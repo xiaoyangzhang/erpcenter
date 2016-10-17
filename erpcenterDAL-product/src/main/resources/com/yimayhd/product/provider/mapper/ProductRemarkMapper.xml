@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.product.dao.ProductRemarkMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.product.po.ProductRemark" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="guest_note" property="guestNote" jdbcType="VARCHAR" />
+    <result column="product_feature" property="productFeature" jdbcType="VARCHAR" />
+    <result column="item_include" property="itemInclude" jdbcType="VARCHAR" />
+    <result column="child_plan" property="childPlan" jdbcType="VARCHAR" />
+    <result column="shopping_plan" property="shoppingPlan" jdbcType="VARCHAR" />
+    <result column="item_charge" property="itemCharge" jdbcType="VARCHAR" />
+    <result column="item_free" property="itemFree" jdbcType="VARCHAR" />
+    <result column="attention" property="attention" jdbcType="VARCHAR" />
+    <result column="item_other" property="itemOther" jdbcType="VARCHAR" />
+    <result column="warm_tip" property="warmTip" jdbcType="VARCHAR" />
+    <result column="passort" property="passort" jdbcType="VARCHAR" />
+    <result column="serve_level" property="serveLevel" jdbcType="VARCHAR" />
+    <result column="eat_note" property="eatNote" jdbcType="VARCHAR" />
+    <result column="car_note" property="carNote" jdbcType="VARCHAR" />
+    <result column="insurance_note" property="insuranceNote" jdbcType="VARCHAR" />
+    <result column="sight_note" property="sightNote" jdbcType="VARCHAR" />
+    <result column="refund_rule" property="refundRule" jdbcType="VARCHAR" />
+    <result column="appoint_rule" property="appointRule" jdbcType="VARCHAR" />
+    <result column="remark_info" property="remarkInfo" jdbcType="VARCHAR" />
+    <result column="guide_note" property="guideNote" jdbcType="VARCHAR" />
+    <result column="item_exclude" property="itemExclude" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, product_id, guest_note, product_feature, item_include, child_plan, shopping_plan, 
+    item_charge, item_free, attention, item_other, warm_tip, passort, serve_level, item_exclude, create_time,eat_note,car_note,guide_note,insurance_note,
+    refund_rule,appoint_rule,remark_info,sight_note
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from product_remark
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByProductId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from product_remark
+    where product_id = #{productId,jdbcType=INTEGER}
+    limit 0,1
+  </select>
+  <select id="selectBriefByProductId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id,product_id    
+    from product_remark
+    where product_id = #{productId,jdbcType=INTEGER}
+    limit 0,1
+  </select>  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from product_remark
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.product.po.ProductRemark" useGeneratedKeys="true" keyProperty="id">
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into product_remark (product_id, guest_note, product_feature, 
+      item_include, child_plan, shopping_plan, 
+      item_charge, item_free, attention, 
+      item_other, warm_tip, passort, serve_level,
+      item_exclude, create_time,eat_note,car_note,guide_note,insurance_note,
+    refund_rule,appoint_rule,remark_info,sight_note)
+    values (#{productId,jdbcType=INTEGER}, #{guestNote,jdbcType=VARCHAR}, #{productFeature,jdbcType=VARCHAR}, 
+      #{itemInclude,jdbcType=VARCHAR}, #{childPlan,jdbcType=VARCHAR}, #{shoppingPlan,jdbcType=VARCHAR}, 
+      #{itemCharge,jdbcType=VARCHAR}, #{itemFree,jdbcType=VARCHAR}, #{attention,jdbcType=VARCHAR}, 
+      #{itemOther,jdbcType=VARCHAR}, #{warmTip,jdbcType=VARCHAR}, #{passort,jdbcType=VARCHAR}, #{serveLevel,jdbcType=VARCHAR},
+    #{itemExclude,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}, #{eatNote,jdbcType=VARCHAR}, #{carNote,jdbcType=VARCHAR},
+     #{guideNote,jdbcType=VARCHAR},  #{insuranceNote,jdbcType=VARCHAR}, #{refundRule,jdbcType=VARCHAR},
+      #{appointRule,jdbcType=VARCHAR}, #{remarkInfo,jdbcType=VARCHAR},#{sightNote,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.product.po.ProductRemark" useGeneratedKeys="true" keyProperty="id" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into product_remark
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="guestNote != null" >
+        guest_note,
+      </if>
+      <if test="productFeature != null" >
+        product_feature,
+      </if>
+      <if test="itemInclude != null" >
+        item_include,
+      </if>
+      <if test="childPlan != null" >
+        child_plan,
+      </if>
+      <if test="shoppingPlan != null" >
+        shopping_plan,
+      </if>
+      <if test="itemCharge != null" >
+        item_charge,
+      </if>
+      <if test="itemFree != null" >
+        item_free,
+      </if>
+      <if test="attention != null" >
+        attention,
+      </if>
+      <if test="itemOther != null" >
+        item_other,
+      </if>
+      <if test="warmTip != null" >
+        warm_tip,
+      </if>
+      <if test="passort != null" >
+        passort,
+      </if>
+      <if test="serveLevel != null" >
+        serve_level,
+      </if>
+      <if test="itemExclude != null" >
+        item_exclude,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="eatNote != null" >
+        eat_note,
+      </if>
+      <if test="carNote != null" >
+        car_note,
+      </if>
+      <if test="guideNote != null" >
+        guide_note,
+      </if>
+      <if test="insuranceNote != null" >
+        insurance_note,
+      </if>
+      <if test="sightNote != null" >
+        sight_note,
+      </if>
+      <if test="refundRule != null" >
+        refund_rule,
+      </if>
+      <if test="appointRule != null" >
+        appoint_rule,
+      </if>
+      <if test="remarkInfo != null" >
+        remark_info,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="guestNote != null" >
+        #{guestNote,jdbcType=VARCHAR},
+      </if>
+      <if test="productFeature != null" >
+        #{productFeature,jdbcType=VARCHAR},
+      </if>
+      <if test="itemInclude != null" >
+        #{itemInclude,jdbcType=VARCHAR},
+      </if>
+      <if test="childPlan != null" >
+        #{childPlan,jdbcType=VARCHAR},
+      </if>
+      <if test="shoppingPlan != null" >
+        #{shoppingPlan,jdbcType=VARCHAR},
+      </if>
+      <if test="itemCharge != null" >
+        #{itemCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="itemFree != null" >
+        #{itemFree,jdbcType=VARCHAR},
+      </if>
+      <if test="attention != null" >
+        #{attention,jdbcType=VARCHAR},
+      </if>
+      <if test="itemOther != null" >
+        #{itemOther,jdbcType=VARCHAR},
+      </if>
+      <if test="warmTip != null" >
+        #{warmTip,jdbcType=VARCHAR},
+      </if>
+      <if test="passort != null" >
+        #{passort,jdbcType=VARCHAR},
+      </if>
+      <if test="serveLevel != null" >
+        #{serveLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="itemExclude != null" >
+        #{itemExclude,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="eatNote != null" >
+        #{eatNote,jdbcType=VARCHAR},
+      </if>
+      <if test="carNote != null" >
+        #{carNote,jdbcType=VARCHAR},
+      </if>
+      <if test="guideNote != null" >
+        #{guideNote,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceNote != null" >
+        #{insuranceNote,jdbcType=VARCHAR},
+      </if>
+      <if test="sightNote != null" >
+        #{sightNote,jdbcType=VARCHAR},
+      </if>
+      <if test="refundRule != null" >
+        #{refundRule,jdbcType=VARCHAR},
+      </if>
+      <if test="appointRule != null" >
+        #{appointRule,jdbcType=VARCHAR},
+      </if>
+      <if test="remarkInfo != null" >
+        #{remarkInfo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.ProductRemark" >
+    update product_remark
+    <set >
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="guestNote != null" >
+        guest_note = #{guestNote,jdbcType=VARCHAR},
+      </if>
+      <if test="productFeature != null" >
+        product_feature = #{productFeature,jdbcType=VARCHAR},
+      </if>
+      <if test="itemInclude != null" >
+        item_include = #{itemInclude,jdbcType=VARCHAR},
+      </if>
+      <if test="childPlan != null" >
+        child_plan = #{childPlan,jdbcType=VARCHAR},
+      </if>
+      <if test="shoppingPlan != null" >
+        shopping_plan = #{shoppingPlan,jdbcType=VARCHAR},
+      </if>
+      <if test="itemCharge != null" >
+        item_charge = #{itemCharge,jdbcType=VARCHAR},
+      </if>
+      <if test="itemFree != null" >
+        item_free = #{itemFree,jdbcType=VARCHAR},
+      </if>
+      <if test="attention != null" >
+        attention = #{attention,jdbcType=VARCHAR},
+      </if>
+      <if test="itemOther != null" >
+        item_other = #{itemOther,jdbcType=VARCHAR},
+      </if>
+      <if test="warmTip != null" >
+        warm_tip = #{warmTip,jdbcType=VARCHAR},
+      </if>
+      <if test="passort != null" >
+        passort = #{passort,jdbcType=VARCHAR},
+      </if>
+      <if test="serveLevel != null" >
+        serve_level = #{serveLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="itemExclude != null" >
+        item_exclude = #{itemExclude,jdbcType=VARCHAR},
+      </if>
+      
+       <if test="eatNote != null" >
+       eat_note= #{eatNote,jdbcType=VARCHAR},
+      </if>
+      <if test="carNote != null" >
+      car_note=  #{carNote,jdbcType=VARCHAR},
+      </if>
+      <if test="guideNote != null" >
+       guide_note= #{guideNote,jdbcType=VARCHAR},
+      </if>
+      <if test="insuranceNote != null" >
+       insurance_note= #{insuranceNote,jdbcType=VARCHAR},
+      </if>
+      <if test="sightNote != null" >
+      sight_note=  #{sightNote,jdbcType=VARCHAR},
+      </if>
+      <if test="refundRule != null" >
+      refund_rule=  #{refundRule,jdbcType=VARCHAR},
+      </if>
+      <if test="appointRule != null" >
+       appoint_rule= #{appointRule,jdbcType=VARCHAR},
+      </if>
+      <if test="remarkInfo != null" >
+        remark_info=#{remarkInfo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.ProductRemark" >
+    update product_remark
+    set product_id = #{productId,jdbcType=INTEGER},
+      guest_note = #{guestNote,jdbcType=VARCHAR},
+      product_feature = #{productFeature,jdbcType=VARCHAR},
+      item_include = #{itemInclude,jdbcType=VARCHAR},
+      child_plan = #{childPlan,jdbcType=VARCHAR},
+      shopping_plan = #{shoppingPlan,jdbcType=VARCHAR},
+      item_charge = #{itemCharge,jdbcType=VARCHAR},
+      item_free = #{itemFree,jdbcType=VARCHAR},
+      attention = #{attention,jdbcType=VARCHAR},
+      item_other = #{itemOther,jdbcType=VARCHAR},
+      warm_tip = #{warmTip,jdbcType=VARCHAR},
+      passort = #{passort,jdbcType=VARCHAR},
+      serve_level = #{serveLevel,jdbcType=VARCHAR},
+      item_exclude = #{itemExclude,jdbcType=VARCHAR},
+     
+       eat_note = #{eatNote,jdbcType=VARCHAR},
+       car_note = #{carNote,jdbcType=VARCHAR},
+       guide_note = #{guideNote,jdbcType=VARCHAR},
+       insurance_note = #{insuranceNote,jdbcType=VARCHAR},
+       sight_note = #{sightNote,jdbcType=VARCHAR},
+       refund_rule = #{refundRule,jdbcType=VARCHAR},
+       appoint_rule = #{appointRule,jdbcType=VARCHAR},
+       remark_info = #{remarkInfo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

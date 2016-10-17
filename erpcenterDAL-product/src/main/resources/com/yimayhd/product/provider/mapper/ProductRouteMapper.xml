@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.product.dao.ProductRouteMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.product.po.ProductRoute" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="day_num" property="dayNum" jdbcType="INTEGER" />
+    <result column="breakfast" property="breakfast" jdbcType="VARCHAR" />
+    <result column="lunch" property="lunch" jdbcType="VARCHAR" />
+    <result column="supper" property="supper" jdbcType="VARCHAR" />
+    <result column="hotel_id" property="hotelId" jdbcType="INTEGER" />
+    <result column="hotel_name" property="hotelName" jdbcType="VARCHAR" />
+    <result column="route_desp" property="routeDesp" jdbcType="VARCHAR" />
+    <result column="route_tip" property="routeTip" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+    <result column="route_short" property="routeShort" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, product_id, day_num, breakfast, lunch, supper,
+    hotel_id, hotel_name, route_desp, route_tip, create_time,route_short
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from product_route
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByProductId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from product_route
+    where product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from product_route
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByProductId" parameterType="java.lang.Integer" >
+    delete from product_route
+    where product_id = #{productId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.product.po.ProductRoute" useGeneratedKeys="true" keyProperty="id">
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into product_route (product_id, day_num,
+      breakfast, lunch,
+      supper, hotel_id,
+      hotel_name, route_desp, route_tip, 
+      create_time,route_short)
+    values (#{productId,jdbcType=INTEGER}, #{dayNum,jdbcType=INTEGER},
+      #{breakfast,jdbcType=VARCHAR}, #{lunch,jdbcType=VARCHAR},
+      #{supper,jdbcType=VARCHAR}, #{hotelId,jdbcType=INTEGER},
+      #{hotelName,jdbcType=VARCHAR}, #{routeDesp,jdbcType=VARCHAR}, #{routeTip,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=BIGINT},#{routeShort,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.product.po.ProductRoute" useGeneratedKeys="true" keyProperty="id">
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into product_route
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="dayNum != null" >
+        day_num,
+      </if>
+      <if test="breakfast != null" >
+        breakfast,
+      </if>
+      <if test="lunch != null" >
+        lunch,
+      </if>
+      <if test="supper != null" >
+        supper,
+      </if>
+      <if test="hotelId != null" >
+        hotel_id,
+      </if>
+      <if test="hotelName != null" >
+        hotel_name,
+      </if>
+      <if test="routeDesp != null" >
+        route_desp,
+      </if>
+      <if test="routeTip != null" >
+        route_tip,
+      </if>
+       <if test="routeShort != null" >
+        route_short,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="dayNum != null" >
+        #{dayNum,jdbcType=INTEGER},
+      </if>
+      <if test="breakfast != null" >
+        #{breakfast,jdbcType=VARCHAR},
+      </if>
+      <if test="lunch != null" >
+        #{lunch,jdbcType=VARCHAR},
+      </if>
+      <if test="supper != null" >
+        #{supper,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelId != null" >
+        #{hotelId,jdbcType=INTEGER},
+      </if>
+      <if test="hotelName != null" >
+        #{hotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="routeDesp != null" >
+        #{routeDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="routeTip != null" >
+        #{routeTip,jdbcType=VARCHAR},
+      </if>
+      <if test="routeShort != null" >
+        #{routeShort,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.ProductRoute" >
+    update product_route
+    <set >
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="dayNum != null" >
+        day_num = #{dayNum,jdbcType=INTEGER},
+      </if>
+      <if test="breakfast != null" >
+        breakfast = #{breakfast,jdbcType=VARCHAR},
+      </if>
+      <if test="lunch != null" >
+        lunch = #{lunch,jdbcType=VARCHAR},
+      </if>
+      <if test="supper != null" >
+        supper = #{supper,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelId != null" >
+        hotel_id = #{hotelId,jdbcType=INTEGER},
+      </if>
+      <if test="hotelName != null" >
+        hotel_name = #{hotelName,jdbcType=VARCHAR},
+      </if>
+      <if test="routeDesp != null" >
+        route_desp = #{routeDesp,jdbcType=VARCHAR},
+      </if>
+      <if test="routeTip != null" >
+        route_tip = #{routeTip,jdbcType=VARCHAR},
+      </if>
+      <if test="routeShort != null" >
+        route_short = #{routeShort,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.ProductRoute" >
+    update product_route
+    set product_id = #{productId,jdbcType=INTEGER},
+      day_num = #{dayNum,jdbcType=INTEGER},
+      breakfast = #{breakfast,jdbcType=VARCHAR},
+      lunch = #{lunch,jdbcType=VARCHAR},
+      supper = #{supper,jdbcType=VARCHAR},
+      hotel_id = #{hotelId,jdbcType=INTEGER},
+      hotel_name = #{hotelName,jdbcType=VARCHAR},
+      route_desp = #{routeDesp,jdbcType=VARCHAR},
+      route_tip = #{routeTip,jdbcType=VARCHAR},
+      route_short = #{routeShort,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

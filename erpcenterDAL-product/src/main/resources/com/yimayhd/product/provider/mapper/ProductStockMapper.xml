@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.product.dao.ProductStockMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.product.po.ProductStock" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="item_date" property="itemDate" jdbcType="DATE" />
+    <result column="stock_count" property="stockCount" jdbcType="INTEGER" />
+    <result column="receive_count" property="receiveCount" jdbcType="INTEGER" />
+    <result column="reserve_count" property="reserveCount" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, product_id, item_date, stock_count, receive_count,reserve_count, state, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from product_stock
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from product_stock
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.product.po.ProductStock" >
+    insert into product_stock (id, product_id, item_date, 
+      stock_count, receive_count, reserve_count, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{itemDate,jdbcType=DATE}, 
+      #{stockCount,jdbcType=INTEGER}, #{receiveCount,jdbcType=INTEGER},0, #{createTime,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.product.po.ProductStock" >
+    insert into product_stock
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="itemDate != null" >
+        item_date,
+      </if>
+      <if test="stockCount != null" >
+        stock_count,
+      </if>
+      <if test="receiveCount != null" >
+        receive_count,
+      </if>
+      <if test="reserveCount != null" >
+        reserve_count,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="itemDate != null" >
+        #{itemDate,jdbcType=DATE},
+      </if>
+      <if test="stockCount != null" >
+        #{stockCount,jdbcType=INTEGER},
+      </if>
+      <if test="receiveCount != null" >
+        #{receiveCount,jdbcType=INTEGER},
+      </if>
+       <if test="reserveCount != null" >
+        #{reserveCount,jdbcType=INTEGER},
+      </if>
+       <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.ProductStock" >
+    update product_stock
+    <set >
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="itemDate != null" >
+        item_date = #{itemDate,jdbcType=DATE},
+      </if>
+      <if test="stockCount != null" >
+        stock_count = #{stockCount,jdbcType=INTEGER},
+      </if>
+      <if test="receiveCount != null" >
+        receive_count = #{receiveCount,jdbcType=INTEGER},
+      </if>
+      <if test="reserveCount != null" >
+        reserve_count = #{reserveCount,jdbcType=INTEGER},
+      </if>
+       <if test="state != null" >
+       	state=#{state,jdbcType=INTEGER},
+       </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.ProductStock" >
+    update product_stock
+    set product_id = #{productId,jdbcType=INTEGER},
+      item_date = #{itemDate,jdbcType=DATE},
+      stock_count = #{stockCount,jdbcType=INTEGER},
+      receive_count = #{receiveCount,jdbcType=INTEGER},      
+      create_time = #{createTime,jdbcType=BIGINT},
+      state = #{state,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getStocksByProductIdAndDateSpan" resultMap="BaseResultMap">
+  	SELECT 
+    <include refid="Base_Column_List" />
+    FROM product_stock
+    WHERE product_id = #{productId,jdbcType=INTEGER} <![CDATA[ AND item_date>=#{startDate} AND item_date<#{endDate}]]> AND state=1
+  </select>
+  <select id="getStockByProductIdAndDate" resultMap="BaseResultMap">
+  	SELECT 
+    <include refid="Base_Column_List" />
+    FROM product_stock
+    WHERE product_id = #{productId,jdbcType=INTEGER} AND item_date=#{date} AND state=1
+  </select>
+  <update id="setDeleteByProductIdAndDateSpan">
+    update product_stock set state=-1
+    where product_id = #{productId,jdbcType=INTEGER} <![CDATA[ AND item_date>=#{startDate} AND item_date<#{endDate}]]> AND state=1
+  </update>
+  <update id="updateStockCount" >
+    update product_stock set receive_count=receive_count+(#{count,jdbcType=INTEGER})
+    where product_id = #{productId,jdbcType=INTEGER} AND item_date=#{date} AND state=1
+  </update>
+  <delete id="deleteByProductIdAndDate">
+  	DELETE FROM product_stock
+    WHERE product_id = #{productId,jdbcType=INTEGER} AND item_date=#{date}
+  </delete>
+  
+   <update id="updateReserveCount" >
+    update product_stock set 
+     <if test="type == 'P'.toString()" >
+     	 reserve_count=reserve_count+(#{count,jdbcType=INTEGER})
+      </if>
+      <if test="type == 'D'.toString()" >
+     	reserve_count=reserve_count-(#{count,jdbcType=INTEGER})
+      </if>
+      <if test="type == 'Z'.toString()" >
+     	reserve_count=reserve_count-(#{count,jdbcType=INTEGER}),
+     	receive_count=receive_count+(#{count,jdbcType=INTEGER})
+      </if>
+    
+    where product_id = #{productId,jdbcType=INTEGER} AND item_date=#{date} AND state=1
+  </update>
+</mapper>

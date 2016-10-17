@@ -7,15 +7,39 @@
 	<context:annotation-config />
 
 
-	<bean id="tempCacheManager" class="com.yimayhd.empty.tair.CacheManager">
-		<property name="tairManager" ref="tempDefaultTairManager"/>
-		<property name="namespace" value="${tair.namespace}"/>
-	</bean>
-	<bean id="persistenceCacheManager" class="com.yimayhd.empty.tair.CacheManager">
-		<property name="tairManager" ref="persistenceDefaultTairManager"/>
-		<property name="namespace" value="${tair.namespace}"/>
-	</bean>
+	<bean id="productTagService" class="com.yihg.product.impl.ProductTagServiceImpl" />
 	
-	<!-- ==================   tair end    ==================== -->
+	<bean id="productRemarkService" class="com.yihg.product.impl.ProductRemarkServiceImpl" />
+
+	
+	<bean id="productRouteService" class="com.yihg.product.impl.ProductRouteServiceImpl" />
+	
+	<bean id="productRouteSupplierService" class="com.yihg.product.impl.ProductRouteSupplierServiceImpl" />
+	
+	<bean id="productRouteTrafficService" class="com.yihg.product.impl.ProductRouteTrafficServiceImpl" />
+	
+	
+	<bean id="productInfoService" class="com.yihg.product.impl.ProductInfoServiceImpl"/>
+	
+	<bean id="productGroupService" class="com.yihg.product.impl.ProductGroupServiceImpl"/>
+	
+	<bean id="productGroupSupplierService" class="com.yihg.product.impl.ProductGroupSupplierServiceImpl"/>
+  	
+	<bean id="productGroupPriceService" class="com.yihg.product.impl.ProductGroupPriceServiceImpl"/>
+	
+	<bean id="productGroupExtraItemService" class="com.yihg.product.impl.ProductGroupExtraItemServiceImpl"/>
+    
+    <bean id="productAttachmentService" class="com.yihg.product.impl.ProductAttachmentServiceImpl"/>
+    
+    <bean id="productGroupSellerService" class="com.yihg.product.impl.ProductGroupSellerServiceImpl"/>
+	
+    <bean id="productStockService" class="com.yihg.product.impl.ProductStockServiceImpl"/>
+
+	
+    <bean id="trafficResService" class="com.yihg.product.impl.TrafficResServiceImpl"/>
+    
+    
+    <bean id="trafficResProductService" class="com.yihg.product.impl.TrafficResProductServiceImpl"/>
+	
 
 </beans>
