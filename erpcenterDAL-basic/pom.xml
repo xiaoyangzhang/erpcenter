@@ -14,7 +14,50 @@
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+		<!-- Common libs -->
+		<druid.version>1.0.5</druid.version>
+		<javassist.version>3.15.0-GA</javassist.version>
+		<netty.version>3.2.5.Final</netty.version>
+		<httpclient.version>4.1.2</httpclient.version>
+		<fastjson.version>1.1.41</fastjson.version>
+		<zookeeper.version>3.3.3</zookeeper.version>
+		<zkclient.version>0.1</zkclient.version>
+		<jedis.version>2.4.1</jedis.version>
+		<xmemcached.version>1.3.6</xmemcached.version>
+		<jfreechart.version>1.0.13</jfreechart.version>
+		<hessian.version>4.0.7</hessian.version>
+		<servlet.version>2.5</servlet.version>
+		<validation.version>1.0.0.GA</validation.version>
+		<hibernate.validator.version>4.2.0.Final</hibernate.validator.version>
+		<cglib.version>2.2</cglib.version>
+		<trove.version>1.0.2</trove.version>
+		
+		<!-- jdbc driver setting -->
+		<!-- 
+		<mysql.driver.version>5.1.13</mysql.driver.version>
+		 -->
+		<oracle.driver.version>11.1.0.7.0</oracle.driver.version>
+		
+		<!-- Log libs -->
+		<slf4j.version>1.7.5</slf4j.version>
+		<log4j.version>1.2.13</log4j.version>
+		<commons-logging.version>1.1.3</commons-logging.version>
+		<!-- Test libs -->
+		<junit.version>4.10</junit.version>
+		<easymock.version>3.0</easymock.version>
+		<jmockit.version>0.999.8</jmockit.version>
+		
+		<architect-mybatis.version>1.0.0</architect-mybatis.version>
+		
+		<!-- cache -->
+		<redis.version>2.4.2</redis.version>
+		<yihg-redis.version>1.0.0-SNAPSHOT</yihg-redis.version>
+		
+		<!-- Build args -->
+		<skip_maven_deploy>false</skip_maven_deploy>
+		<updateReleaseInfo>true</updateReleaseInfo>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -22,5 +65,183 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>com.yimayhd.erpcenter</groupId>
+    	<artifactId>erpcenterDAL-basic-client</artifactId>
+    	<version>0.0.6-SNAPSHOT</version>
+    </dependency>
+	<!-- spring -->
+		<dependency>  
+            <groupId>org.springframework</groupId>  
+            <artifactId>spring-core</artifactId>  
+        </dependency>  
+        <dependency>  
+            <groupId>org.springframework</groupId>  
+            <artifactId>spring-aop</artifactId>  
+        </dependency>
+        <dependency>  
+            <groupId>org.springframework</groupId>  
+            <artifactId>spring-beans</artifactId>  
+	     </dependency>   
+        <dependency>  
+            <groupId>org.springframework</groupId>  
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring.version}</version>    
+        </dependency> 
+         <dependency>  
+            <groupId>org.springframework</groupId>  
+            <artifactId>spring-context</artifactId>  
+        </dependency>  
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+		
+		 <!-- MyBatis -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+        </dependency>
+        
+        <dependency>
+			<groupId>com.yihg</groupId>
+			<artifactId>yihg-architect-mybatis</artifactId>
+			<version>${architect-mybatis.version}</version>
+		</dependency>
+
+
+        <!-- jPush libs -->
+        <dependency>
+            <groupId>cn.jpush.api</groupId>
+            <artifactId>jpush-client</artifactId>
+            <version>3.2.3</version>
+        </dependency>
+
+
+		
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>trove</groupId>
+			<artifactId>trove</artifactId>
+			<version>${trove.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${httpclient.version}</version>
+		</dependency>
+
+		<dependency>
+		  <groupId>org.javassist</groupId>
+		  <artifactId>javassist</artifactId>
+		  <version>${javassist.version}</version>
+		</dependency>       
+	     <dependency>
+		  <groupId>org.jboss.netty</groupId>
+		  <artifactId>netty</artifactId>
+		  <version>${netty.version}</version>
+		</dependency> 
+	
+		<dependency>
+		  <groupId>com.github.sgroschupf</groupId>
+		  <artifactId>zkclient</artifactId>
+		</dependency>
+	 
+		<dependency>
+		  <groupId>org.apache.zookeeper</groupId>
+		  <artifactId>zookeeper</artifactId>
+		</dependency>  
+	
+		<dependency>
+		  <groupId>com.alibaba</groupId>
+		  <artifactId>dubbo</artifactId>
+		  <exclusions>
+	        <exclusion>
+	          <groupId>org.springframework</groupId>
+	          <artifactId>spring</artifactId>
+	        </exclusion>
+	      </exclusions>
+		</dependency>
+	
+		<dependency>
+		  <groupId>com.alibaba</groupId>
+		  <artifactId>druid</artifactId>
+		   <version>${druid.version}</version>
+		</dependency>
+		
+		
+		<dependency>
+		  <groupId>com.alibaba</groupId>
+		  <artifactId>fastjson</artifactId>
+		  <version>1.2.4</version>
+		</dependency>
+		
+		<!--  -->
+	
+		<dependency>
+	        <groupId>org.springframework.data</groupId>
+	        <artifactId>spring-data-redis</artifactId>
+	    </dependency>
+	    <dependency>
+		   <groupId>redis.clients</groupId>
+		   <artifactId>jedis</artifactId>
+		</dependency>
+		
+		
+		<dependency>
+			  <groupId>com.yihg</groupId>
+			  <artifactId>yihg-architect-redis</artifactId>
+			   <version>${yihg-redis.version}</version>
+		</dependency> 
+
+		<dependency>
+              <groupId>org.csource</groupId>
+              <artifactId>fastdfs-client</artifactId>
+              <version>1.24.1</version>
+        </dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.10</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>commons-net</groupId>
+		  <artifactId>commons-net</artifactId>
+		  <version>3.3</version>
+		</dependency>
+    
   </dependencies>
 </project>
