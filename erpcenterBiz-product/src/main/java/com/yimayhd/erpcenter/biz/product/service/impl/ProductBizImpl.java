@@ -1,17 +1,18 @@
-package com.yimayhd.erpcenter.facade.product;
+package com.yimayhd.erpcenter.biz.product.service.impl;
 
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
-import com.yimayhd.erpcenter.facade.client.ProductFacade;
+import com.yimayhd.erpcenter.service.ProductService;
+
 
 /**
  * 
-* @ClassName: ProductFacadeImpl 
+* @ClassName: ProductBizImpl 
 * @Description: 
 * @author wangjun
 * @date 2016年10月17日 下午4:51:55 
 *
  */
-public class ProductFacadeImpl implements ProductFacade{
+public class ProductBizImpl implements ProductService{
 	
 	/**
 	 * 保存产品基本信息
