@@ -7,15 +7,4 @@
 	<context:annotation-config />
 
 
-	<bean id="tempCacheManager" class="com.yimayhd.empty.tair.CacheManager">
-		<property name="tairManager" ref="tempDefaultTairManager"/>
-		<property name="namespace" value="${tair.namespace}"/>
-	</bean>
-	<bean id="persistenceCacheManager" class="com.yimayhd.empty.tair.CacheManager">
-		<property name="tairManager" ref="persistenceDefaultTairManager"/>
-		<property name="namespace" value="${tair.namespace}"/>
-	</bean>
-	
-	<!-- ==================   tair end    ==================== -->
-
 </beans>

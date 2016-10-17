@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.product.dao.ProductRouteTrafficMapper">
+    <resultMap id="BaseResultMap" type="com.yihg.product.po.ProductRouteTraffic">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="route_id" property="routeId" jdbcType="INTEGER"/>
+        <result column="type_id" property="typeId" jdbcType="INTEGER"/>
+        <result column="type_name" property="typeName" jdbcType="VARCHAR"/>
+        <result column="city_departure" property="cityDeparture" jdbcType="VARCHAR"/>
+        <result column="city_arrival" property="cityArrival" jdbcType="VARCHAR"/>
+        <result column="miles" property="miles" jdbcType="VARCHAR"/>
+        <result column="duration" property="duration" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, route_id, type_id, type_name, city_departure, city_arrival, miles, duration,
+        create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from product_route_traffic
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectByRouteId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from product_route_traffic
+        where route_id = #{routeId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from product_route_traffic
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByRouteId" parameterType="java.lang.Integer">
+    delete from product_route_traffic
+    where route_id = #{routeId,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.yihg.product.po.ProductRouteTraffic" useGeneratedKeys="true" keyProperty="id">
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into product_route_traffic (route_id, type_id, type_name,
+        city_departure, city_arrival, miles,
+        duration, create_time)
+        values (#{routeId,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER}, #{typeName,jdbcType=VARCHAR},
+        #{cityDeparture,jdbcType=VARCHAR}, #{cityArrival,jdbcType=VARCHAR}, #{miles,jdbcType=VARCHAR},
+        #{duration,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT})
+    </insert>
+    <insert id="insertSelective" parameterType="com.yihg.product.po.ProductRouteTraffic" useGeneratedKeys="true" keyProperty="id">
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into product_route_traffic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="routeId != null">
+                route_id,
+            </if>
+            <if test="typeId != null">
+                type_id,
+            </if>
+            <if test="typeName != null">
+                type_name,
+            </if>
+            <if test="cityDeparture != null">
+                city_departure,
+            </if>
+            <if test="cityArrival != null">
+                city_arrival,
+            </if>
+            <if test="miles != null">
+                miles,
+            </if>
+            <if test="duration != null">
+                duration,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="routeId != null">
+                #{routeId,jdbcType=INTEGER},
+            </if>
+            <if test="typeId != null">
+                #{typeId,jdbcType=INTEGER},
+            </if>
+            <if test="typeName != null">
+                #{typeName,jdbcType=VARCHAR},
+            </if>
+            <if test="cityDeparture != null">
+                #{cityDeparture,jdbcType=VARCHAR},
+            </if>
+            <if test="cityArrival != null">
+                #{cityArrival,jdbcType=VARCHAR},
+            </if>
+            <if test="miles != null">
+                #{miles,jdbcType=VARCHAR},
+            </if>
+            <if test="duration != null">
+                #{duration,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.ProductRouteTraffic">
+        update product_route_traffic
+        <set>
+            <if test="routeId != null">
+                route_id = #{routeId,jdbcType=INTEGER},
+            </if>
+            <if test="typeId != null">
+                type_id = #{typeId,jdbcType=INTEGER},
+            </if>
+            <if test="typeName != null">
+                type_name = #{typeName,jdbcType=VARCHAR},
+            </if>
+            <if test="cityDeparture != null">
+                city_departure = #{cityDeparture,jdbcType=VARCHAR},
+            </if>
+            <if test="cityArrival != null">
+                city_arrival = #{cityArrival,jdbcType=VARCHAR},
+            </if>
+            <if test="miles != null">
+                miles = #{miles,jdbcType=VARCHAR},
+            </if>
+            <if test="duration != null">
+                duration = #{duration,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.ProductRouteTraffic">
+    update product_route_traffic
+    set route_id = #{routeId,jdbcType=INTEGER},
+      type_id = #{typeId,jdbcType=INTEGER},
+      type_name = #{typeName,jdbcType=VARCHAR},
+      city_departure = #{cityDeparture,jdbcType=VARCHAR},
+      city_arrival = #{cityArrival,jdbcType=VARCHAR},
+      miles = #{miles,jdbcType=VARCHAR},
+      duration = #{duration,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

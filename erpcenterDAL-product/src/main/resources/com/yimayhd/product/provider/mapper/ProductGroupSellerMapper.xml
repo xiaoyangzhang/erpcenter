@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.product.dao.ProductGroupSellerMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.product.po.ProductGroupSeller" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="biz_id" property="bizId" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="operator_id" property="operatorId" jdbcType="INTEGER" />
+    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, biz_id, product_id, group_id, operator_id, operator_name, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from product_group_seller
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from product_group_seller
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.product.po.ProductGroupSeller" >
+    insert into product_group_seller (id, biz_id, product_id, 
+      group_id, operator_id, operator_name, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{bizId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, 
+      #{groupId,jdbcType=INTEGER}, #{operatorId,jdbcType=INTEGER}, #{operatorName,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.product.po.ProductGroupSeller" >
+    insert into product_group_seller
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="bizId != null" >
+        biz_id,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="operatorId != null" >
+        operator_id,
+      </if>
+      <if test="operatorName != null" >
+        operator_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bizId != null" >
+        #{bizId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="operatorId != null" >
+        #{operatorId,jdbcType=INTEGER},
+      </if>
+      <if test="operatorName != null" >
+        #{operatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.ProductGroupSeller" >
+    update product_group_seller
+    <set >
+      <if test="bizId != null" >
+        biz_id = #{bizId,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="operatorId != null" >
+        operator_id = #{operatorId,jdbcType=INTEGER},
+      </if>
+      <if test="operatorName != null" >
+        operator_name = #{operatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.ProductGroupSeller" >
+    update product_group_seller
+    set biz_id = #{bizId,jdbcType=INTEGER},
+      product_id = #{productId,jdbcType=INTEGER},
+      group_id = #{groupId,jdbcType=INTEGER},
+      operator_id = #{operatorId,jdbcType=INTEGER},
+      operator_name = #{operatorName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectGroupSellerList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  	 select 
+    <include refid="Base_Column_List" />
+    from product_group_seller
+    where biz_id = #{bizId,jdbcType=INTEGER}
+    and product_id = #{productId,jdbcType=INTEGER}
+    and group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectGroupSeller" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  	 select 
+    <include refid="Base_Column_List" />
+    from product_group_seller
+    where biz_id = #{bizId,jdbcType=INTEGER}
+    <if test="productId!=null">
+    and product_id = #{productId,jdbcType=INTEGER}</if>
+    and operator_id = #{operateId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByGroupId">
+  	delete from product_group_seller where group_id=#{groupId,jdbcType=INTEGER}
+  </delete>
+  <!-- 2016-5-27欧宗莹，组团版，产品价格－价格－批量设置用户（添加删除方法） -->
+  <delete id="deleteByBatch" >
+  	delete from product_group_seller where group_id=#{groupId,jdbcType=INTEGER} and product_id=#{productId, jdbcType=INTEGER} and operator_id=#{operatorId,jdbcType=INTEGER}
+  </delete>
+  <!-- 2016-5-27欧宗莹，组团版，产品价格－价格－批量设置用户（改进原来晓阳的insertSelective方法，没有判断记录是否存在造成冗余） -->
+  <insert id="insertByBatch" parameterType="com.yihg.product.po.ProductGroupSeller" >
+    insert into product_group_seller (biz_id, product_id, group_id, operator_id, operator_name, create_time)
+    select #{bizId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER},  #{groupId,jdbcType=INTEGER}, #{operatorId,jdbcType=INTEGER}, #{operatorName,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT} 
+    from DUAL WHERE not exists (
+    	select id from product_group_seller where biz_id=#{bizId,jdbcType=INTEGER} and product_id=#{productId,jdbcType=INTEGER} 
+    	and operator_id=#{operatorId,jdbcType=INTEGER} and group_id=#{groupId,jdbcType=INTEGER} limit 1
+    	)
+  </insert>
+  <select id="selectSellerListByProductId" resultMap="BaseResultMap" >
+  	 select 
+    <include refid="Base_Column_List" />
+    from product_group_seller
+    where biz_id = #{bizId,jdbcType=INTEGER}
+    and product_id = #{productId,jdbcType=INTEGER}
+  </select>
+  <select id="selectGroupSellers" resultMap="BaseResultMap" >
+  	 select 
+    <include refid="Base_Column_List" />
+    from product_group_seller
+    where biz_id = #{bizId,jdbcType=INTEGER}
+    
+    and operator_id in (${operatorIds})
+  </select>
+</mapper>
