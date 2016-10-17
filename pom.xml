@@ -28,6 +28,12 @@
     <module>erpcenterBiz-sys</module>
     <module>erpcenterFacade-sys-client</module>
     <module>erpcenterFacade-sys</module>
+    <module>erpcenterDAL-basic-client</module>
+    <module>erpcenterDAL-basic</module>
+    <module>erpcenterBiz-basic-client</module>
+    <module>erpcenterBiz-basic</module>
+    <module>erpcenterFacade-basic-client</module>
+    <module>erpcenterFacade-basic</module>
   </modules>
 
 	<properties>
