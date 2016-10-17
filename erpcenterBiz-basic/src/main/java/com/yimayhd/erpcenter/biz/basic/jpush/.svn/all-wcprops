@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-api/src/main/java/com/yihg/jpush
+END
+JPushConstants.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-api/src/main/java/com/yihg/jpush/JPushConstants.java
+END
+JPushClientsService.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-api/src/main/java/com/yihg/jpush/JPushClientsService.java
+END

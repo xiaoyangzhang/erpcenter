@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yihg.basic.dao.DicMapper">
+    
+    <resultMap type="com.yihg.basic.po.DicInfo" id="dicInfo" >
+		<id property="id" column="id" jdbcType="INTEGER" />
+		<result property="bizId" column="biz_id" jdbcType="INTEGER" />
+		<result property="code" column="code" jdbcType="VARCHAR" />
+		<result property="value" column="value" jdbcType="VARCHAR" />
+		<result property="typeId" column="type_id" jdbcType="INTEGER" />
+		<result property="typeCode" column="type_code" jdbcType="VARCHAR" />
+		<result property="status" column="status" jdbcType="INTEGER" />
+		<result property="note" column="note" jdbcType="VARCHAR" />
+		<result property="orderId" column="order_id" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="DicColumns">
+	  	id,biz_id,code,value,type_id,type_code,status,note,order_id
+	</sql>	
+	<sql id="queryWhere">
+		<where>
+		    <if test="id != null" > id = #{id} </if>
+		    <if test="bizId != null" > and biz_id = #{bizId} </if>
+			<if test="code != null" > and code = #{code} </if>
+			<if test="value != null" > and value = #{value} </if>
+			<if test="status != null" > and status = #{status} </if>
+			<if test="typeId != null" > and type_id = #{typeId} </if>
+			<if test="typeCode != null" > and type_code = #{typeCode} </if>
+		</where>
+		ORDER BY order_id DESC
+	</sql>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+        delete from sys_dic
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    
+	<insert id="insert" parameterType="com.yihg.basic.po.DicInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_dic (id,biz_id,code, value,type_id,note,type_code,order_id)
+        values (#{id,jdbcType=INTEGER},#{bizId,jdbcType=INTEGER},#{code,jdbcType=VARCHAR},#{value,jdbcType=VARCHAR},
+        	#{typeId,jdbcType=INTEGER},#{note,jdbcType=VARCHAR},#{typeCode,jdbcType=VARCHAR},#{orderId,jdbcType=VARCHAR})
+    </insert>
+    
+	<update id="update" parameterType="com.yihg.basic.po.DicInfo">
+        update sys_dic
+        <set>
+			<if test="code != null" > code = #{code}, </if>
+			<if test="bizId != null" > biz_id = #{bizId}, </if>
+			<if test="value != null" > value = #{value}, </if>
+			<if test="status != null" > status = #{status}, </if>
+			<if test="typeId != null" > type_id = #{typeId}, </if>
+			<if test="typeCode != null" > type_code = #{typeCode}, </if>
+			<if test="note != null" > note = #{note}, </if>
+			<if test="orderId != null" > order_id = #{orderId}, </if>
+		</set>	
+		where id=#{id}		
+    </update>
+    
+	<select id="getCount" parameterType="com.yihg.basic.po.DicInfo" resultType="java.lang.Integer">
+        select count(*) 
+        from sys_dic
+        <include refid="queryWhere" />        
+    </select>
+    
+	<select id="getAll"  resultMap="dicInfo">
+        select <include refid="DicColumns"/> 
+        from sys_dic
+        <include refid="queryWhere" />    
+    </select>
+    
+	<select id="getById" parameterType="java.lang.Integer"  resultMap="dicInfo">
+        select <include refid="DicColumns"/>
+        from sys_dic
+       	where id=#{id}  
+    </select>
+	
+	<select id="getWhere" parameterType="com.yihg.basic.po.DicInfo"  resultMap="dicInfo">
+        select <include refid="DicColumns"/>
+        from sys_dic
+        <include refid="queryWhere" />
+        order by order_id
+    </select>
+    
+	<select id="getListByTypeId" resultMap="dicInfo">
+        select <include refid="DicColumns"/>
+        from sys_dic
+        <where>
+		    <if test="typeId != null" > type_id=#{typeId}  </if>
+		</where>
+		order by order_id
+    </select>
+    
+	<select id="getListByTypeCodeAndBizId" resultMap="dicInfo">
+        select <include refid="DicColumns"/>
+        from sys_dic
+        where 1=1
+	    <if test="typeCode != null" > and type_code=#{typeCode}  </if>
+	    <if test="bizId != null " > and biz_id=#{bizId}  </if>
+		order by order_id
+    </select>
+    
+    <select id="getListByTypeIdAndName" resultMap="dicInfo">
+        select <include refid="DicColumns"/>
+        from sys_dic
+        where 1=1
+	    <if test="typeId != null" > and type_id=#{typeId}  </if>
+	    <if test="bizId != null" > and biz_id=#{bizId}  </if>
+	    <if test="name != null" > and value like CONCAT('%','${name}','%' )  </if>
+		order by order_id
+    </select>
+    <select id="getListByTypeCodeAndDicCode" resultMap="dicInfo">
+        select <include refid="DicColumns"/>
+        from sys_dic
+        <where>
+        	1=1 
+        	<if test="bizId != null" >and biz_id=#{bizId}  </if>
+		    <if test="typeCode != null" >and type_code=#{typeCode}  </if>
+		     <if test="dicCode != null" >and code = #{dicCode}  </if>
+		</where>
+    </select>
+    
+</mapper>
