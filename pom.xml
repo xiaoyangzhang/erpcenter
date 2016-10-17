@@ -34,6 +34,7 @@
     <module>erpcenterBiz-basic</module>
     <module>erpcenterFacade-basic-client</module>
     <module>erpcenterFacade-basic</module>
+    <module>erpcenterDAL-sys-client</module>
   </modules>
 
 	<properties>
