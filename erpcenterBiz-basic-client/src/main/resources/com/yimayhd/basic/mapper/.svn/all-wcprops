@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/ERP/!svn/ver/214/yihg-service/yihg-erp-basic-all/yihg-erp-basic-impl/src/main/resources/com/yihg/provider/mapper
+END
+ImgReferenceMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-impl/src/main/resources/com/yihg/provider/mapper/ImgReferenceMapper.xml
+END
+AirPortMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-impl/src/main/resources/com/yihg/provider/mapper/AirPortMapper.xml
+END
+AirLineMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/ERP/!svn/ver/214/yihg-service/yihg-erp-basic-all/yihg-erp-basic-impl/src/main/resources/com/yihg/provider/mapper/AirLineMapper.xml
+END
+MsgPushAppListMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-impl/src/main/resources/com/yihg/provider/mapper/MsgPushAppListMapper.xml
+END
+DicInfo.xml
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-impl/src/main/resources/com/yihg/provider/mapper/DicInfo.xml
+END
+MsgPushAppMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-impl/src/main/resources/com/yihg/provider/mapper/MsgPushAppMapper.xml
+END
+DicTypeInfo.xml
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-impl/src/main/resources/com/yihg/provider/mapper/DicTypeInfo.xml
+END
+ImgSpaceMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 135
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-impl/src/main/resources/com/yihg/provider/mapper/ImgSpaceMapper.xml
+END
+ImgWatermarkMapper.xml
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-impl/src/main/resources/com/yihg/provider/mapper/ImgWatermarkMapper.xml
+END
+RegionInfo.xml
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-impl/src/main/resources/com/yihg/provider/mapper/RegionInfo.xml
+END

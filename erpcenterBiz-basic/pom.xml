@@ -14,7 +14,11 @@
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+		
+		<architect-mybatis.version>1.0.0</architect-mybatis.version>
+		
+	</properties>
+  
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -22,5 +26,19 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis-spring</artifactId>
+	</dependency>
+		<dependency>
+				<groupId>com.yihg</groupId>
+				<artifactId>yihg-architect-mybatis</artifactId>
+				<version>${architect-mybatis.version}</version>
+		</dependency>
+	
   </dependencies>
 </project>

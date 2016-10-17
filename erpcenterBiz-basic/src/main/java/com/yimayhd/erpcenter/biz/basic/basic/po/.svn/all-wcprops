@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-api/src/main/java/com/yihg/basic/po
+END
+RegionInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-api/src/main/java/com/yihg/basic/po/RegionInfo.java
+END
+MsgPushAppList.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-api/src/main/java/com/yihg/basic/po/MsgPushAppList.java
+END
+MsgPushApp.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-api/src/main/java/com/yihg/basic/po/MsgPushApp.java
+END
+DicInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-api/src/main/java/com/yihg/basic/po/DicInfo.java
+END
+SysRegionCard.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-api/src/main/java/com/yihg/basic/po/SysRegionCard.java
+END
+DicTypeInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/ERP/!svn/ver/85/yihg-service/yihg-erp-basic-all/yihg-erp-basic-api/src/main/java/com/yihg/basic/po/DicTypeInfo.java
+END
