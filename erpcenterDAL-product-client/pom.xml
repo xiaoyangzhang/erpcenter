@@ -12,6 +12,7 @@
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <architect-mybatis.version>1.0.0</architect-mybatis.version>
   </properties>
   <dependencies>
     <dependency>
@@ -22,6 +23,11 @@
         <dependency>
 		<groupId>com.alibaba</groupId>
 		<artifactId>fastjson</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>com.yihg</groupId>    
+		<artifactId>yihg-architect-mybatis</artifactId>
+		<version>1.0.0</version>
 	</dependency>
   </dependencies>
   

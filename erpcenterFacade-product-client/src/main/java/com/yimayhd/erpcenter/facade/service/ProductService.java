@@ -3,6 +3,10 @@
  */
 package com.yimayhd.erpcenter.facade.service;
 
+import java.util.Map;
+
+import com.yihg.mybatis.utility.PageBean;
+
 /**
  * @ClassName: ProductService
  * @Description: TODO(这里用一句话描述这个类的作用)
@@ -11,5 +15,5 @@ package com.yimayhd.erpcenter.facade.service;
  */
 public interface ProductService {
 
-	//public 
+	public PageBean selectProductList(PageBean pageBean,Map<String, Object> parameters);
 }
