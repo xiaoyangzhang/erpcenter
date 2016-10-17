@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.yimayhd.erpcenter.facade.product;
+package com.yimayhd.erpcenter.facade.service;
 
 /**
  * @ClassName: ProductService
@@ -11,4 +11,5 @@ package com.yimayhd.erpcenter.facade.product;
  */
 public interface ProductService {
 
+	//public 
 }
