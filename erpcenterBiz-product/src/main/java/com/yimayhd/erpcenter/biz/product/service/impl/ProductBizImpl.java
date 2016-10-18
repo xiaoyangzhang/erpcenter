@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.biz.product.service.impl;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.biz.product.client.service.ProductBiz;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
@@ -18,7 +19,7 @@ import java.util.Map;
 * @date 2016年10月17日 下午4:51:55 
 *
  */
-public class ProductBizImpl implements ProductService{
+public class ProductBizImpl implements ProductBiz{
 	
 	/**
 	 * 保存产品基本信息

@@ -2,8 +2,10 @@ package com.yimayhd.erpcenter.biz.product.client.service;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -16,6 +18,13 @@ import java.util.Map;
 *
  */
 public interface ProductBiz {
+	/**
+	 * 保存产品基本信息
+	 * @param productInfoVo
+	 * @param bizCode
+	 * @param brandCode
+	 * @return
+	 */
 	int saveBasicInfo(ProductInfoVo productInfoVo,String bizCode,String brandCode);
 
 	/**
@@ -25,4 +34,9 @@ public interface ProductBiz {
 	 * @return
 	 */
 	PageBean<ProductInfo> findProductInfos(PageBean<ProductInfo> pageBean,Map parameters);
+	
+	
+	int updateProductInfo(ProductInfo productInfo);
+	
+	List<ProductRoute> findProductRouteByProductId(Integer productId);
 }
