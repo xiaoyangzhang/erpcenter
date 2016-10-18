@@ -1,31 +1,23 @@
-package com.yihg.sys.impl;
+package com.yimayhd.erpcenter.biz.sys.service.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.alibaba.dubbo.common.utils.StringUtils;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.sys.api.SettleApplyService;
-import com.yihg.sys.dao.SettleApplyMapper;
-import com.yihg.sys.dao.SettleApplyResultMapper;
-import com.yihg.sys.po.SettleApply;
-import com.yihg.sys.po.SettleApplyResult;
+import com.yimayhd.erpcenter.biz.sys.service.SettleApplyBiz;
+import com.yimayhd.erpcenter.dal.sys.po.SettleApply;
+import com.yimayhd.erpcenter.dal.sys.po.SettleApplyResult;
+import com.yimayhd.erpcenter.dal.sys.service.SettleApplyDal;
 
-public class SettleApplyServiceImpl implements SettleApplyService {
+public class SettleApplyBizImpl implements SettleApplyBiz {
 
 	@Autowired
-	private SettleApplyMapper applyDao;
-	@Autowired
-	private SettleApplyResultMapper applyResultDao;
+	private SettleApplyDal settleApplyDal;
+
 
 	@Override
 	public int chkExistByName(String name) {
-		if (StringUtils.isBlank(name)) {
-			return 1;
-		}
-		return applyDao.getCountByName(name);
+		return settleApplyDal.chkExistByName(name);
 	}
 
 	/**
@@ -33,11 +25,7 @@ public class SettleApplyServiceImpl implements SettleApplyService {
 	 */
 	@Override
 	public String addApply(SettleApply apply) {
-		apply.setCreateTime(System.currentTimeMillis());
-		applyDao.insert(apply);
-		apply.setServiceNo("SL" + String.format("%05d", apply.getId()));
-		applyDao.updateServiceNoById(apply.getServiceNo(), apply.getId());
-		return apply.getServiceNo();
+		return settleApplyDal.addApply(apply);
 	}
 
 	public static void main(String[] args) {
@@ -47,26 +35,19 @@ public class SettleApplyServiceImpl implements SettleApplyService {
 
 	@Override
 	public PageBean applyList(SettleApply settleApply, Integer page) {
-		PageBean pageBean = new PageBean();
-		pageBean.setPage(page);
-		pageBean.setParameter(settleApply);
-		pageBean.setPageSize(10);
-		List<SettleApply> applyList = applyDao.getApplyListPage(pageBean);
-		pageBean.setResult(applyList);
-		return pageBean;
+		return settleApplyDal.applyList(settleApply, page);
 	}
 
 	@Override
 	public SettleApply getSettleApplyById(Integer id) {
-
-		return applyDao.selectById(id);
+		return settleApplyDal.getSettleApplyById(id);
 
 	}
 
 	@Override
 	public List<SettleApplyResult> getSettleApplyResults() {
 
-		return applyResultDao.getSettleApplyResults();
+		return settleApplyDal.getSettleApplyResults();
 	}
 
 	/*@Override
@@ -94,13 +75,12 @@ public class SettleApplyServiceImpl implements SettleApplyService {
 */
 	@Override
 	public void updateApplyById(SettleApply apply) {
-		applyDao.updateByIdSelective(apply);
+	    settleApplyDal.updateApplyById(apply);
 	}
 
 	@Override
 	public List<SettleApplyResult> getResultByApplyid(Integer applyId) {
-		
-		return applyResultDao.getResultByApplyId(applyId);
+		return settleApplyDal.getResultByApplyid(applyId);
 	}
 
 }
