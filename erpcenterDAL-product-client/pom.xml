@@ -31,17 +31,21 @@
 	</dependency>
 	
 	<dependency>
-				<groupId>com.yimayhd.erpcenter</groupId>
-				<artifactId>erpcenter-common</artifactId>
+		<groupId>com.yimayhd.erpcenter</groupId>
+		<artifactId>erpcenter-common</artifactId>
 	</dependency>
-  </dependencies>
-  <!-- <dependencies>
-		<dependency>
-			<groupId>com.yimayhd.erpcenter</groupId>
-		  <artifactId>erpcenterDAL-basic-client</artifactId>
-		  <version>0.0.6-SNAPSHOT</version>
+	<dependency>
+		<groupId>com.yimayhd.erpcenter</groupId>
+	  <artifactId>erpcenterDAL-basic-client</artifactId>
+	  <version>0.0.6-SNAPSHOT</version>
+	</dependency>
+	<dependency>
+		<groupId>com.yimayhd.erpcenter</groupId>
+		<artifactId>erpcenterDAL-sys-client</artifactId>
+		<version>0.0.6-SNAPSHOT</version>
 		</dependency>
-	</dependencies> -->
+  </dependencies>
+ 
   <build>
 		<finalName>erpcenterDAL-product-client</finalName>
 		<plugins>

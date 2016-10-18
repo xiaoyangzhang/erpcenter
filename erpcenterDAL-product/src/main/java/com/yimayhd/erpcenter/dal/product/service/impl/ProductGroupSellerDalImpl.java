@@ -8,7 +8,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yimayhd.erpcenter.dal.product.dao.ProductGroupSellerMapper;
+import com.yimayhd.erpcenter.dal.product.mapper.ProductGroupSellerMapper;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupSeller;
 import com.yimayhd.erpcenter.dal.product.service.ProductGroupSellerDal;
 
