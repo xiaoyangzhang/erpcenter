@@ -70,6 +70,11 @@
     		</dependency>
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterBiz-basic-clientt</artifactId>
+				<version>0.0.6-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenterDAL-product-client</artifactId>
 				<version>${project.version}</version>
 			</dependency>
