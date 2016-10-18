@@ -1,13 +1,18 @@
 package com.yimayhd.erpcenter.facade.product.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;
+import com.yimayhd.erpcenter.dal.product.po.ProductStock;
 import com.yimayhd.erpcenter.dal.product.service.ProductGroupSupplierDal;
+import com.yimayhd.erpcenter.dal.product.service.ProductStockDal;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
 import com.yimayhd.erpcenter.facade.query.ProductGroupSupplierDTO;
 import com.yimayhd.erpcenter.facade.result.ResultSupport;
@@ -27,6 +32,9 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade{
 	
 	@Autowired
 	private ProductGroupSupplierDal productGroupSupplierDal;
+	
+	@Autowired
+	private ProductStockDal productStockDal;
 	
 	/**
 	 * 保存组团社
@@ -95,4 +103,56 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade{
 		return result;
 	}
 	
+	/**
+	 * 复制到其他产品
+	 * @param data
+	 * @param productId
+	 * @return
+	 */
+	public ResultSupport copyProductSuppliers(String data, Integer productId){
+		
+		ResultSupport result = new ResultSupport();
+		
+		//获取要复制的组团社
+		List<Integer> productSupplierIdList = JSON.parseArray(data, Integer.class);		
+		//获取要复制的产品下的组团社
+		try {
+			productGroupSupplierDal.copyProductSuppliersToTarget(productId, productSupplierIdList);
+		} catch (Exception e) {
+			result.setSuccess(false);
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR.getErrorCode());
+			result.setResultMsg(ProductErrorCode.SYSTEM_ERROR.getErrorMsg());
+			return result;
+		}
+		return result;
+	}
+	
+	/**
+	 * 库存设置
+	 * @param productId
+	 * @param stockStr
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public ResultSupport saveStock(Integer productId,String stockStr,Integer year,Integer month){
+		
+		ResultSupport result = new ResultSupport();
+		
+		
+		if(productId==null || StringUtils.isBlank(stockStr)){
+			result.setSuccess(false);
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR.getErrorCode());
+			result.setResultMsg(ProductErrorCode.SYSTEM_ERROR.getErrorMsg());
+			return result;
+		}
+		
+		String beginDateStr = year+"-"+(month<10 ? ("0"+month):(""+month))+"-01";
+    	String endDateStr = month==12 ? ((year+1)+"-01-01"):(year+"-"+(month<9 ? ("0"+(month+1)):(""+(month+1)))+"-01");    	
+    	Date startDate = DateUtils.parse(beginDateStr, "yyyy-MM-dd");
+    	Date endDate = DateUtils.parse(endDateStr,"yyyy-MM-dd");
+		List<ProductStock> stockList = JSON.parseArray(stockStr, ProductStock.class);
+		productStockDal.saveStock(productId,stockList,startDate,endDate);
+		return result;
+	}
 }
