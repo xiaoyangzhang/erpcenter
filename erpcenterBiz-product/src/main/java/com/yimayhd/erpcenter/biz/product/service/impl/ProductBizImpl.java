@@ -3,12 +3,14 @@ package com.yimayhd.erpcenter.biz.product.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.biz.product.client.service.ProductBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductBiz;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
+import com.yimayhd.erpcenter.dal.product.service.ProductService;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
-
 
 /**
  * 
@@ -19,15 +21,15 @@ import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 *
  */
 public class ProductBizImpl implements ProductBiz{
-	
+	@Autowired
+	private ProductService productService;
 	/**
 	 * 保存产品基本信息
 	 */
 	@Override
 	public int saveBasicInfo(ProductInfoVo productInfoVo, String bizCode,
 			String brandCode) {
-		
-		return 0;
+		return productService.saveBasicInfo(productInfoVo, bizCode, brandCode);
 	}
 
 	/**
