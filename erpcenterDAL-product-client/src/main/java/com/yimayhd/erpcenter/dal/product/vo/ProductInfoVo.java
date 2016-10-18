@@ -18,8 +18,27 @@ public class ProductInfoVo implements Serializable{
 	private ProductInfo productInfo;
 	private List<ProductContact> productContacts;
 	private List<ProductAttachment> productAttachments; // 图片
-	private  List<ProductAttachment> attachments; // 附件
+	private List<ProductAttachment> attachments; // 附件
 	private Set<Integer> orgIdSet;
+	
+	/**
+	 * 商家编码
+	 */
+	private String bizCode;
+	/**
+	 * 产品品牌编码
+	 */
+	private String brandCode;
+	/**
+	 * 创建者id
+	 */
+	private int createId;
+	/**
+	 * 创建者name
+	 */
+	private String createName;
+	
+	
 	public ProductInfo getProductInfo() {
 		return productInfo;
 	}
