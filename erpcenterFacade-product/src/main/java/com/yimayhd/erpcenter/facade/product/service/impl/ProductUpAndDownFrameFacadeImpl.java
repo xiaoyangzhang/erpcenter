@@ -1,7 +1,9 @@
 package com.yimayhd.erpcenter.facade.product.service.impl;
 
 
+import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.facade.query.ToListStateDTO;
 import com.yimayhd.erpcenter.facade.result.ToListStateResult;
 import com.yimayhd.erpcenter.facade.service.ProductUpAndDownFrameFacade;
