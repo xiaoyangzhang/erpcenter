@@ -37,7 +37,8 @@
     <module>erpcenterDAL-sys-client</module>
     <module>erpcenter-common</module>
     <module>erpcenterFacade-common</module>
-	</modules>
+    <module>erpcenterFacade-common-client</module>
+  </modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

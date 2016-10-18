@@ -31,7 +31,7 @@
 	</bean>
 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.yimayhd.erpcenter.dal.basic.dao.mapper" />
+		<property name="basePackage" value="com.yimayhd.erpcenter.dal.basic.dao" />
 	</bean>
 
 	<bean id="sqlSessionBasic" class="org.mybatis.spring.SqlSessionTemplate">
