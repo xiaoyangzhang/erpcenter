@@ -477,7 +477,7 @@ ORDER BY info.create_time
         ORDER BY info.brand_name,info.name_city 
     </select>
     
-    <select id="selectProductInfoListPage2" resultMap="BaseResultMap"
+    <select id="selectProductListPage" resultMap="BaseResultMap"
             parameterType="com.yihg.mybatis.utility.PageBean">
         select info.id, biz_id, code, type, brand_id, brand_name, name_city,
   			name_brief, travel_days, order_num, dest_province_id, dest_province_name, 

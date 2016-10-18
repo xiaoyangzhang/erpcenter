@@ -1,11 +1,10 @@
 package com.yimayhd.erpcenter.dal.product.po;
 
+import com.yihg.product.constants.Constants;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.yimayhd.erpcenter.dal.product.constans.Constants;
 
 public class ProductRouteSupplier implements Serializable {
     private static final long serialVersionUID = 5102126714474100748L;
