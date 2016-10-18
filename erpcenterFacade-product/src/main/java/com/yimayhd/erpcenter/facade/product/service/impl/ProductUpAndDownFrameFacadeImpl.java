@@ -2,6 +2,8 @@ package com.yimayhd.erpcenter.facade.product.service.impl;
 
 
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
+import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
+import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.facade.query.ToListStateDTO;
@@ -19,6 +21,10 @@ public class ProductUpAndDownFrameFacadeImpl implements ProductUpAndDownFrameFac
 
     @Autowired
     private DicBiz dicBiz;
+    @Autowired
+    private PlatformOrgBiz platformOrgBiz;
+    @Autowired
+    private PlatformEmployeeBiz platformEmployeeBiz;
     /**
      * 跳转至产品管理页面
      * @param toListStateDTO
@@ -27,7 +33,9 @@ public class ProductUpAndDownFrameFacadeImpl implements ProductUpAndDownFrameFac
     @Override
     public ToListStateResult toListState(ToListStateDTO toListStateDTO) {
         ToListStateResult toListStateResult = new ToListStateResult();
-        List<DicInfo> dicInfoList = dicBiz.getListByTypeCode(BasicConstants.CPXL_PP,toListStateDTO.getBizId());
+        toListStateResult.setBrandList(dicBiz.getListByTypeCode(BasicConstants.CPXL_PP,toListStateDTO.getBizId()));
+        toListStateResult.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(toListStateDTO.getBizId()));
+        toListStateResult.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(toListStateDTO.getBizId()));
         return toListStateResult;
     }
 }

@@ -30,4 +30,21 @@ public interface ProductPriceFacade {
 	 */
 	ResultSupport delSupplier(ProductGroupSupplierDTO productGroupSupplierDTO);
 	
+	/**
+	 * 复制到其他产品
+	 * @param data
+	 * @param productId
+	 * @return
+	 */
+	ResultSupport copyProductSuppliers(String data, Integer productId);
+	
+	/**
+	 * 库存设置
+	 * @param productId
+	 * @param stockStr
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	ResultSupport saveStock(Integer productId,String stockStr,Integer year,Integer month);
 }
