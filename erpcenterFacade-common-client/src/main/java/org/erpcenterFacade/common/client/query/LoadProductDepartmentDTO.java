@@ -1,13 +1,13 @@
-package com.yimayhd.erpcenter.facade.query;
+package org.erpcenterFacade.common.client.query;
 
 /**
  * @ClassName: ${ClassName}
  * @Description: TODO(这里用一句话描述这个类的作用)
  * @Auther xueshengdong
- * @Date 2016/10/18 18:08
+ * @Date 2016/10/18 19:51
  */
-public class ToListStateDTO {
-    private static final long serialVersionUID = 1L;
+public class LoadProductDepartmentDTO {
+    private static final long serialVersionUID = 7546504127191622861L;
     private Integer bizId;
     private Byte state;
 

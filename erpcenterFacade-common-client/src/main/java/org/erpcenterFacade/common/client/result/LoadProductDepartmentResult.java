@@ -1,17 +1,19 @@
-package com.yimayhd.erpcenter.facade.result;
+package org.erpcenterFacade.common.client.result;
 
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/10/18.
+ * @ClassName: ${ClassName}
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @Auther xueshengdong
+ * @Date 2016/10/18 19:52
  */
-public class ToListStateResult extends ResultSupport{
-    private static final long serialVersionUID = -1L;
-    private String orgJsonStr;
-    private String orgUserJsonStr;
-    private  List<DicInfo> brandList;
+public class LoadProductDepartmentResult extends ResultSupport{
+    private String orgJsonStr; //部门
+    private String orgUserJsonStr; //计调员
+    private List<DicInfo> brandList;//产品名称
 
     public String getOrgJsonStr() {
         return orgJsonStr;

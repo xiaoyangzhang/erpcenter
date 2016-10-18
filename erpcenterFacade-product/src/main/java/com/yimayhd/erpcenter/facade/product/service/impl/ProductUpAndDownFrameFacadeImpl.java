@@ -2,7 +2,6 @@ package com.yimayhd.erpcenter.facade.product.service.impl;
 
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.biz.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
@@ -16,11 +15,10 @@ import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
 import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.facade.query.DetailDTO;
-import com.yimayhd.erpcenter.facade.query.ToListStateDTO;
 import com.yimayhd.erpcenter.facade.query.ToSearchListStateDTO;
 import com.yimayhd.erpcenter.facade.query.UpStateDTO;
 import com.yimayhd.erpcenter.facade.result.DetailResult;
-import com.yimayhd.erpcenter.facade.result.ToListStateResult;
+import com.yimayhd.erpcenter.facade.result.ToSearchListStateResult;
 import com.yimayhd.erpcenter.facade.result.UpStateResult;
 import com.yimayhd.erpcenter.facade.service.ProductUpAndDownFrameFacade;
 
@@ -57,27 +55,12 @@ public class ProductUpAndDownFrameFacadeImpl implements ProductUpAndDownFrameFac
     /**
      * 跳转至产品管理页面
      *
-     * @param toListStateDTO
-     * @return
-     */
-    @Override
-    public ToListStateResult toListState(ToListStateDTO toListStateDTO) {
-        ToListStateResult toListStateResult = new ToListStateResult();
-        toListStateResult.setBrandList(dicBiz.getListByTypeCode(BasicConstants.CPXL_PP, toListStateDTO.getBizId()));
-        toListStateResult.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(toListStateDTO.getBizId()));
-        toListStateResult.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(toListStateDTO.getBizId()));
-        return toListStateResult;
-    }
-
-    /**
-     * 跳转至产品管理页面
-     *
      * @param toSearchListStateDTO
      * @return
      */
     @Override
-    public ToListStateResult toSearchListState(ToSearchListStateDTO toSearchListStateDTO) {
-        ToListStateResult toListStateResult = new ToListStateResult();
+    public ToSearchListStateResult toSearchListState(ToSearchListStateDTO toSearchListStateDTO) {
+        ToSearchListStateResult toSearchListStateResult = new ToSearchListStateResult();
         // 省市
         regionBiz.getAllProvince();
         // 产品名称
@@ -127,7 +110,7 @@ public class ProductUpAndDownFrameFacadeImpl implements ProductUpAndDownFrameFac
 		 * = productInfoService.getProductPriceState(productId);
 		 * priceStateMap.put(info.getId(), state); }
 		 */
-        return toListStateResult;
+        return toSearchListStateResult;
     }
 
     /**

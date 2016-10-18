@@ -1,11 +1,10 @@
 package com.yimayhd.erpcenter.facade.service;
 
 import com.yimayhd.erpcenter.facade.query.DetailDTO;
-import com.yimayhd.erpcenter.facade.query.ToListStateDTO;
 import com.yimayhd.erpcenter.facade.query.ToSearchListStateDTO;
 import com.yimayhd.erpcenter.facade.query.UpStateDTO;
 import com.yimayhd.erpcenter.facade.result.DetailResult;
-import com.yimayhd.erpcenter.facade.result.ToListStateResult;
+import com.yimayhd.erpcenter.facade.result.ToSearchListStateResult;
 import com.yimayhd.erpcenter.facade.result.UpStateResult;
 
 /**
@@ -16,21 +15,12 @@ import com.yimayhd.erpcenter.facade.result.UpStateResult;
  */
 public interface ProductUpAndDownFrameFacade {
     /**
-     * 加载
-     * 产品名称:部门:计调
-     *
-     * @param toListStateDTO
-     * @return
-     */
-    public ToListStateResult toListState(ToListStateDTO toListStateDTO);
-
-    /**
      * 产品列表查询
      *
      * @param toSearchListStateDTO
      * @return
      */
-    public ToListStateResult toSearchListState(ToSearchListStateDTO toSearchListStateDTO);
+    public ToSearchListStateResult toSearchListState(ToSearchListStateDTO toSearchListStateDTO);
 
 
     /**
