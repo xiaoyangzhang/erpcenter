@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.product.dao.ProductGroupSupplierMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.product.po.ProductGroupSupplier" >
+<mapper namespace="com.yimayhd.erpcenter.dal.product.dao.ProductGroupSupplierMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="product_id" property="productId" jdbcType="INTEGER" />
@@ -14,10 +14,10 @@
     <result column="state" property="state" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="BIGINT" />
     <result column="update_time" property="updateTime" jdbcType="DATE" />
-    <collection property="productGroupList" ofType="com.yihg.product.po.ProductGroup"   >
+    <collection property="productGroupList" ofType="com.yimayhd.erpcenter.dal.product.po.ProductGroup"   >
     	<id property="id"  column="productGroupId"/>
     	<result column="name" property="name" jdbcType="VARCHAR" />
-    	<collection property="groupPrices" ofType="com.yihg.product.po.ProductGroupPrice"  column="productGroupId" >
+    	<collection property="groupPrices" ofType="com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice"  column="productGroupId" >
     		<id column="groupPriceId" property="id" jdbcType="INTEGER" />
 		    <result column="group_date" property="groupDate" jdbcType="DATE" />
 		    <result column="group_date_to" property="groupDateTo" jdbcType="DATE" />
@@ -29,7 +29,7 @@
     	</collection>
     </collection>
   </resultMap>
-    <resultMap id="VoResultMap" type="com.yihg.product.vo.ProductGroupSupplierVo" >
+    <resultMap id="VoResultMap" type="com.yimayhd.erpcenter.dal.product.vo.ProductGroupSupplierVo" >
         <id column="id" property="id" jdbcType="INTEGER" />
         <result column="group_id" property="groupId" jdbcType="INTEGER" />
         <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
@@ -88,13 +88,13 @@
     delete from product_group_supplier
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.product.po.ProductGroupSupplier" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier" >
     insert into product_group_supplier (group_id, supplier_id, create_time
       )
     values (#{groupId,jdbcType=INTEGER}, #{supplierId,jdbcType=INTEGER}, #{createTime,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.product.po.ProductGroupSupplier" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier" >
   <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -164,7 +164,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.ProductGroupSupplier" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier" >
     update product_group_supplier
     <set >
       <if test="supplierId != null" >
@@ -182,7 +182,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.ProductGroupSupplier" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier" >
     update product_group_supplier
     set supplier_id = #{supplierId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=BIGINT}
@@ -221,7 +221,7 @@
   						#{parameter.toProductId,jdbcType=INTEGER,mode=IN})
   	]]>  
   </select>
-  <select id="selectSupplierList" resultMap="BaseResultMap" parameterType="com.yihg.product.vo.ProductSupplierCondition">
+  <select id="selectSupplierList" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.product.vo.ProductSupplierCondition">
     SELECT
     <include refid="Base_Column_List" />
     FROM product_group_supplier

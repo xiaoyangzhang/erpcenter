@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.dal.product.mapper;
+package com.yimayhd.erpcenter.dal.product.dao;
 import java.util.List;
 
 import com.yimayhd.erpcenter.dal.product.po.ProductRouteTraffic;

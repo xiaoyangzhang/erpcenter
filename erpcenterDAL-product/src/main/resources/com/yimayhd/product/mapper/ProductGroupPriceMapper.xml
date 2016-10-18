@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.product.dao.ProductGroupPriceMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.product.po.ProductGroupPrice" >
+<mapper namespace="com.yimayhd.erpcenter.dal.product.dao.ProductGroupPriceMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="group_date" property="groupDate" jdbcType="DATE" />
@@ -26,7 +26,7 @@
     <result column="state" property="state" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="BIGINT" />
   </resultMap>
-    <resultMap id="PriceViewMap" type="com.yihg.product.po.PriceView" >
+    <resultMap id="PriceViewMap" type="com.yimayhd.erpcenter.dal.product.po.PriceView" >
         <result column="product_id" property="productId" jdbcType="INTEGER" />
         <result column="group_id" property="groupId" jdbcType="INTEGER" />
         <result column="price_id" property="priceId" jdbcType="INTEGER" />
@@ -43,7 +43,7 @@
         <result column="days_register_begin" property="daysRegisterBegin" jdbcType="INTEGER" />
         <result column="days_register_finish" property="daysRegisterFinish" jdbcType="INTEGER" />
     </resultMap>
-    <resultMap id="PriceMapExt" type="com.yihg.product.vo.StockStaticsResultItemVo" >
+    <resultMap id="PriceMapExt" type="com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultItemVo" >
         <result column="group_date" property="groupDate" jdbcType="DATE" />
         <result column="stock_count" property="stockCount" jdbcType="INTEGER" />
         <result column="receive_count" property="receiveCount" jdbcType="INTEGER" />
@@ -159,7 +159,7 @@
     update product_group_price set state = -1
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.product.po.ProductGroupPrice" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -176,7 +176,7 @@
     #{stockCount,jdbcType=INTEGER}, #{receiveCount,jdbcType=INTEGER}, #{isMemeberAllocate,jdbcType=TINYINT}, #{createTime,jdbcType=BIGINT}
     )
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.product.po.ProductGroupPrice" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -306,7 +306,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.ProductGroupPrice" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice" >
     update product_group_price
     <set >
       <if test="groupId != null" >
@@ -372,7 +372,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.ProductGroupPrice" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice" >
     update product_group_price
     set group_id = #{groupId,jdbcType=INTEGER},
       group_date = #{groupDate,jdbcType=DATE},

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.product.dao.ProductGroupSellerMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.product.po.ProductGroupSeller" >
+<mapper namespace="com.yimayhd.erpcenter.dal.product.dao.ProductGroupSellerMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.ProductGroupSeller" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="biz_id" property="bizId" jdbcType="INTEGER" />
     <result column="product_id" property="productId" jdbcType="INTEGER" />
@@ -23,7 +23,7 @@
     delete from product_group_seller
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.product.po.ProductGroupSeller" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupSeller" >
     insert into product_group_seller (id, biz_id, product_id, 
       group_id, operator_id, operator_name, 
       create_time)
@@ -31,7 +31,7 @@
       #{groupId,jdbcType=INTEGER}, #{operatorId,jdbcType=INTEGER}, #{operatorName,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.product.po.ProductGroupSeller" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupSeller" >
     insert into product_group_seller
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -80,7 +80,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.ProductGroupSeller" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupSeller" >
     update product_group_seller
     <set >
       <if test="bizId != null" >
@@ -104,7 +104,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.ProductGroupSeller" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupSeller" >
     update product_group_seller
     set biz_id = #{bizId,jdbcType=INTEGER},
       product_id = #{productId,jdbcType=INTEGER},
@@ -141,7 +141,7 @@
   	delete from product_group_seller where group_id=#{groupId,jdbcType=INTEGER} and product_id=#{productId, jdbcType=INTEGER} and operator_id=#{operatorId,jdbcType=INTEGER}
   </delete>
   <!-- 2016-5-27欧宗莹，组团版，产品价格－价格－批量设置用户（改进原来晓阳的insertSelective方法，没有判断记录是否存在造成冗余） -->
-  <insert id="insertByBatch" parameterType="com.yihg.product.po.ProductGroupSeller" >
+  <insert id="insertByBatch" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupSeller" >
     insert into product_group_seller (biz_id, product_id, group_id, operator_id, operator_name, create_time)
     select #{bizId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER},  #{groupId,jdbcType=INTEGER}, #{operatorId,jdbcType=INTEGER}, #{operatorName,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT} 
     from DUAL WHERE not exists (

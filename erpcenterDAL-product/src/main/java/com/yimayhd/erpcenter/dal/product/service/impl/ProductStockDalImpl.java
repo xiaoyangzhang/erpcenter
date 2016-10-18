@@ -7,7 +7,7 @@ import javax.annotation.Resource;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yimayhd.erpcenter.dal.product.mapper.ProductStockMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductStockMapper;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
 import com.yimayhd.erpcenter.dal.product.service.ProductStockDal;
 

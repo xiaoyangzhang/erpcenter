@@ -2,7 +2,7 @@ package com.yimayhd.erpcenter.dal.product.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yimayhd.erpcenter.dal.product.mapper.ProductRouteSupplierMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductRouteSupplierMapper;
 import com.yimayhd.erpcenter.dal.product.po.ProductRouteSupplier;
 import com.yimayhd.erpcenter.dal.product.service.ProductRouteSupplierDal;
 

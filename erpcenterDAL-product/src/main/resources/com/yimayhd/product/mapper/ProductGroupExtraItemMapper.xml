@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.product.dao.ProductGroupExtraItemMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.product.po.ProductGroupExtraItem" >
+<mapper namespace="com.yimayhd.erpcenter.dal.product.dao.ProductGroupExtraItemMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.ProductGroupExtraItem" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="item_id" property="itemId" jdbcType="INTEGER" />
@@ -30,7 +30,7 @@
     delete from product_group_extra_item
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.product.po.ProductGroupExtraItem" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupExtraItem" useGeneratedKeys="true" keyProperty="id">
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -38,7 +38,7 @@
     values (#{groupId,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, #{itemName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{priceSale,jdbcType=REAL},
       #{priceCost,jdbcType=REAL}, #{createTime,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.product.po.ProductGroupExtraItem" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupExtraItem" useGeneratedKeys="true" keyProperty="id">
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -90,7 +90,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.ProductGroupExtraItem" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupExtraItem" >
     update product_group_extra_item
     <set >
       <if test="groupId != null" >
@@ -117,7 +117,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.ProductGroupExtraItem" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroupExtraItem" >
     update product_group_extra_item
     set group_id = #{groupId,jdbcType=INTEGER},
       item_id = #{itemId,jdbcType=INTEGER},

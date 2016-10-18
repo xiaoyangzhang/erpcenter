@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yihg.product.dao.TrafficResMapper">
-  <resultMap id="BaseResultMap" type="com.yihg.product.po.TrafficRes">
+<mapper namespace="com.yimayhd.erpcenter.dal.product.dao.TrafficResMapper">
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.TrafficRes">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="biz_id" jdbcType="INTEGER" property="bizId" />
     <result column="res_name" jdbcType="VARCHAR" property="resName" />
@@ -43,7 +43,7 @@
     delete from traffic_res
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.product.po.TrafficRes">
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.product.po.TrafficRes">
     insert into traffic_res (id, biz_id, res_name, 
       res_method, cost_price, num_stock, 
       num_disable, num_reserved, num_sold, 
@@ -59,7 +59,7 @@
       #{userName,jdbcType=VARCHAR}, #{timeCreate,jdbcType=TIMESTAMP}, #{timeUpdate,jdbcType=TIMESTAMP}
       )
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.TrafficRes">
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.product.po.TrafficRes">
     update traffic_res
     set biz_id = #{bizId,jdbcType=INTEGER},
       res_name = #{resName,jdbcType=VARCHAR},
@@ -97,7 +97,7 @@
     time_create, time_update
     from traffic_res
   </select>
-  <insert id="insertSelective" parameterType="com.yihg.product.po.TrafficRes"  useGeneratedKeys="true" keyProperty="id">
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.TrafficRes"  useGeneratedKeys="true" keyProperty="id">
     insert into traffic_res
     <trim prefix="(" suffix=")" suffixOverrides="," >
        <if test="id != null" >
@@ -213,7 +213,7 @@
     </trim>
   </insert>
   
-  <update id="updateTrafficRes" parameterType="com.yihg.product.po.TrafficRes">
+  <update id="updateTrafficRes" parameterType="com.yimayhd.erpcenter.dal.product.po.TrafficRes">
   update traffic_res
    <set>
          <if test="bizId != null" >
@@ -319,7 +319,7 @@ ORDER BY b.adjust_time
 from traffic_res where id=#{id,jdbcType=INTEGER}
    </select>
    
-   <update id="updateStockOrStockDisable" parameterType="com.yihg.product.po.TrafficRes">
+   <update id="updateStockOrStockDisable" parameterType="com.yimayhd.erpcenter.dal.product.po.TrafficRes">
 update traffic_res a left join 
 	(select res_id
 		,sum(case when adjust_action = 'STOCK'  then adjust_num else 0 end) as STOCK 
@@ -336,7 +336,7 @@ set num_stock=ifnull(b.STOCK,0),num_disable=ifnull(b.STOCK_DISABLE,0),num_sold=i
 where a.id=#{id,jdbcType=INTEGER}
    </update>
    
-   <update id="updateTrafficResState" parameterType="com.yihg.product.po.TrafficRes">
+   <update id="updateTrafficResState" parameterType="com.yimayhd.erpcenter.dal.product.po.TrafficRes">
   update traffic_res set  state = #{state,jdbcType=INTEGER}
    where id = #{id,jdbcType=INTEGER}
    </update>

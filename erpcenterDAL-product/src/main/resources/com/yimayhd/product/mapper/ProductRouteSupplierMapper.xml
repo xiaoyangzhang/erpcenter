@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.product.dao.ProductRouteSupplierMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.product.po.ProductRouteSupplier" >
+<mapper namespace="com.yimayhd.erpcenter.dal.product.dao.ProductRouteSupplierMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.ProductRouteSupplier" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="route_id" property="routeId" jdbcType="INTEGER" />
     <result column="supplier_type" property="supplierType" jdbcType="TINYINT" />
@@ -37,7 +37,7 @@
     where route_id = #{routeId,jdbcType=INTEGER}
   </delete>
 
-  <insert id="insert" parameterType="com.yihg.product.po.ProductRouteSupplier" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductRouteSupplier" useGeneratedKeys="true" keyProperty="id">
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -48,7 +48,7 @@
       #{supplierId,jdbcType=INTEGER}, #{supplierName,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.product.po.ProductRouteSupplier" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductRouteSupplier" useGeneratedKeys="true" keyProperty="id">
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -94,7 +94,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.ProductRouteSupplier" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductRouteSupplier" >
     update product_route_supplier
     <set >
       <if test="routeId != null" >
@@ -118,7 +118,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.ProductRouteSupplier" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductRouteSupplier" >
     update product_route_supplier
     set route_id = #{routeId,jdbcType=INTEGER},
       supplier_type = #{supplierType,jdbcType=TINYINT},

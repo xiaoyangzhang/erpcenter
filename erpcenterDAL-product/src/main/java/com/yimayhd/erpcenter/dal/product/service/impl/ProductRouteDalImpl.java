@@ -4,12 +4,12 @@ package com.yimayhd.erpcenter.dal.product.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yimayhd.erpcenter.dal.product.mapper.ProductAttachmentMapper;
-import com.yimayhd.erpcenter.dal.product.mapper.ProductInfoMapper;
-import com.yimayhd.erpcenter.dal.product.mapper.ProductRemarkMapper;
-import com.yimayhd.erpcenter.dal.product.mapper.ProductRouteMapper;
-import com.yimayhd.erpcenter.dal.product.mapper.ProductRouteSupplierMapper;
-import com.yimayhd.erpcenter.dal.product.mapper.ProductRouteTrafficMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductAttachmentMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductInfoMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductRemarkMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductRouteMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductRouteSupplierMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductRouteTrafficMapper;
 import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRemark;

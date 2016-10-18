@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.product.dao.ProductGroupMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.product.po.ProductGroup" >
+<mapper namespace="com.yimayhd.erpcenter.dal.product.dao.ProductGroupMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.ProductGroup" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="product_id" property="productId" jdbcType="INTEGER" />
     <result column="group_supplier_id" property="groupSupplierId" jdbcType="INTEGER" />
@@ -10,7 +10,7 @@
     <result column="state" property="state" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="BIGINT" />
     <result column="group_setting" property="groupSetting" jdbcType="TINYINT" />
-    <!-- <association property="productGroupSupplier"  javaType="com.yihg.product.po.ProductGroupSupplier" >
+    <!-- <association property="productGroupSupplier"  javaType="com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier" >
     	<id column="productGroupSupplierId" property="id" jdbcType="INTEGER" />
 	     <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
 	    <result column="province" property="province" jdbcType="VARCHAR" />
@@ -19,7 +19,7 @@
 	    <result column="town" property="town" jdbcType="VARCHAR" />
 	    <result column="update_time" property="updateTime" jdbcType="DATE" />
     </association>
-    <collection property="groupPrices" column="group_id" ofType="com.yihg.product.po.ProductGroupPrice">
+    <collection property="groupPrices" column="group_id" ofType="com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice">
     	 <id column="groupPriceId" property="id" jdbcType="INTEGER" />
 	    <result column="group_date" property="groupDate" jdbcType="DATE" />
 	    <result column="group_date_to" property="groupDateTo" jdbcType="DATE" />
@@ -60,7 +60,7 @@
     delete from product_group
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.product.po.ProductGroup" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroup" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -69,7 +69,7 @@
     values (#{productId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{cityDeparture,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=BIGINT},#{groupSetting,jdbcType=TINYINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.product.po.ProductGroup" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroup" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -121,7 +121,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.ProductGroup" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroup" >
     update product_group
     <set >
       <if test="productId != null" >
@@ -148,7 +148,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.ProductGroup" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroup" >
     update product_group
     set product_id = #{productId,jdbcType=INTEGER},
       name = #{name,jdbcType=VARCHAR},
@@ -176,7 +176,7 @@
   <update id="updateStateBySupplierId" parameterType="java.lang.Integer">
   	update product_group set state=-1 where group_supplier_id=#{groupSupplierId}
   </update>
-  <select id="selectGroupsByProductIdAndSupplierIdAndDate" resultType="com.yihg.product.vo.ProductGroupVo"  >  	
+  <select id="selectGroupsByProductIdAndSupplierIdAndDate" resultType="com.yimayhd.erpcenter.dal.product.vo.ProductGroupVo"  >  	
   	SELECT pg.`id` groupId,pg.`name`,p.`price_settlement_adult` priceSettlementAdult,p.`price_settlement_child` priceSettlementChild,p.`price_cost_adult` priceCostAdult,p.`price_cost_child` priceCostChild
   	 FROM `product_group_supplier` supplier JOIN `product_group` pg ON supplier.id=pg.group_supplier_id JOIN product_group_price p ON pg.id=p.group_id
   	 WHERE supplier.product_id=#{productId}  AND supplier.supplier_id = #{supplierId} 
