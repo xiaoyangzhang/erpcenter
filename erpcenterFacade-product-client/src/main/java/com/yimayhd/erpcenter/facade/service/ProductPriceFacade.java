@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.facade.service;
 
+import com.yimayhd.erpcenter.facade.query.ProductGroupSupplierDTO;
 import com.yimayhd.erpcenter.facade.result.ResultSupport;
 
 
@@ -21,5 +22,12 @@ public interface ProductPriceFacade {
 	 * @return
 	 */
 	ResultSupport supplierSave(String data);
+	
+	/**
+	 * 删除组团社
+	 * @param groupSupplier
+	 * @return
+	 */
+	ResultSupport delSupplier(ProductGroupSupplierDTO productGroupSupplierDTO);
 	
 }
