@@ -17,7 +17,7 @@ import java.util.Map;
 * @date 2016年10月17日 下午6:32:01 
 *
  */
-public interface ProductService {
+public interface ProductDal {
 	int saveBasicInfo(ProductInfoVo productInfoVo,String bizCode,String brandCode);
 	/**
 	 * 分页查询产品列表
