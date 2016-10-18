@@ -25,7 +25,7 @@ public class ProductFacadeCommonImpl implements ProductFacadeCommon {
 
     /**
      * 加载
-     * 产品名称:部门:计调
+     * 产品名称:部门:计调员
      *
      * @param loadProductDepartmentDTO
      * @return
