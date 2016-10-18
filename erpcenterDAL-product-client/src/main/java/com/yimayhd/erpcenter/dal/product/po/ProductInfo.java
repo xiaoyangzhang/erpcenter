@@ -3,7 +3,7 @@ package com.yimayhd.erpcenter.dal.product.po;
 import java.io.Serializable;
 import java.util.List;
 
-import com.yihg.basic.util.LogFieldAnno;
+import com.yimayhd.erpcenter.common.util.LogFieldAnno;
 
 public class ProductInfo implements Serializable {
 	/**

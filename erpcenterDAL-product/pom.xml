@@ -121,6 +121,10 @@
 			<groupId>com.taobao.tair</groupId>
 			<artifactId>tair-client</artifactId>
 		</dependency>
+		<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenter-common</artifactId>
+			</dependency>
 	</dependencies>
 	
 	<build>
