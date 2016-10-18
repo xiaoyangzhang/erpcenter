@@ -9,7 +9,7 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.product.service.ProductBiz;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
-import com.yimayhd.erpcenter.dal.product.service.ProductService;
+import com.yimayhd.erpcenter.dal.product.service.ProductDal;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 
 /**
@@ -22,14 +22,14 @@ import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
  */
 public class ProductBizImpl implements ProductBiz{
 	@Autowired
-	private ProductService productService;
+	private ProductDal productDal;
 	/**
 	 * 保存产品基本信息
 	 */
 	@Override
 	public int saveBasicInfo(ProductInfoVo productInfoVo, String bizCode,
 			String brandCode) {
-		return productService.saveBasicInfo(productInfoVo, bizCode, brandCode);
+		return productDal.saveBasicInfo(productInfoVo, bizCode, brandCode);
 	}
 
 	/**

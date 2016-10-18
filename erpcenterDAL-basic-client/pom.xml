@@ -7,9 +7,7 @@
     <artifactId>erpcenter</artifactId>
     <version>0.0.6-SNAPSHOT</version>
   </parent>
-  <groupId>com.yimayhd.erpcenter</groupId>
   <artifactId>erpcenterDAL-basic-client</artifactId>
-  <version>0.0.6-SNAPSHOT</version>
   <name>erpcenterDAL-basic-client</name>
   <url>http://maven.apache.org</url>
   <properties>
@@ -19,13 +17,49 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
 		  <groupId>com.alibaba</groupId>
 		  <artifactId>fastjson</artifactId>
-		  <version>1.2.4</version>
-		</dependency>
+		  </dependency>
   </dependencies>
+  <build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>UTF-8</encoding>
+					<showWarnings>true</showWarnings>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-surefire-plugin</artifactId>
+	            	<configuration>
+	                <testFailureIgnore>true</testFailureIgnore>   
+	                <skipTests> true</skipTests>         
+	                </configuration>
+        </plugin>
+		</plugins>
+		<finalName>erpcenterDAL-basic</finalName>
+	</build>
+  <!-- <distributionManagement>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>http://192.168.1.95:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement> -->
 </project>
