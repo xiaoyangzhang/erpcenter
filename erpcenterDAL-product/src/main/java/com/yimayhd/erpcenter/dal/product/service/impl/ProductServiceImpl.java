@@ -3,8 +3,8 @@ package com.yimayhd.erpcenter.dal.product.service.impl;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
+import com.yimayhd.erpcenter.dal.product.service.ProductService;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
-import com.yimayhd.erpcenter.service.ProductService;
 
 import java.util.List;
 import java.util.Map;

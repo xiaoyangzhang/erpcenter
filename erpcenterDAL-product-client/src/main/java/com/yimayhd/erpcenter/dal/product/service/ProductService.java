@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.service;
+package com.yimayhd.erpcenter.dal.product.service;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
