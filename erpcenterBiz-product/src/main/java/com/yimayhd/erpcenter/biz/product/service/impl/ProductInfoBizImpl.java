@@ -37,9 +37,9 @@ public class ProductInfoBizImpl implements ProductInfoBiz{
 	}
 	
 	@Override
-	public PageBean<ProductInfo> findProductInfos2(
+	public PageBean<ProductInfo> selectProductListPage(
 			PageBean<ProductInfo> pageBean, Map parameters) {
-		return productInfoDal.findProductInfos2(pageBean, parameters);
+		return productInfoDal.selectProductListPage(pageBean, parameters);
 	}
 	
 	@Override

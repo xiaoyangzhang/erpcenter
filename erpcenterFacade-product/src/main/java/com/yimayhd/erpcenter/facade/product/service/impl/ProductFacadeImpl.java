@@ -23,8 +23,10 @@ public class ProductFacadeImpl implements ProductFacade{
 	
 	@Autowired
 	private ProductInfoBiz productInfoBiz;
+
 	@Autowired
 	private ProductRouteBiz productRouteBiz;
+
 	/**
 	 * 保存产品基本信息
 	 */

@@ -1,6 +1,5 @@
 package com.yimayhd.erpcenter.dal.product.mapper;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +36,7 @@ public interface ProductInfoMapper {
 	 * @param parameters
 	 * @return
 	 */
-	List<ProductInfo> selectProductInfoListPage2(@Param("page") PageBean pageBean,@Param("parameter")Map parameters);
+	List<ProductInfo> selectProductListPage(@Param("page") PageBean pageBean,@Param("parameter")Map parameters);
 	
 	List<ProductInfo> selectProductAndPriceListPage(@Param("page") PageBean pageBean);
 	/**
