@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.sys.dao.SysBizInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.sys.po.SysBizInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="user_count_limit" property="userCountLimit" jdbcType="INTEGER" />
+    <result column="is_date_limit" property="isDateLimit" jdbcType="TINYINT" />
+    <result column="date_limit" property="dateLimit" jdbcType="DATE" />
+    <result column="date_register" property="dateRegister" jdbcType="DATE" />
+    <result column="creator_id" property="creatorId" jdbcType="INTEGER" />
+    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+    <result column="state" property="state" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, code, user_count_limit, is_date_limit, date_limit, date_register, creator_id, 
+    creator_name,logo, create_time,state
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_biz_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer"  >
+    delete from sys_biz_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.sys.po.SysBizInfo"  >  
+      <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  
+    insert into sys_biz_info (id,name, code, 
+      user_count_limit, is_date_limit, date_limit, 
+      date_register, creator_id, creator_name, logo,
+      create_time)
+    values (#{id,jdbcType=INTEGER},#{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
+      #{userCountLimit,jdbcType=INTEGER}, #{isDateLimit,jdbcType=TINYINT}, #{dateLimit,jdbcType=DATE}, 
+      #{dateRegister,jdbcType=DATE}, #{creatorId,jdbcType=INTEGER}, #{creatorName,jdbcType=VARCHAR}, 
+      #{logo,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.sys.po.SysBizInfo" useGeneratedKeys="true" keyProperty="id" >
+    insert into sys_biz_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="userCountLimit != null" >
+        user_count_limit,
+      </if>
+      <if test="isDateLimit != null" >
+        is_date_limit,
+      </if>
+      <if test="dateLimit != null" >
+        date_limit,
+      </if>
+      <if test="dateRegister != null" >
+        date_register,
+      </if>
+      <if test="creatorId != null" >
+        creator_id,
+      </if>
+      <if test="creatorName != null" >
+        creator_name,
+      </if>
+      <if test="logo != null" >
+        logo,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="userCountLimit != null" >
+        #{userCountLimit,jdbcType=INTEGER},
+      </if>
+      <if test="isDateLimit != null" >
+        #{isDateLimit,jdbcType=TINYINT},
+      </if>
+      <if test="dateLimit != null" >
+        #{dateLimit,jdbcType=DATE},
+      </if>
+      <if test="dateRegister != null" >
+        #{dateRegister,jdbcType=DATE},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=INTEGER},
+      </if>
+      <if test="creatorName != null" >
+        #{creatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null" >
+        #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.sys.po.SysBizInfo" >
+    update sys_biz_info
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="userCountLimit != null" >
+        user_count_limit = #{userCountLimit,jdbcType=INTEGER},
+      </if>
+      <if test="isDateLimit != null" >
+        is_date_limit = #{isDateLimit,jdbcType=TINYINT},
+      </if>
+      <if test="dateLimit != null" >
+        date_limit = #{dateLimit,jdbcType=DATE},
+      </if>
+      <if test="dateRegister != null" >
+        date_register = #{dateRegister,jdbcType=DATE},
+      </if>
+      <if test="creatorId != null" >
+        creator_id = #{creatorId,jdbcType=INTEGER},
+      </if>
+      <if test="creatorName != null" >
+        creator_name = #{creatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null" >
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yihg.sys.po.SysBizInfo" >
+    update sys_biz_info
+    set name = #{name,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      user_count_limit = #{userCountLimit,jdbcType=INTEGER},
+      is_date_limit = #{isDateLimit,jdbcType=TINYINT},
+      date_limit = #{dateLimit,jdbcType=DATE},
+      date_register = #{dateRegister,jdbcType=DATE},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creator_name = #{creatorName,jdbcType=VARCHAR},
+      logo = #{logo,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getListByCode" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_biz_info
+    where code = #{code,jdbcType=VARCHAR}
+  </select>
+  <select id="getAllBizs" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_biz_info
+    where state=1
+  </select>
+  <select id="getBizListPage"  parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BaseResultMap">
+  	select * from sys_biz_info 
+  	where 1=1
+  	<if test="parameter.name!=null and parameter.name!=''">
+   and	name like CONCAT('%','${parameter.name}','%' )
+  		<!-- name=#{parameter.name,jdbcType=VARCHAR} -->
+  	</if>
+  	order by create_time desc
+  </select>
+  <select id="chkExistByCode" parameterType="java.lang.String" resultType="int">
+  	select count(1) from sys_biz_info where code=#{code}
+  </select>
+</mapper>

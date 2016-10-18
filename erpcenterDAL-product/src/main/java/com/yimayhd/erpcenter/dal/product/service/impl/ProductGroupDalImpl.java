@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yimayhd.erpcenter.dal.product.dao.ProductGroupMapper;
-import com.yimayhd.erpcenter.dal.product.dao.ProductGroupPriceMapper;
-import com.yimayhd.erpcenter.dal.product.dao.ProductGroupSellerMapper;
-import com.yimayhd.erpcenter.dal.product.dao.ProductGroupSupplierMapper;
+import com.yimayhd.erpcenter.dal.product.mapper.ProductGroupMapper;
+import com.yimayhd.erpcenter.dal.product.mapper.ProductGroupPriceMapper;
+import com.yimayhd.erpcenter.dal.product.mapper.ProductGroupSellerMapper;
+import com.yimayhd.erpcenter.dal.product.mapper.ProductGroupSupplierMapper;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice;
 import com.yimayhd.erpcenter.dal.product.service.ProductGroupDal;

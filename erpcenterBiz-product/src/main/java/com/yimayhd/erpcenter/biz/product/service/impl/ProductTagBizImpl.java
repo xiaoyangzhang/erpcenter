@@ -1,7 +1,6 @@
 package com.yimayhd.erpcenter.biz.product.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.yimayhd.erpcenter.biz.product.service.ProductTagBiz;
 import com.yimayhd.erpcenter.dal.product.service.ProductTagDal;
@@ -15,7 +14,7 @@ public class ProductTagBizImpl implements ProductTagBiz {
     @Autowired
     private ProductTagDal productTagDal;
 
-    @Transactional
+     
     @Override
     public boolean saveProductTags(ProductTagVo productTagVo) {
     	return productTagDal.saveProductTags(productTagVo);

@@ -243,6 +243,9 @@
 		  <artifactId>commons-net</artifactId>
 		  <version>3.3</version>
 		</dependency>
-    
+    	<dependency>
+			   <groupId>ledis</groupId>
+			   <artifactId>ledis</artifactId>
+		</dependency>
   </dependencies>
 </project>

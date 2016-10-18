@@ -3,7 +3,6 @@ package com.yimayhd.erpcenter.biz.product.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupSupplierBiz;
@@ -18,7 +17,7 @@ public class ProductGroupSupplierBizImpl implements ProductGroupSupplierBiz {
 	@Autowired
 	private ProductGroupSupplierDal productGroupSupplierDal;
 
-	@Transactional
+	 
 	@Override
 	public int save(List<ProductGroupSupplier> groupSuppliers) {
 		return productGroupSupplierDal.save(groupSuppliers);
@@ -75,13 +74,13 @@ public class ProductGroupSupplierBizImpl implements ProductGroupSupplierBiz {
 		return productGroupSupplierDal.selectSupplierList(condition);
 	}
 
-	@Transactional
+	 
 	@Override
 	public int deleteByProductSupplierId(Integer productSupplierId) {
 		return productGroupSupplierDal.deleteByProductSupplierId(productSupplierId);
 	}
 
-	@Transactional
+	 
 	@Override
 	public void copyProductSuppliersToTarget(Integer toProductId,
 			List<Integer> productSupplierIdList) {
