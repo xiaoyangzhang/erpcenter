@@ -2,55 +2,53 @@ package com.yimayhd.erpcenter.biz.basic.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.basic.service.RegionDal;
 
-public class RegionServiceImpl implements RegionDal {
+public class RegionBizImpl implements RegionBiz {
+	@Autowired
+	private RegionDal regionDal;
 
 	@Override
 	public List<RegionInfo> getRegionById(String pid) {
-		// TODO Auto-generated method stub
-		return null;
+		return regionDal.getRegionById(pid);
 	}
 
 	@Override
 	public List<RegionInfo> getAllProvince() {
-		// TODO Auto-generated method stub
-		return null;
+		return regionDal.getAllProvince();
 	}
 
 	@Override
 	public RegionInfo getById(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		return regionDal.getById(id);
 	}
 
 	@Override
 	public int update(RegionInfo dicRegion) {
-		// TODO Auto-generated method stub
-		return 0;
+		return regionDal.update(dicRegion);
 	}
 
 	@Override
 	public int isNode(String id) {
-		// TODO Auto-generated method stub
-		return 0;
+		return regionDal.isNode(id);
 	}
 
 	@Override
 	public int delNode(String id) {
-		// TODO Auto-generated method stub
-		return 0;
+		return regionDal.delNode(id);
 	}
 
 	@Override
 	public int add(RegionInfo dicRegion) {
-		// TODO Auto-generated method stub
-		return 0;
+		return regionDal.add(dicRegion);
 	}
 
 	@Override
 	public void uploadRegion() {
-		// TODO Auto-generated method stub
-		
-	}}
+		regionDal.uploadRegion();
+	}
+}

@@ -2,79 +2,76 @@ package com.yimayhd.erpcenter.biz.basic.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.service.DicDal;
 
-public class DicServiceImpl implements DicDal {
+public class DicBizImpl implements DicBiz {
+	@Autowired
+	private DicDal dicDal;
 
 	@Override
 	public List<DicInfo> getListByTypeId(String type) {
-		// TODO Auto-generated method stub
-		return null;
+		return dicDal.getListByTypeId(type);
 	}
 
 	@Override
 	public DicInfo getById(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		return dicDal.getById(id);
 	}
 
 	@Override
 	public void update(DicInfo dicInfo) {
-		// TODO Auto-generated method stub
+		 dicDal.update(dicInfo);
 		
 	}
 
 	@Override
 	public void add(DicInfo dicInfo) {
-		// TODO Auto-generated method stub
+		dicDal.add(dicInfo);
 		
 	}
 
 	@Override
 	public void delDic(String dicId) {
-		// TODO Auto-generated method stub
+		dicDal.delDic(dicId);
 		
 	}
 
 	@Override
 	public List<DicInfo> getListByTypeCode(String typeCode) {
-		// TODO Auto-generated method stub
-		return null;
+		return dicDal.getListByTypeCode(typeCode);
 	}
 
 	@Override
 	public List<DicInfo> getListByTypeCode(String typeCode, Integer bizId) {
-		// TODO Auto-generated method stub
-		return null;
+		return dicDal.getListByTypeCode(typeCode, bizId);
 	}
 
 	@Override
 	public String getCommProjectTypeTreeJsonStr(String typeCode, Integer bizId) {
-		// TODO Auto-generated method stub
-		return null;
+		return dicDal.getCommProjectTypeTreeJsonStr(typeCode, bizId);
 	}
 
 	@Override
 	public List<DicInfo> getListByTypeIdAndName(String type, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return dicDal.getListByTypeIdAndName(type, name);
 	}
 
 	@Override
 	public List<DicInfo> getListByTypeIdAndName(String type, Integer bizId, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return dicDal.getListByTypeIdAndName(type,bizId, name);
 	}
 
 	@Override
 	public DicInfo getDicInfoByTypeCodeAndDicCode(String typeCode, String dicCode) {
-		// TODO Auto-generated method stub
-		return null;
+		return dicDal.getDicInfoByTypeCodeAndDicCode(typeCode, dicCode);
 	}
 
 	@Override
 	public DicInfo getDicInfoByTypeCodeAndDicCode(Integer bizId, String typeCode, String dicCode) {
-		// TODO Auto-generated method stub
-		return null;
-	}}
+		return dicDal.getDicInfoByTypeCodeAndDicCode(bizId, typeCode, dicCode);
+	}
+}
