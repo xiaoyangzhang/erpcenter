@@ -5,7 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.biz.product.service.ProductBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.facade.service.ProductFacade;
 
@@ -20,14 +20,15 @@ import com.yimayhd.erpcenter.facade.service.ProductFacade;
 public class ProductFacadeImpl implements ProductFacade{
 	
 	@Autowired
-	private ProductBiz productBiz;
+	private ProductInfoBiz productInfoBiz;
 	/**
 	 * 保存产品基本信息
 	 */
 	@Override
 	public int saveBasicInfo(ProductInfoVo productInfoVo, String bizCode,
 			String brandCode) {
-		return productBiz.saveBasicInfo(productInfoVo, bizCode, brandCode);
+				return 0;
+		//return productBiz.saveBasicInfo(productInfoVo, bizCode, brandCode);
 	}
 	
 	@Override
