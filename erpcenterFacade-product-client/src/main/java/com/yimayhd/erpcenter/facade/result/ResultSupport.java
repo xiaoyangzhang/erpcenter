@@ -2,6 +2,8 @@ package com.yimayhd.erpcenter.facade.result;
 
 import java.io.Serializable;
 
+import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
+
 /**
  * Created by Administrator on 2016/10/17.
  */
@@ -9,7 +11,7 @@ public class ResultSupport implements Serializable {
     private static final long serialVersionUID = -2235152751651905167L;
     private boolean success = true;
     private String resultMsg;
-    private String errorCode;
+    private ProductErrorCode errorCode;
 
     public ResultSupport() {
 
@@ -31,11 +33,11 @@ public class ResultSupport implements Serializable {
         this.resultMsg = resultMsg;
     }
 
-    public String getErrorCode() {
+    public ProductErrorCode getErrorCode() {
         return errorCode;
     }
 
-    public void setErrorCode(String errorCode) {
+    public void setErrorCode(ProductErrorCode errorCode) {
         this.errorCode = errorCode;
     }
 
