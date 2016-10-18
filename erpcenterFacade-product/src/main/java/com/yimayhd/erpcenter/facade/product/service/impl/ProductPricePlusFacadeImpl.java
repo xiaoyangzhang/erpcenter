@@ -8,12 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
 import com.yimayhd.erpcenter.dal.product.service.ProductGroupDal;
+import com.yimayhd.erpcenter.dal.product.service.ProductGroupPriceDal;
 import com.yimayhd.erpcenter.dal.product.service.ProductGroupSupplierDal;
 import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
 import com.yimayhd.erpcenter.dal.product.service.ProductStockDal;
@@ -22,6 +25,7 @@ import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
 import com.yimayhd.erpcenter.facade.query.ProductGroupSupplierDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSupplierConditionDTO;
 import com.yimayhd.erpcenter.facade.result.ResultSupport;
+import com.yimayhd.erpcenter.facade.result.ToAddPriceGroupResult;
 import com.yimayhd.erpcenter.facade.result.ToSupplierListResult;
 import com.yimayhd.erpcenter.facade.service.ProductPricePlusFacade;
 
@@ -48,6 +52,9 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 	
 	@Autowired
 	private ProductInfoDal productInfoDal;
+	
+	@Autowired
+    private ProductGroupPriceDal productGroupPriceDal;
 	
 	/**
 	 * 保存组团社
@@ -217,5 +224,53 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 		result.setCity(condition.getCity());
 		
 		return result;
+	}
+	
+	/**
+	 * 跳转到添加价格组页面
+	 * @param id 产品组团社表id
+	 * @return
+	 */
+	public ToAddPriceGroupResult addPriceGroup(Integer id){
+		
+		ToAddPriceGroupResult result = new ToAddPriceGroupResult();
+		
+		List<ProductGroup> productGroups = productGroupDal.selectProductGroupList(id);
+		ProductInfo productInfo = productInfoDal.findProductInfoBySupplierId(id);
+		for (ProductGroup pGroup : productGroups) {
+			List<ProductGroupPrice> groupPrices = productGroupPriceDal.selectProductGroupPrices(pGroup.getId(), null, null);
+			pGroup.setGroupPrices(groupPrices);
+		}
+		result.setProductGroups(productGroups);
+		
+		ProductGroupSupplier supplierInfo = productGroupSupplierDal.selectgGroupSupplierById(id);
+		result.setSupplierName(supplierInfo.getSupplierName());
+		result.setSupplierId(supplierInfo.getSupplierId());
+		result.setGroupSupplierId(id);
+		result.setProductId(supplierInfo.getProductId());
+		result.setBrandName(productInfo.getBrandName());
+		result.setProductName(productInfo.getNameCity());
+		
+		return result;
+	}
+	
+	/**
+	 * 根据年、月得到产品的库存
+	 * @param productId
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	public String stockMonth(Integer productId,Integer year,Integer month){
+		String beginDateStr = year+"-"+(month<10 ? ("0"+month):(""+month))+"-01";
+    	String endDateStr = month==12 ? ((year+1)+"-01-01"):(year+"-"+(month<9 ? ("0"+(month+1)):(""+(month+1)))+"-01");    	
+    	Date startDate = DateUtils.parse(beginDateStr, "yyyy-MM-dd");
+    	Date endDate = DateUtils.parse(endDateStr,"yyyy-MM-dd");
+		List<ProductStock> list = productStockDal.getStocksByProductIdAndDateSpan(productId, startDate, endDate);
+		
+		JSONObject json = new JSONObject();
+		json.put("success", true);
+		json.put("data", JSON.toJSONString(list));
+		return json.toString();
 	}
 }
