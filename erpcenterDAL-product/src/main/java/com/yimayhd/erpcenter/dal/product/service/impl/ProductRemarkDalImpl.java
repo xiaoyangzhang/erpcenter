@@ -3,7 +3,7 @@ package com.yimayhd.erpcenter.dal.product.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yimayhd.erpcenter.dal.product.dao.ProductRemarkMapper;
+import com.yimayhd.erpcenter.dal.product.mapper.ProductRemarkMapper;
 import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
 import com.yimayhd.erpcenter.dal.product.service.ProductRemarkDal;
 
