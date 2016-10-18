@@ -126,7 +126,8 @@ public class ProductUpAndDownFrameFacadeImpl implements ProductUpAndDownFrameFac
     /**
      * 产品上下架
      *
-     * @param upStateDTO@return
+     * @param upStateDTO
+     * @return
      */
     @Override
     public UpStateResult upState(UpStateDTO upStateDTO) {

@@ -32,9 +32,9 @@ public interface ProductUpAndDownFrameFacade {
 
 
     /**
-     * 产品列表查询
+     * 产品上下架
      *
-     * @param toSearchListStateDTO
+     * @param upStateDTO
      * @return
      */
     public UpStateResult upState(UpStateDTO upStateDTO);
