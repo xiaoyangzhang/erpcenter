@@ -1,7 +1,11 @@
 /**
  * 
  */
-package com.yimayhd.erpcenter.facade.product;
+package com.yimayhd.erpcenter.facade.service;
+
+import java.util.Map;
+
+import com.yihg.mybatis.utility.PageBean;
 
 /**
  * @ClassName: ProductService
@@ -11,4 +15,5 @@ package com.yimayhd.erpcenter.facade.product;
  */
 public interface ProductService {
 
+	public PageBean selectProductList(PageBean pageBean,Map<String, Object> parameters);
 }

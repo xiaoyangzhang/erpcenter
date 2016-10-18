@@ -20,6 +20,15 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.yimayhd.erpcenter</groupId>
+			<artifactId>erpcenterDAL-product-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.4</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -20,6 +20,10 @@
 			<artifactId>erpcenterDAL-product-client</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.yimayhd.erpcenter</groupId>
+			<artifactId>erpcenterBiz-product-client</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 		</dependency>
