@@ -2,6 +2,8 @@ package com.yimayhd.erpcenter.facade.product.service.impl;
 
 
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
+import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
+import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.facade.query.ToListStateDTO;
@@ -19,6 +21,10 @@ public class ProductUpAndDownFrameFacadeImpl implements ProductUpAndDownFrameFac
 
     @Autowired
     private DicBiz dicBiz;
+    @Autowired
+    private PlatformOrgBiz platformOrgBiz;
+    @Autowired
+    private PlatformEmployeeBiz platformEmployeeBiz;
     /**
      * 跳转至产品管理页面
      * @param toListStateDTO
