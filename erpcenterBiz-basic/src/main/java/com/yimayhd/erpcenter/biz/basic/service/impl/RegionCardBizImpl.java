@@ -2,26 +2,28 @@ package com.yimayhd.erpcenter.biz.basic.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.yimayhd.erpcenter.dal.basic.po.SysRegionCard;
 import com.yimayhd.erpcenter.dal.basic.service.RegionCardDal;
 
 
-public class RegionCardServiceImpl implements RegionCardDal {
+public class RegionCardBizImpl implements RegionCardDal {
+	@Autowired
+	private RegionCardDal regionCardDal;
 
 	@Override
 	public List<SysRegionCard> getFirstList() {
-		// TODO Auto-generated method stub
-		return null;
+		return regionCardDal.getFirstList();
 	}
 
 	@Override
 	public List<SysRegionCard> getSecondList() {
-		// TODO Auto-generated method stub
-		return null;
+		return regionCardDal.getSecondList();
 	}
 
 	@Override
 	public List<SysRegionCard> getThirdList() {
-		// TODO Auto-generated method stub
-		return null;
-	}}
+		return regionCardDal.getThirdList();
+	}
+}

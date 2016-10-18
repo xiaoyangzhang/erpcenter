@@ -2,68 +2,65 @@ package com.yimayhd.erpcenter.biz.basic.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.yimayhd.erpcenter.dal.basic.po.DicTypeInfo;
 import com.yimayhd.erpcenter.dal.basic.service.DicTypeDal;
 
 
-public class DicTypeServiceImpl implements DicTypeDal {
+public class DicTypeBizImpl implements DicTypeDal {
+	@Autowired
+	private DicTypeDal dicTypeDal;
 
 	@Override
 	public void add(DicTypeInfo dicTypeInfo) {
-		// TODO Auto-generated method stub
-		
+		dicTypeDal.add(dicTypeInfo);
 	}
 
 	@Override
 	public void update(DicTypeInfo dicTypeInfo) {
-		// TODO Auto-generated method stub
-		
+		dicTypeDal.update(dicTypeInfo);
 	}
 
 	@Override
 	public void delete(Integer id) {
-		// TODO Auto-generated method stub
-		
+		dicTypeDal.delete(id);
 	}
 
 	@Override
 	public void delete(String id) {
-		// TODO Auto-generated method stub
-		
+		dicTypeDal.delete(id);
 	}
 
 	@Override
 	public DicTypeInfo getById(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		return dicTypeDal.getById(id);
 	}
 
 	@Override
 	public DicTypeInfo getById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		return dicTypeDal.getById(id);
 	}
 
 	@Override
 	public List<DicTypeInfo> getListByPid(Integer pid) {
-		// TODO Auto-generated method stub
-		return null;
+		return dicTypeDal.getListByPid(pid);
 	}
 
 	@Override
 	public List<DicTypeInfo> getListByPidAndName(String pid, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return dicTypeDal.getListByPidAndName(pid, name);
+		
 	}
 
 	@Override
 	public String getDicTypeJson() {
-		// TODO Auto-generated method stub
-		return null;
+		return dicTypeDal.getDicTypeJson();
 	}
 
 	@Override
 	public List<DicTypeInfo> getAll() {
-		// TODO Auto-generated method stub
-		return null;
-	}}
+		return dicTypeDal.getAll();
+	}
+}

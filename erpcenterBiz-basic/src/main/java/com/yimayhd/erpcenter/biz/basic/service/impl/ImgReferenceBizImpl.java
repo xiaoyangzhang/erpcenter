@@ -10,28 +10,26 @@ import com.yimayhd.erpcenter.dal.basic.service.ImgReferenceDal;
 
 @Service
 @Transactional
-public class ImgReferenceServiceImpl implements ImgReferenceDal{
-
+public class ImgReferenceBizImpl implements ImgReferenceDal{
+	@Autowired
+	private ImgReferenceDal imgReferenceDal;
 	@Override
 	public int saveReference(ImgReference reference) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		return imgReferenceDal.saveReference(reference);
 	}
 
 	@Override
 	public int deleteReferenceById(Long imgReferenceId) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		return imgReferenceDal.deleteReferenceById(imgReferenceId);
 	}
 
 	@Override
 	public int updateReference(ImgReference reference) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		return imgReferenceDal.updateReference(reference);
 	}
 
 	@Override
 	public ImgReference findReferenceById(Long referenceId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}}
+		return imgReferenceDal.findReferenceById(referenceId);
+	}
+}

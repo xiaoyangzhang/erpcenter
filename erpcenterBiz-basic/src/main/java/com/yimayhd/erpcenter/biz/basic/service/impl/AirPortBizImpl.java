@@ -3,33 +3,32 @@ package com.yimayhd.erpcenter.biz.basic.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.dal.basic.po.AirPort;
 import com.yimayhd.erpcenter.dal.basic.service.AirPortDal;
 
 public class AirPortBizImpl implements AirPortDal {
-	
-
+	@Autowired
+	private AirPortDal airPorDal;
 	@Override
 	public int save(AirPort airPort) {
-		// TODO Auto-generated method stub
-		return 0;
+		return airPorDal.save(airPort);
 	}
 
 	@Override
 	public AirPort selectByPrimaryKey(Integer key) {
-		// TODO Auto-generated method stub
-		return null;
+		return airPorDal.selectByPrimaryKey(key);
 	}
 
 	@Override
 	public String getCityCodeByCityName(String cityName) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return airPorDal.getCityCodeByCityName(cityName);
 	}
 
 	@Override
 	public List<Map<String, String>> getFuzzySearchList(String cityName) {
-		// TODO Auto-generated method stub
-		return null;
-	}}
+		return airPorDal.getFuzzySearchList(cityName);
+	}
+}

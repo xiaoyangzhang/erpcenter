@@ -2,6 +2,7 @@ package com.yimayhd.erpcenter.biz.basic.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,118 +15,102 @@ import com.yimayhd.erpcenter.dal.basic.service.ImgSpaceDal;
 
 @Service
 @Transactional
-public class ImgSpaceServiceImpl implements ImgSpaceDal{
+public class ImgSpaceBizImpl implements ImgSpaceDal{
+	@Autowired
+	private ImgSpaceDal imgSpaceDal;
 
 	@Override
 	public int saveImgSpace(ImgSpace imgSpace) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		return imgSpaceDal.saveImgSpace(imgSpace);
 	}
 
 	@Override
 	public int saveListImgSpaces(List<ImgSpace> imgSpaces) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		return imgSpaceDal.saveListImgSpaces(imgSpaces);
 	}
 
 	@Override
 	public int deleteImgSpaceById(Integer id) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		return imgSpaceDal.deleteImgSpaceById(id);
 	}
 
 	@Override
 	public int updateImgSpace(ImgSpace imgSpace) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		return imgSpaceDal.updateImgSpace(imgSpace);
 	}
 
 	@Override
 	public ImgSpace findImgSpaceById(Integer id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return imgSpaceDal.findImgSpaceById(id);
 	}
 
 	@Override
 	public List<ImgSpace> findImgSpaceByParentId(Integer id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return imgSpaceDal.findImgSpaceByParentId(id);
 	}
 
 	@Override
 	public PageBean<ImgSpace> findImgSpaceByConditions(PageBean<ImgSpace> pageBean) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return imgSpaceDal.findImgSpaceByConditions(pageBean);
 	}
 
 	@Override
 	public List<ImgSpace> getImgList(ImgSpace space, String sortFileds, String order) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return imgSpaceDal.getImgList(space, sortFileds, order);
 	}
 
 	@Override
 	public List<ImgSpace> findImgSpaceByConditions(ImgSpace imgSpace) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return imgSpaceDal.findImgSpaceByConditions(imgSpace);
 	}
 
 	@Override
 	public List<ImgSpace> findImgSpaceByConditions(PageDto pageDto) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return imgSpaceDal.findImgSpaceByConditions(pageDto);
 	}
 
 	@Override
 	public List<TreeDto> findImgDirTree(ImgSpace imgSpace) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return findImgDirTree(imgSpace);
 	}
 
 	@Override
 	public int imageDelete(Integer parentId) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		return imgSpaceDal.imageDelete(parentId);
 	}
 
 	@Override
 	public int restoreImageById(Integer imageId) {
-		// TODO Auto-generated method stub
-		return 0;
+		return imgSpaceDal.restoreImageById(imageId);
 	}
 
 	@Override
 	public int queryImageById(Integer imageId) {
-		// TODO Auto-generated method stub
-		return 0;
+		return imgSpaceDal.queryImageById(imageId);
 	}
 
 	@Override
 	public int perpetualDelRestore(Integer imageId) {
-		// TODO Auto-generated method stub
-		return 0;
+		return imgSpaceDal.perpetualDelRestore(imageId);
 	}
 
 	@Override
 	public int imageRename(Integer imageId, String imgName) {
-		// TODO Auto-generated method stub
-		return 0;
+		return imgSpaceDal.imageRename(imageId, imgName);
 	}
 
 	@Override
 	public int moveImage(Integer imageId, Integer parentId) {
-		// TODO Auto-generated method stub
-		return 0;
+		return imgSpaceDal.moveImage(imageId, parentId);
 	}
 
 	@Override
 	public int replaceImage(String uploadFileUrl, String fileName, Integer imageId) {
-		// TODO Auto-generated method stub
-		return 0;
+		return imgSpaceDal.replaceImage(uploadFileUrl, fileName, imageId);
 	}
 
 	@Override
 	public int updateNewPathName(Integer imgId, String newPathNew) {
-		// TODO Auto-generated method stub
-		return 0;
-	}}
+		return imgSpaceDal.updateNewPathName(imgId, newPathNew);
+	}
+}
