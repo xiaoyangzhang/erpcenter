@@ -3,6 +3,8 @@ package com.yimayhd.erpcenter.dal.product.po;
 import java.io.Serializable;
 import java.util.List;
 
+import com.yihg.basic.util.LogFieldAnno;
+
 public class ProductInfo implements Serializable {
 	/**
 	 *
@@ -18,12 +20,14 @@ public class ProductInfo implements Serializable {
 	private Byte type;
 
 	private Integer brandId;
-
+	
+	@LogFieldAnno(description="品牌名称")
 	private String brandName;
 
 	/**
 	 * 产品名称（nameDuration、nameTravelMode、nameStarLevel、nameMode弃用）
 	 */
+	@LogFieldAnno(description="产品名称")
 	private String nameCity;
 
   /*  private String nameDuration;*/
@@ -31,12 +35,13 @@ public class ProductInfo implements Serializable {
    /* private String nameTravelMode;*/
 
    /* private String nameStarLevel;*/
-
+	
 	private String nameBrief;
 
 	/*  private String nameMode;*/
+	@LogFieldAnno(description="天数")
 	private Integer travelDays;
-
+	@LogFieldAnno(description="序号")
 	private Integer orderNum;
 
 	private Integer destProvinceId;
@@ -67,7 +72,44 @@ public class ProductInfo implements Serializable {
 	private List<ProductGroupSeller> groupSellers;
 	private List<ProductRoute> productRouteList;
 	private ProductRemark productRemark;
+	private Integer  stockCount;
+	private String  itemDate;
+	private Integer  stock;
+	private Integer receiveCount;
+	private Integer  productSysId;
+	private Integer  sourceType;
 
+	public Integer getProductSysId() {
+		return productSysId;
+	}
+	public void setProductSysId(Integer productSysId) {
+		this.productSysId = productSysId;
+	}
+	public Integer getReceiveCount() {
+		return receiveCount;
+	}
+	public void setReceiveCount(Integer receiveCount) {
+		this.receiveCount = receiveCount;
+	}
+	public Integer getStock() {
+		return stock;
+	}
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	}
+	public String getItemDate() {
+		return itemDate;
+	}
+	public void setItemDate(String itemDate) {
+		this.itemDate = itemDate;
+	}
+	public Integer getStockCount() {
+		return stockCount;
+	}
+	public void setStockCount(Integer stockCount) {
+		this.stockCount = stockCount;
+	}
+	
 	public Integer getBizId() {
 		return bizId;
 	}
@@ -338,6 +380,12 @@ public class ProductInfo implements Serializable {
 
 	public void setType(Byte type) {
 		this.type = type;
+	}
+	public Integer getSourceType() {
+		return sourceType;
+	}
+	public void setSourceType(Integer sourceType) {
+		this.sourceType = sourceType;
 	}
 
 	/*public String getNameMode() {
