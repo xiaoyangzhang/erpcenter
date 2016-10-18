@@ -221,7 +221,6 @@
 		<dependency>
 			  <groupId>com.yihg</groupId>
 			  <artifactId>yihg-architect-redis</artifactId>
-			   <version>${yihg-redis.version}</version>
 		</dependency> 
 
 		<dependency>
@@ -233,7 +232,6 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.10</version>
 		</dependency>
 		
 		<dependency>
@@ -241,6 +239,9 @@
 		  <artifactId>commons-net</artifactId>
 		  <version>3.3</version>
 		</dependency>
-    
+    	<dependency>
+			   <groupId>ledis</groupId>
+			   <artifactId>ledis</artifactId>
+		</dependency>
   </dependencies>
 </project>

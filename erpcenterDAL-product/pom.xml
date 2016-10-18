@@ -125,6 +125,10 @@
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenter-common</artifactId>
 			</dependency>
+		<dependency>
+			   <groupId>ledis</groupId>
+			   <artifactId>ledis</artifactId>
+		</dependency>
 	</dependencies>
 	
 	<build>
