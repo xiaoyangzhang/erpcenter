@@ -3,7 +3,7 @@ package com.yimayhd.erpcenter.facade.service;
 import java.util.Map;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
+import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 
 
 /**
@@ -15,7 +15,7 @@ import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 *
  */
 public interface ProductFacade {
-	int saveBasicInfo(ProductInfoVo productInfoVo,String bizCode,String brandCode);
+	int saveBasicInfo(ProductSaveDTO productSaveDTO);
 	/**
 	 * 
 	* created by zhangxiaoyang

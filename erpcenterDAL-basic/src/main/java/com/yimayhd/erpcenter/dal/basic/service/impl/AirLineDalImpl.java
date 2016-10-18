@@ -17,20 +17,21 @@ import org.apache.ibatis.ognl.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.yimayhd.erpcenter.common.exception.ClientException;
 import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.dao.AirLineMapper;
 import com.yimayhd.erpcenter.dal.basic.dao.AirPortMapper;
-import com.yimayhd.erpcenter.dal.basic.exception.ClientException;
 import com.yimayhd.erpcenter.dal.basic.po.AirLine;
 import com.yimayhd.erpcenter.dal.basic.po.AirPort;
 import com.yimayhd.erpcenter.dal.basic.service.AirLineDal;
 import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
-
+@Service("airLineDal")
 public class AirLineDalImpl implements AirLineDal {
 	
 	@Autowired
