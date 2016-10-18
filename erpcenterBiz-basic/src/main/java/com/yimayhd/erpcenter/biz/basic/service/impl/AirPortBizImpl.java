@@ -7,7 +7,8 @@ import java.util.Map;
 import com.yimayhd.erpcenter.dal.basic.po.AirPort;
 import com.yimayhd.erpcenter.dal.basic.service.AirPortDal;
 
-public class AirPortServiceImpl implements AirPortDal {
+public class AirPortBizImpl implements AirPortDal {
+	
 
 	@Override
 	public int save(AirPort airPort) {

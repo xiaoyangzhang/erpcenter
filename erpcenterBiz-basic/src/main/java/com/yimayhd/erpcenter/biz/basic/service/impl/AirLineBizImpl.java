@@ -22,26 +22,24 @@ public class AirLineBizImpl implements AirLineBiz {
 
 	@Override
 	public List<AirLine> findAirLineByCity(Date date, String depCity, String arrCity) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return airLineDal.findAirLineByCity(date, depCity, arrCity);
 	}
 
 	@Override
 	public List<AirLine> findAirLineByCity(String date, String depCity, String arrCity) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return airLineDal.findAirLineByCity(date, depCity, arrCity);
 	}
 
 	@Override
 	public List<AirLine> findAirLineByAirCode(String date, String airCode) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return airLineDal.findAirLineByAirCode(date, airCode);
 	}
 
 	@Override
 	public AirLine findAirLine(String date, String airCode, String depCity, String arrCity) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return airLineDal.findAirLine(date, airCode, depCity, arrCity);
 	}
 	
 	
