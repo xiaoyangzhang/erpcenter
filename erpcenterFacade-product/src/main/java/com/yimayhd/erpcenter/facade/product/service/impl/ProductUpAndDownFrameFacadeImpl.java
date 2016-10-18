@@ -1,15 +1,19 @@
 package com.yimayhd.erpcenter.facade.product.service.impl;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.facade.query.ToListStateDTO;
+import com.yimayhd.erpcenter.facade.query.ToSearchListStateDTO;
 import com.yimayhd.erpcenter.facade.result.ToListStateResult;
 import com.yimayhd.erpcenter.facade.service.ProductUpAndDownFrameFacade;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/10/17.
@@ -34,5 +38,10 @@ public class ProductUpAndDownFrameFacadeImpl implements ProductUpAndDownFrameFac
         toListStateResult.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(toListStateDTO.getBizId()));
         toListStateResult.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(toListStateDTO.getBizId()));
         return toListStateResult;
+    }
+
+    @Override
+    public ToListStateResult toSearchListState(ToSearchListStateDTO toSearchListStateDTO) {
+        return null;
     }
 }

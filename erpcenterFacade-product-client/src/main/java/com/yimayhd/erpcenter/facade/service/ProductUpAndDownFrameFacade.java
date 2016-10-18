@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.facade.service;
 
 import com.yimayhd.erpcenter.facade.query.ToListStateDTO;
+import com.yimayhd.erpcenter.facade.query.ToSearchListStateDTO;
 import com.yimayhd.erpcenter.facade.result.ToListStateResult;
 
 /**
@@ -8,4 +9,6 @@ import com.yimayhd.erpcenter.facade.result.ToListStateResult;
  */
 public interface ProductUpAndDownFrameFacade {
     public ToListStateResult toListState(ToListStateDTO toListStateDTO);
+
+    public ToListStateResult toSearchListState(ToSearchListStateDTO toSearchListStateDTO);
 }
