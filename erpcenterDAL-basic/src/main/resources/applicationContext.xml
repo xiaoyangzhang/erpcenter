@@ -15,7 +15,7 @@
 	<context:component-scan base-package="com.yimayhd.erpcenter.dal.basic" />
 
 	<!-- 请修改此处 服务化配置 -->
-	<import resource="provider.xml" />
+	<!-- <import resource="provider.xml" /> -->
 	<!-- 请修改此处  数据库访问-->
     <import resource="daoContext.xml" />
     

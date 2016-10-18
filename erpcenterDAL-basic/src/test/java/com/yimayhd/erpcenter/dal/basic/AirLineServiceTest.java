@@ -21,7 +21,7 @@ import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
 @ContextConfiguration(locations = "classpath:applicationContext.xml")
 public class AirLineServiceTest {
 	@Resource 
-	private AirLineDal service;
+	private AirLineDal airLineDal;
 	
 	@Ignore
 	@Test
@@ -45,14 +45,14 @@ public class AirLineServiceTest {
 	//	System.out.print(map2.containsKey("dep_city_code"));
 	//	System.out.println(map2.containsKey("dep_city_code") ? map2.get("dep_city_code") : "no include");
 	}
-	@Ignore
+//	@Ignore
 	@Test
 	public void findAirLineByCodeTest() throws IOException{
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(System.currentTimeMillis());
 		cal.set(Calendar.MONTH, Calendar.OCTOBER);
 		cal.set(Calendar.DAY_OF_MONTH,22);
-		List<AirLine> list = service.findAirLineByCity(cal.getTime(), "北京", "武汉");
+		List<AirLine> list = airLineDal.findAirLineByCity(cal.getTime(), "北京", "武汉");
 		System.out.println(list.size());
 		System.out.println("----------------------------");
 		for(AirLine airLine : list){
@@ -67,7 +67,7 @@ public class AirLineServiceTest {
 		cal.setTimeInMillis(System.currentTimeMillis());
 		cal.set(Calendar.MONTH, Calendar.OCTOBER);
 		cal.set(Calendar.DAY_OF_MONTH,1);
-		List<AirLine> list = service.findAirLineByAirCode(DateUtils.format(cal.getTime(), "yyyy-MM-dd"),"ZH9428");
+		List<AirLine> list = airLineDal.findAirLineByAirCode(DateUtils.format(cal.getTime(), "yyyy-MM-dd"),"ZH9428");
 		for(AirLine airLine : list){
 			System.out.println(airLine.getAirCode()+"---"+airLine.getDepCity()+"   ---->   " +airLine.getArrCity()+"   ----->" + airLine.getStopCity());
 		}
