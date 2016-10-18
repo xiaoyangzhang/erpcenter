@@ -34,9 +34,17 @@ public interface ProductBiz {
 	 * @return
 	 */
 	PageBean<ProductInfo> findProductInfos(PageBean<ProductInfo> pageBean,Map parameters);
-	
-	
+
+	/**
+	 * 修改产品
+	 * @param productInfo
+	 * @return
+	 */
 	int updateProductInfo(ProductInfo productInfo);
-	
+	/**
+	 * 查询 产品-路线
+	 * @param productId
+	 * @return
+	 */
 	List<ProductRoute> findProductRouteByProductId(Integer productId);
 }

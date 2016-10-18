@@ -34,8 +34,8 @@ public interface ProductService {
 	int updateProductInfo(ProductInfo productInfo);
 
 	/**
-	 *
-	 * @param productInfo
+	 * 查询 产品-路线
+	 * @param productId
 	 * @return
 	 */
 	List<ProductRoute> findProductRouteByProductId(Integer productId);
