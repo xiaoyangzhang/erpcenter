@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRouteBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductTagBiz;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
+import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.service.ProductFacade;
 
 /**
@@ -25,6 +27,9 @@ public class ProductFacadeImpl implements ProductFacade{
 	private ProductInfoBiz productInfoBiz;
 	@Autowired
 	private ProductRouteBiz productRouteBiz;
+	@Autowired
+	private ProductTagBiz productTagBiz;
+	
 	@Override
 	public int saveBasicInfo(ProductSaveDTO productSaveDTO) {
 		if(null == productSaveDTO || null == productSaveDTO.getProductInfoVo()){
@@ -60,6 +65,11 @@ public class ProductFacadeImpl implements ProductFacade{
 	@Override
 	public boolean codeValidate(int bizId, int productId, String code) {
 		return productInfoBiz.checkProductCodeExist(productId, bizId, code);
+	}
+
+	@Override
+	public boolean saveProductTags(ProductTagDTO productTagDTO) {
+		return productTagBiz.saveProductTags(productTagDTO.getProductTagVo());
 	}
 
 }
