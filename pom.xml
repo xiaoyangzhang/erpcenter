@@ -160,6 +160,37 @@
 				<artifactId>erpcenterFacade-product</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+
+	<dependency>
+		<groupId>com.yimayhd.erpcenter</groupId>
+		<artifactId>erpcenterBiz-sys</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>com.yimayhd.erpcenter</groupId>
+		<artifactId>erpcenterBiz-basic</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>com.yimayhd.erpcenter</groupId>
+		<artifactId>erpcenterBiz-product</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>com.yimayhd.erpcenter</groupId>
+		<artifactId>erpcenterFacade-sys</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>com.yimayhd.erpcenter</groupId>
+		<artifactId>erpcenterFacade-basic</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>com.yimayhd.erpcenter</groupId>
+		<artifactId>erpcenterFacade-product</artifactId>
+		<version>${project.version}</version>
+	</dependency>
 			<dependency>
 			   <groupId>ledis</groupId>
 			   <artifactId>ledis</artifactId>

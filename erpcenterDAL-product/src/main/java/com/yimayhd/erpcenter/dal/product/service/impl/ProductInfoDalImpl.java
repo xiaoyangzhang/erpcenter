@@ -76,6 +76,11 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 			PageBean<ProductInfo> pageBean, Map parameters) {
 		List<ProductInfo> list = infoMapper.selectProductInfoListPage(pageBean, parameters);
 		pageBean.setResult(list);
+		if(1==1){
+			
+		}else{
+			
+		}
 		return pageBean;
 	}
 	
