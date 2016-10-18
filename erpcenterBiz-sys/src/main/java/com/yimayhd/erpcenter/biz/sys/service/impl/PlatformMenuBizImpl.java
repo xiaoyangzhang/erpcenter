@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.biz.sys.service.PlatformMenuBiz;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformRolePo;
 import com.yimayhd.erpcenter.dal.sys.service.PlatformMenuDal;
+import com.yimayhd.erpcenter.dal.sys.vo.MenuOptVo;
 
 /**
  * @author : zhangchao
@@ -83,14 +85,12 @@ public class PlatformMenuBizImpl implements PlatformMenuBiz {
 	 */
 	@Override
 	public void deletePlatformMenuByParentId(Integer parentId) {
-		// TODO Auto-generated method stub
-		platformMenuMapper.deletePlatformMenuByParentId(parentId);
+	     platformMenuDal.deletePlatformMenuByParentId(parentId);
 	}
 
 	@Override
 	public PlatformMenuPo getPlatformMenuMenuId(Integer menuId) {
-		// TODO Auto-generated method stub
-		return platformMenuMapper.getPlatformMenuMenuId(menuId);
+		return platformMenuDal.getPlatformMenuMenuId(menuId);
 	}
 
 	/***
@@ -102,62 +102,7 @@ public class PlatformMenuBizImpl implements PlatformMenuBiz {
 	@Override
 	public List<PlatformMenuPo> getMenuList(Integer bizId,
 			List<PlatformRolePo> roleList,Integer isSuper) {
-		List<PlatformMenuPo> list = null;
-		String roleIds = getRoleIds(roleList);
-		
-		//获取子系统的顶级菜单id
-		//Integer parentId = platformMenuMapper.getMenuParent(bizId).getMenuId();
-		//根菜单root
-		final Integer parentId = 0;
-		//菜单类型
-		final Integer menuType = 1;
-		//操作类型
-		final Integer optType = 0;
-		if(isSuper==1){
-			//list = platformMenuMapper.getAllMenuList(bizId,parentId);//一级菜单列表
-			list = platformMenuMapper.getAdminMenuList(bizId, menuType, parentId);//一级菜单列表
-		}else{
-			//list = platformMenuMapper.getMenuList(bizId,parentId,roleIds);//一级菜单列表
-			list = platformMenuMapper.getMenuListByRoleIds(bizId,roleIds,menuType,parentId);//一级菜单列表
-		}
-		if(list!=null){
-			for(int i=0;i<list.size();i++){
-				PlatformMenuPo parentMenu = list.get(i);
-				List<PlatformMenuPo> childMenuList = null;
-				//logger.info("parentId:"+ parentMenu.getMenuId());
-				if(isSuper==1){
-					//childMenuList= platformMenuMapper.getAllMenuList(bizId,parentMenu.getMenuId());//二级菜单列表
-					childMenuList= platformMenuMapper.getAdminMenuList(bizId,menuType,parentMenu.getMenuId());//二级菜单列表
-				}else{
-					//childMenuList= platformMenuMapper.getMenuList(bizId,parentMenu.getMenuId(),roleIds);//二级菜单列表
-					childMenuList= platformMenuMapper.getMenuListByRoleIds(bizId,roleIds,menuType,parentMenu.getMenuId());//二级菜单列表
-				}
-				
-				parentMenu.setChildMenuList(childMenuList);
-				
-				/*if(childMenuList!=null&&childMenuList.size()>0){
-					for(int j=0;j<childMenuList.size();j++){
-						PlatformMenuPo menuOpt = childMenuList.get(j);
-						List<PlatformMenuPo> optList =null;
-						if(isSuper==1){
-							//optList= platformMenuMapper.getAllMenuList(bizId,menuOpt.getMenuId());//操作列表
-							optList= platformMenuMapper.getAdminMenuList(bizId,optType,menuOpt.getMenuId());//操作列表
-						}
-						else{
-							//optList= platformMenuMapper.getMenuList(bizId,menuOpt.getMenuId(),roleIds);//操作列表
-							optList= platformMenuMapper.getMenuListByRoleIds(bizId,roleIds,optType,menuOpt.getMenuId());//操作列表
-						}
-						if(optList!=null&&optList.size()>=1){
-							menuOpt.setChildMenuList(optList);
-							childMenuList.remove(j);
-							childMenuList.add(j, menuOpt);
-						}
-						menuOpt.setChildMenuList(optList);
-					}
-				}*/
-			}
-		}
-		return list;
+		return platformMenuDal.getMenuList(bizId, roleList, isSuper);
 	}
 
 	private String getRoleIds(List<PlatformRolePo> roleList) {
@@ -185,82 +130,35 @@ public class PlatformMenuBizImpl implements PlatformMenuBiz {
 	@Override
 	public MenuOptVo getOptMaps(int bizId,
 			List<PlatformRolePo> roleList, Integer isSuper) {
-		MenuOptVo optVo = new MenuOptVo();
-		//菜单类型
-		final Integer menuType = 1;
-		//操作类型
-		final Integer optType = 0;
-		List<PlatformMenuPo> menuList = null;
-		List<PlatformMenuPo> optList = null;
-		if(isSuper==1){
-			menuList = platformMenuMapper.getAdminMenuList(bizId, menuType, null);
-			optList = platformMenuMapper.getAdminMenuList(bizId, optType, null);
-		}else{
-			String roleIds = getRoleIds(roleList);
-			menuList = platformMenuMapper.getMenuListByRoleIds(bizId,roleIds,menuType,null);
-			optList = platformMenuMapper.getMenuListByRoleIds(bizId,roleIds,optType,null);
-		}
-		//菜单code为key，菜单操作为value
-		Map<String, Map<String,Boolean>> menuOptMap = new HashMap<String,Map<String,Boolean>>();
-		//记录所有的操作权限
-		Map<String,Boolean> optMap = new HashMap<String,Boolean>();
-		//菜单的id为key，code为value
-		Map<Integer,String> menuIdCodeMap = new HashMap<Integer,String>();
-		if(menuList!=null&&menuList.size()>0){
-			for(PlatformMenuPo menu : menuList){
-				menuIdCodeMap.put(menu.getMenuId(), menu.getCode());
-				Map<String,Boolean> map = new HashMap<String,Boolean>();
-				menuOptMap.put(menu.getCode(), map);
-			}
-		}
-		if(optList!=null&&optList.size()>0){
-			for(PlatformMenuPo opt : optList){
-				if(menuIdCodeMap.containsKey(opt.getParentId())){
-					String parentCode = menuIdCodeMap.get(opt.getParentId());
-					Map<String,Boolean> map = menuOptMap.get(parentCode);
-					map.put(opt.getCode(), true);
-					
-					optMap.put(parentCode+"_"+opt.getCode(), true);
-				}
-			}
-		}
-		optVo.setMenuOptMap(menuOptMap);
-		optVo.setOptMap(optMap);
-		return optVo;
+		return platformMenuDal.getOptMaps(bizId, roleList, isSuper);
 	}
 	
 	
 	
 	@Override
 	public List<PlatformMenuPo> getPlatformMenuJosnList(int sysId) {
-		return platformMenuMapper.getPlatformMenuJosnList(sysId);
+		return platformMenuDal.getPlatformMenuJosnList(sysId);
 	}
 
 	@Override
 	public List<PlatformMenuPo> getMenuList(int parentMenuId, String menuName,
 			int exceptMenuId) {
-		return platformMenuMapper.getMenuListExceptMenuId(parentMenuId, menuName, exceptMenuId);
+		return platformMenuDal.getMenuList(parentMenuId, menuName, exceptMenuId);
 	}
 
 	@Override
 	public List<PlatformMenuPo> getAllMenuList(Integer sysId, Integer parentId) {
-		return platformMenuMapper.getAllMenuList(sysId, parentId);
+		return platformMenuDal.getAllMenuList(sysId, parentId);
 	}
 
 	@Override
 	public List<PlatformMenuPo> getMenuListByBizId(Integer bizId, Integer parentId) {
-		return  platformMenuMapper.getMenuListByBizId(bizId, parentId);
+		return platformMenuDal.getMenuListByBizId(bizId, parentId);
 	}
 
 	@Override
 	public void addPlatformMenuAndBizLink(Integer bizId,String menuIds) {
-		String[] menuIDs = menuIds.split(",");
-		PlatformMenuPo po=new PlatformMenuPo();
-		po.setBizId(bizId);
-		for (String menuId : menuIDs) {
-			po.setMenuId(Integer.parseInt(menuId));
-			platformMenuMapper.addPlatformMenuAndBizLink(po);
-		}
+		 platformMenuDal.addPlatformMenuAndBizLink(bizId, menuIds);
 	}
 
 	/*@Override
@@ -271,8 +169,7 @@ public class PlatformMenuBizImpl implements PlatformMenuBiz {
 
 	@Override
 	public void deleteSysMenuByBizId(Integer bizId) {
-		platformMenuMapper.deleteSysMenuByBizId(bizId);
-		
+		platformMenuDal.deleteSysMenuByBizId(bizId);
 	}
 
 }

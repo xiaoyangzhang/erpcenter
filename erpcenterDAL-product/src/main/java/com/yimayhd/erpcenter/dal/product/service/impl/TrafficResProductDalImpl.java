@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yimayhd.erpcenter.dal.product.dao.TrafficResProductMapper;
+import com.yimayhd.erpcenter.dal.product.mapper.TrafficResProductMapper;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
 import com.yimayhd.erpcenter.dal.product.service.TrafficResProductDal;
 

@@ -36,6 +36,7 @@
     <module>erpcenterFacade-basic</module>
     <module>erpcenterDAL-sys-client</module>
     <module>erpcenter-common</module>
+    <module>erpcenterFacade-common</module>
 	</modules>
 
 	<properties>
@@ -305,11 +306,7 @@
 				<artifactId>tomcat-jdbc</artifactId>
 				<version>7.0.50</version>
 			</dependency>
-			<dependency>
-				<groupId>com.alibaba</groupId>
-				<artifactId>fastjson</artifactId>
-				<version>1.2.4</version>
-			</dependency>
+			
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
