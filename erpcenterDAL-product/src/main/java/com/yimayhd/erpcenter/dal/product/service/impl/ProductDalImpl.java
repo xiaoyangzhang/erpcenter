@@ -82,4 +82,12 @@ public class ProductDalImpl implements ProductDal{
 		return null;
 	}
 
+
+	@Override
+	public ProductInfo findProductInfoById(Integer id) {
+		
+		//return infoMapper.selectByPrimaryKey(id);
+		return null;
+	}
+
 }

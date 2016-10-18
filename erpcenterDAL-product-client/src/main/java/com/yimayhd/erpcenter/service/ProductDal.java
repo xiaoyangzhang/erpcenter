@@ -50,4 +50,11 @@ public interface ProductDal {
 	 * @return
 	 */
 	List<ProductRoute> findProductRouteByProductId(Integer productId);
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	ProductInfo findProductInfoById(Integer id);
 }
