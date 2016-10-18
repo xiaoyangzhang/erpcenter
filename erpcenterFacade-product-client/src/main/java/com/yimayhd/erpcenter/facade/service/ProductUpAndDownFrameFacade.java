@@ -1,8 +1,10 @@
 package com.yimayhd.erpcenter.facade.service;
 
+import com.yimayhd.erpcenter.facade.query.DetailDTO;
 import com.yimayhd.erpcenter.facade.query.ToListStateDTO;
 import com.yimayhd.erpcenter.facade.query.ToSearchListStateDTO;
 import com.yimayhd.erpcenter.facade.query.UpStateDTO;
+import com.yimayhd.erpcenter.facade.result.DetailResult;
 import com.yimayhd.erpcenter.facade.result.ToListStateResult;
 import com.yimayhd.erpcenter.facade.result.UpStateResult;
 
@@ -38,4 +40,12 @@ public interface ProductUpAndDownFrameFacade {
      * @return
      */
     public UpStateResult upState(UpStateDTO upStateDTO);
+
+    /**
+     * 产品详细
+     *
+     * @param detailDTO
+     * @return
+     */
+    public DetailResult detail(DetailDTO detailDTO);
 }
