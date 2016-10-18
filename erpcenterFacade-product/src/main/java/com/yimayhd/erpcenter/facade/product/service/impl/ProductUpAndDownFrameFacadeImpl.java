@@ -33,7 +33,9 @@ public class ProductUpAndDownFrameFacadeImpl implements ProductUpAndDownFrameFac
     @Override
     public ToListStateResult toListState(ToListStateDTO toListStateDTO) {
         ToListStateResult toListStateResult = new ToListStateResult();
-        List<DicInfo> dicInfoList = dicBiz.getListByTypeCode(BasicConstants.CPXL_PP,toListStateDTO.getBizId());
+        toListStateResult.setBrandList(dicBiz.getListByTypeCode(BasicConstants.CPXL_PP,toListStateDTO.getBizId()));
+        toListStateResult.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(toListStateDTO.getBizId()));
+        toListStateResult.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(toListStateDTO.getBizId()));
         return toListStateResult;
     }
 }
