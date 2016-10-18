@@ -1,4 +1,4 @@
-package com.yihg.product.impl;
+package com.yimayhd.erpcenter.dal.product.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,20 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.product.api.TrafficResService;
-import com.yihg.product.dao.TrafficResLineMapper;
-import com.yihg.product.dao.TrafficResMapper;
-import com.yihg.product.dao.TrafficResProductMapper;
-import com.yihg.product.dao.TrafficResStocklogMapper;
-import com.yihg.product.po.TrafficRes;
-import com.yihg.product.po.TrafficResLine;
-import com.yihg.product.po.TrafficResProduct;
-import com.yihg.product.po.TrafficResStocklog;
-import com.yihg.product.vo.TrafficResVo;
+import com.yimayhd.erpcenter.dal.product.dao.TrafficResLineMapper;
+import com.yimayhd.erpcenter.dal.product.dao.TrafficResMapper;
+import com.yimayhd.erpcenter.dal.product.dao.TrafficResProductMapper;
+import com.yimayhd.erpcenter.dal.product.dao.TrafficResStocklogMapper;
+import com.yimayhd.erpcenter.dal.product.po.TrafficRes;
+import com.yimayhd.erpcenter.dal.product.po.TrafficResLine;
+import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
+import com.yimayhd.erpcenter.dal.product.po.TrafficResStocklog;
+import com.yimayhd.erpcenter.dal.product.service.TrafficResDal;
+import com.yimayhd.erpcenter.dal.product.vo.TrafficResVo;
 
 
 
-public class TrafficResServiceImpl implements TrafficResService{
+public class TrafficResDalImpl implements TrafficResDal{
 	
 	@Autowired
 	private TrafficResMapper trafficResMapper;

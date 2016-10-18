@@ -2,6 +2,8 @@ package com.yimayhd.erpcenter.dal.product.dao;
 
 import java.util.List;
 
+import com.yimayhd.erpcenter.dal.product.po.TrafficResStocklog;
+
 
 public interface TrafficResStocklogMapper {
     /**

@@ -6,7 +6,7 @@ import java.util.List;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
 
 
-public interface ProductStockService {
+public interface ProductStockDal {
 	List<ProductStock> getStocksByProductIdAndDateSpan(Integer productId,Date startDate,Date endDate);
 
 	void saveStock(Integer productId,List<ProductStock> stockList,Date startDate,Date endDate);

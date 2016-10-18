@@ -1,18 +1,19 @@
-package com.yihg.product.impl;
+package com.yimayhd.erpcenter.dal.product.service.impl;
 
-import com.yihg.product.api.ProductTagService;
-import com.yihg.product.dao.ProductTagMapper;
-import com.yihg.product.po.ProductTag;
-import com.yihg.product.vo.ProductTagVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.yimayhd.erpcenter.dal.product.dao.ProductTagMapper;
+import com.yimayhd.erpcenter.dal.product.po.ProductTag;
+import com.yimayhd.erpcenter.dal.product.service.ProductTagDal;
+import com.yimayhd.erpcenter.dal.product.vo.ProductTagVo;
 
 import java.util.List;
 
 /**
  * Created by ZhengZiyu on 2015/7/6.
  */
-public class ProductTagServiceImpl implements ProductTagService {
+public class ProductTagDalImpl implements ProductTagDal {
 
     @Autowired
     private ProductTagMapper productTagMapper;

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.product.po.TrafficRes;
 
 public interface TrafficResMapper {
     /**

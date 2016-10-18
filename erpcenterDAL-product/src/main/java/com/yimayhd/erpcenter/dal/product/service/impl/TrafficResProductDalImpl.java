@@ -1,4 +1,4 @@
-package com.yihg.product.impl;
+package com.yimayhd.erpcenter.dal.product.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -9,11 +9,11 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.product.api.TrafficResProductService;
-import com.yihg.product.dao.TrafficResProductMapper;
-import com.yihg.product.po.TrafficResProduct;
+import com.yimayhd.erpcenter.dal.product.dao.TrafficResProductMapper;
+import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
+import com.yimayhd.erpcenter.dal.product.service.TrafficResProductDal;
 
-public class TrafficResProductServiceImpl implements TrafficResProductService{
+public class TrafficResProductDalImpl implements TrafficResProductDal{
 	
 	@Autowired
 	private TrafficResProductMapper trafficResProductMapper;

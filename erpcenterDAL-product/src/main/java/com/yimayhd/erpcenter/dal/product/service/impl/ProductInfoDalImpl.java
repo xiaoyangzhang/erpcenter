@@ -1,4 +1,4 @@
-package com.yihg.product.impl;
+package com.yimayhd.erpcenter.dal.product.service.impl;
 
 import java.text.MessageFormat;
 import java.text.ParseException;
@@ -17,32 +17,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.util.TypeUtils;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.product.api.ProductInfoService;
-import com.yihg.product.dao.ProductAttachmentMapper;
-import com.yihg.product.dao.ProductContactMapper;
-import com.yihg.product.dao.ProductGroupPriceMapper;
-import com.yihg.product.dao.ProductInfoMapper;
-import com.yihg.product.dao.ProductRemarkMapper;
-import com.yihg.product.dao.ProductRightMapper;
-import com.yihg.product.dao.ProductRouteMapper;
-import com.yihg.product.po.PriceView;
-import com.yihg.product.po.ProductAttachment;
-import com.yihg.product.po.ProductContact;
-import com.yihg.product.po.ProductInfo;
-import com.yihg.product.po.ProductRemark;
-import com.yihg.product.po.ProductRight;
-import com.yihg.product.po.ProductRoute;
-import com.yihg.product.po.ProductSales;
-import com.yihg.product.po.ProductStock;
-import com.yihg.product.vo.ProductInfoVo;
-import com.yihg.product.vo.StockStaticCondition;
-import com.yihg.product.vo.StockStaticsResultItemVo;
-import com.yihg.product.vo.StockStaticsResultVOPlus;
-import com.yihg.product.vo.StockStaticsResultVo;
+import com.yimayhd.erpcenter.dal.product.dao.ProductAttachmentMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductContactMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductGroupPriceMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductInfoMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductRemarkMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductRightMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductRouteMapper;
+import com.yimayhd.erpcenter.dal.product.po.PriceView;
+import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
+import com.yimayhd.erpcenter.dal.product.po.ProductContact;
+import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
+import com.yimayhd.erpcenter.dal.product.po.ProductSales;
+import com.yimayhd.erpcenter.dal.product.po.ProductStock;
+import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
+import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
+import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
+import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultItemVo;
+import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultVOPlus;
+import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultVo;
 
 import org.springframework.transaction.annotation.Transactional;
 
-public class ProductInfoServiceImpl implements ProductInfoService{
+public class ProductInfoDalImpl implements ProductInfoDal{
 
 	@Autowired
 	private ProductInfoMapper infoMapper;

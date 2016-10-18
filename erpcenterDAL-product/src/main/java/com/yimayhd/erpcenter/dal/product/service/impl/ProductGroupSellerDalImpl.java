@@ -5,14 +5,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.product.api.ProductGroupSellerService;
-import com.yihg.product.dao.ProductGroupSellerMapper;
-import com.yihg.product.po.ProductGroupSeller;
+import com.yimayhd.erpcenter.dal.product.dao.ProductGroupSellerMapper;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupSeller;
+import com.yimayhd.erpcenter.dal.product.service.ProductGroupSellerDal;
 
-public class ProductGroupSellerServiceImpl implements ProductGroupSellerService {
+public class ProductGroupSellerDalImpl implements ProductGroupSellerDal {
 	@Autowired
 	private ProductGroupSellerMapper productGroupSellerMapper;
 	

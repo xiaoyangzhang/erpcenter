@@ -1,4 +1,4 @@
-package com.yihg.product.impl;
+package com.yimayhd.erpcenter.dal.product.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -6,19 +6,18 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.product.api.ProductGroupService;
-import com.yihg.product.dao.ProductGroupMapper;
-import com.yihg.product.dao.ProductGroupPriceMapper;
-import com.yihg.product.dao.ProductGroupSellerMapper;
-import com.yihg.product.dao.ProductGroupSupplierMapper;
-import com.yihg.product.po.ProductGroup;
-import com.yihg.product.po.ProductGroupPrice;
-import com.yihg.product.po.ProductGroupSupplier;
-import com.yihg.product.vo.ProductGroupVo;
+import com.yimayhd.erpcenter.dal.product.dao.ProductGroupMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductGroupPriceMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductGroupSellerMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductGroupSupplierMapper;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice;
+import com.yimayhd.erpcenter.dal.product.service.ProductGroupDal;
+import com.yimayhd.erpcenter.dal.product.vo.ProductGroupVo;
 
 import org.springframework.transaction.annotation.Transactional;
 
-public class ProductGroupServiceImpl implements ProductGroupService {
+public class ProductGroupDalImpl implements ProductGroupDal {
 
 	@Autowired
 	private ProductGroupMapper productGroupMapper;

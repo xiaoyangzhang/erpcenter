@@ -1,4 +1,4 @@
-package com.yihg.product.impl;
+package com.yimayhd.erpcenter.dal.product.service.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -7,11 +7,13 @@ import javax.annotation.Resource;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yihg.product.api.ProductStockService;
-import com.yihg.product.dao.ProductStockMapper;
-import com.yihg.product.po.ProductStock;
+import com.yimayhd.erpcenter.dal.product.dao.ProductStockMapper;
+import com.yimayhd.erpcenter.dal.product.po.ProductStock;
+import com.yimayhd.erpcenter.dal.product.service.ProductStockDal;
 
-public class ProductStockServiceImpl implements ProductStockService {
+
+public class ProductStockDalImpl implements ProductStockDal {
+
 
 	@Resource
 	private ProductStockMapper stockMapper;
@@ -86,5 +88,6 @@ public class ProductStockServiceImpl implements ProductStockService {
 	public int stockCntAddAndReserveCntReduce(Integer productId, Date itemDate,int count) {
 		return stockMapper.updateReserveCount(productId, itemDate, count,"Z");
 	}
+
 
 }

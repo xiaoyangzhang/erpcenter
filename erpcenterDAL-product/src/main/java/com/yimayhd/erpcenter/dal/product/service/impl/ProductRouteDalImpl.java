@@ -1,24 +1,25 @@
-package com.yihg.product.impl;
+package com.yimayhd.erpcenter.dal.product.service.impl;
 
-import com.yihg.product.api.ProductRemarkService;
-import com.yihg.product.api.ProductRouteService;
-import com.yihg.product.dao.ProductAttachmentMapper;
-import com.yihg.product.dao.ProductInfoMapper;
-import com.yihg.product.dao.ProductRemarkMapper;
-import com.yihg.product.dao.ProductRouteMapper;
-import com.yihg.product.dao.ProductRouteSupplierMapper;
-import com.yihg.product.dao.ProductRouteTrafficMapper;
-import com.yihg.product.po.ProductAttachment;
-import com.yihg.product.po.ProductInfo;
-import com.yihg.product.po.ProductRemark;
-import com.yihg.product.po.ProductRoute;
-import com.yihg.product.po.ProductRouteSupplier;
-import com.yihg.product.po.ProductRouteTraffic;
-import com.yihg.product.vo.ProductRouteDayVo;
-import com.yihg.product.vo.ProductRouteVo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.yimayhd.erpcenter.dal.product.dao.ProductAttachmentMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductInfoMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductRemarkMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductRouteMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductRouteSupplierMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductRouteTrafficMapper;
+import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
+import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
+import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
+import com.yimayhd.erpcenter.dal.product.po.ProductRouteSupplier;
+import com.yimayhd.erpcenter.dal.product.po.ProductRouteTraffic;
+import com.yimayhd.erpcenter.dal.product.service.ProductRemarkDal;
+import com.yimayhd.erpcenter.dal.product.service.ProductRouteDal;
+import com.yimayhd.erpcenter.dal.product.vo.ProductRouteDayVo;
+import com.yimayhd.erpcenter.dal.product.vo.ProductRouteVo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.List;
 /**
  * Created by ZhengZiyu on 2015/7/7.
  */
-public class ProductRouteServiceImpl implements ProductRouteService{
+public class ProductRouteDalImpl implements ProductRouteDal{
 
     @Autowired
     private ProductRouteMapper productRouteMapper;
@@ -45,7 +46,7 @@ public class ProductRouteServiceImpl implements ProductRouteService{
     @Autowired
     private ProductRemarkMapper remarkMapper;
     @Autowired
-    private ProductRemarkService remarkService;
+    private ProductRemarkDal remarkService;
     @Transactional
     @Override
     public boolean saveProductRoute(ProductRouteVo productRouteVo) {

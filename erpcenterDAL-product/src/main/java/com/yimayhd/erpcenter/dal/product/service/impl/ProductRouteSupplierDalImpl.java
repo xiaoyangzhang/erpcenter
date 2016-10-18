@@ -1,16 +1,17 @@
-package com.yihg.product.impl;
+package com.yimayhd.erpcenter.dal.product.service.impl;
 
-import com.yihg.product.api.ProductRouteSupplierService;
-import com.yihg.product.dao.ProductRouteSupplierMapper;
-import com.yihg.product.po.ProductRouteSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.yimayhd.erpcenter.dal.product.dao.ProductRouteSupplierMapper;
+import com.yimayhd.erpcenter.dal.product.po.ProductRouteSupplier;
+import com.yimayhd.erpcenter.dal.product.service.ProductRouteSupplierDal;
 
 import java.util.List;
 
 /**
  * Created by ZhengZiyu on 2015/7/8.
  */
-public class ProductRouteSupplierServiceImpl implements ProductRouteSupplierService {
+public class ProductRouteSupplierDalImpl implements ProductRouteSupplierDal {
 
     @Autowired
     private ProductRouteSupplierMapper productRouteSupplierMapper;

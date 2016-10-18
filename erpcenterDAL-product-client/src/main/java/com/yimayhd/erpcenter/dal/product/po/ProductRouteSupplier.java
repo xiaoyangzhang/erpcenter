@@ -1,6 +1,5 @@
 package com.yimayhd.erpcenter.dal.product.po;
 
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;

@@ -1,18 +1,16 @@
-package com.yihg.product.api;
+package com.yimayhd.erpcenter.dal.product.service;
 
 import java.util.List;
 import java.util.Map;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.product.po.ProductInfo;
-import com.yihg.product.po.TrafficRes;
-import com.yihg.product.po.TrafficResLine;
-import com.yihg.product.po.TrafficResProduct;
-import com.yihg.product.po.TrafficResStocklog;
-import com.yihg.product.vo.ProductInfoVo;
-import com.yihg.product.vo.TrafficResVo;
+import com.yimayhd.erpcenter.dal.product.po.TrafficRes;
+import com.yimayhd.erpcenter.dal.product.po.TrafficResLine;
+import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
+import com.yimayhd.erpcenter.dal.product.po.TrafficResStocklog;
+import com.yimayhd.erpcenter.dal.product.vo.TrafficResVo;
 
-public interface TrafficResService {
+public interface TrafficResDal {
 	
 	int saveTrafficRes(TrafficResVo trafficResVo);
 	

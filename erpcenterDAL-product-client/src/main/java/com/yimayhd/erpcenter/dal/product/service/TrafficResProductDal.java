@@ -5,6 +5,8 @@ import java.util.Set;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
+
 
 public interface TrafficResProductDal {
 	
