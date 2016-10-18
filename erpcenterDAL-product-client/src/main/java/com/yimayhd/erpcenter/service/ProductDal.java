@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.biz.product.client.service;
+package com.yimayhd.erpcenter.service;
 
 import java.util.List;
 import java.util.Map;
@@ -9,24 +9,27 @@ import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 
 
+
 /**
  * 
-* @ClassName: ProductBiz 
+* @ClassName: ProductService 
 * @Description: 
 * @author wangjun
-* @date 2016年10月17日 下午4:26:09 
+* @date 2016年10月17日 下午6:32:01 
 *
  */
-public interface ProductBiz {
-	/**
-	 * 保存产品基本信息
-	 * @param productInfoVo
-	 * @param bizCode
-	 * @param brandCode
-	 * @return
-	 */
+public interface ProductDal {
 	int saveBasicInfo(ProductInfoVo productInfoVo,String bizCode,String brandCode);
-
+	/**
+	 * 
+	* created by zhangxiaoyang
+	* @date 2016年10月18日
+	* @Description:产品列表
+	* @param 
+	* @return List<ProductInfo>
+	* @throws
+	 */
+	List<ProductInfo> selectProductListPage(PageBean pageBean,Map<String, Object> parameters);
 	/**
 	 * 分页查询产品列表
 	 * @param pageBean
@@ -34,27 +37,17 @@ public interface ProductBiz {
 	 * @return
 	 */
 	PageBean<ProductInfo> findProductInfos(PageBean<ProductInfo> pageBean,Map parameters);
-
 	/**
 	 * 修改产品
 	 * @param productInfo
 	 * @return
 	 */
 	int updateProductInfo(ProductInfo productInfo);
+
 	/**
-	 * 查询 产品-路线
-	 * @param productId
+	 *
+	 * @param productInfo
 	 * @return
 	 */
 	List<ProductRoute> findProductRouteByProductId(Integer productId);
-	/**
-	 * 
-	* created by zhangxiaoyang
-	* @date 2016年10月18日
-	* @Description:获取产品列表
-	* @param 
-	* @return List<ProductInfo>
-	* @throws
-	 */
-	List<ProductInfo> selectProductListPage(PageBean pageBean,Map<String, Object> parameters);
 }
