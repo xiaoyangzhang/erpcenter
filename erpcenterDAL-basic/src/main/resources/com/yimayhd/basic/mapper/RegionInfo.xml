@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yimayhd.erpcenter.dal.basic.dao.RegionMapper">
+
+	<resultMap type="com.yimayhd.erpcenter.dal.basic.po.RegionInfo" id="dicRegion">
+		<id property="id" column="id" jdbcType="INTEGER" />
+		<result property="code" column="code" jdbcType="VARCHAR" />
+		<result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="pid" column="pid" jdbcType="INTEGER" />
+		<result property="orderid" column="order_no" jdbcType="INTEGER" />
+		<result property="status" column="status" jdbcType="INTEGER" />
+		<result property="level" column="level" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="regionColumns">
+		id,code,name,pid,order_no,status,level
+	</sql>
+	<select id="getRegionById" resultMap="dicRegion">
+        SELECT <include refid="regionColumns"/>
+        FROM sys_region WHERE pid=#{pid} and status=1 
+        ORDER BY order_no asc
+    </select>
+    
+    <select id="getAllProvince" resultMap="dicRegion">
+        SELECT  <include refid="regionColumns"/>
+        FROM sys_region where pid=0 order by order_no asc
+    </select>
+    <select id="getById" resultMap="dicRegion">
+        SELECT  <include refid="regionColumns"/> 
+        FROM sys_region where id=#{id}
+    </select>
+    
+    <update id="update">
+    	UPDATE sys_region
+    	<set>
+    	<if test="name != null" > name = #{name}, </if>
+    	<if test="orderid != null" > order_no = #{orderid}, </if>
+    	<if test="status != null" > status = #{status}, </if>
+    	</set>
+    	WHERE id = #{id}
+    </update>
+    
+    <select id="isNode" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_region WHERE pid = #{id} and status =1
+    </select>
+    <insert id="add">
+		INSERT INTO sys_region
+            (`id`,`name`,`pid`,`order_no`,`status`,`level`)
+            VALUES (#{id},#{name},#{pid},#{orderid},#{status},#{level});
+	</insert>
+	<select id="getMaxIdByLevel" resultType="java.lang.Integer">
+        SELECT MAX(id)
+        FROM sys_region
+        WHERE LEVEL=#{level}        
+    </select>
+</mapper>

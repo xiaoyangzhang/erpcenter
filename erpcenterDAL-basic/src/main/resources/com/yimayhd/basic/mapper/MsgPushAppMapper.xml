@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yimayhd.erpcenter.dal.basic.dao.MsgPushAppMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.basic.po.MsgPushApp" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="biz_id" property="bizId" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="creator_type" property="creatorType" jdbcType="TINYINT" />
+    <result column="creator_id" property="creatorId" jdbcType="INTEGER" />
+    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, biz_id, group_id, content, create_time, creator_type, creator_id, creator_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from msg_push_app
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from msg_push_app
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.basic.po.MsgPushApp" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into msg_push_app (biz_id, group_id, content, 
+      create_time, creator_type, creator_id, 
+      creator_name)
+    values (#{bizId,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{creatorType,jdbcType=TINYINT}, #{creatorId,jdbcType=INTEGER}, 
+      #{creatorName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.basic.po.MsgPushApp" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into msg_push_app
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bizId != null" >
+        biz_id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="creatorType != null" >
+        creator_type,
+      </if>
+      <if test="creatorId != null" >
+        creator_id,
+      </if>
+      <if test="creatorName != null" >
+        creator_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bizId != null" >
+        #{bizId,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorType != null" >
+        #{creatorType,jdbcType=TINYINT},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=INTEGER},
+      </if>
+      <if test="creatorName != null" >
+        #{creatorName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.basic.po.MsgPushApp" >
+    update msg_push_app
+    <set >
+      <if test="bizId != null" >
+        biz_id = #{bizId,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatorType != null" >
+        creator_type = #{creatorType,jdbcType=TINYINT},
+      </if>
+      <if test="creatorId != null" >
+        creator_id = #{creatorId,jdbcType=INTEGER},
+      </if>
+      <if test="creatorName != null" >
+        creator_name = #{creatorName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.basic.po.MsgPushApp" >
+    update msg_push_app
+    set biz_id = #{bizId,jdbcType=INTEGER},
+      group_id = #{groupId,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      creator_type = #{creatorType,jdbcType=TINYINT},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creator_name = #{creatorName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectMessageByUserId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from msg_push_app
+    where creator_id = #{creatorId,jdbcType=INTEGER}
+    <if test="createTime != null" >
+        <![CDATA[
+          AND (UNIX_TIMESTAMP(create_time)*1000) < #{createTime}
+          ]]>
+    </if>
+    ORDER BY create_time desc
+    limit 10
+  </select>
+
+</mapper>
