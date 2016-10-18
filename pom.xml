@@ -53,6 +53,8 @@
 		<fhtd.version>0.1.0-SNAPSHOT</fhtd.version>
 		<ledis.version>1.0</ledis.version>
 		<fastjson.version>1.2.4</fastjson.version>
+		<redis.version>2.4.2</redis.version>
+		<yihg-redis.version>1.0.0-SNAPSHOT</yihg-redis.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -62,8 +64,18 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
+    			<groupId>com.yimayhd.erpcenter</groupId>
+    			<artifactId>erpcenterBiz-sys-client</artifactId>
+    			<version>0.0.6-SNAPSHOT</version>
+    		</dependency>
+			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenterDAL-product-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterDAL-sys-client</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -99,7 +111,17 @@
 				<version>3.10-FINAL</version>
 				<type>jar</type>
 			</dependency>
+			<dependency>
+			   <groupId>redis.clients</groupId>
+			   <artifactId>jedis</artifactId>
+			   <version>${redis.version}</version>
+			</dependency>
 			
+			<dependency>
+			  <groupId>com.yihg</groupId>
+			  <artifactId>yihg-architect-redis</artifactId>
+			  <version>${yihg-redis.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.yimayhd.fhtd</groupId>
 				<artifactId>fhtd</artifactId>

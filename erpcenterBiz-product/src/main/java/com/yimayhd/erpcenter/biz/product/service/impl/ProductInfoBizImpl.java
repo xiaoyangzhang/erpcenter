@@ -2,47 +2,23 @@ package com.yimayhd.erpcenter.biz.product.service.impl;
 
 import java.text.MessageFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.alibaba.fastjson.util.TypeUtils;
-import com.yihg.mybatis.utility.PageBean;
-import com.yihg.product.api.ProductInfoService;
-import com.yihg.product.dao.ProductAttachmentMapper;
-import com.yihg.product.dao.ProductContactMapper;
-import com.yihg.product.dao.ProductGroupPriceMapper;
-import com.yihg.product.dao.ProductInfoMapper;
-import com.yihg.product.dao.ProductRemarkMapper;
-import com.yihg.product.dao.ProductRightMapper;
-import com.yihg.product.dao.ProductRouteMapper;
-import com.yihg.product.po.PriceView;
-import com.yihg.product.po.ProductAttachment;
-import com.yihg.product.po.ProductContact;
-import com.yihg.product.po.ProductInfo;
-import com.yihg.product.po.ProductRemark;
-import com.yihg.product.po.ProductRight;
-import com.yihg.product.po.ProductRoute;
-import com.yihg.product.po.ProductSales;
-import com.yihg.product.po.ProductStock;
-import com.yihg.product.vo.ProductInfoVo;
-import com.yihg.product.vo.StockStaticCondition;
-import com.yihg.product.vo.StockStaticsResultItemVo;
-import com.yihg.product.vo.StockStaticsResultVOPlus;
-import com.yihg.product.vo.StockStaticsResultVo;
-import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
-import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
-
 import org.springframework.transaction.annotation.Transactional;
+
+import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
+import com.yimayhd.erpcenter.dal.product.po.PriceView;
+import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductRight;
+import com.yimayhd.erpcenter.dal.product.po.ProductSales;
+import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
+import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
+import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
 
 public class ProductInfoBizImpl implements ProductInfoBiz{
 
@@ -51,66 +27,36 @@ public class ProductInfoBizImpl implements ProductInfoBiz{
     
 	@Override
 	public int insertSelective(ProductInfo record) {
-		infoMapper.insertSelective(record);
-		return record.getId();
+		return productInfoDal.insertSelective(record);
 	}
 
-//	@Override
-//	public PageBean<ProductInfo> findProductInfos(
-//			PageBean<ProductInfo> pageBean, Integer bizId,String name, String productName,Integer orgId) {
-//		 List<ProductInfo> list = infoMapper.selectProductInfoListPage(pageBean, bizId,name, productName,orgId);
-//		 pageBean.setResult(list);
-//		 return pageBean;
-//	}
 	@Override
 	public PageBean<ProductInfo> findProductInfos(
 			PageBean<ProductInfo> pageBean, Map parameters) {
-		List<ProductInfo> list = infoMapper.selectProductInfoListPage(pageBean, parameters);
-		pageBean.setResult(list);
-		return pageBean;
+		return productInfoDal.findProductInfos(pageBean, parameters);
 	}
 	
 	@Override
 	public PageBean<ProductInfo> findProductInfos2(
 			PageBean<ProductInfo> pageBean, Map parameters) {
-		List<ProductInfo> list = infoMapper.selectProductInfoListPage2(pageBean, parameters);
-		pageBean.setResult(list);
-		return pageBean;
+		return productInfoDal.findProductInfos2(pageBean, parameters);
 	}
 	
 	@Override
 	public PageBean<ProductSales> findProductSales(
 			PageBean<ProductSales> pageBean, Integer bizId,Integer orgId) {
-		 List<ProductSales> list = infoMapper.selectProductSalesListPage(pageBean, bizId,orgId);
-		 if(list!=null && list.size()>0){
-			 /*Date date = com.yihg.images.util.DateUtils.formatDate(new Date(), com.yihg.images.util.DateUtils.FORMAT_SHORT);
-			 for (ProductSales productSales : list) {
-				 /*List<String> dates = productGroupPriceMapper.selectDatesByProductId(productSales.getId(), productSales.getGroupDate());
-				 productSales.setGroupDates(listToString(dates,'、'));
-				 
-				 List<Map> priceList = productGroupPriceMapper.selectMinPriceByProductIdAndDate(productSales.getId(), date);
-				 if(priceList!=null && priceList.size()>0){
-					 productSales.setBprice(TypeUtils.castToString(priceList.get(0).get("price_settlement_adult")));
-					 productSales.setEprice(TypeUtils.castToString(priceList.get(0).get("price_settlement_child")));
-				 }		
-			}*/
-		 }
-		 pageBean.setResult(list);
-		return pageBean;
+		return productInfoDal.findProductSales(pageBean, bizId, orgId);
 	}
 
 	@Override
 	public PageBean<ProductSales> findProductSalesPlus(
 			PageBean<ProductSales> pageBean, Integer bizId, Integer orgId) {
-		List<ProductSales> list = infoMapper.selectProductSalesPlusListPage(pageBean, bizId,orgId);
-		pageBean.setResult(list);
-		return pageBean;
+		return productInfoDal.findProductSalesPlus(pageBean, bizId, orgId);
 	}
 	
-	 public  String listToString(List list, char separator) {
-		 return StringUtils.join(list.toArray(),separator);   
-	}
-	
+//	public  String listToString(List list, char separator) {
+//		 return StringUtils.join(list.toArray(),separator);   
+//	}
 	
 	/**
 	 * 拼成这样： YMQCYM10001
@@ -127,345 +73,162 @@ public class ProductInfoBizImpl implements ProductInfoBiz{
 	@Transactional
 	@Override
 	public int saveProductInfo(ProductInfoVo productInfoVo,String bizCode,String brandCode) {
-		int i = 0;
-		
-		ProductInfo info = productInfoVo.getProductInfo();
-		List<ProductContact> productContacts = productInfoVo.getProductContacts();
-		List<ProductAttachment> productAttachments = productInfoVo.getProductAttachments();
-		List<ProductAttachment> attachments = productInfoVo.getAttachments();
-		if(null!=productInfoVo.getProductInfo().getId()){
-			
-			//修改
-			i= infoMapper.updateByPrimaryKeySelective(info);
-			//删除责任人
-			contactMapper.deleteByproductId(info.getId());
-			//删除图片
-			attachmentMapper.deleteByobjId(info.getId(),1);
-			attachmentMapper.deleteByobjId(info.getId(),2);
-		}else{
-			if ("".equals(info.getCode())){ //若为空，则由系统产生订单号
-				int count=infoMapper.getBizAndBrandCodeCount(productInfoVo.getProductInfo().getBizId(), productInfoVo.getProductInfo().getBrandId());
-				info.setCode(getProductCode(bizCode, brandCode, count));
-			}
-			info.setState((byte) 1);
-			info.setCreateTime(System.currentTimeMillis());
-			i=infoMapper.insertSelective(info);
-			
-			//新增时默认把当前人的数据权限加在上
-			productRightMapper.insertBatch(info.getId(), productInfoVo.getOrgIdSet());
-		}
-		//插入责任人
-		if(productContacts!=null&&!productContacts.isEmpty()){
-			for (ProductContact productContact : productContacts) {
-				if(StringUtils.isNotBlank(productContact.getName())
-						||StringUtils.isNotBlank(productContact.getMobile())
-						||StringUtils.isNotBlank(productContact.getFax())
-						||StringUtils.isNotBlank(productContact.getTel())){
-					productContact.setProductId(info.getId());
-					productContact.setCreateTime(System.currentTimeMillis());
-					contactMapper.insertSelective(productContact);
-				}
-			}
-		}
-		//插入图片
-		if(productAttachments!=null&&!productAttachments.isEmpty()){
-			for (ProductAttachment productAttachment : productAttachments) {
-				if(StringUtils.isNotBlank(productAttachment.getName())
-						||StringUtils.isNotBlank(productAttachment.getPath())){
-					productAttachment.setCreateTime(System.currentTimeMillis());
-					productAttachment.setObjId(info.getId());
-					productAttachment.setObjType((byte)1);
-					attachmentMapper.insertSelective(productAttachment);
-				}
-			}
-			}
-        //附件
-		if(attachments != null){
-			for(ProductAttachment attachment : attachments){
-				if(StringUtils.isNotBlank(attachment.getName())
-						||StringUtils.isNotBlank(attachment.getPath())){
-					attachment.setCreateTime(System.currentTimeMillis());
-					attachment.setObjId(info.getId());
-					attachment.setObjType((byte)1);
-					attachmentMapper.insertSelective(attachment);
-				}
-			}
-
-		}
-		return info.getId();
+		return productInfoDal.saveProductInfo(productInfoVo, bizCode, brandCode);
 	}
 
 	@Override
 	public ProductInfoVo findProductInfoVoById(Integer id) {
-		ProductInfoVo vo = new ProductInfoVo();
-		ProductInfo productInfo = infoMapper.selectByPrimaryKey(id);
-		List<ProductContact> productContacts = contactMapper.selectByConList(id);
-		List<ProductAttachment> productAttachments = attachmentMapper.selectImgByList(id, 1, 1);
-		List<ProductAttachment> attachments = attachmentMapper.selectImgByList(id, 1, 2);
-
-		vo.setProductInfo(productInfo);
-		vo.setProductContacts(productContacts);
-		vo.setProductAttachments(productAttachments);
-        if(attachments != null && !attachments.isEmpty()){
-            vo.setAttachments(attachments);
-        }
-		return vo;
+		return productInfoDal.findProductInfoVoById(id);
 	}
 
 	@Override
 	public int updateProductInfo(ProductInfo productInfo) {
-		
-		return infoMapper.updateByPrimaryKeySelective(productInfo);
+		return productInfoDal.updateProductInfo(productInfo);
 	}
 
 	@Override
 	public ProductInfo findProductInfoById(Integer id) {
-		
-		return infoMapper.selectByPrimaryKey(id);
+		return productInfoDal.findProductInfoById(id);
 	}
 	
 	@Override
 	public ProductInfo selectStockCount(Integer productId,String itemDate) {
-		
-		return infoMapper.selectStockCount(productId,itemDate);
+		return productInfoDal.selectStockCount(productId,itemDate);
 	}
 
     @Override
     public String getProductPriceState(Integer productId) {
-        List<Date> dates = productGroupPriceMapper.selectDateByProductId(productId);
-        List<Date> validDates = new ArrayList<Date>();
-        List<Date> invalidDates = new ArrayList<Date>();
-        for(Date date : dates){
-            if(date.getTime() > System.currentTimeMillis()){
-                validDates.add(date);
-            }else{
-                invalidDates.add(date);
-            }
-        }
-        if(validDates.isEmpty() && !invalidDates.isEmpty()){
-            return "已过期";
-        }else if(!validDates.isEmpty() && invalidDates.isEmpty()){
-            return "有效";
-        }else if(!validDates.isEmpty() && !invalidDates.isEmpty()){
-            return "部分有效";
-        }else{
-            return "无";
-        }
+    	return productInfoDal.getProductPriceState(productId);
     }
 
 	@Override
 	public List<PriceView> getPriceViewsByDate(Integer groupId, Date startDate,Date endDate) {		
-        return productGroupPriceMapper.selectPricesByGroupId(groupId, startDate, endDate);
+        return productInfoDal.getPriceViewsByDate(groupId, startDate, endDate);
 	}
 
 	@Override
 	public Map<String, Object> findProductInfos(Integer productId) {
-		Map<String, Object> map = new HashMap<String, Object>() ;
-		ProductInfo productInfo = infoMapper.selectByPrimaryKey(productId) ;
-		ProductRemark productRemark = remarkMapper.selectByProductId(productId) ;
-		List<ProductRoute> productRoutes = productRouteMapper.selectByProductId(productId) ;
-		map.put("productInfo", productInfo);
-		map.put("productRemark", productRemark);
-		map.put("productRoutes", productRoutes);
-		return map;
+		return productInfoDal.findProductInfos(productId);
 	}
 
 	public PageBean getStockStaticsList(StockStaticCondition condition){
-		PageBean pageBean = new PageBean();
-		pageBean.setPageSize(condition.getPageSize());
-		pageBean.setParameter(condition);
-		pageBean.setPage(condition.getPage());
-		List<StockStaticsResultVo> list = infoMapper.getProductBreifListPage(pageBean);
-		if(list!=null && list.size()>0){
-			//condition.setToGroupDate(DateUtils.addDays(condition.getGroupDate(), 7));
-			for(StockStaticsResultVo result : list){
-				List<StockStaticsResultItemVo> itemList = productGroupPriceMapper.getStockStatics(result.getProductId(), DateUtils.addDays(condition.getGroupDate(),-1), DateUtils.addDays(condition.getToGroupDate(),1));
-				List<StockStaticsResultItemVo> voList = new ArrayList<StockStaticsResultItemVo>();
-				if(itemList!=null && itemList.size()>0){
-					for(int day=0;day<7;day++){//显示七天
-						voList.add(getResultByDate(itemList,DateUtils.addDays(condition.getGroupDate(), day)));
-					}
-				}else{
-					for(int day=0;day<7;day++){
-						StockStaticsResultItemVo vo = new StockStaticsResultItemVo();
-						vo.setGroupDate(DateUtils.addDays(condition.getGroupDate(), day));
-						vo.setStockCount(0);
-						vo.setReceiveCount(0);
-						vo.setLeftCount(0);
-						voList.add(vo);
-					}
-				}
-				result.setItemVoList(voList);
-			}			
-		}	
-		pageBean.setResult(list);
-		return pageBean;
+		return productInfoDal.getStockStaticsList(condition);
 	}
 	
-	private StockStaticsResultItemVo getResultByDate(List<StockStaticsResultItemVo> itemList,Date date){
-		for(StockStaticsResultItemVo item : itemList){
-			if(item!=null){
-				if(DateUtils.isSameDay(item.getGroupDate(), date)){
-					return item;
-				}
-			}
-		}
-		StockStaticsResultItemVo vo = new StockStaticsResultItemVo();
-		vo.setGroupDate(date);
-		vo.setStockCount(0);
-		vo.setReceiveCount(0);
-		vo.setLeftCount(0);
-		return vo;
-	}
+//	private StockStaticsResultItemVo getResultByDate(List<StockStaticsResultItemVo> itemList,Date date){
+//		for(StockStaticsResultItemVo item : itemList){
+//			if(item!=null){
+//				if(DateUtils.isSameDay(item.getGroupDate(), date)){
+//					return item;
+//				}
+//			}
+//		}
+//		StockStaticsResultItemVo vo = new StockStaticsResultItemVo();
+//		vo.setGroupDate(date);
+//		vo.setStockCount(0);
+//		vo.setReceiveCount(0);
+//		vo.setLeftCount(0);
+//		return vo;
+//	}
 
 	@Override
 	public void saveProductRight(Integer productId, Set<Integer> orgIdSet) {
-		productRightMapper.deleteByProductId(productId);
-		productRightMapper.insertBatch(productId, orgIdSet);
+		productInfoDal.saveProductRight(productId, orgIdSet);
 	}
 
 	@Override
 	public List<ProductRight> getRightListByProductId(Integer productId) {
-		return productRightMapper.selectRightListByProductId(productId);
+		return productInfoDal.getRightListByProductId(productId);
 	}
 
 	@Override
 	public ProductInfo findProductInfoBySupplierId(Integer supplierId) {
-		return infoMapper.selectBySupplierId(supplierId);
+		return productInfoDal.findProductInfoBySupplierId(supplierId);
 	}
 
 	@Override
 	public PageBean getStockStaticsList2(StockStaticCondition condition) throws ParseException {
-		PageBean pageBean = new PageBean();
-		pageBean.setPageSize(condition.getPageSize());
-		pageBean.setParameter(condition);
-		pageBean.setPage(condition.getPage());
-		List<StockStaticsResultVOPlus> list = infoMapper.getProductStockListPage(pageBean);
-		//SimpleDateFormat sdf=new SimpleDateFormat();
-		if(list!=null && list.size()>0){
-			for (StockStaticsResultVOPlus voPlus : list) {
-				List<ProductStock> stockList=new ArrayList<ProductStock>();
-				String[] stockInfoStrs = voPlus.getStockInfo().split(",");
-				for (int i = 0; i < 7; i++) {
-				stockList.add(getResultByDate2(DateUtils.addDays(condition.getGroupDate(),i),stockInfoStrs));
-				}
-				voPlus.setStockList(stockList);
-			}
-			
-		}
-		/*if(list!=null && list.size()>0){
-			for(StockStaticsResultVOPlus result : list){
-				List<StockStaticsResultItemVo> itemList = productGroupPriceMapper.getStockStatics(result.getProductId(), DateUtils.addDays(condition.getGroupDate(),-1), DateUtils.addDays(condition.getToGroupDate(),1));
-				List<StockStaticsResultItemVo> voList = new ArrayList<StockStaticsResultItemVo>();
-				if(itemList!=null && itemList.size()>0){
-					for(int day=0;day<7;day++){//显示七天
-						voList.add(getResultByDate(itemList,DateUtils.addDays(condition.getGroupDate(), day)));
-					}
-				}else{
-					for(int day=0;day<7;day++){
-						StockStaticsResultItemVo vo = new StockStaticsResultItemVo();
-						vo.setGroupDate(DateUtils.addDays(condition.getGroupDate(), day));
-						vo.setStockCount(0);
-						vo.setReceiveCount(0);
-						vo.setLeftCount(0);
-						voList.add(vo);
-					}
-				}
-				result.setItemVoList(voList);
-			}			
-		}	*/
-		pageBean.setResult(list);
-		return pageBean;
+		return productInfoDal.getStockStaticsList2(condition);
 	}
-	private ProductStock getResultByDate2(Date date,String[] stockInfoStrs) throws NumberFormatException, ParseException {
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-		for (String str : stockInfoStrs) {
-			String[] stockInfoStr = str.split("/");
-					if (DateUtils.isSameDay(date, sdf.parse(stockInfoStr[0]))) {
-						
-						ProductStock pStock=new ProductStock();
-						pStock.setItemDate(sdf.parse(stockInfoStr[0]));
-						pStock.setReceiveCount(Integer.parseInt(stockInfoStr[2]));
-						pStock.setStockCount(Integer.parseInt(stockInfoStr[1]));
-						return pStock;
-					}
-				
-			}
-		ProductStock pStock=new ProductStock();
-		pStock.setItemDate(date);
-		pStock.setReceiveCount(0);
-		pStock.setStockCount(0);
-		
-			
-			
-		return pStock;
-		
-	}
+	
+//	private ProductStock getResultByDate2(Date date,String[] stockInfoStrs) throws NumberFormatException, ParseException {
+//		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+//		for (String str : stockInfoStrs) {
+//			String[] stockInfoStr = str.split("/");
+//					if (DateUtils.isSameDay(date, sdf.parse(stockInfoStr[0]))) {
+//						
+//						ProductStock pStock=new ProductStock();
+//						pStock.setItemDate(sdf.parse(stockInfoStr[0]));
+//						pStock.setReceiveCount(Integer.parseInt(stockInfoStr[2]));
+//						pStock.setStockCount(Integer.parseInt(stockInfoStr[1]));
+//						return pStock;
+//					}
+//				
+//			}
+//		ProductStock pStock=new ProductStock();
+//		pStock.setItemDate(date);
+//		pStock.setReceiveCount(0);
+//		pStock.setStockCount(0);
+//		
+//			
+//			
+//		return pStock;
+//		
+//	}
 
 	@Override
 	public boolean checkProductCodeExist(Integer productId, Integer bizId,
 			String code) {
-		Integer count = infoMapper.getCurBizCountByProductIdAndCode(bizId,productId,code);
-		if(count==null || count==0){
-			return false;
-		}
-		return true;
+		return productInfoDal.checkProductCodeExist(productId, bizId, code);
 	}
 
 	@Override
 	public List<Map<String, Object>> getAllId(Integer bizId,Integer state) {
-		return infoMapper.getAllIdByBizAndState(bizId, state);
+		return productInfoDal.getAllId(bizId, state);
 	}
 	
 	@Override
 	public List<ProductInfo> searchProductByNameAndDate(Integer bizId, String prodKeyword, String dateStart){
-		return infoMapper.searchProductByNameAndDate(bizId, prodKeyword, dateStart);
+		return productInfoDal.searchProductByNameAndDate(bizId, prodKeyword, dateStart);
 	}
 
 	@Override
 	public PageBean<ProductInfo> findProductRoutes(
 			PageBean<ProductInfo> pageBean, Map parameters) {
-		List<ProductInfo> list = infoMapper.selectProductRouteListPage(pageBean, parameters);
-		pageBean.setResult(list);
-		return pageBean;
+		return productInfoDal.findProductRoutes(pageBean, parameters);
 	}
 	
 	@Override
 	public PageBean<ProductInfo> selectStockProductListPage(
 			PageBean<ProductInfo> pageBean, Map parameters) {
-		List<ProductInfo> list = infoMapper.selectStockProductListPage(pageBean, parameters);
-		pageBean.setResult(list);
-		return pageBean;
+		return productInfoDal.selectStockProductListPage(pageBean, parameters);
 	}
 
 
 	@Override
 	public ProductInfo findProductByIdAndBizId(Integer id, Integer bizId) {
-		return infoMapper.selectByIdAndBizId(id, bizId);
+		return productInfoDal.findProductByIdAndBizId(id, bizId);
 	}
 
 	@Override
 	public PageBean<ProductInfo> findProductAndPriceGroup(
 			PageBean<ProductInfo> pageBean) {
-		 List<ProductInfo> selectProductAndPriceGroup = infoMapper.selectProductAndPriceListPage(pageBean);
-		 pageBean.setResult(selectProductAndPriceGroup);
-		 return pageBean;
+		 return productInfoDal.findProductAndPriceGroup(pageBean);
 	}
 
 	@Override
 	public int fix_SupplierName(Integer supplierId, String supplierName) {
-		// TODO Auto-generated method stub
-		return infoMapper.fix_SupplierName_productGroupSupplier(supplierId, supplierName);
+		return productInfoDal.fix_SupplierName(supplierId, supplierName);
 	}
 
 	@Override
 	public void updateProductSysId(Integer productId,Integer productSysId) {
-	infoMapper.updateProductSysId(productId, productSysId);
+		productInfoDal.updateProductSysId(productId, productSysId);
 	}
 	
 	@Override
 	public ProductInfo selectProductInfoByPsId(Integer productSysId) {
-		return infoMapper.selectProductInfoByPsId(productSysId);
+		return productInfoDal.selectProductInfoByPsId(productSysId);
 	}
 	
 }
