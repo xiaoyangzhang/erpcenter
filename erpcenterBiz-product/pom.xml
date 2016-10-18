@@ -125,6 +125,10 @@
 			<groupId>com.taobao.tair</groupId>
 			<artifactId>tair-client</artifactId>
 		</dependency>
+		<dependency>
+			   <groupId>ledis</groupId>
+			   <artifactId>ledis</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>erpcenterBiz-product</finalName>

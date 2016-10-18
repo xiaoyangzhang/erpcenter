@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.dal.product.mapper.TrafficResLineMapper;
-import com.yimayhd.erpcenter.dal.product.mapper.TrafficResMapper;
-import com.yimayhd.erpcenter.dal.product.mapper.TrafficResProductMapper;
-import com.yimayhd.erpcenter.dal.product.mapper.TrafficResStocklogMapper;
+import com.yimayhd.erpcenter.dal.product.dao.TrafficResLineMapper;
+import com.yimayhd.erpcenter.dal.product.dao.TrafficResMapper;
+import com.yimayhd.erpcenter.dal.product.dao.TrafficResProductMapper;
+import com.yimayhd.erpcenter.dal.product.dao.TrafficResStocklogMapper;
 import com.yimayhd.erpcenter.dal.product.po.TrafficRes;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResLine;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;

@@ -5,9 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-
-import org.springframework.transaction.annotation.Transactional;
-
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
 import com.yimayhd.erpcenter.dal.product.service.ProductGroupDal;
@@ -18,7 +15,7 @@ public class ProductGroupBizImpl implements ProductGroupBiz {
 	@Autowired
 	private ProductGroupDal productGroupDal;
 	
-	@Transactional
+	 
 	@Override
 	public int save(ProductGroup productGroup) {
 		return productGroupDal.save(productGroup);
@@ -42,7 +39,7 @@ public class ProductGroupBizImpl implements ProductGroupBiz {
 	public List<ProductGroup> selectProductGroupList(Integer groupSupplierId) {
 		return productGroupDal.selectProductGroupList(groupSupplierId);
 	}
-	@Transactional
+	 
 	@Override
 	public void save2(List<ProductGroup> productGroups,Integer groupSupplierId) {
 		productGroupDal.save2(productGroups, groupSupplierId);
@@ -59,7 +56,7 @@ public class ProductGroupBizImpl implements ProductGroupBiz {
 		return  productGroupDal.selectGroupsByProdctIdAndSupplierId(productId, supplierId, groupDate);
 	}
 
-	@Transactional
+	 
 	@Override
 	public void copyGroups(List<Integer> groupIdList,
 			List<Integer> groupSupplierIdList) {

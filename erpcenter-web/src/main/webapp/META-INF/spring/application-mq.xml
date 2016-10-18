@@ -10,15 +10,9 @@
             http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd"
         default-autowire="byName">
 
-    <bean id="msgSender" class="com.yimayhd.empty.mq.MsgSenderService"
+    <bean id="msgSender" class="com.yimayhd.erpcenter.common.mq.MsgSenderService"
           init-method="init" destroy-method="destroy">
         <property name="nameServer" value="${rocketmq.server.name}"/>
     </bean>
-
-    <!-- <bean id="orderPaidDoneConsumer" class="com.yimayhd.empty.mq.consumer.OrderPaidDoneConsumer"
-          init-method="init" destroy-method="destroy">
-        <property name="nameServer" value="${rocketmq.server.name}"/>
-        <property name="group" value="${rocketmq.consumer.sns.group}"/>
-    </bean> -->
 
 </beans>

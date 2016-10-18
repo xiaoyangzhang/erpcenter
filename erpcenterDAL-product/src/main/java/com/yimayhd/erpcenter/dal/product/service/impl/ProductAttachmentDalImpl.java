@@ -1,6 +1,6 @@
 package com.yimayhd.erpcenter.dal.product.service.impl;
 
-import com.yimayhd.erpcenter.dal.product.mapper.ProductAttachmentMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductAttachmentMapper;
 import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
 import com.yimayhd.erpcenter.dal.product.service.ProductAttachmentDal;
 

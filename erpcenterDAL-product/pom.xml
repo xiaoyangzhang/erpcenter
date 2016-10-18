@@ -125,6 +125,15 @@
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenter-common</artifactId>
 			</dependency>
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-solrj</artifactId>
+			<version>5.3.0</version>
+		</dependency>
+		<dependency>
+			   <groupId>ledis</groupId>
+			   <artifactId>ledis</artifactId>
+		</dependency>
 	</dependencies>
 	
 	<build>
