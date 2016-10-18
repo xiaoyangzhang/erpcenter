@@ -11,13 +11,18 @@ import com.alibaba.fastjson.JSONArray;
 import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;
+import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
 import com.yimayhd.erpcenter.dal.product.service.ProductGroupDal;
 import com.yimayhd.erpcenter.dal.product.service.ProductGroupSupplierDal;
+import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
 import com.yimayhd.erpcenter.dal.product.service.ProductStockDal;
+import com.yimayhd.erpcenter.dal.product.vo.ProductSupplierCondition;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
 import com.yimayhd.erpcenter.facade.query.ProductGroupSupplierDTO;
+import com.yimayhd.erpcenter.facade.query.ProductSupplierConditionDTO;
 import com.yimayhd.erpcenter.facade.result.ResultSupport;
+import com.yimayhd.erpcenter.facade.result.ToSupplierListResult;
 import com.yimayhd.erpcenter.facade.service.ProductPricePlusFacade;
 
 
@@ -40,6 +45,9 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 	
 	@Autowired
 	private ProductGroupDal productGroupDal;
+	
+	@Autowired
+	private ProductInfoDal productInfoDal;
 	
 	/**
 	 * 保存组团社
@@ -87,13 +95,13 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 		
 		ResultSupport result = new ResultSupport();
 		
-		if(productGroupSupplierDTO == null || productGroupSupplierDTO.getId() == null){
+		if(productGroupSupplierDTO == null || productGroupSupplierDTO.getGroupSupplier() == null){
 			result.setSuccess(false);
 			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
 			return result;
 		}
 		
-		int ret = productGroupSupplierDal.deleteByProductSupplierId(productGroupSupplierDTO.getId());
+		int ret = productGroupSupplierDal.deleteByProductSupplierId(productGroupSupplierDTO.getGroupSupplier().getId());
 		if(ret != 1){
 			result.setSuccess(false);
 			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
@@ -187,6 +195,27 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 		List<Integer> groupIdList = JSON.parseArray(groupIds, Integer.class);
 		List<Integer> groupSupplierIdList = JSON.parseArray(destGroupSupplierIds, Integer.class);
 		productGroupDal.copyGroups(groupIdList,groupSupplierIdList);
+		return result;
+	}
+	
+	/**
+	 * 跳转到价格设置页面
+	 * @param model
+	 * @param condition
+	 * @return
+	 */
+	public ToSupplierListResult toSupplierList(ProductSupplierConditionDTO conditionDTO) {
+		
+		ProductSupplierCondition condition = conditionDTO.getCondition();
+		
+		ToSupplierListResult result = new ToSupplierListResult();
+		result.setProductId(condition.getProductId());
+		ProductInfo productInfo = productInfoDal.findProductInfoById(condition.getProductId());
+		result.setProductName("【" +productInfo.getBrandName()+"】"+productInfo.getNameCity());
+		result.setGroupSuppliers(productGroupSupplierDal.selectSupplierList(conditionDTO.getCondition()));
+		result.setSupplierName(condition.getSupplierName());
+		result.setCity(condition.getCity());
+		
 		return result;
 	}
 }

@@ -1,7 +1,9 @@
 package com.yimayhd.erpcenter.facade.service;
 
 import com.yimayhd.erpcenter.facade.query.ProductGroupSupplierDTO;
+import com.yimayhd.erpcenter.facade.query.ProductSupplierConditionDTO;
 import com.yimayhd.erpcenter.facade.result.ResultSupport;
+import com.yimayhd.erpcenter.facade.result.ToSupplierListResult;
 
 
 
@@ -64,4 +66,12 @@ public interface ProductPricePlusFacade {
 	 * @return
 	 */
 	public ResultSupport copyGroup(String groupIds,String destGroupSupplierIds);
+	
+	/**
+	 * 跳转到价格设置页面
+	 * @param model
+	 * @param condition
+	 * @return
+	 */
+	public ToSupplierListResult toSupplierList(ProductSupplierConditionDTO conditionDTO);
 }
