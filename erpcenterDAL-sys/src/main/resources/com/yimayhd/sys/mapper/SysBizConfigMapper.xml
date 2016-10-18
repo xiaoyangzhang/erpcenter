@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sys.dao.SysBizConfigMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.sys.po.SysBizConfig" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.SysBizConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.SysBizConfig" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="biz_id" property="bizId" jdbcType="INTEGER" />
     <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
@@ -21,13 +21,13 @@
     delete from sys_biz_config
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.sys.po.SysBizConfig" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizConfig" >
     insert into sys_biz_config (id, biz_id, item_code, 
       item_value, item_desp)
     values (#{id,jdbcType=INTEGER}, #{bizId,jdbcType=INTEGER}, #{itemCode,jdbcType=VARCHAR}, 
       #{itemValue,jdbcType=VARCHAR}, #{itemDesp,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.sys.po.SysBizConfig" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizConfig" >
     insert into sys_biz_config
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -64,7 +64,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.sys.po.SysBizConfig" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizConfig" >
     update sys_biz_config
     <set >
       <if test="bizId != null" >
@@ -82,7 +82,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.sys.po.SysBizConfig" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizConfig" >
     update sys_biz_config
     set biz_id = #{bizId,jdbcType=INTEGER},
       item_code = #{itemCode,jdbcType=VARCHAR},

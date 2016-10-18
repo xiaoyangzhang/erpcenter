@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sys.dao.SettleApplyResultMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.sys.po.SettleApplyResult" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.SettleApplyResultMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.SettleApplyResult" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="apply_id" property="applyId" jdbcType="INTEGER" />
     <result column="state" property="state" jdbcType="TINYINT" />
@@ -24,7 +24,7 @@
     delete from settle_apply_result
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.sys.po.SettleApplyResult" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleApplyResult" >
     insert into settle_apply_result (apply_id, state, 
       operator_id, operator_name, remark, is_approve,
       operate_time)
@@ -32,7 +32,7 @@
       #{operatorId,jdbcType=INTEGER}, #{operatorName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{isApprove,jdbcType=TINYINT},
       #{operateTime,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.sys.po.SettleApplyResult" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleApplyResult" >
     insert into settle_apply_result
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -81,7 +81,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.sys.po.SettleApplyResult" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleApplyResult" >
     update settle_apply_result
     <set >
       <if test="applyId != null" >
@@ -105,7 +105,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.sys.po.SettleApplyResult" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleApplyResult" >
     update settle_apply_result
     set apply_id = #{applyId,jdbcType=INTEGER},
       state = #{state,jdbcType=TINYINT},

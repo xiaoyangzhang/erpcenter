@@ -26,11 +26,11 @@
 	<bean id="sqlSessionFactorySys" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSourceSys"/>
 		<property name="mapperLocations" value="classpath:com/yimayhd/sys/mapper/*.xml"/>
-		<property name="typeAliasesPackage" value="com.yimayhd.erpcenter.dal.po"/>
+		<property name="typeAliasesPackage" value="com.yimayhd.erpcenter.sys.dal.po"/>
 		<property name="configLocation" value="classpath:mybatis-config.xml"/>
 	</bean>
 
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	<bean id="sysMapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.yimayhd.erpcenter.dal.sys.dao" />
 	</bean>
 

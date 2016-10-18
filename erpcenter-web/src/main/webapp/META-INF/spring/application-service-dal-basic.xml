@@ -5,7 +5,8 @@
            http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 	<context:annotation-config />
-
+	
+	<!--  
 	<bean id="airLineDal" class="com.yimayhd.erpcenter.dal.basic.service.impl.AirLineDalImpl" />
 	<bean id="airPortDal" class="com.yimayhd.erpcenter.dal.basic.service.impl.AirPortDalImpl" />
 	<bean id="dicDal" class="com.yimayhd.erpcenter.dal.basic.service.impl.DicDalImpl" />
@@ -16,5 +17,5 @@
 	<bean id="msgDal" class="com.yimayhd.erpcenter.dal.basic.service.impl.MsgDalImpl" />
 	<bean id="regionCardDal" class="com.yimayhd.erpcenter.dal.basic.service.impl.RegionCardDalImpl" />
 	<bean id="regionDalImpl" class="com.yimayhd.erpcenter.dal.basic.service.impl.RegionDalImpl" />
-
+	-->
 </beans>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sys.dao.SysBizInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.sys.po.SysBizInfo" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.SysBizInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.SysBizInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="code" property="code" jdbcType="VARCHAR" />
@@ -29,7 +29,7 @@
     delete from sys_biz_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.sys.po.SysBizInfo"  >  
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizInfo"  >  
       <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -43,7 +43,7 @@
       #{dateRegister,jdbcType=DATE}, #{creatorId,jdbcType=INTEGER}, #{creatorName,jdbcType=VARCHAR}, 
       #{logo,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.sys.po.SysBizInfo" useGeneratedKeys="true" keyProperty="id" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizInfo" useGeneratedKeys="true" keyProperty="id" >
     insert into sys_biz_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -116,7 +116,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.sys.po.SysBizInfo" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizInfo" >
     update sys_biz_info
     <set >
       <if test="name != null" >
@@ -155,7 +155,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.sys.po.SysBizInfo" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizInfo" >
     update sys_biz_info
     set name = #{name,jdbcType=VARCHAR},
       code = #{code,jdbcType=VARCHAR},

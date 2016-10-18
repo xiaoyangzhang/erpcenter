@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sys.dao.PlatformEmployeeMapper" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.PlatformEmployeeMapper" >
   
-  	<resultMap type="com.yihg.sys.po.PlatformEmployeePo" id="platformEmployeePo">
+  	<resultMap type="com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo" id="platformEmployeePo">
         <id column="employee_id" property="employeeId" />
         <result column="biz_id" property="bizId" />
         <result column="org_id" property="orgId" />
@@ -74,7 +74,7 @@
 GROUP BY p.`employee_id`
   	 </select>
   	
-  	 <update id="updateEmployee" parameterType="com.yihg.sys.po.PlatformEmployeePo">
+  	 <update id="updateEmployee" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo">
 		update platform_employee
 		<set>
 			<if test="loginName != null"> login_name = #{loginName}, </if>
@@ -95,7 +95,7 @@ GROUP BY p.`employee_id`
 		where employee_id = #{employeeId}
 	</update>
   	 
-  	 <insert id="addEmployee" parameterType="platformEmployeePo" useGeneratedKeys="true" keyProperty="employeeId">
+  	 <insert id="addEmployee" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo" useGeneratedKeys="true" keyProperty="employeeId">
 		insert into platform_employee
             (employee_id,biz_id,org_id,login_name,password,name,gender,position,phone,mobile,fax,email,qq_code,status,del_status,is_super,create_time,update_time)
 		values 
@@ -159,7 +159,7 @@ GROUP BY p.`employee_id`
 		SELECT COUNT(1) FROM
 		platform_employee WHERE name =#{name} and employee_id != #{id}
 	</select> -->
-   <select id="getEmployeeList" parameterType="com.yihg.sys.po.PlatformEmployeePo" resultType="int">
+   <select id="getEmployeeList" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo" resultType="int">
 		SELECT count(1) FROM
 		platform_employee WHERE 1=1 
 		<if test="loginName != null"> and login_name = #{loginName}  </if>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sys.dao.SysBizBankAccountMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.sys.po.SysBizBankAccount" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.SysBizBankAccountMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="biz_id" property="bizId" jdbcType="INTEGER" />
     <result column="account_type" property="accountType" jdbcType="INTEGER" />
@@ -32,7 +32,7 @@
     delete from sys_biz_bankaccount
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.sys.po.SysBizBankAccount" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount" >
     insert into sys_biz_bankaccount (id, biz_id, account_type, 
       bank_id, bank_name, bank_account, 
       account_name, account_no, create_time
@@ -42,7 +42,7 @@
       #{accountName,jdbcType=VARCHAR}, #{accountNo,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.sys.po.SysBizBankAccount" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount" >
     insert into sys_biz_bankaccount
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -103,7 +103,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.sys.po.SysBizBankAccount" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount" >
     update sys_biz_bankaccount
     <set >
       <if test="bizId != null" >
@@ -133,7 +133,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.sys.po.SysBizBankAccount" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount" >
     update sys_biz_bankaccount
     set biz_id = #{bizId,jdbcType=INTEGER},
       account_type = #{accountType,jdbcType=INTEGER},

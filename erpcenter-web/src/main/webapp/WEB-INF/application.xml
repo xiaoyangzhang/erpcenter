@@ -14,8 +14,17 @@
 	<import resource="../META-INF/spring/application-consumer.xml" />
 	<import resource="../META-INF/spring/application-export-client.xml" />
 	<import resource="../META-INF/spring/application-mq.xml" />
-	<import resource="../META-INF/spring/application-persistance-basic.xml" />
+	<!-- 
 	<import resource="../META-INF/spring/application-persistance-product.xml" />
+	 -->
+	
+	<import resource="../META-INF/spring/application-persistance-basic.xml" />
+	
+
+
+	<import resource="../META-INF/spring/application-persistance-sys.xml" />
+	
+	 
 	<import resource="../META-INF/spring/application-redis.xml" />
 	<import resource="../META-INF/spring/application-service-biz-basic.xml" />
 	<import resource="../META-INF/spring/application-service-biz-product.xml" />

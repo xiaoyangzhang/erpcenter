@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sys.dao.SettleQualificationMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.sys.po.SettleQualification" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.SettleQualificationMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.SettleQualification" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="apply_id" property="applyId" jdbcType="INTEGER" />
     <result column="credential_id" property="credentialId" jdbcType="INTEGER" />
@@ -22,7 +22,7 @@
     delete from settle_qualification
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.sys.po.SettleQualification" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleQualification" >
     insert into settle_qualification (id, apply_id, credential_id, 
       credential_name, credential_path, create_time
       )
@@ -30,7 +30,7 @@
       #{credentialName,jdbcType=VARCHAR}, #{credentialPath,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.sys.po.SettleQualification" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleQualification" >
     insert into settle_qualification
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -73,7 +73,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.sys.po.SettleQualification" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleQualification" >
     update settle_qualification
     <set >
       <if test="applyId != null" >
@@ -94,7 +94,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.sys.po.SettleQualification" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleQualification" >
     update settle_qualification
     set apply_id = #{applyId,jdbcType=INTEGER},
       credential_id = #{credentialId,jdbcType=INTEGER},

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sys.dao.PlatformRoleMapper" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.PlatformRoleMapper" >
   
- 	<resultMap type="com.yihg.sys.po.PlatformRolePo" id="platformRolePo">
+ 	<resultMap type="com.yimayhd.erpcenter.dal.sys.po.PlatformRolePo" id="platformRolePo">
         <id column="role_id" property="roleId" />
         <result column="sys_id" property="sysId" />
         <result column="biz_id" property="bizId" />
@@ -51,7 +51,7 @@
        		<if test="bizId != null"> and role.biz_id = #{bizId}  </if>
   	 </select>
   	
-  	 <update id="updateRole" parameterType="platformRolePo">
+  	 <update id="updateRole" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformRolePo">
 		update platform_role
 		<set>
 			<if test="sysId != null"> sys_id = #{sysId}, </if>
@@ -67,7 +67,7 @@
 		where role_id = #{roleId}
 	</update>
   	 
-  	 <insert id="addRole" parameterType="platformRolePo" useGeneratedKeys="true">
+  	 <insert id="addRole" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformRolePo" useGeneratedKeys="true">
   	 
   		<!-- 返回主键 -->
 		<selectKey resultType="int" order="AFTER" keyProperty="roleId">
@@ -96,7 +96,7 @@
 	</delete>
 	
 	<!-- 角色权限操作 -->
-	<resultMap type="com.yihg.sys.po.PlatformRoleMenuLinkPo" id="platformRoleMenuLinkPo">
+	<resultMap type="com.yimayhd.erpcenter.dal.sys.po.PlatformRoleMenuLinkPo" id="platformRoleMenuLinkPo">
         <id column="id" property="id" />
         <result column="role_id" property="roleId" />
         <result column="menu_id" property="menuId" />

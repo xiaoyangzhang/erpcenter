@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.yihg.sys.dao.PlatformMenuMapper">
-	<resultMap id="BaseResultMap" type="com.yihg.sys.po.PlatformMenuPo">
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.PlatformMenuMapper">
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo">
 		<id column="menu_id" property="menuId" jdbcType="INTEGER" />
 		<result column="sys_id" property="sysId" jdbcType="INTEGER" />
 		<result column="biz_id" property="bizId" jdbcType="INTEGER" />
@@ -87,7 +87,7 @@
 		where menu_id = #{menuId,jdbcType=INTEGER}
 	</select>
 	<!-- 添加菜单 -->
-	<insert id="addPlatformMenu" parameterType="com.yihg.sys.po.PlatformMenuPo" >
+	<insert id="addPlatformMenu" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo" >
 		insert into platform_menu ( sys_id,parent_id,name,url,code,css,resource_type,comment,seq_num,status,del_status,create_time,update_time )
 		values
 		(#{sysId,jdbcType=INTEGER},
@@ -106,7 +106,7 @@
 	</insert>
 
 	<!-- 修改菜单 -->
-	<update id="updatePlatformMenu" parameterType="com.yihg.sys.po.PlatformMenuPo">
+	<update id="updatePlatformMenu" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo">
 		update platform_menu
 		<set>
 			<if test="sysId != null"> sys_id = #{sysId}, </if>
@@ -127,7 +127,7 @@
 	</update>
 	<!-- 删除菜单 -->
 	
-	<update id="deletePlatformMenuByMenuId" parameterType="com.yihg.sys.po.PlatformMenuPo">
+	<update id="deletePlatformMenuByMenuId" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo">
 		update platform_menu set del_status = 0 
 		where menu_id=#{menuId}
 	</update>
@@ -168,11 +168,11 @@
 		<if test="roleIds != null"> AND rm.`role_id` IN ${roleIds} </if>
 		order by m.seq_num
 	</select>
-	<insert id="addPlatformMenuAndBizLink" parameterType="com.yihg.sys.po.PlatformMenuPo">
+	<insert id="addPlatformMenuAndBizLink" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo">
 		insert into sys_biz_menu(biz_id,menu_id,create_time,update_time) values(#{bizId},#{menuId},#{createTime},
         #{updateTime})
 	</insert>
-	<update id="updatePlatformMenuAndBiz" parameterType="com.yihg.sys.po.PlatformMenuPo">
+	<update id="updatePlatformMenuAndBiz" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo">
 		update sys_biz_menu 
 		<set>
 			<if test="menuId !=null ">menu_id=#{menuId}</if>

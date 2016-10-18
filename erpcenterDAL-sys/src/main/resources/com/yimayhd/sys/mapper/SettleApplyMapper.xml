@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sys.dao.SettleApplyMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.sys.po.SettleApply" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.SettleApplyMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.SettleApply" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="service_no" property="serviceNo" jdbcType="VARCHAR" />
     <result column="corp_full_name" property="corpFullName" jdbcType="VARCHAR" />
@@ -36,7 +36,7 @@
     delete from settle_apply
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.sys.po.SettleApply" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleApply" useGeneratedKeys="true" keyProperty="id">
     insert into settle_apply (id, service_no, corp_full_name, 
       province_id, province_name, city_id, 
       city_name, area_id, area_name, 
@@ -50,7 +50,7 @@
       #{referee,jdbcType=VARCHAR}, #{contactMan,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, 
       #{note,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.sys.po.SettleApply" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleApply" >
     insert into settle_apply
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -159,7 +159,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByIdSelective" parameterType="com.yihg.sys.po.SettleApply" >
+  <update id="updateByIdSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleApply" >
     update settle_apply
     <set >
       <if test="serviceNo != null" >
@@ -216,7 +216,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateById" parameterType="com.yihg.sys.po.SettleApply" >
+  <update id="updateById" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleApply" >
     update settle_apply
     set service_no = #{serviceNo,jdbcType=VARCHAR},
       corp_full_name = #{corpFullName,jdbcType=VARCHAR},
@@ -247,8 +247,8 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
-  <!-- <resultMap type="com.yihg.sys.po.SettleApply" id="BaseResultMap2" extends="BaseResultMap">
-  	<association property="settleApplyResult" javaType="com.yihg.sys.po.SettleApplyResult">
+  <!-- <resultMap type="com.yimayhd.erpcenter.dal.sys.po.SettleApply" id="BaseResultMap2" extends="BaseResultMap">
+  	<association property="settleApplyResult" javaType="com.yimayhd.erpcenter.dal.sys.po.SettleApplyResult">
   		<id column="id" property="id" jdbcType="INTEGER" />
 	    <result column="apply_id" property="applyId" jdbcType="INTEGER" />
 	    <result column="state" property="state" jdbcType="TINYINT" />

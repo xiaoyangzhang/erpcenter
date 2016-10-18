@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sys.dao.PlatformSysMapper" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.PlatformSysMapper" >
   
-  <resultMap type="PlatformSysPo" id="resultListPlatformSysPo">
+  <resultMap type="com.yimayhd.erpcenter.dal.sys.po.PlatformSysPo" id="resultListPlatformSysPo">
         <id column="sys_id" property="sysId" />
         <result column="name" property="name" />
         <result column="code" property="code" />

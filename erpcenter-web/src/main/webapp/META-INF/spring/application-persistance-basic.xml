@@ -30,7 +30,7 @@
 		<property name="configLocation" value="classpath:mybatis-config.xml"/>
 	</bean>
 
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	<bean id="basicMapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.yimayhd.erpcenter.dal.basic.dao" />
 	</bean>
 

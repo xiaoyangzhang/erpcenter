@@ -14,7 +14,8 @@ import com.yimayhd.erpcenter.dal.basic.service.RegionCardDal;
 
 public class RegionCardDalImpl implements RegionCardDal {
 
-	@Autowired
+	//@Autowired  
+	//TODO 改成mapper的方式
 	private JdbcTemplate jdbcTemplate;
 	
 	@Override

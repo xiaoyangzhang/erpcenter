@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sys.dao.SysDataRightMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.sys.po.SysDataRight" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.SysDataRightMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.SysDataRight" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="view_user_id" property="viewUserId" jdbcType="INTEGER" />
@@ -20,13 +20,13 @@
     delete from sys_data_right
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.sys.po.SysDataRight" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysDataRight" >
     insert into sys_data_right (id, user_id, view_user_id, 
       create_time)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{viewUserId,jdbcType=INTEGER}, 
       #{createTime,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.sys.po.SysDataRight" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysDataRight" >
     insert into sys_data_right
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -57,7 +57,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.sys.po.SysDataRight" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysDataRight" >
     update sys_data_right
     <set >
       <if test="userId != null" >
@@ -72,7 +72,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.sys.po.SysDataRight" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysDataRight" >
     update sys_data_right
     set user_id = #{userId,jdbcType=INTEGER},
       view_user_id = #{viewUserId,jdbcType=INTEGER},
@@ -85,7 +85,7 @@
   <select id="getSysDataRightByViewUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
   	select * from sys_data_right where view_user_id=#{userId}
   </select>
-  <delete id="deleteDataRight" parameterType="com.yihg.sys.po.SysDataRight" >
+  <delete id="deleteDataRight" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysDataRight" >
   	delete from sys_data_right 
   	where 1=1 
   	<choose>  
