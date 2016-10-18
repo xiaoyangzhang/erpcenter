@@ -14,6 +14,7 @@
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <architect-mybatis.version>1.0.0</architect-mybatis.version>
   </properties>
   <dependencies>
     <dependency>
@@ -22,5 +23,24 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis-spring</artifactId>
+	</dependency>
+		
+		<dependency>
+				<groupId>com.yihg</groupId>
+				<artifactId>yihg-architect-mybatis</artifactId>
+				<version>${architect-mybatis.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.yimayhd.erpcenter</groupId>
+			<artifactId>erpcenterBiz-basic</artifactId>
+			<version>0.0.6-SNAPSHOT</version>
+		</dependency>
   </dependencies>
 </project>

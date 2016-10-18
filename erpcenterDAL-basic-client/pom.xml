@@ -7,25 +7,28 @@
     <artifactId>erpcenter</artifactId>
     <version>0.0.6-SNAPSHOT</version>
   </parent>
-  <groupId>com.yimayhd.erpcenter</groupId>
   <artifactId>erpcenterDAL-basic-client</artifactId>
-  <version>0.0.6-SNAPSHOT</version>
   <name>erpcenterDAL-basic-client</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<architect-mybatis.version>1.0.0</architect-mybatis.version>
+	</properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
 		  <groupId>com.alibaba</groupId>
 		  <artifactId>fastjson</artifactId>
-		  <version>1.2.4</version>
+		</dependency>
+		<dependency>
+				<groupId>com.yihg</groupId>
+				<artifactId>yihg-architect-mybatis</artifactId>
+				<version>${architect-mybatis.version}</version>
 		</dependency>
   </dependencies>
 </project>
