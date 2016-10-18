@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,8 +13,8 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.util.TypeUtils;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.mapper.ProductAttachmentMapper;
 import com.yimayhd.erpcenter.dal.product.mapper.ProductContactMapper;
@@ -39,8 +38,6 @@ import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultItemVo;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultVOPlus;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultVo;
-
-import org.springframework.transaction.annotation.Transactional;
 
 public class ProductInfoDalImpl implements ProductInfoDal{
 
@@ -83,9 +80,9 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	}
 	
 	@Override
-	public PageBean<ProductInfo> findProductInfos2(
+	public PageBean<ProductInfo> selectProductListPage(
 			PageBean<ProductInfo> pageBean, Map parameters) {
-		List<ProductInfo> list = infoMapper.selectProductInfoListPage2(pageBean, parameters);
+		List<ProductInfo> list = infoMapper.selectProductListPage(pageBean, parameters);
 		pageBean.setResult(list);
 		return pageBean;
 	}
