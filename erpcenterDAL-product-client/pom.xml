@@ -33,7 +33,7 @@
 	<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenter-common</artifactId>
-			</dependency>
+	</dependency>
   </dependencies>
   <!-- <dependencies>
 		<dependency>

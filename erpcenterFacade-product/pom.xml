@@ -16,6 +16,10 @@
 	</properties>
 	<dependencies>
 		<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenter-common</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.yimayhd.erpcenter</groupId>
 			<artifactId>erpcenterBiz-product-client</artifactId>
 		</dependency>
