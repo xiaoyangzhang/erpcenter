@@ -30,9 +30,7 @@
 			<artifactId>yihg-architect-mybatis</artifactId>
 			<version>${architect-mybatis.version}</version>
 	</dependency>
-		  <groupId>com.alibaba</groupId>
-		  <artifactId>fastjson</artifactId>
-		</dependency>
+		
 		<dependency>
 				<groupId>com.yihg</groupId>
 				<artifactId>yihg-architect-mybatis</artifactId>
