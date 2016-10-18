@@ -5,39 +5,36 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.biz.sys.service.SysBizBankAccountBiz;
+import com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount;
 
 
 public class SysBizBankAccountBizImpl implements SysBizBankAccountBiz {
 	@Autowired
-	private SysBizBankAccountMapper bankAccountDao;
+	private com.yimayhd.erpcenter.dal.sys.service.SysBizBankAccountDal sysBizBankAccountDal;
 		
 	@Override
 	public List<SysBizBankAccount> getListByBizId(Integer bizId) {
-		return bankAccountDao.selectByBizId(bizId);
+		return sysBizBankAccountDal.getListByBizId(bizId);
 	}
 
 	@Override
 	public void delBankAccount(Integer id) {
-		bankAccountDao.deleteByPrimaryKey(id);
+		sysBizBankAccountDal.delBankAccount(id);
 	}
 
 	@Override
 	public int addSysBizBankAccount(SysBizBankAccount bankAcc) {
-		if(bankAcc.getId()==null){
-			return bankAccountDao.insertSelective(bankAcc);
-		}else{
-			return bankAccountDao.updateByPrimaryKey(bankAcc);
-		}
+		return sysBizBankAccountDal.addSysBizBankAccount(bankAcc);
 	}
 
 	@Override
 	public SysBizBankAccount getBankInfo(Integer id) {
-		return bankAccountDao.selectByPrimaryKey(id);
+		return sysBizBankAccountDal.getBankInfo(id);
 	}
 
 	@Override
 	public void updateSysBizBankAccount(SysBizBankAccount bankAcc) {
-		bankAccountDao.updateByPrimaryKeySelective(bankAcc);
+		sysBizBankAccountDal.updateSysBizBankAccount(bankAcc);
 	}
 
 }
