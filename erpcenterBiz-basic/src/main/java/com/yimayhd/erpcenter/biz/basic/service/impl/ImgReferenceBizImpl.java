@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yimayhd.erpcenter.biz.basic.service.ImgReferenceBiz;
 import com.yimayhd.erpcenter.dal.basic.po.ImgReference;
 import com.yimayhd.erpcenter.dal.basic.service.ImgReferenceDal;
 
 
 @Service
 @Transactional
-public class ImgReferenceBizImpl implements ImgReferenceDal{
+public class ImgReferenceBizImpl implements ImgReferenceBiz{
 	@Autowired
 	private ImgReferenceDal imgReferenceDal;
 	@Override

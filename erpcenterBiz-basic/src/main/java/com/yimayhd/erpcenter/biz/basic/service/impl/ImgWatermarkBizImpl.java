@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yimayhd.erpcenter.biz.basic.service.ImgWatermarkBiz;
 import com.yimayhd.erpcenter.dal.basic.po.ImgWatermark;
 import com.yimayhd.erpcenter.dal.basic.service.ImgWatermarkDal;
 
@@ -11,7 +12,7 @@ import com.yimayhd.erpcenter.dal.basic.service.ImgWatermarkDal;
 
 @Service
 @Transactional
-public class ImgWatermarkBizImpl implements ImgWatermarkDal {
+public class ImgWatermarkBizImpl implements ImgWatermarkBiz {
 	@Autowired
 	private ImgWatermarkDal imgWatermarkDal;
 

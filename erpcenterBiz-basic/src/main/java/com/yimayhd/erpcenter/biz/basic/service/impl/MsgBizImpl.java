@@ -5,11 +5,12 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.yimayhd.erpcenter.biz.basic.service.MsgBiz;
 import com.yimayhd.erpcenter.dal.basic.po.MsgPushApp;
 import com.yimayhd.erpcenter.dal.basic.po.MsgPushAppList;
 import com.yimayhd.erpcenter.dal.basic.service.MsgDal;
 
-public class MsgBizImpl implements MsgDal {
+public class MsgBizImpl implements MsgBiz {
 	@Autowired
 	private MsgDal msgDal;
 

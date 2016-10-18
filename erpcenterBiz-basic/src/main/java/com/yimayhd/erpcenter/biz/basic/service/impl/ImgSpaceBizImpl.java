@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.biz.basic.service.ImgSpaceBiz;
 import com.yimayhd.erpcenter.dal.basic.dto.PageDto;
 import com.yimayhd.erpcenter.dal.basic.dto.TreeDto;
 import com.yimayhd.erpcenter.dal.basic.po.ImgSpace;
@@ -15,7 +16,7 @@ import com.yimayhd.erpcenter.dal.basic.service.ImgSpaceDal;
 
 @Service
 @Transactional
-public class ImgSpaceBizImpl implements ImgSpaceDal{
+public class ImgSpaceBizImpl implements ImgSpaceBiz{
 	@Autowired
 	private ImgSpaceDal imgSpaceDal;
 

@@ -4,11 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.yimayhd.erpcenter.biz.basic.service.RegionCardBiz;
 import com.yimayhd.erpcenter.dal.basic.po.SysRegionCard;
 import com.yimayhd.erpcenter.dal.basic.service.RegionCardDal;
 
 
-public class RegionCardBizImpl implements RegionCardDal {
+public class RegionCardBizImpl implements RegionCardBiz {
 	@Autowired
 	private RegionCardDal regionCardDal;
 

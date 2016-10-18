@@ -4,11 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.yimayhd.erpcenter.biz.basic.service.DicTypeBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicTypeInfo;
 import com.yimayhd.erpcenter.dal.basic.service.DicTypeDal;
 
 
-public class DicTypeBizImpl implements DicTypeDal {
+public class DicTypeBizImpl implements DicTypeBiz {
 	@Autowired
 	private DicTypeDal dicTypeDal;
 

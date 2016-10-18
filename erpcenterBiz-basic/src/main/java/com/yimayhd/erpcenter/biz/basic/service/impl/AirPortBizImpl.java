@@ -5,10 +5,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.yimayhd.erpcenter.biz.basic.service.AirPortBiz;
 import com.yimayhd.erpcenter.dal.basic.po.AirPort;
 import com.yimayhd.erpcenter.dal.basic.service.AirPortDal;
 
-public class AirPortBizImpl implements AirPortDal {
+public class AirPortBizImpl implements AirPortBiz {
 	@Autowired
 	private AirPortDal airPorDal;
 	@Override
