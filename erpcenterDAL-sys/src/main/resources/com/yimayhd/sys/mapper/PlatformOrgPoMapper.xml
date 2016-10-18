@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.sys.dao.PlatformOrgMapper" >
+  
+  <resultMap type="com.yihg.sys.po.PlatformOrgPo" id="platformOrgPo">
+        <id column="org_id" property="orgId" />
+        <result column="sys_id" property="sysId" />
+        <result column="org_path" property="orgPath" />
+        <result column="biz_id" property="bizId" />
+        <result column="parent_id" property="parentId" />
+        <result column="name" property="name" />
+        <result column="code" property="code" />
+        <result column="seq_num" property="seqNum" />
+        <result column="comment" property="comment" />
+        <result column="status" property="status" />
+        <result column="del_status" property="delStatus" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="logo" property="logo" />
+	</resultMap>
+  
+  	<select id="findByPid" resultMap="platformOrgPo">
+        select *
+        from platform_org
+        where del_status=1  
+        <if test="pid!=null">
+        	AND parent_id=#{pid}
+        </if>      
+        <if test="sysId!=null">
+        	AND sys_id =#{sysId}
+        </if>
+        ORDER BY seq_num
+  	 </select>
+  	 
+  	 <select id="findByOrgId" resultMap="platformOrgPo">
+        select *
+        from platform_org
+        where org_id=#{orgId}
+  	 </select>
+  	 
+  	  <select id="getOrgList" resultMap="platformOrgPo">
+        select org.*
+        from platform_org org, platform_employee_org_link link
+        where org.org_id = link.org_id
+        <if test="sysId != null"> and org.sys_id = #{sysId}  </if>
+       	<if test="employeeId != null"> and link.employee_id = #{employeeId}  </if>
+  	 </select>
+  	 
+  	 <select id="getAllOrgList" resultMap="platformOrgPo">
+        select org.*
+        from platform_org org
+        where 1 = 1
+        <if test="sysId != null"> and org.sys_id = #{sysId}  </if>
+  	 </select>
+  	 
+  	 <update id="update" parameterType="platformOrgPo">
+		UPDATE platform_org
+		<set>
+			<if test="sysId != null"> sys_id = #{sysId}, </if>
+			<if test="orgPath != null"> org_path = #{orgPath}, </if>
+			<if test="parentId != null"> parent_id = #{parentId}, </if>
+			<if test="name != null"> name = #{name}, </if>
+			<if test="code != null"> code = #{code}, </if>
+			<if test="seqNum != null"> seq_num = #{seqNum}, </if>
+			<if test="comment != null"> comment = #{comment}, </if>
+			<if test="status != null"> status = #{status}, </if>
+			<if test="createTime != null"> create_time = #{createTime}, </if>
+			<if test="updateTime != null"> update_time = #{updateTime}, </if>
+			logo = #{logo}
+		</set>
+		WHERE org_id = #{orgId}
+	</update>
+  	 
+  	 <insert id="add" parameterType="platformOrgPo">
+	  	 <selectKey resultType="java.lang.Integer" keyProperty="orgId" order="AFTER" >
+	      SELECT LAST_INSERT_ID()
+	    </selectKey>
+		INSERT INTO platform_org
+            (`biz_id`,`sys_id`,`parent_id`,`name`,`code`,`seq_num`,`comment`,`status`,`del_status`,`create_time`,`update_time`,logo,org_path)
+		VALUES (
+		#{bizId,jdbcType=INTEGER},
+		#{sysId,jdbcType=INTEGER},
+		#{parentId,jdbcType=INTEGER},
+		#{name,jdbcType=VARCHAR},
+        #{code,jdbcType=VARCHAR},
+        #{seqNum,jdbcType=INTEGER},
+        #{comment,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{delStatus,jdbcType=VARCHAR},
+        #{createTime,jdbcType=DATE},
+        #{updateTime,jdbcType=DATE},
+        #{logo,jdbcType=VARCHAR},
+        #{orgPath,jdbcType=VARCHAR})
+	</insert>
+	<update id="del">
+		UPDATE platform_org set del_status=0 WHERE org_id=#{orgId}
+	</update>
+	
+	
+	<!-- 查询组织机构树 -->
+	 <select id="getOrgTree" resultMap="platformOrgPo">
+       SELECT * FROM platform_org
+		<!--WHERE sys_id = #{sysId}  -->
+		WHERE biz_id=#{bizId}
+		AND STATUS = 1 AND del_status =1
+		  <if test="parentId != null"> AND parent_id= #{parentId} </if>
+		 ORDER BY seq_num
+  	 </select>
+	
+	<select id="getOrgListExceptId"  resultMap="platformOrgPo" >
+        select org.*
+        from platform_org org where 1=1
+       		<if test="name != null"> and org.name = #{name}  </if>
+       		<if test="orgId != null"> and org.org_id != #{orgId}  </if>
+  	 </select>
+  	 <select id="getLogoByOrgId" resultType="string">
+  	 	select logo from platform_org where org_id=#{orgId} and biz_id=#{bizId}
+  	 </select>
+  	 <select id="getCompanyCodeByOrgId" resultType="string">
+  	 	select code from platform_org where org_id=#{orgId} and biz_id=#{bizId}
+  	 </select>
+  	 <select id="getOrgListByOrgIdListAndBiz" resultMap="platformOrgPo">
+  	 	SELECT * FROM platform_org 
+  	 	WHERE biz_id=#{bizId} AND STATUS = 1 AND del_status =1 and org_id in
+  	 	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+		  #{item}  
+		</foreach>
+		ORDER BY seq_num
+  	 </select>
+  	 
+  	 <select id="getCompanyByEmployeeId" resultMap="platformOrgPo">
+  	 	SELECT * FROM `platform_org` WHERE org_id=
+		(SELECT parent_id FROM `platform_org` WHERE org_id=
+		(SELECT org_id FROM `platform_employee` WHERE employee_id=#{employeeId} AND biz_id=#{bizId}))
+  	 </select>
+  	 
+  	 <select id="getCompanyByEmployeeId2" resultMap="platformOrgPo">
+		SELECT * FROM `platform_org` WHERE org_id=
+		(SELECT org_id FROM `platform_employee` WHERE employee_id=#{employeeId} AND biz_id=#{bizId})
+  	 </select>
+  	  <select id="getOrgTree2" resultMap="platformOrgPo">
+       SELECT * FROM platform_org
+		<!--WHERE sys_id = #{sysId}  -->
+		WHERE org_id in (${orgIds})
+		AND STATUS = 1 AND del_status =1
+		  <if test="parentId != null"> AND parent_id= #{parentId} </if>
+		 ORDER BY seq_num
+  	 </select>
+
+  	  <select id="getOrgTree3" resultMap="platformOrgPo">
+       SELECT org.* FROM platform_org org join platform_employee_org_link  link on org.org_id=link.org_id
+   		WHERE 1=1 <if test="userIds!=null">and employee_id in (${userIds})</if>
+		AND STATUS = 1 AND del_status =1
+		  
+		 ORDER BY seq_num
+  	 </select>
+
+  	 <select id="selectSubLevelOrgList" resultMap="platformOrgPo" >
+		SELECT * FROM platform_org
+		WHERE biz_id=#{bizId,jdbcType=INTEGER}
+		AND STATUS = 1 AND del_status =1 AND parent_id IN
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item,jdbcType=INTEGER}
+		</foreach>
+		 ORDER BY seq_num
+	</select> 
+	<select id="selectSecLevelOrgList" resultMap="platformOrgPo" >
+		SELECT * FROM `platform_org` 
+		WHERE biz_id=#{bizId,jdbcType=INTEGER} AND parent_id = (SELECT org_id FROM platform_org WHERE biz_id=#{bizId,jdbcType=INTEGER} AND parent_id=0 and `status`=1 and del_status=1)
+		and `status`=1 and del_status=1
+	</select>
+	<select id="getOrgListByIdSet" resultMap="platformOrgPo" >
+		SELECT * FROM platform_org
+		WHERE biz_id=#{bizId,jdbcType=INTEGER}
+		AND STATUS = 1 AND del_status =1 AND org_id IN
+		<foreach collection="sets" item="item" index="index" open="(" separator="," close=")">
+			#{item,jdbcType=INTEGER}
+		</foreach>
+		 ORDER BY seq_num
+	</select>
+</mapper>

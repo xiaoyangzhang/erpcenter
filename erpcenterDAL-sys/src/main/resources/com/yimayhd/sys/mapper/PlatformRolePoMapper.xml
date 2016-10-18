@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.sys.dao.PlatformRoleMapper" >
+  
+ 	<resultMap type="com.yihg.sys.po.PlatformRolePo" id="platformRolePo">
+        <id column="role_id" property="roleId" />
+        <result column="sys_id" property="sysId" />
+        <result column="biz_id" property="bizId" />
+        <result column="name" property="name" />
+        <result column="code" property="code" />
+        <result column="comment" property="comment" />
+        <result column="status" property="status" />
+        <result column="del_status" property="delStatus" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="group_id" property="groupId" />
+        <result column="group_name" property="groupName" />
+	</resultMap>
+  
+  	<select id="findByRoleId" resultMap="platformRolePo">
+        select *
+        from platform_role
+        where role_id=#{roleId}
+  	 </select>
+  	 
+  	 <select id="getRoleListPage"  resultMap="platformRolePo" 
+  	 parameterType="com.yihg.mybatis.utility.PageBean">
+        select *
+        from platform_role
+        where 1 = 1
+        	<if test="parameter.bizId != null"> and biz_id = #{parameter.bizId}  </if>
+       		<if test="parameter.sysId != null"> and sys_id = #{parameter.sysId}  </if>
+        	<if test="parameter.name != null"> and name like CONCAT('%','${parameter.name}','%' ) </if>
+			<if test="parameter.code != null"> and code like CONCAT ('%','${parameter.code}','%')   </if>
+			<if test="parameter.status != null"> and status = #{parameter.status}  </if>
+			<if test="parameter.delStatus != null"> and del_status = #{parameter.delStatus}  </if>
+  	 </select>
+  	 
+  	  <select id="getRoleList"  resultMap="platformRolePo" >
+        select role.*
+        from platform_role role,platform_employee_role_link link
+        where role.role_id = link.role_id and role.del_status=1 and role.status=1
+       		<if test="bizId != null"> and role.biz_id = #{bizId}  </if>
+       		<if test="employeeId != null"> and link.employee_id = #{employeeId}  </if>
+  	 </select>
+  	 
+  	 <select id="getAllRoleList"  resultMap="platformRolePo" >
+        select role.*
+        from platform_role role
+        where role.del_status=1 and role.status=1
+       		<if test="bizId != null"> and role.biz_id = #{bizId}  </if>
+  	 </select>
+  	
+  	 <update id="updateRole" parameterType="platformRolePo">
+		update platform_role
+		<set>
+			<if test="sysId != null"> sys_id = #{sysId}, </if>
+			<if test="name != null"> name = #{name}, </if>
+			<if test="code != null"> code = #{code}, </if>
+			<if test="comment != null"> comment = #{comment}, </if>
+			<if test="status != null"> status = #{status}, </if>
+			<if test="delStatus != null"> del_status = #{delStatus}, </if>
+			<if test="updateTime != null"> update_time = #{updateTime}, </if>
+			<if test="groupId != null"> group_id = #{groupId}, </if>
+			<if test="groupName != null"> group_name = #{groupName}, </if>
+		</set>
+		where role_id = #{roleId}
+	</update>
+  	 
+  	 <insert id="addRole" parameterType="platformRolePo" useGeneratedKeys="true">
+  	 
+  		<!-- 返回主键 -->
+		<selectKey resultType="int" order="AFTER" keyProperty="roleId">
+		SELECT LAST_INSERT_ID()
+		</selectKey>
+  	 
+		insert into platform_role
+            (role_id,sys_id,biz_id,name,code,comment,status,del_status,create_time,update_time,group_id,group_name)
+		values 
+		(#{roleId,jdbcType=INTEGER},
+		#{sysId,jdbcType=INTEGER},
+		#{bizId,jdbcType=INTEGER},
+		#{name,jdbcType=VARCHAR},
+        #{code,jdbcType=VARCHAR},
+        #{comment,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR},
+        #{delStatus,jdbcType=VARCHAR},
+        #{createTime,jdbcType=DATE},
+        #{updateTime,jdbcType=DATE},
+        #{groupId,jdbcType=INTEGER},#{groupName,jdbcType=VARCHAR});
+	</insert>
+	
+	<delete id="delByRoleId" >
+		delete from platform_role
+		where role_id = #{roleId}
+	</delete>
+	
+	<!-- 角色权限操作 -->
+	<resultMap type="com.yihg.sys.po.PlatformRoleMenuLinkPo" id="platformRoleMenuLinkPo">
+        <id column="id" property="id" />
+        <result column="role_id" property="roleId" />
+        <result column="menu_id" property="menuId" />
+	</resultMap>
+  	<!-- 根据角色ID查询所拥有的菜单权限 -->
+  	<select id="findPlatformRoleMenuLinkPoByRoleId" resultMap="platformRoleMenuLinkPo">
+        select *
+        from platform_role_menu_link
+        where role_id=#{roleId}
+  	 </select>
+  	 
+  	<select id="findPlatformRoleMenuLinkPoByRoleIdAndMenuId" resultMap="platformRoleMenuLinkPo">
+        select *
+        from platform_role_menu_link
+        where role_id=#{roleId} and menu_id=#{menuId}
+  	 </select>
+  	 
+  	<select id="findPlatformRoleMenuLinkPoByMenuId" resultMap="platformRoleMenuLinkPo">
+        select *
+        from platform_role_menu_link
+        where  menu_id=#{menuId}
+  	 </select>
+  
+  	<insert id="addPlatformRoleMenuLinkPo" >
+		insert into platform_role_menu_link
+            (role_id,menu_id) values  (#{0,jdbcType=INTEGER}, #{1,jdbcType=INTEGER});
+	</insert>
+	<!-- 删除角色和权限菜单的关联 -->
+	<delete id="delPlatformRoleMenuLinkPoByRoleId" >
+		delete from platform_role_menu_link
+		where role_id = #{roleId}
+	</delete>
+	<select id="getRoleListExceptId"  resultMap="platformRolePo" >
+        select role.*
+        from platform_role role where 1=1
+       		<if test="name != null"> and role.name = #{name}  </if>
+       		<if test="roleId != null"> and role.role_id != #{roleId}  </if>
+  	 </select>
+	
+</mapper>
