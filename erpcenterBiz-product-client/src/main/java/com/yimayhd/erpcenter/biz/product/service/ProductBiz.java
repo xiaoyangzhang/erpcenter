@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.biz.product.client.service;
+package com.yimayhd.erpcenter.biz.product.service;
 
 import java.util.List;
 import java.util.Map;
