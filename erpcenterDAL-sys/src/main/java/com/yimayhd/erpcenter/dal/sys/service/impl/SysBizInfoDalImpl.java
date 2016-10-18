@@ -24,14 +24,14 @@ public class SysBizInfoDalImpl implements SysBizInfoDal {
 	@Autowired
 	private SysBizInfoMapper bizInfoDao;
 	@Autowired
-	private PlatformMenuDal sysMenuService;
+	private PlatformMenuDal platformMenuDal;
 	@Autowired
-	private PlatformEmployeeDal sysEmployeeService;
+	private PlatformEmployeeDal platformEmployeeDal;
 	
 	@Autowired
-	private PlatformOrgDal sysOrgService;
+	private PlatformOrgDal platformOrgDal;
 	@Autowired
-	private SettleApplyDal settleApplyService;
+	private SettleApplyDal settleApplyDal;
 	
 	@Override
 	public SysBizInfo getBizInfoByCode(String code) {
@@ -60,7 +60,7 @@ public class SysBizInfoDalImpl implements SysBizInfoDal {
 			po.setParentId(0);
 			po.setSysId(1);		
 			po.setSeqNum(1);
-			sysOrgService.saveOrg(po);
+			platformOrgDal.saveOrg(po);
 			
 			//3、保存管理员
 			empPo.setBizId(sysBizInfo.getId());//插入sysBizInfo后可以获取其id值
@@ -69,14 +69,14 @@ public class SysBizInfoDalImpl implements SysBizInfoDal {
 			empPo.setOrgId(po.getOrgId());
 			empPo.setName("管理员");
 			
-			sysEmployeeService.saveEmployee(empPo, sysBizInfo.getId());
+			platformEmployeeDal.saveEmployee(empPo, sysBizInfo.getId());
 			//4、保存菜单权限
-			sysMenuService.addPlatformMenuAndBizLink(sysBizInfo.getId(), menuIds);
+			platformMenuDal.addPlatformMenuAndBizLink(sysBizInfo.getId(), menuIds);
 			
 			//5、更新申请状态
 			apply.setState(1);
 			apply.setBizId(sysBizInfo.getId());
-			settleApplyService.updateApplyById(apply);
+			settleApplyDal.updateApplyById(apply);
 			
 			//6、添加审核记录
 			
@@ -110,10 +110,10 @@ public class SysBizInfoDalImpl implements SysBizInfoDal {
 	public void configSysBizInfoById(SysBizInfo biz,String menuIds) {
 		//List<String> menuIDs = StrUtils.strSplitList(menuIds);
 		//1、删除掉之前的关系
-		sysMenuService.deleteSysMenuByBizId(biz.getId());
+		platformMenuDal.deleteSysMenuByBizId(biz.getId());
 		if (menuIds!=null) {
 			//2、插入
-			sysMenuService.addPlatformMenuAndBizLink(biz.getId(), menuIds);
+			platformMenuDal.addPlatformMenuAndBizLink(biz.getId(), menuIds);
 		}
 		/*for (int i = 0; i < menuIDs.size(); i++) {
 			PlatformMenuPo menu=new PlatformMenuPo();

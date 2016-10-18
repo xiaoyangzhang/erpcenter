@@ -10,8 +10,8 @@ import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.dal.sys.po.SysDataRight;
 import com.yimayhd.erpcenter.dal.sys.service.PlatformOrgDal;
 
-public class PlatformOrgServiceImpl implements PlatformOrgBiz{
-	private static final Logger logger=LoggerFactory.getLogger(PlatformOrgServiceImpl.class);
+public class PlatformOrgBizImpl implements PlatformOrgBiz{
+	private static final Logger logger=LoggerFactory.getLogger(PlatformOrgBizImpl.class);
 
 	@Autowired
 	private PlatformOrgDal platformOrgDal;

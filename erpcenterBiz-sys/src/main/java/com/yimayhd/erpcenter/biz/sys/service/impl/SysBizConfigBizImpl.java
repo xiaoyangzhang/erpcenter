@@ -10,7 +10,7 @@ import com.yimayhd.erpcenter.biz.sys.service.SysBizConfigBiz;
 import com.yimayhd.erpcenter.dal.sys.po.SysBizConfig;
 import com.yimayhd.erpcenter.dal.sys.service.SysBizConfigDal;
 
-public class SysBizConfigServiceBiz implements SysBizConfigBiz {
+public class SysBizConfigBizImpl implements SysBizConfigBiz {
 
 	@Resource
 	private SysBizConfigDal sysBizConfigDal;
