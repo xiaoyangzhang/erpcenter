@@ -69,7 +69,7 @@ public class ProductFacadeImpl implements ProductFacade{
 		WebResult<PageBean<ProductInfo>> result = new WebResult<PageBean<ProductInfo>>(); 
 		try {
 			PageBean<ProductInfo> pageBeanResult = productInfoBiz.selectProductListPage(pageBean, parameters);
-			if (pageBeanResult == null ) {
+			if (pageBeanResult == null  ) {
 				result.setErrorCode(ProductErrorCode.QUERY_ERROR);
 				return result;
 			}
