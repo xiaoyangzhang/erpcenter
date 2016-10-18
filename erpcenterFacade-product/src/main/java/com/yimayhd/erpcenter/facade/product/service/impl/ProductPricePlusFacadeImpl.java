@@ -9,14 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
+import com.yimayhd.erpcenter.dal.product.service.ProductGroupDal;
 import com.yimayhd.erpcenter.dal.product.service.ProductGroupSupplierDal;
 import com.yimayhd.erpcenter.dal.product.service.ProductStockDal;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
 import com.yimayhd.erpcenter.facade.query.ProductGroupSupplierDTO;
 import com.yimayhd.erpcenter.facade.result.ResultSupport;
-import com.yimayhd.erpcenter.facade.service.ProductPriceFacade;
+import com.yimayhd.erpcenter.facade.service.ProductPricePlusFacade;
 
 
 
@@ -28,13 +30,16 @@ import com.yimayhd.erpcenter.facade.service.ProductPriceFacade;
 * @date 2016年10月17日 下午4:26:09 
 *
  */
-public class ProductPriceFacadeImpl implements ProductPriceFacade{
+public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 	
 	@Autowired
 	private ProductGroupSupplierDal productGroupSupplierDal;
 	
 	@Autowired
 	private ProductStockDal productStockDal;
+	
+	@Autowired
+	private ProductGroupDal productGroupDal;
 	
 	/**
 	 * 保存组团社
@@ -47,8 +52,7 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade{
 		
 		if(StringUtils.isEmpty(data)){
 			result.setSuccess(false);
-			result.setErrorCode(ProductErrorCode.PARAM_ERROR.getErrorCode());
-			result.setResultMsg(ProductErrorCode.PARAM_ERROR.getErrorMsg());
+			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
 			return result;
 		}
 		
@@ -60,16 +64,14 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade{
 			}
 		}catch(Exception ex){
 			result.setSuccess(false);
-			result.setErrorCode(ProductErrorCode.PARAM_ERROR.getErrorCode());
-			result.setResultMsg(ProductErrorCode.PARAM_ERROR.getErrorMsg());
+			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
 			return result;
 		};
 		
 		int ret = productGroupSupplierDal.save(saveP);
 		if(ret != 1){
 			result.setSuccess(false);
-			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR.getErrorCode());
-			result.setResultMsg(ProductErrorCode.SYSTEM_ERROR.getErrorMsg());
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
 			return result;
 		}
 		
@@ -87,16 +89,14 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade{
 		
 		if(productGroupSupplierDTO == null || productGroupSupplierDTO.getId() == null){
 			result.setSuccess(false);
-			result.setErrorCode(ProductErrorCode.PARAM_ERROR.getErrorCode());
-			result.setResultMsg(ProductErrorCode.PARAM_ERROR.getErrorMsg());
+			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
 			return result;
 		}
 		
 		int ret = productGroupSupplierDal.deleteByProductSupplierId(productGroupSupplierDTO.getId());
 		if(ret != 1){
 			result.setSuccess(false);
-			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR.getErrorCode());
-			result.setResultMsg(ProductErrorCode.SYSTEM_ERROR.getErrorMsg());
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
 			return result;
 		}
 		
@@ -120,8 +120,7 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade{
 			productGroupSupplierDal.copyProductSuppliersToTarget(productId, productSupplierIdList);
 		} catch (Exception e) {
 			result.setSuccess(false);
-			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR.getErrorCode());
-			result.setResultMsg(ProductErrorCode.SYSTEM_ERROR.getErrorMsg());
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
 			return result;
 		}
 		return result;
@@ -138,12 +137,9 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade{
 	public ResultSupport saveStock(Integer productId,String stockStr,Integer year,Integer month){
 		
 		ResultSupport result = new ResultSupport();
-		
-		
 		if(productId==null || StringUtils.isBlank(stockStr)){
 			result.setSuccess(false);
-			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR.getErrorCode());
-			result.setResultMsg(ProductErrorCode.SYSTEM_ERROR.getErrorMsg());
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
 			return result;
 		}
 		
@@ -153,6 +149,44 @@ public class ProductPriceFacadeImpl implements ProductPriceFacade{
     	Date endDate = DateUtils.parse(endDateStr,"yyyy-MM-dd");
 		List<ProductStock> stockList = JSON.parseArray(stockStr, ProductStock.class);
 		productStockDal.saveStock(productId,stockList,startDate,endDate);
+		return result;
+	}
+	
+	/**
+	 * 添加价格组
+	 * @param productGroups
+	 * @param groupSupplierId
+	 * @return
+	 */
+	public ResultSupport savePriceGroup(String productGroups,Integer groupSupplierId){
+		
+		ResultSupport result = new ResultSupport();
+		
+		List<ProductGroup> GroupPrices = JSON.parseArray(productGroups, ProductGroup.class);
+		try {
+			productGroupDal.save2(GroupPrices,groupSupplierId);
+		} catch (Exception e) {
+			result.setSuccess(false);
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
+			return result;
+		}
+		return result;
+	}
+	
+	/**
+	 * 将价格组复制到其他组
+	 * @param model
+	 * @param groupIds
+	 * @param destGroupSupplierIds
+	 * @return
+	 */
+	public ResultSupport copyGroup(String groupIds,String destGroupSupplierIds){
+
+		ResultSupport result = new ResultSupport();
+
+		List<Integer> groupIdList = JSON.parseArray(groupIds, Integer.class);
+		List<Integer> groupSupplierIdList = JSON.parseArray(destGroupSupplierIds, Integer.class);
+		productGroupDal.copyGroups(groupIdList,groupSupplierIdList);
 		return result;
 	}
 }

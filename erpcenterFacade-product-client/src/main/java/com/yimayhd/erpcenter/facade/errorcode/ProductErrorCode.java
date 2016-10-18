@@ -10,6 +10,7 @@ public class ProductErrorCode  implements Serializable {
     //任务
     public static final ProductErrorCode SYSTEM_ERROR = new ProductErrorCode("1001","系统错误");
     public static final ProductErrorCode PARAM_ERROR = new ProductErrorCode("1002","参数错误");
+    public static final ProductErrorCode QUERY_ERROR = new ProductErrorCode("1003","查询失败");
 
 
     private String errorCode;
