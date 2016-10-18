@@ -8,15 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
+import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRouteBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductTagBiz;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
+import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
-import com.yimayhd.erpcenter.facade.result.ResultSupport;
+import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
 import com.yimayhd.erpcenter.facade.result.WebResult;
 import com.yimayhd.erpcenter.facade.service.ProductFacade;
 
@@ -36,6 +40,12 @@ public class ProductFacadeImpl implements ProductFacade{
 	private ProductRouteBiz productRouteBiz;
 	@Autowired
 	private ProductTagBiz productTagBiz;
+	@Autowired
+	private ProductRemarkBiz productRemarkBiz;
+	@Autowired
+	private RegionBiz regionBiz;
+	@Autowired
+	private DicBiz dicBiz;
 	
 	@Override
 	public int saveBasicInfo(ProductSaveDTO productSaveDTO) {
@@ -90,6 +100,19 @@ public class ProductFacadeImpl implements ProductFacade{
 	@Override
 	public boolean saveProductTags(ProductTagDTO productTagDTO) {
 		return productTagBiz.saveProductTags(productTagDTO.getProductTagVo());
+	}
+
+	@Override
+	public boolean saveProductRemark(ProductRemarkDTO productRemarkDTO) {
+		return productRemarkBiz.saveProductRemark(productRemarkDTO.getProductRemark());
+	}
+
+	@Override
+	public ToProductAddResult toProductAdd(String typeCode, int bizId) {
+		ToProductAddResult toProductAddResult = new ToProductAddResult();
+		toProductAddResult.setAllProvince(regionBiz.getAllProvince());
+		toProductAddResult.setBrandList(dicBiz.getListByTypeCode(typeCode, bizId));
+		return toProductAddResult;
 	}
 
 }
