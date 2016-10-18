@@ -11,9 +11,9 @@ import java.util.List;
  * @Date 2016/10/18 19:52
  */
 public class LoadProductDepartmentResult extends ResultSupport{
-    private String orgJsonStr;
-    private String orgUserJsonStr;
-    private List<DicInfo> brandList;
+    private String orgJsonStr; //部门
+    private String orgUserJsonStr; //计调员
+    private List<DicInfo> brandList;//产品名称
 
     public String getOrgJsonStr() {
         return orgJsonStr;
