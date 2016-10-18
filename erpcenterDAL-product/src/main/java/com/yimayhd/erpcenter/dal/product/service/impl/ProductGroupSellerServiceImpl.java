@@ -1,4 +1,4 @@
-package com.yihg.product.impl;
+package com.yimayhd.erpcenter.dal.product.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package com.yihg.product.impl;
+package com.yimayhd.erpcenter.dal.product.service.impl;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -19,22 +19,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.yihg.basic.exception.ClientException;
-import com.yihg.product.api.ProductGroupPriceService;
-import com.yihg.product.api.ProductGroupService;
-import com.yihg.product.dao.ProductGroupPriceMapper;
-import com.yihg.product.dao.ProductGroupPriceStockallocateMapper;
-import com.yihg.product.po.ProductGroupPrice;
-import com.yihg.product.po.ProductGroupPriceStockallocate;
-import com.yihg.product.vo.PriceCopyVo;
-import com.yihg.product.vo.ProductPriceVo;
+import com.yimayhd.erpcenter.dal.product.dao.ProductGroupPriceMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductGroupPriceStockallocateMapper;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupPriceStockallocate;
+import com.yimayhd.erpcenter.dal.product.service.ProductGroupPriceDal;
+import com.yimayhd.erpcenter.dal.product.vo.PriceCopyVo;
+import com.yimayhd.erpcenter.dal.product.vo.ProductPriceVo;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.StringUtils;
 
-public class ProductGroupPriceServiceImpl implements ProductGroupPriceService {
-	static final Logger logger = LoggerFactory.getLogger(ProductGroupPriceServiceImpl.class);
+public class ProductGroupPriceDalImpl implements ProductGroupPriceDal {
+	static final Logger logger = LoggerFactory.getLogger(ProductGroupPriceDalImpl.class);
 	
 	@Autowired
 	private ProductGroupPriceMapper groupPriceMapper;
