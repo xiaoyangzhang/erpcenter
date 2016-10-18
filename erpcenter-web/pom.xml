@@ -93,6 +93,35 @@
 			<groupId>com.taobao.tair</groupId>
 			<artifactId>tair-client</artifactId>
 		</dependency>
+		<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>dubbo</artifactId>
+		</dependency>
+		<dependency>
+    			<groupId>com.yimayhd.erpcenter</groupId>
+    			<artifactId>erpcenterBiz-sys</artifactId>
+    	</dependency>
+    	<dependency>
+    			<groupId>com.yimayhd.erpcenter</groupId>
+    			<artifactId>erpcenterBiz-basic</artifactId>
+    	</dependency>
+    	<dependency>
+    			<groupId>com.yimayhd.erpcenter</groupId>
+    			<artifactId>erpcenterBiz-product</artifactId>
+    	</dependency>
+    	<dependency>
+    			<groupId>com.yimayhd.erpcenter</groupId>
+    			<artifactId>erpcenterFacade-sys</artifactId>
+    	</dependency>
+    	<dependency>
+    			<groupId>com.yimayhd.erpcenter</groupId>
+    			<artifactId>erpcenterFacade-basic</artifactId>
+    	</dependency>
+    	<dependency>
+    			<groupId>com.yimayhd.erpcenter</groupId>
+    			<artifactId>erpcenterFacade-product</artifactId>
+    	</dependency>
+    	
 	</dependencies>
 	<build>
 		<finalName>erpcenter-web</finalName>

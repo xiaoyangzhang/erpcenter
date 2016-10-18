@@ -5,6 +5,7 @@ import java.util.Map;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
+import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.WebResult;
 
@@ -45,4 +46,12 @@ public interface ProductFacade {
 	 * @author wangjun
 	 */
 	boolean codeValidate(int bizId, int productId, String code);
+	
+	/**
+	 * 保存产品标签
+	 * @param productTagDTO
+	 * @return
+	 * @author wangjun
+	 */
+	boolean saveProductTags(ProductTagDTO productTagDTO);
 }

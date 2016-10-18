@@ -144,5 +144,9 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
+		<dependency>
+			   <groupId>ledis</groupId>
+			   <artifactId>ledis</artifactId>
+		</dependency>
 	</dependencies>
 </project>

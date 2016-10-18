@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.dal.product.mq;
+package com.yimayhd.erpcenter.common.mq;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -20,7 +20,7 @@ import com.alibaba.rocketmq.client.producer.TransactionMQProducer;
 import com.alibaba.rocketmq.client.producer.TransactionSendResult;
 import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.common.message.MessageExt;
-import com.yimayhd.erpcenter.dal.product.utils.HessianUtils;
+import com.yimayhd.erpcenter.common.util.HessianUtils;
 
 /**
  * 

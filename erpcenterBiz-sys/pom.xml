@@ -43,5 +43,9 @@
     			<groupId>com.yimayhd.erpcenter</groupId>
     			<artifactId>erpcenterBiz-sys-client</artifactId>
     		</dependency>
+    		<dependency>
+			   <groupId>ledis</groupId>
+			   <artifactId>ledis</artifactId>
+		</dependency>
   </dependencies>
 </project>

@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.dal.product.mq;
+package com.yimayhd.erpcenter.common.mq;
 
 import java.io.Serializable;
 

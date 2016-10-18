@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.dal.product.utils;
+package com.yimayhd.erpcenter.common.util;
 
 import com.alibaba.com.caucho.hessian.io.Hessian2Input;
 import com.alibaba.com.caucho.hessian.io.Hessian2Output;

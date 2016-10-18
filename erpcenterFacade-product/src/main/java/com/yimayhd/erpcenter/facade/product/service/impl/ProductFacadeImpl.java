@@ -10,10 +10,12 @@ import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRouteBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductTagBiz;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
+import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.WebResult;
 import com.yimayhd.erpcenter.facade.service.ProductFacade;
@@ -32,6 +34,9 @@ public class ProductFacadeImpl implements ProductFacade{
 	private ProductInfoBiz productInfoBiz;
 	@Autowired
 	private ProductRouteBiz productRouteBiz;
+	@Autowired
+	private ProductTagBiz productTagBiz;
+	
 	@Override
 	public int saveBasicInfo(ProductSaveDTO productSaveDTO) {
 		if(null == productSaveDTO || null == productSaveDTO.getProductInfoVo()){
@@ -64,7 +69,7 @@ public class ProductFacadeImpl implements ProductFacade{
 		WebResult<PageBean<ProductInfo>> result = new WebResult<PageBean<ProductInfo>>(); 
 		try {
 			PageBean<ProductInfo> pageBeanResult = productInfoBiz.selectProductListPage(pageBean, parameters);
-			if (pageBeanResult == null ) {
+			if (pageBeanResult == null  ) {
 				result.setErrorCode(ProductErrorCode.QUERY_ERROR);
 				return result;
 			}
@@ -80,6 +85,11 @@ public class ProductFacadeImpl implements ProductFacade{
 	@Override
 	public boolean codeValidate(int bizId, int productId, String code) {
 		return productInfoBiz.checkProductCodeExist(productId, bizId, code);
+	}
+
+	@Override
+	public boolean saveProductTags(ProductTagDTO productTagDTO) {
+		return productTagBiz.saveProductTags(productTagDTO.getProductTagVo());
 	}
 
 }
