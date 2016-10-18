@@ -30,12 +30,6 @@
 			<artifactId>yihg-architect-mybatis</artifactId>
 			<version>${architect-mybatis.version}</version>
 	</dependency>
-		
-		<dependency>
-				<groupId>com.yihg</groupId>
-				<artifactId>yihg-architect-mybatis</artifactId>
-				<version>${architect-mybatis.version}</version>
-		</dependency>
   </dependencies>
   <build>
 		<plugins>
