@@ -121,7 +121,18 @@
     			<groupId>com.yimayhd.erpcenter</groupId>
     			<artifactId>erpcenterFacade-product</artifactId>
     	</dependency>
-    	
+    	<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterDAL-sys</artifactId>
+		</dependency>
+		<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterDAL-basic</artifactId>
+		</dependency>
+		<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterDAL-product</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>erpcenter-web</finalName>
