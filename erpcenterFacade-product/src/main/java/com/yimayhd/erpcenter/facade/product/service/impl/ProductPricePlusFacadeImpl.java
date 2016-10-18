@@ -52,8 +52,7 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 		
 		if(StringUtils.isEmpty(data)){
 			result.setSuccess(false);
-			result.setErrorCode(ProductErrorCode.PARAM_ERROR.getErrorCode());
-			result.setResultMsg(ProductErrorCode.PARAM_ERROR.getErrorMsg());
+			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
 			return result;
 		}
 		
@@ -65,16 +64,14 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 			}
 		}catch(Exception ex){
 			result.setSuccess(false);
-			result.setErrorCode(ProductErrorCode.PARAM_ERROR.getErrorCode());
-			result.setResultMsg(ProductErrorCode.PARAM_ERROR.getErrorMsg());
+			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
 			return result;
 		};
 		
 		int ret = productGroupSupplierDal.save(saveP);
 		if(ret != 1){
 			result.setSuccess(false);
-			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR.getErrorCode());
-			result.setResultMsg(ProductErrorCode.SYSTEM_ERROR.getErrorMsg());
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
 			return result;
 		}
 		
@@ -92,16 +89,14 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 		
 		if(productGroupSupplierDTO == null || productGroupSupplierDTO.getId() == null){
 			result.setSuccess(false);
-			result.setErrorCode(ProductErrorCode.PARAM_ERROR.getErrorCode());
-			result.setResultMsg(ProductErrorCode.PARAM_ERROR.getErrorMsg());
+			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
 			return result;
 		}
 		
 		int ret = productGroupSupplierDal.deleteByProductSupplierId(productGroupSupplierDTO.getId());
 		if(ret != 1){
 			result.setSuccess(false);
-			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR.getErrorCode());
-			result.setResultMsg(ProductErrorCode.SYSTEM_ERROR.getErrorMsg());
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
 			return result;
 		}
 		
@@ -125,8 +120,7 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 			productGroupSupplierDal.copyProductSuppliersToTarget(productId, productSupplierIdList);
 		} catch (Exception e) {
 			result.setSuccess(false);
-			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR.getErrorCode());
-			result.setResultMsg(ProductErrorCode.SYSTEM_ERROR.getErrorMsg());
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
 			return result;
 		}
 		return result;
@@ -145,8 +139,7 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 		ResultSupport result = new ResultSupport();
 		if(productId==null || StringUtils.isBlank(stockStr)){
 			result.setSuccess(false);
-			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR.getErrorCode());
-			result.setResultMsg(ProductErrorCode.SYSTEM_ERROR.getErrorMsg());
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
 			return result;
 		}
 		
@@ -174,8 +167,7 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 			productGroupDal.save2(GroupPrices,groupSupplierId);
 		} catch (Exception e) {
 			result.setSuccess(false);
-			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR.getErrorCode());
-			result.setResultMsg(ProductErrorCode.SYSTEM_ERROR.getErrorMsg());
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
 			return result;
 		}
 		return result;
