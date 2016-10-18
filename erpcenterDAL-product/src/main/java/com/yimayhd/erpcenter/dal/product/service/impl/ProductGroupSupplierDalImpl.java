@@ -10,7 +10,12 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.dao.ProductGroupMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductGroupPriceMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductGroupSupplierMapper;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;
+import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.service.ProductGroupSupplierDal;
+import com.yimayhd.erpcenter.dal.product.vo.ProductGroupSupplierVo;
+import com.yimayhd.erpcenter.dal.product.vo.ProductSupplierCondition;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,6 +3,8 @@ package com.yimayhd.erpcenter.dal.product.po;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.yimayhd.erpcenter.common.util.LogFieldAnno;
+
 public class TrafficRes implements Serializable{
 
 	/**

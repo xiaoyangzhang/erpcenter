@@ -29,6 +29,11 @@
 		<artifactId>yihg-architect-mybatis</artifactId>
 		<version>1.0.0</version>
 	</dependency>
+	
+	<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenter-common</artifactId>
+			</dependency>
   </dependencies>
   <!-- <dependencies>
 		<dependency>

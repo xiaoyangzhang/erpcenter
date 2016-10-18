@@ -35,7 +35,8 @@
     <module>erpcenterFacade-basic-client</module>
     <module>erpcenterFacade-basic</module>
     <module>erpcenterDAL-sys-client</module>
-  </modules>
+    <module>erpcenter-common</module>
+	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -55,6 +56,11 @@
 	</properties>
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenter-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenterDAL-product-client</artifactId>

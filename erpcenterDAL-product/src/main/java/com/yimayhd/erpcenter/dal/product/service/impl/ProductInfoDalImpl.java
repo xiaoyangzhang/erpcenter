@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.util.TypeUtils;
@@ -29,6 +29,8 @@ import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
 import com.yimayhd.erpcenter.dal.product.po.ProductContact;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
+import com.yimayhd.erpcenter.dal.product.po.ProductRight;
+import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.dal.product.po.ProductSales;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
 import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
