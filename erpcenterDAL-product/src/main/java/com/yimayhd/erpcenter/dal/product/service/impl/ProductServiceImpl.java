@@ -1,8 +1,13 @@
 package com.yimayhd.erpcenter.dal.product.service.impl;
 
+import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
+import com.yimayhd.erpcenter.dal.product.service.ProductService;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
-import com.yimayhd.erpcenter.service.ProductService;
 
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -23,6 +28,43 @@ public class ProductServiceImpl implements ProductService{
 			String brandCode) {
 		
 		return 0;
+	}
+
+	/**
+	 * 分页查询产品列表
+	 *
+	 * @param pageBean
+	 * @param parameters
+	 * @return
+	 */
+	@Override
+	public PageBean<ProductInfo> findProductInfos(PageBean<ProductInfo> pageBean, Map parameters) {
+		return null;
+	}
+
+	/**
+	 * 修改产品
+	 *
+	 * @param productInfo
+	 * @return
+	 */
+	@Override
+	public int updateProductInfo(ProductInfo productInfo) {
+		return 0;
+	}
+
+	/**
+	 * @param productId@return
+	 */
+	@Override
+	public List<ProductRoute> findProductRouteByProductId(Integer productId) {
+		return null;
+	}
+
+	@Override
+	public ProductInfo findProductInfoById(Integer id) {
+		//return infoMapper.selectByPrimaryKey(id);
+		return null;
 	}
 
 }

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yimayhd.erpcenter.dal.basic.dao.MsgPushAppListMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.basic.po.MsgPushAppList" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="push_id" property="pushId" jdbcType="INTEGER" />
+    <result column="receiver_type" property="receiverType" jdbcType="TINYINT" />
+    <result column="receiver_name" property="receiverName" jdbcType="VARCHAR" />
+    <result column="receiver_identity" property="receiverIdentity" jdbcType="VARCHAR" />
+    <result column="read_state" property="readState" jdbcType="TINYINT" />
+    <result column="read_time" property="readTime" jdbcType="TIMESTAMP" />
+    <result column="delete_state" property="deleteState" jdbcType="TINYINT" />
+    <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, push_id, receiver_type, receiver_name, receiver_identity, read_state, read_time, 
+    delete_state, delete_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from msg_push_app_list
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from msg_push_app_list
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.basic.po.MsgPushAppList" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into msg_push_app_list (push_id, receiver_type, receiver_name, 
+      receiver_identity, read_state, read_time, 
+      delete_state, delete_time)
+    values (#{pushId,jdbcType=INTEGER}, #{receiverType,jdbcType=TINYINT}, #{receiverName,jdbcType=VARCHAR}, 
+      #{receiverIdentity,jdbcType=VARCHAR}, #{readState,jdbcType=TINYINT}, #{readTime,jdbcType=TIMESTAMP}, 
+      #{deleteState,jdbcType=TINYINT}, #{deleteTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.basic.po.MsgPushAppList" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into msg_push_app_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pushId != null" >
+        push_id,
+      </if>
+      <if test="receiverType != null" >
+        receiver_type,
+      </if>
+      <if test="receiverName != null" >
+        receiver_name,
+      </if>
+      <if test="receiverIdentity != null" >
+        receiver_identity,
+      </if>
+      <if test="readState != null" >
+        read_state,
+      </if>
+      <if test="readTime != null" >
+        read_time,
+      </if>
+      <if test="deleteState != null" >
+        delete_state,
+      </if>
+      <if test="deleteTime != null" >
+        delete_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pushId != null" >
+        #{pushId,jdbcType=INTEGER},
+      </if>
+      <if test="receiverType != null" >
+        #{receiverType,jdbcType=TINYINT},
+      </if>
+      <if test="receiverName != null" >
+        #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverIdentity != null" >
+        #{receiverIdentity,jdbcType=VARCHAR},
+      </if>
+      <if test="readState != null" >
+        #{readState,jdbcType=TINYINT},
+      </if>
+      <if test="readTime != null" >
+        #{readTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteState != null" >
+        #{deleteState,jdbcType=TINYINT},
+      </if>
+      <if test="deleteTime != null" >
+        #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.basic.po.MsgPushAppList" >
+    update msg_push_app_list
+    <set >
+      <if test="pushId != null" >
+        push_id = #{pushId,jdbcType=INTEGER},
+      </if>
+      <if test="receiverType != null" >
+        receiver_type = #{receiverType,jdbcType=TINYINT},
+      </if>
+      <if test="receiverName != null" >
+        receiver_name = #{receiverName,jdbcType=VARCHAR},
+      </if>
+      <if test="receiverIdentity != null" >
+        receiver_identity = #{receiverIdentity,jdbcType=VARCHAR},
+      </if>
+      <if test="readState != null" >
+        read_state = #{readState,jdbcType=TINYINT},
+      </if>
+      <if test="readTime != null" >
+        read_time = #{readTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteState != null" >
+        delete_state = #{deleteState,jdbcType=TINYINT},
+      </if>
+      <if test="deleteTime != null" >
+        delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.basic.po.MsgPushAppList" >
+    update msg_push_app_list
+    set push_id = #{pushId,jdbcType=INTEGER},
+      receiver_type = #{receiverType,jdbcType=TINYINT},
+      receiver_name = #{receiverName,jdbcType=VARCHAR},
+      receiver_identity = #{receiverIdentity,jdbcType=VARCHAR},
+      read_state = #{readState,jdbcType=TINYINT},
+      read_time = #{readTime,jdbcType=TIMESTAMP},
+      delete_state = #{deleteState,jdbcType=TINYINT},
+      delete_time = #{deleteTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <insert id="batchAddMsgPushAppList" useGeneratedKeys="true" parameterType="java.util.List" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into msg_push_app_list (push_id, receiver_type, receiver_name,
+    receiver_identity, read_state, read_time,
+    delete_state, delete_time)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.pushId,jdbcType=INTEGER}, #{item.receiverType,jdbcType=TINYINT}, #{item.receiverName,jdbcType=VARCHAR},
+      #{item.receiverIdentity,jdbcType=VARCHAR}, #{item.readState,jdbcType=TINYINT}, #{item.readTime,jdbcType=TIMESTAMP},
+      #{item.deleteState,jdbcType=TINYINT}, #{item.deleteTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+
+
+
+  <resultMap id="messageResult" type="java.util.HashMap">
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+
+    <result column="receiver_id" property="receiverId" jdbcType="INTEGER" />
+    <result column="receiver_name" property="receiverName" jdbcType="VARCHAR" />
+    <result column="receiver_identity" property="receiverIdentity" jdbcType="VARCHAR" />
+    <result column="read_state" property="readState" jdbcType="TINYINT" />
+    <result column="read_time" property="readTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <select id="selectMessageList" resultMap="messageResult">
+  SELECT mpa.id, mpa.group_id, mpa.content, mpa.create_time,
+  mpal.id receiver_id,mpal.receiver_name,mpal.receiver_identity,mpal.read_state,mpal.read_time
+  FROM msg_push_app mpa LEFT JOIN msg_push_app_list mpal
+  ON mpa.id = mpal.push_id
+  WHERE mpal.receiver_identity = #{receiverIdentity,jdbcType=VARCHAR}
+  AND mpal.delete_state = 0 AND mpa.creator_type = #{creatorType,jdbcType=INTEGER}
+  <if test="createTime != null" >
+    <![CDATA[
+          AND (UNIX_TIMESTAMP(mpa.create_time)*1000) < #{createTime}
+          ]]>
+  </if>
+  ORDER BY mpa.create_time desc
+  limit 10
+</select>
+
+  <select id="selectMessageNotReadCount" resultType="java.lang.Integer">
+    SELECT COUNT(1)
+    FROM msg_push_app mpa LEFT JOIN msg_push_app_list mpal
+    ON mpa.id = mpal.push_id
+    WHERE mpal.receiver_identity = #{receiverIdentity,jdbcType=VARCHAR}
+    AND mpal.delete_state = 0 AND mpal.read_state = 0
+    <if test="creatorType != null" >
+      AND mpa.creator_type = #{creatorType,jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <select id="selectMsgPushAppListIdentityByPushId" resultType="java.lang.String" parameterType="java.lang.Integer">
+    select
+      receiver_identity
+    from msg_push_app_list
+    where push_id = #{pushId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectNotReadMsgPushAppListIdentityByPushId" resultType="java.lang.String" parameterType="java.lang.Integer">
+    select
+    receiver_identity
+    from msg_push_app_list
+    where push_id = #{pushId,jdbcType=INTEGER} AND read_state = 0
+  </select>
+
+</mapper>

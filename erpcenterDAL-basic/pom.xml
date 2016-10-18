@@ -32,10 +32,6 @@
 		<cglib.version>2.2</cglib.version>
 		<trove.version>1.0.2</trove.version>
 		
-		<!-- jdbc driver setting -->
-		<!-- 
-		<mysql.driver.version>5.1.13</mysql.driver.version>
-		 -->
 		<oracle.driver.version>11.1.0.7.0</oracle.driver.version>
 		
 		<!-- Log libs -->
@@ -56,13 +52,11 @@
 		<!-- Build args -->
 		<skip_maven_deploy>false</skip_maven_deploy>
 		<updateReleaseInfo>true</updateReleaseInfo>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
