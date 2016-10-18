@@ -13,7 +13,7 @@ import com.yimayhd.erpcenter.facade.result.ResultSupport;
 * @date 2016年10月17日 下午4:26:09 
 *
  */
-public interface ProductPriceFacade {
+public interface ProductPricePlusFacade {
 	
 	
 	/**
@@ -47,4 +47,21 @@ public interface ProductPriceFacade {
 	 * @return
 	 */
 	ResultSupport saveStock(Integer productId,String stockStr,Integer year,Integer month);
+	
+	/**
+	 * 添加价格组
+	 * @param productGroups
+	 * @param groupSupplierId
+	 * @return
+	 */
+	public ResultSupport savePriceGroup(String productGroups,Integer groupSupplierId);
+	
+	/**
+	 * 将价格组复制到其他组
+	 * @param model
+	 * @param groupIds
+	 * @param destGroupSupplierIds
+	 * @return
+	 */
+	public ResultSupport copyGroup(String groupIds,String destGroupSupplierIds);
 }
