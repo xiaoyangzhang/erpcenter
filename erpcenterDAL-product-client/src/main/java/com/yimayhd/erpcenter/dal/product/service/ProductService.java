@@ -39,4 +39,11 @@ public interface ProductService {
 	 * @return
 	 */
 	List<ProductRoute> findProductRouteByProductId(Integer productId);
+	
+	/**
+	 * 查询产品详情
+	 * @param id
+	 * @return
+	 */
+	ProductInfo findProductInfoById(Integer id);
 }
