@@ -2,7 +2,6 @@ package com.yimayhd.erpcenter.facade.product.service.impl;
 
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.biz.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;

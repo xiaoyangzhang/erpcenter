@@ -22,5 +22,9 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.yimayhd.erpcenter</groupId>
+      <artifactId>erpcenterDAL-product-client</artifactId>
+    </dependency>
   </dependencies>
 </project>
