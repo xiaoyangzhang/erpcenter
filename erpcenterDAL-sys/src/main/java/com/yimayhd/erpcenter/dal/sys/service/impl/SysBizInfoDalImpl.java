@@ -1,40 +1,37 @@
-package com.yihg.sys.impl;
+package com.yimayhd.erpcenter.dal.sys.service.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.sys.api.PlatformEmployeeService;
-import com.yihg.sys.api.PlatformMenuService;
-import com.yihg.sys.api.PlatformOrgService;
-import com.yihg.sys.api.SettleApplyService;
-import com.yihg.sys.api.SysBizInfoService;
-import com.yihg.sys.dao.SysBizInfoMapper;
-import com.yihg.sys.po.PlatformEmployeePo;
-import com.yihg.sys.po.PlatformMenuPo;
-import com.yihg.sys.po.PlatformOrgPo;
-import com.yihg.sys.po.SettleApply;
-import com.yihg.sys.po.SettleApplyResult;
-import com.yihg.sys.po.SysBizInfo;
-import com.yihg.sys.utils.StrUtils;
+import com.yimayhd.erpcenter.dal.sys.dao.SysBizInfoMapper;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
+import com.yimayhd.erpcenter.dal.sys.po.SettleApply;
+import com.yimayhd.erpcenter.dal.sys.po.SysBizInfo;
+import com.yimayhd.erpcenter.dal.sys.service.PlatformEmployeeDal;
+import com.yimayhd.erpcenter.dal.sys.service.PlatformMenuDal;
+import com.yimayhd.erpcenter.dal.sys.service.PlatformOrgDal;
+import com.yimayhd.erpcenter.dal.sys.service.SettleApplyDal;
+import com.yimayhd.erpcenter.dal.sys.service.SysBizInfoDal;
 
-public class SysBizInfoServiceImpl implements SysBizInfoService {
+public class SysBizInfoDalImpl implements SysBizInfoDal {
 
 	@Autowired
 	private SysBizInfoMapper bizInfoDao;
 	@Autowired
-	private PlatformMenuService sysMenuService;
+	private PlatformMenuDal sysMenuService;
 	@Autowired
-	private PlatformEmployeeService sysEmployeeService;
+	private PlatformEmployeeDal sysEmployeeService;
 	
 	@Autowired
-	private PlatformOrgService sysOrgService;
+	private PlatformOrgDal sysOrgService;
 	@Autowired
-	private SettleApplyService settleApplyService;
+	private SettleApplyDal settleApplyService;
 	
 	@Override
 	public SysBizInfo getBizInfoByCode(String code) {

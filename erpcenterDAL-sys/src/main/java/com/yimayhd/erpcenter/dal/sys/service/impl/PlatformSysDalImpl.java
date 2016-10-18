@@ -1,4 +1,4 @@
-package com.yihg.sys.impl;
+package com.yimayhd.erpcenter.dal.sys.service.impl;
 
 import java.util.List;
 
@@ -6,13 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.sys.api.PlatformSysService;
-import com.yihg.sys.dao.PlatformSysMapper;
-import com.yihg.sys.po.PlatformSysPo;
+import com.yimayhd.erpcenter.dal.sys.dao.PlatformSysMapper;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformSysPo;
+import com.yimayhd.erpcenter.dal.sys.service.PlatformSysDal;
 
-public class PlatformSysServiceImpl implements PlatformSysService {
+public class PlatformSysDalImpl implements PlatformSysDal {
 	
-	private static final Logger logger=LoggerFactory.getLogger(PlatformSysServiceImpl.class);
+	private static final Logger logger=LoggerFactory.getLogger(PlatformSysDalImpl.class);
 
 	@Autowired
 	private PlatformSysMapper platformSysMapper;

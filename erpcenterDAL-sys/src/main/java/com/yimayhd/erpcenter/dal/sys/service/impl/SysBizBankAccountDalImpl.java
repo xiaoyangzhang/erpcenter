@@ -1,14 +1,14 @@
-package com.yihg.sys.impl;
+package com.yimayhd.erpcenter.dal.sys.service.impl;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.sys.api.SysBizBankAccountService;
-import com.yihg.sys.dao.SysBizBankAccountMapper;
-import com.yihg.sys.po.SysBizBankAccount;
+import com.yimayhd.erpcenter.dal.sys.dao.SysBizBankAccountMapper;
+import com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount;
+import com.yimayhd.erpcenter.dal.sys.service.SysBizBankAccountDal;
 
-public class SysBizBankAccountServiceImpl implements SysBizBankAccountService {
+public class SysBizBankAccountDalImpl implements SysBizBankAccountDal {
 	@Autowired
 	private SysBizBankAccountMapper bankAccountDao;
 		

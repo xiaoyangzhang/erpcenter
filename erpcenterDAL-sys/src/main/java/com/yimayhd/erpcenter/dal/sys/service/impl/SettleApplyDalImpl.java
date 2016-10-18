@@ -1,19 +1,18 @@
-package com.yihg.sys.impl;
+package com.yimayhd.erpcenter.dal.sys.service.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.sys.api.SettleApplyService;
-import com.yihg.sys.dao.SettleApplyMapper;
-import com.yihg.sys.dao.SettleApplyResultMapper;
-import com.yihg.sys.po.SettleApply;
-import com.yihg.sys.po.SettleApplyResult;
+import com.yimayhd.erpcenter.dal.sys.dao.SettleApplyMapper;
+import com.yimayhd.erpcenter.dal.sys.dao.SettleApplyResultMapper;
+import com.yimayhd.erpcenter.dal.sys.po.SettleApply;
+import com.yimayhd.erpcenter.dal.sys.po.SettleApplyResult;
+import com.yimayhd.erpcenter.dal.sys.service.SettleApplyDal;
 
-public class SettleApplyServiceImpl implements SettleApplyService {
+public class SettleApplyDalImpl implements SettleApplyDal {
 
 	@Autowired
 	private SettleApplyMapper applyDao;

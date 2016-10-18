@@ -1,4 +1,4 @@
-package com.yihg.sys.impl;
+package com.yimayhd.erpcenter.dal.sys.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,11 +6,11 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.yihg.sys.api.SysBizConfigService;
-import com.yihg.sys.dao.SysBizConfigMapper;
-import com.yihg.sys.po.SysBizConfig;
+import com.yimayhd.erpcenter.dal.sys.dao.SysBizConfigMapper;
+import com.yimayhd.erpcenter.dal.sys.po.SysBizConfig;
+import com.yimayhd.erpcenter.dal.sys.service.SysBizConfigDal;
 
-public class SysBizConfigServiceImpl implements SysBizConfigService {
+public class SysBizConfigDalImpl implements SysBizConfigDal {
 
 	@Resource
 	private SysBizConfigMapper configMapper;
