@@ -11,7 +11,7 @@
 	<bean id="dataSourceProduct" class="com.alibaba.druid.pool.DruidDataSource"
 		  destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-		<property name="url" value="${jdbc.url}"/>
+		<property name="url" value="${jdbc.url.product}"/>
 		<property name="username" value="${jdbc.username}"/>
 		<property name="password" value="${jdbc.password}"/>
 		<property name="filters" value="config" />
@@ -26,7 +26,7 @@
 	<bean id="sqlSessionFactoryProduct" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSourceProduct"/>
 		<property name="mapperLocations" value="classpath:com/yimayhd/product/mapper/*.xml"/>
-		<property name="typeAliasesPackage" value="com.yimayhd.product.po"/>
+		<property name="typeAliasesPackage" value="com.yimayhd.erpcenter.dal.po"/>
 		<property name="configLocation" value="classpath:mybatis-config.xml"/>
 	</bean>
 
