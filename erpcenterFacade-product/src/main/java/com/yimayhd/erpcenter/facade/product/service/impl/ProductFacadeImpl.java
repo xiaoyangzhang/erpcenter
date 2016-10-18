@@ -2,9 +2,9 @@ package com.yimayhd.erpcenter.facade.product.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.yimayhd.erpcenter.biz.product.client.service.ProductBiz;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.facade.service.ProductFacade;
-import com.yimayhd.erpcenter.service.ProductService;
 
 /**
  * 
@@ -17,7 +17,7 @@ import com.yimayhd.erpcenter.service.ProductService;
 public class ProductFacadeImpl implements ProductFacade{
 	
 	@Autowired
-	private ProductService productBiz;
+	private ProductBiz productBiz;
 	/**
 	 * 保存产品基本信息
 	 */

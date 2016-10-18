@@ -5,7 +5,6 @@ import com.yimayhd.erpcenter.biz.product.client.service.ProductBiz;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
-import com.yimayhd.erpcenter.service.ProductService;
 
 import java.util.List;
 import java.util.Map;
