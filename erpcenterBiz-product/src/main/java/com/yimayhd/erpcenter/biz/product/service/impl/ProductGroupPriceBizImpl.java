@@ -7,7 +7,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupPriceBiz;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice;
@@ -22,7 +21,7 @@ public class ProductGroupPriceBizImpl implements ProductGroupPriceBiz {
 	private ProductGroupPriceDal productGroupPriceDal;
 	
 	@Override
-	@Transactional
+	 
 	public int save(ProductPriceVo priceVo) {
 		return productGroupPriceDal.save(priceVo);
 	}
@@ -49,13 +48,13 @@ public class ProductGroupPriceBizImpl implements ProductGroupPriceBiz {
 	 * 如果是统一定价则supplierId传入null即可
 	 * 如果是普通模式分别定价，则传入地接社SupplierId
 	 */
-    @Transactional
+     
     @Override
     public boolean updateStock(Integer priceId, Integer supplierId, Integer increaseCount) {
         return productGroupPriceDal.updateStock(priceId, supplierId, increaseCount);
     }
     
-    @Transactional
+     
 	public int copyGroupPrice(PriceCopyVo copyVo){
     	return productGroupPriceDal.copyGroupPrice(copyVo);
     }
@@ -82,7 +81,7 @@ public class ProductGroupPriceBizImpl implements ProductGroupPriceBiz {
 	}
 
 	@Override
-	@Transactional
+	 
 	public void batchInsertPriceGroup(Integer bizId, String json) {
 		productGroupPriceDal.batchInsertPriceGroup(bizId, json);
 	}

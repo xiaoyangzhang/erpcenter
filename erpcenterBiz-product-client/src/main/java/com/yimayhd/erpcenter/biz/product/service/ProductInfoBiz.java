@@ -49,7 +49,7 @@ public interface ProductInfoBiz {
 	 * @param bizId
 	 * @return
 	 */
-	PageBean<ProductInfo> findProductInfos2(PageBean<ProductInfo> pageBean,Map parameters);
+	PageBean<ProductInfo> selectProductListPage(PageBean<ProductInfo> pageBean,Map parameters);
 	
 	/**
 	 * 查询产品和价格组信息

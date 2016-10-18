@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
@@ -37,9 +36,9 @@ public class ProductInfoBizImpl implements ProductInfoBiz{
 	}
 	
 	@Override
-	public PageBean<ProductInfo> findProductInfos2(
+	public PageBean<ProductInfo> selectProductListPage(
 			PageBean<ProductInfo> pageBean, Map parameters) {
-		return productInfoDal.findProductInfos2(pageBean, parameters);
+		return productInfoDal.selectProductListPage(pageBean, parameters);
 	}
 	
 	@Override
@@ -70,7 +69,7 @@ public class ProductInfoBizImpl implements ProductInfoBiz{
 		return MessageFormat.format(format, bizCode,brandCode,String.valueOf(count+1));
 	}
 
-	@Transactional
+	 
 	@Override
 	public int saveProductInfo(ProductInfoVo productInfoVo,String bizCode,String brandCode) {
 		return productInfoDal.saveProductInfo(productInfoVo, bizCode, brandCode);
