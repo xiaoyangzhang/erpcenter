@@ -25,9 +25,6 @@ public class ProductFacadeImpl implements ProductFacade{
 	private ProductInfoBiz productInfoBiz;
 	@Autowired
 	private ProductRouteBiz productRouteBiz;
-	/**
-	 * 保存产品基本信息
-	 */
 	@Override
 	public int saveBasicInfo(ProductSaveDTO productSaveDTO) {
 		if(null == productSaveDTO || null == productSaveDTO.getProductInfoVo()){
@@ -58,6 +55,11 @@ public class ProductFacadeImpl implements ProductFacade{
 	public PageBean selectProductList(PageBean pageBean,
 			Map<String, Object> parameters) {
 		return null;
+	}
+
+	@Override
+	public boolean codeValidate(int bizId, int productId, String code) {
+		return productInfoBiz.checkProductCodeExist(productId, bizId, code);
 	}
 
 }

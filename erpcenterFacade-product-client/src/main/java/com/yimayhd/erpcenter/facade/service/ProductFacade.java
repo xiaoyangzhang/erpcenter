@@ -15,6 +15,12 @@ import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 *
  */
 public interface ProductFacade {
+	/**
+	 * 保存产品基本信息
+	 * @param productSaveDTO
+	 * @return
+	 * @author wangjun
+	 */
 	int saveBasicInfo(ProductSaveDTO productSaveDTO);
 	/**
 	 * 
@@ -26,4 +32,14 @@ public interface ProductFacade {
 	* @throws
 	 */
 	public PageBean selectProductList(PageBean pageBean,Map<String, Object> parameters);
+	
+	/**
+	 * 校验编码是否存在
+	 * @param bizId
+	 * @param productId
+	 * @param code
+	 * @return
+	 * @author wangjun
+	 */
+	boolean codeValidate(int bizId, int productId, String code);
 }
