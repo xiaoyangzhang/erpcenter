@@ -15,4 +15,6 @@
     	<constructor-arg value="${redis-haAddress}" /> 
     	<constructor-arg value="${redis-redisInitParam}" />
     </bean>
+    
+    
 </beans>

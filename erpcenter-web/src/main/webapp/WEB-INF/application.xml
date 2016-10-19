@@ -19,7 +19,7 @@
 	
 	<import resource="../META-INF/spring/application-mq.xml" />
 	<import resource="../META-INF/spring/application-redis.xml" />
-	
+	<import resource="../META-INF/spring/application-redis-old.xml" />
 	
 	<import resource="../META-INF/spring/application-persistance-product.xml" />
 	<import resource="../META-INF/spring/application-persistance-basic.xml" />
