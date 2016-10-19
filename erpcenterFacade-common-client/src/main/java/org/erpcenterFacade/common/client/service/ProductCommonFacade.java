@@ -41,7 +41,8 @@ public interface ProductCommonFacade {
     * @throws
      */
     public String setSaleOperatorIds(String operatorIds,String orgIds,int bizId);
-	List<ImgSpace> imgList(int bizId, int imgId, String name,
+
+    public List<ImgSpace> imgList(int bizId, int imgId, String name,
 			String sortFileds, String order);
 
     public List<TreeDto> findImgDirTree(int bizId);
