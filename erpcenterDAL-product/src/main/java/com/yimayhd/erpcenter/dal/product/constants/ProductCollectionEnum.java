@@ -1,20 +1,23 @@
-package com.yimayhd.erpcenter.dal.product.solrdump.enums;
+package com.yimayhd.erpcenter.dal.product.constants;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * 
+ *产品模块solr collection枚举
+ *
+ */
+public enum ProductCollectionEnum {
 
-
-public enum SolrdumpClient {
     
-    HOTEL_LIST("上下架列表", 1, "productState"),
-    HOTEL_DETAIL("库存列表", 2, "productStock");
-
+    PRODUCT_STATE("产品状态", 1, "productState")
+    ;
     
     private String name;
     private int id;
     private String collection;
 
-    SolrdumpClient(String name, int id, String collection) {
+    ProductCollectionEnum(String name, int id, String collection) {
         this.name = name;
         this.id = id;
         this.collection =  collection;
@@ -33,11 +36,11 @@ public enum SolrdumpClient {
     }
 
     
-    public static SolrdumpClient getClientByCollection(String collection) {
+    public static ProductCollectionEnum getClientByCollection(String collection) {
         if(StringUtils.isBlank(collection)){
             return null;
         }
-        for (SolrdumpClient solrdumpClient : SolrdumpClient.values()) {
+        for (ProductCollectionEnum solrdumpClient : ProductCollectionEnum.values()) {
             if (solrdumpClient.getCollection().equals(collection)) {
                 return solrdumpClient;
             }
@@ -46,13 +49,14 @@ public enum SolrdumpClient {
     }
     
     
-    public static SolrdumpClient getClientById(int id) {
-        for (SolrdumpClient solrdumpClient : SolrdumpClient.values()) {
+    public static ProductCollectionEnum getClientById(int id) {
+        for (ProductCollectionEnum solrdumpClient : ProductCollectionEnum.values()) {
             if (solrdumpClient.getId() == id) {
                 return solrdumpClient;
             }
         }
         return null;
     }
+
 
 }
