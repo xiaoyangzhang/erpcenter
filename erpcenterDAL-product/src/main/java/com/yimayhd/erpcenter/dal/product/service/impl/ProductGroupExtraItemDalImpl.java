@@ -2,7 +2,7 @@ package com.yimayhd.erpcenter.dal.product.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yimayhd.erpcenter.dal.product.mapper.ProductGroupExtraItemMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductGroupExtraItemMapper;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupExtraItem;
 import com.yimayhd.erpcenter.dal.product.service.ProductGroupExtraItemDal;
 

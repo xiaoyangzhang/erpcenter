@@ -92,4 +92,5 @@ public interface ProductFacade {
 	 * @author wangjun
 	 */
 	GetProductRouteResult findProductRouteById(int productId);
+	
 }

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yimayhd.erpcenter.dal.product.dao.ProductGroupMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.ProductGroup" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="group_supplier_id" property="groupSupplierId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="city_departure" property="cityDeparture" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+    <result column="group_setting" property="groupSetting" jdbcType="TINYINT" />
+    <!-- <association property="productGroupSupplier"  javaType="com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier" >
+    	<id column="productGroupSupplierId" property="id" jdbcType="INTEGER" />
+	     <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+	    <result column="province" property="province" jdbcType="VARCHAR" />
+	    <result column="city" property="city" jdbcType="VARCHAR" />
+	    <result column="area" property="area" jdbcType="VARCHAR" />
+	    <result column="town" property="town" jdbcType="VARCHAR" />
+	    <result column="update_time" property="updateTime" jdbcType="DATE" />
+    </association>
+    <collection property="groupPrices" column="group_id" ofType="com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice">
+    	 <id column="groupPriceId" property="id" jdbcType="INTEGER" />
+	    <result column="group_date" property="groupDate" jdbcType="DATE" />
+	    <result column="group_date_to" property="groupDateTo" jdbcType="DATE" />
+	    <result column="price_settlement_adult" property="priceSettlementAdult" jdbcType="REAL" />
+	    <result column="price_settlement_child" property="priceSettlementChild" jdbcType="REAL" />
+	
+	    <result column="price_cost_adult" property="priceCostAdult" jdbcType="REAL" />
+	    <result column="price_cost_child" property="priceCostChild" jdbcType="REAL" />
+	
+    </collection> -->
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, product_id, name,group_supplier_id, city_departure, create_time,group_setting
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from product_group
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectProductGroups" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from product_group
+     where product_id = #{productId,jdbcType=INTEGER}
+     and state !=-1
+     ORDER BY create_time DESC
+  </select>
+  <select id="selectProductGroupsBySellerId" resultMap="BaseResultMap">
+    select 
+    pg.id, pg.product_id, pg.name,pg.group_supplier_id, pg.city_departure, pg.create_time,pg.group_setting
+    from product_group pg,product_group_seller pgs
+    where pg.`id`=pgs.`group_id` AND pg.product_id = #{productId,jdbcType=INTEGER}
+    and pg.state !=-1 AND pgs.operator_id=#{sellerId,jdbcType=INTEGER}
+    ORDER BY create_time DESC
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from product_group
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroup" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into product_group (product_id, name, city_departure, 
+      create_time,group_setting)
+    values (#{productId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{cityDeparture,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=BIGINT},#{groupSetting,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroup" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into product_group
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="groupSupplierId != null" >
+        group_supplier_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="cityDeparture != null" >
+        city_departure,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="groupSetting != null" >
+        group_setting,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="productId != null" >
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="groupSupplierId != null" >
+        #{groupSupplierId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cityDeparture != null" >
+        #{cityDeparture,jdbcType=VARCHAR},
+      </if>
+       <if test="state != null" >
+        #{state,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="groupSetting != null" >
+        #{groupSetting,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroup" >
+    update product_group
+    <set >
+      <if test="productId != null" >
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="groupSupplierId != null" >
+        group_supplier_id= #{groupSupplierId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cityDeparture != null" >
+        city_departure = #{cityDeparture,jdbcType=VARCHAR},
+      </if>
+       <if test="state != null" >
+        state = #{state,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="groupSetting != null" >
+        group_setting = #{groupSetting,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductGroup" >
+    update product_group
+    set product_id = #{productId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      city_departure = #{cityDeparture,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=BIGINT},
+      group_setting = #{groupSetting,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+   <select id="validateName" resultType="int" >
+   	SELECT COUNT(*) FROM product_group WHERE product_id = #{productId,jdbcType=INTEGER} AND NAME=#{name,jdbcType=VARCHAR}
+   	AND state !=-1
+   	<if test="id != null" >
+       AND id != #{id,jdbcType=INTEGER}
+    </if>
+  </select>
+   <select id="selectProductGroupList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from product_group
+     where group_supplier_id = #{groupSupplierId,jdbcType=INTEGER}
+     and state !=-1
+     ORDER BY create_time
+  </select>
+  <update id="updateStateBySupplierId" parameterType="java.lang.Integer">
+  	update product_group set state=-1 where group_supplier_id=#{groupSupplierId}
+  </update>
+  <select id="selectGroupsByProductIdAndSupplierIdAndDate" resultType="com.yimayhd.erpcenter.dal.product.vo.ProductGroupVo"  >  	
+  	SELECT pg.`id` groupId,pg.`name`,p.`price_settlement_adult` priceSettlementAdult,p.`price_settlement_child` priceSettlementChild,p.`price_cost_adult` priceCostAdult,p.`price_cost_child` priceCostChild
+  	 FROM `product_group_supplier` supplier JOIN `product_group` pg ON supplier.id=pg.group_supplier_id JOIN product_group_price p ON pg.id=p.group_id
+  	 WHERE supplier.product_id=#{productId}  AND supplier.supplier_id = #{supplierId} 
+  	<![CDATA[AND p.`group_date`<=#{groupDate} AND p.`group_date_to`>=#{groupDate}]]>
+  	AND supplier.state=1 AND pg.state=1
+  	ORDER BY supplier.create_time
+  </select>
+  <select id="getIdListByProductSupplierId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  	 select id from product_group
+     where group_supplier_id = #{groupSupplierId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByProductSupplierId" parameterType="java.lang.Integer" >
+    delete from product_group
+    where group_supplier_id = #{groupSupplierId,jdbcType=INTEGER}
+  </delete>
+  
+</mapper>

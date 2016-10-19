@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.SettleApplyMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.SettleApply" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="service_no" property="serviceNo" jdbcType="VARCHAR" />
+    <result column="corp_full_name" property="corpFullName" jdbcType="VARCHAR" />
+    <result column="province_id" property="provinceId" jdbcType="INTEGER" />
+    <result column="province_name" property="provinceName" jdbcType="VARCHAR" />
+    <result column="city_id" property="cityId" jdbcType="INTEGER" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="area_id" property="areaId" jdbcType="INTEGER" />
+    <result column="area_name" property="areaName" jdbcType="VARCHAR" />
+    <result column="town_id" property="townId" jdbcType="INTEGER" />
+    <result column="town_name" property="townName" jdbcType="VARCHAR" />
+    <result column="addr_detail" property="addrDetail" jdbcType="VARCHAR" />
+    <result column="referee" property="referee" jdbcType="VARCHAR" />
+    <result column="contact_man" property="contactMan" jdbcType="VARCHAR" />
+    <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+    <result column="state" property="state" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, service_no, corp_full_name, province_id, province_name, city_id, city_name, area_id, 
+    area_name, town_id, town_name, addr_detail, referee, contact_man, contact_phone, 
+    note, create_time,state
+  </sql>
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from settle_apply
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer" >
+    delete from settle_apply
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleApply" useGeneratedKeys="true" keyProperty="id">
+    insert into settle_apply (id, service_no, corp_full_name, 
+      province_id, province_name, city_id, 
+      city_name, area_id, area_name, 
+      town_id, town_name, addr_detail, 
+      referee, contact_man, contact_phone, 
+      note, create_time)
+    values (#{id,jdbcType=INTEGER}, #{serviceNo,jdbcType=VARCHAR}, #{corpFullName,jdbcType=VARCHAR}, 
+      #{provinceId,jdbcType=INTEGER}, #{provinceName,jdbcType=VARCHAR}, #{cityId,jdbcType=INTEGER}, 
+      #{cityName,jdbcType=VARCHAR}, #{areaId,jdbcType=INTEGER}, #{areaName,jdbcType=VARCHAR}, 
+      #{townId,jdbcType=INTEGER}, #{townName,jdbcType=VARCHAR}, #{addrDetail,jdbcType=VARCHAR}, 
+      #{referee,jdbcType=VARCHAR}, #{contactMan,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, 
+      #{note,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleApply" >
+    insert into settle_apply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="serviceNo != null" >
+        service_no,
+      </if>
+      <if test="corpFullName != null" >
+        corp_full_name,
+      </if>
+      <if test="provinceId != null" >
+        province_id,
+      </if>
+      <if test="provinceName != null" >
+        province_name,
+      </if>
+      <if test="cityId != null" >
+        city_id,
+      </if>
+      <if test="cityName != null" >
+        city_name,
+      </if>
+      <if test="areaId != null" >
+        area_id,
+      </if>
+      <if test="areaName != null" >
+        area_name,
+      </if>
+      <if test="townId != null" >
+        town_id,
+      </if>
+      <if test="townName != null" >
+        town_name,
+      </if>
+      <if test="addrDetail != null" >
+        addr_detail,
+      </if>
+      <if test="referee != null" >
+        referee,
+      </if>
+      <if test="contactMan != null" >
+        contact_man,
+      </if>
+      <if test="contactPhone != null" >
+        contact_phone,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="serviceNo != null" >
+        #{serviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="corpFullName != null" >
+        #{corpFullName,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceId != null" >
+        #{provinceId,jdbcType=INTEGER},
+      </if>
+      <if test="provinceName != null" >
+        #{provinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null" >
+        #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="cityName != null" >
+        #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaId != null" >
+        #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="areaName != null" >
+        #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="townId != null" >
+        #{townId,jdbcType=INTEGER},
+      </if>
+      <if test="townName != null" >
+        #{townName,jdbcType=VARCHAR},
+      </if>
+      <if test="addrDetail != null" >
+        #{addrDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="referee != null" >
+        #{referee,jdbcType=VARCHAR},
+      </if>
+      <if test="contactMan != null" >
+        #{contactMan,jdbcType=VARCHAR},
+      </if>
+      <if test="contactPhone != null" >
+        #{contactPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByIdSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleApply" >
+    update settle_apply
+    <set >
+      <if test="serviceNo != null" >
+        service_no = #{serviceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="corpFullName != null" >
+        corp_full_name = #{corpFullName,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceId != null" >
+        province_id = #{provinceId,jdbcType=INTEGER},
+      </if>
+      <if test="provinceName != null" >
+        province_name = #{provinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null" >
+        city_id = #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="cityName != null" >
+        city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaId != null" >
+        area_id = #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="areaName != null" >
+        area_name = #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="townId != null" >
+        town_id = #{townId,jdbcType=INTEGER},
+      </if>
+      <if test="townName != null" >
+        town_name = #{townName,jdbcType=VARCHAR},
+      </if>
+      <if test="addrDetail != null" >
+        addr_detail = #{addrDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="referee != null" >
+        referee = #{referee,jdbcType=VARCHAR},
+      </if>
+      <if test="contactMan != null" >
+        contact_man = #{contactMan,jdbcType=VARCHAR},
+      </if>
+      <if test="contactPhone != null" >
+        contact_phone = #{contactPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateById" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleApply" >
+    update settle_apply
+    set service_no = #{serviceNo,jdbcType=VARCHAR},
+      corp_full_name = #{corpFullName,jdbcType=VARCHAR},
+      province_id = #{provinceId,jdbcType=INTEGER},
+      province_name = #{provinceName,jdbcType=VARCHAR},
+      city_id = #{cityId,jdbcType=INTEGER},
+      city_name = #{cityName,jdbcType=VARCHAR},
+      area_id = #{areaId,jdbcType=INTEGER},
+      area_name = #{areaName,jdbcType=VARCHAR},
+      town_id = #{townId,jdbcType=INTEGER},
+      town_name = #{townName,jdbcType=VARCHAR},
+      addr_detail = #{addrDetail,jdbcType=VARCHAR},
+      referee = #{referee,jdbcType=VARCHAR},
+      contact_man = #{contactMan,jdbcType=VARCHAR},
+      contact_phone = #{contactPhone,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getCountByName" resultType="java.lang.Integer">
+  	SELECT COUNT(1) 
+	FROM settle_apply 
+	WHERE corp_full_name=#{name} 
+  </select>
+  <update id="updateServiceNoById">
+  	update settle_apply
+    set service_no = #{serviceNo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- <resultMap type="com.yimayhd.erpcenter.dal.sys.po.SettleApply" id="BaseResultMap2" extends="BaseResultMap">
+  	<association property="settleApplyResult" javaType="com.yimayhd.erpcenter.dal.sys.po.SettleApplyResult">
+  		<id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="apply_id" property="applyId" jdbcType="INTEGER" />
+	    <result column="state" property="state" jdbcType="TINYINT" />
+	    <result column="operator_id" property="operatorId" jdbcType="INTEGER" />
+	    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="operate_time" property="operateTime" jdbcType="BIGINT" />
+  	</association>
+  </resultMap> -->
+  <select id="getApplyListPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
+  	select *
+  	from settle_apply 
+  	
+  	
+  		where 1=1 and state=0 
+  		<if test="parameter.serviceNo != null and parameter.serviceNo!='' " >
+       <!--  service_no = #{parameter.serviceNo,jdbcType=VARCHAR}, -->
+        and service_no like CONCAT('%','${parameter.serviceNo}','%' )
+      </if>
+      order by create_time desc 
+      <!-- <if test="parameter.state != null" >
+        and state = #{parameter.state,jdbcType=TINYINT}
+      </if> -->
+  	
+  </select>
+  
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.PlatformSysMapper" >
+  
+  <resultMap type="com.yimayhd.erpcenter.dal.sys.po.PlatformSysPo" id="resultListPlatformSysPo">
+        <id column="sys_id" property="sysId" />
+        <result column="name" property="name" />
+        <result column="code" property="code" />
+        <result column="domain_name" property="domainName" />
+        <result column="is_parent" property="isParent" />
+        <result column="is_public" property="isPublic" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<select id="getPlatformSysList"  resultMap="resultListPlatformSysPo">
+	     select * from platform_sys 
+	</select>
+  
+  
+  <select id="findByCode"  resultMap="resultListPlatformSysPo">
+	     select * from platform_sys 
+	     where code = #{code}
+	</select>
+</mapper>

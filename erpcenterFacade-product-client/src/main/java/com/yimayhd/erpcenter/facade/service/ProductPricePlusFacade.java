@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.facade.service;
 import com.yimayhd.erpcenter.facade.query.ProductGroupSupplierDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSupplierConditionDTO;
 import com.yimayhd.erpcenter.facade.result.ResultSupport;
+import com.yimayhd.erpcenter.facade.result.ToAddPriceGroupResult;
 import com.yimayhd.erpcenter.facade.result.ToSupplierListResult;
 
 
@@ -56,7 +57,7 @@ public interface ProductPricePlusFacade {
 	 * @param groupSupplierId
 	 * @return
 	 */
-	public ResultSupport savePriceGroup(String productGroups,Integer groupSupplierId);
+	ResultSupport savePriceGroup(String productGroups,Integer groupSupplierId);
 	
 	/**
 	 * 将价格组复制到其他组
@@ -65,7 +66,7 @@ public interface ProductPricePlusFacade {
 	 * @param destGroupSupplierIds
 	 * @return
 	 */
-	public ResultSupport copyGroup(String groupIds,String destGroupSupplierIds);
+	ResultSupport copyGroup(String groupIds,String destGroupSupplierIds);
 	
 	/**
 	 * 跳转到价格设置页面
@@ -73,5 +74,21 @@ public interface ProductPricePlusFacade {
 	 * @param condition
 	 * @return
 	 */
-	public ToSupplierListResult toSupplierList(ProductSupplierConditionDTO conditionDTO);
+	ToSupplierListResult toSupplierList(ProductSupplierConditionDTO conditionDTO);
+	
+	/**
+	 * 跳转到添加价格组页面
+	 * @param id 产品组团社表id
+	 * @return
+	 */
+	ToAddPriceGroupResult addPriceGroup(Integer id);
+	
+	/**
+	 * 根据年、月得到产品的库存
+	 * @param productId
+	 * @param year
+	 * @param month
+	 * @return
+	 */
+	String stockMonth(Integer productId,Integer year,Integer month);
 }

@@ -5,6 +5,15 @@
            http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 	<context:annotation-config />
-
-
+	
+	<bean id="airLineBiz" class="com.yimayhd.erpcenter.biz.basic.service.impl.AirLineBizImpl" />
+	<bean id="airPortBiz" class="com.yimayhd.erpcenter.biz.basic.service.impl.AirPortBizImpl" />
+	<bean id="dicBiz" class="com.yimayhd.erpcenter.biz.basic.service.impl.DicBizImpl" />
+	<bean id="dicTypeBiz" class="com.yimayhd.erpcenter.biz.basic.service.impl.DicTypeBizImpl" />
+	<bean id="imgReferenceBiz" class="com.yimayhd.erpcenter.biz.basic.service.impl.ImgReferenceBizImpl" />
+	<bean id="imgSpaceBiz" class="com.yimayhd.erpcenter.biz.basic.service.impl.ImgSpaceBizImpl" />
+	<bean id="imgWatermarkBiz" class="com.yimayhd.erpcenter.biz.basic.service.impl.ImgWatermarkBizImpl" />
+	<bean id="msgBiz" class="com.yimayhd.erpcenter.biz.basic.service.impl.MsgBizImpl" />
+	<bean id="regionCardBiz" class="com.yimayhd.erpcenter.biz.basic.service.impl.RegionCardBizImpl" />
+	<bean id="regionBiz" class="com.yimayhd.erpcenter.biz.basic.service.impl.RegionBizImpl" />
 </beans>

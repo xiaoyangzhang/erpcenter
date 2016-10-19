@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.SysBizConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.SysBizConfig" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="biz_id" property="bizId" jdbcType="INTEGER" />
+    <result column="item_code" property="itemCode" jdbcType="VARCHAR" />
+    <result column="item_value" property="itemValue" jdbcType="VARCHAR" />
+    <result column="item_desp" property="itemDesp" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, biz_id, item_code, item_value, item_desp
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_biz_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_biz_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizConfig" >
+    insert into sys_biz_config (id, biz_id, item_code, 
+      item_value, item_desp)
+    values (#{id,jdbcType=INTEGER}, #{bizId,jdbcType=INTEGER}, #{itemCode,jdbcType=VARCHAR}, 
+      #{itemValue,jdbcType=VARCHAR}, #{itemDesp,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizConfig" >
+    insert into sys_biz_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="bizId != null" >
+        biz_id,
+      </if>
+      <if test="itemCode != null" >
+        item_code,
+      </if>
+      <if test="itemValue != null" >
+        item_value,
+      </if>
+      <if test="itemDesp != null" >
+        item_desp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bizId != null" >
+        #{bizId,jdbcType=INTEGER},
+      </if>
+      <if test="itemCode != null" >
+        #{itemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="itemValue != null" >
+        #{itemValue,jdbcType=VARCHAR},
+      </if>
+      <if test="itemDesp != null" >
+        #{itemDesp,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizConfig" >
+    update sys_biz_config
+    <set >
+      <if test="bizId != null" >
+        biz_id = #{bizId,jdbcType=INTEGER},
+      </if>
+      <if test="itemCode != null" >
+        item_code = #{itemCode,jdbcType=VARCHAR},
+      </if>
+      <if test="itemValue != null" >
+        item_value = #{itemValue,jdbcType=VARCHAR},
+      </if>
+      <if test="itemDesp != null" >
+        item_desp = #{itemDesp,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysBizConfig" >
+    update sys_biz_config
+    set biz_id = #{bizId,jdbcType=INTEGER},
+      item_code = #{itemCode,jdbcType=VARCHAR},
+      item_value = #{itemValue,jdbcType=VARCHAR},
+      item_desp = #{itemDesp,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectListByBizId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_biz_config
+    where biz_id = #{bizId,jdbcType=INTEGER}
+  </select>
+  <!-- 阿正 -->
+  <select id="cnm" parameterType="java.lang.String">
+  select item_value from sys_biz_config where biz_id = #{bizId,jdbcType=INTEGER} and item_code=#{config}
+  </select>
+</mapper>

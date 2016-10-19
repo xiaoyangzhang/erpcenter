@@ -6,4 +6,17 @@
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 	<context:annotation-config />
 
+	
+	<bean id="loginLogBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.LoginLogBizImpl" />
+	<bean id="platformEmployeeBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.PlatformEmployeeBizImpl" />
+	<bean id="platformMenuBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.PlatformMenuBizImpl" />
+	<bean id="platformOrgBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.PlatformOrgBizImpl" />
+	<bean id="platformRoleBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.PlatformRoleBizImpl" />
+	<bean id="platformSessionBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.PlatformSessionBizImpl" />
+	<bean id="platformSysBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.PlatformSysBizImpl" />
+	<bean id="sysBizBankAccountBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.SysBizBankAccountBizImpl" />
+	<bean id="sysBizConfigBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.SysBizConfigBizImpl" />
+	<bean id="sysBizInfoBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.SysBizInfoBizImpl" />
+	<bean id="settleApplyBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.SettleApplyBizImpl" />
+	
 </beans>

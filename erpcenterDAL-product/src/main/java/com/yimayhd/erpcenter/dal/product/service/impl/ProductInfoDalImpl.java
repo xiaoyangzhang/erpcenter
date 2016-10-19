@@ -16,13 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.dal.product.mapper.ProductAttachmentMapper;
-import com.yimayhd.erpcenter.dal.product.mapper.ProductContactMapper;
-import com.yimayhd.erpcenter.dal.product.mapper.ProductGroupPriceMapper;
-import com.yimayhd.erpcenter.dal.product.mapper.ProductInfoMapper;
-import com.yimayhd.erpcenter.dal.product.mapper.ProductRemarkMapper;
-import com.yimayhd.erpcenter.dal.product.mapper.ProductRightMapper;
-import com.yimayhd.erpcenter.dal.product.mapper.ProductRouteMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductAttachmentMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductContactMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductGroupPriceMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductInfoMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductRemarkMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductRightMapper;
+import com.yimayhd.erpcenter.dal.product.dao.ProductRouteMapper;
 import com.yimayhd.erpcenter.dal.product.po.PriceView;
 import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
 import com.yimayhd.erpcenter.dal.product.po.ProductContact;
@@ -76,6 +76,11 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 			PageBean<ProductInfo> pageBean, Map parameters) {
 		List<ProductInfo> list = infoMapper.selectProductInfoListPage(pageBean, parameters);
 		pageBean.setResult(list);
+		if(1==1){
+			
+		}else{
+			
+		}
 		return pageBean;
 	}
 	

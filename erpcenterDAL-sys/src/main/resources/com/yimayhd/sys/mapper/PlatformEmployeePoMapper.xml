@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.PlatformEmployeeMapper" >
+  
+  	<resultMap type="com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo" id="platformEmployeePo">
+        <id column="employee_id" property="employeeId" />
+        <result column="biz_id" property="bizId" />
+        <result column="org_id" property="orgId" />
+        <result column="login_name" property="loginName" />
+        <result column="password" property="password" />
+        <result column="name" property="name" />
+        <result column="gender" property="gender" />
+        <result column="phone" property="phone" />
+        <result column="mobile" property="mobile" />
+        <result column="fax" property="fax" />
+        <result column="email" property="email" />
+        <result column="qq_code" property="qqCode" />
+        <result column="status" property="status" />
+        <result column="del_status" property="delStatus" />
+        <result column="is_super" property="isSuper" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="position" property="position" />
+	</resultMap>
+	
+  	<select id="findByOrgPath" resultMap="platformEmployeePo" parameterType="java.lang.String">
+        select 
+        	p.*
+        from 
+        	platform_employee p ,`platform_org` org
+        where 
+        	p.del_status=1 
+        	and p.org_id=org.org_id
+        	and org.`org_path` like CONCAT('%',#{orgPath},'%')
+  	</select>
+  	<select id="findByEmployeeId" resultMap="platformEmployeePo">
+        select *
+        from platform_employee
+        where employee_id=#{employeeId}
+  	 </select>
+  	 
+  	 <select id="getEmployeeByLoginName" resultMap="platformEmployeePo">
+        select *
+        from platform_employee
+        where login_name=#{loginName}
+  	 </select>
+  	 
+  	 <select id="getEmployeeByBizIdAndLoginName" resultMap="platformEmployeePo">
+        select *
+        from platform_employee
+        where status=1 and login_name=#{loginName,jdbcType=VARCHAR} and biz_id=#{bizId,jdbcType=INTEGER} 
+  	 </select>
+  	 
+  	 <select id="getEmployeeListPage"  resultMap="platformEmployeePo"
+  	 parameterType="com.yihg.mybatis.utility.PageBean">
+        select p.*,org.name orgName,GROUP_CONCAT(role.name) roleName
+        from platform_employee p JOIN `platform_org` org ON p.org_id = org.org_id  
+        LEFT JOIN `platform_employee_role_link` link ON p.`employee_id`=link.`employee_id` 
+        LEFT JOIN `platform_role` role ON link.`role_id`=role.`role_id`
+
+        <!-- <if test="parameter.orgIds != null"> ,platform_employee_org_link pl </if> -->
+        where 1 = 1 and p.del_status=1 and p.org_id=org.org_id and p.biz_id=#{parameter.bizId} 
+        	<!-- <if test="parameter.orgIds != null"> and p.`employee_id` = pl.`employee_id` </if> -->
+        	<if test="parameter.platformOrgPo.orgPath != null"> and org.`org_path` like CONCAT('%','${parameter.platformOrgPo.orgPath}','%') </if>
+        	<if test="parameter.loginName != null"> and p.login_name like CONCAT('%','${parameter.loginName}','%') </if>
+        	 <if test="parameter.name != null"> and p.name like CONCAT('%','${parameter.name}','%') </if>
+        	 <if test="parameter.name != null"> and p.mobile like CONCAT('%','${parameter.mobile}','%') </if>
+			<if test="parameter.gender != null"> and p.gender = #{parameter.gender} </if>
+			<if test="parameter.phone != null"> and p.phone CONCAT('%','${parameter.phone}','%') </if>
+			<!-- <if test="parameter.email != null"> and p.email CONCAT('%','${parameter.email}','%') </if>
+			<if test="parameter.qqCode != null"> and p.qq_code CONCAT('%','${parameter.qqCode}','%') </if>  -->
+			<if test="parameter.status != null"> and p.status = #{parameter.status} </if>
+			<!-- <if test="parameter.orgIds != null"> and pl.`org_id` = #{parameter.orgIds} </if> -->
+GROUP BY p.`employee_id`
+  	 </select>
+  	
+  	 <update id="updateEmployee" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo">
+		update platform_employee
+		<set>
+			<if test="loginName != null"> login_name = #{loginName}, </if>
+			<if test="password != null"> password = #{password}, </if>
+			<if test="orgId != null"> org_id = #{orgId}, </if>
+			<if test="position != null"> position = #{position}, </if>
+			<if test="name != null"> name = #{name}, </if>
+			<if test="gender != null"> gender = #{gender}, </if>
+			<if test="phone != null"> phone = #{phone}, </if>
+			<if test="mobile != null"> mobile = #{mobile}, </if>
+			<if test="fax != null"> fax = #{fax}, </if>
+			<if test="email != null"> email = #{email}, </if>
+			<if test="qqCode != null"> qq_code = #{qqCode}, </if>
+			<if test="status != null"> status = #{status}, </if>
+			<if test="delStatus != null"> del_status = #{delStatus}, </if>		
+			<if test="updateTime != null"> update_time = #{updateTime}, </if>
+		</set>
+		where employee_id = #{employeeId}
+	</update>
+  	 
+  	 <insert id="addEmployee" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo" useGeneratedKeys="true" keyProperty="employeeId">
+		insert into platform_employee
+            (employee_id,biz_id,org_id,login_name,password,name,gender,position,phone,mobile,fax,email,qq_code,status,del_status,is_super,create_time,update_time)
+		values 
+		(#{employeeId,jdbcType=INTEGER},
+		#{bizId,jdbcType=INTEGER},
+		#{orgId,jdbcType=INTEGER},
+		#{loginName,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR},
+        #{gender,jdbcType=INTEGER},
+        #{position,jdbcType=INTEGER},
+        #{phone,jdbcType=VARCHAR},
+        #{mobile,jdbcType=VARCHAR},
+        #{fax,jdbcType=VARCHAR},
+        #{email,jdbcType=VARCHAR},
+        #{qqCode,jdbcType=VARCHAR},
+        #{status,jdbcType=INTEGER},
+        #{delStatus,jdbcType=INTEGER},
+        #{isSuper,jdbcType=INTEGER},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<delete id="delByEmployeeId" >
+		delete from platform_employee
+		where employee_id = #{employeeId}
+	</delete>
+	
+	<update id="deleteByEmployeeId">
+		UPDATE platform_employee set del_status=0 WHERE employee_id=#{employeeId};
+	</update>
+
+  	 <insert id="addEmpOrg" >
+		insert into platform_employee_org_link
+            (employee_id,org_id)
+		values 
+		(#{0,jdbcType=INTEGER},
+		#{1,jdbcType=INTEGER});
+	</insert>
+
+	
+	<insert id="addEmpRole" >
+		insert into platform_employee_role_link
+            (employee_id,role_id)
+		values 
+		(#{0,jdbcType=INTEGER},
+		#{1,jdbcType=INTEGER});
+	</insert>
+	
+	<delete id="byEmpDelRole" >
+		DELETE FROM platform_employee_role_link  
+		WHERE  employee_id= #{employeeId} AND role_id IN (SELECT role_id FROM platform_role WHERE biz_id = #{bizId})
+	</delete>
+	
+	
+	<delete id="byEmpDelOrg" >
+		     DELETE  FROM platform_employee_org_link  WHERE  employee_id= #{0} AND org_id IN (SELECT org_id FROM platform_org WHERE sys_id = #{1})
+	</delete>
+	
+	<!-- <select id="validationName" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM
+		platform_employee WHERE name =#{name} and employee_id != #{id}
+	</select> -->
+   <select id="getEmployeeList" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo" resultType="int">
+		SELECT count(1) FROM
+		platform_employee WHERE 1=1 
+		<if test="loginName != null"> and login_name = #{loginName}  </if>
+       		<if test="employeeId != null"> and employee_id != #{employeeId}  </if>
+       		<if test="bizId != null"> and biz_id = #{bizId}  </if>
+	</select> 
+	
+	<select id="getListByOrgId" resultMap="platformEmployeePo">
+		SELECT * FROM
+		platform_employee WHERE org_id=#{orgId} AND status=1 AND del_status=1		
+	</select> 
+	<select id="getUserIdListByOrgId" resultMap="platformEmployeePo">
+		SELECT employee_id 
+		FROM platform_employee WHERE biz_id=#{bizId} AND org_id=#{orgId}
+	</select>
+	<!-- add by gejinjun 20151104 用于选择单位过滤团，根据orgId列表获取用户id列表 -->
+	<select id="getUserIdListByOrgIdList" resultMap="platformEmployeePo">
+		SELECT employee_id 
+		FROM platform_employee WHERE biz_id=#{bizId} AND org_id IN 
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">  
+        	#{item,jdbcType=INTEGER}
+    	</foreach>  
+	</select>
+	<select id="getEmpListByEmpName" resultMap="platformEmployeePo">
+		SELECT *
+		FROM `platform_employee` WHERE 1=1 <if test="name!=null and name!=''">and NAME LIKE CONCAT('%',#{name},'%')</if> AND biz_id=#{bizId}
+	</select>
+	<select id="getEmpListByLoginName" resultMap="platformEmployeePo">
+		SELECT *
+		FROM `platform_employee` WHERE login_name=#{name} AND biz_id=#{bizId}
+	</select>
+	<select id="getListByOrgId2" resultMap="platformEmployeePo">
+		SELECT * FROM
+		platform_employee WHERE org_id=#{orgId} AND status=1 AND del_status=1	<if test="userIds!=null"> and employee_id in (${userIds})	</if>
+	</select> 
+	<select id="getEmpList" resultMap="platformEmployeePo">
+		select * from platform_employee where biz_id=#{bizId} and AND status=1 AND del_status=1	 and employee_id
+		 <foreach collection="set" item="item" index="index" open="(" separator="," close=")">  
+        	#{item,jdbcType=INTEGER}
+    	</foreach>  	
+	</select>
+</mapper>

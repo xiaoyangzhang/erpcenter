@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.SettleQualificationMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.SettleQualification" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="apply_id" property="applyId" jdbcType="INTEGER" />
+    <result column="credential_id" property="credentialId" jdbcType="INTEGER" />
+    <result column="credential_name" property="credentialName" jdbcType="VARCHAR" />
+    <result column="credential_path" property="credentialPath" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, apply_id, credential_id, credential_name, credential_path, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from settle_qualification
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from settle_qualification
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleQualification" >
+    insert into settle_qualification (id, apply_id, credential_id, 
+      credential_name, credential_path, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{applyId,jdbcType=INTEGER}, #{credentialId,jdbcType=INTEGER}, 
+      #{credentialName,jdbcType=VARCHAR}, #{credentialPath,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleQualification" >
+    insert into settle_qualification
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="applyId != null" >
+        apply_id,
+      </if>
+      <if test="credentialId != null" >
+        credential_id,
+      </if>
+      <if test="credentialName != null" >
+        credential_name,
+      </if>
+      <if test="credentialPath != null" >
+        credential_path,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="applyId != null" >
+        #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="credentialId != null" >
+        #{credentialId,jdbcType=INTEGER},
+      </if>
+      <if test="credentialName != null" >
+        #{credentialName,jdbcType=VARCHAR},
+      </if>
+      <if test="credentialPath != null" >
+        #{credentialPath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleQualification" >
+    update settle_qualification
+    <set >
+      <if test="applyId != null" >
+        apply_id = #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="credentialId != null" >
+        credential_id = #{credentialId,jdbcType=INTEGER},
+      </if>
+      <if test="credentialName != null" >
+        credential_name = #{credentialName,jdbcType=VARCHAR},
+      </if>
+      <if test="credentialPath != null" >
+        credential_path = #{credentialPath,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sys.po.SettleQualification" >
+    update settle_qualification
+    set apply_id = #{applyId,jdbcType=INTEGER},
+      credential_id = #{credentialId,jdbcType=INTEGER},
+      credential_name = #{credentialName,jdbcType=VARCHAR},
+      credential_path = #{credentialPath,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

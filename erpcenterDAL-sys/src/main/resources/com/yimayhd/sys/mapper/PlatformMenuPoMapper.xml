@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.PlatformMenuMapper">
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo">
+		<id column="menu_id" property="menuId" jdbcType="INTEGER" />
+		<result column="sys_id" property="sysId" jdbcType="INTEGER" />
+		<result column="biz_id" property="bizId" jdbcType="INTEGER" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="css" property="css" jdbcType="VARCHAR" />
+		<result column="resource_type" property="resourceType" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="seq_num" property="seqNum" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="del_status" property="delStatus" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		menu_id,parent_id,name,url,code,css,resource_type,comment,seq_num,status,del_status,create_time,update_time
+	</sql>
+	<select id="getPlatformMenuListBysysId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from platform_menu
+		where sys_id = #{sysId,jdbcType=INTEGER}
+		and status != -1 order by seq_num desc
+	</select>
+	
+	<select id="getPlatformMenuJosnList" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from platform_menu
+		where sys_id = #{sysId,jdbcType=INTEGER}
+		and status != -1 and parent_id not in (0,1) order by seq_num desc
+	</select>
+	
+	<select id="getPlatformMenuListBysysIdAndParentId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from platform_menu
+		where parent_id=#{parentId} <if test="sysId!=null"> and sys_id =#{sysId} </if> 
+		and status != 0 and del_status=1 order by seq_num desc
+	</select>
+	
+	<select id="getMenuList" resultMap="BaseResultMap">
+		select distinct menu.*
+		from platform_menu menu,platform_role_menu_link link
+		where menu.menu_id=link.menu_id
+		 <if test="sysId != null"> and menu.sys_id = #{sysId}  </if>
+		  <if test="parentId != null"> and menu.parent_id = #{parentId}  </if>
+       	<if test="roleIds != null"> and link.role_id IN ${roleIds}  </if>
+	</select>
+	
+	<select id="getAllMenuList" resultMap="BaseResultMap">
+		SELECT distinct menu.*
+		FROM platform_menu menu
+		WHERE del_status=1
+		 <if test="sysId != null"> and menu.sys_id = #{sysId}  </if>
+		  <if test="parentId != null"> and menu.parent_id = #{parentId}  </if>
+		ORDER BY seq_num
+	</select>
+	
+	<select id="getMenuListByBizId" resultMap="BaseResultMap">
+		SELECT  pm.*
+		FROM sys_biz_menu bm,platform_menu pm
+		WHERE bm.menu_id=pm.menu_id AND pm.del_status=1 
+		 <if test="bizId != null"> AND bm.biz_id = #{bizId}  </if>
+		 <if test="parentId != null"> AND pm.parent_id = #{parentId}  </if>
+		  ORDER BY seq_num
+	</select>
+	
+	<select id="getMenuParent" resultMap="BaseResultMap">
+		select *
+		from platform_menu 
+		where parent_id=1
+		 <if test="sysId != null"> and sys_id = #{sysId} </if>
+	</select>
+
+	<!-- 根据菜单ID查询菜单实体 -->
+	<select id="getPlatformMenuMenuId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select * from platform_menu
+		where menu_id = #{menuId,jdbcType=INTEGER}
+	</select>
+	<!-- 添加菜单 -->
+	<insert id="addPlatformMenu" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo" >
+		insert into platform_menu ( sys_id,parent_id,name,url,code,css,resource_type,comment,seq_num,status,del_status,create_time,update_time )
+		values
+		(#{sysId,jdbcType=INTEGER},
+		#{parentId,jdbcType=INTEGER},
+		#{name,jdbcType=VARCHAR},
+		#{url,jdbcType=VARCHAR},
+		#{code,jdbcType=VARCHAR},
+		#{css,jdbcType=VARCHAR},
+		#{resourceType,jdbcType=INTEGER},
+		#{comment,jdbcType=VARCHAR},
+		#{seqNum,jdbcType=INTEGER},
+		#{status,jdbcType=INTEGER},
+		#{delStatus,jdbcType=INTEGER},
+		#{createTime,jdbcType=DATE},
+        #{updateTime,jdbcType=DATE})
+	</insert>
+
+	<!-- 修改菜单 -->
+	<update id="updatePlatformMenu" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo">
+		update platform_menu
+		<set>
+			<if test="sysId != null"> sys_id = #{sysId}, </if>
+			<if test="parentId != null"> parent_id = #{parentId}, </if>
+			<if test="name != null"> name = #{name}, </if>
+			<if test="url != null"> url = #{url}, </if>
+			<if test="code != null"> code = #{code}, </if>
+			<if test="css != null"> css = #{css}, </if>
+			<if test="resourceType != null"> resource_type = #{resourceType}, </if>
+			<if test="comment != null"> comment = #{comment}, </if>
+			<if test="seqNum != null"> seq_num = #{seqNum}, </if>
+			<if test="status != null"> status = #{status}, </if>
+			<if test="delStatus != null"> del_status = #{delStatus}, </if>
+			<if test="createTime != null"> create_time = #{createTime}, </if>
+			<if test="updateTime != null"> update_time = #{updateTime},</if>
+		</set>
+		where menu_id=#{menuId}
+	</update>
+	<!-- 删除菜单 -->
+	
+	<update id="deletePlatformMenuByMenuId" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo">
+		update platform_menu set del_status = 0 
+		where menu_id=#{menuId}
+	</update>
+	<delete id="ss" parameterType="java.lang.Integer">
+		delete from platform_menu where menu_id=#{menuId}
+	</delete>
+	<!-- 删除菜单的同时  删除所遇下级的菜单 -->
+	<delete id="deletePlatformMenuByParentId" parameterType="java.lang.Integer">
+		delete from platform_menu where menu_id=#{parentId}
+	</delete>
+	
+	<select id="getMenuListExceptMenuId" resultMap="BaseResultMap">
+		select *
+		from platform_menu menu
+		where 1 = 1
+		 <if test="parentId != null"> and menu.parent_id = #{parentId}  </if>
+		  <if test="name != null"> and menu.name = #{name}  </if>
+		  <if test="menuId != null"> and menu.menu_id != #{menuId}  </if>
+	</select>
+	
+	<select id="getAdminMenuList" resultMap="BaseResultMap">
+		SELECT m.*
+		FROM `sys_biz_menu` bm ,`platform_menu` m
+		WHERE bm.`menu_id`=m.`menu_id` AND m.`del_status`=1
+		<if test="resourceType != null"> AND m.`resource_type`=#{resourceType,jdbcType=INTEGER}  </if>
+		<if test="parentId != null"> AND m.`parent_id`=#{parentId,jdbcType=INTEGER}  </if>
+		<if test="bizId != null"> AND bm.`biz_id`=#{bizId,jdbcType=INTEGER}  </if>
+		order by m.seq_num
+	</select>
+	
+	<select id="getMenuListByRoleIds" resultMap="BaseResultMap">
+		SELECT DISTINCT m.*
+		FROM `sys_biz_menu` bm,`platform_menu` m,`platform_role_menu_link` rm
+		WHERE bm.`menu_id`=m.`menu_id` AND rm.`menu_id`=m.`menu_id` AND m.`del_status`=1
+		<if test="resourceType != null"> AND m.`resource_type`=#{resourceType,jdbcType=INTEGER}  </if>
+		<if test="parentId != null"> AND m.`parent_id`=#{parentId,jdbcType=INTEGER}  </if>
+		<if test="bizId != null"> AND bm.`biz_id`=#{bizId,jdbcType=INTEGER}  </if>
+		<if test="roleIds != null"> AND rm.`role_id` IN ${roleIds} </if>
+		order by m.seq_num
+	</select>
+	<insert id="addPlatformMenuAndBizLink" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo">
+		insert into sys_biz_menu(biz_id,menu_id,create_time,update_time) values(#{bizId},#{menuId},#{createTime},
+        #{updateTime})
+	</insert>
+	<update id="updatePlatformMenuAndBiz" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo">
+		update sys_biz_menu 
+		<set>
+			<if test="menuId !=null ">menu_id=#{menuId}</if>
+			<if test="createTime != null"> create_time = #{createTime}, </if>
+			<if test="updateTime != null"> update_time = #{updateTime},</if>
+		</set>
+		where biz_id=#{bizId}
+	</update>
+	<delete id="deleteSysMenuByBizId" parameterType="java.lang.Integer">
+		delete from sys_biz_menu where biz_id=#{bizId}
+	</delete>
+	
+</mapper>
