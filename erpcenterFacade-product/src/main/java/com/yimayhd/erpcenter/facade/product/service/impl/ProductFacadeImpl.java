@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.alibaba.druid.support.logging.Log;
 import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
@@ -26,6 +25,7 @@ import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
+import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.dal.product.po.ProductTag;
 import com.yimayhd.erpcenter.dal.product.vo.DictWithSelectInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
@@ -38,6 +38,7 @@ import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
 import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
+import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
 import com.yimayhd.erpcenter.facade.result.ToProductRemarkResult;
 import com.yimayhd.erpcenter.facade.result.ToProductTagResult;
@@ -347,6 +348,34 @@ public class ProductFacadeImpl implements ProductFacade{
 			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
 		}
         return result;
+	}
+
+	/* (non-Javadoc)
+	 * <p>Title: deleteProduct</p> 
+	 * <p>Description: </p> 
+	 * @param productId
+	 * @param state
+	 * @return 
+	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#deleteProduct(int, byte)
+	 */
+	@Override
+	public ResultSupport deleteProduct(int productId, byte state) {
+		ResultSupport result = new ResultSupport();
+		List<ProductRoute> productRoutes = productRouteBiz.findProductRouteByProductId(productId);
+		if (state != (byte) -1 && productRoutes.size() == 0) {
+			result.setErrorCode(ProductErrorCode.PRODUCT_NO_ROUTE_ERROR);
+			return result;
+		} else {
+			ProductInfo productInfo = new ProductInfo();
+			productInfo.setState(state);
+			productInfo.setId(productId);
+			int updateResult = productInfoBiz.updateProductInfo(productInfo);
+			if (updateResult != 1) {
+				result.setErrorCode(ProductErrorCode.DEL_ERROR);
+				return result;
+			}
+		}
+		return result;
 	}
 
 }
