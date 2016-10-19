@@ -14,7 +14,7 @@ import com.yimayhd.erpcenter.facade.BaseListPage;
  * @author zhangxiaoyang
  * @date 2016年10月18日
  */
-public class ProductListQuery extends BaseListPage implements Serializable {
+public class ProductListQueryDTO extends BaseListPage implements Serializable {
 
 	/**
 	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么)
