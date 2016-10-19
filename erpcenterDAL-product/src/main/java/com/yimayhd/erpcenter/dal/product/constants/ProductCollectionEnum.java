@@ -10,9 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 public enum ProductCollectionEnum {
 
     
-    HOTEL_LIST("酒店列表", 1, "hotel"),
-    HOTEL_DETAIL("酒店详情", 2, "hotelDetail"),
-    SCENIC_LIST("景区列表", 3, "scenic")
+    PRODUCT_STATE("产品状态", 1, "productState")
     ;
     
     private String name;
