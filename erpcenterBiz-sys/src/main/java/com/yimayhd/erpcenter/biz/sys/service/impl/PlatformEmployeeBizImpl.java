@@ -30,7 +30,7 @@ public class PlatformEmployeeBizImpl implements PlatformEmployeeBiz {
 	
 	private static final Logger logger = LoggerFactory.getLogger(PlatformEmployeeBizImpl.class);
 	
-	
+	@Autowired
 	private PlatformEmployeeDal platformEmployeeDal;
 	
 	@Override
