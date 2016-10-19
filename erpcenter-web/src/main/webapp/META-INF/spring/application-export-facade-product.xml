@@ -18,7 +18,7 @@
   <!--产品库存相关接口 -->
   <bean id="productStockFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
  			  <property name="interface" value="com.yimayhd.erpcenter.facade.service.ProductStockFacade"/>
-              <property name="ref" ref="roductStockFacade"/>
+              <property name="ref" ref="productStockFacade"/>
               <property name="application" ref="dubboApplicationConfig"/>
               <property name="registry" ref="dubboRegistryConfig"/>
               <property name="protocol" ref="dubboProtocolConfig"/>
