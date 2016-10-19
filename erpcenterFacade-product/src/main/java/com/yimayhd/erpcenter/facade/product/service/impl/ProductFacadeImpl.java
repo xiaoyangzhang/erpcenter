@@ -379,4 +379,33 @@ public class ProductFacadeImpl implements ProductFacade{
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * <p>Title: toExportProduct</p> 
+	 * <p>Description: </p> 
+	 * @param productId
+	 * @return 
+	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#toExportProduct(int)
+	 */
+	@Override
+	public WebResult<Map<String, Object>> toExportProduct(int productId) {
+		WebResult<Map<String, Object>> result = new WebResult<Map<String,Object>>();
+		if (productId <= 0) {
+			LOGGER.error("params :productId={}",productId);
+			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
+			return result;
+		}
+		try {
+			Map<String, Object> map = productInfoBiz.findProductInfos(productId);
+			if (map != null) {
+				result.setValue(map);
+				return result;
+			}
+			result.setValue(new HashMap<String, Object>());
+		} catch (Exception e) {
+			LOGGER.error("productInfoBiz.findProductInfos error:{}",e);
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
+		}
+		return result;
+	}
+
 }
