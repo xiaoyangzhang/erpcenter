@@ -23,6 +23,7 @@ import com.yimayhd.erpcenter.dal.product.dao.ProductInfoMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductRemarkMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductRightMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductRouteMapper;
+import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
 import com.yimayhd.erpcenter.dal.product.po.PriceView;
 import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
 import com.yimayhd.erpcenter.dal.product.po.ProductContact;
@@ -32,7 +33,11 @@ import com.yimayhd.erpcenter.dal.product.po.ProductRight;
 import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.dal.product.po.ProductSales;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
+import com.yimayhd.erpcenter.dal.product.query.ProductStatePageQueryDTO;
 import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
+import com.yimayhd.erpcenter.dal.product.solr.SolrSearchPageDTO;
+import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStateConverter;
+import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultItemVo;
@@ -58,6 +63,9 @@ public class ProductInfoDalImpl implements ProductInfoDal{
     @Autowired
     private ProductRightMapper productRightMapper;
     
+    @Autowired
+    private ProductSolrQueryManager productSolrQueryManager;
+    
 	@Override
 	public int insertSelective(ProductInfo record) {
 		infoMapper.insertSelective(record);
@@ -77,7 +85,9 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		List<ProductInfo> list = infoMapper.selectProductInfoListPage(pageBean, parameters);
 		pageBean.setResult(list);
 		if(1==1){
-			
+			ProductStatePageQueryDTO queryDTO = ProductStateConverter.toQueryDTO(pageBean, parameters);
+			SolrSearchPageDTO<ProductStateDTO> solrPageResult  = productSolrQueryManager.searchProductState(queryDTO);
+			return ProductStateConverter.dto2PageBean(solrPageResult);
 		}else{
 			
 		}
