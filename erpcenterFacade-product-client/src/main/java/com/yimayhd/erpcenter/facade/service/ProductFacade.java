@@ -143,7 +143,7 @@ public interface ProductFacade {
 	* @return ResultSupport
 	* @throws
 	 */
-	ResultSupport deleteProduct(int productId,byte state);
+	ResultSupport updateProductState(int productId,byte state);
 	/**
 	 * 产品列表/导出
 	* created by zhangxiaoyang
