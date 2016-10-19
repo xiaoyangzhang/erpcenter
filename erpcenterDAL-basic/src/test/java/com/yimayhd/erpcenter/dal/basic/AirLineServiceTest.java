@@ -45,7 +45,7 @@ public class AirLineServiceTest {
 	//	System.out.print(map2.containsKey("dep_city_code"));
 	//	System.out.println(map2.containsKey("dep_city_code") ? map2.get("dep_city_code") : "no include");
 	}
-//	@Ignore
+	@Ignore
 	@Test
 	public void findAirLineByCodeTest() throws IOException{
 		Calendar cal = Calendar.getInstance();
