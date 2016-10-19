@@ -1,7 +1,9 @@
 package org.erpcenterFacade.common.client.service;
 
-import org.erpcenterFacade.common.client.query.LoadProductDepartmentDTO;
-import org.erpcenterFacade.common.client.result.LoadProductDepartmentResult;
+import org.erpcenterFacade.common.client.query.BrandQueryDTO;
+import org.erpcenterFacade.common.client.query.DepartmentTuneQueryDTO;
+import org.erpcenterFacade.common.client.result.BrandQueryResult;
+import org.erpcenterFacade.common.client.result.DepartmentTuneQueryResult;
 
 /**
  * @ClassName: ${ClassName}
@@ -12,10 +14,15 @@ import org.erpcenterFacade.common.client.result.LoadProductDepartmentResult;
 public interface ProductCommonFacade {
 
     /**
-     * 加载
-     * 产品名称:部门:计调
+     *  部门 计调 查询
+     * @param departmentTuneQueryDTO
+     * @return
+     */
+    public DepartmentTuneQueryResult departmentTuneQuery(DepartmentTuneQueryDTO departmentTuneQueryDTO);
+    /**
+     * 产品品牌 查询
      *
-     * @param loadProductDepartmentDTO
+     * @param brandQueryDTO
      * @return
      */
     public LoadProductDepartmentResult loadProductDepartment(LoadProductDepartmentDTO loadProductDepartmentDTO);
@@ -29,4 +36,5 @@ public interface ProductCommonFacade {
     * @throws
      */
     public String setSaleOperatorIds(String operatorIds,String orgIds,int bizId);
+    public BrandQueryResult brandQuery(BrandQueryDTO brandQueryDTO);
 }
