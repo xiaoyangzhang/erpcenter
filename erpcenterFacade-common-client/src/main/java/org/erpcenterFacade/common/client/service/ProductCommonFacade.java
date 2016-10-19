@@ -2,6 +2,7 @@ package org.erpcenterFacade.common.client.service;
 
 import java.util.List;
 
+import com.yimayhd.erpcenter.dal.basic.dto.TreeDto;
 import org.erpcenterFacade.common.client.query.BrandQueryDTO;
 import org.erpcenterFacade.common.client.query.DepartmentTuneQueryDTO;
 import org.erpcenterFacade.common.client.result.BrandQueryResult;
@@ -42,4 +43,6 @@ public interface ProductCommonFacade {
     public String setSaleOperatorIds(String operatorIds,String orgIds,int bizId);
 	List<ImgSpace> imgList(int bizId, int imgId, String name,
 			String sortFileds, String order);
+
+    public List<TreeDto> findImgDirTree(int bizId);
 }

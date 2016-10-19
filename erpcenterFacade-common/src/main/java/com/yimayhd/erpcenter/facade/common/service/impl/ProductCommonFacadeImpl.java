@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.erpcenterFacade.common.client.service.ProductFacadeCommon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +20,11 @@ import com.yimayhd.erpcenter.dal.basic.dto.TreeDto;
 import com.yimayhd.erpcenter.dal.basic.po.ImgSpace;
 import com.yimayhd.erpcenter.dal.basic.utils.FileConstant;
 import com.yimayhd.erpcenter.dal.basic.utils.StaConstant;
-import org.apache.commons.lang3.StringUtils;
 import org.erpcenterFacade.common.client.query.BrandQueryDTO;
 import org.erpcenterFacade.common.client.query.DepartmentTuneQueryDTO;
 import org.erpcenterFacade.common.client.result.BrandQueryResult;
 import org.erpcenterFacade.common.client.result.DepartmentTuneQueryResult;
 import org.erpcenterFacade.common.client.service.ProductCommonFacade;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @ClassName: ${ClassName}
@@ -38,9 +32,10 @@ import java.util.Set;
  * @Auther xueshengdong
  * @Date 2016/10/18 19:55
  */
-public class ProductFacadeCommonImpl implements ProductFacadeCommon {
-	private static final Logger LOGGER = LoggerFactory.getLogger("ProductFacadeCommonImpl");
+
 public class ProductCommonFacadeImpl implements ProductCommonFacade {
+	private static final Logger LOGGER = LoggerFactory.getLogger("ProductFacadeCommonImpl");
+
     @Autowired
     private DicBiz dicBiz;
     @Autowired

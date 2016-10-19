@@ -10,10 +10,9 @@ import java.util.List;
  * @Auther xueshengdong
  * @Date 2016/10/18 19:52
  */
-public class LoadProductDepartmentResult extends ResultSupport{
+public class DepartmentTuneQueryResult extends ResultSupport{
     private String orgJsonStr; //部门
     private String orgUserJsonStr; //计调员
-    private List<DicInfo> brandList;//产品名称
 
     public String getOrgJsonStr() {
         return orgJsonStr;
@@ -31,11 +30,4 @@ public class LoadProductDepartmentResult extends ResultSupport{
         this.orgUserJsonStr = orgUserJsonStr;
     }
 
-    public List<DicInfo> getBrandList() {
-        return brandList;
-    }
-
-    public void setBrandList(List<DicInfo> brandList) {
-        this.brandList = brandList;
-    }
 }
