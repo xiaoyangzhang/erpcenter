@@ -76,7 +76,8 @@ public class ProductFacadeImpl implements ProductFacade{
 			productInfoVo.getProductInfo().setBizId(productSaveDTO.getBizId());
 			productInfoVo.setOrgIdSet(productInfoVo.getOrgIdSet());
 		}
-		int id = productInfoBiz.saveProductInfo(productInfoVo, productSaveDTO.getBizCode(), productSaveDTO.getBrandCode());
+		String brandCode = dicBiz.getById(productInfoVo.getProductInfo().getBrandId().toString()).getCode();
+		int id = productInfoBiz.saveProductInfo(productInfoVo, productSaveDTO.getBizCode(), brandCode);
 		boolean result = false;
 		if (productInfoVo.getProductInfo().getId() == null) {
 			productSaveDTO.getProductRouteVo().setProductId(id);
