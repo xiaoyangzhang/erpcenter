@@ -12,6 +12,7 @@ import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
+import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
 import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.facade.query.DetailDTO;
@@ -62,7 +63,7 @@ public class ProductUpAndDownFrameFacadeImpl implements ProductUpAndDownFrameFac
     public ToSearchListStateResult toSearchListState(ToSearchListStateDTO toSearchListStateDTO) {
         ToSearchListStateResult toSearchListStateResult = new ToSearchListStateResult();
         // 省市
-        regionBiz.getAllProvince();
+        List<RegionInfo> regionInfos = regionBiz.getAllProvince();
         // 产品名称
         List<DicInfo> brandList = dicBiz.getListByTypeCode(
                 BasicConstants.CPXL_PP, toSearchListStateDTO.getBizId());
