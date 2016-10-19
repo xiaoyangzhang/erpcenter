@@ -213,12 +213,12 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	public ProductInfoVo findProductInfoVoById(Integer id) {
 		ProductInfoVo vo = new ProductInfoVo();
 		ProductInfo productInfo = infoMapper.selectByPrimaryKey(id);
-		List<ProductContact> productContacts = contactMapper.selectByConList(id);
+		//List<ProductContact> productContacts = contactMapper.selectByConList(id);
 		List<ProductAttachment> productAttachments = attachmentMapper.selectImgByList(id, 1, 1);
 		List<ProductAttachment> attachments = attachmentMapper.selectImgByList(id, 1, 2);
 
 		vo.setProductInfo(productInfo);
-		vo.setProductContacts(productContacts);
+		//vo.setProductContacts(productContacts);
 		vo.setProductAttachments(productAttachments);
         if(attachments != null && !attachments.isEmpty()){
             vo.setAttachments(attachments);

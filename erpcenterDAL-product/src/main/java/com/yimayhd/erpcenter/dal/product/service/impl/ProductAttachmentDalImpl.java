@@ -1,12 +1,12 @@
 package com.yimayhd.erpcenter.dal.product.service.impl;
 
-import com.yimayhd.erpcenter.dal.product.dao.ProductAttachmentMapper;
-import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
-import com.yimayhd.erpcenter.dal.product.service.ProductAttachmentDal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
+import com.yimayhd.erpcenter.dal.product.dao.ProductAttachmentMapper;
+import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
+import com.yimayhd.erpcenter.dal.product.service.ProductAttachmentDal;
 
 public class ProductAttachmentDalImpl implements ProductAttachmentDal {
 

@@ -4,6 +4,8 @@ import java.util.Map;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
+import com.yimayhd.erpcenter.facade.query.ProductListParam;
 import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
@@ -102,4 +104,25 @@ public interface ProductFacade {
 	 * @author wangjun
 	 */
 	boolean saveProductRemark(ProductRemarkDTO productRemarkDTO);
+	
+	/**
+	 * 
+	* created by zhangxiaoyang
+	* @date 2016年10月18日
+	* @Description:获取编辑产品的信息
+	* @param 
+	* @return ProductInfoVo
+	* @throws
+	 */
+	ProductInfoVo getProductInfoVOById(ProductListParam param);
+	/**
+	 * 
+	* created by zhangxiaoyang
+	* @date 2016年10月18日
+	* @Description:获取编辑产品页面的备注信息
+	* @param 
+	* @return ProductRemark
+	* @throws
+	 */
+	//ProductRemark getProductRemarkByProductId(int productId);
 }

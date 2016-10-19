@@ -19,4 +19,14 @@ public interface ProductFacadeCommon {
      * @return
      */
     public LoadProductDepartmentResult loadProductDepartment(LoadProductDepartmentDTO loadProductDepartmentDTO);
+    /**
+     * 
+    * created by zhangxiaoyang
+    * @date 2016年10月19日
+    * @Description:设置计调/部门的查询参数
+    * @param 
+    * @return String
+    * @throws
+     */
+    public String setSaleOperatorIds(String operatorIds,String orgIds,int bizId);
 }

@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
 import com.yimayhd.erpcenter.dal.product.po.ProductContact;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
 
 
 public class ProductInfoVo implements Serializable{
@@ -20,7 +22,15 @@ public class ProductInfoVo implements Serializable{
 	private List<ProductAttachment> productAttachments; // 图片
 	private List<ProductAttachment> attachments; // 附件
 	private Set<Integer> orgIdSet;
+	private ProductRemark productRemark;
+	private List<DicInfo> brandList;
 	
+	public List<DicInfo> getBrandList() {
+		return brandList;
+	}
+	public void setBrandList(List<DicInfo> brandList) {
+		this.brandList = brandList;
+	}
 	/**
 	 * 商家编码
 	 */
@@ -39,6 +49,12 @@ public class ProductInfoVo implements Serializable{
 	private String createName;
 	
 	
+	public ProductRemark getProductRemark() {
+		return productRemark;
+	}
+	public void setProductRemark(ProductRemark productRemark) {
+		this.productRemark = productRemark;
+	}
 	public ProductInfo getProductInfo() {
 		return productInfo;
 	}

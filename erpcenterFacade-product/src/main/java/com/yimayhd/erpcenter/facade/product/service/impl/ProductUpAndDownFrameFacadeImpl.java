@@ -54,7 +54,7 @@ public class ProductUpAndDownFrameFacadeImpl implements ProductUpAndDownFrameFac
     private ProductGroupBiz productGroupBiz;
 
     /**
-     * 跳转至产品管理页面
+     * 产品列表查询
      *
      * @param toSearchListStateDTO
      * @return
@@ -63,7 +63,7 @@ public class ProductUpAndDownFrameFacadeImpl implements ProductUpAndDownFrameFac
     public ToSearchListStateResult toSearchListState(ToSearchListStateDTO toSearchListStateDTO) {
         ToSearchListStateResult toSearchListStateResult = new ToSearchListStateResult();
         // 省市
-        List<RegionInfo> regionInfos = regionBiz.getAllProvince();
+        List<RegionInfo> allProvince = regionBiz.getAllProvince();
         // 产品名称
         List<DicInfo> brandList = dicBiz.getListByTypeCode(
                 BasicConstants.CPXL_PP, toSearchListStateDTO.getBizId());
@@ -111,6 +111,10 @@ public class ProductUpAndDownFrameFacadeImpl implements ProductUpAndDownFrameFac
 		 * = productInfoService.getProductPriceState(productId);
 		 * priceStateMap.put(info.getId(), state); }
 		 */
+        toSearchListStateResult.setAllProvince(allProvince);
+        toSearchListStateResult.setBrandList(brandList);
+        toSearchListStateResult.setPriceStateMap(priceStateMap);
+        toSearchListStateResult.setPageBean(pageBean);
         return toSearchListStateResult;
     }
 

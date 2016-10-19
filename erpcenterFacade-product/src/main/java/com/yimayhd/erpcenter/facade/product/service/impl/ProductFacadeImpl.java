@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,12 @@ import com.yimayhd.erpcenter.dal.product.constans.Constants;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductTag;
 import com.yimayhd.erpcenter.dal.product.vo.DictWithSelectInfoVo;
+import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductTagVo;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
+import com.yimayhd.erpcenter.facade.query.ProductListParam;
 import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
@@ -290,6 +294,34 @@ public class ProductFacadeImpl implements ProductFacade{
 		ToProductRemarkResult productRemarkResult = new ToProductRemarkResult();
 		productRemarkResult.setProductRemark(productRemarkBiz.findProductRemarkByProductId(productId));
 		return productRemarkResult;
+	}
+
+	/* (non-Javadoc)
+	 * <p>Title: getProductInfoVOById</p> 
+	 * <p>Description: </p> 
+	 * @param id
+	 * @return 
+	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#getProductInfoVOById(int)
+	 */
+	@Override
+	public ProductInfoVo getProductInfoVOById(ProductListParam param) {
+		if (param == null || param.getProductId() <= 0 || param.getBizId() <= 0 ||StringUtils.isBlank(param.getTypeCode())) {
+			LOGGER.error("param error:ProductListParam={}",JSON.toJSONString(param));
+		}
+		ProductInfoVo productInfoVo = productInfoBiz.findProductInfoVoById(param.getProductId());
+		if (productInfoVo == null) {
+			return new ProductInfoVo();
+		}
+		List<DicInfo> brandList = dicBiz.getListByTypeCode(param.getTypeCode(), param.getBizId());
+		productInfoVo.setBrandList(brandList);
+		ProductRemark productRemark = productRemarkBiz.findProductRemarkByProductId(param.getProductId());
+		if (productRemark == null) {
+			productInfoVo.setProductRemark(new ProductRemark());
+		}else {
+			
+			productInfoVo.setProductRemark(productRemark);
+		}
+		return productInfoVo;
 	}
 
 }
