@@ -7,6 +7,8 @@ import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
+import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
+import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
 import com.yimayhd.erpcenter.facade.result.WebResult;
 
@@ -72,4 +74,23 @@ public interface ProductFacade {
 	 * @author wangjun
 	 */
 	ToProductAddResult toProductAdd(String typeCode, int bizId);
+	
+	/**
+	 * 跳转产品修改页
+	 * @param productId
+	 * @param typeCode
+	 * @param bizId
+	 * @return
+	 * @author wangjun
+	 */
+	ToProductAddResult toProductEdit(int productId,String typeCode, int bizId);
+	
+	/**
+	 * 
+	 * @param productId
+	 * @return
+	 * @author wangjun
+	 */
+	GetProductRouteResult findProductRouteById(int productId);
+	
 }

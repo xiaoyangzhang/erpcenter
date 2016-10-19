@@ -20,6 +20,7 @@ import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
 import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
+import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
 import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
 import com.yimayhd.erpcenter.facade.result.WebResult;
 import com.yimayhd.erpcenter.facade.service.ProductFacade;
@@ -113,6 +114,24 @@ public class ProductFacadeImpl implements ProductFacade{
 		toProductAddResult.setAllProvince(regionBiz.getAllProvince());
 		toProductAddResult.setBrandList(dicBiz.getListByTypeCode(typeCode, bizId));
 		return toProductAddResult;
+	}
+
+	@Override
+	public ToProductAddResult toProductEdit(int productId, String typeCode,
+			int bizId) {
+		ToProductAddResult toProductAddResult = new ToProductAddResult();
+		toProductAddResult.setAllProvince(regionBiz.getAllProvince());
+		toProductAddResult.setBrandList(dicBiz.getListByTypeCode(typeCode, bizId));
+		toProductAddResult.setProductInfoVo(productInfoBiz.findProductInfoVoById(productId));
+		toProductAddResult.setProductRemark(productRemarkBiz.findProductRemarkByProductId(productId));
+		return toProductAddResult;
+	}
+
+	@Override
+	public GetProductRouteResult findProductRouteById(int productId) {
+		GetProductRouteResult getProductRouteResult = new GetProductRouteResult();
+		getProductRouteResult.setProductRouteVo(productRouteBiz.findByProductId(productId));
+		return getProductRouteResult;
 	}
 
 }
