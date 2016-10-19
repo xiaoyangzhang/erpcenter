@@ -1,8 +1,10 @@
 package org.erpcenterFacade.common.client.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.yimayhd.erpcenter.dal.basic.dto.TreeDto;
+
 import org.erpcenterFacade.common.client.query.BrandQueryDTO;
 import org.erpcenterFacade.common.client.query.DepartmentTuneQueryDTO;
 import org.erpcenterFacade.common.client.result.BrandQueryResult;
@@ -41,9 +43,41 @@ public interface ProductCommonFacade {
     * @throws
      */
     public String setSaleOperatorIds(String operatorIds,String orgIds,int bizId);
-
+    /**
+     * 图片集
+     * @param bizId
+     * @param imgId
+     * @param name
+     * @param sortFileds
+     * @param order
+     * @return
+     * @author wangjun
+     */
     public List<ImgSpace> imgList(int bizId, int imgId, String name,
 			String sortFileds, String order);
-
+    /**
+     * 图片树
+     * @param bizId
+     * @return
+     * @author wangjun
+     */
     public List<TreeDto> findImgDirTree(int bizId);
+    
+    /**
+	 * 选择计调人员页面
+	 * @param bizId
+	 * @param type 单选 single 多选multi
+	 * @return
+	 */
+    public List<Map<String, String>> orgUserTree(int bizId,String type);
+    
+    /**
+     * 选择计调--查询
+     * @param bizId
+     * @param name
+     * @param type
+     * @return
+     * @author wangjun
+     */
+    public List<Map<String, String>> queryOrgUserTree(int bizId,String name,String type);
 }

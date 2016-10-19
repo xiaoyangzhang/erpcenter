@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.facade.common.service.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +21,7 @@ import com.yimayhd.erpcenter.dal.basic.dto.TreeDto;
 import com.yimayhd.erpcenter.dal.basic.po.ImgSpace;
 import com.yimayhd.erpcenter.dal.basic.utils.FileConstant;
 import com.yimayhd.erpcenter.dal.basic.utils.StaConstant;
+
 import org.erpcenterFacade.common.client.query.BrandQueryDTO;
 import org.erpcenterFacade.common.client.query.DepartmentTuneQueryDTO;
 import org.erpcenterFacade.common.client.result.BrandQueryResult;
@@ -142,5 +144,22 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	@Override
+	public List<Map<String, String>> orgUserTree(int bizId, String type) {
+		if(StringUtils.isBlank(type)){
+			type = "single";
+		}
+		return platformEmployeeBiz.getOrgUserTree(bizId,null,type);
+	}
+
+	@Override
+	public List<Map<String, String>> queryOrgUserTree(int bizId, String name,
+			String type) {
+		if(StringUtils.isBlank(type)){
+			type = "single";
+		}
+		return platformEmployeeBiz.getOrgUserTreeFuzzy(bizId, name, type);
 	}
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;
 
+
 public class ProductGroupSupplierDTO implements Serializable {
     private static final long serialVersionUID = -5738945525593633404L;
     
