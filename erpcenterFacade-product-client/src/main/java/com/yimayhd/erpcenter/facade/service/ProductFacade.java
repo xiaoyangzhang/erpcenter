@@ -114,7 +114,7 @@ public interface ProductFacade {
 	* @return ProductInfoVo
 	* @throws
 	 */
-	ProductInfoVo getProductInfoVOById(ProductListParam param);
+	ProductInfoVo toEditProductInfoVOById(ProductListParam param);
 	/**
 	 * 
 	* created by zhangxiaoyang

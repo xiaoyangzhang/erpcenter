@@ -24,10 +24,9 @@ import com.yimayhd.erpcenter.biz.product.service.ProductTagBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
 import com.yimayhd.erpcenter.dal.product.po.ProductTag;
 import com.yimayhd.erpcenter.dal.product.vo.DictWithSelectInfoVo;
-import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
-import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductTagVo;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
@@ -304,7 +303,7 @@ public class ProductFacadeImpl implements ProductFacade{
 	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#getProductInfoVOById(int)
 	 */
 	@Override
-	public ProductInfoVo getProductInfoVOById(ProductListParam param) {
+	public ProductInfoVo toEditProductInfoVOById(ProductListParam param) {
 		if (param == null || param.getProductId() <= 0 || param.getBizId() <= 0 ||StringUtils.isBlank(param.getTypeCode())) {
 			LOGGER.error("param error:ProductListParam={}",JSON.toJSONString(param));
 		}
