@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.alibaba.druid.support.logging.Log;
 import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
@@ -28,6 +29,7 @@ import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
 import com.yimayhd.erpcenter.dal.product.po.ProductTag;
 import com.yimayhd.erpcenter.dal.product.vo.DictWithSelectInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
+import com.yimayhd.erpcenter.dal.product.vo.ProductRouteVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductTagVo;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
 import com.yimayhd.erpcenter.facade.query.ProductListParam;
@@ -35,6 +37,7 @@ import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
+import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
 import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
 import com.yimayhd.erpcenter.facade.result.ToProductRemarkResult;
 import com.yimayhd.erpcenter.facade.result.ToProductTagResult;
@@ -321,6 +324,29 @@ public class ProductFacadeImpl implements ProductFacade{
 			productInfoVo.setProductRemark(productRemark);
 		}
 		return productInfoVo;
+	}
+
+	
+	@Override
+	public ProductInfoResult toProductPreview(int productId) {
+		ProductInfoResult result = new ProductInfoResult();
+		if (productId <= 0) {
+			LOGGER.error("params :productId={}",productId);
+			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
+			return result;
+		}
+		try {
+			ProductInfoVo productInfoVo = productInfoBiz.findProductInfoVoById(productId);
+			result.setProductInfoVo(productInfoVo);
+			ProductRouteVo productRouteVo = productRouteBiz.findByProductId(productId);
+			result.setProductRouteVo(productRouteVo);
+			ProductRemark productRemark = productRemarkBiz.findProductRemarkByProductId(productId);
+			result.setProductRemark(productRemark);
+		} catch (Exception e) {
+			LOGGER.error("productInfoBiz.findProductInfoVoById ,productRouteBiz.findByProductId,productRemarkBiz.findProductRemarkByProductId,error:{}",e);
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
+		}
+        return result;
 	}
 
 }
