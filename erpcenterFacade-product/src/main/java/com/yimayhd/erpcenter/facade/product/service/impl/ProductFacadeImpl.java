@@ -1,5 +1,10 @@
 package com.yimayhd.erpcenter.facade.product.service.impl;
 
+
+
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,9 +22,14 @@ import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRouteBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductTagBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
+import com.yimayhd.erpcenter.dal.product.constans.Constants;
+import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductTag;
+import com.yimayhd.erpcenter.dal.product.vo.DictWithSelectInfoVo;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
+import com.yimayhd.erpcenter.dal.product.vo.ProductTagVo;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
 import com.yimayhd.erpcenter.facade.query.ProductListParam;
 import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
@@ -27,6 +37,8 @@ import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
 import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
+import com.yimayhd.erpcenter.facade.result.ToProductRemarkResult;
+import com.yimayhd.erpcenter.facade.result.ToProductTagResult;
 import com.yimayhd.erpcenter.facade.result.WebResult;
 import com.yimayhd.erpcenter.facade.service.ProductFacade;
 
@@ -52,7 +64,8 @@ public class ProductFacadeImpl implements ProductFacade{
 	private RegionBiz regionBiz;
 	@Autowired
 	private DicBiz dicBiz;
-	
+//	@Autowired
+//	private product
 	@Override
 	public int saveBasicInfo(ProductSaveDTO productSaveDTO) {
 		if(null == productSaveDTO || null == productSaveDTO.getProductInfoVo()){
@@ -139,6 +152,151 @@ public class ProductFacadeImpl implements ProductFacade{
 		return getProductRouteResult;
 	}
 
+	@Override
+	public ToProductTagResult toProductTags(int productId, int bizId) {
+		ToProductTagResult ToProductTagResult = new ToProductTagResult();
+		
+		List<DicInfo> lineThemeList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_LINE_THEME,bizId);
+        List<DicInfo> lineLevelList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_LINE_LEVEL,bizId);
+        List<DicInfo> attendMethodList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_ATTEND_METHOD,bizId);
+        List<DicInfo> hotelLevelList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_HOTEL_LEVEL,bizId);
+        List<DicInfo> daysPeriodList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_DAYS_PERIOD,bizId);
+        List<DicInfo> priceRangeList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_PRICE_RANGE,bizId);
+        List<DicInfo> exitDestinationList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_EXIT_DESTINATION,bizId);
+        List<DicInfo> domesticDestinationList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_DOMESTIC_DESTINATION,bizId);
+        List<DicInfo> typeList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_TYPE,bizId);
+        
+        ProductTagVo productTagVo = productTagBiz.findProductTagsByProductId(Integer.valueOf(productId));
+		
+        Map<String, List<Integer>> selectedMap = new HashMap<String, List<Integer>>();
+        for(ProductTag productTag : productTagVo.getProductTags()){
+            if(selectedMap.get(productTag.getTagType()) == null){
+                List<Integer> tagList = new ArrayList<Integer>();
+                tagList.add(productTag.getTagId());
+                selectedMap.put(productTag.getTagType(), tagList);
+            }else{
+                selectedMap.get(productTag.getTagType()).add(productTag.getTagId());
+            }
+        }
+
+        List<DictWithSelectInfoVo> lineThemeListPlus = new ArrayList<DictWithSelectInfoVo>();
+        if(selectedMap.get(Constants.PRODUCT_TAG_LINE_THEME) != null){
+            for(DicInfo dicInfo : lineThemeList){
+                lineThemeListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_LINE_THEME).contains(dicInfo.getId())));
+            }
+        }else{
+            for(DicInfo dicInfo : lineThemeList){
+                lineThemeListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+            }
+        }
+        ToProductTagResult.setLineThemeListPlus(lineThemeListPlus);
+
+        List<DictWithSelectInfoVo> lineLevelListPlus = new ArrayList<DictWithSelectInfoVo>();
+        if(selectedMap.get(Constants.PRODUCT_TAG_LINE_LEVEL) != null){
+            for(DicInfo dicInfo : lineLevelList){
+                lineLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_LINE_LEVEL).contains(dicInfo.getId())));
+            }
+        }else{
+            for(DicInfo dicInfo : lineLevelList){
+                lineLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+            }
+        }
+        ToProductTagResult.setLineLevelListPlus(lineLevelListPlus);
+
+        List<DictWithSelectInfoVo> attendMethodListPlus = new ArrayList<DictWithSelectInfoVo>();
+        if(selectedMap.get(Constants.PRODUCT_TAG_ATTEND_METHOD) != null){
+            for(DicInfo dicInfo : attendMethodList){
+                attendMethodListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_ATTEND_METHOD).contains(dicInfo.getId())));
+            }
+        }else{
+            for(DicInfo dicInfo : attendMethodList){
+                attendMethodListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+            }
+        }
+        ToProductTagResult.setAttendMethodListPlus(attendMethodListPlus);
+
+        List<DictWithSelectInfoVo> hotelLevelListPlus = new ArrayList<DictWithSelectInfoVo>();
+        if(selectedMap.get(Constants.PRODUCT_TAG_HOTEL_LEVEL) != null){
+            for(DicInfo dicInfo : hotelLevelList){
+                hotelLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_HOTEL_LEVEL).contains(dicInfo.getId())));
+            }
+        }else{
+            for(DicInfo dicInfo : hotelLevelList){
+                hotelLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+            }
+        }
+        ToProductTagResult.setHotelLevelListPlus(hotelLevelListPlus);
+
+        List<DictWithSelectInfoVo> daysPeriodListPlus = new ArrayList<DictWithSelectInfoVo>();
+        if(selectedMap.get(Constants.PRODUCT_TAG_DAYS_PERIOD) != null){
+            for(DicInfo dicInfo : daysPeriodList){
+                daysPeriodListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_DAYS_PERIOD).contains(dicInfo.getId())));
+            }
+        }else{
+            for(DicInfo dicInfo : daysPeriodList){
+                daysPeriodListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+            }
+        }
+        ToProductTagResult.setDaysPeriodListPlus(daysPeriodListPlus);
+        
+        List<DictWithSelectInfoVo> priceRangeListPlus = new ArrayList<DictWithSelectInfoVo>();
+        if(selectedMap.get(Constants.PRODUCT_TAG_PRICE_RANGE) != null){
+            for(DicInfo dicInfo : priceRangeList){
+            	priceRangeListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_PRICE_RANGE).contains(dicInfo.getId())));
+            }
+        }else{
+            for(DicInfo dicInfo : priceRangeList){
+            	priceRangeListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+            }
+        }
+        ToProductTagResult.setPriceRangeListPlus(priceRangeListPlus);
+       
+        List<DictWithSelectInfoVo> exitDestinationListPlus = new ArrayList<DictWithSelectInfoVo>();
+        if(selectedMap.get(Constants.PRODUCT_TAG_EXIT_DESTINATION) != null){
+            for(DicInfo dicInfo : exitDestinationList){
+            	exitDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_EXIT_DESTINATION).contains(dicInfo.getId())));
+            }
+        }else{
+            for(DicInfo dicInfo : exitDestinationList){
+            	exitDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+            }
+        }
+        ToProductTagResult.setExitDestinationListPlus(exitDestinationListPlus);
+       
+        List<DictWithSelectInfoVo> domesticDestinationListPlus = new ArrayList<DictWithSelectInfoVo>();
+        if(selectedMap.get(Constants.PRODUCT_TAG_DOMESTIC_DESTINATION) != null){
+            for(DicInfo dicInfo : domesticDestinationList){
+            	domesticDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_DOMESTIC_DESTINATION).contains(dicInfo.getId())));
+            }
+        }else{
+            for(DicInfo dicInfo : domesticDestinationList){
+            	domesticDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+            }
+        }
+        ToProductTagResult.setDomesticDestinationListPlus(domesticDestinationListPlus);
+        
+        List<DictWithSelectInfoVo> typeListPlus = new ArrayList<DictWithSelectInfoVo>();
+        if(selectedMap.get(Constants.PRODUCT_TAG_TYPE) != null){
+            for(DicInfo dicInfo : typeList){
+            	typeListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_TYPE).contains(dicInfo.getId())));
+            }
+        }else{
+            for(DicInfo dicInfo : typeList){
+            	typeListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+            }
+        }
+        ToProductTagResult.setTypeListPlus(typeListPlus);
+        
+		return ToProductTagResult;
+	}
+
+	@Override
+	public ToProductRemarkResult toProductRemark(int productId) {
+		ToProductRemarkResult productRemarkResult = new ToProductRemarkResult();
+		productRemarkResult.setProductRemark(productRemarkBiz.findProductRemarkByProductId(productId));
+		return productRemarkResult;
+	}
+
 	/* (non-Javadoc)
 	 * <p>Title: getProductInfoVOById</p> 
 	 * <p>Description: </p> 
@@ -167,5 +325,4 @@ public class ProductFacadeImpl implements ProductFacade{
 		return productInfoVo;
 	}
 
-	
 }

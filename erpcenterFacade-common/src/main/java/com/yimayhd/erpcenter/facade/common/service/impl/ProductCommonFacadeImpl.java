@@ -1,18 +1,19 @@
 package com.yimayhd.erpcenter.facade.common.service.impl;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
-import org.erpcenterFacade.common.client.query.LoadProductDepartmentDTO;
-import org.erpcenterFacade.common.client.result.LoadProductDepartmentResult;
-import org.erpcenterFacade.common.client.service.ProductFacadeCommon;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
+import org.apache.commons.lang3.StringUtils;
+import org.erpcenterFacade.common.client.query.BrandQueryDTO;
+import org.erpcenterFacade.common.client.query.DepartmentTuneQueryDTO;
+import org.erpcenterFacade.common.client.result.BrandQueryResult;
+import org.erpcenterFacade.common.client.result.DepartmentTuneQueryResult;
+import org.erpcenterFacade.common.client.service.ProductCommonFacade;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @ClassName: ${ClassName}
@@ -20,7 +21,7 @@ import com.yimayhd.erpcenter.common.contants.BasicConstants;
  * @Auther xueshengdong
  * @Date 2016/10/18 19:55
  */
-public class ProductFacadeCommonImpl implements ProductFacadeCommon {
+public class ProductCommonFacadeImpl implements ProductCommonFacade {
     @Autowired
     private DicBiz dicBiz;
     @Autowired
@@ -29,19 +30,30 @@ public class ProductFacadeCommonImpl implements ProductFacadeCommon {
     private PlatformEmployeeBiz platformEmployeeBiz;
 
     /**
-     * 加载
-     * 产品名称:部门:计调员
+     * 部门 计调 查询
      *
-     * @param loadProductDepartmentDTO
+     * @param departmentTuneQueryDTO
      * @return
      */
     @Override
-    public LoadProductDepartmentResult loadProductDepartment(LoadProductDepartmentDTO loadProductDepartmentDTO) {
-        LoadProductDepartmentResult loadProductDepartmentResult = new LoadProductDepartmentResult();
-        loadProductDepartmentResult.setBrandList(dicBiz.getListByTypeCode(BasicConstants.CPXL_PP, loadProductDepartmentDTO.getBizId()));
-        loadProductDepartmentResult.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(loadProductDepartmentDTO.getBizId()));
-        loadProductDepartmentResult.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(loadProductDepartmentDTO.getBizId()));
-        return loadProductDepartmentResult;
+    public DepartmentTuneQueryResult departmentTuneQuery(DepartmentTuneQueryDTO departmentTuneQueryDTO) {
+        DepartmentTuneQueryResult departmentTuneQueryResult = new DepartmentTuneQueryResult();
+        departmentTuneQueryResult.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(departmentTuneQueryDTO.getBizId()));
+        departmentTuneQueryResult.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(departmentTuneQueryDTO.getBizId()));
+        return departmentTuneQueryResult;
+    }
+
+    /**
+     * 产品品牌 查询
+     *
+     * @param brandQueryDTO
+     * @return
+     */
+    @Override
+    public BrandQueryResult brandQuery(BrandQueryDTO brandQueryDTO) {
+        BrandQueryResult brandQueryResult = new BrandQueryResult();
+        brandQueryResult.setBrandList(dicBiz.getListByTypeCode(BasicConstants.CPXL_PP, brandQueryDTO.getBizId()));
+        return brandQueryResult;
     }
 
 	/* (non-Javadoc)
