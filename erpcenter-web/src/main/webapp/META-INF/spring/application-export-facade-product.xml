@@ -5,9 +5,9 @@
        http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
        >
  
- <bean id="productFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
+ <bean id="productFacadeExportExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
               <property name="interface" value="com.yimayhd.erpcenter.facade.service.ProductFacade"/>
-              <property name="ref" ref="productFacade"/>
+              <property name="ref" ref="productFacadeExport"/>
               <property name="application" ref="dubboApplicationConfig"/>
               <property name="registry" ref="dubboRegistryConfig"/>
               <property name="protocol" ref="dubboProtocolConfig"/>
