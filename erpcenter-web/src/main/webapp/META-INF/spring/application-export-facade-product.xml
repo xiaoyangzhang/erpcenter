@@ -15,6 +15,26 @@
               <property name="timeout" value="${export.dubbo.timeout}"/>
               <property name="retries" value="${dubbo.retries}"/>
   </bean>
+  <bean id="productPricePlusFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
+ 			  <property name="interface" value="com.yimayhd.erpcenter.facade.service.ProductPricePlusFacade"/>
+              <property name="ref" ref="productPricePlusFacade"/>
+              <property name="application" ref="dubboApplicationConfig"/>
+              <property name="registry" ref="dubboRegistryConfig"/>
+              <property name="protocol" ref="dubboProtocolConfig"/>
+              <property name="version" value="${export.dubbo.version}"/>
+              <property name="timeout" value="${export.dubbo.timeout}"/>
+              <property name="retries" value="${dubbo.retries}"/>
+  </bean>
+  <bean id="productUpAndDownFrameFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
+ 			  <property name="interface" value="com.yimayhd.erpcenter.facade.service.ProductUpAndDownFrameFacade"/>
+              <property name="ref" ref="productUpAndDownFrameFacade"/>
+              <property name="application" ref="dubboApplicationConfig"/>
+              <property name="registry" ref="dubboRegistryConfig"/>
+              <property name="protocol" ref="dubboProtocolConfig"/>
+              <property name="version" value="${export.dubbo.version}"/>
+              <property name="timeout" value="${export.dubbo.timeout}"/>
+              <property name="retries" value="${dubbo.retries}"/>
+  </bean>
   <!--产品库存相关接口 -->
   <bean id="productStockFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
  			  <property name="interface" value="com.yimayhd.erpcenter.facade.service.ProductStockFacade"/>

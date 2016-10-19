@@ -447,7 +447,7 @@ public class ProductFacadeImpl implements ProductFacade{
 	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#deleteProduct(int, byte)
 	 */
 	@Override
-	public ResultSupport deleteProduct(int productId, byte state) {
+	public ResultSupport updateProductState(int productId, byte state) {
 		ResultSupport result = new ResultSupport();
 		List<ProductRoute> productRoutes = productRouteBiz.findProductRouteByProductId(productId);
 		if (state != (byte) -1 && productRoutes.size() == 0) {
@@ -459,7 +459,7 @@ public class ProductFacadeImpl implements ProductFacade{
 			productInfo.setId(productId);
 			int updateResult = productInfoBiz.updateProductInfo(productInfo);
 			if (updateResult != 1) {
-				result.setErrorCode(ProductErrorCode.DEL_ERROR);
+				result.setErrorCode(ProductErrorCode.MODIFY_ERROR);
 				return result;
 			}
 		}
