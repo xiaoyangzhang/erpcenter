@@ -8,8 +8,9 @@ import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
-import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
+import com.yimayhd.erpcenter.facade.result.ToProductRemarkResult;
+import com.yimayhd.erpcenter.facade.result.ToProductTagResult;
 import com.yimayhd.erpcenter.facade.result.WebResult;
 
 
@@ -23,12 +24,45 @@ import com.yimayhd.erpcenter.facade.result.WebResult;
  */
 public interface ProductFacade {
 	/**
+	 * 跳转产品添加页
+	 * @param typeCode
+	 * @param bizId
+	 * @return
+	 * @author wangjun
+	 */
+	ToProductAddResult toProductAdd(String typeCode, int bizId);
+	/**
 	 * 保存产品基本信息
 	 * @param productSaveDTO
 	 * @return
 	 * @author wangjun
 	 */
 	int saveBasicInfo(ProductSaveDTO productSaveDTO);
+	/**
+	 * 校验编码是否存在
+	 * @param bizId
+	 * @param productId
+	 * @param code
+	 * @return
+	 * @author wangjun
+	 */
+	boolean codeValidate(int bizId, int productId, String code);
+	/**
+	 * 跳转产品修改页
+	 * @param productId
+	 * @param typeCode
+	 * @param bizId
+	 * @return
+	 * @author wangjun
+	 */
+	ToProductAddResult toProductEdit(int productId,String typeCode, int bizId);
+	/**
+	 * 
+	 * @param productId
+	 * @return
+	 * @author wangjun
+	 */
+	GetProductRouteResult findProductRouteById(int productId);
 	/**
 	 * 
 	* created by zhangxiaoyang
@@ -39,17 +73,14 @@ public interface ProductFacade {
 	* @throws
 	 */
 	public WebResult<PageBean<ProductInfo>> selectProductList(PageBean pageBean,Map<String, Object> parameters);
-	
 	/**
-	 * 校验编码是否存在
-	 * @param bizId
+	 * 跳转到产品标签修改页
 	 * @param productId
-	 * @param code
+	 * @param bizId
 	 * @return
 	 * @author wangjun
 	 */
-	boolean codeValidate(int bizId, int productId, String code);
-	
+	ToProductTagResult toProductTags(int productId, int bizId);
 	/**
 	 * 保存产品标签
 	 * @param productTagDTO
@@ -57,7 +88,13 @@ public interface ProductFacade {
 	 * @author wangjun
 	 */
 	boolean saveProductTags(ProductTagDTO productTagDTO);
-	
+	/**
+	 * 跳转到产品备注修改页
+	 * @param productId
+	 * @return
+	 * @author wangjun
+	 */
+	ToProductRemarkResult toProductRemark(int productId);
 	/**
 	 * 保存产品备注信息
 	 * @param productRemarkDTO
@@ -65,32 +102,4 @@ public interface ProductFacade {
 	 * @author wangjun
 	 */
 	boolean saveProductRemark(ProductRemarkDTO productRemarkDTO);
-	
-	/**
-	 * 跳转产品添加页
-	 * @param typeCode
-	 * @param bizId
-	 * @return
-	 * @author wangjun
-	 */
-	ToProductAddResult toProductAdd(String typeCode, int bizId);
-	
-	/**
-	 * 跳转产品修改页
-	 * @param productId
-	 * @param typeCode
-	 * @param bizId
-	 * @return
-	 * @author wangjun
-	 */
-	ToProductAddResult toProductEdit(int productId,String typeCode, int bizId);
-	
-	/**
-	 * 
-	 * @param productId
-	 * @return
-	 * @author wangjun
-	 */
-	GetProductRouteResult findProductRouteById(int productId);
-	
 }
