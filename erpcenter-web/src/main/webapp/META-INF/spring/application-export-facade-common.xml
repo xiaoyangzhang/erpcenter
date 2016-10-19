@@ -5,7 +5,7 @@
        http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
        >
  
- <bean id="productCommonFacade" class="com.alibaba.dubbo.config.spring.ServiceBean">
+ <bean id="productCommonFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
               <property name="interface" value="org.erpcenterFacade.common.client.service.ProductCommonFacade"/>
               <property name="ref" ref="productCommonFacade"/>
               <property name="application" ref="dubboApplicationConfig"/>
