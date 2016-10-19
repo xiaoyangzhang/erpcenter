@@ -6,11 +6,14 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.facade.query.ProductListParam;
+import com.yimayhd.erpcenter.facade.query.ProductPriceListDTO;
 import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
+import com.yimayhd.erpcenter.facade.result.ProductPriceListResult;
 import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
+import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
 import com.yimayhd.erpcenter.facade.result.ToProductRemarkResult;
 import com.yimayhd.erpcenter.facade.result.ToProductTagResult;
@@ -117,13 +120,44 @@ public interface ProductFacade {
 	 */
 	ProductInfoVo toEditProductInfoVOById(ProductListParam param);
 	/**
-	 * 产品列表/预览
+	 * 
 	* created by zhangxiaoyang
-	* @date 2016年10月19日
-	* @Description:产品列表/预览
+	* @date 2016年10月18日
+	* @Description:获取编辑产品页面的备注信息
 	* @param 
-	* @return ProductInfoResult
+	* @return ProductRemark
 	* @throws
 	 */
 	ProductInfoResult toProductPreview(int productId);
+	//ProductRemark getProductRemarkByProductId(int productId);
+	
+	/**
+	 * 产品列表/删除
+	* created by zhangxiaoyang
+	* @date 2016年10月19日
+	* @Description:
+	* @param 
+	* @return ResultSupport
+	* @throws
+	 */
+	ResultSupport deleteProduct(int productId,byte state);
+	/**
+	 * 产品列表/导出
+	* created by zhangxiaoyang
+	* @date 2016年10月19日
+	* @Description:
+	* @param 
+	* @return Map<String,Object>
+	* @throws
+	 */
+	WebResult<Map<String, Object>> toExportProduct(int productId);
+	
+	/**
+	 * 产品价格列表
+	 * @param productInfo
+	 * @param productName
+	 * @param name
+	 * @return
+	 */
+	ProductPriceListResult productPriceList(ProductPriceListDTO productPriceListDTO);
 }

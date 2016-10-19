@@ -5,15 +5,16 @@ package com.yimayhd.erpcenter.facade.product.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.alibaba.druid.support.logging.Log;
 import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
@@ -22,10 +23,14 @@ import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRouteBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductTagBiz;
+import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
+import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
+import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
+import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.dal.product.po.ProductTag;
 import com.yimayhd.erpcenter.dal.product.vo.DictWithSelectInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
@@ -33,11 +38,14 @@ import com.yimayhd.erpcenter.dal.product.vo.ProductRouteVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductTagVo;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
 import com.yimayhd.erpcenter.facade.query.ProductListParam;
+import com.yimayhd.erpcenter.facade.query.ProductPriceListDTO;
 import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
 import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
+import com.yimayhd.erpcenter.facade.result.ProductPriceListResult;
+import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
 import com.yimayhd.erpcenter.facade.result.ToProductRemarkResult;
 import com.yimayhd.erpcenter.facade.result.ToProductTagResult;
@@ -66,6 +74,8 @@ public class ProductFacadeImpl implements ProductFacade{
 	private RegionBiz regionBiz;
 	@Autowired
 	private DicBiz dicBiz;
+	@Autowired
+	private PlatformEmployeeBiz platformEmployeeBiz;
 	
 	@Override
 	public int saveBasicInfo(ProductSaveDTO productSaveDTO) {
@@ -79,7 +89,8 @@ public class ProductFacadeImpl implements ProductFacade{
 			productInfoVo.getProductInfo().setBizId(productSaveDTO.getBizId());
 			productInfoVo.setOrgIdSet(productInfoVo.getOrgIdSet());
 		}
-		int id = productInfoBiz.saveProductInfo(productInfoVo, productSaveDTO.getBizCode(), productSaveDTO.getBrandCode());
+		String brandCode = dicBiz.getById(productInfoVo.getProductInfo().getBrandId().toString()).getCode();
+		int id = productInfoBiz.saveProductInfo(productInfoVo, productSaveDTO.getBizCode(), brandCode);
 		boolean result = false;
 		if (productInfoVo.getProductInfo().getId() == null) {
 			productSaveDTO.getProductRouteVo().setProductId(id);
@@ -325,7 +336,79 @@ public class ProductFacadeImpl implements ProductFacade{
 		}
 		return productInfoVo;
 	}
+	
+	/**
+	 * 产品价格列表
+	 * @param productInfo
+	 * @param productName
+	 * @param name
+	 * @return
+	 */
+	public ProductPriceListResult productPriceList(ProductPriceListDTO productPriceListDTO){
+		
+		ProductInfo productInfo = productPriceListDTO.getProductInfo();
+		int bizId = productInfo.getBizId();
+		Integer page = productPriceListDTO.getPage();
+		Integer pageSize = productPriceListDTO.getPageSize();
+		
+		// 省市
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
+		// 产品名称
+		List<DicInfo> brandList = dicBiz.getListByTypeCode(BasicConstants.CPXL_PP, productInfo.getBizId());
+		if (page == 0) {
+			productPriceListDTO.setPage(1);
+		}
+		PageBean pageBean = new PageBean();
+		if (pageSize == 0) {
+			pageBean.setPageSize(Constants.PAGESIZE);
+		} else {
+			pageBean.setPageSize(pageSize);
+		}
+		if (StringUtils.isBlank(productInfo.getOperatorIds())
+				&& StringUtils.isNotBlank(productInfo.getOrgIds())) {
+			Set<Integer> set = new HashSet<Integer>();
+			String[] orgIdArr = productInfo.getOrgIds().split(",");
+			for (String orgIdStr : orgIdArr) {
+				set.add(Integer.valueOf(orgIdStr));
+			}
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
+			String salesOperatorIds = "";
+			for (Integer usrId : set) {
+				salesOperatorIds += usrId + ",";
+			}
+			if (!salesOperatorIds.equals("")) {
+				productInfo.setOperatorIds(salesOperatorIds.substring(0,
+						salesOperatorIds.length() - 1));
+			}
+		}
+		// productInfo.set
+		pageBean.setParameter(productInfo);
+		pageBean.setPage(page);
+		Map parameters = new HashMap();
+		parameters.put("bizId", bizId);
+		parameters.put("name", productPriceListDTO.getName());
+		parameters.put("productName", productPriceListDTO.getProductName());
+		parameters.put("orgId", productPriceListDTO.getOrgId());
+		// parameters.put("set", WebUtils.getDataUserIdSet(request));
+		pageBean = productInfoBiz.findProductInfos(pageBean, parameters);
 
+		Map<Integer, String> priceStateMap = new HashMap<Integer, String>();
+		/*
+		 * for (Object product : pageBean.getResult()) { ProductInfo info =
+		 * (ProductInfo) product; Integer productId = info.getId(); String state
+		 * = productInfoService.getProductPriceState(productId);
+		 * priceStateMap.put(info.getId(), state); }
+		 */
+		
+		ProductPriceListResult result = new ProductPriceListResult();
+		
+		result.setAllProvince(allProvince);;
+		result.setBrandList(brandList);
+		result.setPage(pageBean);
+		result.setPageNum(page);
+		result.setPriceStateMap(priceStateMap);
+		return result;
+	}
 	
 	@Override
 	public ProductInfoResult toProductPreview(int productId) {
@@ -349,4 +432,60 @@ public class ProductFacadeImpl implements ProductFacade{
         return result;
 	}
 
+	/* (non-Javadoc)
+	 * <p>Title: deleteProduct</p> 
+	 * <p>Description: </p> 
+	 * @param productId
+	 * @param state
+	 * @return 
+	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#deleteProduct(int, byte)
+	 */
+	@Override
+	public ResultSupport deleteProduct(int productId, byte state) {
+		ResultSupport result = new ResultSupport();
+		List<ProductRoute> productRoutes = productRouteBiz.findProductRouteByProductId(productId);
+		if (state != (byte) -1 && productRoutes.size() == 0) {
+			result.setErrorCode(ProductErrorCode.PRODUCT_NO_ROUTE_ERROR);
+			return result;
+		} else {
+			ProductInfo productInfo = new ProductInfo();
+			productInfo.setState(state);
+			productInfo.setId(productId);
+			int updateResult = productInfoBiz.updateProductInfo(productInfo);
+			if (updateResult != 1) {
+				result.setErrorCode(ProductErrorCode.DEL_ERROR);
+				return result;
+			}
+		}
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * <p>Title: toExportProduct</p> 
+	 * <p>Description: </p> 
+	 * @param productId
+	 * @return 
+	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#toExportProduct(int)
+	 */
+	@Override
+	public WebResult<Map<String, Object>> toExportProduct(int productId) {
+		WebResult<Map<String, Object>> result = new WebResult<Map<String,Object>>();
+		if (productId <= 0) {
+			LOGGER.error("params :productId={}",productId);
+			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
+			return result;
+		}
+		try {
+			Map<String, Object> map = productInfoBiz.findProductInfos(productId);
+			if (map != null) {
+				result.setValue(map);
+				return result;
+			}
+			result.setValue(new HashMap<String, Object>());
+		} catch (Exception e) {
+			LOGGER.error("productInfoBiz.findProductInfos error:{}",e);
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
+		}
+		return result;
+	}
 }
