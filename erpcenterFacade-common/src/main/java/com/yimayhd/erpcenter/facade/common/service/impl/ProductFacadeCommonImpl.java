@@ -1,18 +1,28 @@
 package com.yimayhd.erpcenter.facade.common.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.erpcenterFacade.common.client.query.LoadProductDepartmentDTO;
 import org.erpcenterFacade.common.client.result.LoadProductDepartmentResult;
 import org.erpcenterFacade.common.client.service.ProductFacadeCommon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.alibaba.fastjson.JSON;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
+import com.yimayhd.erpcenter.biz.basic.service.ImgSpaceBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
+import com.yimayhd.erpcenter.dal.basic.dto.TreeDto;
+import com.yimayhd.erpcenter.dal.basic.po.ImgSpace;
+import com.yimayhd.erpcenter.dal.basic.utils.FileConstant;
+import com.yimayhd.erpcenter.dal.basic.utils.StaConstant;
 
 /**
  * @ClassName: ${ClassName}
@@ -21,12 +31,15 @@ import com.yimayhd.erpcenter.common.contants.BasicConstants;
  * @Date 2016/10/18 19:55
  */
 public class ProductFacadeCommonImpl implements ProductFacadeCommon {
+	private static final Logger LOGGER = LoggerFactory.getLogger("ProductFacadeCommonImpl");
     @Autowired
     private DicBiz dicBiz;
     @Autowired
     private PlatformOrgBiz platformOrgBiz;
     @Autowired
     private PlatformEmployeeBiz platformEmployeeBiz;
+    @Autowired
+    private ImgSpaceBiz imgSpaceBiz;
 
     /**
      * 加载
@@ -72,5 +85,47 @@ public class ProductFacadeCommonImpl implements ProductFacadeCommon {
 			}
 		}
 		return saleOperatorIds;
+	}
+
+	@Override
+	public List<TreeDto> findImgDirTree(int bizId) {
+		List<TreeDto> dirDate = new ArrayList<TreeDto>();
+		ImgSpace imgSpace = new ImgSpace();
+		try {
+			imgSpace.setType(FileConstant.DIRECTORY_TYPE);
+			imgSpace.setStatus(StaConstant.AVAILABLE_STATUS);
+			imgSpace.setParentId(null);
+			imgSpace.setSysId("0");
+			imgSpace.setDealerId(bizId);
+			// 加载用户下的所有目录信息
+			dirDate = imgSpaceBiz.findImgDirTree(imgSpace);
+		} catch (Exception e) {
+			LOGGER.error("ProductFacadeCommon.findImgDirTree error! param:imgSpace={}, error:{}",JSON.toJSONString(imgSpace),e);
+		}
+		return dirDate;
+	}
+
+	@Override
+	public List<ImgSpace> imgList(int bizId, int imgId, String name,
+			String sortFileds, String order) {
+		ImgSpace imgSpace = new ImgSpace();		
+		if(!StringUtils.isEmpty(name)){
+			imgSpace.setImgName(name);
+		}else{
+			imgSpace.setParentId(imgId);			
+		}
+		imgSpace.setSysId("0");
+		imgSpace.setDealerId(bizId);
+		imgSpace.setType(FileConstant.IMAGE_TYPE);
+		imgSpace.setStatus(StaConstant.AVAILABLE_STATUS);
+		//显示图片
+		List<ImgSpace> list = new ArrayList<ImgSpace>();
+		
+		try {
+			list = imgSpaceBiz.getImgList(imgSpace,sortFileds,order);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 }

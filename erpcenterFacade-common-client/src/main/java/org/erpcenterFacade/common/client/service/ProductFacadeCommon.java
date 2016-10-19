@@ -1,7 +1,13 @@
 package org.erpcenterFacade.common.client.service;
 
+import java.util.List;
+
 import org.erpcenterFacade.common.client.query.LoadProductDepartmentDTO;
 import org.erpcenterFacade.common.client.result.LoadProductDepartmentResult;
+
+import com.yimayhd.erpcenter.dal.basic.dto.TreeDto;
+import com.yimayhd.erpcenter.dal.basic.po.ImgSpace;
+
 
 /**
  * @ClassName: ${ClassName}
@@ -29,4 +35,28 @@ public interface ProductFacadeCommon {
     * @throws
      */
     public String setSaleOperatorIds(String operatorIds,String orgIds,int bizId);
+    
+    /**
+     * 查询图片树
+     * @param bizId
+     * @return
+     * @author wangjun
+     */
+    List<TreeDto> findImgDirTree(int bizId);
+    
+    /**
+     * 图片集合
+     * @param bizId
+     * @param imgId
+     * @param name
+     * @param sortFileds
+     * @param order
+     * @return
+     * @author wangjun
+     */
+    List<ImgSpace> imgList(int bizId,int imgId,String name,String sortFileds,String order);
+    
+    //TODO 商家列表 等supplier上了后再写
+//    supplierList();
+   
 }
