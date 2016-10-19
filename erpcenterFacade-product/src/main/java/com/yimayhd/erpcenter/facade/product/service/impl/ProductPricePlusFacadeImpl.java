@@ -216,13 +216,9 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 		ProductSupplierCondition condition = conditionDTO.getCondition();
 		
 		ToSupplierListResult result = new ToSupplierListResult();
-		result.setProductId(condition.getProductId());
 		ProductInfo productInfo = productInfoDal.findProductInfoById(condition.getProductId());
 		result.setProductName("【" +productInfo.getBrandName()+"】"+productInfo.getNameCity());
 		result.setGroupSuppliers(productGroupSupplierDal.selectSupplierList(conditionDTO.getCondition()));
-		result.setSupplierName(condition.getSupplierName());
-		result.setCity(condition.getCity());
-		
 		return result;
 	}
 	
@@ -267,10 +263,6 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
     	Date startDate = DateUtils.parse(beginDateStr, "yyyy-MM-dd");
     	Date endDate = DateUtils.parse(endDateStr,"yyyy-MM-dd");
 		List<ProductStock> list = productStockDal.getStocksByProductIdAndDateSpan(productId, startDate, endDate);
-		
-		JSONObject json = new JSONObject();
-		json.put("success", true);
-		json.put("data", JSON.toJSONString(list));
-		return json.toString();
+		return JSON.toJSONString(list);
 	}
 }
