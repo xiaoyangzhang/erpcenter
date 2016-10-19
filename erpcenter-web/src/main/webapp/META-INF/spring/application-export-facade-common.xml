@@ -7,7 +7,7 @@
  
  <bean id="productCommonFacade" class="com.alibaba.dubbo.config.spring.ServiceBean">
               <property name="interface" value="org.erpcenterFacade.common.client.service.ProductCommonFacade"/>
-              <property name="ref" ref="productFacade"/>
+              <property name="ref" ref="productCommonFacade"/>
               <property name="application" ref="dubboApplicationConfig"/>
               <property name="registry" ref="dubboRegistryConfig"/>
               <property name="protocol" ref="dubboProtocolConfig"/>
