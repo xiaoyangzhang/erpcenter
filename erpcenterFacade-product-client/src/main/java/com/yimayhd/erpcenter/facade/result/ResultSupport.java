@@ -39,6 +39,8 @@ public class ResultSupport implements Serializable {
 
     public void setErrorCode(ProductErrorCode errorCode) {
         this.errorCode = errorCode;
+        this.success = false;
+        this.resultMsg = errorCode.getErrorMsg();
     }
 
 }

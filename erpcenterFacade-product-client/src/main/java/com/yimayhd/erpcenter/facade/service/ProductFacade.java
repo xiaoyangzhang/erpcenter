@@ -1,6 +1,8 @@
 package com.yimayhd.erpcenter.facade.service;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
@@ -11,8 +13,9 @@ import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
-import com.yimayhd.erpcenter.facade.result.ProductPriceListResult;
+import com.yimayhd.erpcenter.facade.result.ProductDataRightResult;
 import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
+import com.yimayhd.erpcenter.facade.result.ProductPriceListResult;
 import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
 import com.yimayhd.erpcenter.facade.result.ToProductRemarkResult;
@@ -140,7 +143,7 @@ public interface ProductFacade {
 	* @return ResultSupport
 	* @throws
 	 */
-	ResultSupport deleteProduct(int productId,byte state);
+	ResultSupport updateProductState(int productId,byte state);
 	/**
 	 * 产品列表/导出
 	* created by zhangxiaoyang
@@ -160,4 +163,34 @@ public interface ProductFacade {
 	 * @return
 	 */
 	ProductPriceListResult productPriceList(ProductPriceListDTO productPriceListDTO);
+	/**
+	 * 获取组织机构列表和某个产品权限集合
+	* created by zhangxiaoyang
+	* @date 2016年10月19日
+	* @Description:
+	* @param 
+	* @return ProductDataRightResult
+	* @throws
+	 */
+	ProductDataRightResult getOrgListAndProductRights(int productId,int bizId);
+	/**
+	 * 产品列表/权限
+	* created by zhangxiaoyang
+	* @date 2016年10月19日
+	* @Description:
+	* @param 
+	* @return List<Map<String,String>>
+	* @throws
+	 */
+	List<Map<String, String>> getProductRight(int productId,int bizId);
+	/**
+	 * 保存产品权限设置结果
+	* created by zhangxiaoyang
+	* @date 2016年10月19日
+	* @Description:
+	* @param 
+	* @return ResultSupport
+	* @throws
+	 */
+	ResultSupport setProductRight(int productId,Set<Integer> orgIdSet);
 }
