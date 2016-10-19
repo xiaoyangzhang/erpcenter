@@ -137,4 +137,16 @@ public interface ProductFacade {
 	* @throws
 	 */
 	ResultSupport deleteProduct(int productId,byte state);
+	/**
+	 * 产品列表/导出
+	* created by zhangxiaoyang
+	* @date 2016年10月19日
+	* @Description:
+	* @param 
+	* @return Map<String,Object>
+	* @throws
+	 */
+	WebResult<Map<String, Object>> toExportProduct(int productId);
+	
+	
 }
