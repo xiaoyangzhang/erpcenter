@@ -1,22 +1,19 @@
 package com.yimayhd.erpcenter.facade.common.service.impl;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
-import org.erpcenterFacade.common.client.query.LoadProductDepartmentDTO;
-import org.erpcenterFacade.common.client.result.LoadProductDepartmentResult;
-import org.erpcenterFacade.common.client.service.ProductCommonFacade;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
-import org.erpcenterFacade.common.client.query.LoadProductDepartmentDTO;
-import org.erpcenterFacade.common.client.result.LoadProductDepartmentResult;
-import org.erpcenterFacade.common.client.service.ProductFacadeCommon;
+import org.apache.commons.lang3.StringUtils;
+import org.erpcenterFacade.common.client.query.BrandQueryDTO;
+import org.erpcenterFacade.common.client.query.DepartmentTuneQueryDTO;
+import org.erpcenterFacade.common.client.result.BrandQueryResult;
+import org.erpcenterFacade.common.client.result.DepartmentTuneQueryResult;
+import org.erpcenterFacade.common.client.service.ProductCommonFacade;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @ClassName: ${ClassName}

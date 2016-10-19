@@ -25,7 +25,7 @@ public interface ProductCommonFacade {
      * @param brandQueryDTO
      * @return
      */
-    public LoadProductDepartmentResult loadProductDepartment(LoadProductDepartmentDTO loadProductDepartmentDTO);
+    public BrandQueryResult brandQuery(BrandQueryDTO brandQueryDTO);
     /**
      * 
     * created by zhangxiaoyang
@@ -36,5 +36,4 @@ public interface ProductCommonFacade {
     * @throws
      */
     public String setSaleOperatorIds(String operatorIds,String orgIds,int bizId);
-    public BrandQueryResult brandQuery(BrandQueryDTO brandQueryDTO);
 }
