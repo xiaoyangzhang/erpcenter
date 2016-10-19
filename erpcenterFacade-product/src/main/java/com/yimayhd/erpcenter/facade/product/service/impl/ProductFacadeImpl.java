@@ -64,7 +64,8 @@ public class ProductFacadeImpl implements ProductFacade{
 	private RegionBiz regionBiz;
 	@Autowired
 	private DicBiz dicBiz;
-	
+//	@Autowired
+//	private product
 	@Override
 	public int saveBasicInfo(ProductSaveDTO productSaveDTO) {
 		if(null == productSaveDTO || null == productSaveDTO.getProductInfoVo()){

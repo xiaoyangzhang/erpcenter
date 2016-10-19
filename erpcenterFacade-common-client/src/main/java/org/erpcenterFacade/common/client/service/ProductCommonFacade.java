@@ -9,7 +9,7 @@ import org.erpcenterFacade.common.client.result.LoadProductDepartmentResult;
  * @Auther xueshengdong
  * @Date 2016/10/18 19:48
  */
-public interface ProductFacadeCommon {
+public interface ProductCommonFacade {
 
     /**
      * 加载

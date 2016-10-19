@@ -6,7 +6,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.erpcenterFacade.common.client.query.LoadProductDepartmentDTO;
 import org.erpcenterFacade.common.client.result.LoadProductDepartmentResult;
-import org.erpcenterFacade.common.client.service.ProductFacadeCommon;
+import org.erpcenterFacade.common.client.service.ProductCommonFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
@@ -20,7 +20,7 @@ import com.yimayhd.erpcenter.common.contants.BasicConstants;
  * @Auther xueshengdong
  * @Date 2016/10/18 19:55
  */
-public class ProductFacadeCommonImpl implements ProductFacadeCommon {
+public class ProductCommonFacadeImpl implements ProductCommonFacade {
     @Autowired
     private DicBiz dicBiz;
     @Autowired
