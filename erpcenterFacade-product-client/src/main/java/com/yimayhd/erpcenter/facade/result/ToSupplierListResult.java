@@ -20,19 +20,8 @@ public class ToSupplierListResult extends ResultSupport {
 	*/
 	private static final long serialVersionUID = 7546504127191622861L;
 
-	private Integer productId;
 	private String productName;
 	private List<ProductGroupSupplier> groupSuppliers;
-	private String supplierName;
-	private String city;
-	
-	public Integer getProductId() {
-		return productId;
-	}
-
-	public void setProductId(Integer productId) {
-		this.productId = productId;
-	}
 
 	public String getProductName() {
 		return productName;
@@ -48,22 +37,6 @@ public class ToSupplierListResult extends ResultSupport {
 
 	public void setGroupSuppliers(List<ProductGroupSupplier> groupSuppliers) {
 		this.groupSuppliers = groupSuppliers;
-	}
-
-	public String getSupplierName() {
-		return supplierName;
-	}
-
-	public void setSupplierName(String supplierName) {
-		this.supplierName = supplierName;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
 	}
 
 }

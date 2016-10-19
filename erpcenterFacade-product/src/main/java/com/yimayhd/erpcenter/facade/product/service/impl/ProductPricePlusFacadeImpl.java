@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice;
@@ -216,13 +215,9 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 		ProductSupplierCondition condition = conditionDTO.getCondition();
 		
 		ToSupplierListResult result = new ToSupplierListResult();
-		result.setProductId(condition.getProductId());
 		ProductInfo productInfo = productInfoDal.findProductInfoById(condition.getProductId());
 		result.setProductName("【" +productInfo.getBrandName()+"】"+productInfo.getNameCity());
 		result.setGroupSuppliers(productGroupSupplierDal.selectSupplierList(conditionDTO.getCondition()));
-		result.setSupplierName(condition.getSupplierName());
-		result.setCity(condition.getCity());
-		
 		return result;
 	}
 	
@@ -267,10 +262,27 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
     	Date startDate = DateUtils.parse(beginDateStr, "yyyy-MM-dd");
     	Date endDate = DateUtils.parse(endDateStr,"yyyy-MM-dd");
 		List<ProductStock> list = productStockDal.getStocksByProductIdAndDateSpan(productId, startDate, endDate);
+		return JSON.toJSONString(list);
+	}
+	
+	/**
+	 * 将某个产品下的组团社和价格组复制到其他产品
+	 * @param data
+	 * @param productId
+	 * @return
+	 */
+	public ResultSupport copyProduct(String data,Integer productId){
 		
-		JSONObject json = new JSONObject();
-		json.put("success", true);
-		json.put("data", JSON.toJSONString(list));
-		return json.toString();
+		ResultSupport result = new ResultSupport();
+		//获取要复制到的产品的id集合
+		List<ProductInfo> productInfos = JSON.parseArray(data, ProductInfo.class);
+		//获取要复制的产品下的组团社
+		try {
+			productGroupSupplierDal.save(productInfos, productId);
+		} catch (Exception e) {
+			result.setSuccess(false);
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
+		}
+		return result;
 	}
 }

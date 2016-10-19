@@ -10,6 +10,8 @@ import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
+import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
+import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
 import com.yimayhd.erpcenter.facade.result.ToProductRemarkResult;
 import com.yimayhd.erpcenter.facade.result.ToProductTagResult;
@@ -116,13 +118,23 @@ public interface ProductFacade {
 	 */
 	ProductInfoVo toEditProductInfoVOById(ProductListParam param);
 	/**
-	 * 
+	 * 产品列表/预览
 	* created by zhangxiaoyang
-	* @date 2016年10月18日
-	* @Description:获取编辑产品页面的备注信息
+	* @date 2016年10月19日
+	* @Description:产品列表/预览
 	* @param 
-	* @return ProductRemark
+	* @return ProductInfoResult
 	* @throws
 	 */
-	//ProductRemark getProductRemarkByProductId(int productId);
+	ProductInfoResult toProductPreview(int productId);
+	/**
+	 * 产品列表/删除
+	* created by zhangxiaoyang
+	* @date 2016年10月19日
+	* @Description:
+	* @param 
+	* @return ResultSupport
+	* @throws
+	 */
+	ResultSupport deleteProduct(int productId,byte state);
 }

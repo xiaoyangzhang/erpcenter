@@ -25,9 +25,11 @@ import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
+import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.dal.product.po.ProductTag;
 import com.yimayhd.erpcenter.dal.product.vo.DictWithSelectInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
+import com.yimayhd.erpcenter.dal.product.vo.ProductRouteVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductTagVo;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
 import com.yimayhd.erpcenter.facade.query.ProductListParam;
@@ -35,6 +37,8 @@ import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
+import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
+import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
 import com.yimayhd.erpcenter.facade.result.ToProductRemarkResult;
 import com.yimayhd.erpcenter.facade.result.ToProductTagResult;
@@ -322,6 +326,57 @@ public class ProductFacadeImpl implements ProductFacade{
 			productInfoVo.setProductRemark(productRemark);
 		}
 		return productInfoVo;
+	}
+
+	
+	@Override
+	public ProductInfoResult toProductPreview(int productId) {
+		ProductInfoResult result = new ProductInfoResult();
+		if (productId <= 0) {
+			LOGGER.error("params :productId={}",productId);
+			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
+			return result;
+		}
+		try {
+			ProductInfoVo productInfoVo = productInfoBiz.findProductInfoVoById(productId);
+			result.setProductInfoVo(productInfoVo);
+			ProductRouteVo productRouteVo = productRouteBiz.findByProductId(productId);
+			result.setProductRouteVo(productRouteVo);
+			ProductRemark productRemark = productRemarkBiz.findProductRemarkByProductId(productId);
+			result.setProductRemark(productRemark);
+		} catch (Exception e) {
+			LOGGER.error("productInfoBiz.findProductInfoVoById ,productRouteBiz.findByProductId,productRemarkBiz.findProductRemarkByProductId,error:{}",e);
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
+		}
+        return result;
+	}
+
+	/* (non-Javadoc)
+	 * <p>Title: deleteProduct</p> 
+	 * <p>Description: </p> 
+	 * @param productId
+	 * @param state
+	 * @return 
+	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#deleteProduct(int, byte)
+	 */
+	@Override
+	public ResultSupport deleteProduct(int productId, byte state) {
+		ResultSupport result = new ResultSupport();
+		List<ProductRoute> productRoutes = productRouteBiz.findProductRouteByProductId(productId);
+		if (state != (byte) -1 && productRoutes.size() == 0) {
+			result.setErrorCode(ProductErrorCode.PRODUCT_NO_ROUTE_ERROR);
+			return result;
+		} else {
+			ProductInfo productInfo = new ProductInfo();
+			productInfo.setState(state);
+			productInfo.setId(productId);
+			int updateResult = productInfoBiz.updateProductInfo(productInfo);
+			if (updateResult != 1) {
+				result.setErrorCode(ProductErrorCode.DEL_ERROR);
+				return result;
+			}
+		}
+		return result;
 	}
 
 }
