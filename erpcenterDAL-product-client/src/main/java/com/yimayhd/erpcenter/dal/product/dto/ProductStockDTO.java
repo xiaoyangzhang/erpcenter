@@ -1,6 +1,8 @@
-package com.yimayhd.erpcenter.dal.product.solrdump.domin;
+package com.yimayhd.erpcenter.dal.product.dto;
 
-public class ProductStockDO {
+import java.io.Serializable;
+
+public class ProductStockDTO implements Serializable{
 
 	 private static final long serialVersionUID = 85760395896024430L;
 	 
