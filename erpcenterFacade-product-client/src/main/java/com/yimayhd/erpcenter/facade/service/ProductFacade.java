@@ -12,6 +12,8 @@ import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
 import com.yimayhd.erpcenter.facade.result.ProductPriceListResult;
+import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
+import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
 import com.yimayhd.erpcenter.facade.result.ToProductRemarkResult;
 import com.yimayhd.erpcenter.facade.result.ToProductTagResult;
@@ -126,7 +128,29 @@ public interface ProductFacade {
 	* @return ProductRemark
 	* @throws
 	 */
+	ProductInfoResult toProductPreview(int productId);
 	//ProductRemark getProductRemarkByProductId(int productId);
+	
+	/**
+	 * 产品列表/删除
+	* created by zhangxiaoyang
+	* @date 2016年10月19日
+	* @Description:
+	* @param 
+	* @return ResultSupport
+	* @throws
+	 */
+	ResultSupport deleteProduct(int productId,byte state);
+	/**
+	 * 产品列表/导出
+	* created by zhangxiaoyang
+	* @date 2016年10月19日
+	* @Description:
+	* @param 
+	* @return Map<String,Object>
+	* @throws
+	 */
+	WebResult<Map<String, Object>> toExportProduct(int productId);
 	
 	/**
 	 * 产品价格列表
@@ -135,5 +159,5 @@ public interface ProductFacade {
 	 * @param name
 	 * @return
 	 */
-	public ProductPriceListResult productPriceList(ProductPriceListDTO productPriceListDTO);
+	ProductPriceListResult productPriceList(ProductPriceListDTO productPriceListDTO);
 }
