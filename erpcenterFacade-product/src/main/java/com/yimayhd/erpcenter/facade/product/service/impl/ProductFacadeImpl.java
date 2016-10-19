@@ -5,15 +5,16 @@ package com.yimayhd.erpcenter.facade.product.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.alibaba.druid.support.logging.Log;
 import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
@@ -22,22 +23,25 @@ import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRouteBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductTagBiz;
+import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
+import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
+import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
 import com.yimayhd.erpcenter.dal.product.po.ProductTag;
 import com.yimayhd.erpcenter.dal.product.vo.DictWithSelectInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
-import com.yimayhd.erpcenter.dal.product.vo.ProductRouteVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductTagVo;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
 import com.yimayhd.erpcenter.facade.query.ProductListParam;
+import com.yimayhd.erpcenter.facade.query.ProductPriceListDTO;
 import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
-import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
+import com.yimayhd.erpcenter.facade.result.ProductPriceListResult;
 import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
 import com.yimayhd.erpcenter.facade.result.ToProductRemarkResult;
 import com.yimayhd.erpcenter.facade.result.ToProductTagResult;
@@ -66,6 +70,8 @@ public class ProductFacadeImpl implements ProductFacade{
 	private RegionBiz regionBiz;
 	@Autowired
 	private DicBiz dicBiz;
+	@Autowired
+	private PlatformEmployeeBiz platformEmployeeBiz;
 	
 	@Override
 	public int saveBasicInfo(ProductSaveDTO productSaveDTO) {
@@ -325,28 +331,78 @@ public class ProductFacadeImpl implements ProductFacade{
 		}
 		return productInfoVo;
 	}
-
 	
-	@Override
-	public ProductInfoResult toProductPreview(int productId) {
-		ProductInfoResult result = new ProductInfoResult();
-		if (productId <= 0) {
-			LOGGER.error("params :productId={}",productId);
-			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
-			return result;
+	/**
+	 * 产品价格列表
+	 * @param productInfo
+	 * @param productName
+	 * @param name
+	 * @return
+	 */
+	public ProductPriceListResult productPriceList(ProductPriceListDTO productPriceListDTO){
+		
+		ProductInfo productInfo = productPriceListDTO.getProductInfo();
+		int bizId = productInfo.getBizId();
+		Integer page = productPriceListDTO.getPage();
+		Integer pageSize = productPriceListDTO.getPageSize();
+		
+		// 省市
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
+		// 产品名称
+		List<DicInfo> brandList = dicBiz.getListByTypeCode(BasicConstants.CPXL_PP, productInfo.getBizId());
+		if (page == 0) {
+			productPriceListDTO.setPage(1);
 		}
-		try {
-			ProductInfoVo productInfoVo = productInfoBiz.findProductInfoVoById(productId);
-			result.setProductInfoVo(productInfoVo);
-			ProductRouteVo productRouteVo = productRouteBiz.findByProductId(productId);
-			result.setProductRouteVo(productRouteVo);
-			ProductRemark productRemark = productRemarkBiz.findProductRemarkByProductId(productId);
-			result.setProductRemark(productRemark);
-		} catch (Exception e) {
-			LOGGER.error("productInfoBiz.findProductInfoVoById ,productRouteBiz.findByProductId,productRemarkBiz.findProductRemarkByProductId,error:{}",e);
-			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
+		PageBean pageBean = new PageBean();
+		if (pageSize == 0) {
+			pageBean.setPageSize(Constants.PAGESIZE);
+		} else {
+			pageBean.setPageSize(pageSize);
 		}
-        return result;
+		if (StringUtils.isBlank(productInfo.getOperatorIds())
+				&& StringUtils.isNotBlank(productInfo.getOrgIds())) {
+			Set<Integer> set = new HashSet<Integer>();
+			String[] orgIdArr = productInfo.getOrgIds().split(",");
+			for (String orgIdStr : orgIdArr) {
+				set.add(Integer.valueOf(orgIdStr));
+			}
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
+			String salesOperatorIds = "";
+			for (Integer usrId : set) {
+				salesOperatorIds += usrId + ",";
+			}
+			if (!salesOperatorIds.equals("")) {
+				productInfo.setOperatorIds(salesOperatorIds.substring(0,
+						salesOperatorIds.length() - 1));
+			}
+		}
+		// productInfo.set
+		pageBean.setParameter(productInfo);
+		pageBean.setPage(page);
+		Map parameters = new HashMap();
+		parameters.put("bizId", bizId);
+		parameters.put("name", productPriceListDTO.getName());
+		parameters.put("productName", productPriceListDTO.getProductName());
+		parameters.put("orgId", productPriceListDTO.getOrgId());
+		// parameters.put("set", WebUtils.getDataUserIdSet(request));
+		pageBean = productInfoBiz.findProductInfos(pageBean, parameters);
+
+		Map<Integer, String> priceStateMap = new HashMap<Integer, String>();
+		/*
+		 * for (Object product : pageBean.getResult()) { ProductInfo info =
+		 * (ProductInfo) product; Integer productId = info.getId(); String state
+		 * = productInfoService.getProductPriceState(productId);
+		 * priceStateMap.put(info.getId(), state); }
+		 */
+		
+		ProductPriceListResult result = new ProductPriceListResult();
+		
+		result.setAllProvince(allProvince);;
+		result.setBrandList(brandList);
+		result.setPage(pageBean);
+		result.setPageNum(page);
+		result.setPriceStateMap(priceStateMap);
+		return result;
 	}
 
 }
