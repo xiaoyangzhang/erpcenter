@@ -41,9 +41,23 @@ public interface ProductCommonFacade {
     * @throws
      */
     public String setSaleOperatorIds(String operatorIds,String orgIds,int bizId);
-
+    /**
+     * 图片集
+     * @param bizId
+     * @param imgId
+     * @param name
+     * @param sortFileds
+     * @param order
+     * @return
+     * @author wangjun
+     */
     public List<ImgSpace> imgList(int bizId, int imgId, String name,
 			String sortFileds, String order);
-
+    /**
+     * 图片树
+     * @param bizId
+     * @return
+     * @author wangjun
+     */
     public List<TreeDto> findImgDirTree(int bizId);
 }
