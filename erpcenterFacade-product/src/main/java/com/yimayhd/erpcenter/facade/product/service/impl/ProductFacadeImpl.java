@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
@@ -25,17 +26,20 @@ import com.yimayhd.erpcenter.biz.product.service.ProductRouteBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductTagBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
+import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
+import com.yimayhd.erpcenter.dal.product.po.ProductRight;
 import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.dal.product.po.ProductTag;
 import com.yimayhd.erpcenter.dal.product.vo.DictWithSelectInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductRouteVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductTagVo;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
 import com.yimayhd.erpcenter.facade.query.ProductListParam;
 import com.yimayhd.erpcenter.facade.query.ProductPriceListDTO;
@@ -43,6 +47,7 @@ import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
+import com.yimayhd.erpcenter.facade.result.ProductDataRightResult;
 import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
 import com.yimayhd.erpcenter.facade.result.ProductPriceListResult;
 import com.yimayhd.erpcenter.facade.result.ResultSupport;
@@ -77,6 +82,7 @@ public class ProductFacadeImpl implements ProductFacade{
 	@Autowired
 	private PlatformEmployeeBiz platformEmployeeBiz;
 	
+	private PlatformOrgBiz platformOrgBiz;
 	@Override
 	public int saveBasicInfo(ProductSaveDTO productSaveDTO) {
 		if(null == productSaveDTO || null == productSaveDTO.getProductInfoVo()){
@@ -488,4 +494,106 @@ public class ProductFacadeImpl implements ProductFacade{
 		}
 		return result;
 	}
+
+	/* (non-Javadoc)
+	 * <p>Title: setProductRight</p> 
+	 * <p>Description: </p> 
+	 * @param productId
+	 * @param bizId
+	 * @return 
+	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#setProductRight(int, int)
+	 */
+	@Override
+	public ProductDataRightResult getOrgListAndProductRights(int productId, int bizId) {
+		ProductDataRightResult result = new ProductDataRightResult();
+		if (productId <=0 || bizId <= 0) {
+			LOGGER.error("params error:productId={},bizId={}",productId,bizId);
+			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
+			return result;
+		}
+		try {
+			List<PlatformOrgPo> orgList = platformOrgBiz.getOrgTree(bizId, null);
+			result.setOrgList(orgList);
+			List<ProductRight> rightList = productInfoBiz.getRightListByProductId(productId);
+			result.setProductRights(rightList);
+		} catch (Exception e) {
+			LOGGER.error("platformOrgBiz.getOrgTree,productInfoBiz.getRightListByProductId,error:{}",e);
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
+		}
+		return result;
+	}
+	
+	/* (non-Javadoc)
+	 * <p>Title: setProductRight</p> 
+	 * <p>Description: </p> 
+	 * @param productId
+	 * @param bizId
+	 * @return 
+	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#setProductRight(int, int)
+	 */
+	@Override
+	public List<Map<String, String>> getProductRight(int productId, int bizId) {
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		ProductDataRightResult orgListAndProductRights = getOrgListAndProductRights(productId, bizId);
+		List<PlatformOrgPo> orgList = orgListAndProductRights.getOrgList();
+		List<ProductRight> rightList = orgListAndProductRights.getProductRights();
+		Map<Integer, Boolean> rightMap = new HashMap<Integer, Boolean>();
+		if (rightList != null && rightList.size() > 0) {
+			for (ProductRight right : rightList) {
+				rightMap.put(right.getOrgId(), true);
+			}
+		}
+		// 父节点集合
+		// Map<Integer,Boolean> parentMap = new HashMap<Integer,Boolean>();
+		if (orgList != null && orgList.size() > 0) {
+			/*
+			 * for(PlatformOrgPo org : orgList){
+			 * parentMap.put(org.getParentId(), true); }
+			 */
+			for (PlatformOrgPo org : orgList) {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("id", org.getOrgId() + "");
+				map.put("pId", org.getParentId() + "");
+				map.put("name", org.getName());
+				map.put("open", "true");
+				// 如果当前节点是父节点，则不允许选择
+				/*
+				 * if(parentMap.containsKey(org.getOrgId())){ map.put("nocheck",
+				 * "true"); }
+				 */
+				if (rightMap.containsKey(org.getOrgId())) {
+					map.put("checked", "true");
+				}
+				list.add(map);
+			}
+		}
+		return list;
+	}
+
+	/* (non-Javadoc)
+	 * <p>Title: setProductRight</p> 
+	 * <p>Description: </p> 
+	 * @param productId
+	 * @param orgIdSet
+	 * @return 
+	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#setProductRight(int, java.util.Set)
+	 */
+	@Override
+	public ResultSupport setProductRight(int productId, Set<Integer> orgIdSet) {
+		ResultSupport result = new ResultSupport();
+		if (productId <= 0 || CollectionUtils.isEmpty(orgIdSet)) {
+			LOGGER.error("params error:productId={},orgIdSet={}",productId,JSON.toJSONString(orgIdSet));
+			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
+			return result;
+		}
+		try {
+			//TODO 需要加返回值判断结果
+			productInfoBiz.saveProductRight(productId, orgIdSet);
+		} catch (Exception e) {
+			LOGGER.error("productInfoBiz.saveProductRight error:{}",e);
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
+		}
+		return result;
+	}
+
 }
