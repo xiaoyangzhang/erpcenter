@@ -6,12 +6,15 @@ import java.util.Set;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.vo.ProductGroupSupplierVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
+import com.yimayhd.erpcenter.facade.query.ComponentProductListDTO;
 import com.yimayhd.erpcenter.facade.query.ProductListParam;
 import com.yimayhd.erpcenter.facade.query.ProductPriceListDTO;
 import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
+import com.yimayhd.erpcenter.facade.result.ComponentProductListResult;
 import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
 import com.yimayhd.erpcenter.facade.result.ProductDataRightResult;
 import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
@@ -193,4 +196,17 @@ public interface ProductFacade {
 	* @throws
 	 */
 	ResultSupport setProductRight(int productId,Set<Integer> orgIdSet);
+	
+	/**
+	 * 查询产品列表
+	 * @return
+	 */
+	ComponentProductListResult componentProductQueryList(ComponentProductListDTO componentProductListDTO);
+	
+	/**
+	 * 产品价格打印预览
+	 * @param productIds
+	 * @return
+	 */
+	List<ProductGroupSupplierVo> productPricePreview(int bizId, String productIds);
 }

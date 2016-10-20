@@ -187,4 +187,15 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 		}
 		return result;
 	}
+
+	@Override
+	public ImgSpace toUploadPage(int parentId) {
+		ImgSpace imgSpace = null;
+		try {
+			imgSpace = imgSpaceBiz.findImgSpaceById(parentId);
+		} catch (Exception e) {
+			LOGGER.error("ProductCommonFacadeImpl.toUploadPage error:{}",e);
+		}
+		return imgSpace;
+	}
 }

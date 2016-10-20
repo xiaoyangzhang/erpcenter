@@ -5,6 +5,7 @@ import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductRouteVo;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
  * @Auther xueshengdong
  * @Date 2016/10/18 19:00
  */
-public class DetailResult {
+public class DetailResult implements Serializable{
     private static final long serialVersionUID = -2235152751651905167L;
     private ProductInfoVo productInfoVo;
     private ProductRouteVo productRouteVo;

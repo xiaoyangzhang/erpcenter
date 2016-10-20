@@ -91,4 +91,12 @@ public interface ProductCommonFacade {
     * @throws
      */
     public RegionResult queryProvinces();
+    
+    /**
+     * 上传图片
+     * @param parentId
+     * @return
+     * @author wangjun
+     */
+    public ImgSpace toUploadPage(int parentId);
 }
