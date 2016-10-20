@@ -7,8 +7,11 @@ import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
  * Created by ZhengZiyu on 2015/7/7.
  */
 public class DictWithSelectInfoVo extends DicInfo{
-    private static final long serialVersionUID = 7129336694105349466L;
-    private Boolean selected;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Boolean selected;
 
     public DictWithSelectInfoVo(DicInfo dicInfo, Boolean selected){
         this.setId(dicInfo.getId());
