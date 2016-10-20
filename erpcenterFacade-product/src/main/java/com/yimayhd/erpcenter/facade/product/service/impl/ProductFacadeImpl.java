@@ -365,15 +365,12 @@ public class ProductFacadeImpl implements ProductFacade{
 		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 		// 产品名称
 		List<DicInfo> brandList = dicBiz.getListByTypeCode(BasicConstants.CPXL_PP, productInfo.getBizId());
-		if (page == 0) {
-			productPriceListDTO.setPage(1);
-		}
 		PageBean pageBean = new PageBean();
-		if (pageSize == 0) {
-			pageBean.setPageSize(Constants.PAGESIZE);
-		} else {
-			pageBean.setPageSize(pageSize);
+		if (page != null && page == 0) {
+			pageBean.setPage(1);
 		}
+		pageBean.setPageSize(pageSize);
+			
 		if (StringUtils.isBlank(productInfo.getOperatorIds())
 				&& StringUtils.isNotBlank(productInfo.getOrgIds())) {
 			Set<Integer> set = new HashSet<Integer>();
