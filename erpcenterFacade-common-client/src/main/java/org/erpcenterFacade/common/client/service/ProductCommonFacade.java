@@ -9,6 +9,7 @@ import org.erpcenterFacade.common.client.query.BrandQueryDTO;
 import org.erpcenterFacade.common.client.query.DepartmentTuneQueryDTO;
 import org.erpcenterFacade.common.client.result.BrandQueryResult;
 import org.erpcenterFacade.common.client.result.DepartmentTuneQueryResult;
+import org.erpcenterFacade.common.client.result.RegionResult;
 
 import com.yimayhd.erpcenter.dal.basic.po.ImgSpace;
 
@@ -80,4 +81,14 @@ public interface ProductCommonFacade {
      * @author wangjun
      */
     public List<Map<String, String>> queryOrgUserTree(int bizId,String name,String type);
+    /**
+     * 
+    * created by zhangxiaoyang
+    * @date 2016年10月20日
+    * @Description:查询所有省份
+    * @param 
+    * @return RegionResult
+    * @throws
+     */
+    public RegionResult queryProvinces();
 }
