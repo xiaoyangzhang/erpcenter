@@ -14,18 +14,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.fastjson.JSON;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.ImgSpaceBiz;
+import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.dto.TreeDto;
 import com.yimayhd.erpcenter.dal.basic.po.ImgSpace;
+import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.basic.utils.FileConstant;
 import com.yimayhd.erpcenter.dal.basic.utils.StaConstant;
 
+import org.erpcenterFacade.common.client.errorcode.ProductErrorCode;
 import org.erpcenterFacade.common.client.query.BrandQueryDTO;
 import org.erpcenterFacade.common.client.query.DepartmentTuneQueryDTO;
 import org.erpcenterFacade.common.client.result.BrandQueryResult;
 import org.erpcenterFacade.common.client.result.DepartmentTuneQueryResult;
+import org.erpcenterFacade.common.client.result.RegionResult;
 import org.erpcenterFacade.common.client.service.ProductCommonFacade;
 
 /**
@@ -46,7 +50,8 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
     private PlatformEmployeeBiz platformEmployeeBiz;
     @Autowired
     private ImgSpaceBiz imgSpaceBiz;
-
+    @Autowired
+    private RegionBiz regionBiz;
     /**
      * 部门 计调 查询
      *
@@ -161,5 +166,25 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 			type = "single";
 		}
 		return platformEmployeeBiz.getOrgUserTreeFuzzy(bizId, name, type);
+	}
+
+	/* (non-Javadoc)
+	 * <p>Title: queryProvinces</p> 
+	 * <p>Description: </p> 
+	 * @return 
+	 * @see org.erpcenterFacade.common.client.service.ProductCommonFacade#queryProvinces()
+	 */
+	@Override
+	public RegionResult queryProvinces() {
+		RegionResult result = new RegionResult();
+		
+		try {
+			List<RegionInfo> allProvince = regionBiz.getAllProvince();
+			result.setRegionList(allProvince);
+		} catch (Exception e) {
+			LOGGER.error("regionBiz.getAllProvince error:{}",e);
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
+		}
+		return result;
 	}
 }
