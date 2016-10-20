@@ -91,16 +91,18 @@ public class ProductFacadeImpl implements ProductFacade{
 			return -1;
 		}
 		ProductInfoVo productInfoVo = productSaveDTO.getProductInfoVo();
-		if (productInfoVo.getProductInfo().getId() == null) {
-			productInfoVo.getProductInfo().setCreatorId(productSaveDTO.getCreateId());
-			productInfoVo.getProductInfo().setCreatorName(productSaveDTO.getCreateName());
-			productInfoVo.getProductInfo().setBizId(productSaveDTO.getBizId());
+		ProductInfo productInfo = productInfoVo.getProductInfo();
+		Integer pid = productInfo.getId();
+		if (pid == null) {
+			productInfo.setCreatorId(productSaveDTO.getCreateId());
+			productInfo.setCreatorName(productSaveDTO.getCreateName());
+			productInfo.setBizId(productSaveDTO.getBizId());
 			productInfoVo.setOrgIdSet(productInfoVo.getOrgIdSet());
 		}
-		String brandCode = dicBiz.getById(productInfoVo.getProductInfo().getBrandId()).getCode();
+		String brandCode = dicBiz.getById(productInfo.getBrandId()).getCode();
 		int id = productInfoBiz.saveProductInfo(productInfoVo, productSaveDTO.getBizCode(), brandCode);
 		boolean result = false;
-		if (productInfoVo.getProductInfo().getId() == null) {
+		if (pid == null) {
 			productSaveDTO.getProductRouteVo().setProductId(id);
 			result = productRouteBiz.saveProductRoute(productSaveDTO.getProductRouteVo());
 		}else{
@@ -174,7 +176,7 @@ public class ProductFacadeImpl implements ProductFacade{
 
 	@Override
 	public ToProductTagResult toProductTags(int productId, int bizId) {
-		ToProductTagResult ToProductTagResult = new ToProductTagResult();
+		ToProductTagResult toProductTagResult = new ToProductTagResult();
 		
 		List<DicInfo> lineThemeList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_LINE_THEME,bizId);
         List<DicInfo> lineLevelList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_LINE_LEVEL,bizId);
@@ -199,101 +201,101 @@ public class ProductFacadeImpl implements ProductFacade{
             }
         }
 
-        List<DictWithSelectInfoVo> lineThemeListPlus = new ArrayList<DictWithSelectInfoVo>();
-        if(selectedMap.get(Constants.PRODUCT_TAG_LINE_THEME) != null){
-            for(DicInfo dicInfo : lineThemeList){
-                lineThemeListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_LINE_THEME).contains(dicInfo.getId())));
-            }
-        }else{
-            for(DicInfo dicInfo : lineThemeList){
-                lineThemeListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
-            }
-        }
-        ToProductTagResult.setLineThemeListPlus(lineThemeListPlus);
-
-        List<DictWithSelectInfoVo> lineLevelListPlus = new ArrayList<DictWithSelectInfoVo>();
-        if(selectedMap.get(Constants.PRODUCT_TAG_LINE_LEVEL) != null){
-            for(DicInfo dicInfo : lineLevelList){
-                lineLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_LINE_LEVEL).contains(dicInfo.getId())));
-            }
-        }else{
-            for(DicInfo dicInfo : lineLevelList){
-                lineLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
-            }
-        }
-        ToProductTagResult.setLineLevelListPlus(lineLevelListPlus);
-
-        List<DictWithSelectInfoVo> attendMethodListPlus = new ArrayList<DictWithSelectInfoVo>();
-        if(selectedMap.get(Constants.PRODUCT_TAG_ATTEND_METHOD) != null){
-            for(DicInfo dicInfo : attendMethodList){
-                attendMethodListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_ATTEND_METHOD).contains(dicInfo.getId())));
-            }
-        }else{
-            for(DicInfo dicInfo : attendMethodList){
-                attendMethodListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
-            }
-        }
-        ToProductTagResult.setAttendMethodListPlus(attendMethodListPlus);
-
-        List<DictWithSelectInfoVo> hotelLevelListPlus = new ArrayList<DictWithSelectInfoVo>();
-        if(selectedMap.get(Constants.PRODUCT_TAG_HOTEL_LEVEL) != null){
-            for(DicInfo dicInfo : hotelLevelList){
-                hotelLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_HOTEL_LEVEL).contains(dicInfo.getId())));
-            }
-        }else{
-            for(DicInfo dicInfo : hotelLevelList){
-                hotelLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
-            }
-        }
-        ToProductTagResult.setHotelLevelListPlus(hotelLevelListPlus);
-
-        List<DictWithSelectInfoVo> daysPeriodListPlus = new ArrayList<DictWithSelectInfoVo>();
-        if(selectedMap.get(Constants.PRODUCT_TAG_DAYS_PERIOD) != null){
-            for(DicInfo dicInfo : daysPeriodList){
-                daysPeriodListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_DAYS_PERIOD).contains(dicInfo.getId())));
-            }
-        }else{
-            for(DicInfo dicInfo : daysPeriodList){
-                daysPeriodListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
-            }
-        }
-        ToProductTagResult.setDaysPeriodListPlus(daysPeriodListPlus);
-        
-        List<DictWithSelectInfoVo> priceRangeListPlus = new ArrayList<DictWithSelectInfoVo>();
-        if(selectedMap.get(Constants.PRODUCT_TAG_PRICE_RANGE) != null){
-            for(DicInfo dicInfo : priceRangeList){
-            	priceRangeListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_PRICE_RANGE).contains(dicInfo.getId())));
-            }
-        }else{
-            for(DicInfo dicInfo : priceRangeList){
-            	priceRangeListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
-            }
-        }
-        ToProductTagResult.setPriceRangeListPlus(priceRangeListPlus);
-       
-        List<DictWithSelectInfoVo> exitDestinationListPlus = new ArrayList<DictWithSelectInfoVo>();
-        if(selectedMap.get(Constants.PRODUCT_TAG_EXIT_DESTINATION) != null){
-            for(DicInfo dicInfo : exitDestinationList){
-            	exitDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_EXIT_DESTINATION).contains(dicInfo.getId())));
-            }
-        }else{
-            for(DicInfo dicInfo : exitDestinationList){
-            	exitDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
-            }
-        }
-        ToProductTagResult.setExitDestinationListPlus(exitDestinationListPlus);
-       
-        List<DictWithSelectInfoVo> domesticDestinationListPlus = new ArrayList<DictWithSelectInfoVo>();
-        if(selectedMap.get(Constants.PRODUCT_TAG_DOMESTIC_DESTINATION) != null){
-            for(DicInfo dicInfo : domesticDestinationList){
-            	domesticDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_DOMESTIC_DESTINATION).contains(dicInfo.getId())));
-            }
-        }else{
-            for(DicInfo dicInfo : domesticDestinationList){
-            	domesticDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
-            }
-        }
-        ToProductTagResult.setDomesticDestinationListPlus(domesticDestinationListPlus);
+//        List<DictWithSelectInfoVo> lineThemeListPlus = new ArrayList<DictWithSelectInfoVo>();
+//        if(selectedMap.get(Constants.PRODUCT_TAG_LINE_THEME) != null){
+//            for(DicInfo dicInfo : lineThemeList){
+//                lineThemeListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_LINE_THEME).contains(dicInfo.getId())));
+//            }
+//        }else{
+//            for(DicInfo dicInfo : lineThemeList){
+//                lineThemeListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+//            }
+//        }
+//        toProductTagResult.setLineThemeListPlus(lineThemeListPlus);
+//
+//        List<DictWithSelectInfoVo> lineLevelListPlus = new ArrayList<DictWithSelectInfoVo>();
+//        if(selectedMap.get(Constants.PRODUCT_TAG_LINE_LEVEL) != null){
+//            for(DicInfo dicInfo : lineLevelList){
+//                lineLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_LINE_LEVEL).contains(dicInfo.getId())));
+//            }
+//        }else{
+//            for(DicInfo dicInfo : lineLevelList){
+//                lineLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+//            }
+//        }
+//        toProductTagResult.setLineLevelListPlus(lineLevelListPlus);
+//
+//        List<DictWithSelectInfoVo> attendMethodListPlus = new ArrayList<DictWithSelectInfoVo>();
+//        if(selectedMap.get(Constants.PRODUCT_TAG_ATTEND_METHOD) != null){
+//            for(DicInfo dicInfo : attendMethodList){
+//                attendMethodListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_ATTEND_METHOD).contains(dicInfo.getId())));
+//            }
+//        }else{
+//            for(DicInfo dicInfo : attendMethodList){
+//                attendMethodListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+//            }
+//        }
+//        toProductTagResult.setAttendMethodListPlus(attendMethodListPlus);
+//
+//        List<DictWithSelectInfoVo> hotelLevelListPlus = new ArrayList<DictWithSelectInfoVo>();
+//        if(selectedMap.get(Constants.PRODUCT_TAG_HOTEL_LEVEL) != null){
+//            for(DicInfo dicInfo : hotelLevelList){
+//                hotelLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_HOTEL_LEVEL).contains(dicInfo.getId())));
+//            }
+//        }else{
+//            for(DicInfo dicInfo : hotelLevelList){
+//                hotelLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+//            }
+//        }
+//        toProductTagResult.setHotelLevelListPlus(hotelLevelListPlus);
+//
+//        List<DictWithSelectInfoVo> daysPeriodListPlus = new ArrayList<DictWithSelectInfoVo>();
+//        if(selectedMap.get(Constants.PRODUCT_TAG_DAYS_PERIOD) != null){
+//            for(DicInfo dicInfo : daysPeriodList){
+//                daysPeriodListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_DAYS_PERIOD).contains(dicInfo.getId())));
+//            }
+//        }else{
+//            for(DicInfo dicInfo : daysPeriodList){
+//                daysPeriodListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+//            }
+//        }
+//        toProductTagResult.setDaysPeriodListPlus(daysPeriodListPlus);
+//        
+//        List<DictWithSelectInfoVo> priceRangeListPlus = new ArrayList<DictWithSelectInfoVo>();
+//        if(selectedMap.get(Constants.PRODUCT_TAG_PRICE_RANGE) != null){
+//            for(DicInfo dicInfo : priceRangeList){
+//            	priceRangeListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_PRICE_RANGE).contains(dicInfo.getId())));
+//            }
+//        }else{
+//            for(DicInfo dicInfo : priceRangeList){
+//            	priceRangeListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+//            }
+//        }
+//        toProductTagResult.setPriceRangeListPlus(priceRangeListPlus);
+//       
+//        List<DictWithSelectInfoVo> exitDestinationListPlus = new ArrayList<DictWithSelectInfoVo>();
+//        if(selectedMap.get(Constants.PRODUCT_TAG_EXIT_DESTINATION) != null){
+//            for(DicInfo dicInfo : exitDestinationList){
+//            	exitDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_EXIT_DESTINATION).contains(dicInfo.getId())));
+//            }
+//        }else{
+//            for(DicInfo dicInfo : exitDestinationList){
+//            	exitDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+//            }
+//        }
+//        toProductTagResult.setExitDestinationListPlus(exitDestinationListPlus);
+//       
+//        List<DictWithSelectInfoVo> domesticDestinationListPlus = new ArrayList<DictWithSelectInfoVo>();
+//        if(selectedMap.get(Constants.PRODUCT_TAG_DOMESTIC_DESTINATION) != null){
+//            for(DicInfo dicInfo : domesticDestinationList){
+//            	domesticDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_DOMESTIC_DESTINATION).contains(dicInfo.getId())));
+//            }
+//        }else{
+//            for(DicInfo dicInfo : domesticDestinationList){
+//            	domesticDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+//            }
+//        }
+//        toProductTagResult.setDomesticDestinationListPlus(domesticDestinationListPlus);
         
         List<DictWithSelectInfoVo> typeListPlus = new ArrayList<DictWithSelectInfoVo>();
         if(selectedMap.get(Constants.PRODUCT_TAG_TYPE) != null){
@@ -305,9 +307,9 @@ public class ProductFacadeImpl implements ProductFacade{
             	typeListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
             }
         }
-        ToProductTagResult.setTypeListPlus(typeListPlus);
+        toProductTagResult.setTypeListPlus(typeListPlus);
         
-		return ToProductTagResult;
+		return toProductTagResult;
 	}
 
 	@Override
