@@ -24,6 +24,7 @@ import com.yimayhd.erpcenter.dal.product.dao.ProductRemarkMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductRightMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductRouteMapper;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
+import com.yimayhd.erpcenter.dal.product.dto.ProductStockDTO;
 import com.yimayhd.erpcenter.dal.product.po.PriceView;
 import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
 import com.yimayhd.erpcenter.dal.product.po.ProductContact;
@@ -34,9 +35,11 @@ import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.dal.product.po.ProductSales;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
 import com.yimayhd.erpcenter.dal.product.query.ProductStatePageQueryDTO;
+import com.yimayhd.erpcenter.dal.product.query.ProductStockPageQueryDTO;
 import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
 import com.yimayhd.erpcenter.dal.product.solr.SolrSearchPageDTO;
 import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStateConverter;
+import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStockConverter;
 import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
@@ -398,6 +401,14 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 				result.setItemVoList(voList);
 			}			
 		}	*/
+		
+		if(1==1){
+			ProductStockPageQueryDTO queryDTO = ProductStockConverter.toQueryDTO(pageBean);
+			SolrSearchPageDTO<ProductStockDTO> solrPageResult  = productSolrQueryManager.searchProductStock(queryDTO);
+			return ProductStockConverter.dto2PageBean(solrPageResult);
+		}else{
+			
+		}
 		pageBean.setResult(list);
 		return pageBean;
 	}

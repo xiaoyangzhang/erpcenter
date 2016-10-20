@@ -1,8 +1,10 @@
 package com.yimayhd.erpcenter.dal.product.query;
 
+import java.io.Serializable;
+
 import com.yimayhd.erpcenter.common.query.PageQuery;
 
-public class ProductStatePageQueryDTO extends PageQuery{
+public class ProductStatePageQueryDTO extends PageQuery implements Serializable{
 
 	/**
 	 * 
@@ -12,6 +14,7 @@ public class ProductStatePageQueryDTO extends PageQuery{
 	/**
 	 * 产品id
 	 */
+
 	private Integer infoId;//产品id
 	private Integer infoBizId;//商家id
 	private String infoCode;//产品编码
@@ -21,12 +24,8 @@ public class ProductStatePageQueryDTO extends PageQuery{
 	private Byte infoState;//产品状态,1待上架2上架3下架-1删除
 	private Integer infoOperatorId;//操作计调id
 	private String infoOperatorIds;//操作计调id
-	private Integer prOrgId;//pr表机构id
-	private Integer prProductId;//pr表产品id
-	
-	
-	
-	
+	private String prOrgId;//pr表机构id
+
 	/**
 	 * @return the infoOperatorIds
 	 */
@@ -138,32 +137,13 @@ public class ProductStatePageQueryDTO extends PageQuery{
 	/**
 	 * @return the prOrgId
 	 */
-	public Integer getPrOrgId() {
+	public String getPrOrgId() {
 		return prOrgId;
 	}
 	/**
 	 * @param prOrgId the prOrgId to set
 	 */
-	public void setPrOrgId(Integer prOrgId) {
+	public void setPrOrgId(String prOrgId) {
 		this.prOrgId = prOrgId;
 	}
-	/**
-	 * @return the prProductId
-	 */
-	public Integer getPrProductId() {
-		return prProductId;
-	}
-	/**
-	 * @param prProductId the prProductId to set
-	 */
-	public void setPrProductId(Integer prProductId) {
-		this.prProductId = prProductId;
-	}
-	
-	
-
-	
-	
-	
-
 }

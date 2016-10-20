@@ -10,8 +10,11 @@ import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStockDTO;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.query.ProductStatePageQueryDTO;
+import com.yimayhd.erpcenter.dal.product.query.ProductStockPageQueryDTO;
 import com.yimayhd.erpcenter.dal.product.solr.SolrSearchPageDTO;
 import com.yimayhd.erpcenter.dal.product.solr.util.ParamCheckUtil;
+import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
+import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultVOPlus;
 
 public class ProductStockConverter {
 
@@ -45,8 +48,21 @@ public class ProductStockConverter {
 	 * @param parameters
 	 * @return
 	 */
-	public static ProductStatePageQueryDTO toQueryDTO(PageBean<ProductInfo> pageBean, Map parameters) {
-		return null;
+	public static ProductStockPageQueryDTO toQueryDTO(PageBean<StockStaticCondition> pageBean) {
+		ProductStockPageQueryDTO dto=new ProductStockPageQueryDTO();
+		StockStaticCondition stock=(StockStaticCondition) pageBean.getParameter();
+//		dto.setInfoBizId(info.getBizId());
+//		dto.setInfoBrandId(info.getBrandId());
+//		dto.setInfoBrandName(info.getBrandName());
+//		dto.setInfoCode(info.getCode());
+//		dto.setInfoId(info.getId());
+//		dto.setInfoNameCity(info.getNameCity());
+//		//dto.setInfoOperatorId(info.getOperatorIds());//传过来的是字符串，solr里是int，条件是in
+//		dto.setInfoOperatorIds(info.getOperatorIds());
+//		dto.setInfoState(info.getState());//状态是固定值
+//		dto.setPrOrgId(Integer.parseInt((String) parameters.get("orgId")));
+//		dto.setPrProductId(info.getId());
+		return dto;
 	}
 
 	/**
@@ -54,7 +70,7 @@ public class ProductStockConverter {
 	 * @param solrPageResult
 	 * @return
 	 */
-	public static PageBean<ProductInfo> dto2PageBean(SolrSearchPageDTO<ProductStateDTO> solrPageResult) {
+	public static PageBean<StockStaticsResultVOPlus> dto2PageBean(SolrSearchPageDTO<ProductStockDTO> solrPageResult) {
 		return null;
 	}
 
@@ -63,7 +79,7 @@ public class ProductStockConverter {
 	 * @param queryDTO
 	 * @return
 	 */
-	public static SolrQuery queryDTO2SolrQuery(ProductStatePageQueryDTO queryDTO) {
+	public static SolrQuery queryDTO2SolrQuery(ProductStockPageQueryDTO queryDTO) {
 
 		SolrQuery solrQuery = new SolrQuery();
 //		if (queryDTO.getId() != null) {

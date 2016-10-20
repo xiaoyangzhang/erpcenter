@@ -198,6 +198,11 @@
 		<artifactId>erpcenterFacade-product</artifactId>
 		<version>${project.version}</version>
 	</dependency>
+	<dependency>
+    	<groupId>com.yimayhd.erpcenter</groupId>
+    	<artifactId>erpcenterDAL-basic-client</artifactId>
+    	<version>${project.version}</version>
+    </dependency>
 			<dependency>
 			   <groupId>ledis</groupId>
 			   <artifactId>ledis</artifactId>
