@@ -10,7 +10,7 @@ public interface DicMapper{
 	void insert(DicInfo info);
 	void update(DicInfo info);
 	void delete(String id);
-	DicInfo getById(String id);
+	DicInfo getById(int id);
 	int getCount(DicInfo info);
 	List<DicInfo> getAll();
 	List<DicInfo> getWhere(DicInfo info);
