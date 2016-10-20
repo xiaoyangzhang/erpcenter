@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.dal.product.query;
 
+
 import java.io.Serializable;
 
 import com.yimayhd.erpcenter.common.query.PageQuery;
@@ -146,4 +147,5 @@ public class ProductStatePageQueryDTO extends PageQuery implements Serializable{
 	public void setPrOrgId(String prOrgId) {
 		this.prOrgId = prOrgId;
 	}
+
 }

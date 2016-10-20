@@ -91,4 +91,12 @@ public interface ProductPricePlusFacade {
 	 * @return
 	 */
 	String stockMonth(Integer productId,Integer year,Integer month);
+	
+	/**
+	 * 将某个产品下的组团社和价格组复制到其他产品
+	 * @param data
+	 * @param productId
+	 * @return
+	 */
+	public ResultSupport copyProduct(String data,Integer productId);
 }

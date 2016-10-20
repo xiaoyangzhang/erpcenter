@@ -19,5 +19,9 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+		<groupId>com.yimayhd.erpcenter</groupId>
+		<artifactId>erpcenterDAL-sys-client</artifactId>
+	</dependency>
   </dependencies>
 </project>

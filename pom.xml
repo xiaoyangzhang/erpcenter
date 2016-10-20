@@ -95,6 +95,11 @@
 				<artifactId>erpcenterFacade-product-client</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-sys-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
@@ -167,6 +172,11 @@
 				<artifactId>erpcenterFacade-common-client</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 	<dependency>
 		<groupId>com.yimayhd.erpcenter</groupId>
@@ -203,11 +213,14 @@
     	<artifactId>erpcenterDAL-basic-client</artifactId>
     	<version>${project.version}</version>
     </dependency>
+
 			<dependency>
 			   <groupId>ledis</groupId>
 			   <artifactId>ledis</artifactId>
 			   <version>${ledis.version}</version>
 			</dependency>
+			
+	
 			<dependency>
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi</artifactId>

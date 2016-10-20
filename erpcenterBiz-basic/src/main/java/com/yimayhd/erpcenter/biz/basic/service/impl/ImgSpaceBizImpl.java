@@ -72,7 +72,7 @@ public class ImgSpaceBizImpl implements ImgSpaceBiz{
 
 	@Override
 	public List<TreeDto> findImgDirTree(ImgSpace imgSpace) throws Exception {
-		return findImgDirTree(imgSpace);
+		return imgSpaceDal.findImgDirTree(imgSpace);
 	}
 
 	@Override

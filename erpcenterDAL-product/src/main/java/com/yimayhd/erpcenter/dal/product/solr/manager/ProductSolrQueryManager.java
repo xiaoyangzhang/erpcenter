@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
+
 import com.yimayhd.erpcenter.common.solr.BaseSolrQueryManager;
 import com.yimayhd.erpcenter.dal.product.constants.ProductCollectionEnum;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
@@ -15,12 +16,14 @@ import com.yimayhd.erpcenter.dal.product.solr.SolrSearchPageDTO;
 import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStateConverter;
 import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStockConverter;
 
+
 public class ProductSolrQueryManager extends BaseSolrQueryManager{
 	
 	public SolrSearchPageDTO<ProductStateDTO> searchProductState(ProductStatePageQueryDTO queryDTO){
 		    
 			 SolrSearchPageDTO<ProductStateDTO> pageResult = new SolrSearchPageDTO<ProductStateDTO>();
 		
+
 			 SolrQuery solrQuery = ProductStateConverter.queryDTO2SolrQuery(queryDTO);
 		     
              QueryResponse response =  this.querySolrDataByFilters(ProductCollectionEnum.PRODUCT_STATE.getCollection(), solrQuery);
@@ -45,4 +48,5 @@ public class ProductSolrQueryManager extends BaseSolrQueryManager{
         
 		return pageResult;
 } 
+
 }

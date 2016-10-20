@@ -97,7 +97,7 @@ public class ProductUpAndDownFrameFacadeImpl implements ProductUpAndDownFrameFac
         pageBean.setParameter(toSearchListStateDTO.getProductInfo());
         pageBean.setPage(toSearchListStateDTO.getPage());
         Map parameters = new HashMap();
-        parameters.put("bizId", toSearchListStateDTO.getProductInfo().getBizId());
+        parameters.put("bizId", toSearchListStateDTO.getBizId());
         parameters.put("name", toSearchListStateDTO.getName());
         parameters.put("productName", toSearchListStateDTO.getProductName());
         parameters.put("orgId", toSearchListStateDTO.getOrgId());

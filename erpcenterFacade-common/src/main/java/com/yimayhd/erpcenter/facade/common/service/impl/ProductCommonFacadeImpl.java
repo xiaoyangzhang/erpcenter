@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.facade.common.service.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,17 +14,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.fastjson.JSON;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.ImgSpaceBiz;
+import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.dto.TreeDto;
 import com.yimayhd.erpcenter.dal.basic.po.ImgSpace;
+import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.basic.utils.FileConstant;
 import com.yimayhd.erpcenter.dal.basic.utils.StaConstant;
+
+import org.erpcenterFacade.common.client.errorcode.ProductErrorCode;
 import org.erpcenterFacade.common.client.query.BrandQueryDTO;
 import org.erpcenterFacade.common.client.query.DepartmentTuneQueryDTO;
 import org.erpcenterFacade.common.client.result.BrandQueryResult;
 import org.erpcenterFacade.common.client.result.DepartmentTuneQueryResult;
+import org.erpcenterFacade.common.client.result.RegionResult;
 import org.erpcenterFacade.common.client.service.ProductCommonFacade;
 
 /**
@@ -44,7 +50,8 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
     private PlatformEmployeeBiz platformEmployeeBiz;
     @Autowired
     private ImgSpaceBiz imgSpaceBiz;
-
+    @Autowired
+    private RegionBiz regionBiz;
     /**
      * 部门 计调 查询
      *
@@ -82,7 +89,6 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 	 */
 	@Override
 	public String setSaleOperatorIds(String operatorIds, String orgIds,int bizId) {
-		String saleOperatorIds = "";
 		if (StringUtils.isBlank(operatorIds) && StringUtils.isNotBlank(orgIds)) {
 			Set<Integer> set = new HashSet<Integer>();
 			String[] orgIdArr = orgIds.split(",");
@@ -96,10 +102,11 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 				salesOperatorIds += usrId + ",";
 			}
 			if (!salesOperatorIds.equals("")) {
-				saleOperatorIds = salesOperatorIds.substring(0,salesOperatorIds.length() - 1);
+				String saleOperatorIds = salesOperatorIds.substring(0,salesOperatorIds.length() - 1);
+				return saleOperatorIds;
 			}
 		}
-		return saleOperatorIds;
+		return operatorIds;
 	}
 
 	@Override
@@ -142,5 +149,53 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	@Override
+	public List<Map<String, String>> orgUserTree(int bizId, String type) {
+		if(StringUtils.isBlank(type)){
+			type = "single";
+		}
+		return platformEmployeeBiz.getOrgUserTree(bizId,null,type);
+	}
+
+	@Override
+	public List<Map<String, String>> queryOrgUserTree(int bizId, String name,
+			String type) {
+		if(StringUtils.isBlank(type)){
+			type = "single";
+		}
+		return platformEmployeeBiz.getOrgUserTreeFuzzy(bizId, name, type);
+	}
+
+	/* (non-Javadoc)
+	 * <p>Title: queryProvinces</p> 
+	 * <p>Description: </p> 
+	 * @return 
+	 * @see org.erpcenterFacade.common.client.service.ProductCommonFacade#queryProvinces()
+	 */
+	@Override
+	public RegionResult queryProvinces() {
+		RegionResult result = new RegionResult();
+		
+		try {
+			List<RegionInfo> allProvince = regionBiz.getAllProvince();
+			result.setRegionList(allProvince);
+		} catch (Exception e) {
+			LOGGER.error("regionBiz.getAllProvince error:{}",e);
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
+		}
+		return result;
+	}
+
+	@Override
+	public ImgSpace toUploadPage(int parentId) {
+		ImgSpace imgSpace = null;
+		try {
+			imgSpace = imgSpaceBiz.findImgSpaceById(parentId);
+		} catch (Exception e) {
+			LOGGER.error("ProductCommonFacadeImpl.toUploadPage error:{}",e);
+		}
+		return imgSpace;
 	}
 }

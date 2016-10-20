@@ -11,6 +11,8 @@ public class ProductErrorCode  implements Serializable {
     public static final ProductErrorCode SYSTEM_ERROR = new ProductErrorCode("1001","系统错误");
     public static final ProductErrorCode PARAM_ERROR = new ProductErrorCode("1002","参数错误");
     public static final ProductErrorCode QUERY_ERROR = new ProductErrorCode("1003","查询失败");
+    public static final ProductErrorCode PRODUCT_NO_ROUTE_ERROR = new ProductErrorCode("1004","产品内无行程内容");
+    public static final ProductErrorCode MODIFY_ERROR = new ProductErrorCode("1005","操作失败");
 
 
     private String errorCode;

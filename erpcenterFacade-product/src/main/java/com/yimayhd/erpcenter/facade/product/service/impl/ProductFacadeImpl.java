@@ -5,39 +5,58 @@ package com.yimayhd.erpcenter.facade.product.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
-import com.alibaba.druid.support.logging.Log;
 import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductGroupSupplierBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRouteBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductTagBiz;
+import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
+import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
+import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
+import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
+import com.yimayhd.erpcenter.dal.product.po.ProductRight;
+import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.dal.product.po.ProductTag;
 import com.yimayhd.erpcenter.dal.product.vo.DictWithSelectInfoVo;
+import com.yimayhd.erpcenter.dal.product.vo.ProductGroupSupplierVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductRouteVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductTagVo;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
+import com.yimayhd.erpcenter.facade.query.ComponentProductListDTO;
 import com.yimayhd.erpcenter.facade.query.ProductListParam;
+import com.yimayhd.erpcenter.facade.query.ProductPriceListDTO;
 import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
+import com.yimayhd.erpcenter.facade.result.ComponentProductListResult;
 import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
+import com.yimayhd.erpcenter.facade.result.ProductDataRightResult;
 import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
+import com.yimayhd.erpcenter.facade.result.ProductPriceListResult;
+import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
 import com.yimayhd.erpcenter.facade.result.ToProductRemarkResult;
 import com.yimayhd.erpcenter.facade.result.ToProductTagResult;
@@ -66,22 +85,32 @@ public class ProductFacadeImpl implements ProductFacade{
 	private RegionBiz regionBiz;
 	@Autowired
 	private DicBiz dicBiz;
+	@Autowired
+	private PlatformEmployeeBiz platformEmployeeBiz;
 	
+	@Autowired
+	private ProductGroupSupplierBiz groupSupplierBiz;
+	
+	
+	private PlatformOrgBiz platformOrgBiz;
 	@Override
 	public int saveBasicInfo(ProductSaveDTO productSaveDTO) {
 		if(null == productSaveDTO || null == productSaveDTO.getProductInfoVo()){
 			return -1;
 		}
 		ProductInfoVo productInfoVo = productSaveDTO.getProductInfoVo();
-		if (productInfoVo.getProductInfo().getId() == null) {
-			productInfoVo.getProductInfo().setCreatorId(productSaveDTO.getCreateId());
-			productInfoVo.getProductInfo().setCreatorName(productSaveDTO.getCreateName());
-			productInfoVo.getProductInfo().setBizId(productSaveDTO.getBizId());
+		ProductInfo productInfo = productInfoVo.getProductInfo();
+		Integer pid = productInfo.getId();
+		if (pid == null) {
+			productInfo.setCreatorId(productSaveDTO.getCreateId());
+			productInfo.setCreatorName(productSaveDTO.getCreateName());
+			productInfo.setBizId(productSaveDTO.getBizId());
 			productInfoVo.setOrgIdSet(productInfoVo.getOrgIdSet());
 		}
-		int id = productInfoBiz.saveProductInfo(productInfoVo, productSaveDTO.getBizCode(), productSaveDTO.getBrandCode());
+		String brandCode = dicBiz.getById(productInfo.getBrandId()).getCode();
+		int id = productInfoBiz.saveProductInfo(productInfoVo, productSaveDTO.getBizCode(), brandCode);
 		boolean result = false;
-		if (productInfoVo.getProductInfo().getId() == null) {
+		if (pid == null) {
 			productSaveDTO.getProductRouteVo().setProductId(id);
 			result = productRouteBiz.saveProductRoute(productSaveDTO.getProductRouteVo());
 		}else{
@@ -155,7 +184,7 @@ public class ProductFacadeImpl implements ProductFacade{
 
 	@Override
 	public ToProductTagResult toProductTags(int productId, int bizId) {
-		ToProductTagResult ToProductTagResult = new ToProductTagResult();
+		ToProductTagResult toProductTagResult = new ToProductTagResult();
 		
 		List<DicInfo> lineThemeList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_LINE_THEME,bizId);
         List<DicInfo> lineLevelList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_LINE_LEVEL,bizId);
@@ -190,7 +219,7 @@ public class ProductFacadeImpl implements ProductFacade{
                 lineThemeListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
             }
         }
-        ToProductTagResult.setLineThemeListPlus(lineThemeListPlus);
+        toProductTagResult.setLineThemeListPlus(lineThemeListPlus);
 
         List<DictWithSelectInfoVo> lineLevelListPlus = new ArrayList<DictWithSelectInfoVo>();
         if(selectedMap.get(Constants.PRODUCT_TAG_LINE_LEVEL) != null){
@@ -202,7 +231,7 @@ public class ProductFacadeImpl implements ProductFacade{
                 lineLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
             }
         }
-        ToProductTagResult.setLineLevelListPlus(lineLevelListPlus);
+        toProductTagResult.setLineLevelListPlus(lineLevelListPlus);
 
         List<DictWithSelectInfoVo> attendMethodListPlus = new ArrayList<DictWithSelectInfoVo>();
         if(selectedMap.get(Constants.PRODUCT_TAG_ATTEND_METHOD) != null){
@@ -214,7 +243,7 @@ public class ProductFacadeImpl implements ProductFacade{
                 attendMethodListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
             }
         }
-        ToProductTagResult.setAttendMethodListPlus(attendMethodListPlus);
+        toProductTagResult.setAttendMethodListPlus(attendMethodListPlus);
 
         List<DictWithSelectInfoVo> hotelLevelListPlus = new ArrayList<DictWithSelectInfoVo>();
         if(selectedMap.get(Constants.PRODUCT_TAG_HOTEL_LEVEL) != null){
@@ -226,7 +255,7 @@ public class ProductFacadeImpl implements ProductFacade{
                 hotelLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
             }
         }
-        ToProductTagResult.setHotelLevelListPlus(hotelLevelListPlus);
+        toProductTagResult.setHotelLevelListPlus(hotelLevelListPlus);
 
         List<DictWithSelectInfoVo> daysPeriodListPlus = new ArrayList<DictWithSelectInfoVo>();
         if(selectedMap.get(Constants.PRODUCT_TAG_DAYS_PERIOD) != null){
@@ -238,7 +267,7 @@ public class ProductFacadeImpl implements ProductFacade{
                 daysPeriodListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
             }
         }
-        ToProductTagResult.setDaysPeriodListPlus(daysPeriodListPlus);
+        toProductTagResult.setDaysPeriodListPlus(daysPeriodListPlus);
         
         List<DictWithSelectInfoVo> priceRangeListPlus = new ArrayList<DictWithSelectInfoVo>();
         if(selectedMap.get(Constants.PRODUCT_TAG_PRICE_RANGE) != null){
@@ -250,7 +279,7 @@ public class ProductFacadeImpl implements ProductFacade{
             	priceRangeListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
             }
         }
-        ToProductTagResult.setPriceRangeListPlus(priceRangeListPlus);
+        toProductTagResult.setPriceRangeListPlus(priceRangeListPlus);
        
         List<DictWithSelectInfoVo> exitDestinationListPlus = new ArrayList<DictWithSelectInfoVo>();
         if(selectedMap.get(Constants.PRODUCT_TAG_EXIT_DESTINATION) != null){
@@ -262,7 +291,7 @@ public class ProductFacadeImpl implements ProductFacade{
             	exitDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
             }
         }
-        ToProductTagResult.setExitDestinationListPlus(exitDestinationListPlus);
+        toProductTagResult.setExitDestinationListPlus(exitDestinationListPlus);
        
         List<DictWithSelectInfoVo> domesticDestinationListPlus = new ArrayList<DictWithSelectInfoVo>();
         if(selectedMap.get(Constants.PRODUCT_TAG_DOMESTIC_DESTINATION) != null){
@@ -274,7 +303,7 @@ public class ProductFacadeImpl implements ProductFacade{
             	domesticDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
             }
         }
-        ToProductTagResult.setDomesticDestinationListPlus(domesticDestinationListPlus);
+        toProductTagResult.setDomesticDestinationListPlus(domesticDestinationListPlus);
         
         List<DictWithSelectInfoVo> typeListPlus = new ArrayList<DictWithSelectInfoVo>();
         if(selectedMap.get(Constants.PRODUCT_TAG_TYPE) != null){
@@ -286,9 +315,9 @@ public class ProductFacadeImpl implements ProductFacade{
             	typeListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
             }
         }
-        ToProductTagResult.setTypeListPlus(typeListPlus);
+        toProductTagResult.setTypeListPlus(typeListPlus);
         
-		return ToProductTagResult;
+		return toProductTagResult;
 	}
 
 	@Override
@@ -325,7 +354,76 @@ public class ProductFacadeImpl implements ProductFacade{
 		}
 		return productInfoVo;
 	}
+	
+	/**
+	 * 产品价格列表
+	 * @param productInfo
+	 * @param productName
+	 * @param name
+	 * @return
+	 */
+	public ProductPriceListResult productPriceList(ProductPriceListDTO productPriceListDTO){
+		
+		ProductInfo productInfo = productPriceListDTO.getProductInfo();
+		int bizId = productInfo.getBizId();
+		Integer page = productPriceListDTO.getPage();
+		Integer pageSize = productPriceListDTO.getPageSize();
+		
+		// 省市
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
+		// 产品名称
+		List<DicInfo> brandList = dicBiz.getListByTypeCode(BasicConstants.CPXL_PP, productInfo.getBizId());
+		PageBean pageBean = new PageBean();
+		if (page != null && page == 0) {
+			pageBean.setPage(1);
+		}
+		pageBean.setPageSize(pageSize);
+			
+		if (StringUtils.isBlank(productInfo.getOperatorIds())
+				&& StringUtils.isNotBlank(productInfo.getOrgIds())) {
+			Set<Integer> set = new HashSet<Integer>();
+			String[] orgIdArr = productInfo.getOrgIds().split(",");
+			for (String orgIdStr : orgIdArr) {
+				set.add(Integer.valueOf(orgIdStr));
+			}
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
+			String salesOperatorIds = "";
+			for (Integer usrId : set) {
+				salesOperatorIds += usrId + ",";
+			}
+			if (!salesOperatorIds.equals("")) {
+				productInfo.setOperatorIds(salesOperatorIds.substring(0,
+						salesOperatorIds.length() - 1));
+			}
+		}
+		// productInfo.set
+		pageBean.setParameter(productInfo);
+		pageBean.setPage(page);
+		Map parameters = new HashMap();
+		parameters.put("bizId", bizId);
+		parameters.put("name", productPriceListDTO.getName());
+		parameters.put("productName", productPriceListDTO.getProductName());
+		parameters.put("orgId", productPriceListDTO.getOrgId());
+		// parameters.put("set", WebUtils.getDataUserIdSet(request));
+		pageBean = productInfoBiz.findProductInfos(pageBean, parameters);
 
+		Map<Integer, String> priceStateMap = new HashMap<Integer, String>();
+		/*
+		 * for (Object product : pageBean.getResult()) { ProductInfo info =
+		 * (ProductInfo) product; Integer productId = info.getId(); String state
+		 * = productInfoService.getProductPriceState(productId);
+		 * priceStateMap.put(info.getId(), state); }
+		 */
+		
+		ProductPriceListResult result = new ProductPriceListResult();
+		
+		result.setAllProvince(allProvince);;
+		result.setBrandList(brandList);
+		result.setPage(pageBean);
+		result.setPageNum(page);
+		result.setPriceStateMap(priceStateMap);
+		return result;
+	}
 	
 	@Override
 	public ProductInfoResult toProductPreview(int productId) {
@@ -347,6 +445,251 @@ public class ProductFacadeImpl implements ProductFacade{
 			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
 		}
         return result;
+	}
+
+	/* (non-Javadoc)
+	 * <p>Title: deleteProduct</p> 
+	 * <p>Description: </p> 
+	 * @param productId
+	 * @param state
+	 * @return 
+	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#deleteProduct(int, byte)
+	 */
+	@Override
+	public ResultSupport updateProductState(int productId, byte state) {
+		ResultSupport result = new ResultSupport();
+		List<ProductRoute> productRoutes = productRouteBiz.findProductRouteByProductId(productId);
+		if (state != (byte) -1 && productRoutes.size() == 0) {
+			result.setErrorCode(ProductErrorCode.PRODUCT_NO_ROUTE_ERROR);
+			return result;
+		} else {
+			ProductInfo productInfo = new ProductInfo();
+			productInfo.setState(state);
+			productInfo.setId(productId);
+			int updateResult = productInfoBiz.updateProductInfo(productInfo);
+			if (updateResult != 1) {
+				result.setErrorCode(ProductErrorCode.MODIFY_ERROR);
+				return result;
+			}
+		}
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * <p>Title: toExportProduct</p> 
+	 * <p>Description: </p> 
+	 * @param productId
+	 * @return 
+	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#toExportProduct(int)
+	 */
+	@Override
+	public WebResult<Map<String, Object>> toExportProduct(int productId) {
+		WebResult<Map<String, Object>> result = new WebResult<Map<String,Object>>();
+		if (productId <= 0) {
+			LOGGER.error("params :productId={}",productId);
+			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
+			return result;
+		}
+		try {
+			Map<String, Object> map = productInfoBiz.findProductInfos(productId);
+			if (map != null) {
+				result.setValue(map);
+				return result;
+			}
+			result.setValue(new HashMap<String, Object>());
+		} catch (Exception e) {
+			LOGGER.error("productInfoBiz.findProductInfos error:{}",e);
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
+		}
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * <p>Title: setProductRight</p> 
+	 * <p>Description: </p> 
+	 * @param productId
+	 * @param bizId
+	 * @return 
+	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#setProductRight(int, int)
+	 */
+	@Override
+	public ProductDataRightResult getOrgListAndProductRights(int productId, int bizId) {
+		ProductDataRightResult result = new ProductDataRightResult();
+		if (productId <=0 || bizId <= 0) {
+			LOGGER.error("params error:productId={},bizId={}",productId,bizId);
+			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
+			return result;
+		}
+		try {
+			List<PlatformOrgPo> orgList = platformOrgBiz.getOrgTree(bizId, null);
+			result.setOrgList(orgList);
+			List<ProductRight> rightList = productInfoBiz.getRightListByProductId(productId);
+			result.setProductRights(rightList);
+		} catch (Exception e) {
+			LOGGER.error("platformOrgBiz.getOrgTree,productInfoBiz.getRightListByProductId,error:{}",e);
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
+		}
+		return result;
+	}
+	
+	/* (non-Javadoc)
+	 * <p>Title: setProductRight</p> 
+	 * <p>Description: </p> 
+	 * @param productId
+	 * @param bizId
+	 * @return 
+	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#setProductRight(int, int)
+	 */
+	@Override
+	public List<Map<String, String>> getProductRight(int productId, int bizId) {
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		ProductDataRightResult orgListAndProductRights = getOrgListAndProductRights(productId, bizId);
+		List<PlatformOrgPo> orgList = orgListAndProductRights.getOrgList();
+		List<ProductRight> rightList = orgListAndProductRights.getProductRights();
+		Map<Integer, Boolean> rightMap = new HashMap<Integer, Boolean>();
+		if (rightList != null && rightList.size() > 0) {
+			for (ProductRight right : rightList) {
+				rightMap.put(right.getOrgId(), true);
+			}
+		}
+		// 父节点集合
+		// Map<Integer,Boolean> parentMap = new HashMap<Integer,Boolean>();
+		if (orgList != null && orgList.size() > 0) {
+			/*
+			 * for(PlatformOrgPo org : orgList){
+			 * parentMap.put(org.getParentId(), true); }
+			 */
+			for (PlatformOrgPo org : orgList) {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("id", org.getOrgId() + "");
+				map.put("pId", org.getParentId() + "");
+				map.put("name", org.getName());
+				map.put("open", "true");
+				// 如果当前节点是父节点，则不允许选择
+				/*
+				 * if(parentMap.containsKey(org.getOrgId())){ map.put("nocheck",
+				 * "true"); }
+				 */
+				if (rightMap.containsKey(org.getOrgId())) {
+					map.put("checked", "true");
+				}
+				list.add(map);
+			}
+		}
+		return list;
+	}
+
+	/* (non-Javadoc)
+	 * <p>Title: setProductRight</p> 
+	 * <p>Description: </p> 
+	 * @param productId
+	 * @param orgIdSet
+	 * @return 
+	 * @see com.yimayhd.erpcenter.facade.service.ProductFacade#setProductRight(int, java.util.Set)
+	 */
+	@Override
+	public ResultSupport setProductRight(int productId, Set<Integer> orgIdSet) {
+		ResultSupport result = new ResultSupport();
+		if (productId <= 0 || CollectionUtils.isEmpty(orgIdSet)) {
+			LOGGER.error("params error:productId={},orgIdSet={}",productId,JSON.toJSONString(orgIdSet));
+			result.setErrorCode(ProductErrorCode.PARAM_ERROR);
+			return result;
+		}
+		try {
+			//TODO 需要加返回值判断结果
+			productInfoBiz.saveProductRight(productId, orgIdSet);
+		} catch (Exception e) {
+			LOGGER.error("productInfoBiz.saveProductRight error:{}",e);
+			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
+		}
+		return result;
+	}
+	
+	/**
+	 * 查询产品列表
+	 * @return
+	 */
+	public ComponentProductListResult componentProductQueryList(ComponentProductListDTO componentProductListDTO){
+		
+		Integer page = componentProductListDTO.getPage();
+		Integer pageSize = componentProductListDTO.getPageSize();
+		ProductInfo productInfo = componentProductListDTO.getProductInfo();
+		
+		PageBean pageBean = new PageBean();
+		if (page==null) {
+			page=1;
+		}
+		if(pageSize==null){
+			pageBean.setPageSize(Constants.PAGESIZE);
+		}else{
+			pageBean.setPageSize(pageSize);
+		}
+
+		pageBean.setParameter(productInfo);
+		pageBean.setPage(page);
+		Map parameters=new HashMap();
+		parameters.put("bizId", productInfo.getBizId());
+		parameters.put("name", null);
+		parameters.put("productName", componentProductListDTO.getProductName());
+		parameters.put("orgId", componentProductListDTO.getOrgId());
+		parameters.put("set", componentProductListDTO.getSet());
+	
+		pageBean = productInfoBiz.findProductInfos(pageBean, parameters);
+		
+		ComponentProductListResult result = new ComponentProductListResult();
+		result.setPage(pageBean);
+		result.setPageNum(page);
+		return result;
+	}
+	
+	/**
+	 * 产品价格打印预览
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param productIds
+	 * @return
+	 */
+	public List<ProductGroupSupplierVo> productPricePreview(int bizId, String productIds) {
+		String[] productIdArr = productIds.split(",");
+		List<ProductGroupSupplierVo> productPriceList = new ArrayList<ProductGroupSupplierVo>();
+		for (String id : productIdArr) {
+			ProductGroupSupplierVo supplierVo = new ProductGroupSupplierVo();
+			ProductInfo product = productInfoBiz.findProductByIdAndBizId(Integer.parseInt(id), bizId);
+			List<ProductGroupSupplier> productPriceInfoList = groupSupplierBiz.getProductPriceInfoList(Integer.parseInt(id));
+			if (productPriceInfoList != null && productPriceInfoList.size() > 0) {
+				int rowSpan = 0;
+				for (ProductGroupSupplier supplier : productPriceInfoList) {
+					// rowSpan += (supplier.getRowSpan()==null?0:
+					// supplier.getRowSpan());
+					List<ProductGroup> productGroupList = supplier
+							.getProductGroupList();
+					if (productGroupList != null && productGroupList.size() > 0) {
+						int rowSpan2 = 0;
+						// supplier.setRowSpan(productGroupList.size());
+						for (ProductGroup productGroup : productGroupList) {
+							productGroup.setRowSpan(productGroup
+									.getGroupPrices() == null ? 0
+									: productGroup.getGroupPrices().size());
+							// productGroup.getGroupPrices();
+							rowSpan2 += (productGroup.getGroupPrices() == null ? 0
+									: productGroup.getGroupPrices().size());
+							rowSpan += (productGroup.getGroupPrices() == null ? 0
+									: productGroup.getGroupPrices().size());
+
+						}
+						supplier.setRowSpan(rowSpan2);
+					}
+				}
+
+				product.setRowSpan(rowSpan);
+			}
+			supplierVo.setProductInfo(product);
+			supplierVo.setProductGroupSupplierList(productPriceInfoList);
+			productPriceList.add(supplierVo);
+		}
+		return productPriceList;
+
 	}
 
 }

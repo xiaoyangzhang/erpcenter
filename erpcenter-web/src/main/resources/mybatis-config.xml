@@ -21,5 +21,11 @@
         <!-- 数据库超过25000秒仍未响应则超时 -->
         <setting name="defaultStatementTimeout" value="25000"/>
     </settings>
-
+<plugins>
+		<plugin interceptor="com.yihg.mybatis.utility.PagePlugin">
+			<!-- 请修改此处：需改为实际使用的数据库方言名称 -->
+			<property name="dialect" value="mysql" />
+			<property name="pageSqlId" value=".*ListPage.*" />
+		</plugin>
+	</plugins>
 </configuration>
