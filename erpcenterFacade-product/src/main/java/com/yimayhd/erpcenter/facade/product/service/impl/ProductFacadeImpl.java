@@ -25,8 +25,8 @@ import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRouteBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductTagBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
-import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
+import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
@@ -41,11 +41,13 @@ import com.yimayhd.erpcenter.dal.product.vo.ProductRouteVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductTagVo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
+import com.yimayhd.erpcenter.facade.query.ComponentProductListDTO;
 import com.yimayhd.erpcenter.facade.query.ProductListParam;
 import com.yimayhd.erpcenter.facade.query.ProductPriceListDTO;
 import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
+import com.yimayhd.erpcenter.facade.result.ComponentProductListResult;
 import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
 import com.yimayhd.erpcenter.facade.result.ProductDataRightResult;
 import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
@@ -593,6 +595,43 @@ public class ProductFacadeImpl implements ProductFacade{
 			LOGGER.error("productInfoBiz.saveProductRight error:{}",e);
 			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
 		}
+		return result;
+	}
+	
+	/**
+	 * 查询产品列表
+	 * @return
+	 */
+	public ComponentProductListResult componentProductQueryList(ComponentProductListDTO componentProductListDTO){
+		
+		Integer page = componentProductListDTO.getPage();
+		Integer pageSize = componentProductListDTO.getPageSize();
+		ProductInfo productInfo = componentProductListDTO.getProductInfo();
+		
+		PageBean pageBean = new PageBean();
+		if (page==null) {
+			page=1;
+		}
+		if(pageSize==null){
+			pageBean.setPageSize(Constants.PAGESIZE);
+		}else{
+			pageBean.setPageSize(pageSize);
+		}
+
+		pageBean.setParameter(productInfo);
+		pageBean.setPage(page);
+		Map parameters=new HashMap();
+		parameters.put("bizId", productInfo.getBizId());
+		parameters.put("name", null);
+		parameters.put("productName", componentProductListDTO.getProductName());
+		parameters.put("orgId", componentProductListDTO.getOrgId());
+		parameters.put("set", componentProductListDTO.getSet());
+	
+		pageBean = productInfoBiz.findProductInfos(pageBean, parameters);
+		
+		ComponentProductListResult result = new ComponentProductListResult();
+		result.setPage(pageBean);
+		result.setPageNum(page);
 		return result;
 	}
 
