@@ -10,6 +10,7 @@ import org.erpcenterFacade.common.client.query.DepartmentTuneQueryDTO;
 import org.erpcenterFacade.common.client.result.BrandQueryResult;
 import org.erpcenterFacade.common.client.result.DepartmentTuneQueryResult;
 import org.erpcenterFacade.common.client.result.RegionResult;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yimayhd.erpcenter.dal.basic.po.ImgSpace;
 
@@ -91,4 +92,12 @@ public interface ProductCommonFacade {
     * @throws
      */
     public RegionResult queryProvinces();
+    
+    /**
+     * 上传图片
+     * @param parentId
+     * @return
+     * @author wangjun
+     */
+    public ImgSpace toUploadPage(int parentId);
 }
