@@ -4,10 +4,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
        http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
        >
-  <!-- 
- <bean id="productFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
-              <property name="interface" value="com.yimayhd.erpcenter.facade.service.ProductFacade"/>
-              <property name="ref" ref="productFacade"/>
+
+ <bean id="sysLoginFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
+              <property name="interface" value="com.yimayhd.erpcenter.facade.sys.service.SysLoginFacade"/>
+              <property name="ref" ref="sysLoginFacade"/>
               <property name="application" ref="dubboApplicationConfig"/>
               <property name="registry" ref="dubboRegistryConfig"/>
               <property name="protocol" ref="dubboProtocolConfig"/>
@@ -15,5 +15,5 @@
               <property name="timeout" value="${export.dubbo.timeout}"/>
               <property name="retries" value="${dubbo.retries}"/>
   </bean>
-  -->    
+  
 </beans>
