@@ -13,9 +13,17 @@ import com.yimayhd.erpcenter.dal.product.vo.DictWithSelectInfoVo;
 *
  */
 public class ToProductTagResult extends ResultSupport{
-    private static final long serialVersionUID = -1L;
    
-    List<DictWithSelectInfoVo> lineThemeListPlus;
+    /**
+	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么)
+	*/
+	private static final long serialVersionUID = 5313851393817942669L;
+
+	/**
+	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么)
+	*/
+
+	List<DictWithSelectInfoVo> lineThemeListPlus;
     
     List<DictWithSelectInfoVo> lineLevelListPlus;
     
