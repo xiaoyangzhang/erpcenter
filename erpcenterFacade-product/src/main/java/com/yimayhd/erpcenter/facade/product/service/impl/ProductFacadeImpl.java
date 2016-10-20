@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductGroupSupplierBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRouteBiz;
@@ -30,12 +31,15 @@ import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
 import com.yimayhd.erpcenter.dal.product.po.ProductRight;
 import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.dal.product.po.ProductTag;
 import com.yimayhd.erpcenter.dal.product.vo.DictWithSelectInfoVo;
+import com.yimayhd.erpcenter.dal.product.vo.ProductGroupSupplierVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductRouteVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductTagVo;
@@ -83,6 +87,10 @@ public class ProductFacadeImpl implements ProductFacade{
 	private DicBiz dicBiz;
 	@Autowired
 	private PlatformEmployeeBiz platformEmployeeBiz;
+	
+	@Autowired
+	private ProductGroupSupplierBiz groupSupplierBiz;
+	
 	
 	private PlatformOrgBiz platformOrgBiz;
 	@Override
@@ -365,15 +373,12 @@ public class ProductFacadeImpl implements ProductFacade{
 		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 		// 产品名称
 		List<DicInfo> brandList = dicBiz.getListByTypeCode(BasicConstants.CPXL_PP, productInfo.getBizId());
-		if (page == 0) {
-			productPriceListDTO.setPage(1);
-		}
 		PageBean pageBean = new PageBean();
-		if (pageSize == 0) {
-			pageBean.setPageSize(Constants.PAGESIZE);
-		} else {
-			pageBean.setPageSize(pageSize);
+		if (page != null && page == 0) {
+			pageBean.setPage(1);
 		}
+		pageBean.setPageSize(pageSize);
+			
 		if (StringUtils.isBlank(productInfo.getOperatorIds())
 				&& StringUtils.isNotBlank(productInfo.getOrgIds())) {
 			Set<Integer> set = new HashSet<Integer>();
@@ -635,6 +640,56 @@ public class ProductFacadeImpl implements ProductFacade{
 		result.setPage(pageBean);
 		result.setPageNum(page);
 		return result;
+	}
+	
+	/**
+	 * 产品价格打印预览
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param productIds
+	 * @return
+	 */
+	public List<ProductGroupSupplierVo> productPricePreview(int bizId, String productIds) {
+		String[] productIdArr = productIds.split(",");
+		List<ProductGroupSupplierVo> productPriceList = new ArrayList<ProductGroupSupplierVo>();
+		for (String id : productIdArr) {
+			ProductGroupSupplierVo supplierVo = new ProductGroupSupplierVo();
+			ProductInfo product = productInfoBiz.findProductByIdAndBizId(Integer.parseInt(id), bizId);
+			List<ProductGroupSupplier> productPriceInfoList = groupSupplierBiz.getProductPriceInfoList(Integer.parseInt(id));
+			if (productPriceInfoList != null && productPriceInfoList.size() > 0) {
+				int rowSpan = 0;
+				for (ProductGroupSupplier supplier : productPriceInfoList) {
+					// rowSpan += (supplier.getRowSpan()==null?0:
+					// supplier.getRowSpan());
+					List<ProductGroup> productGroupList = supplier
+							.getProductGroupList();
+					if (productGroupList != null && productGroupList.size() > 0) {
+						int rowSpan2 = 0;
+						// supplier.setRowSpan(productGroupList.size());
+						for (ProductGroup productGroup : productGroupList) {
+							productGroup.setRowSpan(productGroup
+									.getGroupPrices() == null ? 0
+									: productGroup.getGroupPrices().size());
+							// productGroup.getGroupPrices();
+							rowSpan2 += (productGroup.getGroupPrices() == null ? 0
+									: productGroup.getGroupPrices().size());
+							rowSpan += (productGroup.getGroupPrices() == null ? 0
+									: productGroup.getGroupPrices().size());
+
+						}
+						supplier.setRowSpan(rowSpan2);
+					}
+				}
+
+				product.setRowSpan(rowSpan);
+			}
+			supplierVo.setProductInfo(product);
+			supplierVo.setProductGroupSupplierList(productPriceInfoList);
+			productPriceList.add(supplierVo);
+		}
+		return productPriceList;
+
 	}
 
 }

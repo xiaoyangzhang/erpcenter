@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.vo.ProductGroupSupplierVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.facade.query.ComponentProductListDTO;
 import com.yimayhd.erpcenter.facade.query.ProductListParam;
@@ -201,4 +202,11 @@ public interface ProductFacade {
 	 * @return
 	 */
 	ComponentProductListResult componentProductQueryList(ComponentProductListDTO componentProductListDTO);
+	
+	/**
+	 * 产品价格打印预览
+	 * @param productIds
+	 * @return
+	 */
+	List<ProductGroupSupplierVo> productPricePreview(int bizId, String productIds);
 }
