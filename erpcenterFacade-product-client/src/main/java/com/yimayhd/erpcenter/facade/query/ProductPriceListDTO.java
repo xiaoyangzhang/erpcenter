@@ -24,7 +24,7 @@ public class ProductPriceListDTO extends BaseListPage implements Serializable {
 	private ProductInfo productInfo;
 	private String productName; 
 	private String name;
-	private int orgId;
+	private Integer orgId;
 	private String priceMode;
 	
 	public String getPriceMode() {
@@ -33,10 +33,10 @@ public class ProductPriceListDTO extends BaseListPage implements Serializable {
 	public void setPriceMode(String priceMode) {
 		this.priceMode = priceMode;
 	}
-	public int getOrgId() {
+	public Integer getOrgId() {
 		return orgId;
 	}
-	public void setOrgId(int orgId) {
+	public void setOrgId(Integer orgId) {
 		this.orgId = orgId;
 	}
 	public ProductInfo getProductInfo() {

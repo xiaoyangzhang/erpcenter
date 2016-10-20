@@ -7,9 +7,7 @@
     <artifactId>erpcenter</artifactId>
     <version>0.0.6-SNAPSHOT</version>
   </parent>
-  <groupId>com.yimayhd.erpcenter</groupId>
   <artifactId>erpcenterFacade-sys-client</artifactId>
-  <version>0.0.6-SNAPSHOT</version>
   <name>erpcenterFacade-sys-client</name>
   <url>http://maven.apache.org</url>
   <properties>
@@ -19,8 +17,11 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+		<groupId>com.yimayhd.erpcenter</groupId>
+		<artifactId>erpcenterDAL-sys-client</artifactId>
+	</dependency>
   </dependencies>
 </project>

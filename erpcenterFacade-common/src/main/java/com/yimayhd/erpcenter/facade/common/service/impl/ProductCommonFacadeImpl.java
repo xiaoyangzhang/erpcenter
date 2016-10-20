@@ -89,7 +89,6 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 	 */
 	@Override
 	public String setSaleOperatorIds(String operatorIds, String orgIds,int bizId) {
-		String saleOperatorIds = "";
 		if (StringUtils.isBlank(operatorIds) && StringUtils.isNotBlank(orgIds)) {
 			Set<Integer> set = new HashSet<Integer>();
 			String[] orgIdArr = orgIds.split(",");
@@ -103,10 +102,11 @@ public class ProductCommonFacadeImpl implements ProductCommonFacade {
 				salesOperatorIds += usrId + ",";
 			}
 			if (!salesOperatorIds.equals("")) {
-				saleOperatorIds = salesOperatorIds.substring(0,salesOperatorIds.length() - 1);
+				String saleOperatorIds = salesOperatorIds.substring(0,salesOperatorIds.length() - 1);
+				return saleOperatorIds;
 			}
 		}
-		return saleOperatorIds;
+		return operatorIds;
 	}
 
 	@Override
