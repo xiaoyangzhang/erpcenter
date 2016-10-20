@@ -5,7 +5,7 @@
 	<groupId>com.yimayhd.erpcenter</groupId>
 	<artifactId>erpcenter</artifactId>
 	<packaging>pom</packaging>
-	<version>0.0.6-SNAPSHOT</version>
+	<version>0.0.7-SNAPSHOT</version>
 	<name>erpcenter</name>
 
 	<parent>
@@ -68,12 +68,12 @@
 			<dependency>
     			<groupId>com.yimayhd.erpcenter</groupId>
     			<artifactId>erpcenterBiz-sys-client</artifactId>
-    			<version>0.0.6-SNAPSHOT</version>
+    			<version>${project.version}</version>
     		</dependency>
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenterBiz-basic-client</artifactId>
-				<version>0.0.6-SNAPSHOT</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
@@ -165,7 +165,7 @@
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenterFacade-common-client</artifactId>
-				<version>0.0.6-SNAPSHOT</version>
+				<version>${project.version}</version>
 			</dependency>
 
 	<dependency>
