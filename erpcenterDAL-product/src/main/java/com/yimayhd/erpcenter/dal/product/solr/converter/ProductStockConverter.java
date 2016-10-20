@@ -66,9 +66,9 @@ public class ProductStockConverter {
 	public static SolrQuery queryDTO2SolrQuery(ProductStatePageQueryDTO queryDTO) {
 
 		SolrQuery solrQuery = new SolrQuery();
-		if (queryDTO.getId() != null) {
-			solrQuery.addFilterQuery("id:" + queryDTO.getId());
-		}
+//		if (queryDTO.getId() != null) {
+//			solrQuery.addFilterQuery("id:" + queryDTO.getId());
+//		}
 
 		solrQuery.setStart(queryDTO.getStartRow());
 		solrQuery.setRows(queryDTO.getOldPageSize());

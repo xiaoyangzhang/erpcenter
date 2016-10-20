@@ -1,5 +1,7 @@
 package com.yimayhd.erpcenter.dal.product.solr.converter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.solr.client.solrj.SolrQuery;
@@ -54,7 +56,21 @@ public class ProductStateConverter {
 	 * @return
 	 */
 	public static ProductStatePageQueryDTO toQueryDTO(PageBean<ProductInfo> pageBean, Map parameters) {
-		return null;
+		//根据pageBean和parameters组合获得dto参数
+		ProductStatePageQueryDTO dto=new ProductStatePageQueryDTO();
+		ProductInfo info=(ProductInfo) pageBean.getParameter();
+		dto.setInfoBizId(info.getBizId());
+		dto.setInfoBrandId(info.getBrandId());
+		dto.setInfoBrandName(info.getBrandName());
+		dto.setInfoCode(info.getCode());
+		dto.setInfoId(info.getId());
+		dto.setInfoNameCity(info.getNameCity());
+		//dto.setInfoOperatorId(info.getOperatorIds());//传过来的是字符串，solr里是int，条件是in
+		dto.setInfoOperatorIds(info.getOperatorIds());
+		dto.setInfoState(info.getState());//状态是固定值
+		dto.setPrOrgId(Integer.parseInt((String) parameters.get("orgId")));
+		dto.setPrProductId(info.getId());
+		return dto;
 	}
 
 	/**
@@ -63,7 +79,31 @@ public class ProductStateConverter {
 	 * @return
 	 */
 	public static PageBean<ProductInfo> dto2PageBean(SolrSearchPageDTO<ProductStateDTO> solrPageResult) {
-		return null;
+		PageBean<ProductInfo> pageBean=new PageBean<ProductInfo>();
+		if(solrPageResult.getTotalCount()>0){
+			List<ProductStateDTO> list=solrPageResult.getList();
+			List<ProductInfo> resultList=new ArrayList<ProductInfo>();
+			for(ProductStateDTO dto:list){
+				ProductInfo info=new ProductInfo();
+				info.setCode(dto.getInfoCode());
+				info.setBrandName(dto.getInfoBrandName());
+				info.setNameCity(dto.getInfoNameCity());
+				info.setState(dto.getInfoState());
+				info.setOperatorName(dto.getInfoOperatorName());
+				info.setCreatorName(dto.getInfoCreatorName());
+				info.setNameBrief(dto.getInfoNameBrief());
+				resultList.add(info);
+			}
+			
+			pageBean.setPageSize(solrPageResult.getPageSize());
+			pageBean.setTotalCount(solrPageResult.getTotalCount());
+			pageBean.setPage(solrPageResult.getPageNo());
+			pageBean.setResult(resultList);
+			
+			return pageBean;
+		}else{
+			return null;
+		}
 	}
 
 	/**
@@ -74,10 +114,10 @@ public class ProductStateConverter {
 	public static SolrQuery queryDTO2SolrQuery(ProductStatePageQueryDTO queryDTO) {
 
 		SolrQuery solrQuery = new SolrQuery();
-		if (queryDTO.getId() != null) {
-			solrQuery.addFilterQuery("id:" + queryDTO.getId());
+		if (queryDTO.getInfoId() != null) {
+			solrQuery.addFilterQuery("id:" + queryDTO.getInfoId());
 		}
-
+		//solrQuery.setQuery(query)
 		solrQuery.setStart(queryDTO.getStartRow());
 		solrQuery.setRows(queryDTO.getOldPageSize());
 
