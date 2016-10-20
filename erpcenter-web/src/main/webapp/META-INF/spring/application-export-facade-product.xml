@@ -5,7 +5,8 @@
        http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
        >
  
- <bean id="productFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
+
+  <bean id="productFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
               <property name="interface" value="com.yimayhd.erpcenter.facade.service.ProductFacade"/>
               <property name="ref" ref="productFacade"/>
               <property name="application" ref="dubboApplicationConfig"/>
@@ -35,7 +36,6 @@
               <property name="timeout" value="${export.dubbo.timeout}"/>
               <property name="retries" value="${dubbo.retries}"/>
   </bean>
-  <!--产品库存相关接口 -->
   <bean id="productStockFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
  			  <property name="interface" value="com.yimayhd.erpcenter.facade.service.ProductStockFacade"/>
               <property name="ref" ref="productStockFacade"/>
