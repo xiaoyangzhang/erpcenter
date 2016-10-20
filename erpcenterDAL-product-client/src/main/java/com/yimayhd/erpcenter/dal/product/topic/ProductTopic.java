@@ -3,7 +3,7 @@ package com.yimayhd.erpcenter.dal.product.topic;
 
 public enum ProductTopic {
 
-    PRODUCT_MODIFY(ProductTopic.TOPIC,"PRODUCT_MODIFY","用户注销");
+    PRODUCT_MODIFY(ProductTopic.TOPIC,"PRODUCT_MODIFY","产品信息修改");
 	
     public static final String TOPIC = "ERP_PRODUCT";
     /**
