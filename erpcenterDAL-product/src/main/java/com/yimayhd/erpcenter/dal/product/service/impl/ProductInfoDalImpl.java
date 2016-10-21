@@ -74,7 +74,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
     private ProductRouteMapper productRouteMapper ;
     @Autowired
     private ProductSolrQueryManager productSolrQueryManager;
-    
+    @Autowired
     private  ProductRightMapper productRightMapper;
     @Autowired
     private TransactionTemplate transactionTemplateProduct;
