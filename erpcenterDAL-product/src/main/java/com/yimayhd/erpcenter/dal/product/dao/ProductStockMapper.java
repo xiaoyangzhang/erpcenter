@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
+import com.yimayhd.erpcenter.dal.product.query.StockQueryDTO;
 
 public interface ProductStockMapper {
     int deleteByPrimaryKey(Integer id);
@@ -42,5 +43,13 @@ public interface ProductStockMapper {
      */
 	int updateReserveCount(@Param("productId") Integer productId,@Param("date")Date itemDate,@Param("count")Integer count,
 			@Param("type") String type);
+	
+	
+	/**
+	 * 查询库存列表 不分页
+	 * @param queryDTO
+	 * @return
+	 */
+	List<ProductStock> getSstockListByCondition(StockQueryDTO queryDTO);
 
 }

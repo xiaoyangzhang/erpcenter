@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yimayhd.erpcenter.dal.product.dao.ProductStockMapper;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
+import com.yimayhd.erpcenter.dal.product.query.StockQueryDTO;
 import com.yimayhd.erpcenter.dal.product.service.ProductStockDal;
 
 
@@ -87,6 +88,12 @@ public class ProductStockDalImpl implements ProductStockDal {
 	@Override
 	public int stockCntAddAndReserveCntReduce(Integer productId, Date itemDate,int count) {
 		return stockMapper.updateReserveCount(productId, itemDate, count,"Z");
+	}
+
+
+	@Override
+	public List<ProductStock> getStockListByCondition(StockQueryDTO queryDTO) {
+		return stockMapper.getSstockListByCondition(queryDTO);
 	}
 
 

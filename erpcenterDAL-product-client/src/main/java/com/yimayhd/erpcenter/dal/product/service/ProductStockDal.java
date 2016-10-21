@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
+import com.yimayhd.erpcenter.dal.product.query.StockQueryDTO;
 
 
 public interface ProductStockDal {
@@ -47,5 +48,11 @@ public interface ProductStockDal {
 	 * @return
 	 */
 	int stockCntAddAndReserveCntReduce(Integer productId,Date itemDate,int count);
-
+	
+	/**
+	 * 根据条件查询库存，不分页
+	 * @param queryDTO
+	 * @return
+	 */
+	List<ProductStock> getStockListByCondition(StockQueryDTO queryDTO);
 }
