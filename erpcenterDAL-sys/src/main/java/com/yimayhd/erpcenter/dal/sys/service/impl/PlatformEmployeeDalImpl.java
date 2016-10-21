@@ -126,7 +126,7 @@ public class PlatformEmployeeDalImpl implements PlatformEmployeeDal {
                 }
             }
         });
-        if (!transactionResult) {
+        if (transactionResult) {
             result = 1;
         }
         return result;

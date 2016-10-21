@@ -156,9 +156,6 @@ public class SysBizInfoDalImpl implements SysBizInfoDal {
                 }
             }
         });
-        if (!transactionResult) {
-
-        }
     }
 
     @Override
