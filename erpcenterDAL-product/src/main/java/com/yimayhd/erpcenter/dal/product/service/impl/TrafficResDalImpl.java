@@ -42,13 +42,13 @@ public class TrafficResDalImpl implements TrafficResDal{
 	private TrafficResStocklogMapper trafficResStocklogMapper;
 	
 	@Autowired
-    private TransactionTemplate transactionTemplate;
+    private TransactionTemplate transactionTemplateProduct;
 	
 	@Override
 	public int saveTrafficRes(final TrafficResVo trafficResVo) {
 		final TrafficRes trafficRes=trafficResVo.getTrafficRes();
 		final List<TrafficResLine> trafficResLine= trafficResVo.getTrafficResLine();
-		Boolean dbResult = transactionTemplate.execute(new TransactionCallback<Boolean>() {
+		Boolean dbResult = transactionTemplateProduct.execute(new TransactionCallback<Boolean>() {
 			@Override
 			public Boolean doInTransaction(TransactionStatus status) {
 				try{

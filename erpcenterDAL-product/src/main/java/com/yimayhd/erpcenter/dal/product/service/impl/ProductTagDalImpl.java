@@ -25,7 +25,7 @@ public class ProductTagDalImpl implements ProductTagDal {
     @Autowired
     private ProductTagMapper productTagMapper;
     @Autowired
-    private TransactionTemplate transactionTemplate;
+    private TransactionTemplate transactionTemplateProduct;
 
     @Transactional
     @Override
@@ -33,7 +33,7 @@ public class ProductTagDalImpl implements ProductTagDal {
     	if(productTagVo == null || productTagVo.getProductId() == null || productTagVo.getProductTags() == null){
     		return false;
     	}
-    	Boolean dbResult = transactionTemplate.execute(new TransactionCallback<Boolean>() {
+    	Boolean dbResult = transactionTemplateProduct.execute(new TransactionCallback<Boolean>() {
 			@Override
 			public Boolean doInTransaction(TransactionStatus status) {
 				try{

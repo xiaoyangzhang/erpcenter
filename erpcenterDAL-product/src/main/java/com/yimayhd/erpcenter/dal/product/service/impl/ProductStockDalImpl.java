@@ -24,7 +24,7 @@ public class ProductStockDalImpl implements ProductStockDal {
 	@Resource
 	private ProductStockMapper stockMapper;
 	@Autowired
-    private TransactionTemplate transactionTemplate;
+    private TransactionTemplate transactionTemplateProduct;
 	
 	@Override
 	public List<ProductStock> getStocksByProductIdAndDateSpan(Integer productId,
@@ -35,7 +35,7 @@ public class ProductStockDalImpl implements ProductStockDal {
 	
 	@Override
 	public void saveStock(final Integer productId,final List<ProductStock> stockList,final Date startDate,final Date endDate) {
-		Boolean dbResult = transactionTemplate.execute(new TransactionCallback<Boolean>() {
+		Boolean dbResult = transactionTemplateProduct.execute(new TransactionCallback<Boolean>() {
 			@Override
 			public Boolean doInTransaction(TransactionStatus status) {
 				try{

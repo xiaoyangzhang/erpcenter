@@ -54,7 +54,7 @@ public class ProductRouteDalImpl implements ProductRouteDal{
     @Autowired
     private ProductRemarkDal remarkService;
     @Autowired
-    private TransactionTemplate transactionTemplate;
+    private TransactionTemplate transactionTemplateProduct;
     
     @Override
     public boolean saveProductRoute(final ProductRouteVo productRouteVo) {
@@ -66,7 +66,7 @@ public class ProductRouteDalImpl implements ProductRouteDal{
         productRemark.setProductId(productRouteVo.getProductId());
         final ProductInfo productInfo = productInfoMapper.selectByPrimaryKey(productId);
          
-    	Boolean dbResult = transactionTemplate.execute(new TransactionCallback<Boolean>() {
+    	Boolean dbResult = transactionTemplateProduct.execute(new TransactionCallback<Boolean>() {
 			@Override
 			public Boolean doInTransaction(TransactionStatus status) {
 				try{
@@ -158,7 +158,7 @@ public class ProductRouteDalImpl implements ProductRouteDal{
          final ProductRemark productRemark = productRouteVo.getProductRemark();
          productRemark.setProductId(productRouteVo.getProductId());
     	
-    	Boolean dbResult = transactionTemplate.execute(new TransactionCallback<Boolean>() {
+    	Boolean dbResult = transactionTemplateProduct.execute(new TransactionCallback<Boolean>() {
 			@Override
 			public Boolean doInTransaction(TransactionStatus status) {
 				try{
