@@ -6,14 +6,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.zookeeper.server.FinalRequestProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.dao.ProductAttachmentMapper;
@@ -56,8 +61,9 @@ public class ProductInfoDalImpl implements ProductInfoDal{
     @Autowired
     private ProductRouteMapper productRouteMapper ;
     @Autowired
-    private ProductRightMapper productRightMapper;
-    
+    private  ProductRightMapper productRightMapper;
+    @Autowired
+    private TransactionTemplate transactionTemplateProduct;
 	@Override
 	public int insertSelective(ProductInfo record) {
 		infoMapper.insertSelective(record);
@@ -333,9 +339,16 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	}
 
 	@Override
-	public void saveProductRight(Integer productId, Set<Integer> orgIdSet) {
-		productRightMapper.deleteByProductId(productId);
-		productRightMapper.insertBatch(productId, orgIdSet);
+	public void saveProductRight(final Integer productId,final Set<Integer> orgIdSet) {
+		Boolean dbResult = transactionTemplateProduct.execute(new TransactionCallback<Boolean>() {
+
+			@Override
+			public Boolean doInTransaction(TransactionStatus arg0) {
+				productRightMapper.deleteByProductId(productId);
+				productRightMapper.insertBatch(productId, orgIdSet);
+				return true;
+			}
+		});
 	}
 
 	@Override
@@ -481,6 +494,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	public ProductInfo selectProductInfoByPsId(Integer productSysId) {
 		return infoMapper.selectProductInfoByPsId(productSysId);
 	}
+	
 	
 }
 
