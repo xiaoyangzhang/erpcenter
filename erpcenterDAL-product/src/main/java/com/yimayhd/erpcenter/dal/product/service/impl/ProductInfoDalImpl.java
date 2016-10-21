@@ -150,71 +150,126 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 
 	@Transactional
 	@Override
-	public int saveProductInfo(ProductInfoVo productInfoVo,String bizCode,String brandCode) {
-		int i = 0;
+	public int saveProductInfo(final ProductInfoVo productInfoVo,final String bizCode,final String brandCode) {
 		
-		ProductInfo info = productInfoVo.getProductInfo();
-		List<ProductContact> productContacts = productInfoVo.getProductContacts();
-		List<ProductAttachment> productAttachments = productInfoVo.getProductAttachments();
-		List<ProductAttachment> attachments = productInfoVo.getAttachments();
-		if(null!=productInfoVo.getProductInfo().getId()){
-			
-			//修改
-			i= infoMapper.updateByPrimaryKeySelective(info);
-			//删除责任人
-			contactMapper.deleteByproductId(info.getId());
-			//删除图片
-			attachmentMapper.deleteByobjId(info.getId(),1);
-			attachmentMapper.deleteByobjId(info.getId(),2);
-		}else{
-			if ("".equals(info.getCode())){ //若为空，则由系统产生订单号
-				int count=infoMapper.getBizAndBrandCodeCount(productInfoVo.getProductInfo().getBizId(), productInfoVo.getProductInfo().getBrandId());
-				info.setCode(getProductCode(bizCode, brandCode, count));
-			}
-			info.setState((byte) 1);
-			info.setCreateTime(System.currentTimeMillis());
-			i=infoMapper.insertSelective(info);
-			
-			//新增时默认把当前人的数据权限加在上
-			productRightMapper.insertBatch(info.getId(), productInfoVo.getOrgIdSet());
-		}
-		//插入责任人
-		if(productContacts!=null&&!productContacts.isEmpty()){
-			for (ProductContact productContact : productContacts) {
-				if(StringUtils.isNotBlank(productContact.getName())
-						||StringUtils.isNotBlank(productContact.getMobile())
-						||StringUtils.isNotBlank(productContact.getFax())
-						||StringUtils.isNotBlank(productContact.getTel())){
-					productContact.setProductId(info.getId());
-					productContact.setCreateTime(System.currentTimeMillis());
-					contactMapper.insertSelective(productContact);
+		
+		final ProductInfo info = productInfoVo.getProductInfo();
+		final List<ProductContact> productContacts = productInfoVo.getProductContacts();
+		final List<ProductAttachment> productAttachments = productInfoVo.getProductAttachments();
+		final List<ProductAttachment> attachments = productInfoVo.getAttachments();
+		
+		final List<ProductAttachment> imgList = attachmentMapper.selectByAttList(info.getId(), 1);
+		final List<ProductAttachment> attachList = attachmentMapper.selectByAttList(info.getId(), 2);
+		Boolean dbResult = transactionTemplateProduct.execute(new TransactionCallback<Boolean>() {
+			 int i = 0;
+			@Override
+			public Boolean doInTransaction(TransactionStatus status) {
+				try {
+					if(null!=productInfoVo.getProductInfo().getId()){
+						
+						//修改
+						i= infoMapper.updateByPrimaryKeySelective(info);
+						if (i < 1) {
+							status.setRollbackOnly();
+							LOGGER.error("infoMapper.updateByPrimaryKeySelective error,params:info={},result:{}",JSON.toJSONString(info),i);
+							return false;
+						}
+						//删除责任人 该表已废弃
+						//contactMapper.deleteByproductId(info.getId());
+						//删除图片
+						int deleteImgResult = attachmentMapper.deleteByobjId(info.getId(),1);
+						if (deleteImgResult != imgList.size()) {
+							status.setRollbackOnly();
+							LOGGER.error("attachmentMapper.deleteByobjId error,params:objId={},objType={},result:{}",info.getId(),1,deleteImgResult);
+							return false;
+						}
+						int deleteAttachResult = attachmentMapper.deleteByobjId(info.getId(),2);
+						if (deleteAttachResult != attachList.size()) {
+							status.setRollbackOnly();
+							LOGGER.error("attachmentMapper.deleteByobjId error,params:objId={},objType={},result:{}",info.getId(),2,deleteAttachResult);
+							return false;
+						}
+					}else{
+						if ("".equals(info.getCode())){ //若为空，则由系统产生订单号
+							int count=infoMapper.getBizAndBrandCodeCount(productInfoVo.getProductInfo().getBizId(), productInfoVo.getProductInfo().getBrandId());
+							info.setCode(getProductCode(bizCode, brandCode, count));
+						}
+						info.setState((byte) 1);
+						info.setCreateTime(System.currentTimeMillis());
+						i=infoMapper.insertSelective(info);
+						if (i < 1) {
+							status.setRollbackOnly();
+							LOGGER.error("infoMapper.insertSelective error,params:info={},result:{}",JSON.toJSONString(info),i);
+							return false;
+						}
+						//新增时默认把当前人的数据权限加在上
+						int insertResult = productRightMapper.insertBatch(info.getId(), productInfoVo.getOrgIdSet());
+						if (i < 1) {
+							status.setRollbackOnly();
+							LOGGER.error("productRightMapper.insertBatch error,params:id={},orgIdSet={},result:{}",info.getId(),JSON.toJSONString(productInfoVo.getOrgIdSet()),insertResult);
+							return false;
+						}
+					}
+					//插入责任人
+					/*if(productContacts!=null&&!productContacts.isEmpty()){
+						for (ProductContact productContact : productContacts) {
+							if(StringUtils.isNotBlank(productContact.getName())
+									||StringUtils.isNotBlank(productContact.getMobile())
+									||StringUtils.isNotBlank(productContact.getFax())
+									||StringUtils.isNotBlank(productContact.getTel())){
+								productContact.setProductId(info.getId());
+								productContact.setCreateTime(System.currentTimeMillis());
+								contactMapper.insertSelective(productContact);
+							}
+						}
+					}*/
+					//插入图片
+					if(productAttachments!=null&&!productAttachments.isEmpty()){
+						for (ProductAttachment productAttachment : productAttachments) {
+							if(StringUtils.isNotBlank(productAttachment.getName())
+									||StringUtils.isNotBlank(productAttachment.getPath())){
+								productAttachment.setCreateTime(System.currentTimeMillis());
+								productAttachment.setObjId(info.getId());
+								productAttachment.setObjType((byte)1);
+								//attachmentMapper.insertSelective(productAttachment);
+							}
+						}
+						int insertImgResult = attachmentMapper.insertBatch(productAttachments);
+						if (insertImgResult != productAttachments.size()) {
+							status.setRollbackOnly();
+							LOGGER.error("attachmentMapper.insertBatch error,params:productAttachments={},result:{}",JSON.toJSONString(productAttachments),insertImgResult);
+							return false;
+						}
+						}
+					//附件
+					if(attachments != null){
+						for(ProductAttachment attachment : attachments){
+							if(StringUtils.isNotBlank(attachment.getName())
+									||StringUtils.isNotBlank(attachment.getPath())){
+								attachment.setCreateTime(System.currentTimeMillis());
+								attachment.setObjId(info.getId());
+								attachment.setObjType((byte)1);
+								//attachmentMapper.insertSelective(attachment);
+							}
+						}
+						int insertAttachResult = attachmentMapper.insertBatch(attachments);
+						if (insertAttachResult != attachments.size()) {
+							status.setRollbackOnly();
+							LOGGER.error("attachmentMapper.insertBatch error,params:productAttachments={},result:{}",JSON.toJSONString(attachments),insertAttachResult);
+							return false;
+						}
+					}
+					return true;
+				} catch (Exception e) {
+					status.setRollbackOnly();
+					LOGGER.error("error:{}",e);
+					return false;
 				}
 			}
-		}
-		//插入图片
-		if(productAttachments!=null&&!productAttachments.isEmpty()){
-			for (ProductAttachment productAttachment : productAttachments) {
-				if(StringUtils.isNotBlank(productAttachment.getName())
-						||StringUtils.isNotBlank(productAttachment.getPath())){
-					productAttachment.setCreateTime(System.currentTimeMillis());
-					productAttachment.setObjId(info.getId());
-					productAttachment.setObjType((byte)1);
-					attachmentMapper.insertSelective(productAttachment);
-				}
-			}
-			}
-        //附件
-		if(attachments != null){
-			for(ProductAttachment attachment : attachments){
-				if(StringUtils.isNotBlank(attachment.getName())
-						||StringUtils.isNotBlank(attachment.getPath())){
-					attachment.setCreateTime(System.currentTimeMillis());
-					attachment.setObjId(info.getId());
-					attachment.setObjType((byte)1);
-					attachmentMapper.insertSelective(attachment);
-				}
-			}
-
+		});
+		if (dbResult == null || !dbResult) {
+			LOGGER.error("save productInfo failed ,params:productInfoVo={},bizCode={},brandCode={}",JSON.toJSONString(productInfoVo),bizCode,brandCode);
+			return -1;
 		}
 		return info.getId();
 	}

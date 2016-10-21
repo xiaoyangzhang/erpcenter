@@ -32,4 +32,5 @@ public interface ProductAttachmentMapper {
      */
     List<ProductAttachment> selectImgByList(@Param("objId")Integer objId,@Param("objType")Integer objType,@Param("type")Integer type);
 	
+    int insertBatch(@Param("list")List<ProductAttachment> attachments);
 }

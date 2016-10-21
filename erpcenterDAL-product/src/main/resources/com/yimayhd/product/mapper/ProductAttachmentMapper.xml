@@ -46,6 +46,17 @@
     values (#{type,jdbcType=TINYINT}, #{objId,jdbcType=INTEGER},#{objType,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
       #{path,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT})
   </insert>
+  <insert id="insertBatch" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductAttachment" >
+   
+    insert into product_attachment (type, obj_id,obj_type, name, 
+      path, create_time)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+    	
+     (#{item.type,jdbcType=TINYINT}, #{item.objId,jdbcType=INTEGER},#{item.objType,jdbcType=INTEGER}, #{item.name,jdbcType=VARCHAR}, 
+      #{item.path,jdbcType=VARCHAR}, #{item.createTime,jdbcType=BIGINT})
+    </foreach>
+  </insert>
   <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductAttachment" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
