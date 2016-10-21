@@ -138,6 +138,10 @@
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenterFacade-common</artifactId>
 		</dependency>
+		<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenter-common</artifactId>
+		</dependency>
 		
 	</dependencies>
 	<build>
