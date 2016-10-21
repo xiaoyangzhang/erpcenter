@@ -27,7 +27,6 @@
 	<dependency>
 		<groupId>com.yihg</groupId>    
 		<artifactId>yihg-architect-mybatis</artifactId>
-		<version>1.0.0</version>
 	</dependency>
 	
 	<dependency>

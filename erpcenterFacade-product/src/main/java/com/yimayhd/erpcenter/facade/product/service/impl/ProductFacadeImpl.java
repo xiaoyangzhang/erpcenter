@@ -91,7 +91,7 @@ public class ProductFacadeImpl implements ProductFacade{
 	@Autowired
 	private ProductGroupSupplierBiz groupSupplierBiz;
 	
-	
+	@Autowired
 	private PlatformOrgBiz platformOrgBiz;
 	@Override
 	public int saveBasicInfo(ProductSaveDTO productSaveDTO) {
@@ -366,18 +366,22 @@ public class ProductFacadeImpl implements ProductFacade{
 		
 		ProductInfo productInfo = productPriceListDTO.getProductInfo();
 		int bizId = productInfo.getBizId();
-		Integer page = productPriceListDTO.getPage();
-		Integer pageSize = productPriceListDTO.getPageSize();
+		int page = productPriceListDTO.getPage();
+		int pageSize = productPriceListDTO.getPageSize();
 		
 		// 省市
 		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 		// 产品名称
 		List<DicInfo> brandList = dicBiz.getListByTypeCode(BasicConstants.CPXL_PP, productInfo.getBizId());
 		PageBean pageBean = new PageBean();
-		if (page != null && page == 0) {
+		if (page == 0) {
 			pageBean.setPage(1);
 		}
-		pageBean.setPageSize(pageSize);
+		if (pageSize == 0) {
+			pageBean.setPageSize(Constants.PAGESIZE);
+		}else{
+			pageBean.setPageSize(pageSize);
+		}
 			
 		if (StringUtils.isBlank(productInfo.getOperatorIds())
 				&& StringUtils.isNotBlank(productInfo.getOrgIds())) {

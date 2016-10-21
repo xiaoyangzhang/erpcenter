@@ -1,7 +1,6 @@
 package com.yimayhd.erpcenter.dal.product.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.yimayhd.erpcenter.dal.product.dao.ProductRemarkMapper;
 import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
@@ -15,7 +14,6 @@ public class ProductRemarkDalImpl implements ProductRemarkDal{
     @Autowired
     private ProductRemarkMapper productRemarkMapper;
 
-    @Transactional
     @Override
     public boolean saveProductRemark(ProductRemark productRemark) {
         boolean success;

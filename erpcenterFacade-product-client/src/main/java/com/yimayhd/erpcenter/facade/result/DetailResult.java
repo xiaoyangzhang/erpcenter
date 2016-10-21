@@ -14,7 +14,7 @@ import java.util.List;
  * @Auther xueshengdong
  * @Date 2016/10/18 19:00
  */
-public class DetailResult implements Serializable{
+public class DetailResult extends ResultSupport{
     private static final long serialVersionUID = -2235152751651905167L;
     private ProductInfoVo productInfoVo;
     private ProductRouteVo productRouteVo;

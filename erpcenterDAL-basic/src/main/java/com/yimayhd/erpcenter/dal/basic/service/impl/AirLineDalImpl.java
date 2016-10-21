@@ -6,11 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.ognl.ParseException;
@@ -18,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
@@ -31,6 +28,9 @@ import com.yimayhd.erpcenter.dal.basic.po.AirLine;
 import com.yimayhd.erpcenter.dal.basic.po.AirPort;
 import com.yimayhd.erpcenter.dal.basic.service.AirLineDal;
 import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
+
 @Service("airLineDal")
 public class AirLineDalImpl implements AirLineDal {
 	
@@ -38,6 +38,8 @@ public class AirLineDalImpl implements AirLineDal {
 	private AirLineMapper airLineMapper;
 	@Autowired
 	private AirPortMapper airPortMapper;
+	@Autowired
+	TransactionTemplate transactionTemplateBasic;
 	
 	private static final Logger log = LoggerFactory.getLogger(AirLineDalImpl.class);
 	
@@ -50,7 +52,7 @@ public class AirLineDalImpl implements AirLineDal {
 	 * @throws IOException 
 	 */
 	@Override
-	@Transactional
+	//@Transactional
 	public List<AirLine> findAirLineByCity(Date date, String depCity,String arrCity) throws IOException{
 		String dateStr = DateUtils.format(date,DateUtils.FORMAT_SHORT);
 		return findAirLineByCity(dateStr, depCity, arrCity);
@@ -60,7 +62,7 @@ public class AirLineDalImpl implements AirLineDal {
 	 * @throws IOException 
 	 */
 	@Override
-	@Transactional
+	//@Transactional
 	public List<AirLine> findAirLineByCity(String date, String depCity,String arrCity) throws IOException{
 		if(StringUtils.isBlank(date) || StringUtils.isBlank(depCity) || StringUtils.isBlank(arrCity)){
 			return null;
@@ -80,7 +82,7 @@ public class AirLineDalImpl implements AirLineDal {
 	 * @return
 	 * @throws IOException 
 	 */
-	@Transactional
+	//@Transactional
 	private List<AirLine> findAirLineByCityCode(String date,String depCityCode,String arrCityCode) throws IOException{
 		List<AirLine> list = airLineMapper.findAirLineByCity(date, depCityCode, arrCityCode);
 		if(list == null || list.isEmpty() || list.size() == 0){
@@ -89,11 +91,57 @@ public class AirLineDalImpl implements AirLineDal {
 			param.put("start", depCityCode);
 			param.put("end", arrCityCode);
 			String result = requestFromJuhe("bc",param);
-			bcResultHandle(result);
+			List<AirLine> airLines = bcResultHandle(result);
+			airLineInsertTransactional(airLines);
 			list = airLineMapper.findAirLineByCity(date, depCityCode, arrCityCode);
 		}
 		return list;
 	}
+
+	public void airLineInsertTransactional(final List<AirLine> airLines){
+		Boolean transactionResult = transactionTemplateBasic.execute(new TransactionCallback<Boolean>() {
+			@Override
+			public Boolean doInTransaction(TransactionStatus status) {
+				try {
+						for (AirLine airLine : airLines){
+							airLineMapper.insert(airLine);
+						}
+					return true;
+				} catch (Exception e) {
+					log.error("新增航班事务失败!", e);
+					status.setRollbackOnly();
+					return false;
+				}
+			}
+		});
+		if (!transactionResult) {
+
+		}
+	}
+
+
+	public void airLineUpdateTransactional(final List<AirLine> airLines){
+		Boolean transactionResult = transactionTemplateBasic.execute(new TransactionCallback<Boolean>() {
+			@Override
+			public Boolean doInTransaction(TransactionStatus status) {
+				try {
+					for (AirLine airLine : airLines){
+						airLineMapper.update(airLine);
+					}
+					return true;
+				} catch (Exception e) {
+					log.error("更新航班事务失败!", e);
+					status.setRollbackOnly();
+					return false;
+				}
+			}
+		});
+		if (!transactionResult) {
+
+		}
+	}
+
+
 	/**
 	 * 从聚合请求数据
 	 * 		1、bc:航线查询
@@ -133,8 +181,9 @@ public class AirLineDalImpl implements AirLineDal {
 	 * @throws IOException 
 	 * @throws ParseException 
 	 */
-	@Transactional
-	private void bcResultHandle(String result) throws IOException{
+	//@Transactional
+	private List<AirLine> bcResultHandle(String result) throws IOException{
+		List<AirLine> airLineList = new ArrayList<AirLine>();
 		String resultcode = "resultcode";
 		JSONObject obj = JSON.parseObject(result);
 		if(obj != null && obj.containsKey(resultcode) && "200".equals(obj.getString(resultcode))){
@@ -178,17 +227,19 @@ public class AirLineDalImpl implements AirLineDal {
 				 */
 				cal.add(Calendar.DATE, Integer.parseInt(arrTime[0]) >= Integer.parseInt(depTime[0]) ? 0 : 1);
 				airLine.setArrTime(cal.getTime());
-				airLineMapper.insert(airLine);
+				//airLineMapper.insert(airLine);
 				
 				if(StringUtils.isBlank(airLine.getAirCode()) || StringUtils.isBlank(airLine.getAirline()) || StringUtils.isBlank(airLine.getArrCity()) || StringUtils.isBlank(airLine.getDepCity())){
 					log.error("Key name of bc result from juhe changed");
 				}
+				airLineList.add(airLine);
 			}
 		}
+		return airLineList;
 	}
 	
 	@Override
-	@Transactional
+	//@Transactional
 	public List<AirLine> findAirLineByAirCode(String date, String airCode) throws IOException {
 		if(StringUtils.isBlank(date) || StringUtils.isBlank(airCode)){
 			return null;
@@ -199,7 +250,8 @@ public class AirLineDalImpl implements AirLineDal {
 			param.put("date", date);
 			param.put("name", airCode);
 			String result = requestFromJuhe("snew", param);
-			snewResultHandle(result);
+			List<AirLine> airLines = snewResultHandle(result);
+			airLineUpdateTransactional(airLines);
 			list = airLineMapper.findAirLineByAirCode(date, airCode);
 		}
 		return list;
@@ -221,8 +273,9 @@ public class AirLineDalImpl implements AirLineDal {
 	 * @param result
 	 * @throws IOException 
 	 */
-	@Transactional
-	private void snewResultHandle(String result) throws IOException{
+	//@Transactional
+	private List<AirLine> snewResultHandle(String result) throws IOException{
+		List<AirLine> airLines = new ArrayList<AirLine>();
 		JSONObject obj = JSON.parseObject(result);
 		if(obj != null && obj.containsKey("resultcode") && obj.getString("resultcode").equals("200")){
 			JSONObject resultObj = obj.getJSONObject("result");
@@ -270,11 +323,12 @@ public class AirLineDalImpl implements AirLineDal {
 					finalAirLine.setStopCityCode(stopCityCode);
 					finalAirLine.setStopArrTime(jhddtime_full);
 					finalAirLine.setStopDepTime(jhqftime_full);
-					airLineMapper.update(finalAirLine);
+					airLines.add(finalAirLine);
+					//airLineMapper.update(finalAirLine);
 				}
 			}
 		}
-		
+		return airLines;
 	}
 
 }
