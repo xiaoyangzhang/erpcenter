@@ -24,7 +24,6 @@
 	<import resource="../META-INF/spring/application-persistance-product.xml" />
 	<import resource="../META-INF/spring/application-persistance-basic.xml" />
 	<import resource="../META-INF/spring/application-persistance-sys.xml" />
-	<import resource="../META-INF/spring/application-persistance-common.xml" />
 	 
 	
 	<import resource="../META-INF/spring/application-service-biz-basic.xml" />
