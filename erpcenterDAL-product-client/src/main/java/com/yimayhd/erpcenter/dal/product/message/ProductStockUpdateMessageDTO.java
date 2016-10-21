@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.dal.product.message;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class ProductStockUpdateMessageDTO implements Serializable{
 
@@ -18,18 +19,17 @@ public class ProductStockUpdateMessageDTO implements Serializable{
 	private Integer productId;
 	
 	/**
-	 * 库存id
+	 * 库存日期
 	 */
-	private Integer stockId;
+	private Date itemDate;
 
 	
-	
-	public Integer getStockId() {
-		return stockId;
+	public Date getItemDate() {
+		return itemDate;
 	}
 
-	public void setStockId(Integer stockId) {
-		this.stockId = stockId;
+	public void setItemDate(Date itemDate) {
+		this.itemDate = itemDate;
 	}
 
 	public Integer getProductId() {
