@@ -10,7 +10,6 @@ import org.erpcenterFacade.common.client.query.DepartmentTuneQueryDTO;
 import org.erpcenterFacade.common.client.result.BrandQueryResult;
 import org.erpcenterFacade.common.client.result.DepartmentTuneQueryResult;
 import org.erpcenterFacade.common.client.result.RegionResult;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.yimayhd.erpcenter.dal.basic.po.ImgSpace;
 
