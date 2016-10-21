@@ -134,10 +134,11 @@
 				<artifactId>erpcenterDAL-product</artifactId>
 		</dependency>
 
-			<dependency>
+		<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenterFacade-common</artifactId>
-			</dependency>
+		</dependency>
+		
 	</dependencies>
 	<build>
 		<finalName>erpcenter-web</finalName>
