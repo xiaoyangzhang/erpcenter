@@ -93,7 +93,7 @@ public class ProductStockDalImpl implements ProductStockDal {
 
 	@Override
 	public List<ProductStock> getStockListByCondition(StockQueryDTO queryDTO) {
-		return stockMapper.getSstockListByCondition(queryDTO);
+		return stockMapper.getStockListByCondition(queryDTO);
 	}
 
 
