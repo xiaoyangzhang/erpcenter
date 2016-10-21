@@ -23,7 +23,7 @@ import com.yimayhd.erpcenter.facade.result.ToSearchListStateResult;
 import com.yimayhd.erpcenter.facade.result.UpStateResult;
 import com.yimayhd.erpcenter.facade.service.ProductUpAndDownFrameFacade;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;

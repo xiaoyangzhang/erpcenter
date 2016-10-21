@@ -137,7 +137,7 @@
     WHERE product_id = #{productId,jdbcType=INTEGER} AND item_date=#{date} AND state=1
   </select>
   
-  <select id="getStockListByCondition" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.product.query.StockQueryDTO>
+  <select id="getStockListByCondition" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.product.query.StockQueryDTO">
   	SELECT 
     <include refid="Base_Column_List" />
     FROM product_stock
