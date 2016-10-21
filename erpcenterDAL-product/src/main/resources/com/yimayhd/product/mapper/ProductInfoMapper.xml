@@ -430,14 +430,14 @@ ORDER BY info.create_time
 		  <if test="parameter.orgId!=null">
 		  AND pr.org_id=#{parameter.orgId,jdbcType=INTEGER} 
 		  </if>
-		  AND info.biz_id =#{parameter.bizId,jdbcType=INTEGER}   
+		  AND info.biz_id =#{page.parameter.bizId,jdbcType=INTEGER}   
 		 AND info.state !=-1
 		
-		 <if test="parameter.name != null and parameter.name != ''">
+		 <!-- <if test="parameter.name != null and parameter.name != ''">
 		  AND info.id IN
 		 (SELECT product_id FROM product_contact WHERE NAME
 		 like CONCAT('%',#{parameter.name},'%' ))
-		</if>
+		</if> -->
          <if test="parameter.productName != null and parameter.productName!=''">
            AND info.`name_city` LIKE CONCAT('%',#{parameter.productName},'%' )
          </if>
@@ -497,11 +497,11 @@ ORDER BY info.create_time
 			 </foreach>
 		    </if> -->
 		    
-		 <if test="parameter.name != null and parameter.name != ''">
+		<!--  <if test="parameter.name != null and parameter.name != ''">
 		  AND info.id IN
 		 (SELECT product_id FROM product_contact WHERE NAME
 		 like CONCAT('%',#{parameter.name},'%' ))
-		</if>
+		</if> -->
          <if test="parameter.productName != null and parameter.productName!=''">
            AND info.`name_city` LIKE CONCAT('%',#{parameter.productName},'%' )
          </if>
