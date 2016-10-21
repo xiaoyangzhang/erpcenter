@@ -37,6 +37,6 @@
 	<import resource="../META-INF/spring/application-service-facade-product.xml" />
 	<import resource="../META-INF/spring/application-service-facade-sys.xml" />
 	
-
+	<import resource="../META-INF/spring/application-manager-dal-solr.xml" />
 
 </beans>
