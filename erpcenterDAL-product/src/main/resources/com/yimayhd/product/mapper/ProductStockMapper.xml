@@ -144,17 +144,17 @@
     <where>
     	state=1
     	<if test="productId != null">
-    		product_id = #{productId,jdbcType=INTEGER}
+    		and product_id = #{productId,jdbcType=INTEGER}
     	</if>
     	<if test="startDate != null ">
-    		<![CDATA[ item_date >= #{startDate} ]]>
+    		and <![CDATA[ item_date >= #{startDate} ]]>
     	</if>
     	<if test="endDate != null">
-    		<![CDATA[ item_date <= #{endDate} ]]>
+    		and <![CDATA[ item_date <= #{endDate} ]]>
     	</if>
     	
     	<if test="stockId != null">
-    		id = #{stockId,jdbcType=INTEGER}
+    		and id = #{stockId,jdbcType=INTEGER}
     	</if>
     </where>
     

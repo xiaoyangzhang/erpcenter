@@ -50,6 +50,6 @@ public interface ProductStockMapper {
 	 * @param queryDTO
 	 * @return
 	 */
-	List<ProductStock> getSstockListByCondition(StockQueryDTO queryDTO);
+	List<ProductStock> getStockListByCondition(StockQueryDTO queryDTO);
 
 }
