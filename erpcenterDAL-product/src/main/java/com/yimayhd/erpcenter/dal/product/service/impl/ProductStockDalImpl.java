@@ -5,18 +5,26 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
+import com.alibaba.fastjson.JSON;
 import com.yimayhd.erpcenter.dal.product.dao.ProductStockMapper;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
 import com.yimayhd.erpcenter.dal.product.service.ProductStockDal;
 
 
 public class ProductStockDalImpl implements ProductStockDal {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProductStockDalImpl.class);
 
 	@Resource
 	private ProductStockMapper stockMapper;
+	@Autowired
+    private TransactionTemplate transactionTemplate;
 	
 	@Override
 	public List<ProductStock> getStocksByProductIdAndDateSpan(Integer productId,
@@ -25,22 +33,47 @@ public class ProductStockDalImpl implements ProductStockDal {
 	}
 
 	
-	@Transactional
 	@Override
-	public void saveStock(Integer productId,List<ProductStock> stockList,Date startDate,Date endDate) {
-		stockMapper.setDeleteByProductIdAndDateSpan(productId,startDate,endDate);
-		for(ProductStock stock : stockList){
-			if(stock.getId() == null){
-				//ProductStock 	 = getStockByProductIdAndDate(productId,stock.getItemDate());
-				stockMapper.deleteByProductIdAndDate(productId, stock.getItemDate());
-				stock.setState(1);
-				stock.setCreateTime(new Date().getTime());
-				stock.setReceiveCount(0);
-				stockMapper.insert(stock);
-			}else{
-				stock.setState(1);
-				stockMapper.updateByPrimaryKeySelective(stock);
+	public void saveStock(final Integer productId,final List<ProductStock> stockList,final Date startDate,final Date endDate) {
+		Boolean dbResult = transactionTemplate.execute(new TransactionCallback<Boolean>() {
+			@Override
+			public Boolean doInTransaction(TransactionStatus status) {
+				try{
+					int result = stockMapper.setDeleteByProductIdAndDateSpan(productId,startDate,endDate);
+					if (result < 0) {
+						return false;
+					}
+					for(ProductStock stock : stockList){
+						if(stock.getId() == null){
+							int result2 = stockMapper.deleteByProductIdAndDate(productId, stock.getItemDate());
+							if (result2 < 0) {
+								return false;
+							}
+							stock.setState(1);
+							stock.setCreateTime(new Date().getTime());
+							stock.setReceiveCount(0);
+							int result3 = stockMapper.insert(stock);
+							if (result3 <= 0) {
+								return false;
+							}
+						}else{
+							stock.setState(1);
+							int result4 = stockMapper.updateByPrimaryKeySelective(stock);
+							if (result4 <= 0) {
+								return false;
+							}
+						}
+					}
+					return true;
+				}catch(Exception e){
+					status.setRollbackOnly(); 
+					LOGGER.error("saveStock failed!  productId={},stockList={}", JSON.toJSONString(productId),JSON.toJSONString(stockList), e);
+					return false;
+				}
 			}
+		});
+		if( dbResult == null || !dbResult ){
+			LOGGER.error("saveStock failed!  productId={},stockList={}", JSON.toJSONString(productId),JSON.toJSONString(stockList));
 		}
 	}
 

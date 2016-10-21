@@ -3,11 +3,15 @@ package com.yimayhd.erpcenter.dal.product.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
+import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.dao.TrafficResLineMapper;
 import com.yimayhd.erpcenter.dal.product.dao.TrafficResMapper;
@@ -23,6 +27,7 @@ import com.yimayhd.erpcenter.dal.product.vo.TrafficResVo;
 
 
 public class TrafficResDalImpl implements TrafficResDal{
+	private static final Logger LOGGER = LoggerFactory.getLogger(TrafficResDalImpl.class);
 	
 	@Autowired
 	private TrafficResMapper trafficResMapper;
@@ -36,51 +41,88 @@ public class TrafficResDalImpl implements TrafficResDal{
 	@Autowired
 	private TrafficResStocklogMapper trafficResStocklogMapper;
 	
-	@Transactional
+	@Autowired
+    private TransactionTemplate transactionTemplate;
+	
 	@Override
-	public int saveTrafficRes(TrafficResVo trafficResVo) {
-		TrafficRes trafficRes=trafficResVo.getTrafficRes();
-		List<TrafficResLine> trafficResLine= trafficResVo.getTrafficResLine();
-		if(trafficRes.getId()==null){
-			trafficResMapper.insertSelective(trafficRes);
-		}else{
-			trafficResMapper.updateTrafficRes(trafficRes);
-			List<Integer> a=new ArrayList();                              // 删除交通信息
-			List<TrafficResLine> trafficResLine1=trafficResLineMapper.selectTrafficResLine(trafficRes.getId());
-			if(trafficResLine1 !=null&&trafficResLine1.size()>0){
-				if(trafficResLine !=null&&trafficResLine.size()>0){ 
-			 for (TrafficResLine tr : trafficResLine) {
-				 if(tr.getId()!=null){
-					 a.add(tr.getId());
-				 }
-			 }
-			 for (TrafficResLine tr1 : trafficResLine1) {
-				 if(!(a.contains(tr1.getId()))){
-					 trafficResLineMapper.deleteByPrimaryKey(tr1.getId());
-				 }
-			 }
-			}else{  // 删除页面全部交通信息
-				 for (TrafficResLine tr1 : trafficResLine1) {
-						 trafficResLineMapper.deleteByPrimaryKey(tr1.getId());
-				 }
+	public int saveTrafficRes(final TrafficResVo trafficResVo) {
+		final TrafficRes trafficRes=trafficResVo.getTrafficRes();
+		final List<TrafficResLine> trafficResLine= trafficResVo.getTrafficResLine();
+		Boolean dbResult = transactionTemplate.execute(new TransactionCallback<Boolean>() {
+			@Override
+			public Boolean doInTransaction(TransactionStatus status) {
+				try{
+					if(trafficRes.getId()==null){
+						int result = trafficResMapper.insertSelective(trafficRes);
+						if (result <= 0) {
+							return false;
+						}
+					}else{
+						int result2 = trafficResMapper.updateTrafficRes(trafficRes);
+						if (result2 <= 0) {
+							return false;
+						}
+						List<Integer> a=new ArrayList<Integer>();                              // 删除交通信息
+						List<TrafficResLine> trafficResLine1=trafficResLineMapper.selectTrafficResLine(trafficRes.getId());
+						if(trafficResLine1 !=null&&trafficResLine1.size()>0){
+							if(trafficResLine !=null&&trafficResLine.size()>0){ 
+						 for (TrafficResLine tr : trafficResLine) {
+							 if(tr.getId()!=null){
+								 a.add(tr.getId());
+							 }
+						 }
+						 for (TrafficResLine tr1 : trafficResLine1) {
+							 if(!(a.contains(tr1.getId()))){
+								 int result3 = trafficResLineMapper.deleteByPrimaryKey(tr1.getId());
+								 if (result3 < 0) {
+									 return false;
+								 }
+							 }
+						 }
+						}else{  // 删除页面全部交通信息
+							 for (TrafficResLine tr1 : trafficResLine1) {
+								 int result4 = trafficResLineMapper.deleteByPrimaryKey(tr1.getId());
+								 if (result4 < 0) {
+									 return false;
+								 }
+							 }
+							}
+						}
+					}
+					
+					if(trafficResLine !=null&&trafficResLine.size()>0){
+					   for (TrafficResLine tr : trafficResLine) {
+							   if(tr.getLineDate()!=""&&tr.getLineDate()!=null&&tr!=null){
+								   if(tr.getId()==null){
+								   tr.setResId(trafficRes.getId());
+								   tr.setTimeCreate(new Date());
+								   tr.setUserId(trafficRes.getUserId());
+								   tr.setUserName(trafficRes.getUserName());
+								   int result5 = trafficResLineMapper.insertSelective(tr);
+								   if (result5 <= 0) {
+									   return false;
+								   }
+							   }else{
+								   tr.setTimeUpdate(new Date());
+								   int result6 = trafficResLineMapper.updateTrafficResLine(tr);
+								   if (result6 <= 0) {
+									   return false;
+								   }
+							   }
+						   }
+					   }
+					}
+					
+					return true;
+				}catch(Exception e){
+					status.setRollbackOnly(); 
+					LOGGER.error("saveTrafficRes failed!  TrafficResVo={}", JSON.toJSONString(trafficResVo), e);
+					return false;
 				}
 			}
-		}
-		if(trafficResLine !=null&&trafficResLine.size()>0){
-			   for (TrafficResLine tr : trafficResLine) {
-				   if(tr.getLineDate()!=""&&tr.getLineDate()!=null&&tr!=null){
-				   if(tr.getId()==null){
-				  tr.setResId(trafficRes.getId());
-				  tr.setTimeCreate(new Date());
-				  tr.setUserId(trafficRes.getUserId());
-				  tr.setUserName(trafficRes.getUserName());
-				  trafficResLineMapper.insertSelective(tr);
-			   }else{
-				   tr.setTimeUpdate(new Date());
-				   trafficResLineMapper.updateTrafficResLine(tr);
-			   }
-			   }
-			   }
+		});
+		if( dbResult == null || !dbResult ){
+			LOGGER.error("saveTrafficRes failed!  TrafficResVo={}", JSON.toJSONString(trafficResVo));
 		}
 		return trafficRes.getId();
 	}
