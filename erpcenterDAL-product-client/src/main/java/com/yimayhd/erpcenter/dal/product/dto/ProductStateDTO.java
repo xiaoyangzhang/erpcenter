@@ -27,6 +27,7 @@ public class ProductStateDTO implements Serializable{
 	private Long infoCreateTime;//创建时间
 	private Integer infoOperatorId;//操作计调id
 	private String infoOperatorName;//操作计调name
+
 	private String prOrgId;//pr表机构id
 	/**
 	 * @return the infoId
@@ -281,6 +282,7 @@ public class ProductStateDTO implements Serializable{
 	public void setPrOrgId(String prOrgId) {
 		this.prOrgId = prOrgId;
 	}
+
 
 	/**
 	 * @return the serialversionuid

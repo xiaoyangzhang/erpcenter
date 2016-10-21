@@ -1,12 +1,15 @@
 package org.erpcenterFacade.common.client.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.yimayhd.erpcenter.dal.basic.dto.TreeDto;
+
 import org.erpcenterFacade.common.client.query.BrandQueryDTO;
 import org.erpcenterFacade.common.client.query.DepartmentTuneQueryDTO;
 import org.erpcenterFacade.common.client.result.BrandQueryResult;
 import org.erpcenterFacade.common.client.result.DepartmentTuneQueryResult;
+import org.erpcenterFacade.common.client.result.RegionResult;
 
 import com.yimayhd.erpcenter.dal.basic.po.ImgSpace;
 
@@ -60,4 +63,40 @@ public interface ProductCommonFacade {
      * @author wangjun
      */
     public List<TreeDto> findImgDirTree(int bizId);
+    
+    /**
+	 * 选择计调人员页面
+	 * @param bizId
+	 * @param type 单选 single 多选multi
+	 * @return
+	 */
+    public List<Map<String, String>> orgUserTree(int bizId,String type);
+    
+    /**
+     * 选择计调--查询
+     * @param bizId
+     * @param name
+     * @param type
+     * @return
+     * @author wangjun
+     */
+    public List<Map<String, String>> queryOrgUserTree(int bizId,String name,String type);
+    /**
+     * 
+    * created by zhangxiaoyang
+    * @date 2016年10月20日
+    * @Description:查询所有省份
+    * @param 
+    * @return RegionResult
+    * @throws
+     */
+    public RegionResult queryProvinces();
+    
+    /**
+     * 上传图片
+     * @param parentId
+     * @return
+     * @author wangjun
+     */
+    public ImgSpace toUploadPage(int parentId);
 }

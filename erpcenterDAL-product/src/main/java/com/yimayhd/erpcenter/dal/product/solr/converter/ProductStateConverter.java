@@ -7,12 +7,16 @@ import java.util.Map;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.SolrInputDocument;
 
+
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.query.ProductStatePageQueryDTO;
 import com.yimayhd.erpcenter.dal.product.solr.SolrSearchPageDTO;
 import com.yimayhd.erpcenter.dal.product.solr.util.ParamCheckUtil;
+
+
+
 
 public class ProductStateConverter {
 
@@ -122,4 +126,5 @@ public class ProductStateConverter {
 
 		return solrQuery;
 	}
+
 }

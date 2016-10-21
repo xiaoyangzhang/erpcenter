@@ -8,8 +8,12 @@ import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
  * Created by Administrator on 2016/10/17.
  */
 public class ResultSupport implements Serializable {
-    private static final long serialVersionUID = -2235152751651905167L;
-    private boolean success = true;
+	
+	/**
+	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么)
+	*/
+	private static final long serialVersionUID = -3374909615237307272L;
+	private boolean success = true;
     private String resultMsg;
     private ProductErrorCode errorCode;
 
@@ -39,6 +43,8 @@ public class ResultSupport implements Serializable {
 
     public void setErrorCode(ProductErrorCode errorCode) {
         this.errorCode = errorCode;
+        this.success = false;
+        this.resultMsg = errorCode.getErrorMsg();
     }
 
 }
