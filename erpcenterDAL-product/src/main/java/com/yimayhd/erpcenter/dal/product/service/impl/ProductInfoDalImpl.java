@@ -367,7 +367,8 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		pageBean.setPageSize(condition.getPageSize());
 		pageBean.setParameter(condition);
 		pageBean.setPage(condition.getPage());
-		List<StockStaticsResultVOPlus> list = infoMapper.getProductStockListPage(pageBean);
+		List<StockStaticsResultVOPlus> list =new ArrayList<StockStaticsResultVOPlus>(); 
+		list=infoMapper.getProductStockListPage(pageBean);
 		//SimpleDateFormat sdf=new SimpleDateFormat();
 		if(list!=null && list.size()>0){
 			for (StockStaticsResultVOPlus voPlus : list) {
@@ -405,7 +406,20 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		if(1==1){
 			ProductStockPageQueryDTO queryDTO = ProductStockConverter.toQueryDTO(pageBean);
 			SolrSearchPageDTO<ProductStockDTO> solrPageResult  = productSolrQueryManager.searchProductStock(queryDTO);
-			return ProductStockConverter.dto2PageBean(solrPageResult);
+			list= ProductStockConverter.dto2PageBean(solrPageResult);
+			if(list!=null && list.size()>0){
+				for (StockStaticsResultVOPlus voPlus : list) {
+					List<ProductStock> stockList=new ArrayList<ProductStock>();
+					String[] stockInfoStrs = voPlus.getStockInfo().split(",");
+					for (int i = 0; i < 7; i++) {
+					stockList.add(getResultByDate2(DateUtils.addDays(condition.getGroupDate(),i),stockInfoStrs));
+					}
+					voPlus.setStockList(stockList);
+				}
+				
+			}
+			pageBean.setResult(list);
+			return pageBean;
 		}else{
 			
 		}

@@ -72,6 +72,8 @@ public class ProductStateConverter {
 		dto.setInfoOperatorIds(info.getOperatorIds());
 		dto.setInfoState(info.getState());//状态是固定值
 		dto.setPrOrgId((String) parameters.get("orgId"));
+		dto.setPageNo(pageBean.getPage());
+		dto.setPageSize(pageBean.getPageSize());
 		return dto;
 	}
 

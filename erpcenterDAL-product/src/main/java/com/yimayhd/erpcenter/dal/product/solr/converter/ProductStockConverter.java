@@ -1,7 +1,10 @@
 package com.yimayhd.erpcenter.dal.product.solr.converter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.SolrInputDocument;
 
@@ -9,6 +12,7 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStockDTO;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductStock;
 import com.yimayhd.erpcenter.dal.product.query.ProductStatePageQueryDTO;
 import com.yimayhd.erpcenter.dal.product.query.ProductStockPageQueryDTO;
 import com.yimayhd.erpcenter.dal.product.solr.SolrSearchPageDTO;
@@ -32,12 +36,12 @@ public class ProductStockConverter {
 		doc.addField("infoBrandName", ParamCheckUtil.checkString(productStockDTO.getInfoBrandName()));
 		doc.addField("infoNameCity", ParamCheckUtil.checkString(productStockDTO.getInfoNameCity()));
 		doc.addField("infoState", productStockDTO.getInfoState());
-		doc.addField("prProductId", productStockDTO.getPrProductId());
 		doc.addField("psItemDate", productStockDTO.getPsItemDate());
+		doc.addField("psId", productStockDTO.getPsId());
 		doc.addField("psStockCount", productStockDTO.getPsStockCount());
 		doc.addField("psReceiveCount", productStockDTO.getPsReceiveCount());
 		doc.addField("psState", productStockDTO.getPsState());
-		doc.addField("prOrgId", productStockDTO.getPrOrgId());
+		doc.addField("prOrgId", ParamCheckUtil.checkString(productStockDTO.getPrOrgId()));
 
 		return doc;
 	}
@@ -51,17 +55,16 @@ public class ProductStockConverter {
 	public static ProductStockPageQueryDTO toQueryDTO(PageBean<StockStaticCondition> pageBean) {
 		ProductStockPageQueryDTO dto=new ProductStockPageQueryDTO();
 		StockStaticCondition stock=(StockStaticCondition) pageBean.getParameter();
-//		dto.setInfoBizId(info.getBizId());
-//		dto.setInfoBrandId(info.getBrandId());
-//		dto.setInfoBrandName(info.getBrandName());
-//		dto.setInfoCode(info.getCode());
-//		dto.setInfoId(info.getId());
-//		dto.setInfoNameCity(info.getNameCity());
-//		//dto.setInfoOperatorId(info.getOperatorIds());//传过来的是字符串，solr里是int，条件是in
-//		dto.setInfoOperatorIds(info.getOperatorIds());
-//		dto.setInfoState(info.getState());//状态是固定值
-//		dto.setPrOrgId(Integer.parseInt((String) parameters.get("orgId")));
-//		dto.setPrProductId(info.getId());
+		dto.setInfoBizId(stock.getBizId());
+		dto.setInfoBrandId(stock.getBrandId());
+		dto.setInfoNameCity(stock.getProductName());
+		dto.setInfoState((byte) -1);//状态是固定值
+		dto.setPrOrgId(stock.getOrgId()+"");
+		dto.setPsState(-1);
+		dto.setPsItemDateStart(stock.getGroupDate());
+		dto.setPsItemDateEnd(stock.getToGroupDate());
+		dto.setPageNo(pageBean.getPage());
+		dto.setPageSize(pageBean.getPageSize());
 		return dto;
 	}
 
@@ -70,8 +73,22 @@ public class ProductStockConverter {
 	 * @param solrPageResult
 	 * @return
 	 */
-	public static PageBean<StockStaticsResultVOPlus> dto2PageBean(SolrSearchPageDTO<ProductStockDTO> solrPageResult) {
-		return null;
+	public static List<StockStaticsResultVOPlus> dto2PageBean(SolrSearchPageDTO<ProductStockDTO> solrPageResult) {
+		List<StockStaticsResultVOPlus> listResult=new ArrayList<StockStaticsResultVOPlus>();
+		List<ProductStockDTO> solrList=solrPageResult.getList();
+		if(solrList!=null&&!solrList.isEmpty()){
+			for(ProductStockDTO dto:solrList){
+				StockStaticsResultVOPlus vo=new StockStaticsResultVOPlus();
+				vo.setReceiveCount(dto.getPsReceiveCount());
+				vo.setStockCount(dto.getPsStockCount());
+				vo.setBrandName(dto.getInfoBrandName());
+				vo.setProductId(dto.getInfoId());
+				//vo.setStockInfo(stockInfo);//实际库存数量为聚合函数查询值----------重要参数
+				vo.setProductId(dto.getInfoId());
+				listResult.add(vo);
+			}
+		}
+		return listResult;
 	}
 
 	/**
