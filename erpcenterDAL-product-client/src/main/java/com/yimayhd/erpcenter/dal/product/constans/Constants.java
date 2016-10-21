@@ -17,7 +17,7 @@ public class Constants {
     
     public static final String PRODUCT_TAG = "PRODUCT_LINE";
 
-    public static final Integer PAGESIZE = 10;// 每页个数,用于PageBean
+    public static final Integer PAGESIZE = 15;// 每页个数,用于PageBean
     public static final Integer TRAVELAGENCY = 1; // 旅行社
     public static final Integer RESTAURANT = 2; // 餐厅
     public static final Integer HOTEL = 3; // 酒店
