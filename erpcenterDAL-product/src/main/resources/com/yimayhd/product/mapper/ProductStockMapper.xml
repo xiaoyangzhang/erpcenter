@@ -136,6 +136,30 @@
     FROM product_stock
     WHERE product_id = #{productId,jdbcType=INTEGER} AND item_date=#{date} AND state=1
   </select>
+  
+  <select id="getStockListByCondition" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.product.query.StockQueryDTO>
+  	SELECT 
+    <include refid="Base_Column_List" />
+    FROM product_stock
+    <where>
+    	state=1
+    	<if test="productId != null">
+    		product_id = #{productId,jdbcType=INTEGER}
+    	</if>
+    	<if test="startDate != null ">
+    		<![CDATA[ item_date >= #{startDate} ]]>
+    	</if>
+    	<if test="endDate != null">
+    		<![CDATA[ item_date <= #{endDate} ]]>
+    	</if>
+    	
+    	<if test="stockId != null">
+    		id = #{stockId,jdbcType=INTEGER}
+    	</if>
+    </where>
+    
+  </select>
+  
   <update id="setDeleteByProductIdAndDateSpan">
     update product_stock set state=-1
     where product_id = #{productId,jdbcType=INTEGER} <![CDATA[ AND item_date>=#{startDate} AND item_date<#{endDate}]]> AND state=1
