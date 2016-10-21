@@ -91,7 +91,7 @@ public class ProductFacadeImpl implements ProductFacade{
 	@Autowired
 	private ProductGroupSupplierBiz groupSupplierBiz;
 	
-	
+	@Autowired
 	private PlatformOrgBiz platformOrgBiz;
 	@Override
 	public int saveBasicInfo(ProductSaveDTO productSaveDTO) {

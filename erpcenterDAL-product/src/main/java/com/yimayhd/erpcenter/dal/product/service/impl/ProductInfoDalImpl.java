@@ -14,12 +14,15 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.zookeeper.server.FinalRequestProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.dao.ProductAttachmentMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductContactMapper;
@@ -46,6 +49,7 @@ import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultVo;
 
 public class ProductInfoDalImpl implements ProductInfoDal{
 
+	private static final Logger LOGGER = LoggerFactory.getLogger("ProductInfoDalImpl");
 	@Autowired
 	private ProductInfoMapper infoMapper;
 	@Autowired
@@ -340,13 +344,31 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 
 	@Override
 	public void saveProductRight(final Integer productId,final Set<Integer> orgIdSet) {
+		final List<ProductRight> productRights = getRightListByProductId(productId);
+		final int size = orgIdSet.size();
 		Boolean dbResult = transactionTemplateProduct.execute(new TransactionCallback<Boolean>() {
 
 			@Override
-			public Boolean doInTransaction(TransactionStatus arg0) {
-				productRightMapper.deleteByProductId(productId);
-				productRightMapper.insertBatch(productId, orgIdSet);
-				return true;
+			public Boolean doInTransaction(TransactionStatus status) {
+				try {
+					int deleteResult = productRightMapper.deleteByProductId(productId);
+					if (deleteResult != productRights.size()) {
+						LOGGER.error("productRightMapper.deleteByProductId error,param:productId={},result:deleteResult={}",productId,deleteResult);
+						status.setRollbackOnly();
+						return false;
+					}
+					int insertResult = productRightMapper.insertBatch(productId, orgIdSet);
+					if (insertResult != size) {
+						LOGGER.error("productRightMapper.insertBatch error,param:productId={},orgIdSet={},result:insertResult={}",productId,JSON.toJSONString(orgIdSet),insertResult);
+						status.setRollbackOnly();
+						return false;
+					}
+					return true;
+				} catch (Exception e) {
+					status.setRollbackOnly();
+					LOGGER.error("error:{}",e);
+					return false;
+				}
 			}
 		});
 	}
