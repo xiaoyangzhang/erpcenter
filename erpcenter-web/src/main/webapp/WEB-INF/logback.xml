@@ -1,13 +1,14 @@
 <configuration debug="true">
     <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/home/admin/logs/empty/debug.log</file>
+<!--         <file>/home/admin/logs/empty/debug.log</file>
+ -->        <file>F:/erp/debug.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>DEBUG</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>/home/admin/logs/empty/debug-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <FileNamePattern>F:/erp/debug-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>60MB</maxFileSize>
@@ -21,14 +22,14 @@
         </encoder>
     </appender>
     <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/home/admin/logs/empty/info.log</file>
+        <file>F:/erp/info.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>/home/admin/logs/empty/info-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <FileNamePattern>F:/erp/info-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>60MB</maxFileSize>
@@ -42,14 +43,14 @@
         </encoder>
     </appender>
     <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/home/admin/logs/empty/warn.log</file>
+        <file>F:/erp/warn.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>WARN</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>/home/admin/logs/empty/warn-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <FileNamePattern>F:/erp/warn-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>60MB</maxFileSize>
@@ -63,14 +64,14 @@
         </encoder>
     </appender>
     <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/home/admin/logs/empty/error.log</file>
+        <file>F:/erp/error.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>/home/admin/logs/empty/error-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <FileNamePattern>F:/erp/error-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>60MB</maxFileSize>

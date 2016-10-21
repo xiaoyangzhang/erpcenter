@@ -59,7 +59,9 @@ public class SysLoginFacadImpl implements SysLoginFacade{
 		BeanUtils.copyProperties(po, result);//将对应的属性值拷贝到result中
 		return result;
 	}
+	
 
+	
 	@Override
 	public UserSessionResult getUserSessionResult(int bizId, Integer orgId, Integer employeeId, Integer isSuper) {
 		UserSessionResult result = new UserSessionResult();

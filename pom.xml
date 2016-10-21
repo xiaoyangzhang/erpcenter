@@ -208,11 +208,14 @@
 		<artifactId>erpcenterFacade-product</artifactId>
 		<version>${project.version}</version>
 	</dependency>
+	
 			<dependency>
 			   <groupId>ledis</groupId>
 			   <artifactId>ledis</artifactId>
 			   <version>${ledis.version}</version>
 			</dependency>
+			
+	
 			<dependency>
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi</artifactId>

@@ -7,9 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.architect.redis.JedisManager;
+import com.alibaba.fastjson.JSONObject;
+import com.yimayhd.base.cache.core.factory.ManagerFactory;
 import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.dao.RegionMapper;
+import com.yimayhd.erpcenter.dal.basic.dto.ReginCacheDTO;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.basic.service.RegionDal;
 
@@ -17,15 +19,20 @@ public class RegionDalImpl implements RegionDal {
 	static final Logger logger = LoggerFactory.getLogger(RegionDalImpl.class);
 	@Autowired
 	private RegionMapper regionMapper;
+	@Autowired
+	private ManagerFactory managerFactory;
 
 	@Override
 	public List<RegionInfo> getRegionById(String pid) {
 		if(StringUtils.isNumeric(pid)){
 		List<RegionInfo> regionList = null;
-				Object obj = JedisManager.getObject(BasicConstants.REGION_KEY_PREFIX+pid);
-		if (obj!=null) {
+		
+		String key = BasicConstants.REGION_KEY_PREFIX+pid;
+		String valueJson = managerFactory.getStringCommands().get(key.hashCode(), key);
+		if (!StringUtils.isEmpty(valueJson)) {
 			logger.info("读取redis");
-			regionList=(List<RegionInfo>)obj;
+			ReginCacheDTO regionDTO  = JSONObject.parseObject(valueJson,ReginCacheDTO.class);
+			regionList= regionDTO.getRegionList();
 			return regionList;
 		}
 		else {
@@ -38,12 +45,13 @@ public class RegionDalImpl implements RegionDal {
 
 	@Override
 	public List<RegionInfo> getAllProvince() {
-		List<RegionInfo> provinces=null;
-		Object obj = JedisManager.getObject(BasicConstants.REGION_KEY_PREFIX+0);
-		if (obj!=null) {
-			logger.info("读取redis");
-			provinces=(List<RegionInfo>)obj;
-			return provinces;
+		//List<RegionInfo> provinces=null;
+		String key = BasicConstants.REGION_KEY_PREFIX+0;
+		String valueJson = managerFactory.getStringCommands().get(key.hashCode(), key);
+		
+		if(!StringUtils.isEmpty(valueJson)){
+			ReginCacheDTO regionDTO  = JSONObject.parseObject(valueJson,ReginCacheDTO.class);
+			return  regionDTO.getRegionList();
 		}else {
 			
 			return regionMapper.getAllProvince();
@@ -96,13 +104,31 @@ public class RegionDalImpl implements RegionDal {
 	@Override
 	public void uploadRegion() {
 		List<RegionInfo> allProvinces = getAllProvince();
-		JedisManager.setObject(BasicConstants.REGION_KEY_PREFIX+0,0, allProvinces);
+		String key = BasicConstants.REGION_KEY_PREFIX+0;
+		
+		ReginCacheDTO regionDTO = new ReginCacheDTO();
+		regionDTO.setRegionList(allProvinces);
+		String valueJson = JSONObject.toJSONString(regionDTO);
+		
+		managerFactory.getStringCommands().set(key.hashCode(), key, valueJson);
+		
 		for (RegionInfo province : allProvinces) {
 			List<RegionInfo> cities = getRegionById(String.valueOf(province.getId()));
-			JedisManager.setObject(BasicConstants.REGION_KEY_PREFIX+province.getId(), 0, cities);
+			
+			String cityListKey = BasicConstants.REGION_KEY_PREFIX+province.getId();
+			ReginCacheDTO regionCityListDTO = new ReginCacheDTO();
+			regionCityListDTO.setRegionList(cities);
+			
+			managerFactory.getStringCommands().set(cityListKey.hashCode(), cityListKey, JSONObject.toJSONString(regionDTO));
+			
 			for (RegionInfo city : cities) {
 				List<RegionInfo> districts = getRegionById(String.valueOf(city.getId()));
-				JedisManager.setObject(BasicConstants.REGION_KEY_PREFIX+city.getId(), 0, districts);
+				
+				String districtKey = BasicConstants.REGION_KEY_PREFIX+city.getId();
+				ReginCacheDTO regionDisListDTO = new ReginCacheDTO();
+				regionDisListDTO.setRegionList(districts);
+				
+				managerFactory.getStringCommands().set(districtKey.hashCode(), districtKey, JSONObject.toJSONString(regionDisListDTO));
 			}
 		}
 	}

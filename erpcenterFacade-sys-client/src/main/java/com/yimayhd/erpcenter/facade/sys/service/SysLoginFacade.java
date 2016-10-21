@@ -25,6 +25,15 @@ public interface SysLoginFacade {
 	 * @return
 	 */
 	PlatformEmployeeResult getEmployeeByBizIdAndLoginName(Integer bizId,String loginName);
+//	/**
+//	 * 
+//	 * 描述：根据商家id和登陆名称获取用户信息
+//	 * @author liyong
+//	 * 2016年10月20日 描述：
+//	 * @param userId
+//	 * @return
+//	 */
+//	PlatformEmployeeResult findByEmployeeId(String userId);
 	/**
 	 * 
 	 * 描述：获取用户的UserSessionResult通过多个方法
