@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.zookeeper.server.FinalRequestProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +63,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
     @Autowired
     private  ProductRightMapper productRightMapper;
     @Autowired
-    private TransactionTemplate transactionTemplate;
+    private TransactionTemplate transactionTemplateProduct;
 	@Override
 	public int insertSelective(ProductInfo record) {
 		infoMapper.insertSelective(record);
@@ -338,16 +339,16 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	}
 
 	@Override
-	public void saveProductRight(Integer productId, Set<Integer> orgIdSet) {
-		Boolean dbResult = transactionTemplate.execute(new TransactionCallback<Boolean>() {
+	public void saveProductRight(final Integer productId,final Set<Integer> orgIdSet) {
+		Boolean dbResult = transactionTemplateProduct.execute(new TransactionCallback<Boolean>() {
 
 			@Override
 			public Boolean doInTransaction(TransactionStatus arg0) {
-				return null;
+				productRightMapper.deleteByProductId(productId);
+				productRightMapper.insertBatch(productId, orgIdSet);
+				return true;
 			}
 		});
-		productRightMapper.deleteByProductId(productId);
-		productRightMapper.insertBatch(productId, orgIdSet);
 	}
 
 	@Override
