@@ -30,6 +30,9 @@ public class ProductSolrQueryManager extends BaseSolrQueryManager{
              List<ProductStateDTO> dtoList = response.getBeans(ProductStateDTO.class);
              
              pageResult.setList(dtoList);
+             pageResult.setPageNo(queryDTO.getPageNo());
+             pageResult.setPageSize(queryDTO.getPageSize());
+             pageResult.setTotalCount(response.getResults().getNumFound());
              
 			return pageResult;
 	}
