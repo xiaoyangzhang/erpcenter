@@ -5,11 +5,9 @@
   <parent>
     <groupId>com.yimayhd.erpcenter</groupId>
     <artifactId>erpcenter</artifactId>
-    <version>0.0.7-SNAPSHOT</version>
+    <version>0.0.8-SNAPSHOT</version>
   </parent>
-  <groupId>com.yimayhd.erpcenter</groupId>
   <artifactId>erpcenterDAL-sales</artifactId>
-  <version>0.0.7-SNAPSHOT</version>
   <name>erpcenterDAL-sales</name>
   <url>http://maven.apache.org</url>
   <properties>
