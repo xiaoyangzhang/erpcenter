@@ -2,33 +2,54 @@ package com.yimayhd.erpcenter.dal.product.dto;
 
 import java.io.Serializable;
 
+import org.apache.solr.client.solrj.beans.Field;
+
 public class ProductStateDTO implements Serializable{
 
 	
 	private static final long serialVersionUID = -7825603703944657447L;
-	
+	@Field
 	private Integer infoId;//产品id
+	@Field
 	private Integer infoBizId;//商家id
+	@Field
 	private String infoCode;//产品编码
-	private Byte infoType;//产品类型
+	@Field
+	private Integer infoType;//产品类型
+	@Field
 	private Integer infoBrandId;//名称-品牌
+	@Field
 	private String infoBrandName;//名称-品牌名称
+	@Field
 	private String infoNameCity;//名称-城市
+	@Field
 	private String infoNameBrief;//简要说明
+	@Field
 	private Integer infoTravelDays;//行程天数
+	@Field
 	private Integer infoOrderNum;//排序,填写数字
+	@Field
 	private Integer infoDestProvinceId;//目的地省id
+	@Field
 	private String infoDestProvinceName;//目的地省
+	@Field
 	private Integer infoDestCityId;//目的地市id
+	@Field
 	private String infoDestCityName;//目的地市
-	private Byte infoState;//产品状态,1待上架2上架3下架-1删除
+	@Field
+	private Integer infoState;//产品状态,1待上架2上架3下架-1删除
+	@Field
 	private Integer infoCreatorId;//创建人id
+	@Field
 	private String infoCreatorName;//创建人name
+	@Field
 	private Long infoCreateTime;//创建时间
+	@Field
 	private Integer infoOperatorId;//操作计调id
+	@Field
 	private String infoOperatorName;//操作计调name
-	private Integer prOrgId;//pr表机构id
-	private Integer prProductId;//pr表产品id
+
+	private String prOrgId;//pr表机构id
 	/**
 	 * @return the infoId
 	 */
@@ -69,13 +90,13 @@ public class ProductStateDTO implements Serializable{
 	/**
 	 * @return the infoType
 	 */
-	public Byte getInfoType() {
+	public Integer getInfoType() {
 		return infoType;
 	}
 	/**
 	 * @param infoType the infoType to set
 	 */
-	public void setInfoType(Byte infoType) {
+	public void setInfoType(Integer infoType) {
 		this.infoType = infoType;
 	}
 	/**
@@ -201,13 +222,13 @@ public class ProductStateDTO implements Serializable{
 	/**
 	 * @return the infoState
 	 */
-	public Byte getInfoState() {
+	public Integer getInfoState() {
 		return infoState;
 	}
 	/**
 	 * @param infoState the infoState to set
 	 */
-	public void setInfoState(Byte infoState) {
+	public void setInfoState(Integer infoState) {
 		this.infoState = infoState;
 	}
 	/**
@@ -273,27 +294,17 @@ public class ProductStateDTO implements Serializable{
 	/**
 	 * @return the prOrgId
 	 */
-	public Integer getPrOrgId() {
+	public String getPrOrgId() {
 		return prOrgId;
 	}
 	/**
 	 * @param prOrgId the prOrgId to set
 	 */
-	public void setPrOrgId(Integer prOrgId) {
+	public void setPrOrgId(String prOrgId) {
 		this.prOrgId = prOrgId;
 	}
-	/**
-	 * @return the prProductId
-	 */
-	public Integer getPrProductId() {
-		return prProductId;
-	}
-	/**
-	 * @param prProductId the prProductId to set
-	 */
-	public void setPrProductId(Integer prProductId) {
-		this.prProductId = prProductId;
-	}
+
+
 	/**
 	 * @return the serialversionuid
 	 */

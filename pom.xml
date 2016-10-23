@@ -5,7 +5,7 @@
 	<groupId>com.yimayhd.erpcenter</groupId>
 	<artifactId>erpcenter</artifactId>
 	<packaging>pom</packaging>
-	<version>0.0.6-SNAPSHOT</version>
+	<version>0.0.7-SNAPSHOT</version>
 	<name>erpcenter</name>
 
 	<parent>
@@ -68,12 +68,12 @@
 			<dependency>
     			<groupId>com.yimayhd.erpcenter</groupId>
     			<artifactId>erpcenterBiz-sys-client</artifactId>
-    			<version>0.0.6-SNAPSHOT</version>
+    			<version>${project.version}</version>
     		</dependency>
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenterBiz-basic-client</artifactId>
-				<version>0.0.6-SNAPSHOT</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
@@ -208,7 +208,12 @@
 		<artifactId>erpcenterFacade-product</artifactId>
 		<version>${project.version}</version>
 	</dependency>
-	
+	<dependency>
+    	<groupId>com.yimayhd.erpcenter</groupId>
+    	<artifactId>erpcenterDAL-basic-client</artifactId>
+    	<version>${project.version}</version>
+    </dependency>
+
 			<dependency>
 			   <groupId>ledis</groupId>
 			   <artifactId>ledis</artifactId>
@@ -531,6 +536,12 @@
 				<groupId>org.apache.solr</groupId>
 				<artifactId>solr-solrj</artifactId>
 				<version>5.3.0</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.yihg</groupId>    
+				<artifactId>yihg-architect-mybatis</artifactId>
+				<version>1.0.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

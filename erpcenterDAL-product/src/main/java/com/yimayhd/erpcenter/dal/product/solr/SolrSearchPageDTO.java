@@ -3,6 +3,8 @@ package com.yimayhd.erpcenter.dal.product.solr;
 import java.io.Serializable;
 import java.util.List;
 
+import org.springframework.util.CollectionUtils;
+
 
 public class SolrSearchPageDTO<T> implements Serializable{
 
@@ -18,6 +20,11 @@ public class SolrSearchPageDTO<T> implements Serializable{
     }
 
     public void setList(List<T> list) {
+
+    	if(!CollectionUtils.isEmpty(list) && list.size() >= pageSize){
+    		hasNext = true;
+    	}
+    	
         this.list = list;
     }
 
@@ -56,6 +63,7 @@ public class SolrSearchPageDTO<T> implements Serializable{
     }
 
     public boolean isHasNext() {
+    	
         return hasNext;
     }
 

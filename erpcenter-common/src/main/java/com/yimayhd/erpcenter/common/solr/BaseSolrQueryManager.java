@@ -6,6 +6,7 @@ import org.apache.solr.client.solrj.SolrRequest.METHOD;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
 import com.yimayhd.erpcenter.common.solr.SolrClientInitManager;
@@ -13,7 +14,8 @@ import com.yimayhd.erpcenter.common.solr.SolrClientInitManager;
 public  class BaseSolrQueryManager {
 	 private static final Logger LOGGER = LoggerFactory.getLogger(BaseSolrQueryManager.class);
 	 
-	 private SolrClientInitManager solrClientManager;
+	 @Autowired
+	 SolrClientInitManager solrClientManager;
 	
      public QueryResponse querySolrDataByFilters(String collectionName, SolrQuery solrQuery) {
         try {

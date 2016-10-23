@@ -3,22 +3,36 @@ package com.yimayhd.erpcenter.dal.product.dto;
 import java.io.Serializable;
 
 public class ProductStockDTO implements Serializable{
-
-	 private static final long serialVersionUID = 85760395896024430L;
-	 
-	 
-	 private Integer infoId;//产品id
-	 private Integer infoBizId;//商家id
-	 private Integer infoBrandId;//名称-品牌
-	 private String infoBrandName;//名称-品牌名称
-	 private String infoNameCity;//名称-城市
-	 private Byte infoState;//产品状态,1待上架2上架3下架-1删除
-	 private Integer prProductId;//pr表产品id
-	 private Long psItemDate;//pr表产品id
-	 private Integer psStockCount;//总量
-	 private Integer psReceiveCount;//预定数量
-	 private Integer psState;//ps表状态1正常 -1删除
-	 private Integer prOrgId;//pr表机构id
+	
+	private static final long serialVersionUID = 85760395896024430L;
+	
+	private Integer infoId;//产品id
+	private Integer infoBizId;//商家id
+	private Integer infoBrandId;//名称-品牌
+	private String infoBrandName;//名称-品牌名称
+	private String infoNameCity;//名称-城市
+	private Byte infoState;//产品状态,1待上架2上架3下架-1删除
+	private Integer psId;//pr表id
+	private Long psItemDate;//pr表库存日期时间
+	private Integer psStockCount;//总量
+	private Integer psReceiveCount;//预定数量
+	private Integer psState;//ps表状态1正常 -1删除
+	private String prOrgId;//pr表机构id
+	
+	
+	
+	/**
+	 * @return the psId
+	 */
+	public Integer getPsId() {
+		return psId;
+	}
+	/**
+	 * @param psId the psId to set
+	 */
+	public void setPsId(Integer psId) {
+		this.psId = psId;
+	}
 	/**
 	 * @return the infoId
 	 */
@@ -92,18 +106,6 @@ public class ProductStockDTO implements Serializable{
 		this.infoState = infoState;
 	}
 	/**
-	 * @return the prProductId
-	 */
-	public Integer getPrProductId() {
-		return prProductId;
-	}
-	/**
-	 * @param prProductId the prProductId to set
-	 */
-	public void setPrProductId(Integer prProductId) {
-		this.prProductId = prProductId;
-	}
-	/**
 	 * @return the psItemDate
 	 */
 	public Long getPsItemDate() {
@@ -154,22 +156,17 @@ public class ProductStockDTO implements Serializable{
 	/**
 	 * @return the prOrgId
 	 */
-	public Integer getPrOrgId() {
+	public String getPrOrgId() {
 		return prOrgId;
 	}
 	/**
 	 * @param prOrgId the prOrgId to set
 	 */
-	public void setPrOrgId(Integer prOrgId) {
+	public void setPrOrgId(String prOrgId) {
 		this.prOrgId = prOrgId;
 	}
-	/**
-	 * @return the serialversionuid
-	 */
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-	 
-	 
-	 
+	
+	
+	
+	
 }

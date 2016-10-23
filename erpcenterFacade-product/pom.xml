@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.yimayhd.erpcenter</groupId>
 		<artifactId>erpcenter</artifactId>
-		<version>0.0.6-SNAPSHOT</version>
+		<version>0.0.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>erpcenterFacade-product</artifactId>
 	<name>erpcenterFacade-product</name>
@@ -59,11 +59,6 @@
 		<dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<version>3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -140,6 +135,11 @@
 		<dependency>
 			<groupId>com.taobao.tair</groupId>
 			<artifactId>tair-client</artifactId>
+		</dependency>
+		
+		<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
 		</dependency>
 	</dependencies>
 </project>

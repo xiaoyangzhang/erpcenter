@@ -25,7 +25,8 @@ import org.slf4j.LoggerFactory;
  * @see [相关类/方法]（可选）
  * @since [产品/模块版本] （可选）
  */
-public class SolrClientInitManager {
+
+public class SolrClientInitManager{
 
     private static final Logger logger = LoggerFactory.getLogger(SolrClientInitManager.class);
 

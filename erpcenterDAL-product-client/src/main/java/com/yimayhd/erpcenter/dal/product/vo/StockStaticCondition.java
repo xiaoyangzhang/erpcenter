@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class StockStaticCondition implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private Integer bizId;
 	private String productName;
 	private Integer brandId;

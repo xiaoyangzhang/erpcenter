@@ -31,6 +31,8 @@ import com.yimayhd.erpcenter.dal.product.dao.ProductInfoMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductRemarkMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductRightMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductRouteMapper;
+import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
+import com.yimayhd.erpcenter.dal.product.dto.ProductStockDTO;
 import com.yimayhd.erpcenter.dal.product.po.PriceView;
 import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
 import com.yimayhd.erpcenter.dal.product.po.ProductContact;
@@ -40,7 +42,13 @@ import com.yimayhd.erpcenter.dal.product.po.ProductRight;
 import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.dal.product.po.ProductSales;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
+import com.yimayhd.erpcenter.dal.product.query.ProductStatePageQueryDTO;
+import com.yimayhd.erpcenter.dal.product.query.ProductStockPageQueryDTO;
 import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
+import com.yimayhd.erpcenter.dal.product.solr.SolrSearchPageDTO;
+import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStateConverter;
+import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStockConverter;
+import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultItemVo;
@@ -65,9 +73,12 @@ public class ProductInfoDalImpl implements ProductInfoDal{
     @Autowired
     private ProductRouteMapper productRouteMapper ;
     @Autowired
+    private ProductSolrQueryManager productSolrQueryManager;
+    @Autowired
     private  ProductRightMapper productRightMapper;
     @Autowired
     private TransactionTemplate transactionTemplateProduct;
+
 	@Override
 	public int insertSelective(ProductInfo record) {
 		infoMapper.insertSelective(record);
@@ -84,14 +95,16 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	@Override
 	public PageBean<ProductInfo> findProductInfos(
 			PageBean<ProductInfo> pageBean, Map parameters) {
-		List<ProductInfo> list = infoMapper.selectProductInfoListPage(pageBean, parameters);
-		pageBean.setResult(list);
-		if(1==1){
-			
-		}else{
-			
-		}
-		return pageBean;
+//		List<ProductInfo> list = infoMapper.selectProductInfoListPage(pageBean, parameters);
+//		pageBean.setResult(list);
+//		if(1==0){
+			ProductStatePageQueryDTO queryDTO = ProductStateConverter.toQueryDTO(pageBean, parameters);
+			SolrSearchPageDTO<ProductStateDTO> solrPageResult  = productSolrQueryManager.searchProductState(queryDTO);
+			return ProductStateConverter.dto2PageBean(solrPageResult);
+//		}else{
+//			
+//		}
+//		return pageBean;
 	}
 	
 	@Override
@@ -444,7 +457,8 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		pageBean.setPageSize(condition.getPageSize());
 		pageBean.setParameter(condition);
 		pageBean.setPage(condition.getPage());
-		List<StockStaticsResultVOPlus> list = infoMapper.getProductStockListPage(pageBean);
+		List<StockStaticsResultVOPlus> list =new ArrayList<StockStaticsResultVOPlus>(); 
+		list=infoMapper.getProductStockListPage(pageBean);
 		//SimpleDateFormat sdf=new SimpleDateFormat();
 		if(list!=null && list.size()>0){
 			for (StockStaticsResultVOPlus voPlus : list) {
@@ -478,6 +492,27 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 				result.setItemVoList(voList);
 			}			
 		}	*/
+		
+		if(1==1){
+			ProductStockPageQueryDTO queryDTO = ProductStockConverter.toQueryDTO(pageBean);
+			SolrSearchPageDTO<ProductStockDTO> solrPageResult  = productSolrQueryManager.searchProductStock(queryDTO);
+			list= ProductStockConverter.dto2PageBean(solrPageResult);
+			if(list!=null && list.size()>0){
+				for (StockStaticsResultVOPlus voPlus : list) {
+					List<ProductStock> stockList=new ArrayList<ProductStock>();
+					String[] stockInfoStrs = voPlus.getStockInfo().split(",");
+					for (int i = 0; i < 7; i++) {
+					stockList.add(getResultByDate2(DateUtils.addDays(condition.getGroupDate(),i),stockInfoStrs));
+					}
+					voPlus.setStockList(stockList);
+				}
+				
+			}
+			pageBean.setResult(list);
+			return pageBean;
+		}else{
+			
+		}
 		pageBean.setResult(list);
 		return pageBean;
 	}
