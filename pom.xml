@@ -38,6 +38,15 @@
     <module>erpcenter-common</module>
     <module>erpcenterFacade-common</module>
     <module>erpcenterFacade-common-client</module>
+    <module>erpcenterDAL-sales</module>
+    <module>erpcenterBiz-sales-client</module>
+    <module>erpcenterBiz-sales</module>
+    <module>erpcenterFacade-sales-client</module>
+    <module>erpcenterFacade-sales</module>
+    <module>erpcenterFacade-operation-client</module>
+    <module>erpcenterFacade-operation</module>
+    <module>erpcenterFacade-supplier-client</module>
+    <module>erpcenterFacade-supplier</module>
   </modules>
 
 	<properties>
