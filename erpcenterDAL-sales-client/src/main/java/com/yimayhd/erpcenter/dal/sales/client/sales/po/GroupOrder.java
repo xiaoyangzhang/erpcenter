@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.yihg.basic.util.LogFieldAnno;
-import com.yihg.operation.po.BookingShopDetailDeploy;
+import com.yimayhd.erpcenter.dal.basic.utils.LogFieldAnno;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy;
 
 public class GroupOrder implements Serializable {
 

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.yihg.basic.util.LogFieldAnno;
+import com.yimayhd.erpcenter.dal.basic.utils.LogFieldAnno;
 
 public class GroupOrderTransport implements Serializable {
 	/**

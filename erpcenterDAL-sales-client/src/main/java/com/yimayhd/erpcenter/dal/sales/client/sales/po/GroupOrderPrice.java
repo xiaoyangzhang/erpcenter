@@ -1,9 +1,8 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.po;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
-import com.yihg.basic.util.LogFieldAnno;
+import com.yimayhd.erpcenter.dal.basic.utils.LogFieldAnno;
 
 public class GroupOrderPrice implements Serializable {
 	/**
