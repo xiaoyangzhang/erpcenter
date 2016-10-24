@@ -1,15 +1,12 @@
-package com.yihg.operation.dao;
+package com.yimayhd.erpcenter.dal.sales.operation.dao;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy;
 import org.apache.ibatis.annotations.Param;
 
-
-
-
-import com.yihg.operation.po.BookingShopDetailDeploy;
 
 public interface BookingShopDetailDeployMapper {
     int deleteByPrimaryKey(Integer bdId);

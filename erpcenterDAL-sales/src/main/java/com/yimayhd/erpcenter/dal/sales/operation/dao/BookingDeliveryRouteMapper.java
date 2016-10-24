@@ -1,8 +1,9 @@
-package com.yihg.operation.dao;
+package com.yimayhd.erpcenter.dal.sales.operation.dao;
+
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryRoute;
 
 import java.util.List;
 
-import com.yihg.operation.po.BookingDeliveryRoute;
 
 public interface BookingDeliveryRouteMapper {
     int deleteByPrimaryKey(Integer id);

@@ -1,15 +1,16 @@
-package com.yihg.operation.dao;
+package com.yimayhd.erpcenter.dal.sales.operation.dao;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideListCount;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideListSelect;
 import org.apache.ibatis.annotations.Param;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.po.BookingGuide;
-import com.yihg.operation.po.BookingGuideListCount;
-import com.yihg.operation.po.BookingGuideListSelect;
+
 
 public interface BookingGuideMapper {
     int deleteByPrimaryKey(Integer id);

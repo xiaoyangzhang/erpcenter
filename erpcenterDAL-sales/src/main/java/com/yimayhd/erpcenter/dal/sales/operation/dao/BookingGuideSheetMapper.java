@@ -1,6 +1,7 @@
-package com.yihg.operation.dao;
+package com.yimayhd.erpcenter.dal.sales.operation.dao;
 
-import com.yihg.operation.po.BookingGuideSheet;
+
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideSheet;
 
 public interface BookingGuideSheetMapper {
     int deleteByPrimaryKey(Integer id);

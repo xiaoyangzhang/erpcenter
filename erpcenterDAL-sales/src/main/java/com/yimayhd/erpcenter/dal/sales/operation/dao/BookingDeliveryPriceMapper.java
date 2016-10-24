@@ -1,15 +1,16 @@
-package com.yihg.operation.dao;
+package com.yimayhd.erpcenter.dal.sales.operation.dao;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryPrice;
 import org.apache.ibatis.annotations.Param;
 
 import com.alibaba.dubbo.config.support.Parameter;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.po.BookingDeliveryPrice;
+;
 
 public interface BookingDeliveryPriceMapper {
     int deleteByPrimaryKey(Integer id);
