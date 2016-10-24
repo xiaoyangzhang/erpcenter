@@ -2,9 +2,10 @@ package com.yimayhd.erpcenter.dal.sales.client.sales.service;
 
 import java.text.ParseException;
 
-import com.yihg.sales.vo.TeamGroupVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TeamGroupVO;
 
-public interface TeamGroupService {
+
+public interface TeamGroupDal {
 	public TeamGroupVO selectTeamGroupVOByGroupId(Integer groupId,Integer bizId);
 	
 	public TeamGroupVO saveOrUpdateTeamGroupVO(Integer bizId,Integer userId,String userName,TeamGroupVO teamGroupVO)throws ParseException;

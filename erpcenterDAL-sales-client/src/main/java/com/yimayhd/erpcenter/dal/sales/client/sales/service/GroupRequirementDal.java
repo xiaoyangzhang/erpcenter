@@ -2,9 +2,10 @@ package com.yimayhd.erpcenter.dal.sales.client.sales.service;
 
 import java.util.List;
 
-import com.yihg.sales.po.GroupRequirement;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
 
-public interface GroupRequirementService {
+
+public interface GroupRequirementDal {
 	 int deleteByPrimaryKey(Integer id);
 
 	    int insert(GroupRequirement record);

@@ -4,13 +4,14 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.sales.po.GroupRoute;
-import com.yihg.sales.po.GroupRouteAttachment;
-import com.yihg.sales.po.GroupRouteSupplier;
-import com.yihg.sales.po.GroupRouteTraffic;
-import com.yihg.sales.vo.GroupRouteVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteAttachment;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteTraffic;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 
-public interface GroupRouteService {
+
+public interface GroupRouteDal {
 
 	List<GroupRoute> selectByGroupId(Integer groupId);
 	List<GroupRoute> selectByGroupIdAndBookingId(Integer groupId,Integer bookingId);
