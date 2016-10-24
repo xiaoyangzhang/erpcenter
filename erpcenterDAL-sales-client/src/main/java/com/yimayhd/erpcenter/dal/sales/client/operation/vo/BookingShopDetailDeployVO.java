@@ -1,10 +1,11 @@
 package com.yimayhd.erpcenter.dal.sales.client.operation.vo;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.yihg.operation.po.BookingShopDetailDeploy;
 
 public class BookingShopDetailDeployVO implements Serializable{
    private List<BookingShopDetailDeploy> detail;

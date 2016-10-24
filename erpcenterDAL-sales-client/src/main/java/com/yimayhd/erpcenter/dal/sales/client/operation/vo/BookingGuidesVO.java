@@ -1,10 +1,11 @@
 package com.yimayhd.erpcenter.dal.sales.client.operation.vo;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideTimes;
+
 import java.io.Serializable;
 import java.util.List;
 
-import com.yihg.operation.po.BookingGuide;
-import com.yihg.operation.po.BookingGuideTimes;
 
 public class BookingGuidesVO implements Serializable{
 
