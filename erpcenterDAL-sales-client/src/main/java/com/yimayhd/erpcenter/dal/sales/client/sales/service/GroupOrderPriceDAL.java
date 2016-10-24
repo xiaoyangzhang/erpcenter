@@ -2,8 +2,8 @@ package com.yimayhd.erpcenter.dal.sales.client.sales.service;
 
 import java.util.List;
 
-import com.yihg.sales.po.GroupOrderPrice;
-import com.yihg.sales.vo.CostIncome;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.CostIncome;
 
 /**
  * 销售订单-价格
@@ -11,7 +11,7 @@ import com.yihg.sales.vo.CostIncome;
  * @author qindz
  *
  */
-public interface GroupOrderPriceService {
+public interface GroupOrderPriceDAL {
 
 	int deleteByPrimaryKey(Integer id);
 

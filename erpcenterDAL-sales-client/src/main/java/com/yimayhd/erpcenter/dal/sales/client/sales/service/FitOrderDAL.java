@@ -3,11 +3,11 @@ package com.yimayhd.erpcenter.dal.sales.client.sales.service;
 import java.text.ParseException;
 import java.util.List;
 
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.vo.FitOrderVO;
-import com.yihg.sales.vo.MergeGroupOrderVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.FitOrderVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
 
-public interface FitOrderService {
+public interface FitOrderDAL {
   public FitOrderVO selectFitOrderVOById(Integer orderId);
   public Integer  saveOrUpdateFitOrderInfo(FitOrderVO fitOrderVO,Integer userId,String userName,Integer proOperId,String proOperName ,Integer bizId,String bizCode,boolean mergerGroup)throws ParseException;
   public void mergetGroup(List<MergeGroupOrderVO> list,Integer bizId,Integer operid, String operName, String supplierCode,boolean isAgency)throws ParseException;

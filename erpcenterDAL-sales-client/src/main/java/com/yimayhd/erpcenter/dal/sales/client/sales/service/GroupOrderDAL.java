@@ -1,5 +1,15 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.service;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.PaymentExportVO;
@@ -8,16 +18,17 @@ import com.yimayhd.erpcenter.dal.sales.client.query.vo.DepartmentOrderResult;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.*;
-import org.apache.ibatis.annotations.Param;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupOrderVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupPriceVo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorOrderStatic;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorVo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalePrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalesVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.*;
-
-
-
-public interface GroupOrderService {
+public interface GroupOrderDAL {
 
     public GroupOrder findById(Integer id);
 

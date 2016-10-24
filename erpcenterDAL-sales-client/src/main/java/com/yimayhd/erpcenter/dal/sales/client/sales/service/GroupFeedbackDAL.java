@@ -1,15 +1,15 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.service;
 
-import com.yihg.sales.po.GroupFeedback;
-import com.yihg.sales.vo.GroupFeedbackGroupStaticsVO;
-import com.yihg.sales.vo.GroupFeedbackPersonalStaticsVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupFeedback;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupFeedbackGroupStaticsVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupFeedbackPersonalStaticsVO;
 
 /**
  * 当前行程  旅游服务评价
  * @author lyl
  *
  */
-public interface GroupFeedbackService {
+public interface GroupFeedbackDAL {
 	int deleteByPrimaryKey(Integer id);
 
 	int insert(GroupFeedback record);
