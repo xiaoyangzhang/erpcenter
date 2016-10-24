@@ -10,13 +10,13 @@ import org.springframework.util.StringUtils;
 import com.yimayhd.erpcenter.common.util.NumberUtil;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
-import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderPriceDAL;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderPriceDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.CostIncome;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 
-public class GroupOrderPriceDalImpl implements GroupOrderPriceDAL {
+public class GroupOrderPriceDalImpl implements GroupOrderPriceDal {
 
 	@Autowired
 	private GroupOrderPriceMapper groupOrderPriceMapper;

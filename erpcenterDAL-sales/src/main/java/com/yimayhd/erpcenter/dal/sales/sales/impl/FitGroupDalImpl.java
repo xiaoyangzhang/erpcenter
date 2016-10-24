@@ -13,7 +13,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteAttachment;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteTraffic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
-import com.yimayhd.erpcenter.dal.sales.client.sales.service.FitGroupDAL;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.FitGroupDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.FitGroupInfoVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
@@ -23,7 +23,7 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteSupplierMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteTrafficMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 
-public class FitGroupDalImpl implements FitGroupDAL {
+public class FitGroupDalImpl implements FitGroupDal {
 
 	@Autowired
 	private GroupOrderMapper groupOrderMapper;

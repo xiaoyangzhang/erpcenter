@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
-import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderGuestDAL;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderGuestDal;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 
-public class GroupOrderGuestDalImpl implements GroupOrderGuestDAL {
+public class GroupOrderGuestDalImpl implements GroupOrderGuestDal {
 
 	@Autowired
 	private GroupOrderGuestMapper groupOrderGuestMapper;

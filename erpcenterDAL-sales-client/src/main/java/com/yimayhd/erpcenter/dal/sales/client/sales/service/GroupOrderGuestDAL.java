@@ -10,7 +10,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
  * @author qindz
  *
  */
-public interface GroupOrderGuestDAL {
+public interface GroupOrderGuestDal {
 	
     int deleteByPrimaryKey(Integer id);
 

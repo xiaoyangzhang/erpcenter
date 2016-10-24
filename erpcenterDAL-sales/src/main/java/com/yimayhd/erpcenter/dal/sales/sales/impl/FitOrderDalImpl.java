@@ -23,7 +23,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteAttachment;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteTraffic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
-import com.yimayhd.erpcenter.dal.sales.client.sales.service.FitOrderDAL;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.FitOrderDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.FitOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
@@ -39,7 +39,7 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteSupplierMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteTrafficMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 
-public class FitOrderDalImpl implements FitOrderDAL {
+public class FitOrderDalImpl implements FitOrderDal {
 	@Autowired
 	private GroupOrderMapper groupOrderMapper;
 	@Autowired
@@ -77,7 +77,6 @@ public class FitOrderDalImpl implements FitOrderDAL {
 	public Integer saveOrUpdateFitOrderInfo(FitOrderVO fitOrderVO,
 			Integer userId, String userName,Integer proOperId,String proOperName, Integer bizId, String bizCode,
 			boolean mergeGroup) throws ParseException {
-		// TODO Auto-generated method stub
 		String type = "";
 
 		// 订单

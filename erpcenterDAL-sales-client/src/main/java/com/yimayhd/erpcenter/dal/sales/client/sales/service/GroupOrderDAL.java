@@ -28,7 +28,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalePrice;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalesVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 
-public interface GroupOrderDAL {
+public interface GroupOrderDal {
 
     public GroupOrder findById(Integer id);
 

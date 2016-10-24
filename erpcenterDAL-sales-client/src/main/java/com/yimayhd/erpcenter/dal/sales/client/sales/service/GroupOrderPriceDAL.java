@@ -11,7 +11,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.vo.CostIncome;
  * @author qindz
  *
  */
-public interface GroupOrderPriceDAL {
+public interface GroupOrderPriceDal {
 
 	int deleteByPrimaryKey(Integer id);
 

@@ -36,7 +36,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
-import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderDAL;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupPriceVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
@@ -57,7 +57,7 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 
-public class GroupOrderDalImpl implements GroupOrderDAL {
+public class GroupOrderDalImpl implements GroupOrderDal {
     private static final Logger log = LoggerFactory
             .getLogger(GroupOrderDalImpl.class);
     @Autowired
