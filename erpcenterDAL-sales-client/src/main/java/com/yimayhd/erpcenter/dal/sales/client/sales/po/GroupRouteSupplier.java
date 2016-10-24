@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.yihg.sales.constants.Constants;
+import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 
 public class GroupRouteSupplier implements Serializable {
 	private Integer id;

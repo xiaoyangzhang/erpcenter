@@ -3,7 +3,7 @@ package com.yimayhd.erpcenter.dal.sales.client.sales.vo;
 import java.io.Serializable;
 import java.util.List;
 
-import com.yihg.sales.po.GroupOrderTransport;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
 
 public class GroupOrderTransportVO implements Serializable {
 	/**

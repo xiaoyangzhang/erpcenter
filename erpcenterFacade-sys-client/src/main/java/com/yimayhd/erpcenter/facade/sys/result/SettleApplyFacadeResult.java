@@ -1,0 +1,29 @@
+package com.yimayhd.erpcenter.facade.sys.result;
+
+import java.io.Serializable;
+
+import com.yimayhd.erpcenter.dal.sys.po.SettleApply;
+/**
+ * 
+ * 描述：SettleApply结果对象分装
+ * @author liyong
+ * 2016年10月21日
+ */
+public class SettleApplyFacadeResult extends ResultSupport implements Serializable{
+
+	/**
+	 * 描述：
+	 * @author liyong
+	 * 2016年10月21日 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private SettleApply settleApply = new SettleApply();
+	public void setSettleApply(SettleApply settleApply) {
+		this.settleApply = settleApply;
+	}
+	public SettleApply getSettleApply() {
+		return settleApply;
+	}
+
+}

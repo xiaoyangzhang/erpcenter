@@ -3,9 +3,9 @@ package com.yimayhd.erpcenter.dal.sales.client.sales.vo;
 import java.io.Serializable;
 import java.util.List;
 
-import com.yihg.sales.po.AssistantSupplier;
-import com.yihg.sales.po.AssistantSupplierImg;
-import com.yihg.sales.po.AssistantSupplierImgType;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantSupplierImg;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantSupplierImgType;
 
 /**
  * 行程助手商家信息

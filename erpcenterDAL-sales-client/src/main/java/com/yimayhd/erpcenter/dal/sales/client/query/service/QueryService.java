@@ -4,14 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.query.vo.ProductGuestCondition;
-import com.yihg.query.vo.ProductGuestStaticsVo;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.TourGroup;
-import com.yihg.sales.vo.SaleOperatorVo;
+import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestCondition;
+import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestStaticsVo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorVo;
 
 public interface QueryService {
 	/**

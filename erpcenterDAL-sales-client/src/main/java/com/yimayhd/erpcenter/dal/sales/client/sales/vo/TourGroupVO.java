@@ -1,7 +1,6 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.vo;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 

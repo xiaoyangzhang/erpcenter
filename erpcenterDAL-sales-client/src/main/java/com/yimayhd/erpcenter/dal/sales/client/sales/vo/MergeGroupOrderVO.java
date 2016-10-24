@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 
 public class MergeGroupOrderVO implements Serializable {
 	/**

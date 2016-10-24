@@ -5,10 +5,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import com.yihg.operation.po.BookingGuide;
-import com.yihg.operation.po.BookingSupplier;
-import com.yihg.operation.po.BookingSupplierDetail;
-
 public class FinanceBill implements Serializable {
 
 	/**

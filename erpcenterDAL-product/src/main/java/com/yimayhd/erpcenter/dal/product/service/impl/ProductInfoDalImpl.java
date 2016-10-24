@@ -6,19 +6,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.zookeeper.server.FinalRequestProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -161,7 +158,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		return MessageFormat.format(format, bizCode,brandCode,String.valueOf(count+1));
 	}
 
-	@Transactional
+	//@Transactional
 	@Override
 	public int saveProductInfo(final ProductInfoVo productInfoVo,final String bizCode,final String brandCode) {
 		
