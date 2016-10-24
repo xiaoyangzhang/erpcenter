@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.params.GroupParams;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
@@ -99,12 +100,17 @@ public class ProductStockConverter {
 	public static SolrQuery queryDTO2SolrQuery(ProductStockPageQueryDTO queryDTO) {
 
 		SolrQuery solrQuery = new SolrQuery();
-//		if (queryDTO.getId() != null) {
-//			solrQuery.addFilterQuery("id:" + queryDTO.getId());
-//		}
-
-		solrQuery.setStart(queryDTO.getStartRow());
-		solrQuery.setRows(queryDTO.getOldPageSize());
+		
+		solrQuery.setParam("q","*:*");
+		solrQuery.setParam(GroupParams.GROUP,"true");
+		solrQuery.add(GroupParams.GROUP_FIELD,"infoId");
+		//solrQuery.add(GroupParams.GROUP_FIELD,"infoNameCity");
+		//solrQuery.add(GroupParams.GROUP_FORMAT,"grouped");
+		//solrQuery.add(GroupParams.GROUP_MAIN,"false");
+		solrQuery.setParam("group.ngroups", true);		
+		//solrQuery.set(GroupParams.GROUP_SORT,"infoBrandName asc,infoNameCity asc");
+		solrQuery.setRows(queryDTO.getPageSize());
+		solrQuery.setParam("group.limit",queryDTO.getStartRow() + "");
 
 		return solrQuery;
 	}

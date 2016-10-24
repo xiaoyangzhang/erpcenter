@@ -16,8 +16,10 @@ import com.yimayhd.erpcenter.biz.sys.service.SettleApplyBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.service.DicDal;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.query.ProductStockPageQueryDTO;
 import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
 import com.yimayhd.erpcenter.dal.product.service.ProductRemarkDal;
+import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
 import com.yimayhd.erpcenter.dal.sys.service.SettleApplyDal;
 import com.yimayhd.erpcenter.facade.query.ToSearchListStateDTO;
 import com.yimayhd.erpcenter.facade.service.ProductUpAndDownFrameFacade;
@@ -35,6 +37,9 @@ public class TestController {
 	private ProductUpAndDownFrameFacade productUpAndDownFrameFacade;
 	@Autowired
 	private ProductInfoDal productInfoDal;
+	
+	@Autowired
+	private ProductSolrQueryManager productSolrQueryManager;
 	
 	@RequestMapping(value = "/testBasicDal")
 	public Object testBasicDal(){
@@ -68,5 +73,24 @@ public class TestController {
 		return productInfoDal.findProductInfos(pageBean,parameters);
 //		ToSearchListStateDTO toSearchListStateDTO = new ToSearchListStateDTO();
 //		return productUpAndDownFrameFacade.toSearchListState(toSearchListStateDTO);
+	}
+	
+	@RequestMapping(value = "/testQueryStock")
+	public Object testQueryStock(){
+
+//		StockStaticCondition stockCondition = new StockStaticCondition();
+//		stockCondition.setPage(1);
+//		stockCondition.setPageSize(10);
+//		
+//		try {
+//			return productInfoDal.getStockStaticsList2(stockCondition);
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		ProductStockPageQueryDTO queryDTO = new ProductStockPageQueryDTO();
+		return productSolrQueryManager.searchProductStock(queryDTO);
+
 	}
 }

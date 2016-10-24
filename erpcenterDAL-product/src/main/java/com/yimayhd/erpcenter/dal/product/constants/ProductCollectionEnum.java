@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public enum ProductCollectionEnum {
 
-    PRODUCT_STATE("产品状态", 1, "productManager")
+    PRODUCT_STATE("产品状态", 1, "productManager"),PRODUCT_STOCK("产品状态", 1, "productStock")
     ;
     
     private String name;

@@ -3,8 +3,11 @@ package com.yimayhd.erpcenter.dal.product.solr.manager;
 import java.util.List;
 
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.response.Group;
+import org.apache.solr.client.solrj.response.GroupCommand;
 import org.apache.solr.client.solrj.response.QueryResponse;
-
+import org.apache.solr.common.SolrDocumentList;
+import org.springframework.util.CollectionUtils;
 
 import com.yimayhd.erpcenter.common.solr.BaseSolrQueryManager;
 import com.yimayhd.erpcenter.dal.product.constants.ProductCollectionEnum;
@@ -44,7 +47,19 @@ public class ProductSolrQueryManager extends BaseSolrQueryManager{
 	
 		 SolrQuery solrQuery = ProductStockConverter.queryDTO2SolrQuery(queryDTO);
 	     
-        QueryResponse response =  this.querySolrDataByFilters(ProductCollectionEnum.PRODUCT_STATE.getCollection(), solrQuery);
+        QueryResponse response =  this.querySolrDataByFilters(ProductCollectionEnum.PRODUCT_STOCK.getCollection(), solrQuery);
+        
+        List<GroupCommand> groupCommandList =  response.getGroupResponse().getValues();
+        if(!CollectionUtils.isEmpty(groupCommandList)){
+        	for(GroupCommand groupCommand : groupCommandList){
+        		List<Group> groupList = groupCommand.getValues();
+        		for(Group group : groupList){
+        			String groupValue = group.getGroupValue();
+        			SolrDocumentList docList = group.getResult();
+        		}
+        	}
+        }
+        
         List<ProductStockDTO> dtoList = response.getBeans(ProductStockDTO.class);
         
         pageResult.setList(dtoList);
