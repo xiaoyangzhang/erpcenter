@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.biz.sales.client;
+package com.yimayhd.erpcenter.biz.sales.client.service;
 
 /**
  * Hello world!
