@@ -1,10 +1,10 @@
 package com.yimayhd.erpcenter.dal.sales.client.operation.service;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingShopDetailVO;
+
 import java.util.List;
 
-import com.yihg.operation.po.BookingDeliveryPrice;
-import com.yihg.operation.po.BookingShopDetail;
-import com.yihg.operation.vo.BookingShopDetailVO;
 
 public interface BookingShopDetailService {
 

@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.yihg.basic.exception.ClientException;
-import com.yihg.finance.po.FinanceCommission;
+
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.po.BookingGuide;
-import com.yihg.operation.vo.BookingGuidesVO;
+import com.yimayhd.erpcenter.common.exception.ClientException;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGuidesVO;
+
 
 public interface BookingGuideService {
 	void deleteByPrimaryKey(Integer id) throws ClientException;
