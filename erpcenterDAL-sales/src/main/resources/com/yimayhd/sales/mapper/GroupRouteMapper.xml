@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.sales.dao.GroupRouteMapper">
+	<resultMap id="BaseResultMap" type="com.yihg.sales.po.GroupRoute">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="group_id" property="groupId" jdbcType="INTEGER" />
+		<result column="order_id" property="orderId" jdbcType="INTEGER" />
+		<result column="day_num" property="dayNum" jdbcType="INTEGER" />
+		<result column="group_date" property="groupDate" jdbcType="DATE" />
+		<result column="breakfast" property="breakfast" jdbcType="VARCHAR" />
+		<result column="lunch" property="lunch" jdbcType="VARCHAR" />
+		<result column="supper" property="supper" jdbcType="VARCHAR" />
+		<result column="hotel_id" property="hotelId" jdbcType="INTEGER" />
+		<result column="hotel_name" property="hotelName" jdbcType="VARCHAR" />
+		<result column="route_desp" property="routeDesp" jdbcType="VARCHAR" />
+		<result column="route_tip" property="routeTip" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="BIGINT" />
+		<result column="numDay" property="numDay" jdbcType="INTEGER" />
+		<result column="maxDay" property="maxDay" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, group_id, order_id, day_num, group_date, breakfast,
+		lunch,
+		supper, hotel_id, hotel_name, route_desp, route_tip, create_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from group_route
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from group_route
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.yihg.sales.po.GroupRoute" useGeneratedKeys="true" keyProperty="id">
+		insert into group_route (id, group_id, order_id,
+		day_num, group_date,
+		breakfast, lunch,
+		supper, hotel_id,
+		hotel_name, route_desp, route_tip,
+		create_time)
+		values (#{id,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER},
+		#{orderId,jdbcType=INTEGER},
+		#{dayNum,jdbcType=INTEGER}, #{groupDate,jdbcType=DATE},
+		#{breakfast,jdbcType=VARCHAR},
+		#{lunch,jdbcType=VARCHAR},
+		#{supper,jdbcType=VARCHAR}, #{hotelId,jdbcType=INTEGER},
+		#{hotelName,jdbcType=VARCHAR}, #{routeDesp,jdbcType=VARCHAR},
+		#{routeTip,jdbcType=VARCHAR},
+		#{createTime,jdbcType=BIGINT})
+	</insert>
+	<insert id="insertSelective" parameterType="com.yihg.sales.po.GroupRoute" useGeneratedKeys="true" keyProperty="id">
+		insert into group_route
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="groupId != null">
+				group_id,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			<if test="dayNum != null">
+				day_num,
+			</if>
+			<if test="groupDate != null">
+				group_date,
+			</if>
+			<if test="breakfast != null">
+				breakfast,
+			</if>
+			<if test="lunch != null">
+				lunch,
+			</if>
+			<if test="supper != null">
+				supper,
+			</if>
+			<if test="hotelId != null">
+				hotel_id,
+			</if>
+			<if test="hotelName != null">
+				hotel_name,
+			</if>
+			<if test="routeDesp != null">
+				route_desp,
+			</if>
+			<if test="routeTip != null">
+				route_tip,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="groupId != null">
+				#{groupId,jdbcType=INTEGER},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="dayNum != null">
+				#{dayNum,jdbcType=INTEGER},
+			</if>
+			<if test="groupDate != null">
+				#{groupDate,jdbcType=DATE},
+			</if>
+			<if test="breakfast != null">
+				#{breakfast,jdbcType=VARCHAR},
+			</if>
+			<if test="lunch != null">
+				#{lunch,jdbcType=VARCHAR},
+			</if>
+			<if test="supper != null">
+				#{supper,jdbcType=VARCHAR},
+			</if>
+			<if test="hotelId != null">
+				#{hotelId,jdbcType=INTEGER},
+			</if>
+			<if test="hotelName != null">
+				#{hotelName,jdbcType=VARCHAR},
+			</if>
+			<if test="routeDesp != null">
+				#{routeDesp,jdbcType=VARCHAR},
+			</if>
+			<if test="routeTip != null">
+				#{routeTip,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=BIGINT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.sales.po.GroupRoute">
+		update group_route
+		<set>
+			<if test="groupId != null">
+				group_id = #{groupId,jdbcType=INTEGER},
+			</if>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="dayNum != null">
+				day_num = #{dayNum,jdbcType=INTEGER},
+			</if>
+			<if test="groupDate != null">
+				group_date = #{groupDate,jdbcType=DATE},
+			</if>
+			<if test="breakfast != null">
+				breakfast = #{breakfast,jdbcType=VARCHAR},
+			</if>
+			<if test="lunch != null">
+				lunch = #{lunch,jdbcType=VARCHAR},
+			</if>
+			<if test="supper != null">
+				supper = #{supper,jdbcType=VARCHAR},
+			</if>
+			<if test="hotelId != null">
+				hotel_id = #{hotelId,jdbcType=INTEGER},
+			</if>
+			<if test="hotelName != null">
+				hotel_name = #{hotelName,jdbcType=VARCHAR},
+			</if>
+			<if test="routeDesp != null">
+				route_desp = #{routeDesp,jdbcType=VARCHAR},
+			</if>
+			<if test="routeTip != null">
+				route_tip = #{routeTip,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=BIGINT},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.yihg.sales.po.GroupRoute">
+		update group_route
+		set group_id = #{groupId,jdbcType=INTEGER},
+		order_id = #{orderId,jdbcType=INTEGER},
+		day_num = #{dayNum,jdbcType=INTEGER},
+		group_date = #{groupDate,jdbcType=DATE},
+		breakfast = #{breakfast,jdbcType=VARCHAR},
+		lunch = #{lunch,jdbcType=VARCHAR},
+		supper = #{supper,jdbcType=VARCHAR},
+		hotel_id = #{hotelId,jdbcType=INTEGER},
+		hotel_name = #{hotelName,jdbcType=VARCHAR},
+		route_desp = #{routeDesp,jdbcType=VARCHAR},
+		route_tip = #{routeTip,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=BIGINT}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectByGroupId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from group_route
+		where group_id = #{groupId,jdbcType=INTEGER}
+		ORDER BY group_date
+	</select>
+	<select id="selectByGroupIdAndSupplierId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		 gr.*
+		from group_route gr
+		inner join group_order go on go.group_id = gr.group_id
+		and go.supplier_id  = #{supplierId,jdbcType = INTEGER}
+		where gr.group_id = #{groupId,jdbcType=INTEGER}
+		group by gr.id
+		ORDER BY gr.group_date
+	</select>
+	<select id="selectByGroupIdAndBookingId" resultMap="BaseResultMap">
+		select
+		gr.id, gr.group_id, gr.order_id, gr.day_num, gr.group_date, gr.breakfast,
+		gr.lunch,gr.supper, gr.hotel_id, gr.hotel_name, gr.route_desp, gr.route_tip, gr.create_time
+		from group_route gr JOIN `booking_delivery_route` dr ON gr.id=dr.route_id JOIN `booking_delivery` bd ON bd.id=dr.booking_id 
+		where gr.group_id = #{groupId,jdbcType=INTEGER} and dr.booking_id=#{bookingId}
+		ORDER BY group_date
+	</select>
+
+	<select id="selectByOrderId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from group_route
+		where order_id = #{orderId,jdbcType=INTEGER}
+		ORDER BY group_date
+	</select>
+
+	<delete id="deleteByGroupId" parameterType="java.lang.Integer">
+		delete from group_route
+		where group_id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<delete id="deleteByOrderId" parameterType="java.lang.Integer">
+		delete from group_route
+		where order_id = #{id,jdbcType=INTEGER} and group_id is null
+	</delete>
+	
+	<select id="selectDayNumAndMaxday" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+	 	select	COUNT(*) numDay,max(group_date) maxDay
+		FROM group_route 
+		where order_id = #{orderId,jdbcType=INTEGER}
+	</select>
+
+
+</mapper>

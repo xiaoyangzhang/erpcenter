@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yihg.taobao.dao.PlatTaobaoTradeMapper">
+    <resultMap id="BaseResultMap" type="com.yihg.taobao.po.PlatTaobaoTrade">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="biz_id" jdbcType="INTEGER" property="bizId"/>
+        <result column="tid" jdbcType="VARCHAR" property="tid"/>
+        <result column="order_id" jdbcType="INTEGER" property="orderId"/>
+        <result column="payment" jdbcType="VARCHAR" property="payment"/>
+        <result column="post_fee" jdbcType="VARCHAR" property="postFee"/>
+        <result column="receiver_name" jdbcType="VARCHAR" property="receiverName"/>
+        <result column="receiver_state" jdbcType="VARCHAR" property="receiverState"/>
+        <result column="receiver_address" jdbcType="VARCHAR" property="receiverAddress"/>
+        <result column="receiver_zip" jdbcType="VARCHAR" property="receiverZip"/>
+        <result column="receiver_mobile" jdbcType="VARCHAR" property="receiverMobile"/>
+        <result column="receiver_phone" jdbcType="VARCHAR" property="receiverPhone"/>
+        <result column="receiver_city" jdbcType="VARCHAR" property="receiverCity"/>
+        <result column="receiver_district" jdbcType="VARCHAR" property="receiverDistrict"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="pay_time" jdbcType="TIMESTAMP" property="payTime"/>
+        <result column="modified" jdbcType="TIMESTAMP" property="modified"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="alipay_no" jdbcType="VARCHAR" property="alipayNo"/>
+        <result column="buyer_memo" jdbcType="VARCHAR" property="buyerMemo"/>
+        <result column="alipay_id" jdbcType="VARCHAR" property="alipayId"/>
+        <result column="buyer_alipay_no" jdbcType="VARCHAR" property="buyerAlipayNo"/>
+        <result column="buyer_nick" jdbcType="VARCHAR" property="buyerNick"/>
+        <result column="buyer_email" jdbcType="VARCHAR" property="buyerEmail"/>
+        <result column="trade_from" jdbcType="VARCHAR" property="tradeFrom"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="step_trade_status" jdbcType="VARCHAR" property="stepTradeStatus"/>
+        <result column="step_paid_fee" jdbcType="VARCHAR" property="stepPaidFee"/>
+        <result column="sync_time" jdbcType="TIMESTAMP" property="syncTime"/>
+        <result column="sync_username" jdbcType="VARCHAR" property="syncUsername"/>
+        <result column="my_state" jdbcType="VARCHAR" property="myState"/>
+        <result column="my_store_id" jdbcType="VARCHAR" property="myStoreId"/>
+        <result column="seller_memo" jdbcType="VARCHAR" property="sellerMemo"/>
+        <result column="buyer_message" jdbcType="VARCHAR" property="buyerMessage"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+          <result column="sku_properties_name" jdbcType="VARCHAR" property="skuPropertiesName"/>
+			<result column="outer_iid" jdbcType="VARCHAR" property="outerIid"/>
+          <result column="price" jdbcType="VARCHAR" property="price"/>
+          <result column="num" jdbcType="INTEGER" property="num"/>
+          <result column="oid" jdbcType="VARCHAR" property="oid"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, biz_id, tid, order_id, payment, post_fee, receiver_name, receiver_state, receiver_address, 
+    receiver_zip, receiver_mobile, receiver_phone, receiver_city, receiver_district, 
+    created, pay_time, modified, end_time, alipay_no, buyer_memo, alipay_id, buyer_alipay_no, 
+    buyer_nick, buyer_email, trade_from, status, type, step_trade_status, step_paid_fee, 
+    sync_time, sync_username, my_state, my_store_id, seller_memo, buyer_message
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plat_taobao_trade
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectByTid" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plat_taobao_trade
+        where tid = #{tid,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plat_taobao_trade
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.yihg.taobao.po.PlatTaobaoTrade">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into plat_taobao_trade (biz_id, tid, order_id,
+        payment, post_fee, receiver_name,
+        receiver_state, receiver_address, receiver_zip,
+        receiver_mobile, receiver_phone, receiver_city,
+        receiver_district, created, pay_time,
+        modified, end_time, alipay_no,
+        buyer_memo, alipay_id, buyer_alipay_no,
+        buyer_nick, buyer_email, trade_from,
+        status, type, step_trade_status,
+        step_paid_fee, sync_time, sync_username,
+        my_state, my_store_id, seller_memo,
+        buyer_message)
+        values (#{bizId,jdbcType=INTEGER}, #{tid,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER},
+        #{payment,jdbcType=VARCHAR}, #{postFee,jdbcType=VARCHAR}, #{receiverName,jdbcType=VARCHAR},
+        #{receiverState,jdbcType=VARCHAR}, #{receiverAddress,jdbcType=VARCHAR}, #{receiverZip,jdbcType=VARCHAR},
+        #{receiverMobile,jdbcType=VARCHAR}, #{receiverPhone,jdbcType=VARCHAR}, #{receiverCity,jdbcType=VARCHAR},
+        #{receiverDistrict,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, #{payTime,jdbcType=TIMESTAMP},
+        #{modified,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{alipayNo,jdbcType=VARCHAR},
+        #{buyerMemo,jdbcType=VARCHAR}, #{alipayId,jdbcType=VARCHAR}, #{buyerAlipayNo,jdbcType=VARCHAR},
+        #{buyerNick,jdbcType=VARCHAR}, #{buyerEmail,jdbcType=VARCHAR}, #{tradeFrom,jdbcType=VARCHAR},
+        #{status,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{stepTradeStatus,jdbcType=VARCHAR},
+        #{stepPaidFee,jdbcType=VARCHAR}, #{syncTime,jdbcType=TIMESTAMP}, #{syncUsername,jdbcType=VARCHAR},
+        #{myState,jdbcType=VARCHAR}, #{myStoreId,jdbcType=VARCHAR}, #{sellerMemo,jdbcType=VARCHAR},
+        #{buyerMessage,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.yihg.taobao.po.PlatTaobaoTrade" useGeneratedKeys="true"
+            keyProperty="id">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into plat_taobao_trade
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bizId != null">
+                biz_id,
+            </if>
+            <if test="tid != null">
+                tid,
+            </if>
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="payment != null">
+                payment,
+            </if>
+            <if test="postFee != null">
+                post_fee,
+            </if>
+            <if test="receiverName != null">
+                receiver_name,
+            </if>
+            <if test="receiverState != null">
+                receiver_state,
+            </if>
+            <if test="receiverAddress != null">
+                receiver_address,
+            </if>
+            <if test="receiverZip != null">
+                receiver_zip,
+            </if>
+            <if test="receiverMobile != null">
+                receiver_mobile,
+            </if>
+            <if test="receiverPhone != null">
+                receiver_phone,
+            </if>
+            <if test="receiverCity != null">
+                receiver_city,
+            </if>
+            <if test="receiverDistrict != null">
+                receiver_district,
+            </if>
+            <if test="created != null">
+                created,
+            </if>
+            <if test="payTime != null">
+                pay_time,
+            </if>
+            <if test="modified != null">
+                modified,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="alipayNo != null">
+                alipay_no,
+            </if>
+            <if test="buyerMemo != null">
+                buyer_memo,
+            </if>
+            <if test="alipayId != null">
+                alipay_id,
+            </if>
+            <if test="buyerAlipayNo != null">
+                buyer_alipay_no,
+            </if>
+            <if test="buyerNick != null">
+                buyer_nick,
+            </if>
+            <if test="buyerEmail != null">
+                buyer_email,
+            </if>
+            <if test="tradeFrom != null">
+                trade_from,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="stepTradeStatus != null">
+                step_trade_status,
+            </if>
+            <if test="stepPaidFee != null">
+                step_paid_fee,
+            </if>
+            <if test="syncTime != null">
+                sync_time,
+            </if>
+            <if test="syncUsername != null">
+                sync_username,
+            </if>
+            <if test="myState != null">
+                my_state,
+            </if>
+            <if test="myStoreId != null">
+                my_store_id,
+            </if>
+            <if test="sellerMemo != null">
+                seller_memo,
+            </if>
+            <if test="buyerMessage != null">
+                buyer_message,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bizId != null">
+                #{bizId,jdbcType=INTEGER},
+            </if>
+            <if test="tid != null">
+                #{tid,jdbcType=INTEGER},
+            </if>
+            <if test="orderId != null">
+                #{orderId,jdbcType=INTEGER},
+            </if>
+            <if test="payment != null">
+                #{payment,jdbcType=VARCHAR},
+            </if>
+            <if test="postFee != null">
+                #{postFee,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverName != null">
+                #{receiverName,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverState != null">
+                #{receiverState,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverAddress != null">
+                #{receiverAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverZip != null">
+                #{receiverZip,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverMobile != null">
+                #{receiverMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverPhone != null">
+                #{receiverPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverCity != null">
+                #{receiverCity,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverDistrict != null">
+                #{receiverDistrict,jdbcType=VARCHAR},
+            </if>
+            <if test="created != null">
+                #{created,jdbcType=TIMESTAMP},
+            </if>
+            <if test="payTime != null">
+                #{payTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modified != null">
+                #{modified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="alipayNo != null">
+                #{alipayNo,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerMemo != null">
+                #{buyerMemo,jdbcType=VARCHAR},
+            </if>
+            <if test="alipayId != null">
+                #{alipayId,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerAlipayNo != null">
+                #{buyerAlipayNo,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerNick != null">
+                #{buyerNick,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerEmail != null">
+                #{buyerEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeFrom != null">
+                #{tradeFrom,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="stepTradeStatus != null">
+                #{stepTradeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="stepPaidFee != null">
+                #{stepPaidFee,jdbcType=VARCHAR},
+            </if>
+            <if test="syncTime != null">
+                #{syncTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="syncUsername != null">
+                #{syncUsername,jdbcType=VARCHAR},
+            </if>
+            <if test="myState != null">
+                #{myState,jdbcType=VARCHAR},
+            </if>
+            <if test="myStoreId != null">
+                #{myStoreId,jdbcType=VARCHAR},
+            </if>
+            <if test="sellerMemo != null">
+                #{sellerMemo,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerMessage != null">
+                #{buyerMessage,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yihg.taobao.po.PlatTaobaoTrade">
+        update plat_taobao_trade
+        <set>
+            <if test="bizId != null">
+                biz_id = #{bizId,jdbcType=INTEGER},
+            </if>
+            <if test="tid != null">
+                tid = #{tid,jdbcType=INTEGER},
+            </if>
+            <if test="orderId != null">
+                order_id = #{orderId,jdbcType=INTEGER},
+            </if>
+            <if test="payment != null">
+                payment = #{payment,jdbcType=VARCHAR},
+            </if>
+            <if test="postFee != null">
+                post_fee = #{postFee,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverName != null">
+                receiver_name = #{receiverName,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverState != null">
+                receiver_state = #{receiverState,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverAddress != null">
+                receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverZip != null">
+                receiver_zip = #{receiverZip,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverMobile != null">
+                receiver_mobile = #{receiverMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverPhone != null">
+                receiver_phone = #{receiverPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverCity != null">
+                receiver_city = #{receiverCity,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverDistrict != null">
+                receiver_district = #{receiverDistrict,jdbcType=VARCHAR},
+            </if>
+            <if test="created != null">
+                created = #{created,jdbcType=TIMESTAMP},
+            </if>
+            <if test="payTime != null">
+                pay_time = #{payTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modified != null">
+                modified = #{modified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="alipayNo != null">
+                alipay_no = #{alipayNo,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerMemo != null">
+                buyer_memo = #{buyerMemo,jdbcType=VARCHAR},
+            </if>
+            <if test="alipayId != null">
+                alipay_id = #{alipayId,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerAlipayNo != null">
+                buyer_alipay_no = #{buyerAlipayNo,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerNick != null">
+                buyer_nick = #{buyerNick,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerEmail != null">
+                buyer_email = #{buyerEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeFrom != null">
+                trade_from = #{tradeFrom,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="stepTradeStatus != null">
+                step_trade_status = #{stepTradeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="stepPaidFee != null">
+                step_paid_fee = #{stepPaidFee,jdbcType=VARCHAR},
+            </if>
+            <if test="syncTime != null">
+                sync_time = #{syncTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="syncUsername != null">
+                sync_username = #{syncUsername,jdbcType=VARCHAR},
+            </if>
+            <if test="myState != null">
+                my_state = #{myState,jdbcType=VARCHAR},
+            </if>
+            <if test="myStoreId != null">
+                my_store_id = #{myStoreId,jdbcType=VARCHAR},
+            </if>
+            <if test="sellerMemo != null">
+                seller_memo = #{sellerMemo,jdbcType=VARCHAR},
+            </if>
+            <if test="buyerMessage != null">
+                buyer_message = #{buyerMessage,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yihg.taobao.po.PlatTaobaoTrade">
+    update plat_taobao_trade
+    set biz_id = #{bizId,jdbcType=INTEGER},
+      tid = #{tid,jdbcType=INTEGER},
+      order_id = #{orderId,jdbcType=INTEGER},
+      payment = #{payment,jdbcType=VARCHAR},
+      post_fee = #{postFee,jdbcType=VARCHAR},
+      receiver_name = #{receiverName,jdbcType=VARCHAR},
+      receiver_state = #{receiverState,jdbcType=VARCHAR},
+      receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+      receiver_zip = #{receiverZip,jdbcType=VARCHAR},
+      receiver_mobile = #{receiverMobile,jdbcType=VARCHAR},
+      receiver_phone = #{receiverPhone,jdbcType=VARCHAR},
+      receiver_city = #{receiverCity,jdbcType=VARCHAR},
+      receiver_district = #{receiverDistrict,jdbcType=VARCHAR},
+      created = #{created,jdbcType=TIMESTAMP},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      modified = #{modified,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      alipay_no = #{alipayNo,jdbcType=VARCHAR},
+      buyer_memo = #{buyerMemo,jdbcType=VARCHAR},
+      alipay_id = #{alipayId,jdbcType=VARCHAR},
+      buyer_alipay_no = #{buyerAlipayNo,jdbcType=VARCHAR},
+      buyer_nick = #{buyerNick,jdbcType=VARCHAR},
+      buyer_email = #{buyerEmail,jdbcType=VARCHAR},
+      trade_from = #{tradeFrom,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      step_trade_status = #{stepTradeStatus,jdbcType=VARCHAR},
+      step_paid_fee = #{stepPaidFee,jdbcType=VARCHAR},
+      sync_time = #{syncTime,jdbcType=TIMESTAMP},
+      sync_username = #{syncUsername,jdbcType=VARCHAR},
+      my_state = #{myState,jdbcType=VARCHAR},
+      my_store_id = #{myStoreId,jdbcType=VARCHAR},
+      seller_memo = #{sellerMemo,jdbcType=VARCHAR},
+      buyer_message = #{buyerMessage,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectTaobaoOrderListPage" parameterType="com.yihg.mybatis.utility.PageBean"   resultMap="BaseResultMap">
+ SELECT a.tid,a.buyer_nick,a.created,a.payment,a.my_state,a.trade_from,a.my_store_id,a.id,b.title,b.sku_properties_name,seller_memo
+FROM plat_taobao_trade a
+LEFT JOIN plat_taobao_trade_order b on(a.id=b.trade_id)
+WHERE a.biz_id=#{bizId,jdbcType=INTEGER}
+			AND a.created <![CDATA[>=]]>#{page.parameter.startMin}
+			AND a.created <![CDATA[<=]]>#{page.parameter.startMax}
+			<if test="page.parameter.myStoreId!= null and page.parameter.myStoreId!=''">
+			AND a.my_store_id= #{page.parameter.myStoreId}
+			</if>
+			<if test="page.parameter.tid != null and page.parameter.tid != ''">
+			AND a.tid = #{page.parameter.tid}
+			</if>
+			<if test="page.parameter.buyerNick!= null and page.parameter.buyerNick!=''">
+			AND a.buyer_nick LIKE CONCAT('%','${page.parameter.buyerNick}','%')
+			</if>
+			<if test="page.parameter.title!= null and page.parameter.title!=''">
+			AND b.title LIKE CONCAT('%','${page.parameter.title}','%')
+			</if>
+			<if test="page.parameter.myState!= null and page.parameter.myState!=''">
+			AND a.my_state = #{page.parameter.myState}
+			</if>
+			ORDER BY created DESC		
+  </select>
+  
+  <select id="selectTaobaoOrderById" parameterType="com.yihg.mybatis.utility.PageBean"  resultMap="BaseResultMap">
+SELECT a.id,a.tid,a.trade_from,a.created,a.pay_time,a.buyer_nick,a.buyer_alipay_no,a.receiver_name,a.payment,a.buyer_email,
+a.receiver_mobile,a.receiver_zip,a.receiver_district,a.receiver_address,a.buyer_memo,a.seller_memo,
+b.outer_iid,b.sku_properties_name,b.price,b.num,b.title,b.oid
+FROM plat_taobao_trade a
+LEFT JOIN plat_taobao_trade_order b on(a.id=b.trade_id) 
+	WHERE  find_in_set(a.id,${ids})
+</select>
+
+<select id="selectTaobaoOrderByOrderId" parameterType="com.yihg.mybatis.utility.PageBean"  resultMap="BaseResultMap">
+SELECT id
+FROM plat_taobao_trade
+	WHERE  order_id = #{id,jdbcType=INTEGER}
+</select>
+
+<select id="updateTaobaoOrderId" parameterType="com.yihg.mybatis.utility.PageBean"  resultMap="BaseResultMap">
+		UPDATE  plat_taobao_trade SET order_id =#{orderId,jdbcType=INTEGER},
+		my_state='CONFIRM'  WHERE id in(${ids})
+</select>
+
+<select id="updateTaobaoOrderIdToOrder" parameterType="com.yihg.mybatis.utility.PageBean"  resultMap="BaseResultMap">
+		UPDATE  plat_taobao_trade_order SET order_id =#{orderId,jdbcType=INTEGER},
+		my_state='CONFIRM'  WHERE trade_id in(${ids})
+</select>
+
+<select id="updateTaobaoOrderIdToZero" parameterType="com.yihg.mybatis.utility.PageBean"  resultMap="BaseResultMap">
+UPDATE  plat_taobao_trade SET order_id =0,my_state='NEW'  WHERE id in (${id})
+</select>
+  
+  <select id="updateTaobaoOrderIdToZeroToOrder" parameterType="com.yihg.mybatis.utility.PageBean"  resultMap="BaseResultMap">
+UPDATE  plat_taobao_trade_order SET order_id =0,my_state='NEW'  WHERE trade_id in (${id})
+</select>
+
+  <select id="updateCANCEL" parameterType="com.yihg.mybatis.utility.PageBean"  resultMap="BaseResultMap">
+update plat_taobao_trade a join plat_taobao_trade_order b on (a.id=b.trade_id)
+set a.my_state='CANCEL',b.my_state='CANCEL' where a.id in (${idss});
+</select>
+
+  <select id="updateNEW" parameterType="com.yihg.mybatis.utility.PageBean"  resultMap="BaseResultMap">
+update plat_taobao_trade a join plat_taobao_trade_order b on (a.id=b.trade_id)
+set a.my_state='NEW',b.my_state='NEW' where a.id in (${idss});
+</select>
+  
+  
+</mapper>

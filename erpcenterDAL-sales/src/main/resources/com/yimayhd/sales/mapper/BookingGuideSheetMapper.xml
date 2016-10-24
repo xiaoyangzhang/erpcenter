@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.operation.dao.BookingGuideSheetMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingGuideSheet" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
+    <result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
+    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+    <result column="apply_num" property="applyNum" jdbcType="INTEGER" />
+    <result column="apply_remark" property="applyRemark" jdbcType="VARCHAR" />
+    <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
+    <result column="apply_user_id" property="applyUserId" jdbcType="INTEGER" />
+    <result column="get_num" property="getNum" jdbcType="INTEGER" />
+    <result column="get_remark" property="getRemark" jdbcType="VARCHAR" />
+    <result column="get_codes" property="getCodes" jdbcType="VARCHAR" />
+    <result column="get_user_id" property="getUserId" jdbcType="INTEGER" />
+    <result column="get_time" property="getTime" jdbcType="TIMESTAMP" />
+    <result column="return_num" property="returnNum" jdbcType="INTEGER" />
+    <result column="return_remark" property="returnRemark" jdbcType="VARCHAR" />
+    <result column="return_codes" property="returnCodes" jdbcType="VARCHAR" />
+    <result column="return_user_id" property="returnUserId" jdbcType="INTEGER" />
+    <result column="return_time" property="returnTime" jdbcType="TIMESTAMP" />
+    <result column="Column_19" property="column19" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, booking_id, supplier_type, supplier_id, apply_num, apply_remark, apply_time, 
+    apply_user_id, get_num, get_remark, get_codes, get_user_id, get_time, return_num, 
+    return_remark, return_codes, return_user_id, return_time, Column_19
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_guide_sheet
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from booking_guide_sheet
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.operation.po.BookingGuideSheet" >
+    insert into booking_guide_sheet (id, booking_id, supplier_type, 
+      supplier_id, apply_num, apply_remark, 
+      apply_time, apply_user_id, get_num, 
+      get_remark, get_codes, get_user_id, 
+      get_time, return_num, return_remark, 
+      return_codes, return_user_id, return_time, 
+      Column_19)
+    values (#{id,jdbcType=INTEGER}, #{bookingId,jdbcType=INTEGER}, #{supplierType,jdbcType=INTEGER}, 
+      #{supplierId,jdbcType=INTEGER}, #{applyNum,jdbcType=INTEGER}, #{applyRemark,jdbcType=VARCHAR}, 
+      #{applyTime,jdbcType=TIMESTAMP}, #{applyUserId,jdbcType=INTEGER}, #{getNum,jdbcType=INTEGER}, 
+      #{getRemark,jdbcType=VARCHAR}, #{getCodes,jdbcType=VARCHAR}, #{getUserId,jdbcType=INTEGER}, 
+      #{getTime,jdbcType=TIMESTAMP}, #{returnNum,jdbcType=INTEGER}, #{returnRemark,jdbcType=VARCHAR}, 
+      #{returnCodes,jdbcType=VARCHAR}, #{returnUserId,jdbcType=INTEGER}, #{returnTime,jdbcType=TIMESTAMP}, 
+      #{column19,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingGuideSheet" >
+    insert into booking_guide_sheet
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="bookingId != null" >
+        booking_id,
+      </if>
+      <if test="supplierType != null" >
+        supplier_type,
+      </if>
+      <if test="supplierId != null" >
+        supplier_id,
+      </if>
+      <if test="applyNum != null" >
+        apply_num,
+      </if>
+      <if test="applyRemark != null" >
+        apply_remark,
+      </if>
+      <if test="applyTime != null" >
+        apply_time,
+      </if>
+      <if test="applyUserId != null" >
+        apply_user_id,
+      </if>
+      <if test="getNum != null" >
+        get_num,
+      </if>
+      <if test="getRemark != null" >
+        get_remark,
+      </if>
+      <if test="getCodes != null" >
+        get_codes,
+      </if>
+      <if test="getUserId != null" >
+        get_user_id,
+      </if>
+      <if test="getTime != null" >
+        get_time,
+      </if>
+      <if test="returnNum != null" >
+        return_num,
+      </if>
+      <if test="returnRemark != null" >
+        return_remark,
+      </if>
+      <if test="returnCodes != null" >
+        return_codes,
+      </if>
+      <if test="returnUserId != null" >
+        return_user_id,
+      </if>
+      <if test="returnTime != null" >
+        return_time,
+      </if>
+      <if test="column19 != null" >
+        Column_19,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bookingId != null" >
+        #{bookingId,jdbcType=INTEGER},
+      </if>
+      <if test="supplierType != null" >
+        #{supplierType,jdbcType=INTEGER},
+      </if>
+      <if test="supplierId != null" >
+        #{supplierId,jdbcType=INTEGER},
+      </if>
+      <if test="applyNum != null" >
+        #{applyNum,jdbcType=INTEGER},
+      </if>
+      <if test="applyRemark != null" >
+        #{applyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null" >
+        #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyUserId != null" >
+        #{applyUserId,jdbcType=INTEGER},
+      </if>
+      <if test="getNum != null" >
+        #{getNum,jdbcType=INTEGER},
+      </if>
+      <if test="getRemark != null" >
+        #{getRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="getCodes != null" >
+        #{getCodes,jdbcType=VARCHAR},
+      </if>
+      <if test="getUserId != null" >
+        #{getUserId,jdbcType=INTEGER},
+      </if>
+      <if test="getTime != null" >
+        #{getTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="returnNum != null" >
+        #{returnNum,jdbcType=INTEGER},
+      </if>
+      <if test="returnRemark != null" >
+        #{returnRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="returnCodes != null" >
+        #{returnCodes,jdbcType=VARCHAR},
+      </if>
+      <if test="returnUserId != null" >
+        #{returnUserId,jdbcType=INTEGER},
+      </if>
+      <if test="returnTime != null" >
+        #{returnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="column19 != null" >
+        #{column19,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingGuideSheet" >
+    update booking_guide_sheet
+    <set >
+      <if test="bookingId != null" >
+        booking_id = #{bookingId,jdbcType=INTEGER},
+      </if>
+      <if test="supplierType != null" >
+        supplier_type = #{supplierType,jdbcType=INTEGER},
+      </if>
+      <if test="supplierId != null" >
+        supplier_id = #{supplierId,jdbcType=INTEGER},
+      </if>
+      <if test="applyNum != null" >
+        apply_num = #{applyNum,jdbcType=INTEGER},
+      </if>
+      <if test="applyRemark != null" >
+        apply_remark = #{applyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null" >
+        apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyUserId != null" >
+        apply_user_id = #{applyUserId,jdbcType=INTEGER},
+      </if>
+      <if test="getNum != null" >
+        get_num = #{getNum,jdbcType=INTEGER},
+      </if>
+      <if test="getRemark != null" >
+        get_remark = #{getRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="getCodes != null" >
+        get_codes = #{getCodes,jdbcType=VARCHAR},
+      </if>
+      <if test="getUserId != null" >
+        get_user_id = #{getUserId,jdbcType=INTEGER},
+      </if>
+      <if test="getTime != null" >
+        get_time = #{getTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="returnNum != null" >
+        return_num = #{returnNum,jdbcType=INTEGER},
+      </if>
+      <if test="returnRemark != null" >
+        return_remark = #{returnRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="returnCodes != null" >
+        return_codes = #{returnCodes,jdbcType=VARCHAR},
+      </if>
+      <if test="returnUserId != null" >
+        return_user_id = #{returnUserId,jdbcType=INTEGER},
+      </if>
+      <if test="returnTime != null" >
+        return_time = #{returnTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="column19 != null" >
+        Column_19 = #{column19,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingGuideSheet" >
+    update booking_guide_sheet
+    set booking_id = #{bookingId,jdbcType=INTEGER},
+      supplier_type = #{supplierType,jdbcType=INTEGER},
+      supplier_id = #{supplierId,jdbcType=INTEGER},
+      apply_num = #{applyNum,jdbcType=INTEGER},
+      apply_remark = #{applyRemark,jdbcType=VARCHAR},
+      apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      apply_user_id = #{applyUserId,jdbcType=INTEGER},
+      get_num = #{getNum,jdbcType=INTEGER},
+      get_remark = #{getRemark,jdbcType=VARCHAR},
+      get_codes = #{getCodes,jdbcType=VARCHAR},
+      get_user_id = #{getUserId,jdbcType=INTEGER},
+      get_time = #{getTime,jdbcType=TIMESTAMP},
+      return_num = #{returnNum,jdbcType=INTEGER},
+      return_remark = #{returnRemark,jdbcType=VARCHAR},
+      return_codes = #{returnCodes,jdbcType=VARCHAR},
+      return_user_id = #{returnUserId,jdbcType=INTEGER},
+      return_time = #{returnTime,jdbcType=TIMESTAMP},
+      Column_19 = #{column19,jdbcType=CHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

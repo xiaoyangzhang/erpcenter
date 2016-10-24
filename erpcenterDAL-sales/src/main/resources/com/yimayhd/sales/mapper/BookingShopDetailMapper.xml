@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.operation.dao.BookingShopDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingShopDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
+    <result column="goods_id" property="goodsId" jdbcType="INTEGER" />
+    <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+    <result column="goods_type" property="goodsType" jdbcType="VARCHAR" />
+    <result column="repay_type" property="repayType" jdbcType="TINYINT" />
+     <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="repay_val" property="repayVal" jdbcType="DECIMAL" />
+    <result column="repay_total" property="repayTotal" jdbcType="DECIMAL" />
+    <result column="buy_num" property="buyNum" jdbcType="INTEGER" />
+    <result column="buy_price" property="buyPrice" jdbcType="DECIMAL" />
+    <result column="buy_total" property="buyTotal" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, booking_id, goods_id, goods_name, goods_type, repay_type, repay_val, repay_total,type ,
+    buy_num, buy_price, buy_total, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_shop_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getShopDetailListByBookingId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_shop_detail
+    where booking_id = #{bId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from booking_shop_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.operation.po.BookingShopDetail" >
+    insert into booking_shop_detail (id, booking_id, goods_id, 
+      goods_name, goods_type, repay_type, 
+      repay_val, repay_total, buy_num, 
+      buy_price, buy_total, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{bookingId,jdbcType=INTEGER}, #{goodsId,jdbcType=INTEGER}, 
+      #{goodsName,jdbcType=VARCHAR}, #{goodsType,jdbcType=VARCHAR}, #{repayType,jdbcType=TINYINT}, 
+      #{repayVal,jdbcType=DECIMAL}, #{repayTotal,jdbcType=DECIMAL}, #{buyNum,jdbcType=INTEGER}, 
+      #{buyPrice,jdbcType=DECIMAL}, #{buyTotal,jdbcType=DECIMAL}, #{createTime,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingShopDetail" useGeneratedKeys="true" keyProperty="id">
+    insert into booking_shop_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="bookingId != null" >
+        booking_id,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+      <if test="goodsName != null" >
+        goods_name,
+      </if>
+       <if test="type != null" >
+        type,
+      </if>
+      <if test="goodsType != null" >
+        goods_type,
+      </if>
+      <if test="repayType != null" >
+        repay_type,
+      </if>
+      <if test="repayVal != null" >
+        repay_val,
+      </if>
+      <if test="repayTotal != null" >
+        repay_total,
+      </if>
+      <if test="buyNum != null" >
+        buy_num,
+      </if>
+      <if test="buyPrice != null" >
+        buy_price,
+      </if>
+      <if test="buyTotal != null" >
+        buy_total,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bookingId != null" >
+        #{bookingId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsName != null" >
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+       <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsType != null" >
+        #{goodsType,jdbcType=VARCHAR},
+      </if>
+      <if test="repayType != null" >
+        #{repayType,jdbcType=TINYINT},
+      </if>
+      <if test="repayVal != null" >
+        #{repayVal,jdbcType=DECIMAL},
+      </if>
+      <if test="repayTotal != null" >
+        #{repayTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="buyNum != null" >
+        #{buyNum,jdbcType=INTEGER},
+      </if>
+      <if test="buyPrice != null" >
+        #{buyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="buyTotal != null" >
+        #{buyTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingShopDetail" >
+    update booking_shop_detail
+    <set >
+      <if test="bookingId != null" >
+        booking_id = #{bookingId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsName != null" >
+        goods_name = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsType != null" >
+        goods_type = #{goodsType,jdbcType=VARCHAR},
+      </if>
+      <if test="repayType != null" >
+        repay_type = #{repayType,jdbcType=TINYINT},
+      </if>
+      <if test="repayVal != null" >
+        repay_val = #{repayVal,jdbcType=DECIMAL},
+      </if>
+      <if test="repayTotal != null" >
+        repay_total = #{repayTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="buyNum != null" >
+        buy_num = #{buyNum,jdbcType=INTEGER},
+      </if>
+      <if test="buyPrice != null" >
+        buy_price = #{buyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="buyTotal != null" >
+        buy_total = #{buyTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingShopDetail" >
+    update booking_shop_detail
+    set booking_id = #{bookingId,jdbcType=INTEGER},
+      goods_id = #{goodsId,jdbcType=INTEGER},
+      goods_name = #{goodsName,jdbcType=VARCHAR},
+      goods_type = #{goodsType,jdbcType=VARCHAR},
+      repay_type = #{repayType,jdbcType=TINYINT},
+      repay_val = #{repayVal,jdbcType=DECIMAL},
+      repay_total = #{repayTotal,jdbcType=DECIMAL},
+      buy_num = #{buyNum,jdbcType=INTEGER},
+      buy_price = #{buyPrice,jdbcType=DECIMAL},
+      buy_total = #{buyTotal,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <delete id="deleteByBookingId" parameterType="java.lang.Integer"  >
+  	 delete from booking_shop_detail
+    where booking_id = #{bookingId,jdbcType=INTEGER}
+  </delete>
+  <update id="updateByBookingId" parameterType="com.yihg.operation.po.BookingShopDetail" >
+   update booking_shop_detail
+    <set >
+      
+     
+      <if test="buyTotal != null" >
+        buy_total = #{buyTotal,jdbcType=DECIMAL},
+      </if>
+      
+    </set>
+    where booking_id = #{bookingId,jdbcType=INTEGER}
+  </update>
+</mapper>

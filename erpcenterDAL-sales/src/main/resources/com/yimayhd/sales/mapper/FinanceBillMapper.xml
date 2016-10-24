@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.finance.dao.FinanceBillMapper" >
+  <select id="statisBillListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+    select t.id, t.group_code,t.group_mode, t.date_start, t.product_brand_name, t.product_name, t.operator_id, t.operator_name,
+    t.total_adult,  t.total_child, t.total_guide, b.guide_name, d.bill_type, d.bill_business, d.num, d.received_num, d.returned_num,
+    o.appli_state FROM tour_group t JOIN booking_guide b ON t.id=b.group_id 
+    JOIN finance_bill_order o ON o.group_id=b.group_id AND o.guide_id=b.guide_id
+    JOIN finance_bill_detail d ON d.group_id=b.group_id AND d.guide_id=b.guide_id where 
+    t.biz_id=#{parameter.bizId}  and d.is_delete=0 and  t.group_state in (1,3,4)
+    <if test="parameter.set!=null">
+			AND t.operator_id in
+		<foreach item="item" index="index" collection="parameter.set" open="("
+			separator="," close=")">
+			#{item}
+		</foreach></if>
+    <if test="parameter.depDateFrom != null and parameter.depDateFrom != ''" >
+        and t.date_start <![CDATA[>]]> #{parameter.depDateFrom}
+    </if>
+    <if test="parameter.depDateTo != null and parameter.depDateTo != ''" >
+        and t.date_start <![CDATA[<=]]> #{parameter.depDateTo}
+    </if>
+    <if test="parameter.groupCode != null and parameter.groupCode != ''">
+    	and t.group_code like concat('%',#{parameter.groupCode},'%')
+    </if>
+    <if test="parameter.billType != null and parameter.billType != ''">
+    	and d.bill_type like concat('%',#{parameter.billType},'%')
+    </if>
+    <if test="parameter.guideName != null and parameter.guideName != ''">
+    	and b.guide_name like concat('%',#{parameter.guideName},'%')
+    </if>
+    <if test="parameter.productName != null and parameter.productName != ''">
+    	and (t.product_brand_name like concat('%',#{parameter.productName},'%') 
+    		or t.product_name like concat('%',#{parameter.productName},'%'))
+    </if>
+    <if test="parameter.billState != null and parameter.billState != ''">
+    	and o.appli_state = #{parameter.billState}
+    </if>
+    <if test="parameter.billSupplier != null and parameter.billSupplier != ''">
+    	and d.bill_business like concat('%',#{parameter.billSupplier},'%')
+    </if>
+	order by d.id desc
+  </select>
+
+<select id="statisBillTotal" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+    select SUM(num) num_total, SUM(received_num) received_total, SUM(returned_num) returned_total 
+    FROM tour_group t JOIN booking_guide b ON t.id=b.group_id 
+    JOIN finance_bill_order o ON o.group_id=b.group_id AND o.guide_id=b.guide_id
+    JOIN finance_bill_detail d ON d.group_id=b.group_id AND d.guide_id=b.guide_id where
+    t.biz_id=#{parameter.bizId} and o.biz_id=#{parameter.bizId} and
+     d.biz_id=#{parameter.bizId} and d.is_delete=0
+     <if test="parameter.set!=null">
+			AND t.operator_id in
+		<foreach item="item" index="index" collection="parameter.set" open="("
+			separator="," close=")">
+			#{item}
+		</foreach></if>
+    <if test="parameter.depDateFrom != null" >
+        and t.date_start <![CDATA[>]]> #{parameter.depDateFrom}
+    </if>
+    <if test="parameter.depDateTo != null" >
+        and t.date_start <![CDATA[<]]> #{parameter.depDateTo}
+    </if>
+    <if test="parameter.groupCode != null and parameter.groupCode != ''">
+    	and t.group_code like concat('%',#{parameter.groupCode},'%')
+    </if>
+    <if test="parameter.billType != null and parameter.billType != ''">
+    	and d.bill_type like concat('%',#{parameter.billType},'%')
+    </if>
+    <if test="parameter.guideName != null and parameter.guideName != ''">
+    	and b.guide_name like concat('%',#{parameter.guideName},'%')
+    </if>
+    <if test="parameter.productName != null and parameter.productName != ''">
+    	and (t.product_brand_name like concat('%',#{parameter.productName},'%') 
+    		or t.product_name like concat('%',#{parameter.productName},'%'))
+    </if>
+    <if test="parameter.billState != null and parameter.billState != ''">
+    	and o.appli_state = #{parameter.billState}
+    </if>
+    <if test="parameter.billSupplier != null and parameter.billSupplier != ''">
+    	and d.bill_business like concat('%',#{parameter.billSupplier},'%')
+    </if>
+	order by d.id desc
+  </select>
+  
+  	<!-- 查询领单列表 -->	
+	<select id="selectreceiveOrderListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		SELECT DISTINCT t.id,t2.id AS order_id,t.group_code,t2.group_id,t.product_brand_name,t.product_name,t.operator_name,(IFNULL(total_adult,0)+IFNULL(total_child,0)) person_count,t1.guide_id,t1.guide_name,t2.applicant,t2.appli_time,t2.appli_state
+			,t.date_end dateEnd,t.group_state groupState,group_mode
+			FROM tour_group t 
+			JOIN booking_guide t1 ON t.id=t1.group_id
+			LEFT JOIN finance_bill_order t2 ON t.id=t2.group_id and t1.guide_id=t2.guide_id
+			 where t.biz_id = #{bizId,jdbcType=INTEGER}
+			 AND t.group_state in (1,3,4)
+			 <if test="page.parameter.set!=null">
+				AND t.operator_id in
+				<foreach item="item" index="index" collection="page.parameter.set" open="("
+					separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			 <if test="page.parameter.dataUser != null">
+    			and t.operator_id in (${page.parameter.dataUser})
+   	 		</if>
+   	 		<if test="page.parameter.state != null">
+   	 			<if test="page.parameter.state == 'UNAPPLIED'">
+   	 				and t2.appli_state IS NULL
+   	 			</if>
+   	 			<if test="page.parameter.state != 'UNAPPLIED'">
+    				and t2.appli_state = #{page.parameter.state}
+    			</if>
+   	 		</if>
+			 <if test="'finance'==type">and t2.appli_state is not null</if>
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.startTime != null">and t.date_start <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.endTime != null">and t.date_start <![CDATA[<=]]> #{page.parameter.endTime}	</if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.startTime != null">and t2.appli_time <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.endTime != null">and t2.appli_time <![CDATA[<=]]> #{page.parameter.endTime} </if>
+			<if test="page.parameter.groupCode != null">
+				and t.group_code LIKE
+				CONCAT('%','${page.parameter.groupCode}','%')
+			</if>
+			<if test="page.parameter.productName != null">
+				and (t.product_brand_name LIKE
+				CONCAT('%','${page.parameter.productName}','%')
+				or t.product_name LIKE
+				CONCAT('%','${page.parameter.productName}','%'))
+			</if>
+			<if test="page.parameter.guide != null">
+				and t1.guide_name LIKE
+				CONCAT('%','${page.parameter.guide}','%')
+			</if>
+			<if test="page.parameter.applicant != null">
+				and t2.applicant LIKE
+				CONCAT('%','${page.parameter.applicant}','%')
+			</if>
+			<if test="page.parameter.stateType != null">
+				and t2.appli_state <![CDATA[=]]> #{page.parameter.stateType} 
+			</if>
+			<!-- <if
+				test="page.parameter.operator_id != null and page.parameter.operator_id != ''">
+				and t.operator_id in (#{page.parameter.operator_id})
+			</if> -->
+			<if
+				test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds!=''">
+				and t.operator_id in (${page.parameter.saleOperatorIds})
+			</if>
+			AND t.operator_id in
+			<foreach item="item" index="index" collection="set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		
+			ORDER BY t.date_start, t.create_time
+	</select>		
+	
+	<!-- 根据派单列表ID查询单据列表 -->
+	<select id="selectbillListByIds" parameterType="String" resultType="java.util.HashMap">
+		SELECT t.id,t.group_id,t.bill_type,t.bill_business,t.num,t.remark
+			FROM finance_bill_detail t WHERE t.is_delete = 0 and t.biz_id = #{bizId,jdbcType=INTEGER} and t.group_id IN (#{ids})
+	</select>
+  
+	<!-- 根据派单列表ID和导游ID查询单据列表 -->
+	<select id="getbillListByIdAndGuideId" parameterType="String" resultType="java.util.HashMap">
+		SELECT DISTINCT t.id,t.group_id,t1.guide_name,t.bill_type,t.bill_business,t.num,t.remark,t2.applicant,t2.appli_time
+			,t.received_num,t.bill_num_receive,t.remark_receive,t.returned_num,t.bill_num_return,t.remark_return
+			,t2.appr_time,t2.veri_time 
+			FROM finance_bill_detail t 
+			LEFT JOIN booking_guide t1 ON t.guide_id=t1.guide_id AND t.group_id=t1.group_id
+			LEFT JOIN finance_bill_order t2 ON t.group_id= t2.group_id AND t.guide_id=t2.guide_id
+			 WHERE t.biz_id = #{bizId,jdbcType=INTEGER} 
+			<if test="id != null">
+				and t.group_id <![CDATA[=]]> #{id} 
+			</if>
+			<if test="guideId != null">
+				and t.guide_id <![CDATA[=]]> #{guideId} 
+			</if>
+	</select>	
+  
+	<!-- 添加领单 -->
+	<insert id="insertBillOrder" parameterType="com.yihg.sales.po.FinanceBill"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into finance_bill_order 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="bizId != null">
+				biz_id,
+			</if>
+			<if test="groupId != null">
+				group_id,
+			</if>
+			<if test="guideId != null">
+				guide_id,
+			</if>
+			<if test="applicant != null">
+				applicant,
+			</if>
+			<if test="appliState != null">
+				appli_state,
+			</if>
+				appli_time,
+				create_time
+		</trim>
+		
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="bizId != null">
+				#{bizId,jdbcType=INTEGER},
+			</if>
+			<if test="groupId != null">
+				#{groupId,jdbcType=INTEGER},
+			</if>
+			<if test="guideId != null">
+				#{guideId,jdbcType=VARCHAR},
+			</if>
+			<if test="applicant != null">
+				#{applicant,jdbcType=VARCHAR},
+			</if>
+			<if test="appliState != null">
+				#{appliState,jdbcType=VARCHAR},
+			</if>
+				SYSDATE(),
+				SYSDATE()
+		</trim>
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer"> SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<!-- 查询领单 -->
+	<select id="selectBillOrder" parameterType="java.lang.Integer" resultType="com.yihg.sales.po.FinanceBill">
+		SELECT * FROM finance_bill_order WHERE 1 = 1
+		<if test="bizId != null">
+			and biz_id = ${bizId}  
+		</if> 
+		<if test="groupId != null">
+			and group_id = ${groupId}  
+		</if> 
+		<if test="guideId != null">
+			and guide_id = ${guideId}  
+		</if> 
+	</select>
+	
+		<!-- 查询领单详情 -->
+	<select id="selectBillOrderDetail" parameterType="java.lang.Integer" resultType="com.yihg.sales.po.FinanceBillDetail">
+		SELECT * FROM finance_bill_detail WHERE 1 = 1
+		<if test="bizId != null">
+			and biz_id = ${bizId}  
+		</if> 
+		<if test="groupId != null">
+			and group_id = ${groupId}  
+		</if> 
+		<if test="guideId != null">
+			and guide_id = ${guideId}  
+		</if> 
+	</select>
+	
+	<!-- 删除领单详情 -->
+	<delete id="deleteBillOrder" >
+		delete from finance_bill_order 
+		where biz_id = ${bizId} and group_id = ${groupId} and guide_id = ${guideId}
+	</delete>
+	
+	<!-- 添加领单详情 -->
+	<insert id="insertBillDetail" parameterType="com.yihg.sales.po.FinanceBillDetail"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into finance_bill_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="bizId != null">
+				biz_id,
+			</if>
+			<if test="groupId != null">
+				group_id,
+			</if>
+			<if test="guideId != null">
+				guide_id,
+			</if>
+			<if test="billType != null">
+				bill_type,
+			</if>
+			<if test="billBusiness != null">
+				bill_business,
+			</if>
+			<if test="num != null">
+				num,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+				create_time
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="bizId != null">
+				#{bizId,jdbcType=INTEGER},
+			</if>
+			<if test="groupId != null">
+				#{groupId,jdbcType=INTEGER},
+			</if>
+			<if test="guideId != null">
+				#{guideId,jdbcType=VARCHAR},
+			</if>
+			<if test="billType != null">
+				#{billType,jdbcType=VARCHAR},
+			</if>
+			<if test="billBusiness != null">
+				#{billBusiness,jdbcType=INTEGER},
+			</if>
+			<if test="num != null">
+				#{num,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=INTEGER},
+			</if>
+				SYSDATE()
+		</trim>
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer"> SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	
+	<!-- 删除领单详情 -->
+	<delete id="deleteBillDetail" >
+		delete from finance_bill_detail  
+		where biz_id = ${bizId} and group_id = ${groupId} and guide_id = ${guideId} 
+	</delete>
+	
+	<delete id="deleteBillDetailById" >
+		delete from finance_bill_detail  
+		where id = ${id} 
+	</delete>
+	
+	<delete id="deleteBillDetailByIds" >
+		delete from finance_bill_detail  
+		where biz_id = ${bizId} and group_id = ${groupId} and guide_id = ${guideId}
+		<if test="notIds != null and notIds != ''">
+			and id not in  (${notIds})
+		</if>
+	</delete>
+	
+	<!-- 派单保存 -->
+	<update id="saveApplyBill" parameterType="String">
+		update finance_bill_detail t 
+			set 
+			bill_type <![CDATA[=]]> #{billType},
+			num <![CDATA[=]]> #{num},
+			remark <![CDATA[=]]> #{remark}
+			
+			where id <![CDATA[=]]> ${id}
+	</update>
+	
+		<!-- 派单保存 -->
+	<update id="saveDistributeBill" parameterType="String">
+		update finance_bill_detail t 
+			set 
+			received_num <![CDATA[=]]> ${receivedNum},
+			bill_num_receive <![CDATA[=]]> #{billNumReceive},
+			remark_receive <![CDATA[=]]> #{remarkReceive}
+			
+			where id <![CDATA[=]]> ${id}
+	</update>
+	<!-- 销单保存 -->
+	<update id="saveVerifyBill" parameterType="String">
+		update finance_bill_detail t 
+			set 
+			returned_num <![CDATA[=]]> ${returnedNum},
+			bill_num_return <![CDATA[=]]> #{billNumReturn},
+			remark_return <![CDATA[=]]> #{remarkReturn}
+			
+			where id <![CDATA[=]]> ${id}
+	</update>
+	<!-- 修改BillOrder表 -->
+	<update id="updateFinanceOrder" parameterType="String">
+		update finance_bill_order t 
+			set 
+			<if test="'distribute'==type">
+				appli_state ='RECEIVED',
+				appr_time <![CDATA[=]]> #{date},
+				approver <![CDATA[=]]> #{userName} 	
+			</if>
+			<if test="'verify'==type">
+				appli_state ='VERIFIED',
+				veri_time <![CDATA[=]]> #{date},
+				verifier <![CDATA[=]]> #{userName} 	
+			</if>
+			where group_id <![CDATA[=]]> ${groupId}
+			and guide_id <![CDATA[=]]> ${guideId}
+	</update>
+	<!-- 取消销单 -->
+	<update id="delVerify" parameterType="String">
+		update finance_bill_order t 
+			set  appli_state ='RECEIVED'
+			where id <![CDATA[=]]> ${order_id}
+	</update>
+	<!-- 取消领单单 -->
+	<update id="delReceived" parameterType="String">
+		update finance_bill_order t 
+			set appli_state ='APPLIED'
+			where group_id <![CDATA[=]]> ${group_id}
+			and guide_id <![CDATA[=]]> ${guide_id}
+	</update>
+	<!-- 获取申请人列表 -->
+	<select id="getFuzzyApplicantList" resultType="java.util.HashMap">
+		SELECT DISTINCT t.applicant 
+			FROM finance_bill_order t 
+			 where t.biz_id = #{bizId,jdbcType=INTEGER}
+			 and t.applicant like concat('%',#{name},'%')
+	</select>
+		<!-- 获取操作员列表 -->
+	<select id="getUserNameList" resultType="java.util.HashMap">
+		SELECT DISTINCT t.user_name 
+			FROM finance_pay t 
+			 where t.biz_id = #{bizId,jdbcType=INTEGER}
+			 and t.user_name like concat('%',#{name},'%')
+	</select>
+	
+	<!-- 根据导游安排张的groupID查询领单申请信息 -->
+	<select id="selectByGroupId"  parameterType="com.yihg.sales.po.FinanceBill" resultType="com.yihg.sales.po.FinanceBill">
+	    select * 
+	    from finance_bill_order
+	    where group_id = #{groupId} and guide_id = #{guideId} 
+  	</select>
+  	
+ 	 <!-- 转移领单 -->
+  	<update id="changeGroup" >
+		UPDATE finance_bill_order SET guide_id=#{guideId,jdbcType=INTEGER} where group_id = #{groupId,jdbcType=INTEGER} and guide_id = #{mguideId,jdbcType=INTEGER}
+  	</update>
+</mapper>

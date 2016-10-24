@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.airticket.dao.AirTicketResourceMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.airticket.po.AirTicketResource" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="biz_id" property="bizId" jdbcType="INTEGER" />
+    <result column="resource_number" property="resourceNumber" jdbcType="VARCHAR" />
+    <result column="start_date" property="startDate" jdbcType="DATE" />
+    <result column="end_date" property="endDate" jdbcType="DATE" />
+    <result column="dep_date" property="depDate" jdbcType="DATE" />
+    <result column="dep_city" property="depCity" jdbcType="VARCHAR" />
+    <result column="ticket_supplier_id" property="ticketSupplierId" jdbcType="INTEGER" />
+    <result column="ticket_supplier" property="ticketSupplier" jdbcType="VARCHAR" />
+    <result column="ticket_order_num" property="ticketOrderNum" jdbcType="VARCHAR" />
+    <result column="buy_price" property="buyPrice" jdbcType="DECIMAL" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="advanced_deposit" property="advancedDeposit" jdbcType="DECIMAL" />
+    <result column="total_number" property="totalNumber" jdbcType="INTEGER" />
+    <result column="applied_number" property="appliedNumber" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="CHAR" />
+    <result column="creater_id" property="createrId" jdbcType="INTEGER" />
+    <result column="creater_name" property="createrName" jdbcType="VARCHAR" />
+    <result column="operator_id" property="operatorId" jdbcType="INTEGER" />
+    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="contact" property="contact" jdbcType="VARCHAR" />
+    <result column="contact_mobile" property="contactMobile" jdbcType="VARCHAR" />
+    <result column="contact_tel" property="contactTel" jdbcType="VARCHAR" />
+    <result column="contact_fax" property="contactFax" jdbcType="VARCHAR" />
+    <result column="contact_id" property="contactId" jdbcType="INTEGER" />
+    <result column="seat_type" property="seatType" jdbcType="VARCHAR" />
+    <result column="line_name" property="lineName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR"/>
+    <result column="end_issue_time" property="endIssueTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, biz_id, resource_number, start_date, end_date, dep_date, dep_city,  ticket_supplier_id, ticket_supplier, ticket_order_num, buy_price, price,
+    advanced_deposit, total_number, applied_number, status, is_del, creater_id, creater_name, operator_id, operator_name, add_time, 
+    update_time, comment, contact, contact_tel, contact_mobile, contact_fax, contact_id, seat_type, line_name, type, end_issue_time
+  </sql>
+  <!-- 单条插入   -->
+  <insert id="insert" parameterType="com.yihg.airticket.po.AirTicketResource" useGeneratedKeys="true" keyProperty="id">
+    insert into air_ticket_resource
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bizId != null" >biz_id,</if>
+      <if test="resourceNumber != null and resourceNumber != ''" >resource_number,</if>
+      <if test="startDate != null" >start_date, </if>
+      <if test="endDate != null" >end_date, </if>
+      <if test="depDate != null" >dep_date, </if>
+      <if test="depCity != null and depCity != ''" >dep_city, </if>
+      <if test="ticketSupplierId != null" >ticket_supplier_id, </if>
+      <if test="ticketSupplier != null and ticketSupplier != ''" >ticket_supplier,</if>
+      <if test="ticketOrderNum != null" >ticket_order_num,</if>
+      <if test="buyPrice != null" >buy_price,</if>
+      <if test="price != null" >price,</if>
+      <if test="advancedDeposit != null" >advanced_deposit,</if>
+      <if test="totalNumber != null" >total_number,</if>
+      <if test="appliedNumber != null" >applied_number,</if>
+      <if test="status != null and status != ''" >status,</if>
+        is_del,
+      <if test="createrId != null" >creater_id,</if>
+      <if test="createrName != null and createrName != ''" >creater_name,</if>
+      <if test="comment != null" >comment,</if>
+      <if test="contact != null and contact != ''" >contact,</if>
+      <if test="contactId != null and contactId != ''" >contact_id,</if>
+      <if test="contactTel != null and contactTel != ''" >contact_tel,</if>
+      <if test="contactMobile != null and contactMobile != ''" >contact_mobile,</if>
+      <if test="contactFax != null and contactFax != ''" >contact_fax,</if>
+      <if test="seatType != null and seatType != ''" >seat_type,</if>
+      <if test="lineName != null and lineName != ''" >line_name,</if>
+      <if test="type != null and type != ''" >type,</if>
+      <if test="endIssueTime != null and endIssueTime != ''" >end_issue_time,</if>
+      
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bizId != null" >#{bizId,jdbcType=INTEGER},</if>
+      <if test="resourceNumber != null and resourceNumber != ''" >#{resourceNumber,jdbcType=VARCHAR},</if>
+      <if test="startDate != null" > #{startDate,jdbcType=DATE},</if>
+      <if test="endDate != null" > #{endDate,jdbcType=DATE},</if>
+      <if test="depDate != null" > #{depDate,jdbcType=DATE},</if>
+      <if test="depCity != null" >#{depCity,jdbcType=VARCHAR},</if>
+      <if test="ticketSupplierId != null" >#{ticketSupplierId,jdbcType=INTEGER},</if>
+      <if test="ticketSupplier != null and ticketSupplier != ''" >#{ticketSupplier,jdbcType=VARCHAR},</if>
+      <if test="ticketOrderNum != null" >#{ticketOrderNum,jdbcType=VARCHAR},</if>
+      <if test="buyPrice != null" >#{buyPrice,jdbcType=DECIMAL},</if>
+      <if test="price != null" >#{price,jdbcType=DECIMAL},</if>
+      <if test="advancedDeposit != null" >#{advancedDeposit,jdbcType=DECIMAL},</if>
+      <if test="totalNumber != null" >#{totalNumber,jdbcType=INTEGER},</if>
+      <if test="appliedNumber != null" >#{appliedNumber,jdbcType=INTEGER},</if>
+      <if test="status != null and status != ''" >#{status,jdbcType=VARCHAR},</if>
+      <!-- isDel :  -->'N',
+      <if test="createrId != null" >#{createrId,jdbcType=INTEGER},</if>
+      <if test="createrName != null and createrName !=''" >#{createrName,jdbcType=VARCHAR},</if>
+      <if test="comment != null" >#{comment,jdbcType=VARCHAR},</if>
+      <if test="contact != null and contact != ''" >#{contact,jdbcType=VARCHAR},</if>
+      <if test="contactId != null and contactId != ''" >#{contactId,jdbcType=INTEGER},</if>
+      <if test="contactTel != null and contactTel != ''" >#{contactTel,jdbcType=VARCHAR},</if>
+      <if test="contactMobile != null and contactMobile != ''" >#{contactMobile,jdbcType=VARCHAR},</if>
+      <if test="contactFax != null and contactFax != ''" >#{contactFax,jdbcType=VARCHAR},</if>
+      <if test="seatType != null and seatType != ''" >#{seatType,jdbcType=VARCHAR},</if>
+      <if test="lineName != null and lineName != ''" >#{lineName,jdbcType=VARCHAR},</if>
+      <if test="type != null and type != ''" >#{type,jdbcType=VARCHAR},</if>
+      <if test="endIssueTime != null and endIssueTime != ''" >#{endIssueTime,jdbcType=VARCHAR},</if>
+    </trim>
+  </insert>
+  
+  
+  <!-- 逻辑删除 -->
+   <update id="delete">
+    update air_ticket_resource set is_del = 'Y' where id = #{id,jdbcType=INTEGER} and biz_id = #{bizId,jdbcType=INTEGER}
+   </update>
+  
+  <!-- 单条记录更新  -->
+  <update id="update" parameterType="com.yihg.airticket.po.AirTicketResource" >
+    update air_ticket_resource
+    <set>
+      <if test="resourceNumber != null" >
+        resource_number = #{resourceNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null" >start_date = #{startDate,jdbcType=DATE},</if>
+      <if test="endDate != null" >end_date = #{endDate,jdbcType=DATE},</if>
+      <if test="depDate != null" >dep_date = #{depDate,jdbcType=DATE},</if>
+      <if test="depCity != null" >dep_city = #{depCity,jdbcType=VARCHAR},</if>
+      <if test="ticketSupplierId != null" >ticket_supplier_id = #{ticketSupplierId,jdbcType=INTEGER},</if>
+      <if test="ticketSupplier != null" >ticket_supplier = #{ticketSupplier,jdbcType=VARCHAR},</if>
+      <if test="ticketOrderNum != null" >ticket_order_num = #{ticketOrderNum,jdbcType=VARCHAR},</if>
+      <if test="buyPrice != null" >buy_price = #{buyPrice,jdbcType=DECIMAL},</if>
+      <if test="price != null" >price = #{price,jdbcType=DECIMAL},</if>
+      advanced_deposit = #{advancedDeposit,jdbcType=DECIMAL},
+      <if test="totalNumber != null" >total_number = #{totalNumber,jdbcType=INTEGER},</if>
+      <if test="appliedNumber != null" >applied_number = #{appliedNumber,jdbcType=INTEGER},</if>
+      <if test="status != null and status != ''" >status = #{status,jdbcType=VARCHAR},</if>
+      <if test="isDel != null and isDel != ''" >is_del = #{isDel,jdbcType=CHAR},</if>
+      <if test="operatorId != null" >operator_id = #{operatorId,jdbcType=INTEGER},</if>
+      <if test="operatorName != null" >operator_name = #{operatorName,jdbcType=VARCHAR},</if>
+       	update_time = current_time(),
+      <if test="comment != null" >comment = #{comment,jdbcType=VARCHAR},</if>
+      <if test="contact != null" >contact = #{contact,jdbcType=VARCHAR},</if>
+      <if test="contactId != null" >contact_id = #{contactId,jdbcType=INTEGER},</if>
+      <if test="contactTel != null" >contact_tel = #{contactTel,jdbcType=VARCHAR},</if>
+      <if test="contactMobile != null" >contact_mobile = #{contactMobile,jdbcType=VARCHAR},</if>
+      <if test="contactFax != null" >contact_fax = #{contactFax,jdbcType=VARCHAR},</if>
+      <if test="seatType != null" >seat_type = #{seatType,jdbcType=VARCHAR},</if>
+      <if test="lineName != null" >line_name = #{lineName,jdbcType=VARCHAR},</if>
+      <if test="type != null" >type = #{type,jdbcType=VARCHAR},</if>
+      <if test="endIssueTime != null" >end_issue_time = #{endIssueTime,jdbcType=VARCHAR},</if>
+    </set>
+    where id = #{id,jdbcType=INTEGER} and biz_id = #{bizId,jdbcType=INTEGER}
+  </update>
+  
+  <update id="refreshAppliedNumber" >
+    UPDATE air_ticket_resource r SET applied_number=
+	(SELECT COUNT(o.id) FROM air_ticket_request q LEFT JOIN air_ticket_order o ON q.id=o.request_id AND o.is_del='N'
+	WHERE q.resource_id=#{id,jdbcType=INTEGER} AND q.status NOT IN ('REJECTED') AND q.is_del='N') WHERE id=#{id,jdbcType=INTEGER};
+   </update>
+   <!-- 单条记录查询，必须输入主键ID和商家ID（BIZ_ID）  -->
+  <select id="findResource" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from air_ticket_resource
+    where id = #{id,jdbcType=INTEGER} and biz_id = #{bizId,jdbcType=INTEGER} and is_del = 'N'
+  </select>
+  
+  <select id="findResourceByIdList" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List" /> from air_ticket_resource where id in (${idList}) and biz_id = #{bizId,jdbcType=INTEGER} and is_del = 'N'
+  </select>
+  
+    
+  <!-- 返回当前商家当天最大采购单号后三位   -->
+  <select id="getCurrMaxResourceNumber" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+  	select
+	 	right(resource_number,3) curr_max_num
+  	from air_ticket_resource
+    where biz_id = #{bizId,jdbcType=INTEGER} and resource_number like concat(#{date},'%') order by resource_number desc limit 1 
+  </select>
+  
+   <!-- 分页查询 -->
+   <select id="selectResourceListPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean" >
+    select 
+    <include refid="Base_Column_List" />
+    from air_ticket_resource
+    where biz_id = #{parameter.bizId,jdbcType=INTEGER} and is_del = 'N'
+    
+    <if test="parameter.depDateFrom != null" >
+    	<if test="parameter.dateType == 'dep'">
+        	and dep_date <![CDATA[>=]]> #{parameter.depDateFrom}</if>
+        <if test="parameter.dateType == 'start'">
+        	and start_date <![CDATA[>=]]> #{parameter.depDateFrom}</if>
+    </if>
+    <if test="parameter.depDateTo != null" >
+        <if test="parameter.dateType == 'dep'">
+        	and dep_date <![CDATA[<=]]> #{parameter.depDateTo}</if>
+        <if test="parameter.dateType == 'start'">
+        	and start_date <![CDATA[<=]]> #{parameter.depDateTo}</if>
+    </if>
+    <if test="parameter.endIssueTimeFrom">
+    	and end_issue_time <![CDATA[>=]]> #{parameter.endIssueTimeFrom}
+    </if>
+    <if test="parameter.endIssueTimeTo">
+    	and end_issue_time <![CDATA[<=]]> #{parameter.endIssueTimeTo}
+    </if>
+    <if test="parameter.resourceNumber != null and parameter.resourceNumber != ''">
+    	and resource_number like concat('%',#{parameter.resourceNumber},'%')
+    </if>
+    <if test="parameter.depCity != null and parameter.depCity != ''">
+    	and dep_city like concat('%',#{parameter.depCity},'%')
+    </if>
+    <if test="parameter.lineName != null and parameter.lineName != ''">
+    	and line_name like concat('%',#{parameter.lineName},'%')
+    </if>
+    <if test="parameter.type != null and parameter.type != ''">
+    	and type=#{parameter.type}
+    </if>
+    order by start_date, add_time
+  </select>
+
+<select id="countResourceList" resultType="java.util.HashMap">
+    SELECT SUM(total_number) total, SUM(applied_number) applied FROM 
+	air_ticket_resource r  
+    where r.biz_id = #{parameter.bizId,jdbcType=INTEGER} AND  r.`is_del`='N'
+   <!--  and operator_id in 
+    <foreach item="item" index="index" collection="parameter.set" open="("
+			separator="," close=")">
+			#{item}
+		</foreach> -->
+    <if test="parameter.depDateFrom != null" >
+    	<if test="parameter.dateType == 'dep'">
+        	and dep_date <![CDATA[>=]]> #{parameter.depDateFrom}</if>
+        <if test="parameter.dateType == 'start'">
+        	and start_date <![CDATA[>=]]> #{parameter.depDateFrom}</if>
+    </if>
+    <if test="parameter.depDateTo != null" >
+        <if test="parameter.dateType == 'dep'">
+        	and dep_date <![CDATA[<=]]> #{parameter.depDateTo}</if>
+        <if test="parameter.dateType == 'start'">
+        	and start_date <![CDATA[<=]]> #{parameter.depDateTo}</if>
+    </if>
+    <if test="parameter.endIssueTimeFrom">
+    	and end_issue_time <![CDATA[>=]]> #{parameter.endIssueTimeFrom}
+    </if>
+    <if test="parameter.endIssueTimeTo">
+    	and end_issue_time <![CDATA[<=]]> #{parameter.endIssueTimeTo}
+    </if>
+    <if test="parameter.resourceNumber != null and parameter.resourceNumber != ''">
+    	and resource_number like concat('%',#{parameter.resourceNumber},'%')
+    </if>
+    <if test="parameter.depCity != null and parameter.depCity != ''">
+    	and dep_city like concat('%',#{parameter.depCity},'%')
+    </if>
+    <if test="parameter.lineName != null and parameter.lineName != ''">
+    	and line_name like concat('%',#{parameter.lineName},'%')
+    </if>
+    <if test="parameter.type != null and parameter.type != ''">
+    	and type=#{parameter.type}
+    </if>
+    
+</select>
+
+
+  <!-- 查询当前资源的订单数量 -->
+  <select id="getOrderNum" resultType="java.lang.Integer">
+  	<!-- select count(*) from air_ticket_order where biz_id = #{bizId,jdbcType=INTEGER} and resource_id =#{resourceId,jdbcType=INTEGER} and is_del = 'N'  -->
+  	select SUM(guest_number) from air_ticket_request r 
+  	where r.biz_id = #{bizId,jdbcType=INTEGER} and r.resource_id =#{resourceId,jdbcType=INTEGER} and r.is_del = 'N' 
+  	and r.status NOT in ('REJECTED')
+  </select>
+  
+  <!-- 出发城市补全查询  -->
+  <select id="getFuzzyDepCityList" parameterType="java.lang.String" resultType="java.lang.String">
+  	select DISTINCT
+  		dep_city label
+  	from air_ticket_resource 
+  	where 
+  		#{prefixDepCity} is null
+  	OR	
+  		#{prefixDepCity} = ''
+  	OR
+  		dep_city like CONCAT('%',#{prefixDepCity},'%') 
+  	ORDER BY resource_number desc 
+  	LIMIT 10
+  </select>
+  
+  <select id="getLineTemplateNames" resultType="java.lang.String">
+  select distinct line_name from air_ticket_line_template where 
+  biz_id= #{bizId,jdbcType=INTEGER} and line_name like concat('%', #{keyword, jdbcType=VARCHAR}, '%') order by update_time desc;
+  </select>
+  
+  <select id="getLineTemplates" resultType="java.util.HashMap">
+  select line_name,  date_offset, air_code, dep_city, arr_city from air_ticket_line_template
+  where biz_id= #{bizId,jdbcType=INTEGER} and line_name=#{lineName, jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteTemplate">
+  delete from air_ticket_line_template where biz_id= #{bizId,jdbcType=INTEGER} and line_name=#{lineName, jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertTemplate">
+  insert into air_ticket_line_template (biz_id, line_name, date_offset, dep_city, arr_city, air_code) values
+  (#{bizId,jdbcType=INTEGER}, #{lineName, jdbcType=VARCHAR}, #{dateOffset,jdbcType=INTEGER},
+  #{depCity, jdbcType=VARCHAR}, #{arrCity, jdbcType=VARCHAR}, #{airCode, jdbcType=VARCHAR})
+  </insert>
+  
+  <!-- 获取航线列表 -->
+	<select id="getAirLineList" resultType="java.util.HashMap">
+		SELECT DISTINCT t.air_code 
+			FROM air_ticket_line_template t 
+			 where t.biz_id = #{bizId,jdbcType=INTEGER}
+			 and t.air_code like concat('%',#{name},'%')
+	</select>
+ <!--  <insert id="insertBtach" parameterType="java.util.ArrayList">
+  	insert into air_ticket_resource  (  biz_id, resource_number, start_date, end_date, dep_date, dep_city,  ticket_supplier_id, ticket_supplier, ticket_order_num, buy_price, price,
+    advanced_deposit, total_number, status, is_del, creater_id, creater_name, operator_id, operator_name, add_time, 
+    update_time, comment, contact, contact_tel, contact_mobile, contact_fax, contact_id, seat_type, line_name, end_issue_time)   
+    values  
+    <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.addTime},#{item.empId},#{item.activityId},#{item.flag})  
+    </foreach> 
+  </insert> -->
+  
+  <update id="updateUnissuedOrderPrice" parameterType="java.util.HashMap">
+	UPDATE air_ticket_order o
+	LEFT JOIN air_ticket_resource s ON o.resource_id = s.id
+	LEFT JOIN air_ticket_request  q ON o.request_id = q.id
+	SET o.price = #{price,jdbcType=DECIMAL}
+	WHERE o.biz_id = 1 AND o.is_del = 'N' AND q.status != 'ISSUED' AND s.id = #{id,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

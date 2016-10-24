@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.finance.dao.FinanceCommissionDeductionMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.finance.po.FinanceCommission" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="biz_id" property="bizId" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="commission_type" property="commissionType" jdbcType="VARCHAR" />
+    <result column="guide_id" property="guideId" jdbcType="INTEGER" />
+    <result column="guide_name" property="guideName" jdbcType="VARCHAR" />
+    <result column="total" property="total" jdbcType="DECIMAL" />
+    <result column="total_cash" property="totalCash" jdbcType="DECIMAL" />
+    <result column="balance" property="balance" jdbcType="DECIMAL" />
+    <result column="state_finance" property="stateFinance" jdbcType="INTEGER" />
+    <result column="audit_user_id" property="auditUserId" jdbcType="INTEGER" />
+    <result column="audit_user" property="auditUser" jdbcType="VARCHAR" />
+    <result column="audit_time" property="auditTime" jdbcType="TIMESTAMP" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+    <result column="operate_log" property="operateLog" jdbcType="VARCHAR" />
+    <result column="state_seal" property="stateSeal" jdbcType="INTEGER" />
+    <result column="seal_user_id" property="sealUserId" jdbcType="INTEGER" />
+    <result column="seal_user" property="sealUser" jdbcType="VARCHAR" />
+    <result column="commission_name" property="commissionName" jdbcType="VARCHAR" />
+    <result column="state_commission" property="stateCommission" jdbcType="INTEGER" />
+    <result column="pay_user_name" property="payUserName" jdbcType="VARCHAR" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, biz_id, group_id, commission_type, guide_id, guide_name, total, total_cash, state_finance, 
+    audit_user_id, audit_user, audit_time, create_user_id, create_user, create_time, state_commission,
+    operate_log, pay_user_name, pay_time
+  </sql>
+  <select id="selectByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    	<include refid="Base_Column_List" />
+    from finance_commission_deduction 
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+  <select id="selectTotalByGroupId" resultType="java.util.HashMap" parameterType="java.lang.Integer" >
+    select sum(total) sum_total from finance_commission_deduction where group_id = #{groupId}
+  </select>
+  <select id="selectByPrimaryKeys" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select 
+    	<include refid="Base_Column_List" />
+    from finance_commission_deduction 
+    where id in (${ids})
+  </select>
+  <select id="selectUnPayCommByPrimaryKeys" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select 
+    	<include refid="Base_Column_List" />
+    from finance_commission_deduction 
+    where id in (${ids}) AND total != total_cash
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.util.HashMap" >
+    delete from finance_commission_deduction
+    where id = #{id,jdbcType=INTEGER} and biz_id = #{bizId,jdbcType=INTEGER} 
+  </delete>
+  <delete id="deleteByGroupId" parameterType="java.util.HashMap" >
+    delete from finance_commission_deduction
+    where group_id = #{groupId,jdbcType=INTEGER} and biz_id = #{bizId,jdbcType=INTEGER} 
+    and state_finance != 1 and total_cash = 0.0000
+  </delete>
+  <insert id="insert" parameterType="com.yihg.finance.po.FinanceCommission" >
+    insert into finance_commission_deduction
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="bizId != null" >
+        biz_id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="commissionType != null" >
+        commission_type,
+      </if>
+      <if test="commissionName != null" >
+        commission_name, 
+      </if>
+      <if test="guideId != null" >
+        guide_id,
+      </if>
+      <if test="guideName != null" >
+        guide_name,
+      </if>
+      <if test="total != null" >
+        total,
+      </if>
+      <if test="totalCash != null" >
+        total_cash,
+      </if>
+      <if test="stateFinance != null" >
+        state_finance,
+      </if>
+      <if test="auditUserId != null" >
+        audit_userId,
+      </if>
+      <if test="auditUser != null" >
+        audit_user,
+      </if>
+      <if test="auditTime != null" >
+        audit_time,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      state_commission
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bizId != null" >
+        #{bizId,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="commissionType != null" >
+       #{commissionType,jdbcType=VARCHAR},
+      </if>
+      <if test="commissionName != null" >
+        #{commissionName,jdbcType=VARCHAR}, 
+      </if>
+      <if test="guideId != null" >
+        #{guideId,jdbcType=INTEGER},
+      </if>
+      <if test="guideName != null" >
+        #{guideName,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null" >
+        #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="totalCash != null" >
+        #{totalCash,jdbcType=DECIMAL},
+      </if>
+      <if test="stateFinance != null" >
+        #{stateFinance,jdbcType=INTEGER},
+      </if>
+      <if test="auditUserId != null" >
+        #{auditUserId,jdbcType=INTEGER},
+      </if>
+      <if test="auditUser != null" >
+        #{auditUser,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null" >
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      0
+    </trim>
+  </insert>
+  
+  <!-- 单条记录更新  -->
+  <update id="update" parameterType="com.yihg.finance.po.FinanceCommission" >
+    update finance_commission_deduction
+    <set>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="commissionType != null" >
+        commission_type = #{commissionType,jdbcType=VARCHAR},
+      </if>
+      <if test="commissionName != null" >
+        commission_name = #{commissionName,jdbcType=DECIMAL},
+      </if>
+      <if test="guideId != null" >
+        guide_id = #{guideId,jdbcType=DECIMAL},
+      </if>
+      <if test="guideName != null" >
+        guide_name = #{guideName,jdbcType=DECIMAL},
+      </if>
+      <if test="total != null" >
+        total = #{total,jdbcType=INTEGER},
+      </if>
+      <if test="totalCash != null" >
+        total_cash = #{totalCash,jdbcType=VARCHAR},
+      </if>
+      <if test="stateFinance != null" >
+        state_finance = #{stateFinance,jdbcType=CHAR},
+      </if>
+      <if test="stateCommission != null" >
+      	state_commission = #{stateCommission,jdbcType=VARCHAR},
+      </if>
+      <if test="operateLog != null" >
+      	operate_log = #{operateLog,jdbcType=VARCHAR},
+      </if>
+      <if test="payUserName != null" >
+        pay_user_name = #{payUserName,jdbcType=VARCHAR},
+      </if>
+        pay_time = #{payTime,jdbcType=TIMESTAMP}
+    </set>
+    where id = #{id,jdbcType=INTEGER} and biz_id = #{bizId,jdbcType=INTEGER}
+  </update>
+  
+   <select id="getFinanceCommisionByGroupIdAndGuideId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    	<include refid="Base_Column_List" />
+    from finance_commission_deduction 
+    where biz_id = #{bizId,jdbcType=INTEGER} 
+    and group_id = #{groupId,jdbcType=INTEGER}
+    and guide_id = #{guideId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getCommisionStatsListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
+  	
+  	SELECT c.group_id, g.group_code, g.group_state, g.group_mode, g.total_adult, g.total_child, 
+  		   g.total_guide, g.operator_id, g.operator_name, c.guide_id, c.guide_name, g.product_brand_name, g.product_name   
+  	FROM tour_group g 
+	LEFT JOIN finance_commission_deduction c ON g.id=c.group_id
+	WHERE 1=1 
+	<if test="page.parameter.groupIds!=null and page.parameter.groupIds!=''">and g.id in (${page.parameter.groupIds})</if>
+	<if test="page.parameter.startTime != null">and g.date_start <![CDATA[>=]]> #{page.parameter.startTime} </if>
+	<if test="page.parameter.endTime != null">and g.date_start <![CDATA[<=]]> #{page.parameter.endTime}	</if>
+	<if test="page.parameter.groupCode != null">
+		and g.group_code LIKE CONCAT('%','${page.parameter.groupCode}','%')
+	</if>
+	<if test="page.parameter.guideName != null">
+		and c.guide_name LIKE CONCAT('%','${page.parameter.guideName}','%')
+	</if>
+	<if
+		test="page.parameter.productBrandId != null and page.parameter.productBrandId != -1">
+		and g.prudct_brand_id =#{page.parameter.productBrandId}
+	</if>
+	<if test="page.parameter.operator_id != null">
+		and g.operator_id in (${page.parameter.operator_id})
+	</if>
+	<if test="page.parameter.status != null">
+		and c.state_finance = #{page.parameter.status}
+	</if>
+	<if test="page.parameter.lrStatus == 0 ">
+		and c.commission_type is null
+	</if>
+	<if test="page.parameter.lrStatus == 1 ">
+		and c.commission_type is not null
+	</if>
+	<if test="page.parameter.commProjectTypeCodes != null">
+		and c.commission_type in (${page.parameter.commProjectTypeCodes})
+	</if>
+	<if test="page.parameter.stateCommission != null">
+		and c.state_commission = #{page.parameter.stateCommission}
+	</if>
+	<if test="page.parameter.bizId != null">
+		and g.biz_id = #{page.parameter.bizId}
+	</if>
+	<if test="page.parameter.productName != null and page.parameter.productName != ''">
+    	and (g.product_brand_name like concat('%',#{page.parameter.productName},'%') 
+    		or g.product_name like concat('%',#{page.parameter.productName},'%'))
+    </if>
+    <if test="page.parameter.ffStatus == 1">
+		and c.total  <![CDATA[>=]]> 0
+	</if>
+	<if test="page.parameter.ffStatus == 0">
+		and c.total  <![CDATA[<]]> 0
+	</if>
+    <if test="page.parameter.set != null">
+		and g.operator_id in
+		<foreach item="item" index="index" collection="page.parameter.set" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+	
+    AND g.group_state in (1,3,4) 
+	GROUP BY g.id,c.`guide_id`
+	ORDER BY g.date_start, g.create_time
+  </select>
+  
+  
+   <select id="getCommisionsTotal" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
+  	SELECT IFNULL(SUM(c.total),0) sum_total,IFNULL(SUM(c.`total_cash`),0) sum_total_cash  
+  	FROM tour_group g 
+	LEFT JOIN finance_commission_deduction c ON g.id=c.group_id
+	WHERE 1=1 
+	<if test="page.parameter.groupIds!=null and page.parameter.groupIds!=''">and g.id in (#{page.parameter.groupIds})</if>
+	<if test="page.parameter.startTime != null">and g.date_start <![CDATA[>=]]> #{page.parameter.startTime} </if>
+	<if test="page.parameter.endTime != null">and g.date_start <![CDATA[<=]]> #{page.parameter.endTime}	</if>
+	<if test="page.parameter.groupCode != null">
+		and g.group_code LIKE CONCAT('%','${page.parameter.groupCode}','%')
+	</if>
+	<if test="page.parameter.guideName != null">
+		and c.guide_name LIKE CONCAT('%','${page.parameter.guideName}','%')
+	</if>
+	<if test="page.parameter.operator_id != null">
+		and g.operator_id in (${page.parameter.operator_id})
+	</if>
+	<if test="page.parameter.status != null">
+		and c.state_finance = #{page.parameter.status}
+	</if>
+	<if test="page.parameter.commProjectTypeCodes != null">
+		and c.commission_type in (${page.parameter.commProjectTypeCodes})
+	</if>
+	<if test="page.parameter.stateCommission != null">
+		and c.state_commission = #{page.parameter.stateCommission}
+	</if>
+	<if test="page.parameter.bizId != null">
+		and c.biz_id = #{page.parameter.bizId}
+	</if>
+	<if test="page.parameter.productName != null and page.parameter.productName != ''">
+    	and (g.product_brand_name like concat('%',#{page.parameter.productName},'%') 
+    		or g.product_name like concat('%',#{page.parameter.productName},'%'))
+    </if>
+    <if test="page.parameter.set != null">
+		and g.operator_id in
+		<foreach item="item" index="index" collection="page.parameter.set" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+    AND g.group_state in (0,1,3,4) 
+  </select>
+  
+  
+  <select id="getCommisions" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BaseResultMap" >
+  	SELECT * FROM finance_commission_deduction c
+	WHERE 1=1  
+	<if test="page.parameter.groupId != null">
+		and c.group_id = #{page.parameter.groupId}
+	</if>
+	<if test="page.parameter.guideName != null">
+		and c.guide_name LIKE CONCAT('%','${page.parameter.guideName}','%')
+	</if>
+	<if test="page.parameter.status != null">
+		and c.state_finance = #{page.parameter.status}
+	</if>
+	<if test="page.parameter.commProjectTypeCodes != null">
+		and c.commission_type in (${page.parameter.commProjectTypeCodes})
+	</if>
+	<if test="page.parameter.stateCommission != null">
+		and c.state_commission = #{page.parameter.stateCommission}
+	</if>
+	<if test="page.parameter.bizId != null">
+		and c.biz_id = #{page.parameter.bizId}
+	</if>
+	<if test="page.parameter.guideId != null">
+		and c.guide_id = #{page.parameter.guideId}
+	</if>
+  </select>
+  
+  <select id="getCommisionTotalSum" parameterType="java.util.HashMap" resultType="java.lang.Integer" >
+  	SELECT SUM(total) FROM finance_commission_deduction 
+  	WHERE group_id = #{groupId} AND guide_id = #{guideId}
+  </select>
+	
+  <select id="getCommisionTotalSumAndTotalCashSum" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+  	SELECT SUM(total) total, SUM(total_cash) total_cash FROM finance_commission_deduction 
+  	WHERE group_id = #{groupId} AND guide_id = #{guideId}
+  </select>
+  
+  <select id="getAllTotalSumAndTotalCashSum" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
+  	SELECT SUM(c.total) total, SUM(c.total_cash) total_cash FROM finance_commission_deduction c 
+	INNER JOIN tour_group g ON c.group_id = g.id
+	INNER JOIN booking_guide bg ON c.group_id = bg.group_id AND c.guide_id = bg.guide_id
+	WHERE 1=1 
+	AND bg.state_finance = 1 
+	<if test="page.parameter.bizId != null">
+		and c.biz_id = #{page.parameter.bizId}
+	</if>
+	<if test="page.parameter.group_code != null">and g.group_code like '%${page.parameter.group_code}%' </if>
+	<if test="page.parameter.guide_name != null">and c.guide_name like '%${page.parameter.guide_name}%' </if>
+	<if test="page.parameter.operator_id != null">
+		and g.operator_id in (${page.parameter.operator_id})
+	</if>
+    <if test="page.parameter.set != null">
+		and g.operator_id in
+		<foreach item="item" index="index" collection="page.parameter.set" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+    AND g.group_state in (1,3,4) 
+  </select>  
+</mapper>

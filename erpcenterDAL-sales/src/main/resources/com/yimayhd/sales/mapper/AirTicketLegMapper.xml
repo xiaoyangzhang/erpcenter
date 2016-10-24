@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.airticket.dao.AirTicketLegMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.airticket.po.AirTicketLeg" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="resource_id" property="resourceId" jdbcType="INTEGER" />
+    <result column="dep_date" property="depDate" jdbcType="DATE" />
+    <result column="dep_city" property="depCity" jdbcType="VARCHAR" />
+    <result column="arr_city" property="arrCity" jdbcType="VARCHAR" />
+    <result column="air_code" property="airCode" jdbcType="VARCHAR" />
+    <result column="dep_time" property="depTime" jdbcType="TIMESTAMP" />
+    <result column="arr_time" property="arrTime" jdbcType="TIMESTAMP" />
+    <result column="seat_type" property="seatType" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, resource_id, dep_date, dep_city, arr_city, air_code, dep_time, arr_time, seat_type
+  </sql>
+  
+  <!-- 插入   -->
+  <insert id="save" parameterType="com.yihg.airticket.po.AirTicketLeg" useGeneratedKeys="true" keyProperty="id">
+    insert into air_ticket_leg
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="resourceId != null" >
+        resource_id,
+      </if>
+      <if test="depDate != null" >
+        dep_date,
+      </if>
+      <if test="depCity != null and depCity != ''" >
+        dep_city,
+      </if>
+      <if test="arrCity != null and arrCity != ''" >
+        arr_city,
+      </if>
+      <if test="airCode != null and airCode != ''" >
+        air_code,
+      </if>
+      <if test="depTime != null and depTime != ''" > dep_time, </if>
+      <if test="arrTime != null and arrTime != ''" > arr_time, </if>
+      <if test="seatType != null and seatType != ''" > seat_type </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="resourceId != null" >
+        #{resourceId,jdbcType=INTEGER},
+      </if>
+      <if test="depDate != null" >
+        #{depDate,jdbcType=DATE},
+      </if>
+      <if test="depCity != null and depCity != ''" >
+        #{depCity,jdbcType=VARCHAR},
+      </if>
+      <if test="arrCity != null and arrCity != ''" >
+        #{arrCity,jdbcType=VARCHAR},
+      </if>
+      <if test="airCode != null and airCode != ''" >
+        #{airCode,jdbcType=VARCHAR},
+      </if>
+      <if test="depTime != null and depTime != ''" > #{depTime,jdbcType=TIMESTAMP}, </if>
+      <if test="arrTime != null and arrTime != ''" > #{arrTime,jdbcType=TIMESTAMP}, </if>
+      <if test="seatType != null and seatType != ''" >
+        #{seatType,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 根据resourceId删除航段 -->
+  <delete id="deleteByResourceId" parameterType="java.lang.Integer">
+  	delete from air_ticket_leg where resource_id = #{resourceId,jdbcType=INTEGER}
+  </delete>
+  
+  <select id="findLegsByResourceId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select
+  		<include refid="Base_Column_List" />
+  	from air_ticket_leg where resource_id = #{resourceId,jdbcType=INTEGER}
+  </select>
+</mapper>

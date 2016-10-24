@@ -1,0 +1,908 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="fin">
+
+	<sql id="selectByProperty">
+		SELECT *,
+		(total_adult+total_child) person_count,
+		(total_income-total_income_cash) total_income_balance,
+		(total_income-total_cost) total_profit,
+		(total_income-total_cost)/(IFNULL(total_adult,0)+IFNULL(total_child,0)+IFNULL(total_guide,0)) person_profit
+		FROM
+		tour_group 
+		WHERE 1=1 
+		<if test="parameter!=null and parameter.bizId!=null"> AND biz_id = ${parameter.bizId} </if>
+	</sql>
+
+	<!-- 查询收付款记录 -->
+	<select id="selectCashRecordListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		select a.*, b.detail_count from finance_pay a LEFT JOIN 
+		(SELECT pay_id, COUNT(*) detail_count FROM finance_pay_detail GROUP BY pay_id) b ON a.id = b.pay_id 
+		where biz_id = ${parameter.bizId} 
+		and a.type = 0  
+		<if test="parameter.pay_direct != null">and pay_direct = #{parameter.pay_direct } </if>
+		<if test="parameter.date_start != null">and pay_date <![CDATA[>=]]> #{parameter.date_start } </if>
+		<if test="parameter.date_end != null">and pay_date <![CDATA[<=]]> #{parameter.date_end } </if>
+		<if test="parameter.supplier_name != null">and supplier_name like '%${parameter.supplier_name}%' </if>
+		<if test="parameter.pay_code != null">and pay_code = #{parameter.pay_code} </if>
+		<if test="parameter.left_bank != null">and left_bank = #{parameter.left_bank} </if>
+		<if test="parameter.pay_type != null">and pay_type = #{parameter.pay_type} </if>
+		<if test="parameter.user_name != null">and user_name = #{parameter.user_name} </if>
+		<if test="parameter.set != null">
+			and a.user_id in
+			<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 结算团列表 -->
+	<select id="selectSettleListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		<include refid="selectByProperty" />
+		<if test="parameter.start_min != null">and date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+		<if test="parameter.start_max != null">and date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+		<if test="parameter.group_code != null">and group_code like '%${parameter.group_code}%' </if>
+		<if test="parameter.product_name != null">and product_name like '%${parameter.product_name}%' </if>
+		<if test="parameter.operator_name != null">and operator_name like '%${parameter.operator_name}%' </if>
+		<if test="parameter.operator_id != null">and operator_id in (${parameter.operator_id})</if>
+		<if test="parameter.group_state != null">and group_state = #{parameter.group_state} </if>
+		<if test="parameter.group_state == null">and group_state in(1,3,4) </if>
+		<if test="parameter.audit_user != null">and audit_user = #{parameter.audit_user} </if>
+		<if test="parameter.set != null">
+			and operator_id in
+			<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+		</if>
+		
+		order by date_start ,create_time 
+	</select>
+
+	<!-- 查询团信息 -->
+	<select id="selectGroupList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<include refid="selectByProperty" />
+		<if test="bizId != null"> AND biz_id = #{bizId} </if>
+		<if test="groupId != null"> AND id = #{groupId} </if>
+		order by date_start ,create_time 
+	</select>
+
+	<!-- 订单收入审核 -->
+	<select id="selectOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select *,(IFNULL(total,0)-IFNULL(total_cash,0)) balance,FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') create_date from group_order where 1=1
+		<if test="groupId != null">and group_id = #{groupId} </if>
+		order by create_time 
+	</select>
+	<!-- 购物收入审核 -->
+	<select id="selectShopList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT t.*, h.guide_name, (IFNULL(t.total_repay,0)+IFNULL(t.person_repay_total,0)) total,(t.total_repay+t.person_repay_total-t.total_cash) balance,
+			FROM_UNIXTIME(t.create_time/1000,'%Y-%m-%d') create_date 
+			FROM booking_shop t 
+			LEFT JOIN (SELECT DISTINCT guide_id, guide_name FROM booking_guide WHERE group_id = #{groupId} ) h
+			ON t.guide_id = h.guide_id
+			where 1=1
+		<if test="groupId != null">and t.group_id = #{groupId} </if>
+		order by create_time 
+	</select>
+	<!-- 地接支出审核 -->
+	<select id="selectDeliveryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select *,(IFNULL(total,0)-IFNULL(total_cash,0)) balance,FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') create_date from booking_delivery where 1=1
+		<if test="groupId != null">and group_id = #{groupId} </if>
+		order by create_time 
+	</select>
+	<!-- 商家支出和其他收入审核 -->
+	<select id="selectSupplierList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT a.*, c.guide_id, b.booking_id, IFNULL(b.total,0) finance_total, b.pay_status,
+			(IFNULL(a.total,0)-IFNULL(a.total_cash,0)) balance,
+			FROM_UNIXTIME(a.create_time/1000,'%Y-%m-%d') create_date 
+		FROM booking_supplier a
+		LEFT JOIN finance_guide b ON a.id = b.booking_id_link
+		LEFT JOIN booking_guide c ON b.booking_id = c.id
+		WHERE 1=1		
+		<if test="groupId != null">and a.group_id = #{groupId} </if>
+		<if test="supType != null">and a.supplier_type = #{supType} </if>
+		order by create_time 
+	</select>
+	<!-- 订单收入明细 -->
+	<select id="selectOrderDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select * from group_order_price where 1=1
+		<if test="subId != null">and order_id = #{subId} </if>
+		<if test="mode != null">and mode = #{mode} </if>
+		order by create_time 
+	</select>
+	
+	<!-- 购物收入明细 -->
+	<select id="selectShopDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select * from booking_shop_detail where 1=1
+		<if test="bookingId != null">and booking_id = #{bookingId} </if>
+		order by create_time 
+	</select>
+	
+	<!-- 地接社支出明细 -->
+	<select id="selectDeliveryDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select * from booking_delivery_price where 1=1
+		<if test="bookingId != null">and booking_id = #{bookingId} </if>
+		order by create_time 
+	</select>
+	
+	<!-- 批量审核操作 -->
+	<update id="updateAuditByIds" parameterType="java.util.HashMap">
+		update
+		<if test="feeType=='order'">
+			group_order
+		</if>
+		<if test="feeType=='shop'">
+			booking_shop
+		</if>
+		<if test="feeType=='del'">
+			booking_delivery
+		</if>
+		<if test="feeType=='sup'||feeType=='otherin'">
+			booking_supplier
+		</if>
+		<if test="feeType=='com'">
+			finance_commission 
+		</if>
+		<if test="feeType=='com_deduction'">
+			finance_commission_deduction 
+		</if>
+		set state_finance=#{stateFinance,jdbcType=INTEGER},
+			audit_user=#{userName,jdbcType=VARCHAR},
+			audit_user_id=#{userId,jdbcType=INTEGER},
+			audit_time=#{auditTime,jdbcType=BIGINT},
+			operate_log=CONCAT(IFNULL(operate_log, ''), SYSDATE(), ' ', #{operateLog,jdbcType=VARCHAR}, ' ',  
+							<if test="feeType=='shop'">
+								supplier_name, ' ', TRUNCATE(person_repay_total + total_repay, 2),
+							</if>
+							<if test="feeType=='com' or feeType=='com_deduction' ">
+								'导游：', guide_name ,' ', commission_name, TRUNCATE(total, 2),
+							</if>
+							<if test="feeType!='shop' and feeType!='com' and feeType!='com_deduction' ">
+								supplier_name, ' ', TRUNCATE(total, 2),
+							</if>
+							'元', '\n')
+		where id in(${ids}) 
+		<if test="groupId !=null">
+		and group_id=#{groupId}
+		</if>
+		 and 
+		<if test="stateFinance==0">
+			state_finance = 1
+		</if>
+		<if test="stateFinance==1">
+			(state_finance = 0  OR state_finance IS NULL)
+		</if>
+	</update>
+	
+	<!-- 封存操作 -->
+	<update id="updateSealByGroupIds" parameterType="java.util.HashMap">
+		update
+		<if test="feeType=='order'">
+			group_order
+		</if>
+		<if test="feeType=='shop'">
+			booking_shop
+		</if>
+		<if test="feeType=='del'">
+			booking_delivery
+		</if>
+		<if test="feeType=='sup'||feeType=='otherin'">
+			booking_supplier
+		</if>
+		<if test="feeType=='com'">
+			finance_commission 
+		</if>
+		set state_seal=#{stateSeal,jdbcType=INTEGER},
+			seal_user=#{userName,jdbcType=VARCHAR},
+			seal_user_id=#{userId,jdbcType=INTEGER},
+			seal_time=#{sealTime,jdbcType=BIGINT},
+			operate_log=CONCAT(IFNULL(operate_log, ''), SYSDATE(), ' ', #{operateLog,jdbcType=VARCHAR}, ' ', 
+							<if test="feeType=='shop'">
+								supplier_name, ' ', TRUNCATE(person_repay_total + total_repay, 2),
+							</if>
+							<if test="feeType=='com'">
+								'导游：', guide_name ,' ', commission_name, TRUNCATE(total, 2),
+							</if>
+							<if test="feeType!='shop' and feeType!='com'">
+								supplier_name, ' ', TRUNCATE(total, 2),
+							</if>
+							'元', '\n')
+		where group_id in (${groupIds}) and 
+		<if test="stateSeal==0">
+			state_seal = 1
+		</if>
+		<if test="stateSeal==1">
+			state_seal = 0
+		</if>
+	</update>
+	
+	<!-- 关联收入 -->
+	<select id="selectIncomeListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		select a.id,
+	        <if test="parameter.supType==6"> 
+	        	(IFNULL(a.total_repay, 0)+IFNULL(a.person_repay_total, 0)) total,	
+	        	(IFNULL(a.total_repay, 0)+IFNULL(a.person_repay_total, 0) - IFNULL(a.total_cash, 0)) balance, </if>
+	        <if test="parameter.supType!=6"> 
+	        	IFNULL(a.total, 0) total,(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance, 
+	        </if>
+	        <if test="parameter.supType==1">a.receive_mode,(IFNULL(a.num_adult, 0)+IFNULL(a.num_child, 0)) sum_person, a.order_no </if>
+	        <if test="parameter.supType!=1"> a.booking_no </if>
+	        order_no,
+			a.total_cash,
+			a.audit_user,
+			b.group_code,
+			b.product_name,
+			b.product_brand_name,
+			b.group_mode,
+			b.operator_name,
+			a.state_finance,
+			a.state_seal
+		from
+            <if test="parameter.supType==1"> group_order </if>
+            <if test="parameter.supType==6"> booking_shop </if>
+            <if test="parameter.supType==12"> booking_supplier </if>
+		a inner join tour_group b on a.group_id = b.id
+		where a.supplier_id=#{parameter.supplierId} 
+		<if test="parameter.orderNo!=null"> and 
+			<if test="parameter.supType==1"> a.receive_mode </if>
+			<if test="parameter.supType!=1"> a.booking_no </if>
+			like '%${parameter.orderNo}%' </if>
+        <if test="parameter.groupCode!=null"> and b.group_code = #{parameter.groupCode} </if>
+        
+        <if test="parameter.startMin != null">and a.create_time  <![CDATA[>=]]> UNIX_TIMESTAMP(#{parameter.startMin}) * 1000 </if>
+		<if test="parameter.startMax != null">and a.create_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{parameter.startMax}) * 1000 </if>
+		order by a.state_finance desc, a.state_seal asc
+	</select>
+
+	<!-- 关联支出 -->
+	<select id="selectPayListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		select a.id,
+			<if test="parameter.supType==16"> a.supplier_order_no </if>
+			<if test="parameter.supType!=16"> a.booking_no </if>
+			order_no,
+	        IFNULL(a.total,0) total,
+	        IFNULL(a.total_cash, 0) total_cash,
+	        (IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,
+			a.audit_user,
+			b.id group_id,
+			b.group_code,
+			b.group_mode,
+			b.total_adult,
+			b.total_child,
+			b.product_name,
+			b.product_brand_name,
+			b.operator_name,
+			a.state_finance,
+			a.state_seal
+		from
+			<if test="parameter.supType==16"> booking_delivery </if>
+			<if test="parameter.supType!=16"> booking_supplier </if>
+		a inner join tour_group b on a.group_id = b.id
+		where
+		b.group_state != -1 and 
+		b.biz_id = #{parameter.bizId} and   
+		a.supplier_id=#{parameter.supplierId} 
+		<if test="parameter.supType==12"> 
+			and a.supplier_type = 121   
+		</if>
+		<if test="parameter.orderNo!=null"> and 
+			<if test="parameter.supType==16"> a.supplier_order_no </if>
+			<if test="parameter.supType!=16"> a.booking_no </if>
+			 = #{parameter.orderNo} </if>
+        <if test="parameter.groupCode!=null"> and b.group_code like '%${parameter.groupCode}%'</if>
+        
+        <if test="parameter.dateType == 'groupDate'">
+        	<if test="parameter.startMin != null">and b.date_start  <![CDATA[>=]]> #{parameter.startMin} </if>
+			<if test="parameter.startMax != null">and b.date_start <![CDATA[<=]]> #{parameter.startMax} </if>
+        </if>
+        <if test="parameter.dateType == 'orderDate'">
+	        <if test="parameter.startMin != null">and a.booking_date  <![CDATA[>=]]> #{parameter.startMin} </if>
+			<if test="parameter.startMax != null">and a.booking_date <![CDATA[<=]]> #{parameter.startMax} </if>
+		</if>
+		<if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+			and b.operator_id in (${parameter.saleOperatorIds})
+		</if>
+		<if test="parameter.set != null">
+			and b.operator_id in
+			<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+		</if>
+		<if test="parameter.payState == 'unPaid'">
+			and (IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) != 0
+		</if>
+		<if test="parameter.payState == 'paid'">
+			and (IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) = 0
+		</if>
+		<if test="parameter.stateFinance != null and parameter.stateFinance != ''">
+			and state_finance = #{parameter.stateFinance}
+		</if>
+		order by b.date_start asc
+	</select>
+
+
+	<sql id="selectIncome">
+		select a.id,
+			<if test="payId!=null"> c.cash, </if>
+	        <if test="supType==6"> 
+	        	(IFNULL(a.total_repay, 0) + IFNULL(a.person_repay_total, 0)) total,	
+	        	(IFNULL(a.total_repay, 0) + IFNULL(a.person_repay_total, 0) - IFNULL(a.total_cash, 0)) balance, 
+	        </if>
+	        <if test="supType!=6"> a.total,(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance, </if>
+	        <if test="supType==1"> a.receive_mode, a.order_no </if>
+	        <if test="supType!=1"> a.booking_no </if>
+	        order_no,
+			a.total_cash,
+			a.audit_user,
+			ifNull(b.id,0) group_id,
+			b.group_code,
+			b.product_name,
+			b.product_brand_name,
+			b.group_mode,
+			b.operator_name
+		from
+            <if test="supType==1"> group_order </if>
+            <if test="supType==6"> booking_shop </if>
+            <if test="supType==12"> booking_supplier </if>
+		a left join tour_group b on a.group_id = b.id
+	
+	</sql>
+	<sql id="selectPay">
+		select a.id,
+			<if test="payId!=null"> c.cash, </if>
+			<if test="supType==16"> a.supplier_order_no </if>
+			<if test="supType!=16"> a.booking_no </if>
+			order_no,
+	        a.total,
+	        (IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,
+			a.total_cash,
+			a.audit_user,
+			b.id group_id,
+			b.group_code,
+			b.product_name,
+			b.product_brand_name,
+			b.group_mode,
+			b.operator_name
+		from
+			<if test="supType==16"> booking_delivery </if>
+			<if test="supType!=16"> booking_supplier </if>
+		a left join tour_group b on a.group_id = b.id
+	</sql>
+	<!-- 收款 -->
+	<select id="selectIncomeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<include refid="selectIncome" />
+		where a.id in(${ids})
+		order by date_start ,b.create_time 
+	</select>
+	<!-- 付款 -->
+	<select id="selectPayList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<include refid="selectPay" />
+		where a.id in(${ids})
+		order by date_start ,b.create_time 
+	</select>
+	<!-- 收款记录详情查看 -->
+	<select id="selectIncomeViewList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<include refid="selectIncome" />
+		inner join finance_pay_detail c on (a.id = c.loc_order_id) join finance_pay p on (c.pay_id=p.id)
+		where c.pay_id=#{payId} and p.supplier_id=a.supplier_id
+		<if test="oids != null"> and a.id in (${oids}) </if>
+		order by date_start ,b.create_time 
+	</select>
+	<!-- 付款记录详情查看 -->
+	<select id="selectPayViewList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<include refid="selectPay" />
+		inner join finance_pay_detail c on a.id = c.loc_order_id join finance_pay p on (c.pay_id=p.id)
+		where c.pay_id=#{payId} and p.supplier_id=a.supplier_id
+		<if test="oids != null"> and a.id in (${oids}) </if>
+		order by date_start ,b.create_time 
+	</select>
+
+	<!-- 导游结算 -->
+	<select id="selectGuideSettleListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		SELECT
+			a.id,a.total,a.group_id,a.guide_name,a.state_booking,b.id as groupId,b.group_code,b.group_mode,b.product_name,
+			b.product_brand_name,b.operator_name,b.total_adult,b.total_child,b.total_guide,b.remark
+		FROM
+			booking_guide a
+		INNER JOIN tour_group b ON a.group_id = b.id
+		where biz_id = ${parameter.bizId} and a.state_finance=1
+		<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+		<if test="parameter.start_max != null">and b.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+		<if test="parameter.group_code != null">and b.group_code like '%${parameter.group_code}%' </if>
+		<if test="parameter.guide_name != null">and a.guide_name like '%${parameter.guide_name}%' </if>
+		<if test="parameter.state_booking != null">and a.state_booking =#{parameter.state_booking} </if>
+		order by date_start ,b.create_time 
+	</select>
+	
+	<!-- 查询收款订单 -->
+	<select id="selectIncomeRecordListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		<if test="parameter.supplier_type == null">
+			SELECT * FROM (
+			SELECT a.id order_id,a.supplier_name,a.supplier_id,a.total_cash,
+				(IFNULL(a.total_repay, 0) + IFNULL(a.person_repay_total, 0)) total,
+				(IFNULL(a.total_repay, 0) + IFNULL(a.person_repay_total, 0) - IFNULL(a.total_cash, 0)) balance,b.* 
+				FROM booking_shop a
+				INNER JOIN tour_group b on b.id=a.group_id
+				WHERE b.biz_id = ${parameter.bizId}
+				and b.group_state in (1,3,4)
+				<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+				<if test="parameter.start_max != null">and b.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+				<if test="parameter.group_code != null">and b.group_code like '%${parameter.group_code}%' </if>
+				<if test="parameter.status == 1">and (a.total_repay+a.person_repay_total-a.total_cash) <![CDATA[!=0]]></if>
+				<if test="parameter.status == 0">and (a.total_repay+a.person_repay_total-a.total_cash) <![CDATA[=0]]></if>
+				<if test="parameter.group_mode == 0">and b.group_mode <![CDATA[<1]]></if>
+				<if test="parameter.group_mode > 0">and b.group_mode <![CDATA[>0]]></if>
+				<if test="parameter.supplier_name != null">and a.supplier_name like '%${parameter.supplier_name}%' </if>
+				<if test="parameter.product_name != null">and b.product_name like '%${parameter.product_name}%' </if>
+				<if test="parameter.set != null">
+					and b.operator_id in
+					<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+					#{item}
+					</foreach>
+				</if>
+				
+			UNION ALL
+			SELECT a.id order_id,a.supplier_name,a.supplier_id,a.total_cash,a.total,
+				(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,b.* 
+				FROM group_order a
+				INNER JOIN tour_group b on b.id=a.group_id
+				WHERE b.biz_id = ${parameter.bizId}
+				and b.group_state in (1,3,4)
+				<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+				<if test="parameter.start_max != null">and b.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+				<if test="parameter.group_code != null">and b.group_code like '%${parameter.group_code}%' </if>
+				<if test="parameter.status == 1">and (a.total - a.total_cash) <![CDATA[!=0]]></if>
+				<if test="parameter.status == 0">and (a.total - a.total_cash) <![CDATA[=0]]></if>
+				<if test="parameter.group_mode == 0">and b.group_mode = 0</if>
+				<if test="parameter.group_mode > 0">and b.group_mode <![CDATA[>0]]></if>
+				<if test="parameter.supplier_name != null">and a.supplier_name like '%${parameter.supplier_name}%' </if>
+				<if test="parameter.product_name != null">and b.product_name like '%${parameter.product_name}%' </if>
+				<if test="parameter.set != null">
+					and b.operator_id in
+					<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+					#{item}
+					</foreach>
+				</if>
+			UNION ALL
+			SELECT a.id order_id,a.supplier_name,a.supplier_id,a.total_cash,a.total,
+				(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,b.* 
+				FROM booking_supplier a
+				INNER JOIN tour_group b on b.id=a.group_id
+				WHERE a.supplier_type=120
+				and b.biz_id = ${parameter.bizId}
+				and b.group_state in (1,3,4)
+				<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+				<if test="parameter.start_max != null">and b.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+				<if test="parameter.group_code != null">and b.group_code like '%${parameter.group_code}%' </if>
+				<if test="parameter.status == 1">and (a.total - a.total_cash) <![CDATA[!=0]]></if>
+				<if test="parameter.status == 0">and (a.total - a.total_cash) <![CDATA[=0]]></if>
+				<if test="parameter.group_mode == 0">and b.group_mode = 0</if>
+				<if test="parameter.group_mode > 0">and b.group_mode <![CDATA[>0]]></if>
+				<if test="parameter.supplier_name != null">and a.supplier_name like '%${parameter.supplier_name}%' </if>
+				<if test="parameter.product_name != null">and b.product_name like '%${parameter.product_name}%' </if>
+				<if test="parameter.set != null">
+					and b.operator_id in
+					<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+					#{item}
+					</foreach>
+				</if>
+			) rr ORDER BY date_start, create_time
+		</if>
+		<if test="parameter.supplier_type == 1">
+			SELECT a.id order_id,a.supplier_name,a.supplier_id,a.total_cash,a.total,
+				(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,b.* 
+				FROM group_order a
+				INNER JOIN tour_group b on b.id=a.group_id
+				WHERE b.biz_id = ${parameter.bizId}
+				and b.group_state in (1,3,4)
+				<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+				<if test="parameter.start_max != null">and b.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+				<if test="parameter.group_code != null">and b.group_code like '%${parameter.group_code}%' </if>
+				<if test="parameter.status == 1">and (a.total - a.total_cash) <![CDATA[!=0]]></if>
+				<if test="parameter.status == 0">and (a.total - a.total_cash) <![CDATA[=0]]></if>
+				<if test="parameter.group_mode == 0">and b.group_mode = 0</if>
+				<if test="parameter.group_mode > 0">and b.group_mode <![CDATA[>0]]></if>
+				<if test="parameter.supplier_name != null">and a.supplier_name like '%${parameter.supplier_name}%' </if>
+				<if test="parameter.product_name != null">and b.product_name like '%${parameter.product_name}%' </if>
+				<if test="parameter.set != null">
+					and b.operator_id in
+					<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+					#{item}
+					</foreach>
+				</if>
+				ORDER BY b.date_start, b.create_time
+		</if>
+		<if test="parameter.supplier_type == 6">
+			SELECT a.id order_id,a.supplier_name,a.supplier_id,a.total_cash,
+				(IFNULL(a.total_repay, 0) + IFNULL(a.person_repay_total, 0)) total,	
+				(IFNULL(a.total_repay, 0) + IFNULL(a.person_repay_total, 0) - IFNULL(a.total_cash, 0)) balance,b.* 
+				FROM booking_shop a
+				INNER JOIN tour_group b on b.id=a.group_id
+				WHERE b.biz_id = ${parameter.bizId}
+				and b.group_state in (1,3,4)
+				<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+				<if test="parameter.start_max != null">and b.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+				<if test="parameter.group_code != null">and b.group_code like '%${parameter.group_code}%' </if>
+				<if test="parameter.status == 1">and (a.total_repay+a.person_repay_total-a.total_cash) <![CDATA[!=0]]></if>
+				<if test="parameter.status == 0">and (a.total_repay+a.person_repay_total-a.total_cash) <![CDATA[=0]]></if>
+				<if test="parameter.group_mode == 0">and b.group_mode = 0</if>
+				<if test="parameter.group_mode > 0">and b.group_mode <![CDATA[>0]]></if>
+				<if test="parameter.supplier_name != null">and a.supplier_name like '%${parameter.supplier_name}%' </if>
+				<if test="parameter.product_name != null">and b.product_name like '%${parameter.product_name}%' </if>
+				<if test="parameter.set != null">
+					and b.operator_id in
+					<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+					#{item}
+					</foreach>
+				</if>
+				ORDER BY b.date_start, b.create_time
+		</if>
+		<if test="parameter.supplier_type == 12">
+			SELECT a.id order_id,a.supplier_name,a.supplier_id,a.total_cash,a.total,
+				(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,b.* 
+				FROM booking_supplier a
+				INNER JOIN tour_group b on b.id=a.group_id
+				WHERE a.supplier_type=120
+				and b.biz_id = ${parameter.bizId}
+				and b.group_state in (1,3,4)
+				<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+				<if test="parameter.start_max != null">and b.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+				<if test="parameter.group_code != null">and b.group_code like '%${parameter.group_code}%' </if>
+				<if test="parameter.status == 1">and (a.total - a.total_cash) <![CDATA[!=0]]></if>
+				<if test="parameter.status == 0">and (a.total - a.total_cash) <![CDATA[=0]]></if>
+				<if test="parameter.group_mode == 0">and b.group_mode = 0</if>
+				<if test="parameter.group_mode > 0">and b.group_mode <![CDATA[>0]]></if>
+				<if test="parameter.supplier_name != null">and a.supplier_name like '%${parameter.supplier_name}%' </if>
+				<if test="parameter.product_name != null">and b.product_name like '%${parameter.product_name}%' </if>
+				<if test="parameter.set != null">
+					and b.operator_id in
+					<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+					#{item}
+					</foreach>
+				</if>
+			ORDER BY b.date_start, b.create_time
+		</if>
+	</select>
+	
+	<!-- 查询付款订单 -->
+	<select id="selectPayRecordListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		
+		SELECT * FROM (
+		<if test="parameter.supplier_type == null || parameter.supplier_type == 16">
+			SELECT a.id order_id,a.supplier_name,a.supplier_id, 16 supplier_type, IFNULL(a.total_cash, 0) total_cash, a.total,
+				(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,b.*
+				FROM booking_delivery a
+				INNER JOIN tour_group b on b.id=a.group_id
+				WHERE b.biz_id = ${parameter.bizId}
+				and b.group_state in (1,3,4)
+				<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+				<if test="parameter.start_max != null">and b.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+				<if test="parameter.group_code != null">and b.group_code like '%${parameter.group_code}%' </if>
+				<if test="parameter.status == 1">and (a.total - a.total_cash) <![CDATA[>0]]></if>
+				<if test="parameter.status == 0">and (a.total - a.total_cash) <![CDATA[<=0]]></if>
+				<if test="parameter.group_mode == 0">and b.group_mode = 0</if>
+				<if test="parameter.group_mode > 0">and b.group_mode <![CDATA[>0]]></if>
+				<if test="parameter.supplier_name != null">and a.supplier_name like '%${parameter.supplier_name}%' </if>
+				<if test="parameter.product_name != null">and b.product_name like '%${parameter.product_name}%' </if>
+				<if test="parameter.set != null">
+					and b.operator_id in
+					<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+					#{item}
+					</foreach>
+				</if>
+			UNION ALL
+		</if>
+		SELECT a.id order_id,a.supplier_name,a.supplier_id, a.supplier_type, IFNULL(a.total_cash, 0) total_cash,a.total,
+			(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,b.*
+			FROM booking_supplier a
+			INNER JOIN tour_group b on b.id=a.group_id
+			WHERE b.biz_id = ${parameter.bizId} and a.supplier_type<![CDATA[<>]]>120
+			and b.group_state in (1,3,4)
+			<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+			<if test="parameter.start_max != null">and b.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+			<if test="parameter.group_code != null">and b.group_code like '%${parameter.group_code}%' </if>
+			<if test="parameter.status == 1">and (a.total - a.total_cash) <![CDATA[>0]]></if>
+			<if test="parameter.status == 0">and (a.total - a.total_cash) <![CDATA[<=0]]></if>
+			<if test="parameter.group_mode == 0">and b.group_mode = 0</if>
+			<if test="parameter.group_mode > 0">and b.group_mode <![CDATA[>0]]></if>
+			<if test="parameter.supplier_name != null">and a.supplier_name like '%${parameter.supplier_name}%' </if>
+			<if test="parameter.product_name != null">and b.product_name like '%${parameter.product_name}%' </if>
+			<if test="parameter.supplier_type != null">
+				<if test="parameter.supplier_type != 12">
+					and a.supplier_type = #{parameter.supplier_type}
+				</if>
+				<if test="parameter.supplier_type == 12">
+					and a.supplier_type = 121  
+				</if>
+			</if>
+			<if test="parameter.set != null">
+				and b.operator_id in
+				<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+			</if>
+		) rr ORDER BY date_start, create_time
+	</select>
+	
+	<!-- 查询单个订单的收付款记录 -->
+	<select id="selectCashRecordList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select b.cash, a.pay_date,a.pay_code,a.supplier_name,a.pay_type,a.left_bank,a.left_bank_open,
+			a.left_bank_holder,a.left_bank_account,a.right_bank,a.right_bank_open,a.right_bank_holder,
+			a.right_bank_account,a.remark,a.booking_guide_id,a.user_name,a.user_id,a.create_time 
+		from finance_pay a INNER JOIN finance_pay_detail b on a.id = b.pay_id 
+		where (a.supplier_id=#{supplierId} or a.TYPE =2) and a.pay_direct=#{payDirect} and b.loc_order_id=#{orderId}
+	</select>
+	
+	<!-- 查询佣金发放的付款记录 -->
+	<select id="selectCommCashRecordList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT b.cash, a.pay_date,a.pay_code,a.supplier_name,a.pay_type,a.left_bank,a.left_bank_open,
+			a.left_bank_holder,a.left_bank_account,a.right_bank,a.right_bank_open,a.right_bank_holder,
+			a.right_bank_account,a.remark,a.booking_guide_id,a.user_name,a.user_id,a.create_time 
+		FROM finance_pay a INNER JOIN finance_pay_detail b ON a.id = b.pay_id 
+		WHERE a.group_id=#{groupId} AND a.guide_id=#{guideId} AND a.pay_direct=#{payDirect}
+	</select>
+	
+	<!-- 查询佣金扣款的付款记录 -->
+	<select id="selectCommDeductionCashRecordList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT b.cash, a.pay_date,a.pay_code,a.supplier_name,a.pay_type,a.left_bank,a.left_bank_open,
+			a.left_bank_holder,a.left_bank_account,a.right_bank,a.right_bank_open,a.right_bank_holder,
+			a.right_bank_account,a.remark,a.booking_guide_id,a.user_name,a.user_id,a.create_time 
+		FROM finance_pay_commission_deduction a INNER JOIN finance_pay_detail_commission_deduction b ON a.id = b.pay_id 
+		WHERE a.group_id=#{groupId} AND a.guide_id=#{guideId} AND a.pay_direct=#{payDirect}
+	</select>
+	
+	<!-- 查询单个订单的明细 -->
+	<select id="selectPayOrderDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<if test="supplierType == 16">
+			select item_name,remark,unit_price,num_person,num_times,total_price FROM booking_delivery_price
+		</if> 
+		<if test="supplierType != 16">
+			select concat_ws(' ',type1_name,type2_name) item_name,item_brief remark,item_price unit_price,
+			item_num num_times,item_total total_price,item_num_minus, ticket_flight 
+			FROM booking_supplier_detail
+		</if> 
+		where booking_id=#{orderId}
+	</select>
+	
+	<!-- 查询单个订单的明细 -->
+	<select id="selectGuideAuditListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		select a.id,a.guide_id,a.guide_name,a.total,a.state_finance,b.id as groupId,b.group_mode ,b.group_code,b.product_name,
+			b.product_brand_name,b.total_adult,b.total_child,b.total_guide,b.operator_name,b.group_state,b.id group_id  
+			from booking_guide a inner join tour_group b on a.group_id = b.id
+			where biz_id = ${parameter.bizId} and a.state_booking=2
+			and b.group_state in (1,3,4)
+			<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+			<if test="parameter.start_max != null">and b.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+			<if test="parameter.group_code != null">and b.group_code like '%${parameter.group_code}%' </if>
+			<if test="parameter.product_name != null">and b.product_name like '%${parameter.product_name}%' </if>
+			<if test="parameter.operator_name != null">and b.operator_name = #{parameter.operator_name} </if>
+			<if test="parameter.operator_id != null">and b.operator_id in (${parameter.operator_id})</if>
+			<if test="parameter.group_state != null">and b.group_state = #{parameter.group_state} </if>
+			<if test="parameter.guide_name != null">and a.guide_name = #{parameter.guide_name} </if>
+			<if test="parameter.state_finance != null">and a.state_finance = #{parameter.state_finance} </if>
+			<if test="parameter.set != null">
+				and b.operator_id in
+				<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+			</if>
+			order by date_start ,b.create_time 
+	</select>
+	
+	<!-- 查询审核统计列表 -->
+	<select id="selectAduditStatisticsListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		SELECT t.audit_user ,COUNT(t.audit_user) AS count_group,
+			SUM(t.total_adult) AS sum_adult,
+			SUM(t.total_child) AS sum_child 
+				FROM tour_group t where biz_id = ${parameter.bizId} and  t.audit_user IS NOT NULL and group_state in (1,3,4)
+			<if test="parameter.start_min != null">and t.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+			<if test="parameter.start_max != null">and t.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+			<if test="parameter.audit_user != null">and t.audit_user = #{parameter.audit_user} </if>
+			<if test="parameter.set != null">
+				and t.audit_user_id in
+				<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+			</if>
+			 <if test="parameter.operator_id!= null and parameter.operator_id != ''" >
+        		and t.operator_id in (${parameter.operator_id})	
+      		 </if>
+			GROUP BY t.audit_user
+			order by date_start ,t.create_time 
+	</select>
+	<!--对账单列表  -->
+	<select id="selectVerifyListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+	SELECT t.id, t.verify_code, t.create_time, t.user_id, t.user_name, t.date_start, t.date_end, t.supplier_name, 
+		t.supplier_type, t.total_price,t.total_cash,(IFNULL(t.total_price, 0) - IFNULL(t.total_cash, 0)) AS total_not,
+		t.total_adjust,t.total_record,t.verify_state 
+		FROM finance_verify t 
+		WHERE t.biz_id = ${parameter.bizId}
+		<if test="parameter.start_min != null">and t.create_time <![CDATA[>=]]> #{parameter.start_min} </if>
+		<if test="parameter.start_max != null">and t.create_time <![CDATA[<=]]> #{parameter.start_max}	</if>
+		<if test="parameter.verify_code != null">and t.verify_code like '%${parameter.verify_code}%' </if>
+		<if test="parameter.status != null">and t.verify_state <![CDATA[=]]> #{parameter.status}</if>
+		<if test="parameter.verify_name != null">and t.user_name like '%${parameter.verify_name}%' </if>
+		<if test="parameter.supplier_name != null">and t.supplier_name like '%${parameter.supplier_name}%' </if>
+		<if test="parameter.supplierType != null">and t.supplier_type <![CDATA[=]]> #{parameter.supplierType}</if>
+		<if test="parameter.set != null">
+			and t.user_id in
+			<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+		</if>
+	</select>
+	<!--对账查询列表 -->
+	<select id="selectVerifySearchListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		<if test="parameter.supplierType != null and parameter.supplierType == 16">
+			SELECT g.id as groupId,t.id,v.verify_code,g.group_mode,g.group_code,t.supplier_name,
+			(IFNULL(t.person_adult, 0) + IFNULL(t.person_child, 0) + IFNULL(t.person_guide, 0)) person_count,
+			t.supplier_order_no AS booking_no,t.booking_date,g.product_name,g.product_brand_name,g.operator_name,g.group_mode  groupModel,
+			IFNULL(t.total, 0) total, IFNULL(t.total_cash, 0) total_cash,(IFNULL(t.total, 0) - IFNULL(t.total_cash, 0)) AS total_not
+			 FROM booking_delivery t 
+			LEFT JOIN finance_verify_detail d ON  t.id=d.booking_id
+			LEFT JOIN  finance_verify v ON d.verify_id=v.id
+			LEFT JOIN tour_group g ON t.group_id=g.id
+			where g.group_state in (1,3,4)   and g.biz_id = ${parameter.bizId}
+			<if test="parameter.booking_no != null">and t.supplier_order_no like '%${parameter.booking_no}%'</if>
+			<if test="parameter.supplierType != null and parameter.status != null and parameter.status==0"> AND v.verify_code IS NULL </if>
+			<if test="parameter.supplierType != null and  parameter.status != null and parameter.status==1">and v.supplier_type <![CDATA[=]]> #{parameter.supplierType} AND v.verify_code IS not NULL </if>
+		</if>
+		
+		<if test="parameter.supplierType != null and parameter.supplierType == 1">
+			SELECT g.id as groupId, t.id,v.verify_code,g.group_mode,g.group_code,t.product_name,t.product_brand_name,
+			(IFNULL(t.num_adult, 0) + IFNULL(t.num_child, 0) + IFNULL(t.num_guide, 0)) person_count,
+			t.order_no AS booking_no,FROM_UNIXTIME(t.create_time/1000) AS booking_date,t.operator_name,
+			t.supplier_name,g.group_mode groupModel,
+			IFNULL(t.total, 0) total, IFNULL(t.total_cash, 0) total_cash, (IFNULL(t.total, 0) - IFNULL(t.total_cash, 0)) AS total_not
+			 FROM group_order t
+			LEFT JOIN  tour_group g ON t.`group_id`=g.`id` 
+			LEFT JOIN finance_verify_detail d ON  t.id=d.`order_id`
+			LEFT JOIN  finance_verify v ON d.`verify_id`=v.id
+			where g.group_state in (1,3,4)  and t.biz_id = ${parameter.bizId}
+			<if test="parameter.booking_no != null">and t.order_no like '%${parameter.booking_no}%'</if>
+			<if test="parameter.supplierType != null and parameter.status != null and parameter.status==0"> AND v.verify_code IS NULL </if>
+			<if test="parameter.supplierType != null and  parameter.status != null and parameter.status==1">and v.supplier_type <![CDATA[=]]> #{parameter.supplierType} AND v.verify_code IS not NULL </if>
+		</if>
+		
+		<if test="parameter.supplierType != null and parameter.supplierType != 16 and parameter.supplierType != 1">
+		SELECT g.id as groupId, t.id,v.verify_code,g.group_mode,g.group_code,t.supplier_name,
+			(IFNULL(g.total_adult, 0) + IFNULL(g.total_child, 0) + IFNULL(g.total_guide, 0)) person_count,
+			t.booking_no,t.booking_date,g.product_name,g.product_brand_name,g.operator_name,t.user_name,
+			 g.group_mode groupModel,
+			IFNULL(t.total, 0) total, IFNULL(t.total_cash, 0) total_cash, (IFNULL(t.total, 0) - IFNULL(t.total_cash, 0)) AS total_not
+			 FROM booking_supplier t 
+			LEFT JOIN finance_verify_detail d ON  t.id=d.booking_id
+			LEFT JOIN  finance_verify v ON d.verify_id=v.id
+			LEFT JOIN tour_group g ON t.group_id=g.id
+			WHERE g.group_state in (1,3,4) and g.biz_id = ${parameter.bizId}
+			<if test="parameter.booking_no != null">and t.booking_no like '%${parameter.booking_no}%'</if>
+			<if test="parameter.supplierType != null">and t.supplier_type <![CDATA[=]]> #{parameter.supplierType}</if>
+			<if test="parameter.status != null and parameter.status==0">AND v.verify_code IS NULL </if>
+			<if test="parameter.status != null and parameter.status==1">AND v.verify_code IS not NULL </if>
+		</if>	
+			
+			<if test="parameter.start_min != null">and g.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+			<if test="parameter.start_max != null">and g.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+			<if test="parameter.group_code != null">and g.group_code like '%${parameter.group_code}%' </if>
+			<if test="parameter.product_name != null">and g.product_name like '%${parameter.product_name}%' </if>
+			<if test="parameter.supplier_name != null">and t.supplier_name like '%${parameter.supplier_name}%' </if>
+			<if test="parameter.operator_id != null">and g.operator_id in (${parameter.operator_id}) </if>
+			<if test="parameter.set != null">
+				and g.operator_id in
+				<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+			</if>
+			order by g.date_start ,g.create_time 
+	</select>
+	
+	<!--对账单-订单列表 -->
+	<select id="selectVerifyDetailOrderListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		<if test="parameter.supplierType != null and parameter.supplierType == 16">
+			SELECT t.id,v.verify_code,g.group_code,t.supplier_name,
+			(IFNULL(t.person_adult, 0) + IFNULL(t.person_child, 0) + IFNULL(t.person_guide, 0)) person_count,
+			t.supplier_order_no AS booking_no,t.booking_date,g.product_name,g.product_brand_name,g.operator_name,
+			IFNULL(t.total, 0) total, IFNULL(t.total_cash, 0) total_cash, (IFNULL(t.total, 0) - IFNULL(t.total_cash, 0)) AS total_not,
+			t.state_finance, t.state_seal 
+			FROM booking_delivery t 
+			LEFT JOIN finance_verify_detail d ON  t.id=d.booking_id
+			LEFT JOIN  finance_verify v ON d.verify_id=v.id
+			LEFT JOIN tour_group g ON t.group_id=g.id
+			where g.group_state in (1,3,4) and g.biz_id = ${parameter.bizId}
+			<if test="parameter.booking_no != null">and t.supplier_order_no like '%${parameter.booking_no}%'</if>
+			<if test="parameter.supplierType != null and parameter.status != null and parameter.status==0"> AND v.verify_code IS NULL  AND t.state_finance=1 </if>
+			<if test="parameter.supplierType != null and  parameter.status != null and parameter.status==1">and v.supplier_type <![CDATA[=]]> #{parameter.supplierType} AND v.verify_code IS not NULL  AND t.state_finance=1 </if>
+			<if test="parameter.status != null and parameter.status==2"> AND v.verify_code IS NULL AND t.state_finance=0 </if>
+			<if test="parameter.status != null and parameter.status==4"> AND t.state_finance=4 </if>
+		</if>
+		
+		<if test="parameter.supplierType != null and parameter.supplierType == 1">
+			SELECT t.id,v.verify_code,g.group_code,t.product_name,t.product_brand_name,
+			(IFNULL(t.num_adult, 0) + IFNULL(t.num_child, 0) + IFNULL(t.num_guide, 0)) person_count,
+			t.order_no AS booking_no,FROM_UNIXTIME(t.create_time/1000) AS booking_date,t.operator_name,t.supplier_name,
+			IFNULL(t.total, 0) total, IFNULL(t.total_cash, 0) total_cash, (IFNULL(t.total, 0) - IFNULL(t.total_cash, 0)) AS total_not,
+			t.state_finance, t.state_seal 
+			FROM group_order t
+			LEFT JOIN  tour_group g ON t.group_id=g.id 
+			LEFT JOIN finance_verify_detail d ON  t.id=d.order_id 
+			LEFT JOIN  finance_verify v ON d.verify_id=v.id
+			where g.group_state in (1,3,4) and t.biz_id = ${parameter.bizId}
+			<if test="parameter.booking_no != null">and t.order_no like '%${parameter.booking_no}%'</if>
+			<if test="parameter.supplierType != null and parameter.status != null and parameter.status==0"> AND v.verify_code IS NULL AND t.state_finance=1 </if>
+			<if test="parameter.supplierType != null and  parameter.status != null and parameter.status==1">and v.supplier_type <![CDATA[=]]> #{parameter.supplierType} AND v.verify_code IS not NULL  AND t.state_finance=1 </if>
+			<if test="parameter.status != null and parameter.status==2"> AND v.verify_code IS NULL AND t.state_finance=0 </if>
+			<if test="parameter.status != null and parameter.status==4"> AND t.state_finance=4 </if>
+		</if>
+		
+		<if test="parameter.supplierType != null and parameter.supplierType != 16 and parameter.supplierType != 1">
+		SELECT t.id,v.verify_code,g.group_code,t.supplier_name,
+			(IFNULL(g.total_adult, 0) + IFNULL(g.total_child, 0) + IFNULL(g.total_guide, 0)) person_count,
+			t.booking_no,t.booking_date,g.product_name,g.product_brand_name,g.operator_name,t.user_name,
+			IFNULL(t.total, 0) total, IFNULL(t.total_cash, 0) total_cash, (IFNULL(t.total, 0) - IFNULL(t.total_cash, 0)) AS total_not,
+			t.state_finance, t.state_seal 
+			FROM booking_supplier t 
+			LEFT JOIN finance_verify_detail d ON  t.id=d.`booking_id`
+			LEFT JOIN  finance_verify v ON d.`verify_id`=v.id
+			LEFT JOIN tour_group g ON t.`group_id`=g.`id`
+			WHERE g.group_state in (1,3,4) and g.biz_id = ${parameter.bizId}
+			<if test="parameter.booking_no != null">and t.booking_no like '%${parameter.booking_no}%'</if>
+			<if test="parameter.supplierType != null">and t.supplier_type <![CDATA[=]]> #{parameter.supplierType}</if>
+			<if test="parameter.status != null and parameter.status==0"> AND v.verify_code IS NULL  AND t.state_finance=1 </if>
+			<if test="parameter.status != null and parameter.status==1"> AND v.verify_code IS not NULL  AND t.state_finance=1 </if>
+			<if test="parameter.status != null and parameter.status==2"> AND v.verify_code IS  NULL AND t.state_finance=0 </if>
+			<if test="parameter.status != null and parameter.status==4"> AND t.state_finance=4 </if>
+		</if>	
+			
+			<if test="parameter.start_min != null">and g.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+			<if test="parameter.start_max != null">and g.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+			<if test="parameter.group_code != null">and g.group_code like '%${parameter.group_code}%' </if>
+			<if test="parameter.product_name != null">and g.product_name like '%${parameter.product_name}%' </if>
+			<if test="parameter.supplier_name != null">and t.supplier_name like '%${parameter.supplier_name}%' </if>
+			<if test="parameter.operator_id != null">and g.operator_id in (${parameter.operator_id}) </if>
+			<if test="parameter.ids != null"> AND t.id in (${parameter.ids}) </if>
+			<if test="parameter.set != null">
+				and g.operator_id in
+				<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+			</if>
+			order by date_start ,g.create_time 
+	</select>
+	
+		<!-- 金额详情 -->
+	<select id="selectAmountDetailOrderListPage" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	<if test="supplierType == 1">
+		SELECT t.id,t.item_name,t.remark,t.unit_price,t.num_person,t.num_times,t.total_price FROM group_order_price t 
+		WHERE t.order_id = #{bookingId} 
+		<if test="mode != null"> and mode = #{mode} </if>
+	</if>
+	<if test="supplierType == 16">
+		SELECT t.id,t.item_name,t.remark,t.unit_price,t.num_person,t.num_times,t.total_price FROM booking_delivery_price t 
+		WHERE t.booking_id = #{bookingId}
+	</if>
+	<if test="supplierType != null and supplierType != 16 and supplierType != 1">
+		SELECT 
+			type1_name, 
+			type2_name, 
+			item_date, 
+			item_num,
+			item_num_minus, 
+			item_price, 
+			item_total 
+		FROM booking_supplier_detail
+		WHERE booking_id = #{bookingId}
+	</if>
+	</select>
+	
+	
+	<!-- 购物佣金统计 -->
+	<select id="selectShopCommListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		SELECT t.id,g.group_code,g.product_name,g.product_brand_name,g.date_start,g.operator_name,t.guide_id
+			,t.supplier_id,t.supplier_name,t.total_money,t.person_num_fact ,d.buy_price,t.state_finance,t.audit_time,t.state_seal
+			FROM booking_shop t 
+			LEFT JOIN tour_group g ON t.group_id= g.`id` 
+			LEFT JOIN booking_shop_detail d ON t.id=d.booking_id
+			WHERE g.biz_id = #{bizId,jdbcType=INTEGER}
+			order by date_start ,g.create_time 
+	</select>
+
+</mapper>

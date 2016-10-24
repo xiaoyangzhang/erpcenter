@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="rpt">
+	
+	<sql id="selectSupplier">
+		<if test="parameter.supplier_type != null">and t.supplier_type <![CDATA[=]]> #{parameter.supplier_type} </if>
+		<if test="parameter.car_type != null">and d.type1_id = #{parameter.car_type }</if>
+		<if test="parameter.cashType != null">and t.cash_type like concat ('%',#{parameter.cashType},'%')   </if>
+		<if test="parameter.supplier_name != null">and t.supplier_name like concat( '%',#{parameter.supplier_name},'%')</if>
+		<if test="parameter.user_name != null">and t.user_name like concat( '%',#{parameter.user_name},'%')  </if>
+		 AND b.biz_id = #{parameter.bizId}   and group_state in (1,3,4)
+		 <if test="parameter.set!=null">
+			AND b.operator_id in
+			<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		
+		<if test="parameter.choose_type != null and parameter.choose_type==0">
+			<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+			<if test="parameter.start_max != null">and b.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+		</if>
+		<if test="parameter.choose_type != null and parameter.choose_type==2">
+			<if test="parameter.start_min != null">and b.date_end <![CDATA[>=]]> #{parameter.start_min} </if>
+			<if test="parameter.start_max != null">and b.date_end <![CDATA[<=]]> #{parameter.start_max}	</if>
+		</if>
+		<if test="parameter.product_name != null">and (b.product_name like concat( '%',#{parameter.product_name},'%') or b.product_brand_name like concat( '%',#{parameter.product_name},'%')) </if>
+		
+	    <if test="parameter.group_mode == 0">and group_mode <![CDATA[<]]> 1</if>
+	    <if test="parameter.group_mode !=0 and parameter.group_mode!=null">and group_mode <![CDATA[>]]>0</if>
+	    <if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and b.operator_id in (${parameter.saleOperatorIds})
+		</if>
+	</sql>
+	
+	<!-- 供应商列表 -->
+	<select id="selectSupplierListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		select t.supplier_id, t.supplier_name, COUNT(t.supplier_id) order_num,  IFNULL(SUM(t.total),0) total, IFNULL(SUM(t.total_cash),0) total_cash, 
+				IFNULL(SUM(num),0) total_item, ifnull(sum(itemNumMinus),0) total_item_minus, pt.originalTotalBalance
+		from  booking_supplier t join tour_group b on b.id=t.group_id  
+				 left join (SELECT booking_id,SUM(IFNULL(item_num,0)) num,sum(IFNULL(`item_num_minus`,0)) itemNumMinus,item_date,type1_id,item_date_to 
+						 		FROM booking_supplier_detail GROUP BY booking_id )  d ON t.id=d.`booking_id`
+				left join (select supplier_id, SUM(IFNULL(t.`total`,0)-IFNULL(t.`total_cash`,0)) originalTotalBalance 
+						 		from booking_supplier t join tour_group b on b.id=t.group_id 
+						 		left join (SELECT booking_id,SUM(IFNULL(item_num,0)) num,sum(IFNULL(`item_num_minus`,0)) itemNumMinus,item_date,type1_id,item_date_to 
+						 						FROM booking_supplier_detail GROUP BY booking_id )  d ON t.id=d.`booking_id`
+								where group_state in (1,3,4) and t.supplier_type =#{parameter.supplier_type}  AND b.biz_id = #{parameter.bizId} 
+								<if test="parameter.choose_type != null and parameter.choose_type==1">
+									<if test="parameter.start_min != null ">and  d.item_date <![CDATA[<]]> #{parameter.start_min} </if>
+								</if>
+								<if test="parameter.choose_type != null and parameter.choose_type==0">
+									<if test="parameter.start_min != null">and b.date_start <![CDATA[<]]> #{parameter.start_min} </if>
+								</if>
+								<if test="parameter.choose_type != null and parameter.choose_type==2">
+									<if test="parameter.start_min != null">and b.date_end <![CDATA[<]]> #{parameter.start_min} </if>
+								</if>
+								<if test="parameter.supplier_name != null">and t.supplier_name like concat( '%',#{parameter.supplier_name},'%')</if>
+								<if test="parameter.product_name != null">and (b.product_name like concat( '%',#{parameter.product_name},'%') or b.product_brand_name like concat( '%',#{parameter.product_name},'%')) </if>
+								<if test="parameter.car_type != null">and d.type1_id = #{parameter.car_type }</if>
+								<if test="parameter.cashType != null">and t.cash_type like concat ('%',#{parameter.cashType},'%')   </if>
+								<if test="parameter.user_name != null">and t.user_name like concat( '%',#{parameter.user_name},'%')  </if>	
+								<if test="parameter.group_mode!=null">
+										<if test="parameter.group_mode == 0">and group_mode <![CDATA[<]]> 1</if>
+									    <if test="parameter.group_mode !=0 ">and group_mode <![CDATA[>]]>0</if>
+							    </if>
+								<if test="parameter.set!=null">
+									AND b.operator_id in
+									<foreach item="item" index="index" collection="parameter.set" open="("  separator="," close=")">
+										#{item}
+									</foreach>
+								</if>
+								<if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+										and b.operator_id in (${parameter.saleOperatorIds})
+								 </if>								
+							    group by t.supplier_id
+						) pt on (pt.supplier_id = t.supplier_id)
+		where  group_state in (1,3,4) and t.supplier_type =#{parameter.supplier_type}  AND b.biz_id = #{parameter.bizId} 
+		<if test="parameter.choose_type != null and parameter.choose_type==1">
+			<if test="parameter.start_min != null ">and  d.item_date <![CDATA[>=]]> #{parameter.start_min} </if>
+			<if test=" parameter.start_max != null">and #{parameter.start_max} <![CDATA[>=]]> d.item_date   </if>
+		</if>
+		<if test="parameter.choose_type != null and parameter.choose_type==0">
+			<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+			<if test="parameter.start_max != null">and b.date_start <![CDATA[<=]]> #{parameter.start_max}</if>
+		</if>
+		<if test="parameter.choose_type != null and parameter.choose_type==2">
+			<if test="parameter.start_min != null">and b.date_end <![CDATA[>=]]> #{parameter.start_min} </if>
+			<if test="parameter.start_max != null">and b.date_end <![CDATA[<=]]> #{parameter.start_max}</if>
+		</if>
+		<if test="parameter.supplier_name != null">and t.supplier_name like concat( '%',#{parameter.supplier_name},'%')</if>
+		<if test="parameter.product_name != null">and (b.product_name like concat( '%',#{parameter.product_name},'%') or b.product_brand_name like concat( '%',#{parameter.product_name},'%')) </if>
+		<if test="parameter.car_type != null">and d.type1_id = #{parameter.car_type }</if>
+		<if test="parameter.cashType != null">and t.cash_type like concat ('%',#{parameter.cashType},'%')   </if>
+		<if test="parameter.user_name != null">and t.user_name like concat( '%',#{parameter.user_name},'%')  </if>	
+		<if test="parameter.group_mode!=null">
+			<if test="parameter.group_mode == 0">and group_mode <![CDATA[<]]> 1</if>
+		    <if test="parameter.group_mode !=0 ">and group_mode <![CDATA[>]]>0</if>
+	    </if>
+		<if test="parameter.set!=null">
+			AND b.operator_id in
+			<foreach item="item" index="index" collection="parameter.set" open="("  separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and b.operator_id in (${parameter.saleOperatorIds})
+		 </if>
+
+		<if test="parameter.status == 0">
+			and IFNULL(t.total,0) - IFNULL(t.total_cash,0) = 0 and originalTotalBalance= 0
+		</if>
+		<if test="parameter.status == 1">
+			and (IFNULL(t.total,0) - IFNULL(t.total_cash,0) <![CDATA[<>]]> 0 or originalTotalBalance <![CDATA[<>]]> 0)
+		</if>
+		group by t.supplier_id
+		order by IFNULL(SUM(t.total_cash),0)+ pt.originalTotalBalance desc
+
+	</select>
+	<select id="selectFleetSupplierListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+	select m.*,ifnull(originalTotalBalance,0) originalTotalBalance from (
+		SELECT 
+			t.supplier_id, 
+			t.supplier_name, 
+			COUNT(t.supplier_id) order_num, 
+			IFNULL(SUM(t.total),0) total, 
+			IFNULL(SUM(t.total_cash),0) total_cash,
+			IFNULL(SUM(num),0) total_item,
+			t.user_name,
+			ifnull(sum(itemNumMinus),0) total_item_minus
+		
+		from  booking_supplier t join tour_group b on b.id=t.group_id 
+		left JOIN (SELECT booking_id,SUM(IFNULL(item_num,0)) num,sum(IFNULL(`item_num_minus`,0)) itemNumMinus,item_date,type1_id,item_date_to FROM booking_supplier_detail GROUP BY booking_id )  d ON t.id=d.`booking_id`
+		WHERE 1=1 
+		<include refid="selectSupplier" />
+		
+		<if test="parameter.choose_type != null and parameter.choose_type==1">
+			<if test="parameter.start_min != null and parameter.start_max != null">and (d.item_date BETWEEN #{parameter.start_min}  and  #{parameter.start_max})</if>
+		</if>
+		
+		GROUP BY t.supplier_id 
+		order by b.date_start desc, t.create_time  ) m
+		left join (SELECT  t.supplier_id,  SUM(IFNULL(t.`total`,0)-IFNULL(t.`total_cash`,0)) originalTotalBalance
+		           from  booking_supplier t 
+		           join tour_group b on b.id=t.group_id 
+		           left JOIN (SELECT booking_id,item_date,type1_id,item_date_to FROM booking_supplier_detail GROUP BY booking_id )  d ON t.id=d.`booking_id`
+					WHERE b.biz_id = #{parameter.bizId} and group_state in (1,3,4)
+					<if test="parameter.supplier_type != null">and t.supplier_type <![CDATA[=]]> #{parameter.supplier_type} </if>
+					<if test="parameter.car_type != null">and d.type1_id = #{parameter.car_type }</if>
+					<if test="parameter.cashType != null">and t.cash_type like concat ('%',#{parameter.cashType},'%')   </if>
+					<if test="parameter.supplier_name != null">and t.supplier_name like concat( '%',#{parameter.supplier_name},'%')</if>
+					<if test="parameter.user_name != null">and t.user_name like concat( '%',#{parameter.user_name},'%')  </if>
+		 			<if test="parameter.set!=null">
+						AND b.operator_id in
+						<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+							#{item}
+						</foreach>
+					</if>
+					<if test="parameter.choose_type==0">
+							<if test="parameter.start_min != null">and b.date_start <![CDATA[<]]> #{parameter.start_min} </if>
+					</if>
+					<if test="parameter.choose_type==1">
+							<if test="parameter.start_min != null">and d.item_date <![CDATA[<]]> #{parameter.start_min} </if>
+					</if>
+					<if test="parameter.choose_type==2">
+							<if test="parameter.start_min != null">and b.date_end <![CDATA[<]]> #{parameter.start_min} </if>
+					</if>
+					<if test="parameter.product_name != null">and (b.product_name like concat( '%',#{parameter.product_name},'%') or b.product_brand_name like concat( '%',#{parameter.product_name},'%')) </if>
+				    <if test="parameter.group_mode == 0">and group_mode <![CDATA[<]]> 1</if>
+				    <if test="parameter.group_mode !=0 and parameter.group_mode!=null">and group_mode <![CDATA[>]]>0</if>
+				    <if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+							and b.operator_id in (${parameter.saleOperatorIds})
+					</if>
+					GROUP BY t.supplier_id 
+					order by b.date_start desc, t.create_time 
+				) a on a.supplier_id=m.supplier_id
+		 where 1=1 
+		<if test="parameter.status == 0">and (ifnull(total,0) - ifnull(total_cash,0)) <![CDATA[=]]>0</if>
+		<if test="parameter.status == 1">and (ifnull(total,0) - ifnull(total_cash,0)) <![CDATA[<>]]>0</if>
+	</select>
+	
+	<!-- 供应商总计 -->
+	<select id="selectSupplierSum" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+			SELECT 
+				IFNULL(SUM(t.total),0) total, IFNULL(SUM(t.total_cash),0) total_cash,
+				IFNULL(SUM(num),0) total_item , ifnull(sum(totalNumMinus),0) total_item_minus, SUM(num)- sum(totalNumMinus) as totalNum
+			FROM booking_supplier  t join tour_group b on b.id=t.group_id
+			left JOIN (SELECT booking_id,SUM(IFNULL(item_num,0)) num,sum(IFNULL(`item_num_minus`,0)) totalNumMinus FROM booking_supplier_detail GROUP BY booking_id) d ON t.id=d.`booking_id`
+			left join (select supplier_id, SUM(IFNULL(t.`total`,0)-IFNULL(t.`total_cash`,0)) originalTotalBalance 
+						 		from booking_supplier t join tour_group b on b.id=t.group_id 
+						 		left join(SELECT booking_id,item_date FROM booking_supplier_detail 
+						 			where 1=1
+						 			<if test="parameter.car_type != null">and d.type1_id = #{parameter.car_type }</if>
+						 			GROUP BY booking_id,item_date
+						 		) d on t.id=d.booking_id 
+								where group_state in (1,3,4)  AND b.biz_id = #{parameter.bizId}  
+								<if test="parameter.supplier_type != null">and t.supplier_type <![CDATA[=]]> #{parameter.supplier_type} </if>
+								<if test="parameter.cashType != null">and t.cash_type like concat ('%',#{parameter.cashType},'%')   </if>
+								<if test="parameter.supplier_name != null">and t.supplier_name like concat( '%',#{parameter.supplier_name},'%')</if>
+								<if test="parameter.user_name != null">and t.user_name like concat( '%',#{parameter.user_name},'%')  </if>
+								<if test="parameter.set!=null">
+									AND b.operator_id in
+									<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+										#{item}
+									</foreach>
+								</if>
+								<if test="parameter.choose_type != null and parameter.choose_type==1">
+									<if test="parameter.start_min != null">and d.item_date <![CDATA[<]]> #{parameter.start_min} </if>
+								</if>
+								<if test="parameter.choose_type != null and parameter.choose_type==0">
+									<if test="parameter.start_min != null">and b.date_start <![CDATA[<]]> #{parameter.start_min} </if>
+								</if>
+								<if test="parameter.choose_type != null and parameter.choose_type==2">
+									<if test="parameter.start_min != null">and b.date_end <![CDATA[<]]> #{parameter.start_min} </if>
+								</if>
+								<if test="parameter.product_name != null">and (b.product_name like concat( '%',#{parameter.product_name},'%') or b.product_brand_name like concat( '%',#{parameter.product_name},'%')) </if>
+							    <if test="parameter.group_mode == 0">and group_mode <![CDATA[<]]> 1</if>
+							    <if test="parameter.group_mode !=0 and parameter.group_mode!=null">and group_mode <![CDATA[>]]>0</if>
+							    <if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+										and b.operator_id in (${parameter.saleOperatorIds})
+								</if>
+							group by t.supplier_id
+						) pt on (pt.supplier_id = t.supplier_id)
+			WHERE 1=1
+			<include refid="selectSupplier" />
+
+			
+			<if test="parameter.choose_type != null and parameter.choose_type==1">
+				<if test="parameter.start_min != null ">and d.item_date <![CDATA[>=]]> #{parameter.start_min} </if>
+				<if test="parameter.start_max != null">and d.item_date <![CDATA[<=]]> #{parameter.start_max} </if>
+			</if>
+			<if test="parameter.choose_type!=null and parameter.choose_type==0">
+			  	<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+			  	<if test="parameter.start_max != null">and b.date_start<![CDATA[<=]]> #{parameter.start_max} </if>
+		  	</if>
+		  	<if test="parameter.choose_type!=null and parameter.choose_type==2">
+			  	<if test="parameter.start_min != null">and b.date_end <![CDATA[>=]]> #{parameter.start_min} </if>
+			  	<if test="parameter.start_max != null">and b.date_end<![CDATA[<=]]> #{parameter.start_max} </if>
+		  	</if>
+			<if test="parameter.status == 0">and (ifnull(total,0) - ifnull(total_cash,0)) <![CDATA[=]]>0 and pt.originalTotalBalance<![CDATA[=]]>0</if>
+			<if test="parameter.status == 1">and (ifnull(t.total,0) - IFNULL(t.total_cash,0) <![CDATA[<>]]> 0 or originalTotalBalance <![CDATA[<>]]> 0)</if>
+		</select>
+		
+	 
+	
+			
+	<select id="selectFleetSupplierSum" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+			SELECT 
+				IFNULL(SUM(t.total),0) total, IFNULL(SUM(t.total_cash),0) total_cash,
+				IFNULL(SUM(num),0) total_item , ifnull(sum(totalNumMinus),0) total_item_minus, SUM(num)- sum(totalNumMinus) as totalNum
+			FROM booking_supplier  t join tour_group b on b.id=t.group_id
+			left JOIN (SELECT booking_id,SUM(IFNULL(item_num,0)) num,sum(IFNULL(`item_num_minus`,0)) totalNumMinus FROM booking_supplier_detail GROUP BY booking_id) d ON t.id=d.`booking_id`
+			left join (select supplier_id, SUM(IFNULL(t.`total`,0)-IFNULL(t.`total_cash`,0)) originalTotalBalance 
+						 		from booking_supplier t join tour_group b on b.id=t.group_id 
+						 		left join(SELECT booking_id,item_date FROM booking_supplier_detail 
+						 			where 1=1
+						 			<if test="parameter.car_type != null">and d.type1_id = #{parameter.car_type }</if>
+						 			GROUP BY booking_id,item_date
+						 		) d on t.id=d.booking_id 
+								where group_state in (1,3,4)  AND b.biz_id = #{parameter.bizId}  
+								<if test="parameter.supplier_type != null">and t.supplier_type <![CDATA[=]]> #{parameter.supplier_type} </if>
+								<if test="parameter.cashType != null">and t.cash_type like concat ('%',#{parameter.cashType},'%')   </if>
+								<if test="parameter.supplier_name != null">and t.supplier_name like concat( '%',#{parameter.supplier_name},'%')</if>
+								<if test="parameter.user_name != null">and t.user_name like concat( '%',#{parameter.user_name},'%')  </if>
+								<if test="parameter.set!=null">
+									AND b.operator_id in
+									<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+										#{item}
+									</foreach>
+								</if>
+								<if test="parameter.choose_type != null and parameter.choose_type==1">
+									<if test="parameter.start_min != null">and d.item_date <![CDATA[<]]> #{parameter.start_min} </if>
+								</if>
+								<if test="parameter.choose_type != null and parameter.choose_type==0">
+									<if test="parameter.start_min != null">and b.date_start <![CDATA[<]]> #{parameter.start_min} </if>
+								</if>
+								<if test="parameter.choose_type != null and parameter.choose_type==2">
+									<if test="parameter.start_min != null">and b.date_end <![CDATA[<]]> #{parameter.start_min} </if>
+								</if>
+								<if test="parameter.product_name != null">and (b.product_name like concat( '%',#{parameter.product_name},'%') or b.product_brand_name like concat( '%',#{parameter.product_name},'%')) </if>
+							    <if test="parameter.group_mode == 0">and group_mode <![CDATA[<]]> 1</if>
+							    <if test="parameter.group_mode !=0 and parameter.group_mode!=null">and group_mode <![CDATA[>]]>0</if>
+							    <if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+										and b.operator_id in (${parameter.saleOperatorIds})
+								</if>
+							group by t.supplier_id
+						) pt on (pt.supplier_id = t.supplier_id)
+			WHERE 1=1
+			<include refid="selectSupplier" />
+
+			
+			<if test="parameter.choose_type != null and parameter.choose_type==1">
+				<if test="parameter.start_min != null ">and d.item_date <![CDATA[>=]]> #{parameter.start_min} </if>
+				<if test="parameter.start_max != null">and d.item_date <![CDATA[<=]]> #{parameter.start_max} </if>
+			</if>
+			<if test="parameter.choose_type!=null and parameter.choose_type==0">
+			  	<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+			  	<if test="parameter.start_max != null">and b.date_start<![CDATA[<=]]> #{parameter.start_max} </if>
+		  	</if>
+		  	<if test="parameter.choose_type!=null and parameter.choose_type==2">
+			  	<if test="parameter.start_min != null">and b.date_end <![CDATA[>=]]> #{parameter.start_min} </if>
+			  	<if test="parameter.start_max != null">and b.date_end<![CDATA[<=]]> #{parameter.start_max} </if>
+		  	</if>
+			<if test="parameter.status == 0">and (ifnull(total,0) - ifnull(total_cash,0)) <![CDATA[=]]>0 and pt.originalTotalBalance<![CDATA[=]]>0</if>
+			<if test="parameter.status == 1">and (ifnull(t.total,0) - IFNULL(t.total_cash,0) <![CDATA[<>]]> 0 or originalTotalBalance <![CDATA[<>]]> 0)</if>
+	</select>
+	
+	
+	<sql id="selectSupplierDetail">
+		
+		WHERE b.biz_id = #{parameter.bizId}  and group_state in (1,3,4)
+		<if test="parameter.product_name != null">and (b.product_name like concat( '%',#{parameter.product_name},'%') or b.product_brand_name like concat( '%',#{parameter.product_name},'%')) </if>
+		
+		<if test="parameter.choose_type != null and parameter.choose_type==0">
+			<if test="parameter.startTime != null">and b.date_start<![CDATA[>=]]> #{parameter.startTime} </if>
+			<if test="parameter.endTime != null">and b.date_start <![CDATA[<=]]> #{parameter.endTime}	</if>
+		</if>
+		<if test="parameter.choose_type != null and parameter.choose_type==2">
+			<if test="parameter.startTime != null">and b.date_end<![CDATA[>=]]> #{parameter.startTime} </if>
+			<if test="parameter.endTime != null">and b.date_end <![CDATA[<=]]> #{parameter.endTime}	</if>
+		</if>
+		
+		<if test="parameter.supplier_type != null">and t.supplier_type <![CDATA[=]]> #{parameter.supplier_type} </if>
+		
+		<if test="parameter.supplier_name != null">and t.supplier_name like concat( '%',#{parameter.supplier_name},'%') </if>  
+		<!-- <if test="parameter.status == 1">and (ifnull(t.total,0) - ifnull(t.total_cash,0)) <![CDATA[<>0]]></if>
+		<if test="parameter.status == 0">and (ifnull(t.total,0) - ifnull(t.total_cash,0)) <![CDATA[=0]]></if>-->
+		<if test="parameter.user_name != null">and t.user_name like concat( '%',#{parameter.user_name},'%') </if>
+		    <if test="parameter.group_mode == 0">and group_mode <![CDATA[<]]> 1</if>
+		    <if test="parameter.group_mode !=0 and parameter.group_mode!=null">and group_mode <![CDATA[>]]>0</if>
+		<if test="parameter.group_code != null">and b.group_code like concat ('%,' #{parameter.group_code },'%')</if>
+		<if test="parameter.supplier_id != null">and t.supplier_id = #{parameter.supplier_id }</if>
+		<if test="parameter.cashType != null">and t.cash_Type= #{parameter.cashType} </if>
+		
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and b.operator_id in (${parameter.saleOperatorIds})
+			</if>
+		 <if test="parameter.set!=null">
+			AND b.operator_id in
+		<foreach item="item" index="index" collection="parameter.set" open="("
+			separator="," close=")">
+			#{item}
+		</foreach></if>
+	</sql>
+	
+	
+	<select id="selectSupplierDetailListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		select * from (
+		SELECT 
+			t.id,
+			b.group_code groupCode,
+			b.id groupId,
+			group_mode groupMode,
+			t.user_name,
+			b.operator_name,
+			t.supplier_name,
+			b.`product_name`,
+			b.`product_brand_name`,
+			d.type1_name,
+			d.type2_name,
+			b.group_mode,
+			t.booking_date,
+	  		d.item_date,
+			d.`item_date_to`,
+			t.cash_type,
+			IFNULL(t.total,0) total ,
+			IFNULL(t.total_cash,0) total_cash,
+			IFNULL((t.total - t.total_cash) ,0) balance
+			FROM
+			 booking_supplier  t
+		INNER JOIN tour_group b ON t.group_id = b.id
+		INNER JOIN booking_supplier_detail d ON t.id=d.`booking_id`
+		<include refid="selectSupplierDetail" />
+		<if test="parameter.choose_type != null and parameter.choose_type==1">
+			<if test="parameter.startTime != null ">and  d.item_date <![CDATA[>=]]> #{parameter.startTime} </if>
+			<if test=" parameter.endTime != null">and #{parameter.endTime} <![CDATA[>=]]> d.item_date   </if>
+		</if>
+		group by t.id
+		order by date_start desc,b.create_time desc ) m
+		 where 1=1 
+		
+		<if test="parameter.status == 0">and (ifnull(total,0) - ifnull(total_cash,0)) <![CDATA[=]]>0</if>
+			<if test="parameter.status == 1">and (ifnull(total,0) - ifnull(total_cash,0)) <![CDATA[<>]]>0</if>
+		
+	</select>
+	<select id="selectFleetSupplierDetailListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+	select * from (
+		SELECT 
+			t.id,
+			b.group_code groupCode,
+			b.group_mode groupMode,
+			b.id groupId,
+			t.user_name,
+			b.operator_name,
+			t.supplier_name,
+			b.`product_name`,
+			b.`product_brand_name`,
+			d.type1_name,
+			d.type2_name,
+			d.driver_name,
+			d.driver_tel,
+			d.car_lisence,
+			t.booking_date,
+	  		d.item_date,
+			d.`item_date_to`,
+			t.cash_type,
+			IFNULL(t.total,0) total ,
+			IFNULL(t.total_cash,0) total_cash,
+			IFNULL((t.total - t.total_cash) ,0) balance,
+			b.total_adult totalAdult,
+			b.total_child totalChild,
+			t.cash_type cashType,
+			t.remark
+			FROM
+			 booking_supplier  t
+		INNER JOIN tour_group b ON t.group_id = b.id
+		INNER JOIN booking_supplier_detail d ON t.id=d.`booking_id`
+		WHERE 1 = 1 AND b.biz_id = #{parameter.bizId}  and
+		group_state in (1,3,4)
+		
+		<if test="parameter.choose_type != null and parameter.choose_type==0">
+			<if test="parameter.startTime != null">and b.date_start<![CDATA[>=]]> #{parameter.startTime} </if>
+			<if test="parameter.endTime != null">and b.date_start <![CDATA[<=]]> #{parameter.endTime}	</if>
+		</if>
+		<if test="parameter.choose_type != null and parameter.choose_type==1">
+			<if test="parameter.startTime != null">and d.item_date <![CDATA[>=]]> #{parameter.startTime}</if>
+			<if test="parameter.endTime != null">and d.item_date <![CDATA[<=]]> #{parameter.endTime}</if>
+		</if> 
+		<if test="parameter.choose_type != null and parameter.choose_type==2">
+			<if test="parameter.startTime != null">and b.date_end<![CDATA[>=]]> #{parameter.startTime} </if>
+			<if test="parameter.endTime != null">and b.date_end <![CDATA[<=]]> #{parameter.endTime}	</if>
+		</if>
+		
+		<if test="parameter.supplier_type != null">and t.supplier_type <![CDATA[=]]> #{parameter.supplier_type} </if>
+				<if test="parameter.product_name != null">and (b.product_name like concat( '%',#{parameter.product_name},'%') or b.product_brand_name like concat( '%',#{parameter.product_name},'%')) </if>
+		
+		 <if test="parameter.supplier_name != null">and t.supplier_name like concat( '%',#{parameter.supplier_name},'%') </if>  
+		 <if test="parameter.group_mode == 0">and group_mode <![CDATA[<]]> 1</if>
+		    <if test="parameter.group_mode !=0 and parameter.group_mode!=null">and group_mode <![CDATA[>]]>0</if>
+		<if test="parameter.group_code != null">and b.group_code like concat('%', #{parameter.group_code },'%')</if>
+		<if test="parameter.supplier_id != null">and t.supplier_id = #{parameter.supplier_id }</if>
+		<if test="parameter.cashType != null">and t.cash_Type= #{parameter.cashType} </if>
+		<if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+			and b.operator_id in (${parameter.saleOperatorIds})
+		</if>
+		
+		 <if test="parameter.car_num_min != null ">and cast(d.type2_name as signed) <![CDATA[>=]]> #{parameter.car_num_min} </if>
+		<if test=" parameter.car_num_max != null">and  cast(d.type2_name as signed)<![CDATA[<=]]> #{parameter.car_num_max}</if> 
+		<if test="parameter.driver_name != null">and d.driver_name like concat( '%',#{parameter.driver_name},'%') </if>
+		<if test="parameter.car_lisence != null">and d.car_lisence like concat( '%',#{parameter.car_lisence},'%') </if>
+		<if test="parameter.car_type != null">and d.type1_id = #{parameter.car_type }</if>
+		
+		 <if test="parameter.set!=null">
+			AND b.operator_id in
+		<foreach item="item" index="index" collection="parameter.set" open="("
+			separator="," close=")">
+			#{item}
+		</foreach></if>
+		group by t.id
+		order by date_start desc,b.create_time desc ) m
+		 where 1=1 
+		
+		<if test="parameter.status == 0">and (ifnull(total,0) - ifnull(total_cash,0)) <![CDATA[=]]>0</if>
+			<if test="parameter.status == 1">and (ifnull(total,0) - ifnull(total_cash,0)) <![CDATA[<>]]>0</if>
+		
+	</select>
+	
+	
+	
+	<sql id="selectSupplierDetailSum">
+		
+		WHERE b.biz_id = #{parameter.bizId}  and group_state in (1,3,4)
+		<if test="parameter.product_name != null">and (b.product_name like concat( '%',#{parameter.product_name},'%') or b.product_brand_name like concat( '%',#{parameter.product_name},'%')) </if>
+		
+		<if test="parameter.choose_type != null and parameter.choose_type==0">
+			<if test="parameter.startTime != null">and b.date_start<![CDATA[>=]]> #{parameter.startTime} </if>
+			<if test="parameter.endTime != null">and b.date_start <![CDATA[<=]]> #{parameter.endTime}	</if>
+		</if>
+		<if test="parameter.choose_type != null and parameter.choose_type==2">
+			<if test="parameter.startTime != null">and b.date_end<![CDATA[>=]]> #{parameter.startTime} </if>
+			<if test="parameter.endTime != null">and b.date_end <![CDATA[<=]]> #{parameter.endTime}	</if>
+		</if>
+		
+		<if test="parameter.supplier_type != null">and t.supplier_type <![CDATA[=]]> #{parameter.supplier_type} </if>
+		
+		<if test="parameter.supplier_name != null">and t.supplier_name like concat( '%',#{parameter.supplier_name},'%') </if>  
+		<!-- <if test="parameter.status == 1">and (ifnull(t.total,0) - ifnull(t.total_cash,0)) <![CDATA[<>0]]></if>
+		<if test="parameter.status == 0">and (ifnull(t.total,0) - ifnull(t.total_cash,0)) <![CDATA[=0]]></if>
+		 --><!-- <if test="parameter.user_name != null">and t.user_name like '%${parameter.user_name}%' </if> -->
+		    <if test="parameter.group_mode == 0">and group_mode <![CDATA[<]]> 1</if>
+		    <if test="parameter.group_mode !=0 and parameter.group_mode!=null">and group_mode <![CDATA[>]]>0</if>
+		<if test="parameter.group_code != null">and b.group_code like concat ('%', #{parameter.group_code },'%')</if>
+		<if test="parameter.supplier_id != null">and t.supplier_id = #{parameter.supplier_id }</if>
+		<if test="parameter.cashType != null">and t.cash_Type= #{parameter.cashType} </if>
+		<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and b.operator_id in (${parameter.saleOperatorIds})
+			</if>
+			 <if test="parameter.set!=null">
+			AND b.operator_id in
+		<foreach item="item" index="index" collection="parameter.set" open="("
+			separator="," close=")">
+			#{item}
+		</foreach></if>
+	</sql>
+	
+	<select id="selectSupplierDetailSum" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT
+			SUM(IFNULL(total, 0)) AS totalCount,
+			SUM(IFNULL(totalCash, 0)) AS totalCashCount,
+			SUM(IFNULL(total, 0)-IFNULL(totalCash, 0)) AS totalBalanceCount
+			,SUM(ifnull(itemNum,0)) totalNum,SUM(ifnull(itemNumMinus,0)) totalNumMinus
+			from (
+			SELECT 
+			t.`total` AS total,
+				t.`total_cash` AS totalCash
+				,SUM(d.item_num)   itemNum
+    , SUM(d.item_num_minus)   itemNumMinus
+			FROM `tour_group` b JOIN 
+				`booking_supplier` t ON b.`id`=t.`group_id` left JOIN 
+     `booking_supplier_detail` d ON d.`booking_id`=t.`id`
+		<include refid="selectSupplierDetailSum" />
+		<if test="parameter.choose_type != null and parameter.choose_type==1">
+			<if test="parameter.startTime != null ">and  d.item_date <![CDATA[>=]]> #{parameter.startTime} </if>
+			<if test=" parameter.endTime != null">and #{parameter.endTime} <![CDATA[>=]]> d.item_date   </if>
+		</if> GROUP BY t.`id`) g  
+		 where 1=1 
+		
+		<if test="parameter.status == 0">AND IFNULL(total, 0)-IFNULL(totalCash, 0) <![CDATA[=]]>0</if>
+		<if test="parameter.status == 1">AND IFNULL(total, 0)-IFNULL(totalCash, 0)  <![CDATA[<>]]>0</if>
+		
+	</select>
+	<select id="selectFleetSupplierDetailSum" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			SUM(ifnull(t.total, 0)) AS totalCount,SUM(ifnull(t.total_cash, 0)) AS totalCashCount,SUM(ifnull(total, 0)-ifnull(total_cash, 0)) AS totalBalanceCount ,
+			SUM(ifnull(item_Num,0)) totalNum, SUM(ifnull(item_Num_Minus,0)) totalNumMinus,
+			SUM(ifnull(b.total_adult,0))AS totalAdultCount, SUM(ifnull(b.total_Child,0))AS totalChildCount
+		FROM `booking_supplier` t join tour_group b on (t.group_id=b.id)
+		left JOIN `booking_supplier_detail` d ON d.`booking_id`=t.`id`
+		
+
+     
+		<include refid="selectSupplierDetailSum" />
+		<if test="parameter.car_num_min != null ">and cast(d.type2_name as signed)<![CDATA[>=]]> #{parameter.car_num_min} </if>
+		<if test=" parameter.car_num_max != null">and cast(d.type2_name as signed) <![CDATA[<=]]> #{parameter.car_num_max}</if>
+		<if test="parameter.driver_name != null">and d.driver_name like concat( '%',#{parameter.driver_name},'%') </if>
+		<if test="parameter.car_lisence != null">and d.car_lisence like concat( '%',#{parameter.car_lisence},'%') </if>
+		<if test="parameter.car_type != null">and d.type1_id = #{parameter.car_type }</if>
+		<if test="parameter.choose_type != null and parameter.choose_type==1">
+			<if test="parameter.startTime != null">and ( d.item_date <![CDATA[>=]]> #{parameter.startTime})</if>
+			<if test="parameter.endTime != null">and ( d.item_date <![CDATA[<=]]> #{parameter.endTime})</if>
+		</if> 
+
+		
+		<if test="parameter.status == 0">AND (ifnull(total,0) - ifnull(total_cash,0)) <![CDATA[=]]>0</if>
+		<if test="parameter.status == 1">AND (ifnull(total,0) - ifnull(total_cash,0)) <![CDATA[<>]]>0</if>
+		
+	</select>
+	
+	
+	<select id="selectSupplierDetailOrderListPage" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		
+		SELECT 
+			type1_name, 
+			type2_name, 
+			item_date, 
+			item_num,
+			IFNULL(item_num_minus,0) item_num_minus, 
+			item_price, 
+			item_total 
+		FROM booking_supplier_detail
+		WHERE booking_id = #{bookingId}
+		order by create_time 
+	</select>
+	<select id="bookingSupplierDetailListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
+	
+		SELECT tg.id groupId, tg.group_mode groupMode, tg.`group_code` groupCode,tg.`total_adult` totalAdult,tg.`total_child` totalChild,tg.total_guide totalGuide,tg.`operator_name` operatorName,bs.`supplier_name` supplierName,det.`item_date` itemDate,
+det.`item_num` itemNum,det.`item_num_minus` itemNumMinus,det.`item_price` itemPrice,det.`item_total` itemTotal,det.`type1_name` type1Name,bs.`cash_type` cashType,det.`item_brief` itemBrief
+,tg.product_brand_name productBrandName,tg.product_name productName
+FROM `tour_group` tg  JOIN `booking_supplier` bs ON tg.`id`=bs.`group_id`  JOIN `booking_supplier_detail` det ON bs.`id`=det.booking_id
+where 1=1 and 
+		biz_id=#{parameter.bizId} 
+		<if test="parameter.supplierId != null">and bs.supplier_id = #{parameter.supplierId}</if>
+		<if test="parameter.supplierType != null">and bs.supplier_type=  #{parameter.supplierType} </if>
+		<if test="parameter.type1Name != null">and det.type1_name LIKE CONCAT('%',#{parameter.type1Name },'%')  </if>
+		<if test="parameter.choose_type!=null and parameter.choose_type==1">
+			<if test="parameter.startMin != null">and det.item_date <![CDATA[>=]]> #{parameter.startMin} </if>
+			<if test="parameter.startMax != null">and det.item_date <![CDATA[<=]]> #{parameter.startMax} </if>
+		</if>
+		<if test="parameter.choose_type!=null and parameter.choose_type==0">
+		    <if test="parameter.startMin != null">and date_start <![CDATA[>=]]> #{parameter.startMin} </if>
+		  	<if test="parameter.startMax != null">and date_start <![CDATA[<=]]> #{parameter.startMax} </if>
+	  	</if>
+	  	<if test="parameter.choose_type!=null and parameter.choose_type==2">
+		    <if test="parameter.startMin != null">and date_end <![CDATA[>=]]> #{parameter.startMin} </if>
+		  	<if test="parameter.startMax != null">and date_end <![CDATA[<=]]> #{parameter.startMax} </if>
+	  	</if>
+			  	<if test="parameter.cashType != null and parameter.cashType != ''">and bs.cash_Type= #{parameter.cashType} </if>
+		 <if test="parameter.set!=null">
+			AND tg.operator_id in
+		<foreach item="item" index="index" collection="parameter.set" open="("
+			separator="," close=")">
+			#{item}
+		</foreach></if>
+		and    
+		 group_state in (1,3,4)
+		<!-- 人员 -->
+		<!-- <if test="parameter.operatorIds != null">and operator_id IN (#{parameter.operatorIds})</if>
+	    <if test="parameter.operatorName != null and parameter.operatorName!=''">and operator_name LIKE CONCAT('%',#{parameter.operatorName},'%')</if>
+	    --> <!-- 团类型 -->
+	    <if test="parameter.groupMode == 0">and group_mode <![CDATA[<]]> 1</if>
+	    <if test="parameter.groupMode !=0 and parameter.groupMode!=null">and group_mode <![CDATA[>]]>0</if>
+
+
+	  	<!-- 团号 --> 
+	  	<if test="parameter.groupCode != null and parameter.groupCode != ''">and group_code LIKE CONCAT('%',#{parameter.groupCode},'%')</if>
+	  		  	<if test="parameter.type1Name != null and parameter.type1Name  != ''">and type1_name LIKE CONCAT('%',#{parameter.type1Name },'%')</if>
+	  	
+	  	 <if test="parameter.productBrandName != null and parameter.productBrandName!=''">
+				and (product_brand_name LIKE
+				CONCAT('%',#{parameter.productBrandName},'%')
+				or product_name LIKE
+				CONCAT('%',#{parameter.productBrandName},'%'))
+			</if> 
+	  	<!-- 商家 -->
+		<if test="parameter.supplierName != null and parameter.supplierName!=''">and bs.supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%') </if>	
+		<if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and operator_id in (${parameter.saleOperatorIds})
+			</if>
+			GROUP BY det.`id`
+		 order by tg.date_start ,tg.create_time 
+	</select>
+	<select id="selectSupplierDetailSum2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			SUM(IFNULL(total, 0)) AS totalCount,SUM(IFNULL(total_Cash, 0)) AS totalCashCount,SUM(IFNULL(total, 0)-IFNULL(total_Cash, 0)) AS totalBalanceCount ,
+			SUM(ifnull(item_Num,0)) totalNum,SUM(ifnull(item_Num_Minus,0)) totalNumMinus
+		FROM `booking_supplier` t 
+		 join tour_group tg on (t.group_id=tg.id)
+		 join (select booking_id,sum(item_Num)item_Num,sum(item_Num_Minus)item_Num_Minus from `booking_supplier_detail` 
+		 		where 1=1 
+				 <if test="parameter.choose_type != null and parameter.choose_type==1">
+					<if test="parameter.startMin != null">and item_date <![CDATA[>=]]> #{parameter.startMin} </if>
+				  	<if test="parameter.startMax != null">and item_date <![CDATA[<=]]> #{parameter.startMax} </if>
+				</if>
+				<if test="parameter.type1Name != null and parameter.type1Name  != ''">and type1_name LIKE CONCAT('%',#{parameter.type1Name },'%')</if>
+		 	   group by booking_id) d ON d.`booking_id`=t.`id`
+		WHERE group_state in (1,3,4) and tg.biz_id = #{parameter.bizId}   
+		
+		<if test="parameter.choose_type != null and parameter.choose_type==0">
+			<if test="parameter.startMin != null">and date_start <![CDATA[>=]]> #{parameter.startMin} </if>
+			<if test="parameter.startMax != null">and date_start <![CDATA[<=]]> #{parameter.startMax} </if>
+		</if>
+		<if test="parameter.choose_type != null and parameter.choose_type==2">
+			<if test="parameter.startMin != null">and date_end <![CDATA[>=]]> #{parameter.startMin} </if>
+			<if test="parameter.startMax != null">and date_end <![CDATA[<=]]> #{parameter.startMax}	</if>
+		</if>
+		<if test="parameter.supplierType != null">and t.supplier_type = #{parameter.supplierType} </if>
+		<if test="parameter.supplierName != null">and t.supplier_name like concat( '%',#{parameter.supplierName},'%') </if>  
+		<if test="parameter.userName != null">and t.user_name like concat( '%',#{parameter.userName},'%') </if>
+		
+		<if test="parameter.productBrandName != null">and (tg.product_name like concat( '%',#{parameter.productBrandName},'%') or tg.product_brand_name like concat( '%',#{parameter.productBrandName},'%')) </if>
+		<if test="parameter.groupMode == 0">and tg.group_mode <![CDATA[<]]>1</if>
+		<if test="parameter.groupMode != null and parameter.groupMode != 0">and tg.group_mode <![CDATA[>]]>0</if>
+		<if test="parameter.set!=null">
+			AND tg.operator_id in
+			<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and tg.operator_id in (${parameter.saleOperatorIds})
+		</if>
+		<if test="parameter.supplierId != null">and t.supplier_id = #{parameter.supplierId }</if>
+		<if test="parameter.cashType != null">and t.cash_Type= #{parameter.cashType} </if>
+		
+
+		<if test="parameter.status == 0">and (ifnull(total,0) - ifnull(total_cash,0)) <![CDATA[=]]>0</if>
+		<if test="parameter.status == 1">and (ifnull(total,0) - ifnull(total_cash,0)) <![CDATA[<>]]>0</if>
+	</select>
+</mapper>

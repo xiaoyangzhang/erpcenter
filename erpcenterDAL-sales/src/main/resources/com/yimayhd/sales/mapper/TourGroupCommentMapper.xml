@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.sales.dao.TourGroupCommentMapper">
+	<resultMap id="TourGroupComment" type="com.yihg.sales.po.TourGroupComment">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="biz_id" property="bizId" jdbcType="INTEGER" />
+		<result column="group_id" property="groupId" jdbcType="INTEGER" />
+		<result column="group_comment" property="groupComment" jdbcType="VARCHAR" />
+		<result column="group_notice" property="groupNotice" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getTourGroupComments" resultMap="TourGroupComment">
+	SELECT * from tour_group_comment where biz_id=#{bizId,jdbcType=INTEGER} and group_id in (${groupIds});
+	</select>
+	<insert id="insertTourGroupComment" parameterType="com.yihg.sales.po.TourGroupComment">
+	insert into tour_group_comment  (biz_id, group_id, group_comment, group_notice) values ( 
+	  #{comment.bizId,jdbcType=INTEGER}, #{comment.groupId,jdbcType=INTEGER}, 
+	  #{comment.groupComment,jdbcType=VARCHAR}, #{comment.groupNotice,jdbcType=VARCHAR})
+	</insert>
+	<delete id="deleteTourGroupComment" >
+	delete from tour_group_comment where biz_id=#{bizId,jdbcType=INTEGER} and group_id=#{groupId, jdbcType=INTEGER}
+	</delete>
+</mapper>

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.operation.dao.OperationMapper">
+	<select id="selectGroupBookingListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="com.yihg.operation.vo.GroupBookingInfo">
+		SELECT 
+			t.id groupId, 
+			group_code groupCode, 
+			date_start dateStart,
+			date_end dateEnd,
+			group_mode groupMode, 
+			product_name productName,
+			product_brand_name productBrandName,
+			IFNULL(t.`total_adult`,0) totalAdult,
+			IFNULL(t.total_child,0) totalChild,
+			IFNULL(t.`total_guide`,0) totalGuide,
+			operator_name operatorName,
+			group_state groupState
+		FROM tour_group t
+		<if test="page.parameter.supplierName != null and page.parameter.supplierName != '' ">
+		
+			<if test="page.parameter.supplierType == 2 or page.parameter.supplierType == 3 or
+						page.parameter.supplierType == 4 or page.parameter.supplierType == 5 or
+						page.parameter.supplierType == 9 or page.parameter.supplierType == 10 or
+						page.parameter.supplierType == 15">
+				LEFT JOIN booking_supplier s ON t.id = s.group_id
+			</if>
+			<if test="page.parameter.supplierType == 8">
+				LEFT JOIN booking_guide g ON t.id = g.group_id
+			</if>
+			<if test="page.parameter.supplierType == 16">
+				LEFT JOIN booking_delivery d ON t.id = d.group_id
+			</if>
+		</if>
+		
+		WHERE 1=1
+			AND  group_state in (0,1,3,4)
+			AND biz_id = #{bizId}
+			<if test="page.parameter.startTime != null and page.parameter.startTime !=''">
+				AND <![CDATA[t.date_start >=#{page.parameter.startTime}]]>
+			</if>
+			<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
+				AND <![CDATA[t.date_start <=#{page.parameter.endTime}]]>
+			</if>
+			AND t.operator_id in
+			<foreach item="item" index="index" collection="set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			<if test="page.parameter.groupCode != null and page.parameter.groupCode != ''">
+				AND t.group_code LIKE CONCAT('%',#{page.parameter.groupCode},'%')
+			</if>
+			<if test="page.parameter.productBrandName != null and page.parameter.productBrandName != ''">
+				AND (
+					t.product_brand_name LIKE CONCAT('%',#{page.parameter.productBrandName},'%') 
+					or 
+					t.product_name like CONCAT('%',#{page.parameter.productBrandName},'%' )
+				)
+			</if>
+			<if test="page.parameter.saleOperatorIds != null and page.parameter.saleOperatorIds != ''">
+				AND t.operator_id in (${page.parameter.saleOperatorIds})
+			</if>
+			<if test="page.parameter.groupMode!=null">
+				<if test="page.parameter.groupMode==0">
+					AND t.group_mode<![CDATA[<]]>1
+				</if>
+				<if test="page.parameter.groupMode==1">
+					AND <![CDATA[t.group_mode>0]]>
+				</if>
+			</if>
+			<if test="page.parameter.groupIdSet!=null">
+				AND t.id IN 
+				<foreach item="item" index="index" collection="page.parameter.groupIdSet" open="("
+					separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			
+			<if test="page.parameter.supplierName != null and page.parameter.supplierName != '' ">
+			
+				<if test="page.parameter.supplierType == 2 or page.parameter.supplierType == 3 or
+							page.parameter.supplierType == 4 or page.parameter.supplierType == 5 or
+							page.parameter.supplierType == 9 or page.parameter.supplierType == 10 or
+							page.parameter.supplierType == 15">
+					AND s.supplier_name LIKE CONCAT('%',#{page.parameter.supplierName},'%') 
+				</if>
+				<if test="page.parameter.supplierType == 8">
+					AND g.guide_name LIKE CONCAT('%',#{page.parameter.supplierName},'%')
+				</if>
+				<if test="page.parameter.supplierType == 16">
+					AND d.supplier_name LIKE CONCAT('%',#{page.parameter.supplierName},'%')
+				</if>
+			</if>
+		ORDER BY t.date_start
+	</select>
+
+
+	<select id="selectBookingSupplierCountForGroups" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
+		SELECT group_id, COUNT(*) count FROM booking_supplier 
+		WHERE 1=1 
+		
+		<if test="supplierType != null">
+			AND supplier_type = #{supplierType}
+		</if>
+		<if test="supplierName != null and supplierName != ''">
+			AND supplier_name LIKE CONCAT('%',#{supplierName},'%')
+		</if>
+		AND group_id in (${groupIds})
+		GROUP BY group_id
+	</select>
+	
+	<select id="selectBookingShopCountForGroups" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
+		SELECT group_id, COUNT(*) count FROM booking_shop 
+		WHERE 1=1 
+		<if test="supplierName != null and supplierName != ''">
+			AND supplier_name LIKE CONCAT('%',#{supplierName},'%')
+		</if>
+		AND group_id in (${groupIds})
+		GROUP BY group_id
+	</select>
+	
+	<select id="selectBookingGuideForGroups" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
+		SELECT group_id, GROUP_CONCAT(CONCAT_WS('-', guide_name, guide_mobile)) bookSupplierName FROM booking_guide 
+		WHERE 1=1 
+		<if test="supplierName != null and supplierName != ''">
+			AND guide_name LIKE CONCAT('%',#{supplierName},'%')
+		</if>
+		AND group_id in (${groupIds})
+		GROUP BY group_id
+	</select>
+	
+	<select id="selectBookingDeliveryForGroups" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
+		SELECT group_id,GROUP_CONCAT(CONCAT_WS('-', supplier_name, contact, contact_tel)) bookSupplierName FROM booking_delivery
+		WHERE 1=1 
+		<if test="supplierName != null and supplierName != ''">
+			AND supplier_name LIKE CONCAT('%',#{supplierName},'%')
+		</if>
+		AND group_id in (${groupIds})
+		GROUP BY group_id
+	</select>
+	
+	<select id="getPersonCount" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT 
+			t.id groupId, 
+			SUM(IFNULL(total_adult,0)) adultCount,
+			SUM(IFNULL(total_child,0)) childCount,
+			SUM(IFNULL(total_guide,0)) guideCount
+		FROM tour_group t
+		<if test="page.parameter.supplierName != null and page.parameter.supplierName != '' ">
+		
+			<if test="page.parameter.supplierType == 2 or page.parameter.supplierType == 3 or
+						page.parameter.supplierType == 4 or page.parameter.supplierType == 5 or
+						page.parameter.supplierType == 9 or page.parameter.supplierType == 10 or
+						page.parameter.supplierType == 15">
+				LEFT JOIN booking_supplier s ON t.id = s.group_id
+			</if>
+			<if test="page.parameter.supplierType == 8">
+				LEFT JOIN booking_guide g ON t.id = g.group_id
+			</if>
+			<if test="page.parameter.supplierType == 16">
+				LEFT JOIN booking_delivery d ON t.id = d.group_id
+			</if>
+		</if>
+		
+		WHERE 1=1
+			AND  group_state in (0,1,3,4)
+			AND biz_id = #{bizId}
+			<if test="page.parameter.startTime != null and page.parameter.startTime !=''">
+				AND <![CDATA[t.date_start >=#{page.parameter.startTime}]]>
+			</if>
+			<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
+				AND <![CDATA[t.date_start <=#{page.parameter.endTime}]]>
+			</if>
+			AND t.operator_id in
+			<foreach item="item" index="index" collection="set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			<if test="page.parameter.groupCode != null and page.parameter.groupCode != ''">
+				AND t.group_code LIKE CONCAT('%',#{page.parameter.groupCode},'%')
+			</if>
+			<if test="page.parameter.productBrandName != null and page.parameter.productBrandName != ''">
+				AND (
+					t.product_brand_name LIKE CONCAT('%',#{page.parameter.productBrandName},'%') 
+					or 
+					t.product_name like CONCAT('%',#{page.parameter.productBrandName},'%' )
+				)
+			</if>
+			<if test="page.parameter.saleOperatorIds != null and page.parameter.saleOperatorIds != ''">
+				AND t.operator_id in (${page.parameter.saleOperatorIds})
+			</if>
+			<if test="page.parameter.groupMode!=null">
+				<if test="page.parameter.groupMode==0">
+					AND t.group_mode<![CDATA[<]]>1
+				</if>
+				<if test="page.parameter.groupMode==1">
+					AND <![CDATA[t.group_mode>0]]>
+				</if>
+			</if>
+			<if test="page.parameter.groupIdSet!=null">
+				AND t.id IN 
+				<foreach item="item" index="index" collection="page.parameter.groupIdSet" open="("
+					separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			
+			<if test="page.parameter.supplierName != null and page.parameter.supplierName != '' ">
+			
+				<if test="page.parameter.supplierType == 2 or page.parameter.supplierType == 3 or
+							page.parameter.supplierType == 4 or page.parameter.supplierType == 5 or
+							page.parameter.supplierType == 9 or page.parameter.supplierType == 10 or
+							page.parameter.supplierType == 15">
+					AND s.supplier_name LIKE CONCAT('%',#{page.parameter.supplierName},'%') 
+				</if>
+				<if test="page.parameter.supplierType == 8">
+					AND g.guide_name LIKE CONCAT('%',#{page.parameter.supplierName},'%')
+				</if>
+				<if test="page.parameter.supplierType == 16">
+					AND d.supplier_name LIKE CONCAT('%',#{page.parameter.supplierName},'%')
+				</if>
+			</if>
+		</select>
+</mapper>

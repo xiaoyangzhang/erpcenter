@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.operation.dao.BookingSupplierDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingSupplierDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
+    <result column="type1_id" property="type1Id" jdbcType="INTEGER" />
+    <result column="type1_name" property="type1Name" jdbcType="VARCHAR" />
+    <result column="type2_id" property="type2Id" jdbcType="INTEGER" />
+    <result column="type2_name" property="type2Name" jdbcType="VARCHAR" />
+    <result column="item_date" property="itemDate" jdbcType="DATE" />
+    <result column="item_date_to" property="itemDateTo" jdbcType="DATE" />
+    <result column="item_num" property="itemNum" jdbcType="DECIMAL" />
+    <result column="item_price" property="itemPrice" jdbcType="DECIMAL" />
+    <result column="item_num_minus" property="itemNumMinus" jdbcType="DECIMAL" />
+    <result column="item_total" property="itemTotal" jdbcType="DECIMAL" />
+    <result column="item_brief" property="itemBrief" jdbcType="VARCHAR" />
+    <result column="ticket_departure" property="ticketDeparture" jdbcType="VARCHAR" />
+    <result column="ticket_arrival" property="ticketArrival" jdbcType="VARCHAR" />
+    <result column="ticket_flight" property="ticketFlight" jdbcType="VARCHAR" />
+    <result column="driver_id" property="driverId" jdbcType="INTEGER" />
+    <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
+    <result column="driver_tel" property="driverTel" jdbcType="VARCHAR" />
+    <result column="car_lisence" property="carLisence" jdbcType="VARCHAR" />
+    <result column="fangdiao_luru" property="fangDiaoLuRu" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, booking_id, type1_id, type1_name, type2_id, type2_name, item_date,item_date_to ,item_num, 
+    item_price, item_num_minus, item_total, item_brief, ticket_departure, ticket_arrival, 
+    ticket_flight, driver_id, driver_name,driver_tel,car_lisence, fangdiao_luru
+  </sql>
+  <select id="selectBookingSupplierDetailByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	   SELECT 	
+		pbs.supplier_name AS supplierName,
+		bsd.*
+		<!-- bsd.type2_name,
+		bsd.`item_date`,
+		bsd.`item_date_to`,
+		bsd.`type1_name`,
+		bsd.`car_lisence`,
+		bsd.driver_name,
+		bsd.driver_tel,
+		bsd.item_price -->
+	  FROM
+	    booking_supplier_detail bsd 
+	    INNER JOIN 
+	      (SELECT 
+		bs.* 
+	      FROM
+		booking_supplier bs 
+	      WHERE bs.group_id = #{groupId}
+		AND bs.supplier_type = 4) pbs 
+	      ON pbs.id = bsd.booking_id
+	  GROUP BY bsd.booking_id,bsd.type1_id
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_supplier_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryBookId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_supplier_detail
+    where booking_id = #{bookId,jdbcType=INTEGER}
+    ORDER BY item_date
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from booking_supplier_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.operation.po.BookingSupplierDetail" >
+    insert into booking_supplier_detail (id, booking_id, type1_id, 
+      type1_name, type2_id, type2_name, 
+      item_date, item_date_to, item_num, item_price, 
+      item_num_minus, item_total, item_brief, 
+      ticket_departure, ticket_arrival, ticket_flight, 
+      driver_id, driver_name,driver_tel,car_lisence, fangdiao_luru)
+    values (#{id,jdbcType=INTEGER}, #{bookingId,jdbcType=INTEGER}, #{type1Id,jdbcType=INTEGER}, 
+      #{type1Name,jdbcType=VARCHAR}, #{type2Id,jdbcType=INTEGER}, #{type2Name,jdbcType=VARCHAR}, 
+      #{itemDate,jdbcType=DATE},#{itemDateTo,jdbcType=DATE}, #{itemNum,jdbcType=DECIMAL}, #{itemPrice,jdbcType=DECIMAL}, 
+      #{itemNumMinus,jdbcType=DECIMAL}, #{itemTotal,jdbcType=DECIMAL}, #{itemBrief,jdbcType=VARCHAR}, 
+      #{ticketDeparture,jdbcType=VARCHAR}, #{ticketArrival,jdbcType=VARCHAR}, #{ticketFlight,jdbcType=VARCHAR}, 
+      #{driverId,jdbcType=INTEGER}, #{driverName,jdbcType=VARCHAR},#{driverTel,jdbcType=VARCHAR},#{carLisence,jdbcType=VARCHAR},
+      #{fangDiaoLuRu,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingSupplierDetail" >
+    insert into booking_supplier_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="bookingId != null" >
+        booking_id,
+      </if>
+      <if test="type1Id != null" >
+        type1_id,
+      </if>
+      <if test="type1Name != null" >
+        type1_name,
+      </if>
+      <if test="type2Id != null" >
+        type2_id,
+      </if>
+      <if test="type2Name != null" >
+        type2_name,
+      </if>
+      <if test="itemDate != null" >
+        item_date,
+      </if>
+      <if test="itemDateTo != null" >
+        item_date_to,
+      </if>
+      <if test="itemNum != null" >
+        item_num,
+      </if>
+      <if test="itemPrice != null" >
+        item_price,
+      </if>
+      <if test="itemNumMinus != null" >
+        item_num_minus,
+      </if>
+      <if test="itemTotal != null" >
+        item_total,
+      </if>
+      <if test="itemBrief != null" >
+        item_brief,
+      </if>
+      <if test="ticketDeparture != null" >
+        ticket_departure,
+      </if>
+      <if test="ticketArrival != null" >
+        ticket_arrival,
+      </if>
+      <if test="ticketFlight != null" >
+        ticket_flight,
+      </if>
+      <if test="driverId != null" >
+        driver_id,
+      </if>
+      <if test="driverName != null" >
+        driver_name,
+      </if>
+      <if test="driverTel != null" >
+        driver_tel,
+      </if>
+      <if test="carLisence != null" >
+        car_lisence,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bookingId != null" >
+        #{bookingId,jdbcType=INTEGER},
+      </if>
+      <if test="type1Id != null" >
+        #{type1Id,jdbcType=INTEGER},
+      </if>
+      <if test="type1Name != null" >
+        #{type1Name,jdbcType=VARCHAR},
+      </if>
+      <if test="type2Id != null" >
+        #{type2Id,jdbcType=INTEGER},
+      </if>
+      <if test="type2Name != null" >
+        #{type2Name,jdbcType=VARCHAR},
+      </if>
+      <if test="itemDate != null" >
+        #{itemDate,jdbcType=DATE},
+      </if>
+      <if test="itemDateTo != null" >
+        #{itemDateTo,jdbcType=DATE},
+      </if>
+      <if test="itemNum != null" >
+        #{itemNum,jdbcType=DECIMAL},
+      </if>
+      <if test="itemPrice != null" >
+        #{itemPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="itemNumMinus != null" >
+        #{itemNumMinus,jdbcType=DECIMAL},
+      </if>
+      <if test="itemTotal != null" >
+        #{itemTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="itemBrief != null" >
+        #{itemBrief,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketDeparture != null" >
+        #{ticketDeparture,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketArrival != null" >
+        #{ticketArrival,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketFlight != null" >
+        #{ticketFlight,jdbcType=VARCHAR},
+      </if>
+      <if test="driverId != null" >
+        #{driverId,jdbcType=INTEGER},
+      </if>
+      <if test="driverName != null" >
+        #{driverName,jdbcType=VARCHAR},
+      </if>
+      <if test="driverTel != null" >
+        #{driverTel,jdbcType=VARCHAR},
+      </if>
+      <if test="carLisence != null" >
+        #{carLisence,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingSupplierDetail" >
+    update booking_supplier_detail
+    <set >
+      <if test="bookingId != null" >
+        booking_id = #{bookingId,jdbcType=INTEGER},
+      </if>
+      <if test="type1Id != null" >
+        type1_id = #{type1Id,jdbcType=INTEGER},
+      </if>
+      <if test="type1Name != null" >
+        type1_name = #{type1Name,jdbcType=VARCHAR},
+      </if>
+      <if test="type2Id != null" >
+        type2_id = #{type2Id,jdbcType=INTEGER},
+      </if>
+      <if test="type2Name != null" >
+        type2_name = #{type2Name,jdbcType=VARCHAR},
+      </if>
+      <if test="itemDate != null" >
+        item_date = #{itemDate,jdbcType=DATE},
+      </if>
+      <if test="itemDateTo != null" >
+        item_date_to = #{itemDateTo,jdbcType=DATE},
+      </if>
+      <if test="itemNum != null" >
+        item_num = #{itemNum,jdbcType=DECIMAL},
+      </if>
+      <if test="itemPrice != null" >
+        item_price = #{itemPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="itemNumMinus != null" >
+        item_num_minus = #{itemNumMinus,jdbcType=DECIMAL},
+      </if>
+      <if test="itemTotal != null" >
+        item_total = #{itemTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="itemBrief != null" >
+        item_brief = #{itemBrief,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketDeparture != null" >
+        ticket_departure = #{ticketDeparture,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketArrival != null" >
+        ticket_arrival = #{ticketArrival,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketFlight != null" >
+        ticket_flight = #{ticketFlight,jdbcType=VARCHAR},
+      </if>
+      <if test="driverId != null" >
+        driver_id = #{driverId,jdbcType=INTEGER},
+      </if>
+      <if test="driverName != null" >
+        driver_name = #{driverName,jdbcType=VARCHAR},
+      </if>
+      <if test="driverTel != null" >
+        driver_tel = #{driverTel,jdbcType=VARCHAR},
+      </if>
+      <if test="carLisence != null" >
+        car_lisence = #{carLisence,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingSupplierDetail" >
+    update booking_supplier_detail
+    set booking_id = #{bookingId,jdbcType=INTEGER},
+      type1_id = #{type1Id,jdbcType=INTEGER},
+      type1_name = #{type1Name,jdbcType=VARCHAR},
+      type2_id = #{type2Id,jdbcType=INTEGER},
+      type2_name = #{type2Name,jdbcType=VARCHAR},
+      item_date = #{itemDate,jdbcType=DATE},
+      item_date_to = #{itemDateTo,jdbcType=DATE},
+      item_num = #{itemNum,jdbcType=DECIMAL},
+      item_price = #{itemPrice,jdbcType=DECIMAL},
+      item_num_minus = #{itemNumMinus,jdbcType=DECIMAL},
+      item_total = #{itemTotal,jdbcType=DECIMAL},
+      item_brief = #{itemBrief,jdbcType=VARCHAR},
+      ticket_departure = #{ticketDeparture,jdbcType=VARCHAR},
+      ticket_arrival = #{ticketArrival,jdbcType=VARCHAR},
+      ticket_flight = #{ticketFlight,jdbcType=VARCHAR},
+      driver_id = #{driverId,jdbcType=INTEGER},
+      driver_name = #{driverName,jdbcType=VARCHAR},
+      driver_tel = #{driverTel,jdbcType=VARCHAR},
+      car_lisence = #{carLisence,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- <select id="getBookingPriceSumByGroupIdAndSupplierType"  resultType="java.math.BigDecimal">
+  	SELECT SUM(item_num*item_price-item_num_minus*item_price) price FROM booking_supplier_detail,booking_supplier WHERE group_id=#{groupId} and supplier_type=#{supplierType} 
+  </select>
+  <select id="getBookingCountByGroupIdAndSupplierType"  resultType="java.lang.Integer">
+  	select count(det.id)  `count` from booking_supplier_detail det,booking_supplier bs where bs.group_id=#{groupId} and bs.supplier_type=#{supplierType} GROUP BY bs.group_id
+  </select> -->
+  <select id="getBookingPriceSumByBookingId" resultType="java.math.BigDecimal">
+  	select SUM(item_num*item_price-item_num_minus*item_price) from booking_supplier_detail where booking_id=#{bookingId} group by booking_id
+  </select>
+  <delete id="deleteByBookingId" parameterType="java.lang.Integer" >
+  	delete  from booking_supplier_detail where booking_id=#{bookId}
+  </delete>
+  <update id="updateBookingTotalByBookingId" parameterType="java.lang.Integer">
+  	UPDATE booking_supplier   
+  	
+  	<set>
+  		total=(SELECT SUM(item_total) FROM booking_supplier_detail WHERE booking_id=#{bookingId} GROUP BY booking_id)
+  	</set>
+  	WHERE id=#{bookingId}
+  </update>
+  <select id="getListByGroupIdAndType" resultMap="BaseResultMap" >
+  	SELECT sd.*
+	FROM `booking_supplier_detail` sd,`booking_supplier` s
+	WHERE sd.`booking_id`=s.`id` 
+	<if test="groupId!=null"> and s.`group_id`=#{groupId,jdbcType=INTEGER}</if>
+	<if test="type!=null">AND s.`supplier_type`=#{type,jdbcType=INTEGER}</if>
+	 
+  </select>
+
+
+  <select id="selectDriverInfoByGroupIdAndDriverId" resultMap="BaseResultMap" >
+    SELECT sd.*
+    FROM booking_supplier_detail sd,booking_supplier s
+    WHERE sd.booking_id=s.id AND s.group_id=#{groupId,jdbcType=INTEGER} AND s.supplier_type=4 AND sd.driver_id = #{driverId,jdbcType=INTEGER}
+    limit 1
+  </select>
+<select id="getBookingIdsByType1Id" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	select booking_id bookingId from tour_group tg join booking_supplier  bs on tg.id=bs.group_id join booking_supplier_detail sd on bs.id=sd.booking_id where 1=1
+	<if test="parameter.set!=null">
+			AND tg.operator_id in
+		<foreach item="item" index="index" collection="parameter.set" open="("
+			separator="," close=")">
+			#{item}
+		</foreach></if>
+				 <if test="parameter.supplierType != null">and bs.supplier_type=  #{parameter.supplierType} </if>
+				 <if test="parameter.cashType != null">and bs.cash_type like concat ('%',#{parameter.cashType},'%')   </if>
+				 <if test="parameter.type1Id != null">and sd.type1_id=#{parameter.type1Id}  </if>
+				
+				
+				<if test="parameter.selectDate!=null and parameter.selectDate==1">
+			  	<if test="parameter.startTime != null">and sd.item_date  <![CDATA[>=]]> #{parameter.startTime} </if>
+			  	<if test="parameter.endTime != null">and sd.item_date<![CDATA[<=]]> #{parameter.endTime} </if>
+			  	</if>
+				<!-- <if test="parameter.provinceId!=null">and info.province_id=#{parameter.provinceId}</if>
+				<if test="parameter.cityId!=null">and info.city_id=#{parameter.cityId}</if>
+				 --> and tg.biz_id=#{parameter.bizId}
+				    AND group_state in (1,3,4)
+				    	<!-- 团类型 -->
+				    <if test="parameter.groupMode == 0">and group_mode <![CDATA[<]]> 1</if>
+				    <if test="parameter.groupMode !=0 and parameter.groupMode!=null">and group_mode <![CDATA[>]]>0</if>
+				    <!--  时间 -->
+				    <if test="parameter.selectDate==null or parameter.selectDate==0">
+			  	<if test="parameter.startTime != null">and tg.date_start <![CDATA[>=]]> #{parameter.startTime} </if>
+			  	<if test="parameter.endTime != null">and tg.date_start<![CDATA[<=]]> #{parameter.endTime} </if>
+			  	</if>
+			  	<if test="parameter.productBrandName!= null and parameter.productBrandName!=''">
+				and (tg.product_brand_name LIKE
+				CONCAT('%',#{parameter.productBrandName},'%')
+				or tg.product_name LIKE
+				CONCAT('%',#{parameter.productBrandName},'%'))
+			</if>
+		    	 
+		    	
+				 <!-- 财务状态 -->
+			<if test="parameter.paymentState == 0">and IFNULL(total,0)-IFNULL(total_cash,0) <![CDATA[<>]]> 0</if>
+			<if test="parameter.paymentState == 1">and IFNULL(total,0) - IFNULL(total_cash,0)=0</if>	
+			<!-- 商家 -->
+			<if test="parameter.supplierName != null and parameter.supplierName !=''">and supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%') </if>	
+			
+		<if test="parameter.operType==0 or parameter.operType==null ">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and tg.operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.operType==1">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and bs.user_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+			 
+</select>
+  
+</mapper>

@@ -1,0 +1,833 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.operation.dao.BookingShopMapper">
+	<resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingShop">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="group_id" property="groupId" jdbcType="INTEGER" />
+		<result column="booking_no" property="bookingNo" jdbcType="VARCHAR" />
+		<result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+		<result column="guide_id" property="guideId" jdbcType="INTEGER" />
+		<result column="shop_date" property="shopDate" jdbcType="VARCHAR" />
+		<result column="person_num" property="personNum" jdbcType="INTEGER" />
+		<result column="person_num_fact" property="personNumFact"
+			jdbcType="INTEGER" />
+		<result column="person_repay_price" property="personRepayPrice"
+			jdbcType="DECIMAL" />
+		<result column="person_repay_total" property="personRepayTotal"
+			jdbcType="DECIMAL" />
+		<result column="person_buy_avg" property="personBuyAvg"
+			jdbcType="DECIMAL" />
+		<result column="total_face" property="totalFace" jdbcType="DECIMAL" />
+		<result column="total_cash" property="totalCash" jdbcType="DECIMAL" />
+		<result column="total_repay" property="totalRepay" jdbcType="DECIMAL" />
+		<result column="shop_code" property="shopCode" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="state_finance" property="stateFinance"
+			jdbcType="TINYINT" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="BIGINT" />
+		<result column="guide_name" property="guideName" jdbcType="VARCHAR" />
+		<result column="booking_date" property="bookingDate" jdbcType="DATE" />
+		<result column="supplier_name" property="supplierName"
+			jdbcType="VARCHAR" />
+		<result column="audit_user" property="auditUser" jdbcType="VARCHAR" />
+		<result column="audit_user_id" property="auditUserId" jdbcType="INTEGER" />
+		<result column="audit_time" property="auditTime" jdbcType="DATE" />
+		<result column="total_money" property="totalMoney" jdbcType="DECIMAL" />
+
+	</resultMap>
+	<resultMap id="ShopResultMap" type="com.yihg.operation.po.BookingShopDet">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="group_id" property="groupId" jdbcType="INTEGER" />
+		<result column="booking_no" property="bookingNo" jdbcType="VARCHAR" />
+		<result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+		<result column="guide_id" property="guideId" jdbcType="INTEGER" />
+		<result column="shop_date" property="shopDate" jdbcType="VARCHAR" />
+		<result column="person_num" property="personNum" jdbcType="INTEGER" />
+		<result column="person_num_fact" property="personNumFact"
+			jdbcType="INTEGER" />
+		<result column="person_repay_price" property="personRepayPrice"
+			jdbcType="DECIMAL" />
+		<result column="person_repay_total" property="personRepayTotal"
+			jdbcType="DECIMAL" />
+		<result column="person_buy_avg" property="personBuyAvg"
+			jdbcType="DECIMAL" />
+		<result column="total_face" property="totalFace" jdbcType="DECIMAL" />
+		<result column="total_cash" property="totalCash" jdbcType="DECIMAL" />
+		<result column="total_repay" property="totalRepay" jdbcType="DECIMAL" />
+		<result column="shop_code" property="shopCode" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="state_finance" property="stateFinance"
+			jdbcType="TINYINT" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="BIGINT" />
+		<result column="guide_name" property="guideName" jdbcType="VARCHAR" />
+		<result column="booking_date" property="bookingDate" jdbcType="DATE" />
+		<result column="supplier_name" property="supplierName"
+			jdbcType="VARCHAR" />
+		<result column="audit_user" property="auditUser" jdbcType="VARCHAR" />
+		<result column="audit_user_id" property="auditUserId" jdbcType="INTEGER" />
+		<result column="audit_time" property="auditTime" jdbcType="DATE" />
+		<result column="shop_buy_total" property="shopBuyTotal"
+			jdbcType="DECIMAL" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, group_id, booking_no, supplier_id, guide_id, shop_date,
+		person_num,
+		person_repay_price,
+		person_repay_total, person_buy_avg,
+		total_face, total_repay, total_cash, shop_code,
+		remark, state_finance,
+		user_id,audit_user_id,user_name,create_time,supplier_name,booking_date,person_num_fact
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from booking_shop
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<update id="updatetotalFace" parameterType="java.lang.Integer">
+		UPDATE booking_shop
+		SET total_repay=(SELECT SUM(repay_total) FROM
+		booking_shop_detail WHERE
+		booking_id = #{bId,jdbcType=INTEGER}),
+		total_face=(SELECT
+		SUM(buy_total) FROM booking_shop_detail WHERE
+		booking_id =
+		#{bId,jdbcType=INTEGER})
+		WHERE id=#{bId,jdbcType=INTEGER}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		booking_shop
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.yihg.operation.po.BookingShop" keyProperty="id" useGeneratedKeys="true" >
+		insert into booking_shop (id,
+		group_id, booking_no,
+		supplier_id, guide_id, shop_date,
+		person_num,
+		person_repay_price, person_repay_total,
+		person_buy_avg, total_face,
+		total_repay, shop_code,
+		remark, state_finance, user_id,
+		create_time,supplier_name)
+		values (#{id,jdbcType=INTEGER},
+		#{groupId,jdbcType=INTEGER},
+		#{bookingNo,jdbcType=VARCHAR},
+		#{supplierId,jdbcType=INTEGER}, #{guideId,jdbcType=INTEGER},
+		#{shopDate,jdbcType=VARCHAR},
+		#{personNum,jdbcType=INTEGER},
+		#{personRepayPrice,jdbcType=DECIMAL},
+		#{personRepayTotal,jdbcType=DECIMAL},
+		#{personBuyAvg,jdbcType=DECIMAL}, #{totalFace,jdbcType=DECIMAL},
+		#{totalRepay,jdbcType=DECIMAL}, #{shopCode,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR}, #{stateFinance,jdbcType=TINYINT},
+		#{userId,jdbcType=INTEGER},
+		#{createTime,jdbcType=BIGINT},
+		#{supplierName,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.yihg.operation.po.BookingShop" keyProperty="id" useGeneratedKeys="true" >
+		insert into booking_shop
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="groupId != null">
+				group_id,
+			</if>
+			<if test="bookingNo != null">
+				booking_no,
+			</if>
+			<if test="supplierId != null">
+				supplier_id,
+			</if>
+			<if test="guideId != null">
+				guide_id,
+			</if>
+			<if test="shopDate != null">
+				shop_date,
+			</if>
+			<if test="personNum != null">
+				person_num,
+			</if>
+			<if test="personNumFact != null">
+				person_num_fact,
+			</if>
+			<if test="personRepayPrice != null">
+				person_repay_price,
+			</if>
+			<if test="personRepayTotal != null">
+				person_repay_total,
+			</if>
+			<if test="personBuyAvg != null">
+				person_buy_avg,
+			</if>
+			<if test="totalFace != null">
+				total_face,
+			</if>
+			<if test="totalRepay != null">
+				total_repay,
+			</if>
+			<if test="shopCode != null">
+				shop_code,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="stateFinance != null">
+				state_finance,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="supplierName != null">
+				supplier_name,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="bookingDate != null">
+				booking_date,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="groupId != null">
+				#{groupId,jdbcType=INTEGER},
+			</if>
+			<if test="bookingNo != null">
+				#{bookingNo,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierId != null">
+				#{supplierId,jdbcType=INTEGER},
+			</if>
+			<if test="guideId != null">
+				#{guideId,jdbcType=INTEGER},
+			</if>
+			<if test="shopDate != null">
+				#{shopDate,jdbcType=VARCHAR},
+			</if>
+			<if test="personNum != null">
+				#{personNum,jdbcType=INTEGER},
+			</if>
+			<if test="personNumFact != null">
+				#{personNumFact,jdbcType=INTEGER},
+			</if>
+			<if test="personRepayPrice != null">
+				#{personRepayPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="personRepayTotal != null">
+				#{personRepayTotal,jdbcType=DECIMAL},
+			</if>
+			<if test="personBuyAvg != null">
+				#{personBuyAvg,jdbcType=DECIMAL},
+			</if>
+			<if test="totalFace != null">
+				#{totalFace,jdbcType=DECIMAL},
+			</if>
+			<if test="totalRepay != null">
+				#{totalRepay,jdbcType=DECIMAL},
+			</if>
+			<if test="shopCode != null">
+				#{shopCode,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="stateFinance != null">
+				#{stateFinance,jdbcType=TINYINT},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=BIGINT},
+			</if>
+			<if test="supplierName != null">
+				#{supplierName,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="bookingDate != null">
+				#{bookingDate,jdbcType=DATE},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingShop"  >
+		update booking_shop
+		<set>
+			<if test="groupId != null">
+				group_id = #{groupId,jdbcType=INTEGER},
+			</if>
+			<if test="bookingNo != null">
+				booking_no = #{bookingNo,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierId != null">
+				supplier_id = #{supplierId,jdbcType=INTEGER},
+			</if>
+			<if test="guideId != null">
+				guide_id = #{guideId,jdbcType=INTEGER},
+			</if>
+			<if test="shopDate != null">
+				shop_date = #{shopDate,jdbcType=VARCHAR},
+			</if>
+			<if test="personNum != null">
+				person_num = #{personNum,jdbcType=INTEGER},
+			</if>
+			<if test="personNumFact != null">
+				person_num_fact = #{personNumFact,jdbcType=INTEGER},
+			</if>
+			<if test="personRepayPrice != null">
+				person_repay_price =
+				#{personRepayPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="personRepayTotal != null">
+				person_repay_total =
+				#{personRepayTotal,jdbcType=DECIMAL},
+			</if>
+			<if test="personBuyAvg != null">
+				person_buy_avg = #{personBuyAvg,jdbcType=DECIMAL},
+			</if>
+			<if test="totalFace != null">
+				total_face = #{totalFace,jdbcType=DECIMAL},
+			</if>
+			<if test="totalRepay != null">
+				total_repay = #{totalRepay,jdbcType=DECIMAL},
+			</if>
+			<if test="totalCash != null">
+				total_cash = #{totalCash,jdbcType=DECIMAL},
+			</if>
+			<if test="shopCode != null">
+				shop_code = #{shopCode,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="stateFinance != null">
+				state_finance = #{stateFinance,jdbcType=TINYINT},
+			</if>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=BIGINT},
+			</if>
+			<if test="supplierName != null">
+				supplier_name = #{supplierName,jdbcType=VARCHAR},
+			</if>
+			<if test="totalMoney != null">
+				total_money = #{totalMoney,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingShop" >
+		update
+		booking_shop
+		set group_id = #{groupId,jdbcType=INTEGER},
+		booking_no =
+		#{bookingNo,jdbcType=VARCHAR},
+		supplier_id =
+		#{supplierId,jdbcType=INTEGER},
+		guide_id = #{guideId,jdbcType=INTEGER},
+		shop_date = #{shopDate,jdbcType=VARCHAR},
+		person_num =
+		#{personNum,jdbcType=INTEGER},
+		person_repay_price =
+		#{personRepayPrice,jdbcType=DECIMAL},
+		person_repay_total =
+		#{personRepayTotal,jdbcType=DECIMAL},
+		person_buy_avg =
+		#{personBuyAvg,jdbcType=DECIMAL},
+		total_face =
+		#{totalFace,jdbcType=DECIMAL},
+		total_repay =
+		#{totalRepay,jdbcType=DECIMAL},
+		total_cash =
+		#{totalCash,jdbcType=DECIMAL},
+		shop_code =
+		#{shopCode,jdbcType=VARCHAR},
+		remark = #{remark,jdbcType=VARCHAR},
+		state_finance = #{stateFinance,jdbcType=TINYINT},
+		user_id =
+		#{userId,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=BIGINT}
+		supplier_name = #{supplierName,jdbcType=VARCHAR}
+		where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+	<select id="getSelectCountByGruopId" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+		SELECT COUNT(id) FROM booking_shop WHERE group_id
+		=#{groupId}
+	</select>
+
+	<select id="getShopListByGroupId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		SELECT
+		s.id, s.group_id, s.booking_no, s.supplier_id,
+		s.guide_id, s.shop_date,
+		s.person_num, s.person_repay_price,
+		s.person_repay_total, s.person_buy_avg, s.total_face, s.total_repay,
+		s.total_cash,
+		s.shop_code, s.remark, s.state_finance,
+		s.user_id,s.user_name,
+		s.create_time,s.supplier_name,s.total_money,g.`guide_name`,s.booking_date,g.user_name,s.audit_user,s.audit_user_id,s.audit_time
+		FROM booking_shop s LEFT JOIN booking_guide g ON s.`guide_id` = g.`guide_id` AND s.`group_id`=g.`group_id`
+		WHERE s.group_id = #{groupId,jdbcType=INTEGER}
+		order by s.create_time
+
+	</select>
+	<select id="getShopListByGroupIdAndShopDate" resultMap="ShopResultMap">
+		SELECT
+		b.*, (
+		SELECT
+		SUM(buy_total)
+		FROM
+		booking_shop_detail b2
+		WHERE
+		b.id =
+		b2.booking_id
+		) shop_buy_total
+		FROM
+		booking_shop b
+		WHERE
+		b.group_id =
+		#{groupId}
+		AND
+    <![CDATA[ b.create_time < #{shopDate}]]>
+		order by b.create_time desc
+		limit 0,20
+	</select>
+
+	<select id="getBookingCountByTime" resultType="java.lang.Integer">
+		select count(id)
+		from booking_shop where create_time between #{curDay} and #{nextDay}
+	</select>
+
+
+	<select id="getGuideShopListPage" resultType="com.yihg.operation.vo.QueryGuideShop"
+		parameterType="com.yihg.mybatis.utility.PageBean">
+		SELECT
+		t.id AS groupId,
+		t.group_mode AS groupMode,
+		t.`group_code` groupCode,
+		g.supplier_name supplierName,
+		g.receive_mode receiveMode,
+		g.`num_adult` adultNum,
+		g.`num_child` childNum,
+		g.product_brand_name productBrandName,
+		g.product_name productName,
+		CONCAT(g.province_name,g.`city_name`) source,
+		g.`source_type_name` sourceType,
+		SUM(IFNULL(bd.`buy_total`,0)) totalFee,
+		b.user_name userName,
+		GROUP_CONCAT(shop.supplier_name) shopName,
+		GROUP_CONCAT(IFNULL(bd.buy_total,0)) shopFee,
+		GROUP_CONCAT(IFNULL(b.`guide_name`,'')) guideName
+		FROM
+		tour_group t
+		INNER JOIN group_order g ON t.`id`=g.`group_id`
+		INNER JOIN booking_shop shop ON g.group_id = shop.group_id
+		LEFT JOIN booking_guide b ON shop.`guide_id`=b.`guide_id` AND b.`group_id`=shop.`group_id`
+		LEFT JOIN booking_shop_detail_deploy bd ON g.`id`=bd.`order_id` AND bd.`booking_id`=shop.`id`
+		WHERE 1=1
+		AND t.`biz_id`=#{page.parameter.bizId} and t.group_state in (1,3,4)
+		AND t.operator_id in
+		<foreach item="item" index="index" collection="set" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		<if test="page.parameter.dateType!=null and page.parameter.dateType==0">
+			<if test="page.parameter.startTime!=null and page.parameter.startTime!=''">
+  		 <![CDATA[AND t.date_start>=DATE_FORMAT( #{page.parameter.startTime},'%Y-%m-%d')]]>
+			</if>
+			<if test="page.parameter.endTime!=null and page.parameter.endTime!=''">
+  		 <![CDATA[AND t.date_start<=DATE_FORMAT(#{page.parameter.endTime},'%Y-%m-%d') ]]>
+			</if>
+		</if>
+		<if test="page.parameter.dateType!=null and page.parameter.dateType==1">
+			<if test="page.parameter.startTime!=null and page.parameter.startTime!=''">
+  		 <![CDATA[AND shop.shop_date >= DATE_FORMAT(#{page.parameter.startTime},'%Y-%m-%d')]]>
+			</if>
+			<if test="page.parameter.endTime!=null and page.parameter.endTime!=''">
+  		 <![CDATA[AND shop.shop_date <= DATE_FORMAT(#{page.parameter.endTime},'%Y-%m-%d') ]]>
+			</if>
+		</if>
+		<if test="page.parameter.groupCode!=null and page.parameter.groupCode!=''">
+			and t.group_code LIKE
+			CONCAT('%',#{page.parameter.groupCode},'%')
+		</if>
+		<if test="page.parameter.guideName!=null and page.parameter.guideName!=''">
+			and b.guide_name LIKE
+			CONCAT('%',#{page.parameter.guideName},'%')
+		</if>
+		<if test="page.parameter.userName!=null and page.parameter.userName!=''">
+			and b.user_name LIKE
+			CONCAT('%',#{page.parameter.userName},'%')
+		</if>
+		<if test="page.parameter.shopName!=null and page.parameter.shopName!=''">
+			and shop.supplier_name LIKE
+			CONCAT('%',#{page.parameter.shopName},'%')
+		</if>
+		<if
+			test="page.parameter.supplierName!=null and page.parameter.supplierName!=''">
+			and g.supplier_name LIKE
+			CONCAT('%',#{page.parameter.supplierName},'%')
+		</if>
+		<if
+			test="page.parameter.productName!=null and page.parameter.productName!=''">
+			and (g.product_brand_name LIKE
+			CONCAT('%',#{page.parameter.productName},'%') or
+			g.product_name
+			LIKE
+			CONCAT('%',#{page.parameter.productName},'%'))
+		</if>
+		<!-- <if
+			test="page.parameter.supplierName!=null and page.parameter.supplierName!=''">
+			and g.supplier_name LIKE
+			CONCAT('%',#{page.parameter.supplierName},'%')
+		</if> -->
+		<if test="page.parameter.sourceTypeId != null">
+			and g.source_type_id=#{page.parameter.sourceTypeId}
+		</if>
+		<if test="page.parameter.provinceId != null">
+			and g.province_id=#{page.parameter.provinceId}
+		</if>
+		<if test="page.parameter.cityId != null">
+			and g.city_id=#{page.parameter.cityId}
+		</if>
+		<if test="page.parameter.groupMode != null">
+			<if test="page.parameter.groupMode ==0 ">
+				and t.group_mode<![CDATA[<]]>1
+			</if>
+			<if test="page.parameter.groupMode ==1 ">
+				and t.group_mode<![CDATA[>]]>0
+			</if>
+		</if>
+		<if test="page.parameter.saleOperatorIds != null and page.parameter.saleOperatorIds != ''">
+			and t.operator_id in (${page.parameter.saleOperatorIds})
+		</if>
+		<if test="page.parameter.shoppingDataState != null">
+			<if test="page.parameter.shoppingDataState == 1">
+			and <![CDATA[bd.buy_total IS NOT NULL]]> 
+			</if>
+			<if test="page.parameter.shoppingDataState == 0">
+			and <![CDATA[bd.buy_total IS NULL]]> 
+			</if>
+		</if>
+		GROUP BY g.id
+		ORDER BY g.id
+	</select>
+  
+  
+  
+    <select id="getShopSelect" resultType="com.yihg.operation.po.BookingShopSelect">
+		SELECT COUNT(id) shopCount,SUM(person_num*person_buy_avg) jhSales,SUM(total_face) factSales,SUM(person_repay_total) personRepayTotal,
+			SUM(total_repay) totalRepay, SUM(CASE WHEN state_finance>0 THEN 1 ELSE 0 END) auditCount FROM booking_shop 
+			where group_id = #{groupId}	GROUP BY group_id 
+  	</select>
+  	
+  	
+  	 <select id="getshopInfoDetailListPage" resultType="com.yihg.operation.vo.QueryShopInfo" parameterType="com.yihg.mybatis.utility.PageBean">
+				SELECT shop.id,tgroup.id groupId,gorder.id orderId,tgroup.group_mode groupMode,tgroup.group_code groupCode,shop.user_name userName,tgroup.operator_name operatorName,guide.guide_name guideName
+		,shop.supplier_name supplierName,shop.shop_date shopDate,shop.person_num personNum,shop.person_repay_price personRepayPrice,
+		(shop.person_num*shop.person_buy_avg) jhSales,shop.total_face totalFace,shop.total_repay totalRepay
+		FROM  booking_shop shop,booking_guide guide,tour_group tgroup,group_order gorder
+		WHERE shop.guide_id=guide.id AND tgroup.id = shop.group_id AND tgroup.id = gorder.group_id AND tgroup.`biz_id`=#{page.parameter.bizId}
+		<if test="page.parameter.selectDate!=null and page.parameter.selectDate==1">
+		<if test="page.parameter.startTime != null and page.parameter.startTime !=''">
+				<![CDATA[and shop.shop_date >=#{page.parameter.startTime}]]>
+			</if>
+		<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
+			<![CDATA[and shop.shop_date <=#{page.parameter.endTime}]]>
+		</if>
+		</if>
+		<if test="page.parameter.selectDate!=null and page.parameter.selectDate==0">
+		<if test="page.parameter.startTime != null and page.parameter.startTime !=''">
+				<![CDATA[and tgroup.date_start >=#{page.parameter.startTime}]]>
+			</if>
+		<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
+			<![CDATA[and tgroup.date_start <=#{page.parameter.endTime}]]>
+		</if>
+		</if>
+		<if test="page.parameter.groupCode != null and page.parameter.groupCode != ''">
+			 and tgroup.group_code LIKE
+						CONCAT('%','${page.parameter.groupCode}','%')
+			</if>
+			<if test="page.parameter.supplierName != null and page.parameter.supplierName != ''">
+			 and shop.supplier_name LIKE
+						CONCAT('%','${page.parameter.supplierName}','%')
+			</if>
+			<if test="page.parameter.guideName != null and page.parameter.guideName != ''">
+			 and guide.guide_name LIKE
+						CONCAT('%','${page.parameter.guideName}','%')
+			</if>
+			<if test="page.parameter.userName != null and page.parameter.userName != ''">
+			 and shop.user_name LIKE
+						CONCAT('%','${page.parameter.userName}','%')
+			</if>
+		<if test="page.parameter.saleOperatorIds != null and page.parameter.saleOperatorIds != ''">
+			and tgroup.operator_id in (#{page.parameter.saleOperatorIds})
+		</if>
+		<!-- 团类型 -->
+	    <if test="page.parameter.groupMode == null">and tgroup.group_mode <![CDATA[>]]> -1</if>
+	    <if test="page.parameter.groupMode == 0">and tgroup.group_mode <![CDATA[=]]> 0</if>
+	    <if test="page.parameter.groupMode !=0 and parameter.groupMode!=null">and tgroup.group_mode <![CDATA[>]]>0</if>
+	    <if test="page.parameter.provinceId != null and page.parameter.provinceId !=-1">
+ 				and gorder.province_id =#{page.parameter.provinceId}
+		</if>
+		<if test="page.parameter.cityId != null and page.parameter.cityId !=-1">
+				and gorder.city_id =#{page.parameter.cityId}
+		</if>
+  	</select>
+  	<!-- 查询购物项目统计 -->
+  	<select id="selectShopListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		SELECT t.supplier_id,t.`supplier_name`,SUM(t.`total_face`) AS sum_money,SUM(t.`person_num`) AS sum_person
+			FROM booking_shop t 
+			LEFT JOIN tour_group g ON t.group_id= g.`id`
+			LEFT JOIN booking_shop_detail d ON t.id=d.booking_id
+			WHERE g.biz_id = #{bizId,jdbcType=INTEGER}
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.startTime != null">and g.date_start <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.endTime != null">and g.date_start <![CDATA[<=]]> #{page.parameter.endTime}	</if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.startTime != null">and t.shop_date <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.endTime != null">and t.shop_date <![CDATA[<=]]> #{page.parameter.endTime} </if>
+			<if test="page.parameter.shopStore != null">
+				and t.supplier_name LIKE
+				CONCAT('%','${page.parameter.shopStore}','%')
+			</if>
+			<if test="page.parameter.shopItem != null">
+				and d.goods_name LIKE
+				CONCAT('%','${page.parameter.shopItem}','%')
+			</if>
+			<if test="page.parameter.productName != null">and (g.product_name like '%${page.parameter.productName}%' or g.product_brand_name like '%${page.parameter.productName}%') </if>
+			<if test="page.parameter.operator_id != null">and g.operator_id in (${page.parameter.operator_id})</if>
+			GROUP BY t.`supplier_id`
+	</select>	
+	
+	
+	<select id="getShopDetailListByShopId" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		SELECT t.goods_name,SUM(t.repay_total) AS sum_repay_total,SUM(t.buy_total) AS sum_buy_total FROM booking_shop_detail t 
+		LEFT JOIN booking_shop b ON t.booking_id=b.id 
+		LEFT JOIN tour_group g ON b.group_id= g.`id` 
+		WHERE 1=1
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.startTime != null">and g.date_start <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.endTime != null">and g.date_start <![CDATA[<=]]> #{page.parameter.endTime}	</if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.startTime != null">and b.shop_date <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.endTime != null">and b.shop_date <![CDATA[<=]]> #{page.parameter.endTime} </if>
+			<if test="id != null">
+				and b.supplier_id <![CDATA[=]]> #{id} 
+			</if>
+			<if test="page.parameter.shopItem != null">
+				and t.goods_name LIKE
+				CONCAT('%','${page.parameter.shopItem}','%')
+			</if>
+			<if test="page.parameter.productName != null">and (g.product_name like '%${page.parameter.productName}%' or g.product_brand_name like '%${page.parameter.productName}%') </if>
+			<if test="page.parameter.operator_id != null">and g.operator_id in (${page.parameter.operator_id})</if>
+		GROUP BY t.`goods_id`
+	</select>	
+	
+	
+	  	<select id="selectShopVerifyListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		SELECT t.id,g.`group_code`,g.`product_name`,g.`product_brand_name`,g.`date_start`,g.`operator_name`,t.`guide_id`,
+			g.group_mode,g.id as groupId,t.supplier_id,t.`supplier_name`,t.`total_money`,t.`person_num` ,t.state_finance,
+			t.audit_time,t.state_seal,g.group_state
+			FROM booking_shop t 
+			LEFT JOIN tour_group g ON t.group_id= g.`id` 
+			<if test="page.parameter.shopItem != null">
+				LEFT JOIN booking_shop_detail d ON t.id=d.booking_id
+			</if>
+			WHERE g.biz_id = #{bizId,jdbcType=INTEGER}
+			AND g.group_state in (0,1,3,4) 
+			<if test="page.parameter.guideName != null">
+			AND t.guide_id IN(SELECT DISTINCT guide_id FROM booking_guide t WHERE  t.guide_name LIKE '%${page.parameter.guideName}%')
+			</if>
+			
+			<if test="page.parameter.shopItem != null">
+				and d.goods_name = #{page.parameter.shopItem}
+			</if>
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.startTime != null">and g.date_start <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.endTime != null">and g.date_start <![CDATA[<=]]> #{page.parameter.endTime}	</if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.startTime != null">and t.shop_date <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.endTime != null">and t.shop_date <![CDATA[<=]]> #{page.parameter.endTime} </if>
+			<if test="page.parameter.shopStore != null">
+				and t.supplier_name LIKE
+				CONCAT('%','${page.parameter.shopStore}','%')
+			</if>
+			<if test="page.parameter.groupCode != null">
+				and g.group_code LIKE
+				CONCAT('%','${page.parameter.groupCode}','%')
+			</if>
+			<if test="page.parameter.status != null">
+				<if test="page.parameter.status == 0">
+					and (t.state_finance = #{page.parameter.status} OR t.state_finance IS NULL) 
+				</if>
+				<if test="page.parameter.status != 0">
+					and t.state_finance = #{page.parameter.status}
+				</if>
+			</if>
+			<if test="page.parameter.guideId != null">
+				and t.guide_id = #{page.parameter.guideId}
+			</if>
+			<if test="page.parameter.productName != null">and (g.product_name like '%${page.parameter.productName}%' or g.product_brand_name like '%${page.parameter.productName}%') </if>
+			<if test="page.parameter.operator_id != null">and g.operator_id in (${page.parameter.operator_id})</if>
+			<if test="page.parameter.set != null">
+				and g.operator_id in
+				<foreach item="item" index="index" collection="page.parameter.set" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+			</if>
+			GROUP BY g.id, t.id 
+			ORDER BY g.date_start, g.create_time
+	</select>	
+	
+	
+	<select id="selectShopVerifySum" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.lang.Integer">
+		select sum(t0.person_num) person_num from (SELECT t.id,g.`group_code`,g.`product_name`,g.`product_brand_name`,g.`date_start`,g.`operator_name`,t.`guide_id`,g.group_mode,g.id as groupId
+			,t.supplier_id,t.`supplier_name`,t.`total_money`,t.`person_num` ,t.state_finance,t.audit_time,t.state_seal
+			FROM booking_shop t 
+			LEFT JOIN tour_group g ON t.group_id= g.`id` 
+			<if test="page.parameter.shopItem != null">
+				LEFT JOIN booking_shop_detail d ON t.id=d.booking_id
+			</if>
+			WHERE g.biz_id = #{bizId,jdbcType=INTEGER}
+			and g.group_state IN (0,1,3,4)
+		<if test="page.parameter.guideName != null">
+			AND t.guide_id IN(SELECT DISTINCT t.guide_id FROM booking_guide t WHERE t.guide_name LIKE '%${page.parameter.guideName}%')
+		</if>
+			<if test="page.parameter.set!=null">
+				AND g.operator_id in
+				<foreach item="item" index="index" collection="page.parameter.set" open="("
+					separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="page.parameter.shopItem != null">
+				and d.goods_name = #{page.parameter.shopItem}
+			</if>
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.startTime != null">and g.date_start <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.endTime != null">and g.date_start <![CDATA[<=]]> #{page.parameter.endTime}	</if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.startTime != null">and t.shop_date <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.endTime != null">and t.shop_date <![CDATA[<=]]> #{page.parameter.endTime} </if>
+			<if test="page.parameter.shopStore != null">
+				and t.supplier_name LIKE
+				CONCAT('%','${page.parameter.shopStore}','%')
+			</if>
+			<if test="page.parameter.groupCode != null">
+				and g.group_code LIKE
+				CONCAT('%','${page.parameter.groupCode}','%')
+			</if>
+			<if test="page.parameter.status != null">
+				<if test="page.parameter.status == 0">
+					and (t.state_finance = #{page.parameter.status} OR t.state_finance IS NULL) 
+				</if>
+				<if test="page.parameter.status != 0">
+					and t.state_finance = #{page.parameter.status}
+				</if>
+			</if>
+			<if test="page.parameter.guideId != null">
+				and t.guide_id = #{page.parameter.guideId}
+			</if>
+			<if test="page.parameter.productName != null">and (g.product_name like '%${page.parameter.productName}%' or g.product_brand_name like '%${page.parameter.productName}%') </if>
+			<if test="page.parameter.operator_id != null">and g.operator_id in (${page.parameter.operator_id})</if>
+			GROUP BY g.id, t.id 
+			ORDER BY g.date_start, g.create_time) t0
+	</select>	
+	
+	
+	<select id="getShopVerifyDetailListByShopId" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		SELECT t.goods_name,SUM(t.repay_total) AS sum_repay_total,SUM(t.buy_total) AS sum_buy_total,t.repay_val FROM booking_shop_detail t 
+		LEFT JOIN booking_shop b ON t.booking_id=b.id 
+		LEFT JOIN tour_group g ON b.group_id= g.`id` 
+		WHERE 1=1 and g.biz_id = #{page.parameter.bizId,jdbcType=INTEGER}
+		AND g.group_state in (1,3,4) 
+		<if test="page.parameter.set!=null">
+			AND g.operator_id in
+			<foreach item="item" index="index" collection="page.parameter.set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="page.parameter.guideName != null">
+			AND b.guide_id IN(SELECT DISTINCT t.guide_id FROM booking_guide t WHERE t.guide_name LIKE '%${page.parameter.guideName}%')
+		</if>
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.startTime != null">and g.date_start <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.endTime != null">and g.date_start <![CDATA[<=]]> #{page.parameter.endTime}	</if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.startTime != null">and b.shop_date <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.endTime != null">and b.shop_date <![CDATA[<=]]> #{page.parameter.endTime} </if>
+			<if test="id != null">
+				and t.booking_id <![CDATA[=]]> #{id} 
+			</if>
+			<if test="page.parameter.shopStore != null">
+				and b.supplier_name LIKE
+				CONCAT('%','${page.parameter.shopStore}','%')
+			</if>
+			<if test="page.parameter.shopItem != null">
+				and t.goods_name = #{page.parameter.shopItem}
+			</if>
+			<if test="page.parameter.groupCode != null">
+				and g.group_code LIKE
+				CONCAT('%','${page.parameter.groupCode}','%')
+			</if>
+			<if test="page.parameter.status != null">
+				and b.state_finance = #{page.parameter.status}
+			</if>
+			<if test="page.parameter.guideId != null">
+				and b.guide_id = #{page.parameter.guideId}
+			</if>
+			<if test="page.parameter.productName != null">and (g.product_name like '%${page.parameter.productName}%' or g.product_brand_name like '%${page.parameter.productName}%') </if>
+			<if test="page.parameter.operator_id != null">and g.operator_id in (${page.parameter.operator_id})</if>
+			<if test="sum != 'sum' ">
+				GROUP BY t.`goods_name`
+			</if>
+	</select>	
+	<select id="getBookingShopList" resultType="java.util.HashMap">
+		SELECT bs.`supplier_id` supplierId,bs.`supplier_name` supplierName,bs.`id` bookingId,dep.`buy_total` butTotal,dep.id,dep.order_id orderId
+		FROM `booking_shop` bs 
+		LEFT JOIN (SELECT dep1.* FROM `booking_shop_detail_deploy` dep1 WHERE dep1.`order_id`=#{orderId}) dep ON bs.`id`=dep.`booking_id` 
+		WHERE bs.`group_id`=#{groupId}
+	</select>
+	
+	<select id="getShopListByGroupIdAndGuideId" resultMap="BaseResultMap"
+		parameterType="com.yihg.mybatis.utility.PageBean">
+		SELECT *
+		FROM booking_shop s 
+		WHERE s.group_id = #{groupId,jdbcType=INTEGER}
+		AND s.guide_id = #{guideId,jdbcType=INTEGER}
+		<if test="'appliDate'==page.parameter.dateType and page.parameter.startTime != null">and s.shop_date <![CDATA[>=]]> #{page.parameter.startTime} </if>
+		<if test="'appliDate'==page.parameter.dateType and page.parameter.endTime != null">and s.shop_date <![CDATA[<=]]> #{page.parameter.endTime} </if>
+	</select>
+	
+	<select id="getShopListByGroupIdAndSupplierId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM booking_shop s 
+		WHERE s.group_id = #{groupId,jdbcType=INTEGER} and s.supplier_id = #{supplierId,jdbcType=INTEGER}
+		and s.guide_id = #{guideId,jdbcType=INTEGER}
+	</select>
+	
+	<select id="existBookingShop" parameterType="java.lang.Integer" resultType="java.lang.Integer" >
+		SELECT COUNT(*) FROM booking_shop WHERE supplier_id = #{supplierId}
+	</select>
+	
+	<!-- 根据导游安排中的groupID查询购物信息 -->
+	<select id="selectByGroupId"  parameterType="com.yihg.operation.po.BookingShop" resultMap="BaseResultMap">
+	    select 
+	    	<include refid="Base_Column_List" />
+	    from booking_shop
+	    where group_id = #{groupId,jdbcType=INTEGER} and guide_id = #{guideId}
+  	</select>
+	
+</mapper>

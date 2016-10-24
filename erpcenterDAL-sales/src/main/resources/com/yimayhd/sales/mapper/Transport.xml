@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="transport">
+	<!-- 查询接送信息 -->
+	<select id="selectTransportListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		SELECT s.*,
+		  tg.`group_code` groupCode,
+		  tg.`group_mode` groupMode
+		FROM (
+		SELECT 
+		  got.`type` TYPE,
+		  got.method,
+		  got.class_no,
+		  got.`departure_city` departureCity,
+		  got.`departure_station` departureStation,
+		  got.`departure_time` departureTime,
+		  got.`departure_date` departureDate,
+		  got.`arrival_city` arrivalCity,
+		  got.`arrival_station` arrivalStation,
+		  got.`is_direct` isDirect,
+		  got.`destination` destination,
+		  go.`supplier_name` supplierName,
+		  go.operator_name operatorName,
+		  go.id orderId,
+		  go.receive_mode receiveMode ,
+		  go.`group_id` groupId
+		FROM
+		  group_order_transport got 
+		  INNER JOIN group_order go 
+		    ON got.`order_id` = go.id 
+		WHERE go.`state` != - 1 
+		<if test="parameter.set!=null">
+			AND go.operator_id in
+			<foreach item="item" index="index" collection="parameter.set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		  AND go.biz_id = ${parameter.bizId}
+		  <if test="parameter.startTime != null">and got.departure_date <![CDATA[>=]]> #{parameter.startTime} </if>
+	 	  <if test="parameter.endTime != null">and got.departure_date <![CDATA[<=]]> #{parameter.endTime} </if>
+		  <if test="parameter.coachMethod != null">and got.`type`= #{parameter.coachMethod}</if>
+		  <if test="parameter.departureCity != null">and got.`departure_city` LIKE CONCAT('%',#{parameter.departureCity},'%')</if>
+	      <if test="parameter.arrivalCity != null">and got.`arrival_city` LIKE CONCAT('%',#{parameter.arrivalCity},'%')</if>
+	      <if test="parameter.destination != null"> AND got.`destination` LIKE CONCAT('%',#{parameter.destination},'%')</if>
+	      <if test="parameter.transportType != null"> AND got.`method` = #{parameter.transportType}</if>
+		) s
+		INNER JOIN tour_group tg 
+		    ON tg.id = s.groupId 
+		WHERE group_state IN (1, 3, 4) 
+	    <if test="parameter.groupCode != null">and tg.group_code LIKE CONCAT('%',#{parameter.groupCode},'%')</if>
+	    ORDER BY s.`departureTime`
+	</select>
+</mapper>

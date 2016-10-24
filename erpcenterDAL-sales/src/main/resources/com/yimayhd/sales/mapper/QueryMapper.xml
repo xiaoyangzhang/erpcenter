@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.query.dao.QueryMapper">
+  
+	<select id="getProductGuestShoppingGroupOrderListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		SELECT gog.product_brand_name,GROUP_CONCAT(DISTINCT gog.id) order_ids
+		FROM group_order gog JOIN tour_group tg ON gog.group_id=tg.id
+		WHERE 1=1 AND tg.group_state IN (1,3,4) AND tg.biz_id=#{page.parameter.bizId}
+		<if test="page.parameter.provinceId!=null">
+		AND gog.province_id=#{page.parameter.provinceId}
+		</if>  
+		<if test="page.parameter.cityId!=null and page.parameter.cityId!=-1">
+		AND gog.city_id=#{page.parameter.cityId}
+		</if>  
+		
+		AND gog.operator_id IN
+		<foreach item="item" index="index" collection="page.parameter.dataRightSet" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+		<if test="page.parameter.dateStart!=null">
+		AND <![CDATA[gog.departure_date>=#{page.parameter.dateStart}]]>
+		</if>
+		<if test="page.parameter.dateEnd!=null">
+		AND <![CDATA[gog.departure_date<=#{page.parameter.dateEnd}]]>
+		</if>
+		<if test="page.parameter.operatorIds!=null and page.parameter.operatorIds!=''">
+		AND gog.operator_id IN (${page.parameter.operatorIds})
+		</if>
+		<if test="page.parameter.productBrandName != null">and 
+		(gog.product_brand_name like concat( '%',#{page.parameter.productBrandName},'%') or
+		gog.product_name like concat('%',#{page.parameter.productBrandName},'%')) </if>
+		GROUP BY gog.product_brand_name
+	</select>
+	<select id="getGuestSourceShoppingByOrderId" resultType="java.util.HashMap">
+		SELECT go.province_name,go.city_name,SUM(IFNULL(bsdd.buy_total,0)) total,SUM(go.num_adult) adult
+		FROM group_order go LEFT JOIN (SELECT order_id,SUM(buy_total) buy_total FROM  `booking_shop_detail_deploy` GROUP BY order_id) bsdd  ON go.id=bsdd.order_id
+		WHERE go.id IN (${orderIds})
+		GROUP BY go.province_name,go.city_name
+	</select>
+	<select id="getGuestSourceShoppingByOrderIds" resultType="java.util.HashMap">
+		<!-- SELECT go.province_name,go.city_name,SUM(IFNULL(bsdd.buy_total,0)) total,SUM(go.num_adult) adult
+		FROM group_order go LEFT JOIN (SELECT order_id,SUM(buy_total) buy_total FROM  `booking_shop_detail_deploy` GROUP BY order_id) bsdd  ON go.id=bsdd.order_id
+		WHERE go.id IN (${orderIds})
+		GROUP BY go.province_name,go.city_name -->
+		
+		SELECT go.supplier_id, go.province_name,go.city_name,SUM(IFNULL(bsdd.buy_total,0)) total,SUM(go.num_adult) adult
+		FROM group_order go JOIN (SELECT order_id,SUM(buy_total) buy_total FROM  `booking_shop_detail_deploy` where 1=1 
+						<if test="page.parameter.shopDetailDeploy.shoppingDataState != null">
+								<if test="page.parameter.shopDetailDeploy.shoppingDataState == 1">
+								and buy_total IS NOT NULL 
+								</if>
+								<if test="page.parameter.shopDetailDeploy.shoppingDataState == 0">
+								and buy_total IS NULL 
+								</if>
+						</if>		
+						GROUP BY order_id) bsdd  ON go.id=bsdd.order_id
+		WHERE  go.biz_id=#{page.parameter.bizId} and go.state=1
+		<if test="page.parameter.provinceId!=null">
+			AND go.province_id=#{page.parameter.provinceId}
+		</if>  
+		<if test="page.parameter.cityId!=null and page.parameter.cityId!=-1 ">
+			AND go.city_id=#{page.parameter.cityId}
+		</if>  
+		AND go.operator_id IN
+		<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+		<if test="page.parameter.startTime!=null and page.parameter.startTime!=''">
+			AND <![CDATA[go.departure_date>=#{page.parameter.startTime}]]>
+		</if>
+		<if test="page.parameter.endTime!=null and page.parameter.endTime!=''">
+			AND <![CDATA[go.departure_date<=#{page.parameter.endTime}]]>
+		</if>
+		<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds!=''">
+			AND go.operator_id IN (${page.parameter.saleOperatorIds})
+		</if>
+		<if test="page.parameter.productBrandName != null and page.parameter.productBrandName != ''"> 
+			and (go.product_brand_name like concat( '%',#{page.parameter.productBrandName},'%') or go.product_name like concat('%',#{page.parameter.productBrandName},'%') )
+		</if>
+		<if test="page.parameter.supplierName != null and page.parameter.supplierName != ''">and 
+		go.supplier_name like concat( '%',#{page.parameter.supplierName},'%') </if>
+		GROUP BY go.supplier_id,go.province_name,go.city_name
+	</select>
+	
+	<select id="getSupplierGuestShoppingGroupOrderListPage"  resultType="java.util.HashMap">
+		SELECT gog.supplier_id as supplierId, gog.supplier_name supplierName
+		FROM group_order gog 
+		JOIN (select order_id from booking_shop_detail_deploy where 1=1
+					<if test="page.parameter.shopDetailDeploy.shoppingDataState != null">
+								<if test="page.parameter.shopDetailDeploy.shoppingDataState == 1">
+								and buy_total IS NOT NULL 
+								</if>
+								<if test="page.parameter.shopDetailDeploy.shoppingDataState == 0">
+								and buy_total IS NULL 
+								</if>
+						</if>
+				  GROUP BY order_id
+				  ) shop on (gog.id=shop.order_id)
+		WHERE gog.biz_id=#{page.parameter.bizId} and gog.state=1
+		<if test="page.parameter.provinceId!=null">
+			AND gog.province_id=#{page.parameter.provinceId}
+		</if>  
+		<if test="page.parameter.cityId!=null and page.parameter.cityId!=-1 ">
+			AND gog.city_id=#{page.parameter.cityId}
+		</if>  
+		AND gog.operator_id IN
+		<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+		<if test="page.parameter.startTime!=null and page.parameter.startTime!=''">
+			AND <![CDATA[gog.departure_date>=#{page.parameter.startTime}]]>
+		</if>
+		<if test="page.parameter.endTime!=null and page.parameter.endTime!=''">
+			AND <![CDATA[gog.departure_date<=#{page.parameter.endTime}]]>
+		</if>
+		<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds!=''">
+			AND gog.operator_id IN (${page.parameter.saleOperatorIds})
+		</if>
+		<if test="page.parameter.productBrandName != null and page.parameter.productBrandName != ''"> 
+			and (gog.product_brand_name like concat( '%',#{page.parameter.productBrandName},'%') or gog.product_name like concat('%',#{page.parameter.productBrandName},'%') )
+		</if>
+		<if test="page.parameter.supplierName != null and page.parameter.supplierName != ''">and 
+		gog.supplier_name like concat( '%',#{page.parameter.supplierName},'%') </if>
+		GROUP BY gog.supplier_id, gog.supplier_name
+	</select>
+	
+	<!-- <select id="getSupplierGuestShoppingGroupOrderListPage"  resultType="java.util.HashMap">
+		SELECT gog.supplier_name supplierName,GROUP_CONCAT(DISTINCT gog.id) order_ids
+		FROM group_order gog JOIN tour_group tg ON gog.group_id=tg.id
+		INNER JOIN booking_shop bs ON gog.group_id=bs.`group_id`
+		LEFT JOIN booking_shop_detail_deploy bsdd ON gog.`id`=bsdd.`order_id` AND bsdd.booking_id=bs.`id`  
+		WHERE 1=1 AND tg.group_state IN (1,3,4) AND gog.biz_id=#{page.parameter.bizId} and gog.state=1
+		<if test="page.parameter.shopDetailDeploy.shoppingDataState != null">
+			<if test="page.parameter.shopDetailDeploy.shoppingDataState == 1">
+			and bsdd.buy_total IS NOT NULL 
+			</if>
+			<if test="page.parameter.shopDetailDeploy.shoppingDataState == 0">
+			and bsdd.buy_total IS NULL 
+			</if>
+		</if>
+		<if test="page.parameter.provinceId!=null">
+		AND gog.province_id=#{page.parameter.provinceId}
+		</if>  
+		<if test="page.parameter.cityId!=null and page.parameter.cityId!=-1 ">
+		AND gog.city_id=#{page.parameter.cityId}
+		</if>  
+		AND gog.operator_id IN
+		<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+		<if test="page.parameter.startTime!=null and page.parameter.startTime!=''">
+		AND <![CDATA[gog.departure_date>=#{page.parameter.startTime}]]>
+		</if>
+		<if test="page.parameter.endTime!=null and page.parameter.endTime!=''">
+		AND <![CDATA[gog.departure_date<=#{page.parameter.endTime}]]>
+		</if>
+		<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds!=''">
+		AND gog.operator_id IN (${page.parameter.saleOperatorIds})
+		</if>
+		<if test="page.parameter.productBrandName != null and page.parameter.productBrandName != ''">and 
+	(	gog.product_brand_name like concat( '%',#{page.parameter.productBrandName},'%') or gog.product_name like concat('%',#{page.parameter.productBrandName},'%') )</if>
+		<if test="page.parameter.supplierName != null and page.parameter.supplierName != ''">and 
+		gog.supplier_name like concat( '%',#{page.parameter.supplierName},'%') </if>
+		GROUP BY gog.supplier_name
+	</select> -->
+	
+	<!-- 客源 -->
+	
+	<select id="getSupplierGuestShoppingGroupOrderListPages"  parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	SELECT go.supplier_id,go.supplier_name,sum(num_adult) adult,go.province_id,
+		go.province_name,go.city_name,sum(sd.buy_total) buy_total, 0 as supplierRows,0 as ProvinceRows ,
+		0 provincePerson
+		FROM group_order go 
+		left JOIN (select order_id,sum(ifNull(buy_total,0)) as buy_total from  booking_shop_detail_deploy 
+		where 1=1
+		<if test="page.parameter.shopDetailDeploy.shoppingDataState != null">
+			<if test="page.parameter.shopDetailDeploy.shoppingDataState == 1">
+			and buy_total IS NOT NULL
+			</if>
+			<if test="page.parameter.shopDetailDeploy.shoppingDataState == 0">
+			and buy_total IS NULL 
+			</if>
+		</if>
+		group by order_id) sd ON go.`id`=sd.`order_id`
+		 where  go.biz_id=#{page.parameter.bizId}  and go.state=1
+		<if test="page.parameter.provinceId!=null">
+		AND go.province_id=#{page.parameter.provinceId}
+		</if>  
+		<if test="page.parameter.cityId!=null and page.parameter.cityId!=-1 ">
+		AND go.city_id=#{page.parameter.cityId}
+		</if>
+		AND go.operator_id IN
+		<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+		 <if test="page.parameter.startTime!=null and page.parameter.startTime!=''">
+		AND <![CDATA[go.departure_date>=#{page.parameter.startTime}]]>
+		</if>
+		<if test="page.parameter.endTime!=null and page.parameter.endTime!=''">
+		AND <![CDATA[go.departure_date<=#{page.parameter.endTime}]]>
+		</if>
+		<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds!=''">
+		AND go.operator_id IN (${page.parameter.saleOperatorIds})
+		</if>
+		<if test="page.parameter.productBrandName != null and page.parameter.productBrandName != ''">and 
+		(	go.product_brand_name like concat( '%',#{page.parameter.productBrandName},'%') or go.product_name like concat('%',#{page.parameter.productBrandName},'%') )</if>
+		<if test="page.parameter.supplierName != null and page.parameter.supplierName != ''">and 
+		go.supplier_name like concat( '%',#{page.parameter.supplierName},'%') </if>
+		group by go.supplier_id,go.supplier_name,province_name,city_name
+		order by supplier_id,province_id
+	</select>
+	
+	
+	<select id="getReceivePersonStatistics" resultType="java.util.HashMap">
+		SELECT t.*,
+		cast(SUM(IFNULL(group1Adult,0)+IFNULL(group2Adult,0)+IFNULL(group3Adult,0)+IFNULL(group4Adult,0)+IFNULL(group5Adult,0)+
+		IFNULL(group6Adult,0)+IFNULL(group7Adult,0)+IFNULL(group8Adult,0)+IFNULL(group9Adult,0)+IFNULL(group10Adult,0)+IFNULL(group11Adult,0)+IFNULL(group12Adult,0)
+		) as decimal(50,2)) groupTotalAdult,
+		cast(SUM(IFNULL(disperse1Adult,0)+IFNULL(disperse2Adult,0)+IFNULL(disperse3Adult,0)+IFNULL(disperse4Adult,0)+IFNULL(disperse5Adult,0)+
+		IFNULL(disperse6Adult,0)+IFNULL(disperse7Adult,0)+IFNULL(disperse8Adult,0)+IFNULL(disperse9Adult,0)+IFNULL(disperse10Adult,0)+IFNULL(disperse11Adult,0)+IFNULL(disperse12Adult,0)
+		) as decimal(50,2)) disperseTotalAdult,
+		SUM(IFNULL(group1child,0)+IFNULL(group2child,0)+IFNULL(group3child,0)+IFNULL(group4child,0)+IFNULL(group5child,0)+IFNULL(group6child,0)+IFNULL(group7child,0)+
+		IFNULL(group8child,0)+IFNULL(group9child,0)+IFNULL(group10child,0)+IFNULL(group11child,0)+IFNULL(group12child,0)) groupTotalChild,
+		SUM(IFNULL(disperse1child,0)+IFNULL(disperse2child,0)+IFNULL(disperse3child,0)+IFNULL(disperse4child,0)+IFNULL(disperse5child,0)+IFNULL(disperse6child,0)+IFNULL(disperse7child,0)+
+		IFNULL(disperse8child,0)+IFNULL(disperse9child,0)+IFNULL(disperse10child,0)+IFNULL(disperse11child,0)+IFNULL(disperse12child,0)) disperseTotalChild,
+		SUM(IFNULL(group1Guide,0)+IFNULL(group2Guide,0)+IFNULL(group3Guide,0)+IFNULL(group4Guide,0)+IFNULL(group5Guide,0)+IFNULL(group6Guide,0)+IFNULL(group7Guide,0)+IFNULL(group8Guide,0)+
+		IFNULL(group9Guide,0)+IFNULL(group10Guide,0)+IFNULL(group11Guide,0)+IFNULL(group12Guide,0)) groupTotalGuide,
+		SUM(IFNULL(disperse1Guide,0)+IFNULL(disperse2Guide,0)+IFNULL(disperse3Guide,0)+IFNULL(disperse4Guide,0)+IFNULL(disperse5Guide,0)+IFNULL(disperse6Guide,0)+IFNULL(disperse7Guide,0)+
+		IFNULL(disperse8Guide,0)+IFNULL(disperse9Guide,0)+IFNULL(disperse10Guide,0)+IFNULL(disperse11Guide,0)+IFNULL(disperse12Guide,0)) disperseTotalGuide
+		,SUM(IFNULL(group1Adult,0)+IFNULL(group1child,0)+IFNULL(group1Guide,0)) group1Total,SUM(IFNULL(group2Adult,0)+IFNULL(group2child,0)+IFNULL(group2Guide,0)) group2Total,
+		SUM(IFNULL(group3Adult,0)+IFNULL(group3child,0)+IFNULL(group3Guide,0)) group3Total,SUM(IFNULL(group4Adult,0)+IFNULL(group4child,0)+IFNULL(group4Guide,0)) group4Total,
+		SUM(IFNULL(group5Adult,0)+IFNULL(group5child,0)+IFNULL(group5Guide,0)) group5Total,SUM(IFNULL(group6Adult,0)+IFNULL(group6child,0)+IFNULL(group6Guide,0)) group6Total,
+		SUM(IFNULL(group7Adult,0)+IFNULL(group7child,0)+IFNULL(group7Guide,0)) group7Total,SUM(IFNULL(group8Adult,0)+IFNULL(group8child,0)+IFNULL(group8Guide,0)) group8Total,
+		SUM(IFNULL(group9Adult,0)+IFNULL(group9child,0)+IFNULL(group9Guide,0)) group9Total,SUM(IFNULL(group10Adult,0)+IFNULL(group10child,0)+IFNULL(group10Guide,0)) group10Total,
+		SUM(IFNULL(group11Adult,0)+IFNULL(group11child,0)+IFNULL(group11Guide,0)) group11Total,SUM(IFNULL(group12Adult,0)+IFNULL(group12child,0)+IFNULL(group12Guide,0)) group12Total,
+		SUM(IFNULL(disperse1Adult,0)+IFNULL(disperse1child,0)+IFNULL(disperse1Guide,0)) disperse1Total,SUM(IFNULL(disperse2Adult,0)+IFNULL(disperse2child,0)+IFNULL(disperse2Guide,0)) disperse2Total,
+		SUM(IFNULL(disperse3Adult,0)+IFNULL(disperse3child,0)+IFNULL(disperse3Guide,0)) disperse3Total,SUM(IFNULL(disperse4Adult,0)+IFNULL(disperse4child,0)+IFNULL(disperse4Guide,0)) disperse4Total,
+		SUM(IFNULL(disperse5Adult,0)+IFNULL(disperse5child,0)+IFNULL(disperse5Guide,0)) disperse5Total,SUM(IFNULL(disperse6Adult,0)+IFNULL(disperse6child,0)+IFNULL(disperse6Guide,0)) disperse6Total,
+		SUM(IFNULL(disperse7Adult,0)+IFNULL(disperse7child,0)+IFNULL(disperse7Guide,0)) disperse7Total,SUM(IFNULL(disperse8Adult,0)+IFNULL(disperse8child,0)+IFNULL(disperse8Guide,0)) disperse8Total,
+		SUM(IFNULL(disperse9Adult,0)+IFNULL(disperse9child,0)+IFNULL(disperse9Guide,0)) disperse9Total,SUM(IFNULL(disperse10Adult,0)+IFNULL(disperse10child,0)+IFNULL(disperse10Guide,0)) disperse10Total,
+		SUM(IFNULL(disperse11Adult,0)+IFNULL(disperse11child,0)+IFNULL(disperse11Guide,0)) disperse11Total,SUM(IFNULL(disperse12Adult,0)+IFNULL(disperse12child,0)+IFNULL(disperse12Guide,0)) disperse12Total
+ 
+		 FROM (
+		SELECT <!-- go.product_brand_name,go.product_name,go.operator_id,go.sale_operator_id,go.supplier_name, -->
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=1 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_adult,0)  END),0) group1Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=2 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_adult,0)  END),0) group2Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=3 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_adult,0)  END),0) group3Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=4 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_adult,0)  END),0) group4Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=5 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_adult,0) END),0) group5Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=6 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_adult,0)  END),0) group6Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=7 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_adult,0) END),0) group7Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=8 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_adult,0)  END),0) group8Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=9 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_adult,0)  END),0) group9Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=10 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_adult,0)  END),0) group10Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=11 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_adult,0)  END),0) group11Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=12 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_adult,0)  END),0) group12Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=1 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_adult,0)  END),0) disperse1Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=2 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_adult,0)  END),0) disperse2Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=3 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_adult,0)  END),0) disperse3Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=4 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_adult,0)  END),0) disperse4Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=5 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_adult,0)  END),0) disperse5Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=6 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_adult,0)  END),0) disperse6Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=7 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_adult,0)  END),0) disperse7Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=8 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_adult,0)  END),0) disperse8Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=9 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_adult,0)  END),0) disperse9Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=10 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_adult,0)  END),0) disperse10Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=11 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_adult,0)  END),0) disperse11Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=12 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_adult,0)  END),0) disperse12Adult,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=1 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_child,0)  END),0) group1child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=2 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_child,0)  END),0) group2child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=3 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_child,0)  END),0) group3child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=4 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_child,0)  END),0) group4child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=5 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_child,0)  END),0) group5child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=6 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_child,0)  END),0) group6child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=7 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_child,0)  END),0) group7child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=8 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_child,0)  END),0) group8child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=9 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_child,0)  END),0) group9child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=10 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_child,0)  END),0) group10child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=11 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_child,0)  END),0) group11child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=12 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_child,0)  END),0) group12child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=1 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_child,0)  END),0) disperse1child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=2 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_child,0)  END),0) disperse2child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=3 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_child,0)  END),0) disperse3child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=4 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_child,0)  END),0) disperse4child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=5 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_child,0)  END),0) disperse5child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=6 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_child,0)  END),0) disperse6child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=7 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_child,0)  END),0) disperse7child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=8 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_child,0)  END),0) disperse8child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=9 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_child,0)  END),0) disperse9child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=10 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_child,0)  END),0) disperse10child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=11 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_child,0)  END),0) disperse11child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=12 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_child,0)  END),0) disperse12child,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=1 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_guide,0)  END),0) group1Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=2 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_guide,0)  END),0) group2Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=3 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_guide,0)  END),0) group3Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=4 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_guide,0)  END),0) group4Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=5 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_guide,0)  END),0) group5Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=6 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_guide,0)  END),0) group6Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=7 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_guide,0)  END),0) group7Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=8 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_guide,0)  END),0) group8Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=9 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_guide,0)  END),0) group9Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=10 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_guide,0)  END),0) group10Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=11 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_guide,0)  END),0) group11Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=12 AND go.order_type<![CDATA[>]]>0 THEN IFNULL(go.num_guide,0)  END),0) group12Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=1 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_guide,0)  END),0) disperse1Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=2 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_guide,0)  END),0) disperse2Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=3 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_guide,0)  END),0) disperse3Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=4 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_guide,0)  END),0) disperse4Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=5 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_guide,0)  END),0) disperse5Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=6 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_guide,0)  END),0) disperse6Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=7 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_guide,0)  END),0) disperse7Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=8 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_guide,0)  END),0) disperse8Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=9 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_guide,0)  END),0) disperse9Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=10 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_guide,0)  END),0) disperse10Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=11 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_guide,0)  END),0) disperse11Guide,
+		IFNULL(SUM(CASE WHEN MONTH(go.departure_date)=12 AND go.order_type<![CDATA[<]]>1 THEN IFNULL(go.num_guide,0)  END),0) disperse12Guide
+		
+		 FROM    `group_order`  go 
+		  WHERE go.state=1 and   go.`biz_id`=#{parameter.bizId} 
+		 AND go.operator_id IN
+		<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+		 <if test="parameter.yearLimit!=null"> and YEAR(go.departure_date)=#{parameter.yearLimit}</if>
+		 <if test="parameter.productBrandName != null and parameter.productBrandName !='' ">and 
+	(	go.product_brand_name like concat( '%',#{parameter.productBrandName},'%') or go.product_name like concat('%',#{parameter.productBrandName},'%') )</if>
+		<if test="parameter.supplierName != null and parameter.supplierName != ''">and 
+		go.supplier_name like concat( '%',#{parameter.supplierName},'%') </if>
+		 <if test="parameter.operType==0 ">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and go.operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.operType==1">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and go.sale_operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		  ) t
+	</select>
+	<select id="getPersonCountMap" resultType="java.util.HashMap">
+		select sum(ifnull(go.num_adult,0)) totalAdult,sum(ifnull(go.num_child,0))  totalChild 
+		from  group_order go  left join (select order_id,gender from group_order_guest 
+		where 1=1 <if test="map.gender!=null"> and gender=#{map.gender}</if>
+		 group by order_id ) gog 
+		on go.id=gog.order_id
+		where go.biz_id=#{map.bizId} and go.state=1
+		 AND go.operator_id IN
+		<foreach item="item" index="index" collection="map.set" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+		<if test="map.supplierName != null and map.supplierName!=''">and go.supplier_name like concat('%', #{map.supplierName} ,'%')</if>
+		<if test="map.productBrandName != null and map.productBrandName!=''">
+			and (go.product_brand_name LIKE
+			CONCAT('%',#{map.productBrandName},'%')
+			or go.product_name LIKE
+			CONCAT('%',#{map.productBrandName},'%'))
+		</if>
+		
+		
+		<if test="map.orderType == 0">and
+			order_type <![CDATA[<]]>1
+		</if>
+		<if test="map.orderType !=0 and map.orderType!=null">and
+			order_type <![CDATA[>]]>0
+		</if>
+		
+		<if test="map.startTime != null and map.startTime!=''">and
+			go.departure_date <![CDATA[>=]]>
+			#{map.startTime}
+		</if>
+		<if test="map.endTime != null and map.endTime!=''">and
+			go.departure_date<![CDATA[<=]]>
+			#{map.endTime}
+		</if>
+		<if test="map.operType==0 or map.operType==null">
+			<if test="map.saleOperatorIds!=null and map.saleOperatorIds!=''">
+				and go.sale_operator_id in (${map.saleOperatorIds})
+			</if>
+		</if>
+		<if test="map.operType==1">
+			<if test="map.saleOperatorIds!=null and map.saleOperatorIds!=''">
+				and go.operator_id in (#{map.saleOperatorIds})
+			</if>
+		</if>
+	</select>
+	<!-- 地接社期初未付总计 -->
+	<select id="selectDeliveryOriginalTotal" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT SUM(IFNULL(a.total,0)-IFNULL(a.total_cash,0)) originalTotal	FROM booking_delivery a INNER JOIN tour_group b on a.group_id = b.id
+		  WHERE group_state in (1,3,4)
+		  <if test="parameter.set!=null">
+					AND b.operator_id in
+				<foreach item="item" index="index" collection="parameter.set" open="("
+					separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="parameter.bizId != null"> and b.biz_id=#{parameter.bizId} </if>
+			<if test="parameter.dateType==0">
+				<if test="parameter.start_min != null">and date_start <![CDATA[<]]> #{parameter.start_min} </if>
+			</if>
+			<if test="parameter.dateType==1">
+				<if test="parameter.start_min != null">and date_arrival <![CDATA[<]]> #{parameter.start_min} </if>
+			</if>
+			<if test="parameter.dateType==2">
+				<if test="parameter.start_min != null">and date_end <![CDATA[<]]> #{parameter.start_min} </if>
+			</if>
+			<if test="parameter.supplier_name != null and parameter.supplier_name !=''">and a.supplier_name like concat( '%',#{parameter.supplier_name},'%') </if>
+			 <if test="parameter.user_name != null and parameter.user_name != ''">and a.user_name like concat( '%',#{parameter.user_name},'%') </if>
+			<if test="parameter.group_mode == 0 ">and b.group_mode <![CDATA[<]]>1</if>
+			<if test="parameter.group_mode > 0">and b.group_mode <![CDATA[>]]>0</if>
+			<if test="parameter.productName != null and parameter.productName!=''">
+				and (product_brand_name LIKE CONCAT('%',#{parameter.productName},'%') or product_name LIKE CONCAT('%',#{parameter.productName},'%'))
+			</if>
+			<if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and b.operator_id in (${parameter.saleOperatorIds})
+			</if>
+		<if test="parameter.status == 0"> and IFNULL(a.total,0)=IFNULL(a.total_cash,0)</if>
+		<if test="parameter.status == 1">and IFNULL(a.total,0)!=IFNULL(a.total_cash,0)</if>
+		
+		and a.supplier_id in (
+			select supplier_id from booking_delivery a inner join tour_group b on a.group_id = b.id
+			where b.biz_id = #{parameter.bizId}  and group_state in (1,3,4)
+						<if test="parameter.set!=null">
+								AND b.operator_id in
+							<foreach item="item" index="index" collection="parameter.set" open="("
+								separator="," close=")">
+								#{item}
+							</foreach>
+						</if>
+						<if test="parameter.bizId != null"> and b.biz_id=#{parameter.bizId} </if>
+						<if test="parameter.dateType==0">
+							<if test="parameter.start_min != null">and date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+							<if test="parameter.start_max != null">and date_start <![CDATA[<=]]> #{parameter.start_max}</if>
+						</if>
+						<if test="parameter.dateType==2">
+							<if test="parameter.start_min != null">and date_end <![CDATA[>=]]> #{parameter.start_min} </if>
+							<if test="parameter.start_max != null">and date_end <![CDATA[<=]]> #{parameter.start_max}</if>
+						</if>
+						<if test="parameter.dateType==1">
+							<if test="parameter.start_min != null">and date_arrival <![CDATA[>=]]> #{parameter.start_min} </if>
+							<if test="parameter.start_max != null">and date_arrival <![CDATA[<=]]> #{parameter.start_max}	</if>
+						</if>
+						<if test="parameter.supplier_name != null and parameter.supplier_name !=''">and a.supplier_name like concat( '%',#{parameter.supplier_name},'%') </if>
+						 <if test="parameter.user_name != null and parameter.user_name != ''">and a.user_name like concat( '%',#{parameter.user_name},'%') </if>
+						<if test="parameter.group_mode == 0 ">and b.group_mode <![CDATA[<]]>1</if>
+						<if test="parameter.group_mode > 0">and b.group_mode <![CDATA[>]]>0</if>
+						<if test="parameter.productName != null and parameter.productName!=''">
+							and (product_brand_name LIKE CONCAT('%',#{parameter.productName},'%') or product_name LIKE CONCAT('%',#{parameter.productName},'%'))
+						</if>
+						<if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+							and b.operator_id in (${parameter.saleOperatorIds})
+						</if>
+					<if test="parameter.status == 0"> and IFNULL(a.total,0)=IFNULL(a.total_cash,0)</if>
+				<if test="parameter.status == 1">and ifnull(a.total,0) <![CDATA[<>]]>0</if> 
+			)			
+	</select>
+	
+	<select id="selectOriginalTotal1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT SUM(IFNULL(t.total,0)-IFNULL(t.total_cash,0)) originalTotal
+		FROM booking_supplier t 
+				inner join tour_group b on b.id=t.group_id 
+				left  join (SELECT booking_id,item_date,type1_id FROM booking_supplier_detail GROUP BY booking_id) d ON t.id=d.`booking_id`
+		where  b.biz_id = #{parameter.bizId} and group_state in (1,3,4)
+		<if test="parameter.choose_type != null and parameter.choose_type==1">
+			<if test="parameter.start_min != null">and ( d.item_date <![CDATA[<]]> #{parameter.start_min} )</if>
+		</if>
+		<if test="parameter.choose_type != null and parameter.choose_type==0">
+			<if test="parameter.start_min != null">and b.date_start <![CDATA[<]]> #{parameter.start_min} </if>
+		</if>
+		<if test="parameter.choose_type != null and parameter.choose_type==2">
+			<if test="parameter.start_min != null">and b.date_end <![CDATA[<]]> #{parameter.start_min} </if>
+		</if>
+		<if test="parameter.supplier_type != null">and t.supplier_type <![CDATA[=]]> #{parameter.supplier_type} </if>
+		<if test="parameter.car_type != null">and d.type1_id = #{parameter.car_type }</if>
+		<if test="parameter.cashType != null">and t.cash_type like concat ('%',#{parameter.cashType},'%')   </if>
+		<if test="parameter.supplier_name != null">and t.supplier_name like concat( '%',#{parameter.supplier_name},'%')</if>
+		<if test="parameter.user_name != null">and t.user_name like concat( '%',#{parameter.user_name},'%')  </if>
+		<if test="parameter.set!=null">
+		AND b.operator_id in
+		<foreach item="item" index="index" collection="parameter.set" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		</if>
+		
+		<if test="parameter.product_name != null">and (b.product_name like concat( '%',#{parameter.product_name},'%') or b.product_brand_name like concat( '%',#{parameter.product_name},'%')) </if>
+	    <if test="parameter.group_mode == 0">and group_mode <![CDATA[<]]> 1</if>
+	    <if test="parameter.group_mode !=0 and parameter.group_mode!=null">and group_mode <![CDATA[>]]>0</if>
+	    <if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and b.operator_id in (${parameter.saleOperatorIds})
+		</if>
+		<if test="parameter.status == 0"> and IFNULL(t.total,0)=IFNULL(t.total_cash,0)</if>
+		<if test="parameter.status == 1">and IFNULL(t.total,0)!=IFNULL(t.total_cash,0)</if>
+		
+		
+		and t.supplier_id in (
+			select supplier_id from booking_supplier t inner join tour_group b on b.id=t.group_id 
+			where b.biz_id = #{parameter.bizId}  and group_state in (1,3,4)
+					<if test="parameter.choose_type != null and parameter.choose_type==1">
+<!-- 						<if test="parameter.start_min != null and parameter.start_max == null">and ( d.item_date <![CDATA[>=]]> #{parameter.start_min}  or d.item_date_to <![CDATA[>=]]> #{parameter.start_min})</if>
+						<if test="parameter.start_min == null and parameter.start_max != null">and #{parameter.start_max} <![CDATA[>=]]> d.item_date  or  #{parameter.start_max} <![CDATA[>=]]> d.item_date_to </if>
+ -->						<if test="parameter.start_min != null and parameter.start_max != null">and (d.item_date BETWEEN #{parameter.start_min}  and  #{parameter.start_max})</if>
+					</if>
+					<if test="parameter.choose_type != null and parameter.choose_type==0">
+						<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+						<if test="parameter.start_max != null">and b.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+					</if>
+					<if test="parameter.choose_type != null and parameter.choose_type==2">
+						<if test="parameter.start_min != null">and b.date_end <![CDATA[>=]]> #{parameter.start_min} </if>
+						<if test="parameter.start_max != null">and b.date_end <![CDATA[<=]]> #{parameter.start_max}	</if>
+					</if>
+					<if test="parameter.supplier_type != null">and t.supplier_type <![CDATA[=]]> #{parameter.supplier_type} </if>
+					<if test="parameter.car_type != null">and d.type1_id = #{parameter.car_type }</if>
+					<if test="parameter.cashType != null">and t.cash_type like concat ('%',#{parameter.cashType},'%')   </if>
+					<if test="parameter.supplier_name != null">and t.supplier_name like concat( '%',#{parameter.supplier_name},'%')</if>
+					<if test="parameter.user_name != null">and t.user_name like concat( '%',#{parameter.user_name},'%')  </if>
+					<if test="parameter.set!=null">
+						AND b.operator_id in
+						<foreach item="item" index="index" collection="parameter.set" open="("
+							separator="," close=")">
+							#{item}
+						</foreach>
+					</if>
+					<if test="parameter.product_name != null">and (b.product_name like concat( '%',#{parameter.product_name},'%') or b.product_brand_name like concat( '%',#{parameter.product_name},'%')) </if>
+				    <if test="parameter.group_mode == 0">and group_mode <![CDATA[<]]> 1</if>
+				    <if test="parameter.group_mode !=0 and parameter.group_mode!=null">and group_mode <![CDATA[>]]>0</if>
+				    <if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+							and b.operator_id in (${parameter.saleOperatorIds})
+					</if>
+					<if test="parameter.status == 0">and (ifnull(t.total,0) - ifnull(t.total_cash,0)) <![CDATA[=]]>0</if>
+					<if test="parameter.status == 1">and ifnull(t.total,0) <![CDATA[<>]]>0</if>
+			)		
+	</select>
+	
+	<select id="selectOriginalTotal2" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+		SELECT SUM(IFNULL(t.total,0)-IFNULL(t.total_cash,0)) originalTotal
+		FROM booking_supplier t 
+				inner join tour_group b on b.id=t.group_id 
+				left  join (SELECT booking_id,item_date,type1_id,item_date_to FROM booking_supplier_detail GROUP BY booking_id) d ON t.id=d.`booking_id`
+		WHERE  b.biz_id = #{parameter.bizId}  and group_state in (1,3,4)
+		<if test="parameter.choose_type != null and parameter.choose_type==1">
+			<if test="parameter.start_min != null">and ( d.item_date <![CDATA[<]]> #{parameter.start_min} )</if>
+		</if>
+		<if test="parameter.choose_type != null and parameter.choose_type==0">
+			<if test="parameter.start_min != null">and b.date_start <![CDATA[<]]> #{parameter.start_min} </if>
+		</if>
+		<if test="parameter.choose_type != null and parameter.choose_type==2">
+			<if test="parameter.start_min != null">and b.date_end <![CDATA[<]]> #{parameter.start_min} </if>
+		</if>
+		<if test="parameter.supplier_type != null">and t.supplier_type <![CDATA[=]]> #{parameter.supplier_type} </if>
+		<if test="parameter.car_type != null">and d.type1_id = #{parameter.car_type }</if>
+		<if test="parameter.cashType != null">and t.cash_type like concat ('%',#{parameter.cashType},'%')   </if>
+		<if test="parameter.supplier_name != null">and t.supplier_name like concat( '%',#{parameter.supplier_name},'%')</if>
+		<if test="parameter.user_name != null">and t.user_name like concat( '%',#{parameter.user_name},'%')  </if>
+		<if test="parameter.set!=null">
+			AND b.operator_id in
+			<foreach item="item" index="index" collection="parameter.set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="parameter.product_name != null">and (b.product_name like concat( '%',#{parameter.product_name},'%') or b.product_brand_name like concat( '%',#{parameter.product_name},'%')) </if>
+	    <if test="parameter.group_mode == 0">and group_mode <![CDATA[<]]> 1</if>
+	    <if test="parameter.group_mode !=0 and parameter.group_mode!=null">and group_mode <![CDATA[>]]>0</if>
+	    <if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and b.operator_id in (${parameter.saleOperatorIds})
+		</if>
+		<if test="parameter.status == 0">and (ifnull(t.total,0) - ifnull(t.total_cash,0)) <![CDATA[=]]>0</if>
+		<if test="parameter.status == 1">and (ifnull(t.total,0) - ifnull(t.total_cash,0)) <![CDATA[<>]]>0</if>
+		
+		and t.supplier_id in (
+			select supplier_id from booking_supplier t inner join tour_group b on b.id=t.group_id 
+			where b.biz_id = #{parameter.bizId}  and group_state in (1,3,4)
+					<if test="parameter.choose_type != null and parameter.choose_type==1">
+<!-- 						<if test="parameter.start_min != null and parameter.start_max == null">and ( d.item_date <![CDATA[>=]]> #{parameter.start_min}  or d.item_date_to <![CDATA[>=]]> #{parameter.start_min})</if>
+						<if test="parameter.start_min == null and parameter.start_max != null">and #{parameter.start_max} <![CDATA[>=]]> d.item_date  or  #{parameter.start_max} <![CDATA[>=]]> d.item_date_to </if>
+ -->						<if test="parameter.start_min != null and parameter.start_max != null">and (d.item_date BETWEEN #{parameter.start_min}  and  #{parameter.start_max})</if>
+					</if>
+					<if test="parameter.choose_type != null and parameter.choose_type==0">
+						<if test="parameter.start_min != null">and b.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+						<if test="parameter.start_max != null">and b.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+					</if>
+					<if test="parameter.choose_type != null and parameter.choose_type==2">
+						<if test="parameter.start_min != null">and b.date_end <![CDATA[>=]]> #{parameter.start_min} </if>
+						<if test="parameter.start_max != null">and b.date_end <![CDATA[<=]]> #{parameter.start_max}	</if>
+					</if>
+					<if test="parameter.supplier_type != null">and t.supplier_type <![CDATA[=]]> #{parameter.supplier_type} </if>
+					<if test="parameter.car_type != null">and d.type1_id = #{parameter.car_type }</if>
+					<if test="parameter.cashType != null">and t.cash_type like concat ('%',#{parameter.cashType},'%')   </if>
+					<if test="parameter.supplier_name != null">and t.supplier_name like concat( '%',#{parameter.supplier_name},'%')</if>
+					<if test="parameter.user_name != null">and t.user_name like concat( '%',#{parameter.user_name},'%')  </if>
+					<if test="parameter.set!=null">
+						AND b.operator_id in
+						<foreach item="item" index="index" collection="parameter.set" open="("
+							separator="," close=")">
+							#{item}
+						</foreach>
+					</if>
+					<if test="parameter.product_name != null">and (b.product_name like concat( '%',#{parameter.product_name},'%') or b.product_brand_name like concat( '%',#{parameter.product_name},'%')) </if>
+				    <if test="parameter.group_mode == 0">and group_mode <![CDATA[<]]> 1</if>
+				    <if test="parameter.group_mode !=0 and parameter.group_mode!=null">and group_mode <![CDATA[>]]>0</if>
+				    <if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+							and b.operator_id in (${parameter.saleOperatorIds})
+					</if>
+					<if test="parameter.status == 0">and (ifnull(t.total,0) - ifnull(t.total_cash,0)) <![CDATA[=]]>0</if>
+					<if test="parameter.status == 1">and ifnull(t.total,0) <![CDATA[<>]]>0</if>
+			)		
+	</select>
+</mapper>
