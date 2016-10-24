@@ -5,11 +5,10 @@
   <parent>
     <groupId>com.yimayhd.erpcenter</groupId>
     <artifactId>erpcenter</artifactId>
-    <version>0.0.6-SNAPSHOT</version>
+   <version>0.0.7-SNAPSHOT</version>
   </parent>
-  <groupId>com.yimayhd.erpcenter</groupId>
+
   <artifactId>erpcenterBiz-basic-client</artifactId>
-  <version>0.0.6-SNAPSHOT</version>
   <name>erpcenterBiz-basic-client</name>
   <url>http://maven.apache.org</url>
   <properties>
@@ -24,7 +23,6 @@
   <dependency>
     	<groupId>com.yimayhd.erpcenter</groupId>
     	<artifactId>erpcenterDAL-basic-client</artifactId>
-    	<version>0.0.6-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

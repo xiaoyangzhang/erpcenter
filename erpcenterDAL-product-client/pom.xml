@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.yimayhd.erpcenter</groupId>
     <artifactId>erpcenter</artifactId>
-    <version>0.0.6-SNAPSHOT</version>
+    <version>0.0.7-SNAPSHOT</version>
   </parent>
   <artifactId>erpcenterDAL-product-client</artifactId>
   <name>erpcenterDAL-product-client</name>
@@ -27,18 +27,13 @@
 	<dependency>
 		<groupId>com.yihg</groupId>    
 		<artifactId>yihg-architect-mybatis</artifactId>
-		<version>1.0.0</version>
 	</dependency>
 	
 	<dependency>
 		<groupId>com.yimayhd.erpcenter</groupId>
 		<artifactId>erpcenter-common</artifactId>
 	</dependency>
-	<dependency>
-		<groupId>com.yimayhd.erpcenter</groupId>
-	  <artifactId>erpcenterDAL-basic-client</artifactId>
-	  <version>0.0.6-SNAPSHOT</version>
-	</dependency>
+
 	<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenter-common</artifactId>
@@ -47,12 +42,10 @@
 	<dependency>
 			<groupId>com.yimayhd.erpcenter</groupId>
 		  <artifactId>erpcenterDAL-basic-client</artifactId>
-		  <version>0.0.6-SNAPSHOT</version>
 		</dependency>
 	<dependency>
 		<groupId>com.yimayhd.erpcenter</groupId>
 		<artifactId>erpcenterDAL-sys-client</artifactId>
-		<version>0.0.6-SNAPSHOT</version>
 		</dependency>
   </dependencies>
  
