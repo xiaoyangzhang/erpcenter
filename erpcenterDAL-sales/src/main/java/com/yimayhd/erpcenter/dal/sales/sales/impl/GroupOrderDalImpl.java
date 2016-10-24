@@ -60,6 +60,7 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.util.GenerateCodeUtil;
 
 public class GroupOrderDalImpl implements GroupOrderDal {
     private static final Logger log = LoggerFactory
@@ -135,7 +136,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
         groupOrder.setOrderNoSort(orderCodeSort == null ? 1 : orderCodeSort
                 .getOrderNoSort() + 1);
 
-        String makeCodeByMode = makeCodeByMode(groupOrder.getBizId(),
+        String makeCodeByMode = GenerateCodeUtil.makeCodeByMode(groupOrder.getBizId(),
                 groupOrder.getOrderNo(), groupOrder.getDepartureDate(),
                 orderCodeSort == null ? 1 : orderCodeSort.getOrderNoSort() + 1);
         groupOrder.setOrderNo(makeCodeByMode);
@@ -445,7 +446,6 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public List<GroupOrder> selectGroupNumForQuery(GroupOrder groupOrder, Integer curBizId,
                                                    Set<Integer> dataUserIdSet) {
-        // TODO Auto-generated method stub
         List<GroupOrder> list = groupOrderMapper.selectGroupNumForQuery(groupOrder, curBizId, dataUserIdSet);
         return list;
     }
@@ -469,19 +469,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
         return groupOrderMapper.selectSupplierByGroupId(groupId);
     }
 
-    //	@Transactional
-//	@Override
-//	public void updateOrderAndGroupPersonNum(Integer orderId) {
-//		GroupOrder groupOrder = groupOrderMapper.selectByPrimaryKey(orderId);
-//		if(groupOrder.getOrderType()!=1 && groupOrder.getPriceId()!=null){
-//			groupOrderMapper.updateGroupOrderPersonNum(orderId);
-//		}
-//		if(groupOrder.getGroupId()!=null){
-//			groupOrderMapper.updateTourGroupPersonNum(groupOrder.getGroupId());
-//			bookingDeliveryService.updateDeliveryGuestCountOnModifySKGuestCount(groupOrder.getGroupId());
-//		}
-//		
-//	}
+   
     @Transactional
     @Override
     public void updateGroupPersonNum(Integer groupId) {
@@ -833,23 +821,12 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public PageBean getDeservedCashGroupByOrderId(PageBean pageBean, Set<Integer> set) {
         List<GroupOrder> orders = groupOrderMapper.getDeservedCashGroupByOrderIdListPage(pageBean, set);
-//		 StringBuilder sb=new StringBuilder();
-//		 String orderIds="";
         if (orders != null && orders.size() > 0) {
             for (GroupOrder groupOrder : orders) {
-                //sb.append(groupOrder.getId()+",");
                 groupOrder.setGuestInfo(groupOrderGuestMapper.getGuestInfoByOrderId(groupOrder.getId()));
-                //groupOrder.setOrderPrices(groupOrderPriceMapper.getPriceInfoByOrderId(orderIds));
                 groupOrder.setPriceInfo(convertListToStr(groupOrderPriceMapper.getPriceInfoByOrderId(groupOrder.getId())));
             }
-            //	orderIds =sb.substring(0, sb.length()-1);
-            //for (GroupOrder groupOrder : orders) {
-            //}
         }
-//		 else {
-//			throw new ClientException();
-//		}
-
         pageBean.setResult(orders);
         return pageBean;
     }
@@ -908,7 +885,6 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 
     @Override
     public List<GroupOrder> selectAiYouOrders(Integer bizId, String startTime, String endTime) {
-        // TODO Auto-generated method stub
         return groupOrderMapper.selectAiYouOrders(bizId, startTime, endTime);
     }
 
@@ -920,7 +896,6 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 
     @Override
     public List<GroupOrder> selectTopAiYouOrders(Integer bizId, String startTime, Integer limit) {
-        // TODO Auto-generated method stub
         return groupOrderMapper.selectTopAiYouOrders(bizId, startTime, limit);
     }
 
