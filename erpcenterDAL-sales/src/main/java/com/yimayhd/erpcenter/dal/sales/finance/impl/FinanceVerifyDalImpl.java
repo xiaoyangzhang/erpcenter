@@ -1,4 +1,4 @@
-package com.yihg.finance.impl;
+package com.yimayhd.erpcenter.dal.sales.finance.impl;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -12,25 +12,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.yihg.basic.exception.ClientException;
-import com.yihg.finance.api.FinanceVerifyService;
-import com.yihg.finance.dao.FinanceVerifyMapper;
-import com.yihg.finance.po.FinanceVerify;
-import com.yihg.finance.po.FinanceVerifyDetail;
-import com.yihg.images.util.DateUtils;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.api.BookingDeliveryPriceService;
-import com.yihg.operation.api.BookingSupplierDetailService;
-import com.yihg.operation.po.BookingDeliveryPrice;
-import com.yihg.operation.po.BookingSupplierDetail;
-import com.yihg.sales.api.GroupOrderPriceService;
-import com.yihg.sales.po.GroupOrderPrice;
-import com.yihg.supplier.constants.Constants;
+import com.yimayhd.erpcenter.common.exception.ClientException;
+import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceVerify;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceVerifyDetail;
+import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceVerifyDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryPrice;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryPriceService;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDetailService;
+import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceVerifyMapper;
 
 /**
  * 对账管理
  */
-public class FinanceVerifyServiceImpl implements FinanceVerifyService {
+public class FinanceVerifyDalImpl implements FinanceVerifyDal {
 
 	@Autowired
 	private SqlSessionTemplate ss;

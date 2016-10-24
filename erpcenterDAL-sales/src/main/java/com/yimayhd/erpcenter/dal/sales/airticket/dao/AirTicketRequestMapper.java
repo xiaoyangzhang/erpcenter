@@ -1,12 +1,12 @@
-package com.yihg.airticket.dao;
+package com.yimayhd.erpcenter.dal.sales.airticket.dao;
 
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.airticket.po.AirTicketRequest;
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketRequest;
 
 public interface AirTicketRequestMapper {
 	/**

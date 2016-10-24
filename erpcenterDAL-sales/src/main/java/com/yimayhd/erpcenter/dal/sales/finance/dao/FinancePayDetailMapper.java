@@ -1,11 +1,11 @@
-package com.yihg.finance.dao;
+package com.yimayhd.erpcenter.dal.sales.finance.dao;
 
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.finance.po.FinancePayDetail;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePayDetail;
 
 public interface FinancePayDetailMapper {
     int deleteByPrimaryKey(Integer id);

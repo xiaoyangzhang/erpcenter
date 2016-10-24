@@ -1,16 +1,14 @@
-package com.yihg.finance.dao;
+package com.yimayhd.erpcenter.dal.sales.finance.dao;
 
-import com.yihg.finance.po.FinanceVerify;
-
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.finance.po.FinanceVerifyDetail;
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceVerify;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceVerifyDetail;
 public interface FinanceVerifyMapper {
 	/**
 	 * 修改对账单状态

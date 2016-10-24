@@ -1,4 +1,4 @@
-package com.yihg.finance.impl;
+package com.yimayhd.erpcenter.dal.sales.finance.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,16 +14,16 @@ import org.springframework.util.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.yihg.basic.exception.ClientException;
-import com.yihg.finance.api.FinanceBillService;
-import com.yihg.finance.dao.FinanceBillMapper;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.sales.dao.TourGroupMapper;
-import com.yihg.sales.po.FinanceBill;
-import com.yihg.sales.po.FinanceBillDetail;
+import com.yimayhd.erpcenter.common.exception.ClientException;
+import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceBillDal;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBill;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBillDetail;
+import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceBillMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 
 
-public class FinanceBillServiceImpl implements FinanceBillService{
+public class FinanceBillDalImpl implements FinanceBillDal{
 	
 	@Autowired
 	private FinanceBillMapper bsMapper;

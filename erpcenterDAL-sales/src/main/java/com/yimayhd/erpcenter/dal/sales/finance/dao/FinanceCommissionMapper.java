@@ -1,13 +1,12 @@
-package com.yihg.finance.dao;
+package com.yimayhd.erpcenter.dal.sales.finance.dao;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.finance.po.FinanceCommission;
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission;
 
 public interface FinanceCommissionMapper {
 	

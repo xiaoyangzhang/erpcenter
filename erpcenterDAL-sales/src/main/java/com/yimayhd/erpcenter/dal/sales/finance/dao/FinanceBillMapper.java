@@ -1,4 +1,4 @@
-package com.yihg.finance.dao;
+package com.yimayhd.erpcenter.dal.sales.finance.dao;
 
 import java.util.Date;
 import java.util.List;
@@ -8,8 +8,8 @@ import java.util.Set;
 import org.apache.ibatis.annotations.Param;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.sales.po.FinanceBill;
-import com.yihg.sales.po.FinanceBillDetail;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBill;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBillDetail;
 
 public interface FinanceBillMapper {
 	List<Map> statisBillListPage(PageBean<Map> pageBean);

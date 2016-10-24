@@ -1,17 +1,17 @@
-package com.yihg.sales.impl;
+package com.yimayhd.erpcenter.dal.sales.sales.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.sales.api.GroupFeedbackService;
-import com.yihg.sales.dao.GroupFeedbackMapper;
-import com.yihg.sales.po.GroupFeedback;
-import com.yihg.sales.vo.GroupFeedbackGroupStaticsVO;
-import com.yihg.sales.vo.GroupFeedbackPersonalStaticsVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupFeedback;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupFeedbackDAL;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupFeedbackGroupStaticsVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupFeedbackPersonalStaticsVO;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupFeedbackMapper;
 
-public class GroupFeedbackServiceImpl implements GroupFeedbackService{
+public class GroupFeedbackDalImpl implements GroupFeedbackDAL{
 
 	@Autowired
 	private GroupFeedbackMapper groupFeedbackMapper;

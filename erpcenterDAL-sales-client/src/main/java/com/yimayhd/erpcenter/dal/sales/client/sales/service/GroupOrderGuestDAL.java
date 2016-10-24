@@ -3,16 +3,14 @@ package com.yimayhd.erpcenter.dal.sales.client.sales.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
-
-import com.yihg.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 
 /**
  * 销售订单-客人
  * @author qindz
  *
  */
-public interface GroupOrderGuestService {
+public interface GroupOrderGuestDAL {
 	
     int deleteByPrimaryKey(Integer id);
 

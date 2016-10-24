@@ -1,4 +1,4 @@
-package com.yihg.finance.dao;
+package com.yimayhd.erpcenter.dal.sales.finance.dao;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -6,11 +6,10 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.finance.po.CheckSheetFinance;
-import com.yihg.finance.po.FinanceGuide;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.po.BookingGuide;
-import com.yihg.operation.po.BookingShop;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.CheckSheetFinance;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 
 public interface FinanceGuideMapper {
     int deleteByPrimaryKey(Integer id);

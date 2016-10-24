@@ -1,7 +1,6 @@
-package com.yihg.finance.impl;
+package com.yimayhd.erpcenter.dal.sales.finance.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,32 +12,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import com.yihg.basic.exception.ClientException;
-import com.yihg.basic.util.NumberUtil;
-import com.yihg.finance.api.FinanceGuideService;
-import com.yihg.finance.api.FinanceService;
-import com.yihg.finance.dao.FinanceBillMapper;
-import com.yihg.finance.dao.FinanceCommissionDeductionMapper;
-import com.yihg.finance.dao.FinanceCommissionMapper;
-import com.yihg.finance.dao.FinanceGuideMapper;
-import com.yihg.finance.dao.FinancePayCommissionDeductionMapper;
-import com.yihg.finance.dao.FinancePayDetailCommissionDeductionMapper;
-import com.yihg.finance.dao.FinancePayDetailMapper;
-import com.yihg.finance.dao.FinancePayMapper;
-import com.yihg.finance.po.CheckSheetFinance;
-import com.yihg.finance.po.FinanceCommission;
-import com.yihg.finance.po.FinanceGuide;
-import com.yihg.finance.po.FinancePay;
-import com.yihg.finance.po.FinancePayDetail;
-import com.yihg.images.util.DateUtils;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.api.BookingGuideService;
-import com.yihg.operation.dao.BookingGuideMapper;
-import com.yihg.operation.dao.BookingSupplierMapper;
-import com.yihg.operation.po.BookingGuide;
-import com.yihg.operation.po.BookingSupplier;
-import com.yihg.sales.dao.TourGroupMapper;
-import com.yihg.sales.po.TourGroup;
+import com.yimayhd.erpcenter.common.exception.ClientException;
+import com.yimayhd.erpcenter.common.util.NumberUtil;
+import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.CheckSheetFinance;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePayDetail;
+import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceDal;
+import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceGuideDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingGuideService;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceBillMapper;
+import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceCommissionDeductionMapper;
+import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceCommissionMapper;
+import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceGuideMapper;
+import com.yimayhd.erpcenter.dal.sales.finance.dao.FinancePayCommissionDeductionMapper;
+import com.yimayhd.erpcenter.dal.sales.finance.dao.FinancePayDetailCommissionDeductionMapper;
+import com.yimayhd.erpcenter.dal.sales.finance.dao.FinancePayDetailMapper;
+import com.yimayhd.erpcenter.dal.sales.finance.dao.FinancePayMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingGuideMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 
 /**
  * 导游报账
@@ -46,13 +45,13 @@ import com.yihg.sales.po.TourGroup;
  * @author Jing.Zhuo
  * @create 2015年8月13日 下午12:11:47
  */
-public class FinanceGuideServiceImpl implements FinanceGuideService {
+public class FinanceGuideDalImpl implements FinanceGuideDal {
 
 	@Autowired
 	private SqlSessionTemplate ss;
 	
 	@Autowired
-	private FinanceService financeService;
+	private FinanceDal financeDal;
 	@Autowired
 	private	BookingGuideService bookingGuideService;
 	
@@ -188,7 +187,7 @@ public class FinanceGuideServiceImpl implements FinanceGuideService {
 			
 			BookingSupplier modify = new BookingSupplier();
 			modify.setId(fg.getBookingIdLink());
-			BigDecimal rowCash = financeService.calcTotalCashValue(fg.getBookingIdLink(), fg.getSupplierType());
+			BigDecimal rowCash = financeDal.calcTotalCashValue(fg.getBookingIdLink(), fg.getSupplierType());
 			modify.setTotalCash(rowCash);
 			supplierMapper.updateByPrimaryKeySelective(modify);//更新booking_supplier表的total_cash			
 		}
@@ -201,7 +200,7 @@ public class FinanceGuideServiceImpl implements FinanceGuideService {
 		guideMapper.updateByPrimaryKeySelective(p2);
 
 		// 统计整团收支
-		financeService.calcTourGroupAmount(guide.getGroupId());
+		financeDal.calcTourGroupAmount(guide.getGroupId());
 	}
 	
 	/**
@@ -267,7 +266,7 @@ public class FinanceGuideServiceImpl implements FinanceGuideService {
 			//ou注释以下两行 2016-06-15，直接在原来基础上直接加减是有问题，因为发现好多次本身totalCash字段的值是错的
 			//modify.setTotalCash(bs.getTotalCash() == null ? new BigDecimal(0) : bs.getTotalCash());
 			//modify.setTotalCash(modify.getTotalCash().add(fg.getTotal()));
-			rowCash = financeService.calcTotalCashValue(fg.getBookingIdLink(), fg.getSupplierType());
+			rowCash = financeDal.calcTotalCashValue(fg.getBookingIdLink(), fg.getSupplierType());
 			modify.setTotalCash(rowCash);
 			supplierMapper.updateByPrimaryKeySelective(modify);//更新booking_supplier表的total_cash
 		}
@@ -290,7 +289,7 @@ public class FinanceGuideServiceImpl implements FinanceGuideService {
 		}
 		
 		// 统计整团收支
-		financeService.calcTourGroupAmount(guide.getGroupId());
+		financeDal.calcTourGroupAmount(guide.getGroupId());
 	}
 	
 	/**
@@ -335,12 +334,12 @@ public class FinanceGuideServiceImpl implements FinanceGuideService {
 			
 			BookingSupplier modify = new BookingSupplier();
 			modify.setId(financeGuide.getBookingIdLink());
-			BigDecimal rowCash = financeService.calcTotalCashValue(financeGuide.getBookingIdLink(), financeGuide.getSupplierType());
+			BigDecimal rowCash = financeDal.calcTotalCashValue(financeGuide.getBookingIdLink(), financeGuide.getSupplierType());
 			modify.setTotalCash(rowCash);
 			supplierMapper.updateByPrimaryKeySelective(modify);//更新booking_supplier表的total_cash
 		}
 		// 统计整团收支
-		financeService.calcTourGroupAmount(groupId);
+		financeDal.calcTourGroupAmount(groupId);
 	}
 	
 	/**
@@ -388,7 +387,7 @@ public class FinanceGuideServiceImpl implements FinanceGuideService {
 		
 		// 统计整团收支
 		if(pay.getGroupId() != null){
-			financeService.calcTourGroupAmount(pay.getGroupId());
+			financeDal.calcTourGroupAmount(pay.getGroupId());
 		}
 	}
 	
@@ -679,7 +678,7 @@ public class FinanceGuideServiceImpl implements FinanceGuideService {
 			commissionMapper.insert(com);
 		}
 		
-		financeService.calcTourGroupAmount(groupId);
+		financeDal.calcTourGroupAmount(groupId);
 	}
 	
 	/**
@@ -966,7 +965,7 @@ public class FinanceGuideServiceImpl implements FinanceGuideService {
 		payMapper.update(pay);
 		
 		// 统计整团收支
-		financeService.calcTourGroupAmount(groupId);
+		financeDal.calcTourGroupAmount(groupId);
 	}
 	
 	@Override

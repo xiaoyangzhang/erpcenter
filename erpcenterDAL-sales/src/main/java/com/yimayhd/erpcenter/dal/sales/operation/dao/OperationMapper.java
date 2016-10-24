@@ -1,4 +1,4 @@
-package com.yihg.operation.dao;
+package com.yimayhd.erpcenter.dal.sales.operation.dao;
 
 import java.util.List;
 import java.util.Map;
@@ -7,9 +7,7 @@ import java.util.Set;
 import org.apache.ibatis.annotations.Param;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.po.BookingDelivery;
-import com.yihg.operation.vo.BookingDeliveryStatics;
-import com.yihg.operation.vo.GroupBookingInfo;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.GroupBookingInfo;
 
 public interface OperationMapper {
 	List<GroupBookingInfo> selectGroupBookingListPage(@Param("page") PageBean pageBean, @Param("bizId") Integer bizId,

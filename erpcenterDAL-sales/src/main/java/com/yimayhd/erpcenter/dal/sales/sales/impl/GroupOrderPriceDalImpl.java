@@ -1,26 +1,22 @@
-package com.yihg.sales.impl;
+package com.yimayhd.erpcenter.dal.sales.sales.impl;
 
-import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.yihg.basic.util.NumberUtil;
-import com.yihg.sales.api.GroupOrderPriceService;
-import com.yihg.sales.api.GroupOrderService;
-import com.yihg.sales.constants.Constants;
-import com.yihg.sales.dao.GroupOrderMapper;
-import com.yihg.sales.dao.GroupOrderPriceMapper;
-import com.yihg.sales.dao.TourGroupMapper;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.GroupOrderPrice;
-import com.yihg.sales.vo.CostIncome;
-
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-public class GroupOrderPriceServiceImpl implements GroupOrderPriceService {
+import com.yimayhd.erpcenter.common.util.NumberUtil;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderPriceDAL;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.CostIncome;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
+
+public class GroupOrderPriceDalImpl implements GroupOrderPriceDAL {
 
 	@Autowired
 	private GroupOrderPriceMapper groupOrderPriceMapper;

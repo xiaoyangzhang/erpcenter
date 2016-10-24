@@ -1,22 +1,23 @@
 package com.yimayhd.erpcenter.dal.sales.b2b.impl;
 
-import com.yihg.b2b.api.B2BGroupOrderService;
-import com.yihg.sales.dao.GroupOrderGuestMapper;
-import com.yihg.sales.dao.GroupOrderMapper;
-import com.yihg.sales.dao.GroupOrderPriceMapper;
-import com.yihg.sales.dao.GroupRouteMapper;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.GroupOrderGuest;
-import com.yihg.sales.po.GroupOrderPrice;
-import com.yihg.sales.po.GroupRoute;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
+import com.yimayhd.erpcenter.dal.sales.client.b2b.service.B2BGroupOrderDal;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
 
 /**
  * Created by zm on 2016/6/17.
  */
-public class B2BGroupOrderServiceImpl implements B2BGroupOrderService {
+public class B2BGroupOrderDalImpl implements B2BGroupOrderDal {
 
 	@Autowired
 	private GroupOrderMapper groupOrderMapper;

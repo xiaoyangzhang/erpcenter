@@ -1,4 +1,4 @@
-package com.yihg.sales.impl;
+package com.yimayhd.erpcenter.dal.sales.sales.impl;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -12,39 +12,34 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yihg.airticket.api.AirTicketRequestService;
-import com.yihg.finance.api.FinanceService;
-import com.yihg.operation.api.BookingSupplierService;
-import com.yihg.sales.api.FitOrderService;
-import com.yihg.sales.api.GroupOrderService;
-import com.yihg.sales.api.GroupRouteService;
-import com.yihg.sales.api.TourGroupService;
-import com.yihg.sales.dao.GroupOrderGuestMapper;
-import com.yihg.sales.dao.GroupOrderMapper;
-import com.yihg.sales.dao.GroupOrderPriceMapper;
-import com.yihg.sales.dao.GroupOrderTransportMapper;
-import com.yihg.sales.dao.GroupRequirementMapper;
-import com.yihg.sales.dao.GroupRouteAttachmentMapper;
-import com.yihg.sales.dao.GroupRouteMapper;
-import com.yihg.sales.dao.GroupRouteSupplierMapper;
-import com.yihg.sales.dao.GroupRouteTrafficMapper;
-import com.yihg.sales.dao.TourGroupMapper;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.GroupOrderGuest;
-import com.yihg.sales.po.GroupOrderPrice;
-import com.yihg.sales.po.GroupOrderTransport;
-import com.yihg.sales.po.GroupRequirement;
-import com.yihg.sales.po.GroupRoute;
-import com.yihg.sales.po.GroupRouteAttachment;
-import com.yihg.sales.po.GroupRouteSupplier;
-import com.yihg.sales.po.GroupRouteTraffic;
-import com.yihg.sales.po.TourGroup;
-import com.yihg.sales.vo.FitOrderVO;
-import com.yihg.sales.vo.GroupRouteDayVO;
-import com.yihg.sales.vo.GroupRouteVO;
-import com.yihg.sales.vo.MergeGroupOrderVO;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierService;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteAttachment;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteTraffic;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.FitOrderDAL;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.FitOrderVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderTransportMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRequirementMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteAttachmentMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteSupplierMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteTrafficMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 
-public class FitOrderServiceImpl implements FitOrderService {
+public class FitOrderDalImpl implements FitOrderDAL {
 	@Autowired
 	private GroupOrderMapper groupOrderMapper;
 	@Autowired

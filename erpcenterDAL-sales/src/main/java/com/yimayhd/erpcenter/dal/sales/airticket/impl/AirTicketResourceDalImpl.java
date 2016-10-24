@@ -1,4 +1,4 @@
-package com.yihg.airticket.impl;
+package com.yimayhd.erpcenter.dal.sales.airticket.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,29 +9,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.yihg.airticket.api.AirTicketRequestService;
-import com.yihg.airticket.api.AirTicketResourceService;
-import com.yihg.airticket.dao.AirTicketLegMapper;
-import com.yihg.airticket.dao.AirTicketResourceMapper;
-import com.yihg.airticket.po.AirTicketLeg;
-import com.yihg.airticket.po.AirTicketResource;
-import com.yihg.basic.exception.ClientException;
-import com.yihg.images.util.DateUtils;
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.common.exception.ClientException;
+import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
+import com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketLegMapper;
+import com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketResourceMapper;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketLeg;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketResource;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.service.AirTicketRequestDal;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.service.AirTicketResourceDal;
 
-public class AirTicketResourceServiceImpl implements AirTicketResourceService{
+public class AirTicketResourceDalImpl implements AirTicketResourceDal{
 	
 	@Autowired
 	private AirTicketResourceMapper resourceMapper;
 	@Autowired
-	private AirTicketRequestService requestService;
+	private AirTicketRequestDal requestDal;
 	@Autowired
 	private AirTicketLegMapper legMapper;
 	
@@ -92,7 +92,7 @@ public class AirTicketResourceServiceImpl implements AirTicketResourceService{
 	@Override
 	@Transactional
 	public void deleteResource(Integer resourceId,Integer bizId){
-		Integer countRequest = requestService.countRequestByResource(resourceId, bizId);
+		Integer countRequest = requestDal.countRequestByResource(resourceId, bizId);
 		if (countRequest>0){
 			throw new ClientException("请先删除资源下所有申请");
 		}else {
