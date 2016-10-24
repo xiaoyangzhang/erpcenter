@@ -7,5 +7,26 @@
 	<context:annotation-config />
 	
 	<bean id="sysLoginFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysLoginFacadImpl" />
+	
+	<bean id="sysBizBankAccountFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysBizBankAccountFacadeImpl" />
+	
+	<bean id="sysBizConfigFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysBizConfigFacadeImpl" />
+	
+	
+	<bean id="sysBizInfoFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysBizInfoFacadeImpl" />
+	
+	<bean id="sysLoginLogFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysLoginLogFacadeImpl" />
+	
+	<bean id="sysPlatformEmployeeFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysPlatformEmployeeFacadeImpl" />
+	
+	<bean id="sysPlatformMenuFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysPlatformMenuFacadeImpl" />
+	
+	<bean id="sysPlatformOrgFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysPlatformOrgFacadeImpl" />
+	
+	<bean id="sysPlatformRoleFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysPlatformRoleFacadeImpl" />
+	
+	<bean id="sysPlatformSysFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysPlatformSysFacadeImpl" />
+	
+	<bean id="sysSettleApplyFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysSettleApplyFacadeImpl" />
 
 </beans>

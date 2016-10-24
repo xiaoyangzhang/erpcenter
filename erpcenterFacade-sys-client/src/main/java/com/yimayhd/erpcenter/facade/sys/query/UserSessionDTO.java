@@ -17,7 +17,7 @@ public class UserSessionDTO implements Serializable {
 	 * 2016年10月20日 
 	 */
 	private static final long serialVersionUID = 1L;
-	private UserSession userSession;
+	private UserSession userSession = new UserSession();
 
 	public UserSession getUserSession() {
 		return userSession;
