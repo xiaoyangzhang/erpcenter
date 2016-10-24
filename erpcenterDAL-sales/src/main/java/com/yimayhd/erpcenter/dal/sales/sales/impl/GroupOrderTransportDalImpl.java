@@ -1,16 +1,17 @@
-package com.yihg.sales.impl;
+package com.yimayhd.erpcenter.dal.sales.sales.impl;
 
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.sales.api.GroupOrderTransportService;
-import com.yihg.sales.dao.GroupOrderTransportMapper;
-import com.yihg.sales.po.GroupOrderTransport;
-import com.yihg.sales.vo.Transport;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderTransportDal;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.Transport;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderTransportMapper;
 
-public class GroupOrderTransportServiceImpl implements GroupOrderTransportService{
+
+public class GroupOrderTransportDalImpl implements GroupOrderTransportDal{
 
 	@Autowired
 	private GroupOrderTransportMapper groupOrderTransportMapper ;

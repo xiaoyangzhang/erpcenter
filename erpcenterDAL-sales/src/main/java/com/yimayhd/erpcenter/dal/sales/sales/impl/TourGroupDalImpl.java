@@ -1,4 +1,4 @@
-package com.yihg.sales.impl;
+package com.yimayhd.erpcenter.dal.sales.sales.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,7 +65,7 @@ import com.yihg.sales.vo.OperatorGroupStatic;
 import com.yihg.sales.vo.TourGroupVO;
 import com.yihg.supplier.constants.Constants;
 
-public class TourGroupServiceImpl implements TourGroupService {
+public class TourGroupDalImpl implements TourGroupService {
 
 	@Autowired
 	private TourGroupMapper tourGroupMapper;
@@ -233,7 +233,7 @@ public class TourGroupServiceImpl implements TourGroupService {
 	}
 
 	public static void main(String[] args) {
-		String code = new TourGroupServiceImpl().makeCodeForAgency("test", "ttt", "2016-01-01", "2016-02-01", "哈哈哈",
+		String code = new TourGroupDalImpl().makeCodeForAgency("test", "ttt", "2016-01-01", "2016-02-01", "哈哈哈",
 				100);
 		System.out.println(code);
 

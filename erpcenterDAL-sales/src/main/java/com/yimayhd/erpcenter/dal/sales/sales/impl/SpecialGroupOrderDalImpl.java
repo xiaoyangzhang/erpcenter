@@ -1,4 +1,4 @@
-package com.yihg.sales.impl;
+package com.yimayhd.erpcenter.dal.sales.sales.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,41 +8,40 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.omg.PortableServer.ForwardRequestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.airticket.api.AirTicketRequestService;
-import com.yihg.finance.api.FinanceService;
-import com.yihg.operation.api.BookingSupplierService;
-import com.yihg.sales.api.GroupOrderService;
-import com.yihg.sales.api.SpecialGroupOrderService;
-import com.yihg.sales.api.TourGroupService;
-import com.yihg.sales.dao.GroupOrderGuestMapper;
-import com.yihg.sales.dao.GroupOrderMapper;
-import com.yihg.sales.dao.GroupOrderPriceMapper;
-import com.yihg.sales.dao.GroupOrderTransportMapper;
-import com.yihg.sales.dao.GroupRequirementMapper;
-import com.yihg.sales.dao.GroupRouteAttachmentMapper;
-import com.yihg.sales.dao.GroupRouteMapper;
-import com.yihg.sales.dao.GroupRouteSupplierMapper;
-import com.yihg.sales.dao.GroupRouteTrafficMapper;
-import com.yihg.sales.dao.TourGroupMapper;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.GroupOrderGuest;
-import com.yihg.sales.po.GroupOrderPrice;
-import com.yihg.sales.po.GroupOrderTransport;
-import com.yihg.sales.po.GroupRequirement;
-import com.yihg.sales.po.GroupRoute;
-import com.yihg.sales.po.GroupRouteAttachment;
-import com.yihg.sales.po.GroupRouteSupplier;
-import com.yihg.sales.po.GroupRouteTraffic;
-import com.yihg.sales.po.TourGroup;
-import com.yihg.sales.vo.GroupRouteDayVO;
-import com.yihg.sales.vo.GroupRouteVO;
-import com.yihg.sales.vo.MergeGroupOrderVO;
-import com.yihg.sales.vo.SpecialGroupOrderVO;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.service.AirTicketRequestDal;
+import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierService;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteAttachment;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteTraffic;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderService;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.SpecialGroupOrderDal;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.TourGroupDal;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SpecialGroupOrderVO;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderTransportMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRequirementMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteAttachmentMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteSupplierMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteTrafficMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 
-public class SpecialGroupOrderServiceImpl implements SpecialGroupOrderService {
+public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 	@Autowired
 	private GroupOrderMapper groupOrderMapper;
 	@Autowired
@@ -66,13 +65,13 @@ public class SpecialGroupOrderServiceImpl implements SpecialGroupOrderService {
 	@Autowired
 	private GroupOrderService groupOrderService;
 	@Autowired
-	private TourGroupService tourGroupService;
+	private TourGroupDal tourGroupDal;
 	@Autowired
-	private FinanceService financeService;
+	private FinanceDal financeDal;
 	@Autowired
-	private AirTicketRequestService airTicketRequestService;
+	private AirTicketRequestDal airTicketRequestDal;
 	@Autowired
-	private BookingSupplierService bookingSupplierService;
+	private BookingSupplierDal bookingSupplierDal;
 
 	@Override
 	public Integer saveOrUpdateSpecialOrderInfo(SpecialGroupOrderVO sgovo,
@@ -439,7 +438,7 @@ public class SpecialGroupOrderServiceImpl implements SpecialGroupOrderService {
 		// 客人
 		List<GroupOrderGuest> guestList = groupOrderGuestMapper
 				.selectByOrderId(orderId);
-		List<Integer> guestIdList = airTicketRequestService
+		List<Integer> guestIdList = airTicketRequestDal
 				.findIssuedGuestIdList(groupOrder.getBizId(), orderId);
 		if (guestList != null && guestList.size() > 0) {
 			for (GroupOrderGuest groupOrderGuest : guestList) {
@@ -540,7 +539,7 @@ public class SpecialGroupOrderServiceImpl implements SpecialGroupOrderService {
 			tourGroup.setDateEnd(time);
 			TourGroup selectGroupCodeSort = tourGroupMapper
 					.selectGroupCodeSort(bizId,0, go.getDepartureDate());
-			String makeCodeByMode = tourGroupService.makeCodeByMode(supplierCode,0,go.getDepartureDate(),null,selectGroupCodeSort == null ? 1 : selectGroupCodeSort.getGroupCodeSort() + 1);
+			String makeCodeByMode = tourGroupDal.makeCodeByMode(supplierCode,0,go.getDepartureDate(),null,selectGroupCodeSort == null ? 1 : selectGroupCodeSort.getGroupCodeSort() + 1);
 			tourGroup.setGroupCodeSort(selectGroupCodeSort == null ? 1: selectGroupCodeSort.getGroupCodeSort() + 1);
 			tourGroup.setGroupCode(makeCodeByMode);
 			tourGroup.setDaynum(groupRouteDayVOList == null ? 0: groupRouteDayVOList.size());
@@ -644,7 +643,7 @@ public class SpecialGroupOrderServiceImpl implements SpecialGroupOrderService {
 			tourGroup.setGroupCode(supplierCode);
 			TourGroup selectGroupCodeSort = tourGroupMapper.selectGroupCodeSort(bizId,1,sdf.format(tourGroup.getDateStart()));
 			tourGroup.setGroupCodeSort(selectGroupCodeSort == null ? 1: selectGroupCodeSort.getGroupCodeSort() + 1);
-			String makeCodeByMode = tourGroupService.makeCodeByMode(tourGroup.getGroupCode(), 1, sdf.format(tourGroup.getDateStart()),
+			String makeCodeByMode = tourGroupDal.makeCodeByMode(tourGroup.getGroupCode(), 1, sdf.format(tourGroup.getDateStart()),
 					tourGroup.getGroupCodeMark(), selectGroupCodeSort == null ? 1: selectGroupCodeSort.getGroupCodeSort() + 1);
 			tourGroup.setGroupCode(makeCodeByMode);
 			tourGroup.setDaynum(groupRouteDayVOList == null ? 0: groupRouteDayVOList.size());
@@ -678,7 +677,7 @@ public class SpecialGroupOrderServiceImpl implements SpecialGroupOrderService {
 				tourGroup.setServiceStandard(go.getServiceStandard());
 				tourGroup.setRemark(go.getRemark());
 				tourGroup.setRemarkInternal(go.getReceiveMode());
-				tourGroupService.updateByPrimaryKeySelective(tourGroup);
+				tourGroupDal.updateByPrimaryKeySelective(tourGroup);
 			}
 		}
 		
@@ -775,7 +774,7 @@ public class SpecialGroupOrderServiceImpl implements SpecialGroupOrderService {
 			tourGroup.setGroupCode(supplierCode);
 			TourGroup selectGroupCodeSort = tourGroupMapper.selectGroupCodeSort(bizId,1,sdf.format(tourGroup.getDateStart()));
 			tourGroup.setGroupCodeSort(selectGroupCodeSort == null ? 1: selectGroupCodeSort.getGroupCodeSort() + 1);
-			String makeCodeByMode = tourGroupService.makeCodeByMode(tourGroup.getGroupCode(), 1, sdf.format(tourGroup.getDateStart()),
+			String makeCodeByMode = tourGroupDal.makeCodeByMode(tourGroup.getGroupCode(), 1, sdf.format(tourGroup.getDateStart()),
 					tourGroup.getGroupCodeMark(), selectGroupCodeSort == null ? 1: selectGroupCodeSort.getGroupCodeSort() + 1);
 			tourGroup.setGroupCode(makeCodeByMode);
 			tourGroup.setDaynum(groupRouteDayVOList == null ? 0: groupRouteDayVOList.size());
@@ -809,7 +808,7 @@ public class SpecialGroupOrderServiceImpl implements SpecialGroupOrderService {
 				tourGroup.setServiceStandard(go.getServiceStandard());
 				tourGroup.setRemark(go.getRemark());
 				tourGroup.setRemarkInternal(go.getReceiveMode());
-				tourGroupService.updateByPrimaryKeySelective(tourGroup);
+				tourGroupDal.updateByPrimaryKeySelective(tourGroup);
 			}
 		}
 		
@@ -903,7 +902,7 @@ public class SpecialGroupOrderServiceImpl implements SpecialGroupOrderService {
 			tourGroup.setDateEnd(time);
 			TourGroup selectGroupCodeSort = tourGroupMapper
 					.selectGroupCodeSort(bizId,0, go.getDepartureDate());
-			String makeCodeByMode = tourGroupService.makeCodeByMode(supplierCode,0,go.getDepartureDate(),null,selectGroupCodeSort == null ? 1 : selectGroupCodeSort.getGroupCodeSort() + 1);
+			String makeCodeByMode = tourGroupDal.makeCodeByMode(supplierCode,0,go.getDepartureDate(),null,selectGroupCodeSort == null ? 1 : selectGroupCodeSort.getGroupCodeSort() + 1);
 			tourGroup.setGroupCodeSort(selectGroupCodeSort == null ? 1: selectGroupCodeSort.getGroupCodeSort() + 1);
 			tourGroup.setGroupCode(makeCodeByMode);
 			tourGroup.setDaynum(groupRouteDayVOList == null ? 0: groupRouteDayVOList.size());
@@ -938,11 +937,11 @@ public class SpecialGroupOrderServiceImpl implements SpecialGroupOrderService {
 				idList.add(groupOrder.getId());
 			}
 		}
-		bookingSupplierService.updateOperationAfterMergeGroupOrder(
+		bookingSupplierDal.updateOperationAfterMergeGroupOrder(
 				tourGroup.getId(), idList);
 		groupOrderMapper.updateTourGroupPersonNum(tourGroup.getId());
 		// groupOrderMapper.updateGroupPrice(tourGroup.getId());
-		financeService.calcTourGroupAmount(tourGroup.getId());
+		financeDal.calcTourGroupAmount(tourGroup.getId());
 
 		List<GroupRouteDayVO> groupRouteDayVOList = groupRouteVO
 				.getGroupRouteDayVOList();

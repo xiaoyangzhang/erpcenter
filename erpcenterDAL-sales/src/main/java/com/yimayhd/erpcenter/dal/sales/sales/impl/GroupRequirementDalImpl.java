@@ -1,14 +1,14 @@
-package com.yihg.sales.impl;
+package com.yimayhd.erpcenter.dal.sales.sales.impl;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.sales.api.GroupRequirementService;
-import com.yihg.sales.dao.GroupRequirementMapper;
-import com.yihg.sales.po.GroupRequirement;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupRequirementDal;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRequirementMapper;
 
-public class GroupRequirementServiceImpl implements GroupRequirementService {
+public class GroupRequirementDalImpl implements GroupRequirementDal {
 	@Autowired
 	private GroupRequirementMapper groupRequirementMapper ;
 	

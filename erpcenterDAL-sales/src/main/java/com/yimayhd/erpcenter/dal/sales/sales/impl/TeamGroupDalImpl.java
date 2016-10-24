@@ -1,8 +1,7 @@
-package com.yihg.sales.impl;
+package com.yimayhd.erpcenter.dal.sales.sales.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -12,40 +11,37 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.airticket.api.AirTicketRequestService;
-import com.yihg.basic.api.LogOperatorService;
-import com.yihg.basic.contants.BasicConstants.LOG_ACTION;
-import com.yihg.basic.po.LogOperator;
-import com.yihg.basic.util.LogFieldUtil;
-import com.yihg.sales.api.GroupOrderService;
-import com.yihg.sales.api.TeamGroupService;
-import com.yihg.sales.api.TourGroupService;
-import com.yihg.sales.dao.GroupOrderGuestMapper;
-import com.yihg.sales.dao.GroupOrderMapper;
-import com.yihg.sales.dao.GroupOrderPriceMapper;
-import com.yihg.sales.dao.GroupOrderTransportMapper;
-import com.yihg.sales.dao.GroupRequirementMapper;
-import com.yihg.sales.dao.GroupRouteAttachmentMapper;
-import com.yihg.sales.dao.GroupRouteMapper;
-import com.yihg.sales.dao.GroupRouteSupplierMapper;
-import com.yihg.sales.dao.GroupRouteTrafficMapper;
-import com.yihg.sales.dao.TourGroupMapper;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.GroupOrderGuest;
-import com.yihg.sales.po.GroupOrderPrice;
-import com.yihg.sales.po.GroupOrderTransport;
-import com.yihg.sales.po.GroupRequirement;
-import com.yihg.sales.po.GroupRoute;
-import com.yihg.sales.po.GroupRouteAttachment;
-import com.yihg.sales.po.GroupRouteSupplier;
-import com.yihg.sales.po.GroupRouteTraffic;
-import com.yihg.sales.po.TourGroup;
-import com.yihg.sales.vo.GroupRouteDayVO;
-import com.yihg.sales.vo.TeamGroupVO;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.service.AirTicketRequestDal;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteAttachment;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteTraffic;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderService;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.TeamGroupDal;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.TourGroupDal;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TeamGroupVO;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderTransportMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRequirementMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteAttachmentMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteSupplierMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteTrafficMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 
-public class TeamGroupServiceImpl implements TeamGroupService {
+
+public class TeamGroupDalImpl implements TeamGroupDal {
 	private static final Logger log = LoggerFactory
-			.getLogger(TeamGroupServiceImpl.class);
+			.getLogger(TeamGroupDalImpl.class);
 	@Autowired
 	private GroupOrderMapper groupOrderMapper;
 	@Autowired
@@ -67,11 +63,11 @@ public class TeamGroupServiceImpl implements TeamGroupService {
 	@Autowired
 	private GroupRequirementMapper groupRequirementMapper;
 	@Autowired
-	private TourGroupService tourGroupService;
+	private TourGroupDal tourGroupDal;
 	@Autowired
 	private GroupOrderService groupOrderService;
 	@Autowired
-	private AirTicketRequestService airTicketRequestService;
+	private AirTicketRequestDal airTicketRequestDal;
 	
 	@Override
 	public TeamGroupVO selectTeamGroupVOByGroupId(Integer groupId, Integer bizId) {
@@ -101,7 +97,7 @@ public class TeamGroupServiceImpl implements TeamGroupService {
 		// 客人
 		List<GroupOrderGuest> guestList = groupOrderGuestMapper
 				.selectByOrderId(GroupOrder.getId());
-		List<Integer> guestIdList = airTicketRequestService
+		List<Integer> guestIdList = airTicketRequestDal
 				.findIssuedGuestIdList(GroupOrder.getBizId(),
 						GroupOrder.getId());
 		teamGroupVO.setGroupOrderGuestList(guestList);
@@ -153,7 +149,7 @@ public class TeamGroupServiceImpl implements TeamGroupService {
 				TourGroup groupCodeSort = tourGroupMapper.selectGroupCodeSort(bizId,null,sdf.format(tourGroup.getDateStart()));
 				tourGroup.setGroupCodeSort(groupCodeSort == null ? 1: groupCodeSort.getGroupCodeSort() + 1);
 				
-				makeCodeByMode = tourGroupService.makeCodeForAgency(tourGroup.getGroupCode(), 
+				makeCodeByMode = tourGroupDal.makeCodeForAgency(tourGroup.getGroupCode(), 
 						teamGroupVO.getProductCode(), sdf.format(tourGroup.getDateStart()), sdf.format(tourGroup.getDateEnd()), tourGroup.getGroupCodeMark(), 
 						groupCodeSort == null ? 1 : groupCodeSort.getGroupCodeSort() + 1);
 			}else{
@@ -162,7 +158,7 @@ public class TeamGroupServiceImpl implements TeamGroupService {
 				tourGroup.setGroupCodeSort(groupCodeSort == null ? 1
 						: groupCodeSort.getGroupCodeSort() + 1);
 				
-				makeCodeByMode = tourGroupService.makeCodeByMode(tourGroup
+				makeCodeByMode = tourGroupDal.makeCodeByMode(tourGroup
 						.getGroupCode(), 1, sdf.format(tourGroup.getDateStart()),
 						tourGroup.getGroupCodeMark(), groupCodeSort == null ? 1
 								: groupCodeSort.getGroupCodeSort() + 1);
@@ -201,7 +197,7 @@ public class TeamGroupServiceImpl implements TeamGroupService {
 			//产生日志
 			
 		} else {
-			tourGroupService.updateByPrimaryKeySelective(tourGroup);
+			tourGroupDal.updateByPrimaryKeySelective(tourGroup);
 		}
 		
 		// 团里面的备注、服务标准、内部备注存一份到订单--只针对定制团队
