@@ -11,7 +11,7 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGuidesVO;
 
 
-public interface BookingGuideService {
+public interface BookingGuideDal {
 	void deleteByPrimaryKey(Integer id) throws ClientException;
 	
 	void deleteGuideWithFinanceByPrimaryKey(Integer id) throws ClientException;

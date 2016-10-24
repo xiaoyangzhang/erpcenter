@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public interface BookingShopDetailDeployService {
+public interface BookingShopDetailDeployDal {
 	int deleteByPrimaryKey(Integer bdId);
 
 	List<BookingShopDetailDeploy> selectByDetailId(Integer dId);

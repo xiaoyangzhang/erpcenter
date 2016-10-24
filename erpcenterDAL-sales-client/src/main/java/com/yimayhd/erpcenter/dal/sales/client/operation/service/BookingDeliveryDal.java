@@ -8,7 +8,7 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingDeliveryStatic
 import org.apache.ibatis.annotations.Param;
 
 
-public interface BookingDeliveryService {
+public interface BookingDeliveryDal {
 	BookingDeliveryStatics getStaticsByGroupId(Integer groupId);
 	List<BookingDelivery> getDeliveryListByGroupId(Integer groupId);
 	int saveBooking(BookingDelivery bookingDelivery);	

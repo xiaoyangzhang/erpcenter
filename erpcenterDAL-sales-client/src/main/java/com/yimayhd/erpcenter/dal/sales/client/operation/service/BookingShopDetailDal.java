@@ -6,7 +6,7 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingShopDetailVO;
 import java.util.List;
 
 
-public interface BookingShopDetailService {
+public interface BookingShopDetailDal {
 
 	int updateByPrimaryKeySelective(BookingShopDetail record);
 

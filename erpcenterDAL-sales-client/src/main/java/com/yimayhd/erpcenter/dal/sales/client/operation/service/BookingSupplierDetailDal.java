@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import com.yihg.mybatis.utility.PageBean;
 
 
-public interface BookingSupplierDetailService {
+public interface BookingSupplierDetailDal {
 	int deleteByPrimaryKey(Integer id);
 	int deleteByBookingId(Integer bookingId);
 

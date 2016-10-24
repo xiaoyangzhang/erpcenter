@@ -11,7 +11,7 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopSelect;
 
 
-public interface BookingShopService {
+public interface BookingShopDal {
 	
 	int updateByPrimaryKeySelective(BookingShop record);
 

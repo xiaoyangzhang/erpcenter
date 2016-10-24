@@ -18,7 +18,7 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingSupplierAndDet
 import org.apache.ibatis.annotations.Param;
 
 
-public interface BookingSupplierService {
+public interface BookingSupplierDal {
 	void deleteByPrimaryKey(Integer id) throws ClientException;
 	
 	/**
