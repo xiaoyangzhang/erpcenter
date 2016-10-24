@@ -119,19 +119,27 @@
   	 select 
     <include refid="Base_Column_List" />
     from product_group_seller
-    where biz_id = #{bizId,jdbcType=INTEGER}
-    and product_id = #{productId,jdbcType=INTEGER}
-    and group_id = #{groupId,jdbcType=INTEGER}
+    where  1=1 
+    <if test="bizId != null">
+     and biz_id = #{bizId,jdbcType=INTEGER}</if>
+    <if test="productId!=null">
+    and product_id = #{productId,jdbcType=INTEGER}</if>
+    <if test="groupId != null">
+    and group_id = #{groupId,jdbcType=INTEGER}</if>
   </select>
   
   <select id="selectGroupSeller" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
   	 select 
     <include refid="Base_Column_List" />
     from product_group_seller
-    where biz_id = #{bizId,jdbcType=INTEGER}
+    
+    where 1=1 
+    <if test="bizId != null">
+     and biz_id = #{bizId,jdbcType=INTEGER}</if>
     <if test="productId!=null">
     and product_id = #{productId,jdbcType=INTEGER}</if>
-    and operator_id = #{operateId,jdbcType=INTEGER}
+    <if test="operateId != null">
+    and operator_id = #{operateId,jdbcType=INTEGER}</if>
   </select>
   <delete id="deleteByGroupId">
   	delete from product_group_seller where group_id=#{groupId,jdbcType=INTEGER}

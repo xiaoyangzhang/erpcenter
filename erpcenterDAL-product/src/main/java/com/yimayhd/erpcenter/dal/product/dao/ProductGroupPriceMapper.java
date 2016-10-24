@@ -55,8 +55,10 @@ public interface ProductGroupPriceMapper {
 
    List<ProductGroupPrice> selectPricesByGroupId2(@Param("groupId")Integer groupId);
 
-   void deleteByGroupIdNotInIds(@Param("bizId")Integer bizId, @Param("groupId")Integer groupId, @Param("notIds")String notIds);
+   int deleteByGroupIdNotInIds(@Param("bizId")Integer bizId, @Param("groupId")Integer groupId, @Param("notIds")String notIds);
 
    List<ProductGroupPrice> getPriceByPidAndUserIdAndDate(@Param("bizId")Integer bizId,@Param("productId")Integer productId,
 		   @Param("operatorId")Integer operatorId, @Param("date")Date date);
+   
+   int selectByGroupIdNotInIds(@Param("bizId")Integer bizId, @Param("groupId")Integer groupId, @Param("notIds")String notIds);
 }

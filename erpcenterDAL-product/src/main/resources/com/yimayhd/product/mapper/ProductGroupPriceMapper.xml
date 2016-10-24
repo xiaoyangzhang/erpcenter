@@ -464,6 +464,13 @@
 			and id not in  (${notIds})
 		</if>
 	</update>
+ 	<select id="selectByGroupIdNotInIds" resultType="int" >
+		select count(*) from  `product_group_price`  
+		where  group_id = ${groupId} 
+		<if test="notIds != null and notIds != ''">
+			and id not in  (${notIds})
+		</if>
+	</select>
 	
 	<select id="getPriceByPidAndUserIdAndDate" resultMap="BaseResultMap">
 		SELECT * FROM `product_group_price` t WHERE t.group_id IN

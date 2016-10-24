@@ -1,6 +1,17 @@
 package com.yimayhd.erpcenter.facade.product.service.impl;
 
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
@@ -23,13 +34,6 @@ import com.yimayhd.erpcenter.facade.result.DetailResult;
 import com.yimayhd.erpcenter.facade.result.ToSearchListStateResult;
 import com.yimayhd.erpcenter.facade.result.UpStateResult;
 import com.yimayhd.erpcenter.facade.service.ProductUpAndDownFrameFacade;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.*;
 
 /**
  * @ClassName: ${ClassName}
