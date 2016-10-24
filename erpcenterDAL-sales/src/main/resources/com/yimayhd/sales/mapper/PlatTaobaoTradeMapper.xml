@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yihg.taobao.dao.PlatTaobaoTradeMapper">
-    <resultMap id="BaseResultMap" type="com.yihg.taobao.po.PlatTaobaoTrade">
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.taobao.dao.PlatTaobaoTradeMapper">
+    <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="biz_id" jdbcType="INTEGER" property="bizId"/>
         <result column="tid" jdbcType="VARCHAR" property="tid"/>
@@ -67,7 +67,7 @@
     delete from plat_taobao_trade
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.yihg.taobao.po.PlatTaobaoTrade">
+    <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade">
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -96,7 +96,7 @@
         #{myState,jdbcType=VARCHAR}, #{myStoreId,jdbcType=VARCHAR}, #{sellerMemo,jdbcType=VARCHAR},
         #{buyerMessage,jdbcType=VARCHAR})
     </insert>
-    <insert id="insertSelective" parameterType="com.yihg.taobao.po.PlatTaobaoTrade" useGeneratedKeys="true"
+    <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade" useGeneratedKeys="true"
             keyProperty="id">
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
             SELECT LAST_INSERT_ID()
@@ -311,7 +311,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.yihg.taobao.po.PlatTaobaoTrade">
+    <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade">
         update plat_taobao_trade
         <set>
             <if test="bizId != null">
@@ -419,7 +419,7 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.yihg.taobao.po.PlatTaobaoTrade">
+    <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade">
     update plat_taobao_trade
     set biz_id = #{bizId,jdbcType=INTEGER},
       tid = #{tid,jdbcType=INTEGER},

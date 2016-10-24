@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sales.dao.GroupRouteAttachmentMapper">
-	<resultMap id="BaseResultMap" type="com.yihg.sales.po.GroupRouteAttachment">
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteAttachmentMapper">
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteAttachmentMapper">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="type" property="type" jdbcType="INTEGER" />
 		<result column="obj_type" property="objType" jdbcType="INTEGER" />
@@ -28,7 +28,7 @@
 
 
 
-	<insert id="insert" parameterType="com.yihg.sales.po.GroupRouteAttachment">
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteAttachmentMapper">
 		insert into
 		group_route_attachment (id, type, obj_type,
 		obj_id, name, path,
@@ -39,7 +39,7 @@
 		#{name,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR},
 		#{createTime,jdbcType=BIGINT})
 	</insert>
-	<insert id="insertSelective" parameterType="com.yihg.sales.po.GroupRouteAttachment">
+	<insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteAttachmentMapper">
 		insert into group_route_attachment
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -88,7 +88,7 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.sales.po.GroupRouteAttachment">
+	<update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteAttachmentMapper">
 		update group_route_attachment
 		<set>
 			<if test="type != null">
@@ -112,7 +112,7 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yihg.sales.po.GroupRouteAttachment">
+	<update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteAttachmentMapper">
 		update
 		group_route_attachment
 		set type = #{type,jdbcType=INTEGER},

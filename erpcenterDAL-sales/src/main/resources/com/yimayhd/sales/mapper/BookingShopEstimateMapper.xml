@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.operation.dao.BookingShopEstimateMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingShopEstimate" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.operation.dao.BookingShopEstimateMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopEstimate" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="profit_person_avg" property="profitPersonAvg" jdbcType="DOUBLE" />
@@ -28,7 +28,7 @@
     delete from booking_shop_estimate
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.operation.po.BookingShopEstimate" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopEstimate" >
     insert into booking_shop_estimate (id, group_id, profit_person_avg, 
       repay_rate_avg, buy_person_avg, person_num, 
       buy_total, user_id, create_time, 
@@ -38,7 +38,7 @@
       #{buyTotal,jdbcType=DOUBLE}, #{userId,jdbcType=INTEGER}, #{createTime,jdbcType=BIGINT}, 
       #{updateLastTime,jdbcType=BIGINT}, #{updateLastUser,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingShopEstimate" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopEstimate" >
     insert into booking_shop_estimate
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -111,7 +111,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingShopEstimate" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopEstimate" >
     update booking_shop_estimate
     <set >
       <if test="groupId != null" >
@@ -147,7 +147,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingShopEstimate" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopEstimate" >
     update booking_shop_estimate
     set group_id = #{groupId,jdbcType=INTEGER},
       profit_person_avg = #{profitPersonAvg,jdbcType=DOUBLE},

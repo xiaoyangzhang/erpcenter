@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.operation.dao.BookingShopDetailDeployMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingShopDetailDeploy" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.operation.dao.BookingShopDetailDeployMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="booking_detail_id" property="bookingDetailId" jdbcType="INTEGER" />
     <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
@@ -30,13 +30,13 @@
     delete from booking_shop_detail_deploy
     where booking_id = #{bdId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.operation.po.BookingShopDetailDeploy" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy" >
     insert into booking_shop_detail_deploy (id, booking_detail_id, order_id, 
       buy_total)
     values (#{id,jdbcType=INTEGER}, #{bookingDetailId,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER}, 
       #{buyTotal,jdbcType=DECIMAL})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingShopDetailDeploy" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy" >
    
     insert into booking_shop_detail_deploy
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -80,7 +80,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingShopDetailDeploy" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy" >
     update booking_shop_detail_deploy
     <set >
       <if test="bookingDetailId != null" >
@@ -98,7 +98,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingShopDetailDeploy" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy" >
     update booking_shop_detail_deploy
     set booking_detail_id = #{bookingDetailId,jdbcType=INTEGER},
       order_id = #{orderId,jdbcType=INTEGER},
@@ -133,7 +133,7 @@
          <if test="parameter.productName!=null and parameter.productName!=''"> AND tg.`product_name`=#{parameter.productName}</if>
   	
   </select>
-  <select id="getByBookingIdAndOrderId" resultMap="BaseResultMap" parameterType="com.yihg.operation.po.BookingShopDetailDeploy" >
+  <select id="getByBookingIdAndOrderId" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy" >
     SELECT 
     <include refid="Base_Column_List" />
     FROM booking_shop_detail_deploy

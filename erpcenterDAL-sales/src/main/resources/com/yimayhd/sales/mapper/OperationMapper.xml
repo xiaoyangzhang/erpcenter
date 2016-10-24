@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.operation.dao.OperationMapper">
-	<select id="selectGroupBookingListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="com.yihg.operation.vo.GroupBookingInfo">
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.operation.dao.OperationMapper">
+	<select id="selectGroupBookingListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="com.yimayhd.erpcenter.dal.sales.client.operation.vo.GroupBookingInfo">
 		SELECT 
 			t.id groupId, 
 			group_code groupCode, 

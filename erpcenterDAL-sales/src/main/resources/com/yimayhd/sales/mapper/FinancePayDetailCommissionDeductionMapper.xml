@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.finance.dao.FinancePayDetailCommissionDeductionMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.finance.po.FinancePayDetail" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.finance.dao.FinancePayDetailCommissionDeductionMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePayDetail" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="pay_id" property="payId" jdbcType="INTEGER" />
     <result column="loc_order_id" property="locOrderId" jdbcType="INTEGER" />
@@ -40,11 +40,11 @@
     delete from finance_pay_detail_commission_deduction
     where pay_id = #{locOrderId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.finance.po.FinancePayDetail" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePayDetail" >
     insert into finance_pay_detail_commission_deduction (id, pay_id, loc_order_id,cash)
     values (#{id,jdbcType=INTEGER}, #{payId,jdbcType=INTEGER}, #{locOrderId,jdbcType=INTEGER},  #{cash,jdbcType=DECIMAL})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.finance.po.FinancePayDetail" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePayDetail" >
     insert into finance_pay_detail_commission_deduction
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -75,7 +75,7 @@
       </if>
     </trim>
   </insert>
-  <update id="update" parameterType="com.yihg.finance.po.FinancePayDetail" >
+  <update id="update" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePayDetail" >
    	update finance_pay_detail_commission_deduction 
    		set cash = #{cash,jdbcType=DECIMAL} 
    	where 

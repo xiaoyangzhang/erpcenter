@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.operation.dao.BookingShopDetailMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingShopDetail" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.operation.dao.BookingShopDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
     <result column="goods_id" property="goodsId" jdbcType="INTEGER" />
@@ -37,7 +37,7 @@
     delete from booking_shop_detail
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.operation.po.BookingShopDetail" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail" >
     insert into booking_shop_detail (id, booking_id, goods_id, 
       goods_name, goods_type, repay_type, 
       repay_val, repay_total, buy_num, 
@@ -49,7 +49,7 @@
       #{buyPrice,jdbcType=DECIMAL}, #{buyTotal,jdbcType=DECIMAL}, #{createTime,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingShopDetail" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail" useGeneratedKeys="true" keyProperty="id">
     insert into booking_shop_detail
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -134,7 +134,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingShopDetail" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail" >
     update booking_shop_detail
     <set >
       <if test="bookingId != null" >
@@ -173,7 +173,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingShopDetail" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail" >
     update booking_shop_detail
     set booking_id = #{bookingId,jdbcType=INTEGER},
       goods_id = #{goodsId,jdbcType=INTEGER},
@@ -192,7 +192,7 @@
   	 delete from booking_shop_detail
     where booking_id = #{bookingId,jdbcType=INTEGER}
   </delete>
-  <update id="updateByBookingId" parameterType="com.yihg.operation.po.BookingShopDetail" >
+  <update id="updateByBookingId" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail" >
    update booking_shop_detail
     <set >
       

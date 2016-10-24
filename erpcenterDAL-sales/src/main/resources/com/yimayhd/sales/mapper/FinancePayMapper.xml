@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.finance.dao.FinancePayMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.finance.po.FinancePay" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.finance.dao.FinancePayMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="pay_date" property="payDate" jdbcType="DATE" />
     <result column="pay_code" property="payCode" jdbcType="VARCHAR" />
@@ -48,7 +48,7 @@
     delete from finance_pay
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.finance.po.FinancePay" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay" useGeneratedKeys="true" keyProperty="id">
     insert into finance_pay (id,biz_id, pay_date, pay_code, 
       pay_direct, supplier_type, supplier_id, supplier_name, 
       pay_type, left_bank, left_bank_open, 
@@ -66,7 +66,7 @@
       #{bookingGuideId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
       #{createTime,jdbcType=BIGINT},#{groupId,jdbcType=INTEGER},#{guideId,jdbcType=INTEGER},#{type,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.finance.po.FinancePay" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay" useGeneratedKeys="true" keyProperty="id">
     insert into finance_pay
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -218,7 +218,7 @@
     </trim>
   </insert>
   
-  <update id="update" parameterType="com.yihg.finance.po.FinancePay" >
+  <update id="update" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay" >
     update finance_pay
     <set >
       <if test="payDate != null" >

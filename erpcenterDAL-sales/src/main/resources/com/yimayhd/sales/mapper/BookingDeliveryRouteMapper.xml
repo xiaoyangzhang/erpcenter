@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.operation.dao.BookingDeliveryRouteMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingDeliveryRoute" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.operation.dao.BookingDeliveryRouteMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryRoute" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
     <result column="route_id" property="routeId" jdbcType="INTEGER" />
@@ -19,13 +19,13 @@
     delete from booking_delivery_route
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.operation.po.BookingDeliveryRoute" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryRoute" >
     insert into booking_delivery_route (id, booking_id, route_id
       )
     values (#{id,jdbcType=INTEGER}, #{bookingId,jdbcType=INTEGER}, #{routeId,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingDeliveryRoute" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryRoute" >
     insert into booking_delivery_route
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -50,7 +50,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingDeliveryRoute" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryRoute" >
     update booking_delivery_route
     <set >
       <if test="bookingId != null" >
@@ -62,7 +62,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingDeliveryRoute" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryRoute" >
     update booking_delivery_route
     set booking_id = #{bookingId,jdbcType=INTEGER},
       route_id = #{routeId,jdbcType=INTEGER}

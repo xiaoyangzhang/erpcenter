@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.finance.dao.FinanceGuideMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.finance.po.FinanceGuide" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceGuideMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
@@ -10,7 +10,7 @@
     <result column="cash_type" property="cashType" jdbcType="VARCHAR" />
     <result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
   </resultMap>
-  <resultMap id="CheckSheetResultMap" type="com.yihg.finance.po.CheckSheetFinance" >
+  <resultMap id="CheckSheetResultMap" type="com.yimayhd.erpcenter.dal.sales.client.finance.po.CheckSheetFinance" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
@@ -56,7 +56,7 @@
     where booking_id = #{bookingId,jdbcType=INTEGER}
   </delete>
   
-  <insert id="insert" parameterType="com.yihg.finance.po.FinanceGuide" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide" >
     insert into finance_guide (id, group_id, booking_id, 
       booking_id_link, total, cash_type
       )
@@ -64,7 +64,7 @@
       #{bookingIdLink,jdbcType=INTEGER}, #{total,jdbcType=DECIMAL}, #{cashType,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.finance.po.FinanceGuide" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide" >
     insert into finance_guide
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -113,7 +113,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.finance.po.FinanceGuide" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide" >
     update finance_guide
     <set >
       <if test="groupId != null" >
@@ -146,7 +146,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.finance.po.FinanceGuide" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide" >
     update finance_guide
     set group_id = #{groupId,jdbcType=INTEGER},
       booking_id = #{bookingId,jdbcType=INTEGER},
@@ -158,7 +158,7 @@
   
  
   <!-- 根据属性查询 -->
-  <select id="selectByProperty" resultMap="BaseResultMap" parameterType="com.yihg.finance.po.FinanceGuide" >
+  <select id="selectByProperty" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide" >
     select 
     <include refid="Base_Column_List" />
     from finance_guide

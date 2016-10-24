@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.finance.dao.FinanceVerifyMapper" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceVerifyMapper" >
   
-	<resultMap id="BaseResultMap" type="com.yihg.finance.po.FinanceVerify" >
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceVerify" >
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="verify_code" property="verifyCode" jdbcType="VARCHAR" />
 		<result column="verify_state" property="verifyState" jdbcType="INTEGER" />
@@ -28,7 +28,7 @@
 	</update>
 	
 	<!-- 添加对账单 -->
-	<insert id="insert" parameterType="com.yihg.finance.po.FinanceVerify" >
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceVerify" >
     	INSERT INTO finance_verify 
     	<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -278,7 +278,7 @@
 	</select>
 	
 	<!-- 添加对账单详情 -->
-	<insert id="insertDetail" parameterType="com.yihg.finance.po.FinanceVerifyDetail" >
+	<insert id="insertDetail" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceVerifyDetail" >
     	INSERT INTO finance_verify_detail 
     	<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -337,7 +337,7 @@
 			id = #{id,jdbcType=INTEGER} 
 	</update>
 	
-	<update id="updateVerify" parameterType="com.yihg.finance.po.FinanceVerify" >
+	<update id="updateVerify" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceVerify" >
 		UPDATE finance_verify 
 		SET 
 			total_price = #{verify.totalPrice,jdbcType=DECIMAL}, 
@@ -350,7 +350,7 @@
 			id = #{verify.id,jdbcType=INTEGER}
 	</update>
 	
-	<update id="updateVerifyTotal" parameterType="com.yihg.finance.po.FinanceVerify" >
+	<update id="updateVerifyTotal" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceVerify" >
 		UPDATE finance_verify 
 		SET  
 			total_price = (total_price - #{verify.totalPrice,jdbcType=DECIMAL}),

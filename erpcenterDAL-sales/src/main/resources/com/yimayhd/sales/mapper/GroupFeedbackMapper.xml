@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sales.dao.GroupFeedbackMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.sales.po.GroupFeedback" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.sales.dao.GroupFeedbackMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupFeedback" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="guide_attitude" property="guideAttitude" jdbcType="DOUBLE" />
@@ -20,7 +20,7 @@
     <result column="creator_identity_no" property="creatorIdentityNo" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
-  <resultMap id="PersonalStaticsResultMap" type="com.yihg.sales.vo.GroupFeedbackPersonalStaticsVO" >
+  <resultMap id="PersonalStaticsResultMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupFeedbackPersonalStaticsVO" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="guide_attitude" property="guideAttitude" jdbcType="DOUBLE" />
@@ -40,7 +40,7 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="score" property="score" jdbcType="DOUBLE" />
   </resultMap>
-  <resultMap id="GroupStaticsResultMap" type="com.yihg.sales.vo.GroupFeedbackGroupStaticsVO" >    
+  <resultMap id="GroupStaticsResultMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupFeedbackGroupStaticsVO" >    
     <result column="guide_attitude" property="guideAttitude" jdbcType="DOUBLE" />
     <result column="guide_profession" property="guideProfession" jdbcType="DOUBLE" />
     <result column="food_quality" property="foodQuality" jdbcType="DOUBLE" />
@@ -75,7 +75,7 @@
     delete from group_feedback
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.sales.po.GroupFeedback" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupFeedback" >
     insert into group_feedback (id, group_id, guide_attitude, 
       guide_profession, food_quality, food_environment, 
       hotel_quality, hotel_environment, driver_attitude, 
@@ -89,7 +89,7 @@
       #{creatorId,jdbcType=INTEGER}, #{creatorName,jdbcType=VARCHAR}, #{creatorPic,jdbcType=VARCHAR}, 
       #{creatorIdentityNo,jdbcType=VARCHAR}, #{createTime})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.sales.po.GroupFeedback" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupFeedback" >
     insert into group_feedback
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -198,7 +198,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.sales.po.GroupFeedback" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupFeedback" >
     update group_feedback
     <set >
       <if test="groupId != null" >
@@ -252,7 +252,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.sales.po.GroupFeedback" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupFeedback" >
     update group_feedback
     set group_id = #{groupId,jdbcType=INTEGER},
       guide_attitude = #{guideAttitude,jdbcType=DOUBLE},

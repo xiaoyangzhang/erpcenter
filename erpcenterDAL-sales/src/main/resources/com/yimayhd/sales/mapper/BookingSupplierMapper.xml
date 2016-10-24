@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.operation.dao.BookingSupplierMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingSupplier" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
@@ -39,7 +39,7 @@
     
   </resultMap>
   
-  <resultMap id="AirTicketResultMap" type="com.yihg.operation.po.BookingAirTicket" >
+  <resultMap id="AirTicketResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingAirTicket" >
   	<id column="id" property="id" jdbcType="INTEGER" />
     <result column="biz_id" property="bizId" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
@@ -111,7 +111,7 @@
     delete from booking_supplier
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.operation.po.BookingSupplier" keyProperty="id" useGeneratedKeys="true" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier" keyProperty="id" useGeneratedKeys="true" >
     insert into booking_supplier (id, group_id, supplier_type,sub_type ,booking_no,
       supplier_id, contact, contact_tel, 
       contact_fax, contact_mobile, cash_type, 
@@ -125,7 +125,7 @@
       #{totalCash,jdbcType=DECIMAL}, #{stateBooking,jdbcType=TINYINT}, #{stateFinance,jdbcType=TINYINT},#{bookingDate,jdbcType=DATE},
       #{userId,jdbcType=INTEGER},#{userName,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT},#{supplierName,jdbcType=VARCHAR},#{orderId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingSupplier" keyProperty="id" useGeneratedKeys="true" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier" keyProperty="id" useGeneratedKeys="true" >
     insert into booking_supplier
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -270,7 +270,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingSupplier" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier" >
     update booking_supplier
     <set >
       <if test="groupId != null" >
@@ -333,7 +333,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingSupplier" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier" >
     update booking_supplier
     set group_id = #{groupId,jdbcType=INTEGER},
       supplier_type = #{supplierType,jdbcType=INTEGER},
@@ -359,7 +359,7 @@
 		SELECT bs.*,(SELECT GROUP_CONCAT(DISTINCT CONCAT_WS('-' ,guide_name,guide_mobile))  FROM `booking_guide` WHERE group_id=#{groupId}  ) guideInfo
 		 FROM booking_supplier bs WHERE group_id=#{groupId} AND supplier_type= #{supplierType}
   </select>
-	<resultMap type="com.yihg.operation.po.BookingSupplierPO" id="BookingSupplierPO">
+	<resultMap type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierPO" id="BookingSupplierPO">
 		 <result column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
