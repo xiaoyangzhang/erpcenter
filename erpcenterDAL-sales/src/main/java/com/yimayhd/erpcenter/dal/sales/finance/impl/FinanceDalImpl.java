@@ -39,6 +39,7 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierD
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderPriceDal;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceCommissionMapper;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.FinancePayDetailMapper;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.FinancePayMapper;
@@ -83,7 +84,7 @@ public class FinanceDalImpl implements FinanceDal {
 	@Autowired
 	private BookingGuideMapper bookingGuideMapper;
 	@Autowired
-	private GroupOrderPriceService groupOrderPriceService;
+	private GroupOrderPriceDal groupOrderPriceDal;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -563,7 +564,7 @@ public class FinanceDalImpl implements FinanceDal {
 			if("order".equals(feeType)){
 				String priceCheckedIds = item.getString("priceCheckedIds");
 				String priceUnCheckedIds = item.getString("priceUnCheckedIds");
-				groupOrderPriceService.auditPriceByIds(priceCheckedIds, priceUnCheckedIds);
+				groupOrderPriceDal.auditPriceByIds(priceCheckedIds, priceUnCheckedIds);
 			}
 		}
 	}

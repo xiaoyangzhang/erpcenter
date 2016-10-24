@@ -24,6 +24,7 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryP
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDetailService;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderPriceDal;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceVerifyMapper;
 
 /**
@@ -41,7 +42,7 @@ public class FinanceVerifyDalImpl implements FinanceVerifyDal {
 	private BookingSupplierDetailService bookingSupplierDetailService;
 	
 	@Autowired
-	private GroupOrderPriceService groupOrderPriceService;
+	private GroupOrderPriceDal groupOrderPriceDal;
 	
 	@Autowired
 	private BookingDeliveryPriceService bookingDeliveryPriceService;
@@ -283,8 +284,8 @@ public class FinanceVerifyDalImpl implements FinanceVerifyDal {
 				Integer bookingId = map.get("id") != null ? Integer.parseInt(map.get("id").toString()) : 0;
 				String details = "";
 				if(Constants.TRAVELAGENCY.equals(supplierType)){
-					List<GroupOrderPrice> priceList = groupOrderPriceService.selectByOrderAndType(bookingId, 0);
-					details = groupOrderPriceService.concatDetail(priceList);
+					List<GroupOrderPrice> priceList = groupOrderPriceDal.selectByOrderAndType(bookingId, 0);
+					details = groupOrderPriceDal.concatDetail(priceList);
 				}else if(Constants.LOCALTRAVEL.equals(supplierType)){
 					List<BookingDeliveryPrice> priceList = bookingDeliveryPriceService.getPriceListByBookingId(bookingId);
 					details = bookingDeliveryPriceService.concatDetail(priceList);
