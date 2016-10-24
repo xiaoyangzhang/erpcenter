@@ -361,12 +361,12 @@ public class GroupOrderDalImpl implements GroupOrderDal {
         return cal.getTimeInMillis();
     }
 
-    @Override
+    /*@Override
     public String makeCodeByMode(Integer bizId, String bizCode,
                                  String dateTime, int sort) {
         String code = bizCode + dateTime.replace("-", "") + sort;
         return code;
-    }
+    }*/
 
     @Override
     public PageBean<GroupOrder> selectByConListPage(

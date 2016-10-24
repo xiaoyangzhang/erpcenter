@@ -38,6 +38,7 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteSupplierMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteTrafficMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.util.GenerateCodeUtil;
 
 public class FitOrderDalImpl implements FitOrderDal {
 	@Autowired
@@ -91,7 +92,8 @@ public class FitOrderDalImpl implements FitOrderDal {
 			GroupOrder orderCodeSort = groupOrderMapper
 					.selectGroupOrderCodeSort(bizId,
 							groupOrder.getDepartureDate());
-			String makeCodeByMode = groupOrderService.makeCodeByMode(bizId,
+			//GenerateCodeUtil
+			String makeCodeByMode = GenerateCodeUtil.makeCodeByMode(bizId,
 					groupOrder.getOrderNo(), groupOrder.getDepartureDate(),
 					orderCodeSort == null ? 1
 							: orderCodeSort.getOrderNoSort() + 1);

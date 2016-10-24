@@ -95,7 +95,7 @@ public interface GroupOrderDal {
      * @param bizCode 当前商家编码
      * @return
      */
-    public String makeCodeByMode(Integer bizId, String bizCode, String dateTime, int sort);
+   // public String makeCodeByMode(Integer bizId, String bizCode, String dateTime, int sort);
 
 
     /**
