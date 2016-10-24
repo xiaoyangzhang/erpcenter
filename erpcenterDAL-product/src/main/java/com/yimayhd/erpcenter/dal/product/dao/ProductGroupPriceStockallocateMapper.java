@@ -19,4 +19,5 @@ public interface ProductGroupPriceStockallocateMapper {
     int updateByPrimaryKeySelective(ProductGroupPriceStockallocate record);
 
     int updateByPrimaryKey(ProductGroupPriceStockallocate record);
+   // ProductGroupPriceStockallocate selectByPriceIdAndSupplierId(@Param("priceId")Integer priceId, @Param("supplierId")Integer supplierId);
 }

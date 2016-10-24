@@ -95,4 +95,10 @@
     set stock_num = stock_num - #{decreaseStock,jdbcType=INTEGER}
     where price_id = #{priceId,jdbcType=INTEGER} and supplier_id = #{supplierId,jdbcType=INTEGER} and stock_num - #{decreaseStock,jdbcType=INTEGER} >= 0
   </update>
+  <!-- <select id="selectByPriceIdAndSupplierId" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from product_group_price_stockallocate
+    where price_id = #{priceId,jdbcType=INTEGER} and supplier_id = #{supplierId,jdbcType=INTEGER}
+  </select> -->
 </mapper>

@@ -39,7 +39,7 @@ public interface ProductGroupSupplierMapper {
 	
 	Integer copyProductSuppliers(@Param("parameter")Map parameter);
 	
-	void updateTimeById(@Param("id")Integer id);
+	int updateTimeById(@Param("id")Integer id);
 	/**
 	 * 根据产品id查询组团社、价格组信息
 	 * @param productId
