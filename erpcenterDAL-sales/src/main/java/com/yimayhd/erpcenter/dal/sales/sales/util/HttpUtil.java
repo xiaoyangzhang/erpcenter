@@ -1,4 +1,4 @@
-package com.yihg.sales.util;
+package com.yimayhd.erpcenter.dal.sales.sales.util;
 
 
 import java.io.IOException;
