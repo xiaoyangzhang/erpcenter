@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.taobao.dao.TaobaoOrderMapper" >
+<resultMap id="BaseResultMap" type="com.yihg.taobao.po.TaobaoOrder">
+<result column="id" property="id" jdbcType="INTEGER"/>
+<result column="biz_id" property="bizId" jdbcType="INTEGER"/>
+<result column="order_id" property="orderId" jdbcType="INTEGER"/>
+<result column="name_product" property="nameProduct" jdbcType="VARCHAR"/>
+<result column="name_SKU" property="nameSKU" jdbcType="VARCHAR"/>
+<result column="order_buy_time" property="startMin" jdbcType="DATE"/>
+<result column="order_buy_time" property="startMax" jdbcType="DATE"/>
+<result column="code_master" property="codeMaster" jdbcType="VARCHAR"/>
+<result column="code_slave" property="codeSlave" jdbcType="VARCHAR"/>
+<result column="code_self" property="codeSelf" jdbcType="VARCHAR"/>
+<result column="buyer_account_wangwang" property="buyerAccountWangwang" jdbcType="VARCHAR"/>
+<result column="buyer_account_alipay" property="buyerAccountAlipay" jdbcType="VARCHAR"/>
+<result column="buyer_account_mail" property="buyerAccountMail" jdbcType="VARCHAR"/>
+<result column="buyer_region" property="buyerRegion" jdbcType="VARCHAR"/>
+<result column="order_source" property="orderSource" jdbcType="VARCHAR"/>
+<result column="order_create_time" property="orderCreateTime" jdbcType="VARCHAR"/>
+<result column="order_buy_time" property="orderBuyTime" jdbcType="VARCHAR"/>
+<result column="order_price" property="orderPrice" jdbcType="DECIMAL"/>
+<result column="order_num" property="orderNum" jdbcType="DECIMAL"/>
+<result column="order_total" property="orderTotal" jdbcType="DECIMAL"/>
+<result column="contact_name" property="contactName" jdbcType="VARCHAR"/>
+<result column="contact_tel" property="contactTel" jdbcType="VARCHAR"/>
+<result column="contact_postcode" property="contactPostcode" jdbcType="VARCHAR"/>
+<result column="contact_region" property="contactRegion" jdbcType="VARCHAR"/>
+<result column="contact_address" property="contactAddress" jdbcType="VARCHAR"/>
+<result column="remark_buyer" property="remarkBuyer" jdbcType="VARCHAR"/>
+<result column="remark_saler" property="remarkSaler" jdbcType="VARCHAR"/>
+<result column="my_create_username" property="myCreateUsername" jdbcType="VARCHAR"/>
+<result column="my_create_time" property="myCreateTime" jdbcType="DATE"/>
+<result column="my_update_username" property="myUpdateUsername" jdbcType="VARCHAR"/>
+<result column="my_update_name" property="myUpdateName" jdbcType="DATE"/>
+<result column="my_state" property="myState" jdbcType="VARCHAR"/>
+<result column="my_store_id" property="myStoreId" jdbcType="VARCHAR"/>
+</resultMap>
+
+
+<select id="selectTaobaoOrder" parameterType="com.yihg.mybatis.utility.PageBean"  resultMap="BaseResultMap">
+SELECT code_master,buyer_account_wangwang,name_product,order_buy_time,order_total,my_state,order_source,name_SKU,my_store_id,id
+FROM group_order_taobao
+	WHERE  	biz_id=#{bizId,jdbcType=INTEGER}
+			<if test="page.parameter.startMin != null and page.parameter.startMin !='' and page.parameter.startMax != null and page.parameter.startMax != ''">
+			AND order_buy_time <![CDATA[>=]]>#{page.parameter.startMin}
+			AND order_buy_time <![CDATA[<=]]>#{page.parameter.startMax}
+			</if>
+			<if test="page.parameter.codeMaster != null and page.parameter.codeMaster != ''">
+			AND code_master = #{page.parameter.codeMaster}
+			</if>
+			<if test="page.parameter.buyerAccountWangwang != null and page.parameter.buyerAccountWangwang !=''">
+			AND buyer_account_wangwang LIKE CONCAT('%','${page.parameter.buyerAccountWangwang}','%')
+			</if>
+			<if test="page.parameter.nameProduct!= null and page.parameter.nameProduct!=''">
+			AND name_product LIKE CONCAT('%','${page.parameter.nameProduct}','%')
+			</if>
+			<if test="page.parameter.myState!= null and page.parameter.myState!=''">
+			AND my_state = #{page.parameter.myState}
+			</if>
+				<if test="page.parameter.myStoreId!= null and page.parameter.myStoreId!=''">
+			AND my_store_id = #{page.parameter.myStoreId}
+			</if>		
+</select>
+
+<select id="selectTaobaoOrderById" parameterType="com.yihg.mybatis.utility.PageBean"  resultMap="BaseResultMap">
+SELECT id, name_product,code_master,code_slave,code_self,order_source,order_create_time,order_buy_time,
+buyer_account_wangwang,buyer_account_alipay,buyer_region,name_SKU,order_price,order_num,contact_name,order_total,buyer_account_mail,
+contact_tel,contact_postcode,contact_region,contact_address,remark_buyer,remark_saler
+FROM group_order_taobao
+	WHERE  find_in_set(id,${ids})
+</select>
+
+
+<select id="updateTaobaoOrderId" parameterType="com.yihg.mybatis.utility.PageBean"  resultMap="BaseResultMap">
+	UPDATE  group_order_taobao SET order_id =#{orderId,jdbcType=INTEGER},my_state='CONFIRM'  WHERE id in (${ids})
+</select>
+
+<select id="updateTaobaoOrderIdToZero" parameterType="com.yihg.mybatis.utility.PageBean"  resultMap="BaseResultMap">
+UPDATE  group_order_taobao SET order_id =0,my_state='NEW'  WHERE id in (${id})
+</select>
+
+<select id="selectTaobaoOrderByOrderId" parameterType="com.yihg.mybatis.utility.PageBean"  resultMap="BaseResultMap">
+SELECT id
+FROM group_order_taobao
+	WHERE  order_id = #{id,jdbcType=INTEGER}
+</select>
+
+
+</mapper>

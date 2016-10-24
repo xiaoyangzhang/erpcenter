@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.sales.dao.GroupRequirementMapper">
+	<resultMap id="BaseResultMap" type="com.yihg.sales.po.GroupRequirement">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="group_id" property="groupId" jdbcType="INTEGER" />
+		<result column="order_id" property="orderId" jdbcType="INTEGER" />
+		<result column="supplier_type" property="supplierType"
+			jdbcType="INTEGER" />
+		<result column="require_date" property="requireDate" jdbcType="VARCHAR" />
+		<result column="require_date_to" property="requireDateTo" jdbcType="VARCHAR" />
+		<result column="area" property="area" jdbcType="VARCHAR" />
+		<result column="hotel_level" property="hotelLevel" jdbcType="VARCHAR" />
+		<result column="count_single_room" property="countSingleRoom"
+			jdbcType="INTEGER" />
+		<result column="count_double_room" property="countDoubleRoom"
+			jdbcType="INTEGER" />
+		<result column="count_triple_room" property="countTripleRoom"
+			jdbcType="INTEGER" />
+		<result column="peifang" property="peiFang" jdbcType="INTEGER" />
+		<result column="extrabed" property="extraBed" jdbcType="INTEGER" />
+		<result column="model_num" property="modelNum" jdbcType="VARCHAR" />
+		<result column="count_seat" property="countSeat" jdbcType="INTEGER" />
+		<result column="age_limit" property="ageLimit" jdbcType="VARCHAR" />
+		<result column="class_no" property="classNo" jdbcType="VARCHAR" />
+		<result column="city_departure" property="cityDeparture"
+			jdbcType="VARCHAR" />
+		<result column="city_arrival" property="cityArrival" jdbcType="VARCHAR" />
+		<result column="count_require" property="countRequire"
+			jdbcType="INTEGER" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="gender" property="gender" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="creator_id" property="creatorId" jdbcType="INTEGER" />
+		<result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="BIGINT" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, group_id, order_id, supplier_type, require_date,require_date_to, area,
+		hotel_level,
+		count_single_room,
+		count_double_room,
+		count_triple_room,peifang,extrabed,
+		model_num, count_seat, age_limit,
+		class_no,
+		city_departure,
+		city_arrival, count_require, language, gender,
+		remark,
+		creator_id,
+		creator_name, create_time
+	</sql>
+	<select id="selectGroupRequirementByGroupId"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from group_requirement
+		where order_id= #{orderId,jdbcType=INTEGER} and
+		supplier_type=#{type,jdbcType=INTEGER}
+		<!-- and require_date in 
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+		 	#{item}  
+		</foreach>  -->
+	</select>
+	<select id="selectByOrderAndType" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from group_requirement
+		where order_id= #{orderId,jdbcType=INTEGER} and
+		supplier_type=#{type,jdbcType=INTEGER}
+
+	</select>
+	<select id="selectByGroupIdAndType" resultMap="BaseResultMap">
+		select
+		gr.*,receive_mode as receiveMode
+		from group_requirement gr
+		left join group_order go
+		on go.id = gr.order_id
+		where gr.group_id= #{groupId,jdbcType=INTEGER} and
+		supplier_type=#{type,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectByOrderId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from group_requirement
+		where order_id= #{orderId,jdbcType=INTEGER}
+	</select>
+
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from group_requirement
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		group_requirement
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.yihg.sales.po.GroupRequirement">
+		insert into group_requirement
+		(id, group_id, order_id,
+		supplier_type, require_date,require_date_to, area,
+		hotel_level, count_single_room, count_double_room,
+		count_triple_room,peifang,extrabed,
+		model_num, count_seat,
+		age_limit,
+		class_no, city_departure,
+		city_arrival, count_require, language,
+		gender, remark, creator_id,
+		creator_name, create_time)
+		values
+		(#{id,jdbcType=INTEGER},
+		#{groupId,jdbcType=INTEGER},
+		#{orderId,jdbcType=INTEGER},
+		#{supplierType,jdbcType=INTEGER},
+		#{requireDate,jdbcType=DATE},
+		#{requireDateTo,jdbcType=DATE},
+		#{area,jdbcType=VARCHAR},
+		#{hotelLevel,jdbcType=VARCHAR},
+		#{countSingleRoom,jdbcType=INTEGER},
+		#{countDoubleRoom,jdbcType=INTEGER},
+		#{countTripleRoom,jdbcType=INTEGER},#{peiFang,jdbcType=INTEGER},#{extraBed,jdbcType=INTEGER},
+		#{modelNum,jdbcType=VARCHAR},
+		#{countSeat,jdbcType=INTEGER},
+		#{ageLimit,jdbcType=VARCHAR},
+		#{classNo,jdbcType=VARCHAR},
+		#{cityDeparture,jdbcType=VARCHAR},
+		#{cityArrival,jdbcType=VARCHAR},
+		#{countRequire,jdbcType=INTEGER},
+		#{language,jdbcType=VARCHAR},
+		#{gender,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR},
+		#{creatorId,jdbcType=INTEGER},
+		#{creatorName,jdbcType=VARCHAR},
+		#{createTime,jdbcType=BIGINT})
+	</insert>
+	<insert id="insertSelective" parameterType="com.yihg.sales.po.GroupRequirement">
+		insert into group_requirement
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="groupId != null">
+				group_id,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			<if test="supplierType != null">
+				supplier_type,
+			</if>
+			<if test="requireDate != null">
+				require_date,
+			</if>
+			<if test="requireDateTo != null">
+				require_date_to,
+			</if>
+			<if test="area != null">
+				area,
+			</if>
+			<if test="hotelLevel != null">
+				hotel_level,
+			</if>
+			<if test="countSingleRoom != null">
+				count_single_room,
+			</if>
+			<if test="countDoubleRoom != null">
+				count_double_room,
+			</if>
+			<if test="countTripleRoom != null">
+				count_triple_room,
+			</if>
+			<if test="extraBed != null">
+				extrabed,
+			</if>
+			<if test="peiFang != null">
+				peifang,
+			</if>
+
+			<if test="modelNum != null">
+				model_num,
+			</if>
+			<if test="countSeat != null">
+				count_seat,
+			</if>
+			<if test="ageLimit != null">
+				age_limit,
+			</if>
+			<if test="classNo != null">
+				class_no,
+			</if>
+			<if test="cityDeparture != null">
+				city_departure,
+			</if>
+			<if test="cityArrival != null">
+				city_arrival,
+			</if>
+			<if test="countRequire != null">
+				count_require,
+			</if>
+			<if test="language != null">
+				language,
+			</if>
+			<if test="gender != null">
+				gender,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="creatorId != null">
+				creator_id,
+			</if>
+			<if test="creatorName != null">
+				creator_name,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="groupId != null">
+				#{groupId,jdbcType=INTEGER},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="supplierType != null">
+				#{supplierType,jdbcType=INTEGER},
+			</if>
+			<if test="requireDate != null">
+				#{requireDate,jdbcType=DATE},
+			</if>
+			<if test="requireDateTo != null">
+				#{requireDateTo,jdbcType=DATE},
+			</if>
+			<if test="area != null">
+				#{area,jdbcType=VARCHAR},
+			</if>
+			<if test="hotelLevel != null">
+				#{hotelLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="countSingleRoom != null">
+				#{countSingleRoom,jdbcType=INTEGER},
+			</if>
+			<if test="countDoubleRoom != null">
+				#{countDoubleRoom,jdbcType=INTEGER},
+			</if>
+			<if test="countTripleRoom != null">
+				#{countTripleRoom,jdbcType=INTEGER},
+			</if>
+			<if test="extraBed != null">
+				#{extraBed,jdbcType=INTEGER},
+			</if>
+			<if test="peiFang != null">
+				#{peiFang,jdbcType=INTEGER},
+			</if>
+			<if test="modelNum != null">
+				#{modelNum,jdbcType=VARCHAR},
+			</if>
+			<if test="countSeat != null">
+				#{countSeat,jdbcType=INTEGER},
+			</if>
+			<if test="ageLimit != null">
+				#{ageLimit,jdbcType=VARCHAR},
+			</if>
+			<if test="classNo != null">
+				#{classNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cityDeparture != null">
+				#{cityDeparture,jdbcType=VARCHAR},
+			</if>
+			<if test="cityArrival != null">
+				#{cityArrival,jdbcType=VARCHAR},
+			</if>
+			<if test="countRequire != null">
+				#{countRequire,jdbcType=INTEGER},
+			</if>
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="gender != null">
+				#{gender,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="creatorId != null">
+				#{creatorId,jdbcType=INTEGER},
+			</if>
+			<if test="creatorName != null">
+				#{creatorName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=BIGINT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.sales.po.GroupRequirement">
+		update group_requirement
+		<set>
+			<if test="groupId != null">
+				group_id = #{groupId,jdbcType=INTEGER},
+			</if>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="supplierType != null">
+				supplier_type = #{supplierType,jdbcType=INTEGER},
+			</if>
+			<if test="requireDate != null">
+				require_date = #{requireDate,jdbcType=DATE},
+			</if>
+			<if test="requireDate != null">
+				require_date_to = #{requireDateTo,jdbcType=DATE},
+			</if>
+			<if test="area != null">
+				area = #{area,jdbcType=VARCHAR},
+			</if>
+			<if test="hotelLevel != null">
+				hotel_level = #{hotelLevel,jdbcType=VARCHAR},
+			</if>
+			<if test="countSingleRoom != null">
+				count_single_room = #{countSingleRoom,jdbcType=INTEGER},
+			</if>
+			<if test="countDoubleRoom != null">
+				count_double_room = #{countDoubleRoom,jdbcType=INTEGER},
+			</if>
+			<if test="countTripleRoom != null">
+				count_triple_room = #{countTripleRoom,jdbcType=INTEGER},
+			</if>
+			<if test="extraBed != null">
+				extrabed=#{extraBed,jdbcType=INTEGER},
+			</if>
+			<if test="peiFang != null">
+				peifang=#{peiFang,jdbcType=INTEGER},
+			</if>
+			<if test="modelNum != null">
+				model_num = #{modelNum,jdbcType=VARCHAR},
+			</if>
+			<if test="countSeat != null">
+				count_seat = #{countSeat,jdbcType=INTEGER},
+			</if>
+			<if test="ageLimit != null">
+				age_limit = #{ageLimit,jdbcType=VARCHAR},
+			</if>
+			<if test="classNo != null">
+				class_no = #{classNo,jdbcType=VARCHAR},
+			</if>
+			<if test="cityDeparture != null">
+				city_departure = #{cityDeparture,jdbcType=VARCHAR},
+			</if>
+			<if test="cityArrival != null">
+				city_arrival = #{cityArrival,jdbcType=VARCHAR},
+			</if>
+			<if test="countRequire != null">
+				count_require = #{countRequire,jdbcType=INTEGER},
+			</if>
+			<if test="language != null">
+				language = #{language,jdbcType=VARCHAR},
+			</if>
+			<if test="gender != null">
+				gender = #{gender,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="creatorId != null">
+				creator_id = #{creatorId,jdbcType=INTEGER},
+			</if>
+			<if test="creatorName != null">
+				creator_name = #{creatorName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=BIGINT},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.yihg.sales.po.GroupRequirement">
+		update
+		group_requirement
+		set group_id = #{groupId,jdbcType=INTEGER},
+		order_id =
+		#{orderId,jdbcType=INTEGER},
+		supplier_type =
+		#{supplierType,jdbcType=INTEGER},
+		require_date =
+		#{requireDate,jdbcType=DATE},
+		require_date_to =
+		#{requireDateTo,jdbcType=DATE},
+		area = #{area,jdbcType=VARCHAR},
+		hotel_level = #{hotelLevel,jdbcType=VARCHAR},
+		count_single_room =
+		#{countSingleRoom,jdbcType=INTEGER},
+		count_double_room =
+		#{countDoubleRoom,jdbcType=INTEGER},
+		count_triple_room =
+		#{countTripleRoom,jdbcType=INTEGER},
+		extrabed=#{extraBed,jdbcType=INTEGER},
+		peifang=#{peiFang,jdbcType=INTEGER},
+		model_num =
+		#{modelNum,jdbcType=VARCHAR},
+		count_seat =
+		#{countSeat,jdbcType=INTEGER},
+		age_limit =
+		#{ageLimit,jdbcType=VARCHAR},
+		class_no = #{classNo,jdbcType=VARCHAR},
+		city_departure = #{cityDeparture,jdbcType=VARCHAR},
+		city_arrival =
+		#{cityArrival,jdbcType=VARCHAR},
+		count_require =
+		#{countRequire,jdbcType=INTEGER},
+		language =
+		#{language,jdbcType=VARCHAR},
+		gender = #{gender,jdbcType=VARCHAR},
+		remark = #{remark,jdbcType=VARCHAR},
+		creator_id =
+		#{creatorId,jdbcType=INTEGER},
+		creator_name =
+		#{creatorName,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=BIGINT}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<select id="selectRequirementForOrders" resultType="java.util.HashMap" parameterType="com.yihg.mybatis.utility.PageBean">
+		SELECT
+			gr1.`order_id`,
+			gr1.hotel_level hotelLevels,
+			CONCAT( IF(SUM(gr1.count_single_room)=0, "", CONCAT(CONVERT(SUM(gr1.count_single_room), CHAR),'单')),
+			IF(SUM(gr1.count_double_room)=0, "", CONCAT(CONVERT(SUM(gr1.count_double_room), CHAR),'标')) ,
+			IF(SUM(gr1.count_triple_room)=0, "", CONCAT(CONVERT(SUM(gr1.count_triple_room), CHAR),'三人间')) ,
+			CONCAT( IF(SUM(gr1.peifang)=0, "", CONCAT(CONVERT(SUM(gr1.peifang), CHAR),'陪')) ),
+			IF(SUM(gr1.extrabed)=0, "",
+			CONCAT(CONVERT(SUM(gr1.extrabed), CHAR),'加床'))
+		) AS hotelNums
+		FROM group_requirement gr1
+		WHERE gr1.supplier_type = 3
+		AND gr1.order_id in (${orderIds}) 
+		GROUP BY gr1.order_id
+	</select>
+</mapper>

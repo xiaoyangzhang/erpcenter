@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="car">
+	<select id="selectCarListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		select * from (
+		SELECT  
+			tg.group_code,
+			tg.group_mode,
+			tg.group_state,
+			tg.date_end,
+			tg.product_brand_name,
+			tg.product_name,
+			tg.operator_name,
+			tg.id group_id,
+			tg.operator_id,
+			tg.biz_id,
+			tg.date_start,
+			tg.create_time,
+			tg.total_adult,
+			tg.total_child,
+			tg.total_guide,
+			bs.id,
+			bs.user_name,
+			bs.user_id,
+			bs.operate_price,
+			bsd.type1_name,
+			bsd.type2_name,
+			bsd.item_date,
+			bsd.car_lisence,
+			bsd.driver_id,
+			bsd.driver_name,
+			bsd.item_price
+		FROM 
+			booking_supplier bs	
+		INNER JOIN 
+			tour_group tg
+		ON 
+			bs.group_id = tg.id
+			<!-- AND tg.group_state!=-1 -->
+		INNER JOIN 
+			booking_supplier_detail bsd
+		ON
+			bsd.booking_id = bs.id
+			<!--  AND bsd.type1_id = 18-->
+		WHERE 
+			bs.supplier_type= 4) bbb
+		where 1=1 and  bbb.operator_id in
+		<foreach item="item" index="index" collection="parameter.set" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		and biz_id = ${parameter.bizId}  AND group_state in (0,1,3,4)
+		    <if test="parameter.groupMode == 0">and group_mode <![CDATA[<]]>1</if>
+		    <if test="parameter.groupMode !=0 and parameter.groupMode !=null">and group_mode <![CDATA[>]]>0</if>
+		    <if test="parameter.groupCode != null">and group_code  LIKE CONCAT('%',#{parameter.groupCode},'%')</if>
+		     <if test="parameter.productName != null">and product_name  LIKE CONCAT('%',#{parameter.productName},'%')</if>
+		    <!-- <if test="parameter.operatorIds != null">and operator_id IN (${parameter.operatorIds})</if> -->
+		    <if test="parameter.startTime != null">and date_start <![CDATA[>=]]> #{parameter.startTime} </if>
+	  		<if test="parameter.endTime != null">and date_start <![CDATA[<=]]> #{parameter.endTime} </if>
+	  		<if test="parameter.operType==0 or parameter.operType==null ">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and bbb.operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.operType==1">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and bbb.user_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		ORDER BY  date_start ,create_time 
+	</select>
+	<select id="selectCarTotal" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select ifnull(sum(operate_price),0) operate_price,ifnull(sum(item_price),0) item_price from (
+		SELECT  
+			tg.group_code,
+			tg.group_mode,
+			tg.group_state,
+			
+			tg.product_name,
+			
+			tg.biz_id,
+			tg.date_start,
+			
+			
+			bs.user_id,
+			
+			
+			bs.operate_price,
+			tg.operator_id,
+			bsd.item_price
+		FROM 
+			booking_supplier bs	
+		INNER JOIN 
+			tour_group tg
+		ON 
+			bs.group_id = tg.id
+		INNER JOIN 
+			booking_supplier_detail bsd
+		ON
+			bsd.booking_id = bs.id
+		WHERE 
+			bs.supplier_type= 4) bbb
+		where 1=1 and  bbb.operator_id in
+		<foreach item="item" index="index" collection="parameter.set" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		and biz_id = ${parameter.bizId}  AND group_state in (0,1,3,4)
+		    <if test="parameter.groupMode == 0">and group_mode <![CDATA[<]]>1</if>
+		    <if test="parameter.groupMode !=0 and parameter.groupMode !=null">and group_mode <![CDATA[>]]>0</if>
+		    <if test="parameter.groupCode != null">and group_code  LIKE CONCAT('%',#{parameter.groupCode},'%')</if>
+		     <if test="parameter.productName != null">and product_name  LIKE CONCAT('%',#{parameter.productName},'%')</if>
+		    <!-- <if test="parameter.operatorIds != null">and operator_id IN (${parameter.operatorIds})</if> -->
+		    <if test="parameter.startTime != null">and date_start <![CDATA[>=]]> #{parameter.startTime} </if>
+	  		<if test="parameter.endTime != null">and date_start <![CDATA[<=]]> #{parameter.endTime} </if>
+	  		<if test="parameter.operType==0 or parameter.operType==null ">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and bbb.operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.operType==1">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and bbb.user_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		
+	</select>
+	
+</mapper>

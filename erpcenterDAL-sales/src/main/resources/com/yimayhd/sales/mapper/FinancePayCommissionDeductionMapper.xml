@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.finance.dao.FinancePayCommissionDeductionMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.finance.po.FinancePay" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pay_date" property="payDate" jdbcType="DATE" />
+    <result column="pay_code" property="payCode" jdbcType="VARCHAR" />
+    <result column="pay_direct" property="payDirect" jdbcType="TINYINT" />
+    <result column="supplier_type" property="supplierType" jdbcType="TINYINT" />
+    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+    <result column="supplier_name" property="supplierName" jdbcType="INTEGER" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="left_bank" property="leftBank" jdbcType="VARCHAR" />
+    <result column="left_bank_open" property="leftBankOpen" jdbcType="VARCHAR" />
+    <result column="left_bank_holder" property="leftBankHolder" jdbcType="VARCHAR" />
+    <result column="left_bank_account" property="leftBankAccount" jdbcType="VARCHAR" />
+    <result column="right_bank" property="rightBank" jdbcType="VARCHAR" />
+    <result column="right_bank_open" property="rightBankOpen" jdbcType="VARCHAR" />
+    <result column="right_bank_holder" property="rightBankHolder" jdbcType="VARCHAR" />
+    <result column="right_bank_account" property="rightBankAccount" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="cash" property="cash" jdbcType="DECIMAL" />
+    <result column="verify_id" property="verifyId" jdbcType="INTEGER" />
+    <result column="booking_guide_id" property="bookingGuideId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+    <result column="detail_count" property="detailCount" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, pay_date, pay_code, pay_direct, supplier_type, supplier_id,	supplier_name, pay_type, left_bank, 
+    left_bank_open, left_bank_holder, left_bank_account, right_bank, right_bank_open, 
+    right_bank_holder, right_bank_account, remark, cash, verify_id, booking_guide_id, 
+    user_name, user_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select a.*, b.detail_count from finance_pay_commission_deduction a LEFT JOIN  
+    (SELECT pay_id, COUNT(*) detail_count FROM finance_pay_detail_commission_deduction GROUP BY pay_id) b ON a.id = b.pay_id 
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="getFinancePayBySupplierId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+		<include refid="Base_Column_List" />
+	from finance_pay_commission_deduction where supplier_id = #{supplierId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from finance_pay_commission_deduction
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.finance.po.FinancePay" useGeneratedKeys="true" keyProperty="id">
+    insert into finance_pay_commission_deduction (id,biz_id, pay_date, pay_code, 
+      pay_direct, supplier_type, supplier_id, supplier_name, 
+      pay_type, left_bank, left_bank_open, 
+      left_bank_holder, left_bank_account, right_bank, 
+      right_bank_open, right_bank_holder, right_bank_account, 
+      remark, cash, verify_id, 
+      booking_guide_id, user_name, user_id, 
+      create_time, group_id, guide_id, type)
+    values (#{id,jdbcType=INTEGER},#{bizId,jdbcType=INTEGER}, #{payDate,jdbcType=DATE}, #{payCode,jdbcType=VARCHAR}, 
+      #{payDirect,jdbcType=TINYINT}, #{supplierType,jdbcType=TINYINT}, #{supplierId,jdbcType=INTEGER}, #{supplierName,jdbcType=VARCHAR}, 
+      #{payType,jdbcType=VARCHAR}, #{leftBank,jdbcType=VARCHAR}, #{leftBankOpen,jdbcType=VARCHAR}, 
+      #{leftBankHolder,jdbcType=VARCHAR}, #{leftBankAccount,jdbcType=VARCHAR}, #{rightBank,jdbcType=VARCHAR}, 
+      #{rightBankOpen,jdbcType=VARCHAR}, #{rightBankHolder,jdbcType=VARCHAR}, #{rightBankAccount,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{cash,jdbcType=DECIMAL}, #{verifyId,jdbcType=INTEGER}, 
+      #{bookingGuideId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=BIGINT},#{groupId,jdbcType=INTEGER},#{guideId,jdbcType=INTEGER},#{type,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.finance.po.FinancePay" >
+    insert into finance_pay_commission_deduction
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="payDate != null" >
+        pay_date,
+      </if>
+      <if test="payCode != null" >
+        pay_code,
+      </if>
+      <if test="payDirect != null" >
+        pay_direct,
+      </if>
+      <if test="supplierType != null" >
+        supplier_type,
+      </if>
+      <if test="supplierId != null" >
+        supplier_id,
+      </if>
+      <if test="supplierName != null" >
+        supplier_name,
+      </if>
+      <if test="payType != null" >
+        pay_type,
+      </if>
+      <if test="leftBank != null" >
+        left_bank,
+      </if>
+      <if test="leftBankOpen != null" >
+        left_bank_open,
+      </if>
+      <if test="leftBankHolder != null" >
+        left_bank_holder,
+      </if>
+      <if test="leftBankAccount != null" >
+        left_bank_account,
+      </if>
+      <if test="rightBank != null" >
+        right_bank,
+      </if>
+      <if test="rightBankOpen != null" >
+        right_bank_open,
+      </if>
+      <if test="rightBankHolder != null" >
+        right_bank_holder,
+      </if>
+      <if test="rightBankAccount != null" >
+        right_bank_account,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="cash != null" >
+        cash,
+      </if>
+      <if test="verifyId != null" >
+        verify_id,
+      </if>
+      <if test="bookingGuideId != null" >
+        booking_guide_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="payDate != null" >
+        #{payDate,jdbcType=DATE},
+      </if>
+      <if test="payCode != null" >
+        #{payCode,jdbcType=VARCHAR},
+      </if>
+      <if test="payDirect != null" >
+        #{payDirect,jdbcType=TINYINT},
+      </if>
+      <if test="supplierType != null" >
+        #{supplierType,jdbcType=TINYINT},
+      </if>
+      <if test="supplierId != null" >
+        #{supplierId,jdbcType=INTEGER},
+      </if>
+      <if test="supplierName != null" >
+        #{supplierName,jdbcType=INTEGER},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="leftBank != null" >
+        #{leftBank,jdbcType=VARCHAR},
+      </if>
+      <if test="leftBankOpen != null" >
+        #{leftBankOpen,jdbcType=VARCHAR},
+      </if>
+      <if test="leftBankHolder != null" >
+        #{leftBankHolder,jdbcType=VARCHAR},
+      </if>
+      <if test="leftBankAccount != null" >
+        #{leftBankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="rightBank != null" >
+        #{rightBank,jdbcType=VARCHAR},
+      </if>
+      <if test="rightBankOpen != null" >
+        #{rightBankOpen,jdbcType=VARCHAR},
+      </if>
+      <if test="rightBankHolder != null" >
+        #{rightBankHolder,jdbcType=VARCHAR},
+      </if>
+      <if test="rightBankAccount != null" >
+        #{rightBankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="cash != null" >
+        #{cash,jdbcType=DECIMAL},
+      </if>
+      <if test="verifyId != null" >
+        #{verifyId,jdbcType=INTEGER},
+      </if>
+      <if test="bookingGuideId != null" >
+        #{bookingGuideId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="com.yihg.finance.po.FinancePay" >
+    update finance_pay_commission_deduction
+    <set >
+      <if test="payDate != null" >
+        pay_date = #{payDate,jdbcType=DATE},
+      </if>
+      <if test="payCode != null" >
+        pay_code = #{payCode,jdbcType=DATE},
+      </if>
+      <if test="payDirect != null" >
+        pay_direct = #{payDirect,jdbcType=DATE},
+      </if>
+      <if test="supplierType != null" >
+        supplier_type = #{supplierType,jdbcType=DATE},
+      </if>
+      <if test="supplierId != null" >
+        supplier_id = #{supplierId,jdbcType=DATE},
+      </if>
+      <if test="supplierName != null" >
+        supplier_name = #{supplierName,jdbcType=DATE},
+      </if>
+      <if test="payType != null" >
+        pay_type = #{payType,jdbcType=DATE},
+      </if>
+      <if test="leftBank != null" >
+        left_bank = #{leftBank,jdbcType=DATE},
+      </if>
+      <if test="leftBankOpen != null" >
+        left_bank_open = #{leftBankOpen,jdbcType=DATE},
+      </if>
+      <if test="leftBankHolder != null" >
+        left_bank_holder = #{leftBankHolder,jdbcType=DATE},
+      </if>
+      <if test="leftBankAccount != null" >
+        left_bank_account = #{leftBankAccount,jdbcType=DATE},
+      </if>
+      <if test="rightBank != null" >
+        right_bank = #{rightBank,jdbcType=DATE},
+      </if>
+      <if test="rightBankOpen != null" >
+        right_bank_open = #{rightBankOpen,jdbcType=DATE},
+      </if>
+      <if test="rightBankHolder != null" >
+        right_bank_holder = #{rightBankHolder,jdbcType=DATE},
+      </if>
+      <if test="rightBankAccount != null" >
+        right_bank_account = #{rightBankAccount,jdbcType=DATE},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=DATE},
+      </if>
+      <if test="cash != null" >
+        cash = #{cash,jdbcType=DATE},
+      </if>
+      <if test="verifyId != null" >
+        verify_id = #{verifyId,jdbcType=DATE},
+      </if>
+      <if test="bookingGuideId != null" >
+        booking_guide_id = #{bookingGuideId,jdbcType=DATE},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=DATE},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=DATE},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+    </set>
+     where id = #{id,jdbcType=DATE}
+  </update>
+  
+  	<!-- 查询导游报账记录 -->
+	<select id="selectGuideCashRecordListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		
+		<if test="parameter.type == null">
+			SELECT * FROM (
+				SELECT d.id group_id, a.id pay_id, d.group_code, d.group_mode, d.group_state, c.guide_id, c.guide_name, a.cash,
+					a.pay_date,a.pay_code, a.supplier_name,a.pay_type,a.pay_direct,a.left_bank,a.left_bank_open,
+					a.left_bank_holder,a.left_bank_account,a.right_bank,a.right_bank_open,a.right_bank_holder,
+					a.right_bank_account,a.remark,a.booking_guide_id,a.user_name,a.user_id,a.create_time,a.type, d.operator_id
+				FROM finance_pay_commission_deduction a 
+				INNER JOIN booking_guide c ON a.booking_guide_id = c.id
+				INNER JOIN tour_group d ON c.group_id = d.id
+				WHERE a.type = 2 
+				UNION ALL
+				SELECT d.id group_id, a.id pay_id, d.group_code, d.group_mode, d.group_state, c.guide_id, c.guide_name, a.cash,
+					a.pay_date,a.pay_code, a.supplier_name,a.pay_type,a.pay_direct,a.left_bank,a.left_bank_open,
+					a.left_bank_holder,a.left_bank_account,a.right_bank,a.right_bank_open,a.right_bank_holder,
+					a.right_bank_account,a.remark,a.booking_guide_id,a.user_name,a.user_id,a.create_time,a.type , d.operator_id
+				FROM finance_pay_commission_deduction a 
+				INNER JOIN booking_guide c ON a.group_id = c.group_id AND a.guide_id = c.guide_id
+				INNER JOIN tour_group d ON c.group_id = d.id
+				WHERE a.type = 1
+			) tt WHERE group_state IN (1,3,4) AND pay_direct=0 
+		</if>
+		<if test="parameter.type == 2">
+			SELECT * FROM (
+				SELECT d.id group_id, a.id pay_id, d.group_code, d.group_mode, d.group_state, c.guide_id, c.guide_name, a.cash,
+					a.pay_date,a.pay_code, a.supplier_name,a.pay_type,a.pay_direct,a.left_bank,a.left_bank_open,
+					a.left_bank_holder,a.left_bank_account,a.right_bank,a.right_bank_open,a.right_bank_holder,
+					a.right_bank_account,a.remark,a.booking_guide_id,a.user_name,a.user_id,a.create_time,a.type, d.operator_id
+				FROM finance_pay_commission_deduction a 
+				INNER JOIN booking_guide c ON a.booking_guide_id = c.id
+				INNER JOIN tour_group d ON c.group_id = d.id
+				WHERE a.type = 2 
+			) tt WHERE group_state IN (1,3,4) AND pay_direct=0 
+		</if>
+		<if test="parameter.type == 1">
+			SELECT * FROM (
+				SELECT d.id group_id, a.id pay_id, d.group_code, d.group_mode, d.group_state, c.guide_id, c.guide_name, a.cash,
+					a.pay_date,a.pay_code, a.supplier_name,a.pay_type,a.pay_direct,a.left_bank,a.left_bank_open,
+					a.left_bank_holder,a.left_bank_account,a.right_bank,a.right_bank_open,a.right_bank_holder,
+					a.right_bank_account,a.remark,a.booking_guide_id,a.user_name,a.user_id,a.create_time,a.type , d.operator_id
+				FROM finance_pay_commission_deduction a 
+				INNER JOIN booking_guide c ON a.group_id = c.group_id AND a.guide_id = c.guide_id
+				INNER JOIN tour_group d ON c.group_id = d.id
+				WHERE a.type = 1
+			) tt WHERE group_state IN (1,3,4) AND pay_direct=0 
+		</if>
+		<if test="parameter.start_min != null">and pay_date <![CDATA[>=]]> #{parameter.start_min} </if>
+		<if test="parameter.start_max != null">and pay_date <![CDATA[<=]]> #{parameter.start_max}	</if>
+		<if test="parameter.group_code != null">and group_code like '%${parameter.group_code}%' </if>
+		<if test="parameter.user_name != null">and user_name like '%${parameter.user_name}%' </if>
+		<if test="parameter.pay_type != null">and pay_type like '%${parameter.pay_type}%' </if>
+		<if test="parameter.guide_name != null">and guide_name like '%${parameter.guide_name}%' </if>
+		<if
+			test="parameter.saleOperatorIds != null and parameter.saleOperatorIds != ''">
+			and operator_id in (${parameter.saleOperatorIds})
+		</if>
+		<if test="parameter.set != null">
+			and operator_id in
+			<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+		</if>
+		ORDER BY pay_date
+	</select>
+	
+	<!-- 查询团收付款记录数 -->
+	<select id="selectPayOrIncomeRecordCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM finance_pay_commission_deduction p
+		LEFT JOIN booking_supplier s ON p.supplier_id = s.id
+		WHERE p.group_id = #{groupId} || s.group_id = #{groupId}
+	</select>
+	
+	<select id="selectGuidePayInfo" parameterType="java.lang.Integer" resultType="java.util.HashMap" >
+		SELECT b.group_id, bg.guide_id, b.type FROM 
+		finance_pay_commission_deduction b
+		INNER JOIN booking_guide bg ON bg.id = b.booking_guide_id
+		WHERE b.id = #{payId,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectCommPayInfo" parameterType="java.lang.Integer" resultType="java.util.HashMap" >
+		SELECT b.group_id, b.guide_id, b.type FROM 
+		finance_pay_commission_deduction b
+		WHERE b.id = #{payId,jdbcType=INTEGER}
+	</select>
+</mapper>

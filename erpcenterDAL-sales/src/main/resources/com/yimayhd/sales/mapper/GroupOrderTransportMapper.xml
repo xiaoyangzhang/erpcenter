@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.sales.dao.GroupOrderTransportMapper">
+	<resultMap id="BaseResultMap" type="com.yihg.sales.po.GroupOrderTransport">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="order_id" property="orderId" jdbcType="INTEGER" />
+		<result column="method" property="method" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="class_no" property="classNo" jdbcType="VARCHAR" />
+		<result column="departure_city" property="departureCity" jdbcType="VARCHAR" />
+		<result column="departure_station" property="departureStation" jdbcType="VARCHAR" />
+		<result column="departure_date" property="departureDate" jdbcType="DATE" />
+		<result column="departure_time" property="departureTime" jdbcType="VARCHAR" />
+		<result column="arrival_city" property="arrivalCity" jdbcType="VARCHAR" />
+		<result column="arrival_station" property="arrivalStation" jdbcType="VARCHAR" />
+		<result column="arrival_Date" property="arrivalDate" jdbcType="DATE" />
+		<result column="arrival_time" property="arrivalTime" jdbcType="VARCHAR" />
+		<result column="is_direct" property="isDirect" jdbcType="INTEGER" />
+		<result column="destination" property="destination" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="BIGINT" />
+		<result column="source_type" property="sourceType" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, order_id, method, type, class_no, departure_city,
+		departure_station, departure_date, departure_time,
+		arrival_city, arrival_station, arrival_date, arrival_time, 
+		is_direct, destination, create_time,source_type
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from group_order_transport
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectByGroupId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		SELECT got.*,go.group_id 
+		FROM
+		  group_order_transport got,
+		  group_order go,
+		  tour_group tg 
+		WHERE go.id = got.`order_id` 
+		  AND tg.id = go.group_id 
+		  AND tg.id = #{groupId} 
+	</select>
+	<select id="selectByOrderId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from group_order_transport
+		where order_id = #{orderId,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectByCustomerCertificateNum" resultMap="BaseResultMap">
+		SELECT
+		d.*
+		FROM
+		group_order a,
+		tour_group b,
+		group_order_guest c,
+		group_order_transport d
+		WHERE a.group_id = b.id
+		AND c.order_id = a.id
+		AND d.order_id = a.id
+		AND c.certificate_num =#{certificateNum,jdbcType=VARCHAR}
+		AND b.id = #{groupId,jdbcType=INTEGER}
+	</select>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		group_order_transport
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.yihg.sales.po.GroupOrderTransport">
+		insert into
+		group_order_transport (id, order_id, method,
+		type, class_no,
+		departure_city,
+		departure_station, departure_date, departure_time, arrival_city,
+		arrival_station, arrival_date, arrival_time, is_direct,
+		destination, create_time,source_type)
+		values (#{id,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER},
+		#{method,jdbcType=INTEGER},
+		#{type,jdbcType=INTEGER},
+		#{classNo,jdbcType=VARCHAR}, #{departureCity,jdbcType=VARCHAR},
+		#{departureStation,jdbcType=VARCHAR},#{departureDate,jdbcType=DATE},
+		#{departureTime,jdbcType=VARCHAR}, #{arrivalCity,jdbcType=VARCHAR},
+		#{arrivalStation,jdbcType=VARCHAR}, #{arrivalDate,jdbcType=DATE}, 
+		#{arrivalTime,jdbcType=VARCHAR},
+		#{isDirect,jdbcType=INTEGER},
+		#{destination,jdbcType=VARCHAR},
+		#{createTime,jdbcType=BIGINT},
+		#{sourceType,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.yihg.sales.po.GroupOrderTransport">
+		insert into group_order_transport
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			<if test="method != null">
+				method,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="classNo != null">
+				class_no,
+			</if>
+			<if test="departureCity != null">
+				departure_city,
+			</if>
+			<if test="departureStation != null">
+				departure_station,
+			</if>
+			<if test="departureDate != null">
+				departure_date,
+			</if>
+			<if test="departureTime != null">
+				departure_time,
+			</if>
+			<if test="arrivalCity != null">
+				arrival_city,
+			</if>
+			<if test="arrivalStation != null">
+				arrival_station,
+			</if>
+			<if test="arrivalDate != null">
+				arrival_date,
+			</if>
+			<if test="arrivalTime != null">
+				arrival_time,
+			</if>
+			<if test="isDirect != null">
+				is_direct,
+			</if>
+			<if test="destination != null">
+				destination,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="sourceType != null">
+				source_type,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="method != null">
+				#{method,jdbcType=INTEGER},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="classNo != null">
+				#{classNo,jdbcType=VARCHAR},
+			</if>
+			<if test="departureCity != null">
+				#{departureCity,jdbcType=VARCHAR},
+			</if>
+			<if test="departureStation != null">
+				#{departureStation,jdbcType=VARCHAR},
+			</if>
+			<if test="departureDate != null">
+				#{departureDate,jdbcType=DATE},
+			</if>
+			<if test="departureTime != null">
+				#{departureTime,jdbcType=VARCHAR},
+			</if>
+			<if test="arrivalCity != null">
+				#{arrivalCity,jdbcType=VARCHAR},
+			</if>
+			<if test="arrivalStation != null">
+				#{arrivalStation,jdbcType=VARCHAR},
+			</if>
+			<if test="arrivalDate != null">
+				#{arrivalDate,jdbcType=DATE},
+			</if>
+			<if test="arrivalTime != null">
+				#{arrivalTime,jdbcType=VARCHAR},
+			</if>
+			<if test="isDirect != null">
+				#{isDirect,jdbcType=INTEGER},
+			</if>
+			<if test="destination != null">
+				#{destination,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=BIGINT},
+			</if>
+			<if test="sourceType != null">
+				#{sourceType,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.sales.po.GroupOrderTransport">
+		update group_order_transport
+		<set>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="method != null">
+				method = #{method,jdbcType=INTEGER},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="classNo != null">
+				class_no = #{classNo,jdbcType=VARCHAR},
+			</if>
+			<if test="departureCity != null">
+				departure_city = #{departureCity,jdbcType=VARCHAR},
+			</if>
+			<if test="departureStation != null">
+				departure_station = #{departureStation,jdbcType=VARCHAR},
+			</if>
+			<if test="departureDate != null">
+				departure_date = #{departureDate,jdbcType=DATE},
+			</if>
+			<if test="departureTime != null">
+				departure_time = #{departureTime,jdbcType=VARCHAR},
+			</if>
+			<if test="arrivalCity != null">
+				arrival_city = #{arrivalCity,jdbcType=VARCHAR},
+			</if>
+			<if test="arrivalStation != null">
+				arrival_station = #{arrivalStation,jdbcType=VARCHAR},
+			</if>
+			<if test="arrivalDate != null">
+				arrival_date = #{arrivalDate,jdbcType=DATE},
+			</if>
+			<if test="arrivalTime != null">
+				arrival_time = #{arrivalTime,jdbcType=VARCHAR},
+			</if>
+			<if test="isDirect != null">
+				is_direct = #{isDirect,jdbcType=INTEGER},
+			</if>
+			<if test="destination != null">
+				destination = #{destination,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=BIGINT},
+			</if>
+			<if test="sourceType != null">
+				source_type = #{sourceType,jdbcType=BIGINT},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.yihg.sales.po.GroupOrderTransport">
+		update
+		group_order_transport
+		set order_id = #{orderId,jdbcType=INTEGER},
+		method = #{method,jdbcType=INTEGER},
+		type = #{type,jdbcType=INTEGER},
+		class_no = #{classNo,jdbcType=VARCHAR},
+		departure_city =
+		#{departureCity,jdbcType=VARCHAR},
+		departure_station =
+		#{departureStation,jdbcType=VARCHAR},
+		departure_date = #{departureDate,jdbcType=DATE},
+		departure_time =
+		#{departureTime,jdbcType=VARCHAR},
+		arrival_city =
+		#{arrivalCity,jdbcType=VARCHAR},
+		arrival_station =
+		#{arrivalStation,jdbcType=VARCHAR},
+		arrival_date = #{arrivalDate,jdbcType=DATE},
+		arrival_time =
+		#{arrivalTime,jdbcType=VARCHAR},
+		is_direct =
+		#{isDirect,jdbcType=INTEGER},
+		destination =
+		#{destination,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=BIGINT},
+		source_type = #{sourceType,jdbcType=INTEGER},
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<!-- <select id="getTransportInfoByOrderId" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT order_id,
+     (CASE WHEN `type`=0 THEN  GROUP_CONCAT(DISTINCT CONCAT(departure_city,'-',arrival_city,'/',class_no,'/',departure_time))  END) pickUpInfo,
+    (CASE  WHEN `type`=1 THEN GROUP_CONCAT(DISTINCT CONCAT(departure_city,'-',arrival_city,'/',class_no,'/',departure_time))  END ) transferInfo 
+     FROM `group_order_transport` where method=154  GROUP BY order_id
+	</select> -->
+	<select id="selectGuestAirTimeList" resultType="java.util.HashMap">
+		SELECT 
+		cast(SUM(go.`num_adult`) as signed) adultCount,cast(SUM(go.`num_child`) as signed) childCount
+		,cast(SUM(a) as signed) '6~8'
+		,cast(SUM(b) as signed) '9~11',cast(SUM(c) as signed) '12~14',cast(SUM(d) as signed) '15~17',cast(SUM(e) as signed) '18~20',
+		cast(SUM(f) as signed) '21~23',cast(SUM(g) as signed) '24~5'
+		 FROM `tour_group` tg JOIN 
+		 `group_order` go ON tg.`id`=go.`group_id` 
+		
+		 JOIN  (SELECT order_id,`method`,COUNT(CASE WHEN STR_TO_DATE(departure_time,'%H:%i')<![CDATA[>=]]>#{parameter.time1} and STR_TO_DATE(departure_time,'%H:%i') <![CDATA[<=]]>#{parameter.time2}  THEN id END) a,
+		 COUNT(CASE WHEN STR_TO_DATE(departure_time,'%H:%i')<![CDATA[>=]]>#{parameter.time2} and STR_TO_DATE(departure_time,'%H:%i') <![CDATA[<=]]>#{parameter.time3} THEN id END) b,
+		 COUNT(CASE WHEN STR_TO_DATE(departure_time,'%H:%i')<![CDATA[>=]]>#{parameter.time3} and STR_TO_DATE(departure_time,'%H:%i') <![CDATA[<=]]>#{parameter.time4} THEN id END) c
+		,COUNT(CASE WHEN STR_TO_DATE(departure_time,'%H:%i')<![CDATA[>=]]>#{parameter.time4} and STR_TO_DATE(departure_time,'%H:%i') <![CDATA[<=]]>#{parameter.time5} THEN id END) d,
+		COUNT(CASE WHEN STR_TO_DATE(departure_time,'%H:%i')<![CDATA[>=]]>#{parameter.time5} and STR_TO_DATE(departure_time,'%H:%i') <![CDATA[<=]]>#{parameter.time6} THEN id END) e,
+		COUNT(CASE WHEN STR_TO_DATE(departure_time,'%H:%i')<![CDATA[>=]]>#{parameter.time6} and STR_TO_DATE(departure_time,'%H:%i') <![CDATA[<=]]>#{parameter.time8} THEN id END) f
+		,COUNT(CASE WHEN STR_TO_DATE(departure_time,'%H:%i')<![CDATA[>=]]>#{parameter.time7} and STR_TO_DATE(departure_time,'%H:%i') <![CDATA[<=]]>#{parameter.time1} THEN id END) g 
+		FROM `group_order_transport` where  `method`=154 AND departure_time IS NOT NULL
+    	AND `departure_time`!='' GROUP BY order_id) got ON got.order_id=go.id
+		 
+		 where  tg.biz_id=#{parameter.bizId} and tg.group_state in (1,3,4) 
+		 AND tg.operator_id IN 
+ 	 <foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+		<if test=" parameter.dateType==0">
+			<if test="parameter.startTime != null">and
+				tg.date_start  <![CDATA[>=]]>
+				#{parameter.startTime}
+			</if>
+			<if test="parameter.endTime != null">and
+				tg.date_start<![CDATA[<=]]>
+				#{parameter.endTime}
+			</if>
+		</if>
+		<if test="parameter.dateType==1">
+			<if test="parameter.startTime != null">and
+				go.create_time  <![CDATA[>=]]>
+				#{parameter.startTime}
+			</if>
+			<if test="parameter.endTime != null">and
+				go.create_time<![CDATA[<=]]>
+				#{parameter.endTime}
+			</if>
+		</if>
+		<if test="parameter.productName != null and parameter.productName !=''">and 
+		(go.product_brand_name like concat( '%',#{parameter.productName},'%') or go.product_name like concat('%',#{parameter.productName},'%') )</if>
+		<if test="parameter.supplierName != null and parameter.supplierName != ''">and 
+		go.supplier_name like concat( '%',#{parameter.supplierName},'%') </if>
+		<if test="parameter.operType==0 ">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and go.sale_operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.operType==1">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and tg.operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+	</select>
+	
+	<select id="selectTransportForOrders" resultType="java.util.HashMap" parameterType="com.yihg.mybatis.utility.PageBean">
+		SELECT
+		got1.`order_id`,
+		GROUP_CONCAT(
+		CONCAT_WS(
+		"-",
+		IF(
+		got1.source_type = 1
+		AND
+		got1.type = 0,
+		CONCAT(
+		got1.departure_city,'/',
+		got1.arrival_city,' ',
+		got1.`class_no`,' 出发时间',
+		got1.`departure_date`,' ',
+		got1.`departure_time`
+		),
+		''
+		)
+		)
+		) AS upAir,
+		GROUP_CONCAT(
+		CONCAT_WS(
+		"-",
+		IF(
+		got1.source_type = 1
+		AND got1.type = 1,
+		CONCAT(
+		got1.departure_city,'/',
+		got1.arrival_city,' ',
+		got1.`class_no`,' 出发时间',
+		got1.`departure_date`,'
+		',
+		got1.`departure_time`
+		),
+		''
+		)
+		)
+		) AS offAir,
+		GROUP_CONCAT(
+		CONCAT_WS(
+		"-",
+		IF(
+		got1.source_type = 0,
+		CONCAT(
+		got1.departure_city,'/',
+		got1.arrival_city,' ',
+		got1.`class_no`,' 出发时间',
+		got1.`departure_date`,'
+		',
+		got1.`departure_time`
+		),
+		''
+		)
+		)
+		) AS trans
+		FROM
+		group_order_transport got1
+		WHERE 1=1 
+		AND order_id in (${orderIds}) 
+		GROUP BY order_id
+	</select>
+</mapper>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.finance.dao.FinancePayDetailCommissionDeductionMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.finance.po.FinancePayDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="pay_id" property="payId" jdbcType="INTEGER" />
+    <result column="loc_order_id" property="locOrderId" jdbcType="INTEGER" />
+    <result column="cash" property="cash" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, pay_id, loc_order_id, cash
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from finance_pay_detail_commission_deduction
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPayIdAndLocOrderId" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from finance_pay_detail_commission_deduction
+    where pay_id = #{payId,jdbcType=INTEGER} and loc_order_id = #{locOrderId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPayId" resultMap="BaseResultMap" parameterType="java.util.HashMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from finance_pay_detail_commission_deduction
+    where pay_id = #{payId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from finance_pay_detail_commission_deduction
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByLocOrderIdAndPayId" parameterType="java.util.HashMap" >
+    delete from finance_pay_detail_commission_deduction
+    where loc_order_id = #{locOrderId,jdbcType=INTEGER} and pay_id = #{payId,jdbcType=INTEGER}
+  </delete>
+   <delete id="deleteByPayId" parameterType="java.lang.Integer" >
+    delete from finance_pay_detail_commission_deduction
+    where pay_id = #{locOrderId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.finance.po.FinancePayDetail" >
+    insert into finance_pay_detail_commission_deduction (id, pay_id, loc_order_id,cash)
+    values (#{id,jdbcType=INTEGER}, #{payId,jdbcType=INTEGER}, #{locOrderId,jdbcType=INTEGER},  #{cash,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.finance.po.FinancePayDetail" >
+    insert into finance_pay_detail_commission_deduction
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="payId != null" >
+        pay_id,
+      </if>
+      <if test="locOrderId != null" >
+        loc_order_id,
+      </if>
+      <if test="cash != null" >
+        cash,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="payId != null" >
+        #{payId,jdbcType=INTEGER},
+      </if>
+      <if test="locOrderId != null" >
+        #{locOrderId,jdbcType=INTEGER},
+      </if>
+      <if test="cash != null" >
+        #{cash,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.yihg.finance.po.FinancePayDetail" >
+   	update finance_pay_detail_commission_deduction 
+   		set cash = #{cash,jdbcType=DECIMAL} 
+   	where 
+   		pay_id = #{payId,jdbcType=INTEGER} and 
+   		loc_order_id = #{locOrderId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectGuidePayDetailsByPayId" resultType="java.util.HashMap" parameterType="java.lang.Integer" >
+    SELECT c.id supplier_id, c.supplier_name, c.supplier_type, c.remark, a.cash, b.user_name, b.pay_date FROM 
+    finance_pay_detail_commission_deduction a 
+	INNER JOIN finance_pay_commission_deduction b ON a.pay_id = b.id 
+	INNER JOIN booking_supplier c ON a.loc_order_id = c.id 
+	WHERE b.type = 2 AND a.pay_id = #{payId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectCommPayDetailsByPayId" resultType="java.util.HashMap" parameterType="java.lang.Integer" >
+    SELECT "佣金" supplier_name, commission_name details, a.cash, b.user_name, b.pay_date
+	FROM  finance_pay_detail_commission_deduction a   
+	INNER JOIN finance_pay_commission_deduction b ON a.pay_id = b.id   
+	INNER JOIN finance_commission_deduction c ON a.loc_order_id = c.id
+	WHERE b.type = 1 AND a.pay_id = #{payId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectDetailByLocOrderId" resultType="java.util.HashMap" parameterType="java.lang.Integer" >
+	SELECT p.pay_code, p.remark, p.pay_type, FROM_UNIXTIME(p.create_time/1000,'%Y-%m-%d %h:%i:%s') create_time, p.right_bank_holder, pd.cash, p.user_name, p.user_id
+	FROM finance_pay_detail_commission_deduction pd INNER JOIN finance_pay_commission_deduction p ON pd.pay_id = p.id WHERE loc_order_id = #{locOrderId, jdbcType=INTEGER}
+  </select>
+  
+</mapper>

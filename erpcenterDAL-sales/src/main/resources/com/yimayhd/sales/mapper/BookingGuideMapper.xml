@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.operation.dao.BookingGuideMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingGuide" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="booking_no" property="bookingNo" jdbcType="VARCHAR" />
+    <result column="guide_id" property="guideId" jdbcType="INTEGER" />
+    <result column="guide_name" property="guideName" jdbcType="VARCHAR" />
+    <result column="guide_mobile" property="guideMobile" jdbcType="VARCHAR" />
+    <result column="is_default" property="isDefault" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="driver_id" property="driverId" jdbcType="INTEGER" />
+     <result column="booking_detail_id" property="bookingDetailId" jdbcType="INTEGER" />
+    <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
+    <result column="total" property="total" jdbcType="DECIMAL" />
+    <result column="state_booking" property="stateBooking" jdbcType="TINYINT" />
+    <result column="state_finance" property="stateFinance" jdbcType="TINYINT" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="booking_date" property="bookingDate" jdbcType="DATE" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+     <result column="state_lock" property="stateLock" jdbcType="TINYINT" />
+  </resultMap>
+ 
+  <!--  <resultMap id="bookingGuideListCount" type="com.yihg.operation.po.BookingGuideListCount" ></resultMap> -->
+  <!--  <resultMap id="bookingGuideListSelect" type="com.yihg.operation.po.BookingGuideListSelect" ></resultMap> -->
+ <!--  <typeAlias type="com.yihg.operation.po.BookingGuideListSelect" alias="bookingGuideListSelect"/>  --> 
+ 
+  <sql id="Base_Column_List" >
+    id, group_id, guide_id,booking_no,guide_name,guide_mobile, is_default, remark,driver_id,driver_name, total, state_booking, state_finance,booking_detail_id, 
+    user_id, user_name,booking_date,create_time,state_lock
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_guide
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+   <select id="selectByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_guide
+    where  group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+  
+   <select id="selectByGroupIdAndGuideId" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from booking_guide
+    where  group_id = #{groupId,jdbcType=INTEGER} and guide_id = #{guideId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectListByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_guide
+    where  group_id = #{groupId,jdbcType=INTEGER} and is_default = 1
+  </select>
+  
+  <select id="selectListByGroupId2" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_guide
+    where  group_id = #{groupId,jdbcType=INTEGER} 
+  </select>
+  
+  <select id="selectListByGroupIdAndName" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_guide
+    where  group_id = #{groupId,jdbcType=INTEGER} 
+    <if test="guideName!=null and guideName !=''">
+    and guide_name LIKE
+			CONCAT('%',#{guideName},'%')
+    </if> 
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from booking_guide
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.operation.po.BookingGuide" >
+    insert into booking_guide (id, group_id, guide_id, 
+      is_default, remark, total, 
+      state_booking, state_finance, user_id, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, #{guideId,jdbcType=INTEGER}, 
+      #{isDefault,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{total,jdbcType=DECIMAL}, 
+      #{stateBooking,jdbcType=TINYINT}, #{stateFinance,jdbcType=TINYINT}, #{userId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingGuide" >
+   <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into booking_guide
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="guideId != null" >
+        guide_id,
+      </if>
+       <if test="bookingDetailId != null" >
+        booking_detail_id,
+      </if>
+       <if test="guideName != null" >
+        guide_name,
+      </if>
+       <if test="guideMobile != null" >
+        guide_mobile,
+      </if>
+       <if test="bookingNo != null" >
+        booking_no,
+      </if>
+      <if test="isDefault != null" >
+        is_default,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="driverId != null" >
+        driver_id,
+      </if>
+       <if test="driverName != null" >
+        driver_name,
+      </if>
+      <if test="total != null" >
+        total,
+      </if>
+      <if test="stateBooking != null" >
+        state_booking,
+      </if>
+      <if test="stateFinance != null" >
+        state_finance,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="bookingDate != null" >
+        booking_date,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="guideId != null" >
+        #{guideId,jdbcType=INTEGER},
+      </if>
+      <if test="bookingDetailId != null" >
+        #{bookingDetailId,jdbcType=INTEGER},
+      </if>
+      
+       <if test="guideName != null" >
+        #{guideName,jdbcType=VARCHAR},
+      </if>
+       <if test="guideMobile != null" >
+        #{guideMobile,jdbcType=VARCHAR},
+      </if>
+       <if test="bookingNo != null" >
+        #{bookingNo,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null" >
+        #{isDefault,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="driverId != null" >
+        #{driverId,jdbcType=INTEGER},
+      </if>
+       <if test="driverName != null" >
+        #{driverName,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null" >
+        #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="stateBooking != null" >
+        #{stateBooking,jdbcType=TINYINT},
+      </if>
+      <if test="stateFinance != null" >
+        #{stateFinance,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="bookingDate != null" >
+        #{bookingDate,jdbcType=DATE},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateBygroupId" parameterType="java.lang.Integer">
+  	UPDATE booking_guide SET is_default = 0 WHERE group_id=#{groupId,jdbcType=INTEGER};
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingGuide" >
+    update booking_guide
+    <set >
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="guideId != null" >
+        guide_id = #{guideId,jdbcType=INTEGER},
+      </if>
+       <if test="bookingDetailId != null" >
+        booking_detail_id = #{bookingDetailId,jdbcType=INTEGER},
+      </if>
+       <if test="guideName != null" >
+        guide_name = #{guideName,jdbcType=VARCHAR},
+      </if>
+       <if test="guideMobile != null" >
+        guide_mobile = #{guideMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="bookingNo != null" >
+        booking_no = #{bookingNo,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null" >
+        is_default = #{isDefault,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="driverId != null" >
+        driver_id = #{driverId,jdbcType=INTEGER},
+      </if>
+       <if test="driverName != null" >
+        driver_name = #{driverName,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null" >
+        total = #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="stateBooking != null" >
+        state_booking = #{stateBooking,jdbcType=TINYINT},
+      </if>
+      <if test="stateFinance != null" >
+        state_finance = #{stateFinance,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=INTEGER},
+      </if>
+      <if test="bookingDate != null" >
+        booking_date = #{bookingDate,jdbcType=DATE},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingGuide" >
+    update booking_guide
+    set group_id = #{groupId,jdbcType=INTEGER},
+      guide_id = #{guideId,jdbcType=INTEGER},
+       booking_detail_id = #{bookingDetailId,jdbcType=INTEGER},
+      
+      is_default = #{isDefault,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      total = #{total,jdbcType=DECIMAL},
+      state_booking = #{stateBooking,jdbcType=TINYINT},
+      state_finance = #{stateFinance,jdbcType=TINYINT},
+      user_id = #{userId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getSelectCountByGruopId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	SELECT COUNT(id) FROM booking_guide WHERE group_id =#{groupId}
+  </select>
+  
+   <select id="getBookingCountByTime" resultType="java.lang.Integer">
+   	select count(id) from booking_guide where create_time between #{curDay} and #{nextDay}
+   </select>
+   
+   <select id="selectBookingGuideListCountListPage" resultType="com.yihg.operation.po.BookingGuideListCount"
+		parameterType="com.yihg.mybatis.utility.PageBean">
+SELECT t.guide_id guideId,t.guide_name guideName,t.guide_mobile guideMobile,
+SUM(CASE WHEN <![CDATA[t.state_booking<3]]> THEN 1 ELSE 0 END ) state0,
+SUM(CASE t.state_booking WHEN 3 THEN 1 ELSE 0 END ) state2,
+SUM(IFNULL(t.total_adult,0)) adult,SUM(jh) jh,SUM(sj) sj,COUNT(t.id) groupCount
+	FROM (
+SELECT tour.id,tour.total_adult,guide.guide_id,guide.`guide_name`,guide.`guide_mobile`,
+guide.state_booking,SUM(IFNULL(shop.person_num,0)*IFNULL(shop.person_buy_avg,0)) jh,
+SUM(IFNULL(shop.total_face,0)) sj,tour.group_state groupState,date_end dateEnd
+FROM tour_group tour
+INNER JOIN booking_guide guide ON  tour.`id`=guide.`group_id`
+LEFT JOIN booking_shop shop ON tour.`id`=shop.group_id AND shop.`guide_id`=guide.`guide_id`
+WHERE 1=1
+AND tour.biz_id = #{bizId}
+AND tour.group_state in (1,3,4)
+AND tour.operator_id in
+<foreach item="item" index="index" collection="set" open="("
+	separator="," close=")">
+	#{item}
+</foreach>
+<if test="page.parameter.startTime != null and page.parameter.startTime !=''">
+AND <![CDATA[tour.date_start >=#{page.parameter.startTime}]]>
+</if>
+<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
+AND <![CDATA[tour.date_start <=#{page.parameter.endTime}]]>
+</if>
+<if test="page.parameter.guideName != null and page.parameter.guideName !=''">
+AND guide.guide_name LIKE CONCAT('%',#{page.parameter.guideName},'%')
+</if>
+GROUP BY tour.id,guide.`guide_id`
+) t
+GROUP BY t.guide_id
+	</select>
+	<select id="selectBookingGuideTotalCount" resultType="java.util.HashMap" parameterType="com.yihg.mybatis.utility.PageBean">
+	SELECT SUM(CASE WHEN <![CDATA[t.state_booking<3]]> THEN 1 ELSE 0 END ) state0,
+SUM(CASE t.state_booking WHEN 3 THEN 1 ELSE 0 END ) state2,
+SUM(IFNULL(t.total_adult,0)) adult,SUM(jh) jh,SUM(sj) sj,COUNT(t.id) groupCount
+	FROM (
+SELECT tour.id,tour.total_adult,guide.guide_id,guide.`guide_name`,guide.`guide_mobile`,
+guide.state_booking,SUM(IFNULL(shop.person_num,0)*IFNULL(shop.person_buy_avg,0)) jh,
+SUM(IFNULL(shop.total_face,0)) sj
+FROM tour_group tour
+INNER JOIN booking_guide guide ON  tour.`id`=guide.`group_id`
+LEFT JOIN booking_shop shop ON tour.`id`=shop.group_id AND shop.`guide_id`=guide.`guide_id`
+WHERE 1=1
+AND tour.biz_id = #{bizId}
+AND <![CDATA[tour.group_state < 2]]>
+AND <![CDATA[tour.group_state > -1]]>
+AND tour.operator_id in
+<foreach item="item" index="index" collection="set" open="("
+	separator="," close=")">
+	#{item}
+</foreach>
+<if test="page.parameter.startTime != null and page.parameter.startTime !=''">
+AND <![CDATA[tour.date_start >=#{page.parameter.startTime}]]>
+</if>
+<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
+AND <![CDATA[tour.date_start <=#{page.parameter.endTime}]]>
+</if>
+<if test="page.parameter.guideName != null and page.parameter.guideName !=''">
+AND guide.guide_name LIKE CONCAT('%',#{page.parameter.guideName},'%')
+</if>
+GROUP BY tour.id,guide.`guide_id`
+) t
+	</select>
+	
+
+<select id="selectBookingGuideListSelectListPage" resultType="com.yihg.operation.po.BookingGuideListSelect" parameterType="com.yihg.mybatis.utility.PageBean">
+SELECT
+bg.id,t.id groupId,group_code groupCode,date_start dateStart,group_mode groupMode,product_name productName,product_brand_name productBrandName,
+IF (group_mode = 0,'散客团',(SELECT supplier_name FROM group_order o WHERE
+o.group_id=t.`id` LIMIT 0,1))
+supplierName,
+IFNULL(t.total_adult,0) adultCount,
+IFNULL(t.total_child,0) childCount,
+IFNULL(t.total_guide,0) guideCount,
+ IF (group_mode = 0, 0, 
+  (SELECT o.id
+  FROM group_order o 
+  WHERE o.group_id = t.`id` 
+    LIMIT 0,1 )) orderId,
+operator_name operatorName, group_state groupState,date_end dateEnd,
+bg.`guide_name` guideName,bg.`guide_mobile` guideMobile,IFNULL(bg.`state_booking`,0) stateBooking,bg.`user_name` userName,bg.`total` total,bs1.jh,bs1.sj
+FROM tour_group t 
+INNER JOIN booking_guide bg ON t.`id`=bg.`group_id`
+LEFT JOIN (
+SELECT bs.group_id,bs.guide_id,SUM(IFNULL(bs.person_num,0)*IFNULL(bs.person_buy_avg,0)) jh,SUM(IFNULL(bs.total_face,0)) sj
+FROM `booking_shop` bs
+GROUP BY bs.group_id,bs.guide_id
+) bs1 ON bg.group_id=bs1.group_id AND bg.`guide_id`=bs1.guide_id
+WHERE  t.group_state in (1,3,4) AND t.biz_id = #{bizId,jdbcType=INTEGER}
+<if test="set!=null">
+			AND t.operator_id in
+		<foreach item="item" index="index" collection="set" open="("
+			separator="," close=")">
+			#{item}
+		</foreach></if>
+<if test="page.parameter.startTime != null and page.parameter.startTime !=''">
+	AND <![CDATA[t.date_start >=#{page.parameter.startTime}]]>
+</if>
+<if test="page.parameter.userName != null and page.parameter.userName !=''">
+	AND bg.user_name like CONCAT('%',#{page.parameter.userName},'%')
+</if>
+<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
+	AND <![CDATA[t.date_start <=#{page.parameter.endTime}]]>
+</if>
+<if test="page.parameter.groupCode != null and page.parameter.groupCode != ''">
+ 	AND t.group_code LIKE	CONCAT('%',#{page.parameter.groupCode},'%')
+</if>
+<if test="page.parameter.guideName != null and page.parameter.guideName != ''">
+	AND bg.guide_name LIKE CONCAT('%',#{page.parameter.guideName},'%')
+</if>
+	<if test="page.parameter.productName != null">
+			and (t.product_name like CONCAT('%','${page.parameter.productName}','%')
+			or t.product_brand_name like CONCAT('%','${page.parameter.productName}','%') )
+		</if>		
+			<if
+					test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds!=''">
+				and t.operator_id in (${page.parameter.saleOperatorIds})
+			</if>
+	<if test="page.parameter.operatorName != null and page.parameter.operatorName != ''">
+	AND t.operator_name LIKE CONCAT('%',#{page.parameter.operatorName},'%')
+</if>
+<if test="page.parameter.stateBooking != null">
+	<if test="page.parameter.stateBooking == 0">
+	AND <![CDATA[bg.state_booking<3]]>
+	</if>
+	<if test="page.parameter.stateBooking == 2">
+	AND bg.state_booking=3
+	</if>
+</if>
+ORDER BY t.date_start,t.id
+	</select>
+
+  <select id="selectByGuideIdAndGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from booking_guide
+    where guide_id = #{guideId,jdbcType=INTEGER} AND  group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+<select id="selectListBySupplierIdAndSupplierType" resultMap="BaseResultMap">
+	SELECT bg.* FROM `booking_supplier` bs,`booking_guide` bg WHERE bs.`group_id`=bg.`group_id` AND bs.`supplier_type` =#{supplierType} AND bs.`supplier_id`=#{supplierId} GROUP BY bg.`guide_id`
+</select>
+
+	<select id="selectDistinctListByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+	    select DISTINCT guide_id, guide_name from booking_guide
+	    where  group_id = #{groupId,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectShopTjByGroupId" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		SELECT t1.guide_id,t1.guide_name,t1.guide_mobile,t1.`user_name` ,t2.driver_id,t2.`driver_name`,t2.`driver_tel`,t2.`car_lisence`
+			FROM booking_guide t1 
+			LEFT JOIN `booking_supplier_detail` t2 ON t1.`booking_detail_id`=t2.id
+			WHERE t1.`group_id`= #{groupId}
+	</select>	
+	
+	<update id="updateStateLock" parameterType="com.yihg.operation.po.BookingGuide" >
+    update booking_guide
+    set  state_lock=1
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </update>
+  	<update id="updateStateUnlock" parameterType="com.yihg.operation.po.BookingGuide" >
+    update booking_guide
+    set  state_lock=0
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </update>
+</mapper>

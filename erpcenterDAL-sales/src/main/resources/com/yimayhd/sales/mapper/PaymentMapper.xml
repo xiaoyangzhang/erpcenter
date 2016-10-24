@@ -1,0 +1,629 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="pay">
+
+	<!-- 欠款-子公司 -->
+	<select id="selectSubsidiaryListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		SELECT sss.* FROM(
+			SELECT supplier_id, supplier_name, SUM(ljj) AS ljj, SUM(lmm) AS lmm, SUM(yxx) AS yxx, SUM(ypp) AS ypp, SUM(ltt) AS ltt, 
+				SUM(ljj)+SUM(lmm)+SUM(yxx)+SUM(ypp)+SUM(ltt) AS total FROM(
+			SELECT 
+			  go.supplier_id,
+			  go.supplier_name,
+			  go.operator_id,
+			  go.order_type,
+			  go.departure_date,
+			  (CASE WHEN go.operator_id IN(${parameter.lj}) THEN SUM(go.total-go.total_cash) ELSE 0 END) AS ljj,
+			  (CASE WHEN go.operator_id IN(${parameter.lm}) THEN SUM(go.total-go.total_cash) ELSE 0 END) AS lmm,
+			  (CASE WHEN go.operator_id IN(${parameter.yx}) THEN SUM(go.total-go.total_cash) ELSE 0 END) AS yxx,
+			  (CASE WHEN go.operator_id IN(${parameter.yp}) THEN SUM(go.total-go.total_cash) ELSE 0 END) AS ypp,
+			  (CASE WHEN go.operator_id IN(${parameter.llt}) THEN SUM(go.total-go.total_cash) ELSE 0 END) AS ltt
+			FROM
+			  group_order go 
+			
+			WHERE go.state=1 
+			and go.biz_id=#{parameter.bizId}
+			<if test="parameter.set!=null">
+				AND go.operator_id in
+			<foreach item="item" index="index" collection="parameter.set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach></if>
+			<!-- 人员 -->
+		   <!--  <if test="parameter.operatorIds != null and parameter.operatorIds !='' ">and go.operator_id IN (${parameter.operatorIds})</if> -->
+		   <if test="parameter.operType==0  ">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and go.operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.operType==1">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and go.sale_operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		    <!-- 时间 -->
+	    	<if test="parameter.startTime != null">and go.departure_date <![CDATA[>=]]> #{parameter.startTime} </if>
+	  		<if test="parameter.endTime != null">and go.departure_date <![CDATA[<=]]> #{parameter.endTime} </if>
+		   	<!-- 团类型 -->
+		    <if test="parameter.groupMode == 0">and group_mode <![CDATA[<]]>1</if>
+		    <if test="parameter.groupMode !=0 and parameter.groupMode!=null">and group_mode <![CDATA[>]]>0</if>
+		    <!-- 商家 -->
+		    <if test="parameter.supplierName != null and parameter.supplierName !=''">and go.supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%') </if>
+			GROUP BY go.supplier_id, operator_id) ss GROUP BY supplier_id) sss
+			WHERE sss.total != 0.0000
+			AND sss.supplier_name IS NOT NULL AND sss.supplier_name!='' group by sss.supplier_id
+	</select>
+	<select id="selectSubsidiaryTotal"  resultType="java.util.HashMap">
+		SELECT supplier_name,sum(total) total,sum(ljj) ljj,sum(lmm) lmm,sum(yxx) yxx,sum(ypp) ypp,sum(ltt) ltt FROM(
+			SELECT ss.*,ljj+lmm+yxx+ypp+ltt AS total  FROM(
+			SELECT 
+			  go.supplier_id,
+			  go.supplier_name,
+			  go.operator_id,
+			  go.order_type,
+			  go.departure_date,
+			  (CASE WHEN go.operator_id IN(${parameter.lj}) THEN SUM(go.total-go.total_cash) ELSE 0 END) AS ljj,
+			  (CASE WHEN go.operator_id IN(${parameter.lm}) THEN SUM(go.total-go.total_cash) ELSE 0 END) AS lmm,
+			  (CASE WHEN go.operator_id IN(${parameter.yx}) THEN SUM(go.total-go.total_cash) ELSE 0 END) AS yxx,
+			  (CASE WHEN go.operator_id IN(${parameter.yp}) THEN SUM(go.total-go.total_cash) ELSE 0 END) AS ypp,
+			  (CASE WHEN go.operator_id IN(${parameter.llt}) THEN SUM(go.total-go.total_cash) ELSE 0 END) AS ltt
+			FROM
+			  group_order go 
+			
+			WHERE go.state=1 
+			and go.biz_id=#{parameter.bizId}
+			<if test="parameter.set!=null">
+				AND go.operator_id in
+			<foreach item="item" index="index" collection="parameter.set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach></if>
+			<!-- 人员 -->
+		  <!--   <if test="parameter.operatorIds != null">and go.operator_id IN (${parameter.operatorIds})</if> -->
+		  <if test="parameter.operType==0  ">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and go.operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.operType==1">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and go.sale_operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		    <!-- 时间 -->
+	    	<if test="parameter.startTime != null">and go.departure_date <![CDATA[>=]]> #{parameter.startTime} </if>
+	  		<if test="parameter.endTime != null">and go.departure_date <![CDATA[<=]]> #{parameter.endTime} </if>
+		   	<!-- 团类型 -->
+		    <if test="parameter.groupMode == 0">and group_mode <![CDATA[<]]>1</if>
+		    <if test="parameter.groupMode !=0 and parameter.groupMode!=null">and group_mode <![CDATA[>]]>0</if>
+		    <!-- 商家 -->
+		    <if test="parameter.supplierName != null">and go.supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%') </if>
+			GROUP BY go.supplier_id, operator_id) ss ) sss
+			WHERE sss.total != 0.0000
+			AND sss.supplier_name IS NOT NULL AND sss.supplier_name!=''
+	</select>
+	<!-- 欠款统计 -->
+	<select id="selectDebtListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+			SELECT * FROM (
+			SELECT 
+				*,m12+m11+m10+m9+m8+m7+m6+m5+m4+m3+m2+m1 AS total 
+			FROM (
+				SELECT 
+					SUM(m12) AS m12,
+					SUM(m11) AS m11,
+					SUM(m10) AS m10,
+					SUM(m9) AS m9,
+					SUM(m8) AS m8,
+					SUM(m7) AS m7,
+					SUM(m6) AS m6,
+					SUM(m5) AS m5,
+					SUM(m4) AS m4,
+					SUM(m3) AS m3,
+					SUM(m2) AS m2,
+					SUM(m1) AS m1,
+					supplier_id,
+					supplier_name,
+					operator_id,
+					order_type,
+					operator_name
+				FROM (
+					SELECT 
+						(CASE WHEN YEAR(go.`departure_date`)=#{parameter.yearLimit} AND MONTH(go.`departure_date`)=12 THEN SUM(total-total_cash) ELSE 0 END) AS m12,
+						(CASE WHEN YEAR(go.`departure_date`)=#{parameter.yearLimit} AND MONTH(go.`departure_date`)=11 THEN SUM(total-total_cash) ELSE 0 END) AS m11,
+						(CASE WHEN YEAR(go.`departure_date`)=#{parameter.yearLimit} AND MONTH(go.`departure_date`)=10 THEN SUM(total-total_cash) ELSE 0 END) AS m10,
+						(CASE WHEN YEAR(go.`departure_date`)=#{parameter.yearLimit} AND MONTH(go.`departure_date`)=9 THEN SUM(total-total_cash) ELSE 0 END) AS m9,
+						(CASE WHEN YEAR(go.`departure_date`)=#{parameter.yearLimit} AND MONTH(go.`departure_date`)=8 THEN SUM(total-total_cash) ELSE 0 END) AS m8,
+						(CASE WHEN YEAR(go.`departure_date`)=#{parameter.yearLimit} AND MONTH(go.`departure_date`)=7 THEN SUM(total-total_cash) ELSE 0 END) AS m7,
+						(CASE WHEN YEAR(go.`departure_date`)=#{parameter.yearLimit} AND MONTH(go.`departure_date`)=6 THEN SUM(total-total_cash) ELSE 0 END) AS m6,
+						(CASE WHEN YEAR(go.`departure_date`)=#{parameter.yearLimit} AND MONTH(go.`departure_date`)=5 THEN SUM(total-total_cash) ELSE 0 END) AS m5,
+						(CASE WHEN YEAR(go.`departure_date`)=#{parameter.yearLimit} AND MONTH(go.`departure_date`)=4 THEN SUM(total-total_cash) ELSE 0 END) AS m4,
+						(CASE WHEN YEAR(go.`departure_date`)=#{parameter.yearLimit} AND MONTH(go.`departure_date`)=3 THEN SUM(total-total_cash) ELSE 0 END) AS m3,
+						(CASE WHEN YEAR(go.`departure_date`)=#{parameter.yearLimit} AND MONTH(go.`departure_date`)=2 THEN SUM(total-total_cash) ELSE 0 END) AS m2,
+						(CASE WHEN YEAR(go.`departure_date`)=#{parameter.yearLimit} AND MONTH(go.`departure_date`)=1 THEN SUM(total-total_cash) ELSE 0 END) AS m1,
+						supplier_id,
+						supplier_name,
+						go.operator_id,
+						go.order_type,
+						go.operator_name
+					FROM 
+						group_order go
+					
+					WHERE 
+						go.state = 1
+						AND go.biz_id = ${parameter.bizId}
+						<if test="parameter.set!=null">
+							AND go.operator_id in
+						<foreach item="item" index="index" collection="parameter.set" open="("
+							separator="," close=")">
+							#{item}
+						</foreach></if>
+					    <if test="parameter.groupMode == 0">and order_type <![CDATA[<]]>1</if>
+					    <if test="parameter.groupMode == 1">and order_type <![CDATA[>]]>0</if>
+					    <!-- 商家 -->
+						<if test="parameter.supplierName != null">and go.supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%') </if>
+			<!-- <if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and go.operator_id in (${parameter.saleOperatorIds})
+			</if> -->
+					<if test="parameter.operType==0  ">
+					<if
+						test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+						and go.operator_id in (${parameter.saleOperatorIds})
+					</if>
+				</if>
+				<if test="parameter.operType==1">
+					<if
+						test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+						and go.sale_operator_id in (${parameter.saleOperatorIds})
+					</if>
+				</if>
+		
+						GROUP BY go.id 
+					) go
+					GROUP BY go.supplier_id 
+				) go
+			) go
+			WHERE total != 0.0000
+				AND go.supplier_name IS NOT NULL AND go.supplier_name!=''
+		ORDER BY total DESC
+	</select>
+	<select id="getDebtTotal" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT supplier_name,operator_name, SUM(total) total ,SUM(m12) AS m12,
+			      SUM(m11) AS m11,
+			      SUM(m10) AS m10,
+			      SUM(m9) AS m9,
+			      SUM(m8) AS m8,
+			      SUM(m7) AS m7,
+			      SUM(m6) AS m6,
+			      SUM(m5) AS m5,
+			      SUM(m4) AS m4,
+			      SUM(m3) AS m3,
+			      SUM(m2) AS m2,
+			      SUM(m1) AS m1
+			      FROM (
+			SELECT *,
+				m12+m11+m10+m9+m8+m7+m6+m5+m4+m3+m2+m1 AS total 
+			FROM (
+				SELECT 
+					SUM(m12) AS m12,
+					SUM(m11) AS m11,
+					SUM(m10) AS m10,
+					SUM(m9) AS m9,
+					SUM(m8) AS m8,
+					SUM(m7) AS m7,
+					SUM(m6) AS m6,
+					SUM(m5) AS m5,
+					SUM(m4) AS m4,
+					SUM(m3) AS m3,
+					SUM(m2) AS m2,
+					SUM(m1) AS m1,
+					supplier_id,
+						supplier_name,
+						operator_id,
+						order_type,
+						operator_name
+				FROM (
+					SELECT 
+						(CASE WHEN YEAR(go1.`departure_date`)=#{parameter.yearLimit} AND MONTH(go1.`departure_date`)=12 THEN SUM(total-total_cash) ELSE 0 END) AS m12,
+						(CASE WHEN YEAR(go1.`departure_date`)=#{parameter.yearLimit} AND MONTH(go1.`departure_date`)=11 THEN SUM(total-total_cash) ELSE 0 END) AS m11,
+						(CASE WHEN YEAR(go1.`departure_date`)=#{parameter.yearLimit} AND MONTH(go1.`departure_date`)=10 THEN SUM(total-total_cash) ELSE 0 END) AS m10,
+						(CASE WHEN YEAR(go1.`departure_date`)=#{parameter.yearLimit} AND MONTH(go1.`departure_date`)=9 THEN SUM(total-total_cash) ELSE 0 END) AS m9,
+						(CASE WHEN YEAR(go1.`departure_date`)=#{parameter.yearLimit} AND MONTH(go1.`departure_date`)=8 THEN SUM(total-total_cash) ELSE 0 END) AS m8,
+						(CASE WHEN YEAR(go1.`departure_date`)=#{parameter.yearLimit} AND MONTH(go1.`departure_date`)=7 THEN SUM(total-total_cash) ELSE 0 END) AS m7,
+						(CASE WHEN YEAR(go1.`departure_date`)=#{parameter.yearLimit} AND MONTH(go1.`departure_date`)=6 THEN SUM(total-total_cash) ELSE 0 END) AS m6,
+						(CASE WHEN YEAR(go1.`departure_date`)=#{parameter.yearLimit} AND MONTH(go1.`departure_date`)=5 THEN SUM(total-total_cash) ELSE 0 END) AS m5,
+						(CASE WHEN YEAR(go1.`departure_date`)=#{parameter.yearLimit} AND MONTH(go1.`departure_date`)=4 THEN SUM(total-total_cash) ELSE 0 END) AS m4,
+						(CASE WHEN YEAR(go1.`departure_date`)=#{parameter.yearLimit} AND MONTH(go1.`departure_date`)=3 THEN SUM(total-total_cash) ELSE 0 END) AS m3,
+						(CASE WHEN YEAR(go1.`departure_date`)=#{parameter.yearLimit} AND MONTH(go1.`departure_date`)=2 THEN SUM(total-total_cash) ELSE 0 END) AS m2,
+						(CASE WHEN YEAR(go1.`departure_date`)=#{parameter.yearLimit} AND MONTH(go1.`departure_date`)=1 THEN SUM(total-total_cash) ELSE 0 END) AS m1,
+						supplier_id,
+						supplier_name,
+						go1.operator_id,
+						go1.order_type,
+						go1.operator_name
+					FROM 
+						group_order go1
+					
+					WHERE 
+						go1.state = 1
+						AND go1.biz_id = ${parameter.bizId}
+						<if test="parameter.set!=null">
+							AND go1.operator_id in
+						<foreach item="item" index="index" collection="parameter.set" open="("
+							separator="," close=")">
+							#{item}
+						</foreach></if>
+					    <if test="parameter.groupMode == 0">and order_type <![CDATA[<]]>1</if>
+					    <if test="parameter.groupMode == 1">and order_type <![CDATA[>]]>0</if>
+					    <!-- 商家 -->
+						<if test="parameter.supplierName != null">and go1.supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%') </if>
+			<!-- <if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and go1.operator_id in (${parameter.saleOperatorIds})
+			</if> -->
+			<if test="parameter.operType==0  ">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and go1.operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.operType==1">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and go1.sale_operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		
+						GROUP BY go1.id 
+					) go
+					GROUP BY go.supplier_id 
+				) go
+			) go
+			WHERE total != 0.0000
+				AND go.supplier_name IS NOT NULL AND go.supplier_name!=''
+	</select>
+	<!-- 查询应收款项 -->
+	<select id="selectPaymentListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		select ss.*,IFNULL(sss.preTotal,0) preTotal  from (
+		SELECT 
+		  * 
+		FROM 
+		  (SELECT 
+			    supplier_id, 
+			    supplier_name AS supplierName, 
+			    operator_id,
+			    product_name,
+			    departure_date,
+			    create_time,
+			    product_brand_name,
+			    SUM(IFNULL(total, 0)) AS total,
+			    SUM(IFNULL(total_cash, 0)) AS totalCash,
+			    SUM(
+			      IFNULL(total, 0) - IFNULL(total_cash, 0)
+			    ) AS totalBalance,
+			    SUM(IFNULL(num_adult, 0)) AS num_adult,
+			    SUM(IFNULL(num_child, 0)) AS num_child,
+			    SUM(IFNULL(num_guide, 0)) AS num_guide,
+			    COUNT(0) orderCount 
+		   FROM
+		        group_order 
+		   WHERE biz_id = #{parameter.bizId} AND state=1
+		    <if test="parameter.set!=null">
+				AND operator_id in
+			 <foreach item="item" index="index" collection="parameter.set" open="("
+				separator="," close=")">
+				#{item}
+			 </foreach>
+		    </if>
+		   <!-- 人员 -->
+			<if test="parameter.type == 0">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds !=''">
+				and operator_id in (${parameter.saleOperatorIds})
+			</if>
+			</if>
+			<if test="parameter.type == 1">
+				<if
+					test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds !=''">
+					and sale_operator_id in(${parameter.saleOperatorIds})
+				</if>
+			</if>
+		   <!-- 时间 -->
+		  	<if test="parameter.startTime != null">and departure_date <![CDATA[>=]]> #{parameter.startTime} </if>
+		  	<if test="parameter.endTime != null">and departure_date <![CDATA[<=]]> #{parameter.endTime} </if>
+		  	<if test="parameter.supplierName != null">and supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%') </if>
+			<if test="parameter.productName != null">and CONCAT('【',product_brand_name,'】',product_name) LIKE CONCAT('%',#{parameter.productName},'%') </if>
+		   
+		   	<!-- 团类型 由订单类型count判断 -->
+		   	<if test="parameter.groupMode!=null">
+		    	<if test="parameter.groupMode == 1">and order_type <![CDATA[=]]> 1</if>
+		    	<if test="parameter.groupMode ==0 ">and order_type <![CDATA[!=]]>1</if>
+		    </if>
+		    <!-- 财务状态 -->
+		    <if test="parameter.paymentState!=null">
+				<if test="parameter.paymentState == 0">and total <![CDATA[<>]]> total_cash</if>
+				<if test="parameter.paymentState == 1">and total = total_cash</if>
+			</if>	
+		    GROUP BY supplier_id) a 
+		order by  departure_date ,create_time ) ss
+		LEFT JOIN (SELECT SUM(IFNULL(go.total, 0) - IFNULL(go.total_cash, 0)) AS preTotal,go.supplier_id,go.supplier_name FROM group_order go WHERE 
+			go.state =1 
+			and go.biz_id = #{parameter.bizId}
+			<if test="parameter.set!=null">
+				AND go.operator_id in
+			 <foreach item="item" index="index" collection="parameter.set" open="("
+				separator="," close=")">
+				#{item}
+			 </foreach>
+		    </if>
+		    <!-- 人员 -->
+			<if test="parameter.type == 0">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds !=''">
+				and go.operator_id in (${parameter.saleOperatorIds})
+			</if>
+			</if>
+			<!-- 团类型 判断期初欠收数 -->
+		   	<if test="parameter.groupMode!=null">
+		    	<if test="parameter.groupMode == 1">and go.order_type <![CDATA[=]]> 1</if>
+		    	<if test="parameter.groupMode ==0 ">and go.order_type <![CDATA[!=]]>1</if>
+		    </if>
+			<if test="parameter.type == 1">
+				<if
+					test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds !=''">
+					and go.sale_operator_id in(${parameter.saleOperatorIds})
+				</if>
+			</if>
+			<if test="parameter.startTime != null">and go.departure_date <![CDATA[<]]> #{parameter.startTime} </if>
+			<if test="parameter.productName != null">and CONCAT('【',go.product_brand_name,'】',go.product_name) LIKE CONCAT('%',#{parameter.productName},'%') </if>
+			GROUP BY go.supplier_id
+		) sss
+		ON ss.supplier_id = sss.supplier_id
+	</select>
+	
+	<!-- 查询应收款项2 ou2016-06-06 -->
+	<select id="selectPaymentListPage2" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		select distinct o.supplier_id,o.supplier_name as supplierName,s1.supplierId1,IFNULL(s1.orderCount,0) orderCount,ifNull(s1.total,0) total,ifNull(s1.totalCash,0) totalCash,ifNull(s1.totalBalance,0) totalBalance
+		          ,ifNull(s1.num_adult,0) num_adult,ifNull(s1.num_child,0) num_child,ifNull(s1.num_guide,0) num_guide ,s2.supplierId2,ifNull(s2.preTotal,0) preTotal
+		from group_order o 
+		left join  (SELECT o.supplier_id  as supplierId1 ,SUM(total) AS total,SUM(total_cash) AS totalCash,SUM(total-total_cash) AS totalBalance,SUM(num_adult) AS num_adult,SUM(num_child) AS num_child,SUM(num_guide) AS num_guide,COUNT(o.id) orderCount
+		               FROM group_order o  left join tour_group tg on (o.group_id=tg.id)
+		              where  o.biz_id = #{parameter.bizId} AND o.state=1 and IFNULL(tg.group_state,0) <![CDATA[!=]]> 2
+				    <if test="parameter.set!=null">
+						AND o.operator_id in
+					 <foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+						#{item}
+					 </foreach>
+				    </if>
+				   <!-- 人员 -->
+					<if test="parameter.type == 0">
+					<if test="parameter.saleOperatorIds != null and parameter.saleOperatorIds !=''">
+						and o.operator_id in (${parameter.saleOperatorIds})
+					</if>
+					</if>
+					<if test="parameter.type == 1">
+						<if test="parameter.saleOperatorIds != null and parameter.saleOperatorIds !=''">
+							and o.sale_operator_id in(${parameter.saleOperatorIds})
+						</if>
+					</if>
+				   <!-- 时间 -->
+				  	<if test="parameter.startTime != null">and departure_date <![CDATA[>=]]> #{parameter.startTime} </if>
+				  	<if test="parameter.endTime != null">and departure_date <![CDATA[<=]]> #{parameter.endTime} </if>
+				  	<if test="parameter.supplierName != null">and supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%') </if>
+					<if test="parameter.productName != null">and CONCAT('【',o.product_brand_name,'】',o.product_name) LIKE CONCAT('%',#{parameter.productName},'%') </if>
+				   	<!-- 团类型 由订单类型count判断 -->
+				   	<if test="parameter.groupMode!=null">
+				    	<if test="parameter.groupMode == 1">and order_type <![CDATA[=]]> 1</if>
+				    	<if test="parameter.groupMode ==0 ">and order_type <![CDATA[!=]]>1</if>
+				    </if>
+				    <!-- 财务状态 -->
+				    <if test="parameter.paymentState!=null">
+						<if test="parameter.paymentState == 0">and total <![CDATA[!=]]> total_cash</if>
+						<if test="parameter.paymentState == 1">and total = total_cash</if>
+					</if>	
+		 		GROUP BY supplier_id
+				) s1 on (o.supplier_id=s1.supplierId1)
+		left join (SELECT SUM(total-total_cash) AS preTotal,supplier_id  as supplierId2 
+		 			 FROM group_order o left join tour_group tg on (o.group_id=tg.id) 
+		 			 WHERE o.state =1 and o.biz_id = #{parameter.bizId}   and IFNULL(tg.group_state,0) <![CDATA[!=]]>2
+		 			<if test="parameter.set!=null">
+						AND o.operator_id in
+					 <foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+						#{item}
+					 </foreach>
+				    </if>
+				   <!-- 人员 -->
+					<if test="parameter.type == 0">
+					<if test="parameter.saleOperatorIds != null and parameter.saleOperatorIds !=''">
+						and o.operator_id in (${parameter.saleOperatorIds})
+					</if>
+					</if>
+					<if test="parameter.type == 1">
+						<if test="parameter.saleOperatorIds != null and parameter.saleOperatorIds !=''">
+							and o.sale_operator_id in(${parameter.saleOperatorIds})
+						</if>
+					</if>
+				   <!-- 时间 -->
+				  	<if test="parameter.startTime != null">and departure_date <![CDATA[<]]> #{parameter.startTime} </if>
+
+				  	<if test="parameter.supplierName != null">and supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%') </if>
+					<if test="parameter.productName != null">and CONCAT('【',o.product_brand_name,'】',o.product_name) LIKE CONCAT('%',#{parameter.productName},'%') </if>
+				   	<!-- 团类型 由订单类型count判断 -->
+				   	<if test="parameter.groupMode!=null">
+				    	<if test="parameter.groupMode == 1">and order_type <![CDATA[=]]> 1</if>
+				    	<if test="parameter.groupMode ==0 ">and order_type <![CDATA[!=]]>1</if>
+				    </if>
+				    <!-- 财务状态 -->
+				    <if test="parameter.paymentState!=null">
+						<if test="parameter.paymentState == 0">and total <![CDATA[!=]]> total_cash</if>
+						<if test="parameter.paymentState == 1">and total = total_cash</if>
+					</if>	
+		 		GROUP BY supplier_id
+		 		having SUM(total-total_cash) <![CDATA[!=]]> 0
+				)s2 ON o.supplier_id = s2.supplierId2
+		where  o.biz_id = #{parameter.bizId}  and (s1.supplierId1 is not null) or (s2.supplierId2 is not null)
+		order by totalBalance+preTotal desc
+	</select>
+	
+	<!-- 查询应收款项 详情-->
+	<select id="selectPaymentDetailListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		SELECT 
+			tg.group_code AS groupCode,
+			tg.date_start,tg.id groupId,group_mode groupMode,
+			tg.create_time,tg.date_end,
+			go.departure_date AS departureDate,
+			go.product_name AS productName,
+			go.product_brand_name as productBrandName,
+			go.supplier_name AS supplierName,
+			go.operator_name AS operatorName,
+			go.sale_operator_name AS saleOperatorName,
+			IFNULL(go.num_adult,0) AS numAdult,
+			IFNULL(go.num_child,0) AS numChild,
+			IFNULL(go.num_guide,0) AS numGuide,
+			go.`total` AS total,
+			go.`total_cash` AS totalCash,
+			go.province_name as provinceName,
+			go.city_name cityName,
+			go.supplier_code as supplierCode,
+			go.receive_mode as receiveMode
+		FROM group_order go
+			LEFT JOIN  tour_group tg  ON go.group_id = tg.id   
+		WHERE go.biz_id = #{parameter.bizId} and go.state = 1 and  IFNULL(tg.group_state,0) <![CDATA[!=]]> 2
+		<if test="parameter.set!=null">
+				AND go.operator_id in
+			 <foreach item="item" index="index" collection="parameter.set" open="("
+				separator="," close=")">
+				#{item}
+			 </foreach>
+		</if>
+		<if test="parameter.type == 0">
+			<if test="parameter.saleOperatorIds !=null and parameter.saleOperatorIds !=''">
+				and go.operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.type == 1">
+			<if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds !=''">
+				and go.sale_operator_id in
+				(${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.provinceId != null and parameter.provinceId !=-1">
+ 				and go.province_id =#{parameter.provinceId}
+		</if>
+		<if test="parameter.cityId != null and parameter.cityId !=-1">
+				and go.city_id =#{parameter.cityId}
+		</if>
+		<if test="parameter.supplierId != null">and go.supplier_id = #{parameter.supplierId}</if>
+		<!-- 人员 -->
+		<!-- <if test="parameter.operatorIds != null">and go.operator_id IN (#{parameter.operatorIds})</if> -->
+<!-- 	    <if test="parameter.operatorName != null">and go.operator_name LIKE CONCAT('%',#{parameter.operatorName},'%')</if>
+ -->	    <!-- 团类型 -->
+ 		<if test="parameter.groupMode!=null">
+	    	<if test="parameter.groupMode == 0">and tg.group_mode <![CDATA[<]]> 1</if>
+	    	<if test="parameter.groupMode !=0">and tg.group_mode <![CDATA[>]]>0</if>
+	    </if>
+	    <!-- 时间 -->
+	    <if test="parameter.dateType == 1">
+	    	 <if test="parameter.startTime != null">and go.departure_date <![CDATA[>=]]> #{parameter.startTime} </if>
+	  		<if test="parameter.endTime != null">and go.departure_date <![CDATA[<=]]> #{parameter.endTime} </if>
+	    </if>
+	    <if test="parameter.dateType == 0">
+	    	<if test="parameter.startTime != null">and go.create_time <![CDATA[>=]]> #{parameter.startTime} </if>
+	  		<if test="parameter.endTime != null">and go.create_time <![CDATA[<=]]> #{parameter.endTime} </if>
+	    </if>
+	  	<!-- 团号 -->
+	  	<if test="parameter.groupCode != null">and tg.group_code LIKE CONCAT('%',#{parameter.groupCode},'%')</if>
+	  	<!-- 财务状态 -->
+	  	<if test="parameter.paymentState == 0">and go.total <![CDATA[<>]]>go.total_cash</if>
+		<if test="parameter.paymentState == 1">and go.total = go.total_cash</if>
+		<!-- 商家 -->
+		<if test="parameter.supplierName != null">and go.supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%') </if>	
+		<if test="parameter.receiveMode != null">and go.receive_mode LIKE CONCAT('%',#{parameter.receiveMode},'%') </if>
+		<!-- 行程 -->
+		<if test="parameter.productName !=null">and CONCAT('【',go.product_brand_name,'】',go.product_name) LIKE CONCAT('%',#{parameter.productName},'%') </if>
+		order by go.departure_date,go.create_time
+	</select>
+	
+	<select id="selectPaymentTotal" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT 
+			SUM(IFNULL(numAdult, 0)) AS personCountAdult,
+			SUM(IFNULL(numChild, 0)) AS personCountChild,
+			SUM(IFNULL(numGuide, 0)) AS personCountGuide,
+			SUM(IFNULL(total, 0)) AS totalCount,
+			SUM(IFNULL(totalCash, 0)) AS totalCashCount,
+			SUM(IFNULL(total, 0)-IFNULL(totalCash, 0)) AS totalBalanceCount
+		FROM
+			(SELECT 
+				tg.group_code AS groupCode,
+				go.departure_date AS departureDate,
+				go.product_name AS productName,
+				go.product_brand_name as productBrandName,
+				go.supplier_name AS supplierName,
+				go.operator_name AS operatorName,
+				go.num_adult AS numAdult, 
+				go.num_child AS numChild,
+				go.num_guide AS numGuide,
+				go.`total` AS total,
+				go.`total_cash` AS totalCash
+			FROM 
+				group_order go
+			LEFT JOIN 
+				tour_group tg
+			ON go.group_id = tg.id
+			WHERE go.biz_id = ${parameter.bizId}
+			and go.state = 1
+			and  IFNULL(tg.group_state,0) <![CDATA[!=]]> 2
+			<if test="parameter.set!=null">
+				AND go.operator_id in
+			 <foreach item="item" index="index" collection="parameter.set" open="("
+				separator="," close=")">
+				#{item}
+			 </foreach>
+			</if>
+			<!-- 商家 -->
+			<if test="supplierId != null">and go.supplier_id = #{supplierId}</if>
+			<!-- 人员 -->
+			<if test="parameter.type == 0">
+				<if test="parameter.saleOperatorIds !=null and parameter.saleOperatorIds !=''">
+					and go.operator_id in (${parameter.saleOperatorIds})
+				</if>
+			</if>
+			<if test="parameter.type == 1">
+				<if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds !=''">
+					and go.sale_operator_id in
+					(${parameter.saleOperatorIds})
+				</if>
+			</if>
+		    <!-- 团类型 -->
+		    <if test="groupMode!=null">
+		    <if test="groupMode == 0">and tg.group_mode <![CDATA[<]]> 1</if>
+		    <if test="groupMode !=0">and tg.group_mode <![CDATA[>]]>0</if>
+		    </if>
+		    <!-- 时间 -->
+		    <if test="parameter.dateType == 1">
+		    	 <if test="parameter.startTime != null">and go.departure_date <![CDATA[>=]]> #{parameter.startTime} </if>
+		  		<if test="parameter.endTime != null">and go.departure_date <![CDATA[<=]]> #{parameter.endTime} </if>
+		    </if>
+		    <if test="parameter.dateType == 0">
+		    	<if test="parameter.startTime != null">and go.create_time <![CDATA[>=]]> #{parameter.startTime} </if>
+		  		<if test="parameter.endTime != null">and go.create_time <![CDATA[<=]]> #{parameter.endTime} </if>
+		    </if>
+		  	<!-- 团号 --> 
+		  	<if test="groupCode != null">and tg.group_code LIKE CONCAT('%',#{groupCode},'%')</if>
+		  	<!-- 财务状态 -->
+		  	<if test="paymentState == 0">and go.total <![CDATA[<>]]>go.total_cash</if>
+			<if test="paymentState == 1">and go.total = go.total_cash</if>
+			<!-- 商家 -->
+			<if test="supplierName != null">and go.supplier_name LIKE CONCAT('%',#{supplierName},'%') </if>	
+			<!-- 行程 -->
+			<if test="productName !=null">and CONCAT('【',go.product_brand_name,'】',go.product_name) LIKE CONCAT('%',#{productName},'%') </if>
+			<!-- 接站牌 -->
+			<if test="parameter.receiveMode != null">and go.receive_mode LIKE CONCAT('%',#{parameter.receiveMode},'%') </if>
+			) countTable
+	</select>
+	
+</mapper>

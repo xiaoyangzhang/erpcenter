@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.finance.dao.FinanceVerifyMapper" >
+  
+	<resultMap id="BaseResultMap" type="com.yihg.finance.po.FinanceVerify" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="verify_code" property="verifyCode" jdbcType="VARCHAR" />
+		<result column="verify_state" property="verifyState" jdbcType="INTEGER" />
+		<result column="date_start" property="dateStart" jdbcType="DATE" />
+		<result column="date_end" property="dateEnd" jdbcType="DATE" />
+		<result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
+		<result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
+		<result column="total_cash" property="totalCash" jdbcType="DECIMAL" />
+		<result column="total_record" property="totalRecord" jdbcType="DECIMAL" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="total_adjust" property="totalAdjust" jdbcType="DECIMAL" />
+		<result column="biz_id" property="bizId" jdbcType="INTEGER" />
+		<result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="sort" property="sort" jdbcType="INTEGER" />
+	</resultMap>
+  
+	<update id="changeStatus" parameterType="String">
+		UPDATE finance_verify t 
+		SET t.`verify_state`=1
+		WHERE t.id= #{id}
+	</update>
+	
+	<!-- 添加对账单 -->
+	<insert id="insert" parameterType="com.yihg.finance.po.FinanceVerify" >
+    	INSERT INTO finance_verify 
+    	<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="verifyCode != null">
+				verify_code,
+			</if>
+			<if test="verifyState != null">
+				verify_state,
+			</if>
+			<if test="dateStart != null">
+				date_start,
+			</if>
+			<if test="dateEnd != null">
+				date_end,
+			</if>
+			<if test="supplierType != null">
+				supplier_type,
+			</if>
+			<if test="supplierId != null">
+				supplier_id,
+			</if>
+			<if test="totalPrice != null">
+				total_price,
+			</if>
+			<if test="totalCash != null">
+				total_cash,
+			</if>
+			<if test="totalRecord != null">
+				total_record,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="totalAdjust != null">
+				total_adjust,
+			</if>
+			<if test="bizId != null">
+				biz_id,
+			</if>
+			<if test="supplierName != null">
+				supplier_name,
+			</if>
+			<if test="userName != null">
+				user_name,
+			</if>
+			<if test="sort != null">
+				sort
+			</if>
+		</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="verifyCode != null">
+				#{verifyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="verifyState != null">
+				#{verifyState,jdbcType=INTEGER},
+			</if>
+			<if test="dateStart != null">
+				#{dateStart,jdbcType=DATE},
+			</if>
+			<if test="dateEnd != null">
+				#{dateEnd,jdbcType=DATE},
+			</if>
+			<if test="supplierType != null">
+				#{supplierType,jdbcType=INTEGER},
+			</if>
+			<if test="supplierId != null">
+				#{supplierId,jdbcType=INTEGER},
+			</if>
+			<if test="totalPrice != null">
+				#{totalPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="totalCash != null">
+				#{totalCash,jdbcType=DECIMAL},
+			</if>
+			<if test="totalRecord != null">
+				#{totalRecord,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="totalAdjust != null">
+				#{totalAdjust,jdbcType=DECIMAL},
+			</if>
+			<if test="bizId != null">
+				#{bizId,jdbcType=INTEGER},
+			</if>
+			<if test="supplierName != null">
+				#{supplierName,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null">
+				#{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				#{sort,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 查询最新插入的key值 -->
+	<select id="selectInsertKey" resultType="java.lang.Integer">
+		SELECT id FROM finance_verify ORDER BY id DESC LIMIT 0,1;
+	</select>
+	
+	<!-- 查询对账单最大的序号 -->
+  	<select id="getMaxSort" resultType="java.lang.Integer">
+  		SELECT MAX(sort) FROM finance_verify WHERE biz_id = #{bizId,jdbcType=INTEGER};
+  	</select>
+  	
+  	<!-- 获取商家列表列表 -->
+	<select id="getSupplierNameList" resultType="java.util.HashMap">
+	
+		SELECT DISTINCT supplier_name name 
+		<!-- 组团社 -->
+		<if test="supplierType == 1" >
+			FROM group_order 
+			where supplier_name like concat('%',#{supplierName},'%') and biz_id = #{bizId}
+		</if>
+		<!-- 地接社 -->
+		<if test="supplierType == 16" >
+			FROM booking_delivery 
+			where supplier_name like concat('%',#{supplierName},'%') 
+		</if>
+		<!-- 商家 -->
+		<if test="supplierType != 1 and supplierType != 16" >
+			FROM booking_supplier 
+			where supplier_type = #{supplierType} and supplier_name like concat('%',#{supplierName},'%') 
+		</if>
+	</select>
+	
+	<!-- 根据商家名字，取到商家数量-->
+	<select id="getSupplierNameCount" resultType="java.lang.Integer">
+		SELECT count(supplier_name) 
+		<!-- 组团社 -->
+		<if test="supplierType == 1" >
+			FROM group_order 
+			where supplier_name like concat('%',#{supplierName},'%') and biz_id = #{bizId}
+		</if>
+		<!-- 地接社 -->
+		<if test="supplierType == 16" >
+			FROM booking_delivery 
+			where supplier_name like concat('%',#{supplierName},'%') 
+		</if>
+		<!-- 商家 -->
+		<if test="supplierType != 1 and supplierType != 16" >
+			FROM booking_supplier 
+			where supplier_type = #{supplierType} and supplier_name like concat('%',#{supplierName},'%') 
+		</if>
+	</select>
+  
+  	<!-- 查询对账单详情 -->
+	<select id="selectVerifyDetailPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		<if test="supplierType == 1 ">
+			SELECT t.id,s.id AS booking_id,t.`verify_id`,g.group_mode,g.group_code,s.order_no AS booking_no, s.receive_mode,
+			(IFNULL(s.num_adult,0) + IFNULL(s.num_child,0) + IFNULL(s.num_guide,0)) person_count, g.date_start, g.date_end,
+			FROM_UNIXTIME(s.create_time/1000) AS booking_date,g.`product_name`,g.`product_brand_name`, s.receive_mode,
+			 g.`operator_name`,IFNULL(s.total, 0) total, IFNULL(s.total_cash, 0) total_cash, (IFNULL(s.total, 0)-IFNULL(s.total_cash, 0)) AS total_not, 
+			t.`total_adjust`,t.`remark` FROM finance_verify_detail t 
+			 INNER JOIN group_order s ON t.`order_id`=s.`id`
+			 LEFT JOIN  tour_group g ON s.`group_id`=g.id
+			 WHERE t.biz_id = ${bizId} 
+			<if test="verifyId != null"> and t.verify_id <![CDATA[=]]> #{verifyId}</if>
+		</if>
+		<if test="supplierType == 16">
+			SELECT t.id,s.id AS booking_id,t.`verify_id`,g.group_mode,g.group_code,s.supplier_order_no AS booking_no,
+			(IFNULL(s.person_adult,0) + IFNULL(s.person_child,0) + IFNULL(s.person_guide,0)) person_count, 
+			s.`booking_date`,g.`product_name`,g.`product_brand_name`,g.`operator_name`,IFNULL(s.total, 0) total,
+			IFNULL(s.total_cash, 0) total_cash, (IFNULL(s.total, 0)-IFNULL(s.total_cash, 0)) AS total_not,
+			t.`total_adjust`,t.`remark` FROM finance_verify_detail t 
+			 INNER JOIN booking_delivery s ON t.`booking_id`=s.`id`
+			 LEFT JOIN  tour_group g ON s.`group_id`=g.id
+			 WHERE t.biz_id = ${bizId} 
+			<if test="verifyId != null"> and t.verify_id <![CDATA[=]]> #{verifyId}</if>
+		</if>
+		<if test="supplierType != null and supplierType != 16 and supplierType != 1">
+		SELECT t.id,s.id AS booking_id,t.`verify_id`,g.group_mode,g.group_code,s.booking_no,s.`booking_date`,
+			g.`product_name`,g.`product_brand_name`,g.`operator_name`,IFNULL(s.total, 0) total, IFNULL(s.total_cash, 0) total_cash,
+			(IFNULL(s.total, 0)-IFNULL(s.total_cash, 0)) AS total_not, 
+			t.`total_adjust`,t.`remark` FROM finance_verify_detail t 
+			 INNER JOIN booking_supplier s ON t.`booking_id`=s.`id`
+			 LEFT JOIN  tour_group g ON s.`group_id`=g.id
+			 WHERE t.biz_id = ${bizId} 
+			<if test="verifyId != null"> and t.verify_id <![CDATA[=]]> #{verifyId}</if>
+		</if>
+		<if test="set != null">
+			and g.operator_id in
+			<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+		</if>
+	</select>
+	<!-- 查询对账单详情金额统计 -->
+	<select id="selectVerifyDetailSum" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+	<if test="supplierType == 1 ">
+	SELECT SUM(s.`total`)AS total_price ,
+			SUM(s.total_cash) AS total_cash,
+			SUM(t.`total_adjust`) AS total_adjust FROM finance_verify_detail t 
+			 LEFT JOIN group_order s ON t.`order_id`=s.`id`
+			WHERE t.biz_id = ${bizId}
+			<if test="verifyId != null">and t.verify_id <![CDATA[=]]> #{verifyId}</if>
+	</if>
+	<if test="supplierType == 16">
+	SELECT SUM(s.`total`)AS total_price ,
+			SUM(s.total_cash) AS total_cash,
+			SUM(t.`total_adjust`) AS total_adjust FROM finance_verify_detail t 
+			 LEFT JOIN booking_delivery s ON t.`booking_id`=s.`id`
+			WHERE t.biz_id = ${bizId}
+			<if test="verifyId != null">and t.verify_id <![CDATA[=]]> #{verifyId}</if>
+	</if>
+	<if test="supplierType != null and supplierType != 16 and supplierType != 1">
+		SELECT SUM(s.`total`)AS total_price ,
+			SUM(s.total_cash) AS total_cash,
+			SUM(t.`total_adjust`) AS total_adjust FROM finance_verify_detail t 
+			 LEFT JOIN booking_supplier s ON t.`booking_id`=s.`id`
+			WHERE t.biz_id = ${bizId}
+			<if test="verifyId != null">and t.verify_id <![CDATA[=]]> #{verifyId}</if>
+	</if>
+	</select>
+	
+	<delete id="deleteVerifyDetailById">
+		delete from finance_verify_detail where biz_id = ${bizId} and id= ${id}
+	</delete>
+	
+	<delete id="deleteVerify">
+		delete from finance_verify  where biz_id = ${bizId} and id= ${id}
+	</delete>
+	
+	<delete id="deleteVerifyDetail">
+		delete from finance_verify_detail where biz_id = ${bizId} and verify_id = ${verifyId}
+	</delete>
+	
+	<!-- 查询对账单 -->
+	<select id="selectVerify" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BaseResultMap">
+		SELECT * FROM finance_verify 
+		WHERE biz_id = ${bizId}
+		<if test="verifyId != null">and id <![CDATA[=]]> #{verifyId}</if>
+	</select>
+	
+	<!-- 添加对账单详情 -->
+	<insert id="insertDetail" parameterType="com.yihg.finance.po.FinanceVerifyDetail" >
+    	INSERT INTO finance_verify_detail 
+    	<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="verifyId != null">
+				verify_id,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			<if test="bookingId != null">
+				booking_id,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="totalAdjust != null">
+				total_adjust,
+			</if>
+			<if test="bizId != null">
+				biz_id,
+			</if>
+		</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="verifyId != null">
+				#{verifyId,jdbcType=INTEGER},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="bookingId != null">
+				#{bookingId,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="totalAdjust != null">
+				#{totalAdjust,jdbcType=DECIMAL},
+			</if>
+			<if test="bizId != null">
+				#{bizId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateVerifyState" parameterType="java.util.HashMap" >
+		UPDATE finance_verify  
+		SET 
+			verify_state = #{verifyState,jdbcType=INTEGER} 
+		WHERE  
+			biz_id = #{bizId,jdbcType=INTEGER} and  
+			id = #{id,jdbcType=INTEGER} 
+	</update>
+	
+	<update id="updateVerify" parameterType="com.yihg.finance.po.FinanceVerify" >
+		UPDATE finance_verify 
+		SET 
+			total_price = #{verify.totalPrice,jdbcType=DECIMAL}, 
+			total_cash = #{verify.totalCash,jdbcType=DECIMAL},
+			total_record = #{verify.totalRecord,jdbcType=DECIMAL},
+			total_adjust = #{verify.totalAdjust,jdbcType=DECIMAL},
+			verify_state = #{verify.verifyState,jdbcType=INTEGER}
+		WHERE 
+			biz_id = #{verify.bizId,jdbcType=INTEGER} and 
+			id = #{verify.id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateVerifyTotal" parameterType="com.yihg.finance.po.FinanceVerify" >
+		UPDATE finance_verify 
+		SET  
+			total_price = (total_price - #{verify.totalPrice,jdbcType=DECIMAL}),
+			total_cash = (total_cash - #{verify.totalCash,jdbcType=DECIMAL}), 
+			total_record = (total_record - #{verify.totalRecord,jdbcType=DECIMAL}), 
+			total_adjust = (total_adjust - #{verify.totalAdjust,jdbcType=DECIMAL}),
+			verify_state = #{verify.verifyState,jdbcType=INTEGER} 
+		WHERE  
+			biz_id = #{verify.bizId,jdbcType=INTEGER} and 
+			id = #{verify.id,jdbcType=INTEGER}
+	</update>
+	
+	<!--对账单-订单列表 -->
+	<select id="selectVerifyDetailOrderListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		<if test="parameter.supplierType != null and parameter.supplierType == 16">
+			SELECT t.id,v.`verify_code`,g.group_mode,g.`group_code`,t.`supplier_name`,(IFNULL(t.person_adult,0)+IFNULL(t.person_child,0)+IFNULL(t.person_guide,0)) person_count,
+			t.supplier_order_no AS booking_no,t.`booking_date`,g.`product_name`,g.`product_brand_name`,g.`operator_name`,
+			IFNULL(t.total,0) total, IFNULL(t.total_cash,0) total_cash, (IFNULL(t.total,0)-IFNULL(t.total_cash,0)) AS total_not,
+			t.state_finance, t.state_seal 
+			FROM booking_delivery t 
+			LEFT JOIN finance_verify_detail d ON  t.id=d.`booking_id`
+			LEFT JOIN  finance_verify v ON d.`verify_id`=v.id
+			LEFT JOIN tour_group g ON t.`group_id`=g.`id`
+			where 1=1 
+			and g.biz_id = ${parameter.bizId}
+			and g.group_state in(1,3,4)
+			<if test="parameter.booking_no != null">and t.supplier_order_no like '%${parameter.booking_no}%'</if>
+			<if test="parameter.supplierType != null and parameter.status != null and parameter.status==0"> AND v.verify_code IS NULL  AND t.state_finance=1 </if>
+			<if test="parameter.supplierType != null and  parameter.status != null and parameter.status==1">and v.supplier_type <![CDATA[=]]> #{parameter.supplierType} AND v.verify_code IS not NULL  AND t.state_finance=1 </if>
+			<if test="parameter.status != null and parameter.status==2"> AND v.verify_code IS NULL AND t.state_finance=0 </if>
+			<if test="parameter.status != null and parameter.status==4"> AND t.state_finance=4 </if>
+		</if>
+		
+		<if test="parameter.supplierType != null and parameter.supplierType == 1">
+			SELECT t.id,v.`verify_code`,g.group_mode,g.`group_code`,t.`product_name`,t.`product_brand_name`,
+			(IFNULL(t.num_adult,0)+IFNULL(t.num_child,0)+IFNULL(t.num_guide,0)) person_count, g.date_start, g.date_end,
+			t.order_no AS booking_no,FROM_UNIXTIME(t.create_time/1000) AS booking_date,t.`operator_name`,t.supplier_name,
+			IFNULL(t.total,0) total,IFNULL(t.total_cash,0) total_cash, (IFNULL(t.total,0)-IFNULL(t.total_cash,0)) AS total_not,
+			t.state_finance, t.state_seal ,t.receive_mode
+			 FROM group_order t
+			LEFT JOIN  tour_group g ON t.`group_id`=g.`id` 
+			LEFT JOIN finance_verify_detail d ON  t.id=d.`order_id`
+			LEFT JOIN  finance_verify v ON d.`verify_id`=v.id
+			where 1=1 
+			and t.biz_id = ${parameter.bizId}
+			and g.group_state in(1,3,4)
+			<if test="parameter.booking_no != null">and t.order_no like '%${parameter.booking_no}%'</if>
+			<if test="parameter.supplierType != null and parameter.status != null and parameter.status==0"> AND v.verify_code IS NULL AND t.state_finance=1 </if>
+			<if test="parameter.supplierType != null and  parameter.status != null and parameter.status==1">and v.supplier_type <![CDATA[=]]> #{parameter.supplierType} AND v.verify_code IS not NULL  AND t.state_finance=1 </if>
+			<if test="parameter.status != null and parameter.status==2"> AND v.verify_code IS NULL AND t.state_finance=0 </if>
+			<if test="parameter.status != null and parameter.status==4"> AND t.state_finance=4 </if>
+			<if test="parameter.receive_mode != null"> AND t.receive_mode like '%${parameter.receive_mode}%' </if>
+		</if>
+		
+		<if test="parameter.supplierType != null and parameter.supplierType != 16 and parameter.supplierType != 1">
+		SELECT t.id,v.`verify_code`,g.group_mode,g.`group_code`,t.`supplier_name`,(IFNULL(g.total_adult,0)+IFNULL(g.total_child,0)+IFNULL(g.total_guide,0)) person_count,
+			t.booking_no,t.`booking_date`,g.`product_name`,g.`product_brand_name`,g.`operator_name`,t.`user_name`,
+			IFNULL(t.total,0) total,IFNULL(t.total_cash,0) total_cash, (IFNULL(t.total,0)-IFNULL(t.total_cash,0)) AS total_not,
+			t.state_finance, t.state_seal 
+			 FROM booking_supplier t 
+			LEFT JOIN finance_verify_detail d ON  t.id=d.`booking_id`
+			LEFT JOIN  finance_verify v ON d.`verify_id`=v.id
+			LEFT JOIN tour_group g ON t.`group_id`=g.`id`
+			WHERE 1=1 
+			and g.biz_id = ${parameter.bizId}
+			<if test="parameter.booking_no != null">and t.booking_no like '%${parameter.booking_no}%'</if>
+			<if test="parameter.supplierType != null">and t.supplier_type <![CDATA[=]]> #{parameter.supplierType}</if>
+			<if test="parameter.status != null and parameter.status==0"> AND v.verify_code IS NULL  AND t.state_finance=1 </if>
+			<if test="parameter.status != null and parameter.status==1"> AND v.verify_code IS not NULL  AND t.state_finance=1 </if>
+			<if test="parameter.status != null and parameter.status==2"> AND v.verify_code IS  NULL AND t.state_finance=0 </if>
+			<if test="parameter.status != null and parameter.status==4"> AND t.state_finance=4 </if>
+		</if>	
+			
+			<if test="parameter.start_min != null">and g.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+			<if test="parameter.start_max != null">and g.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+			<if test="parameter.group_code != null">and g.group_code like '%${parameter.group_code}%' </if>
+			<if test="parameter.product_name != null">and g.product_name like '%${parameter.product_name}%' </if>
+			<if test="parameter.supplier_name != null">and t.supplier_name like '%${parameter.supplier_name}%' </if>
+			<if test="parameter.operator_id != null">and g.operator_id <![CDATA[=]]> #{parameter.operator_id} </if>
+			<if test="parameter.ids != null"> AND t.id in (${parameter.ids}) </if>
+			<if test="parameter.saleOperatorIds != null">
+				AND g.operator_id in (${parameter.saleOperatorIds})
+			</if>
+			<if test="parameter.set != null">
+				and g.operator_id in
+				<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+			</if>
+			and g.group_state in (1,3,4)
+	</select>
+	
+
+</mapper>

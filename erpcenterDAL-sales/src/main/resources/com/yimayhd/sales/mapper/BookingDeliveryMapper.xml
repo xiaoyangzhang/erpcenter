@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.operation.dao.BookingDeliveryMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingDelivery" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+    <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+    <result column="supplier_order_no" property="supplierOrderNo" jdbcType="VARCHAR" />
+    <result column="contact" property="contact" jdbcType="VARCHAR" />
+    <result column="contact_tel" property="contactTel" jdbcType="VARCHAR" />
+    <result column="contact_fax" property="contactFax" jdbcType="VARCHAR" />
+    <result column="contact_mobile" property="contactMobile" jdbcType="VARCHAR" />
+    <result column="person_adult" property="personAdult" jdbcType="INTEGER" />
+    <result column="person_child" property="personChild" jdbcType="INTEGER" />
+    <result column="person_guide" property="personGuide" jdbcType="INTEGER" />
+    <result column="date_arrival" property="dateArrival" jdbcType="DATE" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="total" property="total" jdbcType="DECIMAL" />
+    <result column="total_cash" property="totalCash" jdbcType="DECIMAL" />
+    <result column="state_booking" property="stateBooking" jdbcType="TINYINT" />
+    <result column="state_finance" property="stateFinance" jdbcType="TINYINT" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="booking_date" property="bookingDate" jdbcType="DATE" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+    <result column="audit_user" property="auditUser" jdbcType="VARCHAR" />
+    <result column="audit_user_id" property="auditUserId" jdbcType="INTEGER" />
+    <result column="audit_time" property="auditTime" jdbcType="DATE" />    
+  </resultMap>
+  <resultMap type="com.yihg.operation.vo.BookingDeliveryStatics" id="staticsResultMap">
+  		<result column="booking_count" property="bookingCount" jdbcType="INTEGER" />
+  		<result column="booking_total_price" property="bookingTotalPrice" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, group_id, supplier_id,supplier_name,supplier_order_no, contact, contact_tel, contact_fax, 
+    contact_mobile, person_adult,person_child, person_guide, date_arrival, remark, total, total_cash, state_booking, 
+    state_finance, user_id,user_name, booking_date,create_time,audit_user,audit_user_id,audit_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_delivery
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectInitDeliveryList" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_delivery
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from booking_delivery
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.operation.po.BookingDelivery" useGeneratedKeys="true" keyProperty="id" >
+    insert into booking_delivery (id, group_id, supplier_id,supplier_name,supplier_order_no, 
+      contact, contact_tel, contact_fax, 
+      contact_mobile, person_adult, person_child, 
+      person_guide, date_arrival, remark, 
+      total, state_booking, 
+      state_finance, user_id,user_name,booking_date, create_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, #{supplierId,jdbcType=INTEGER}, 
+      #{supplierName,jdbcType=VARCHAR},#{supplierOrderNo,jdbcType=VARCHAR},
+      #{contact,jdbcType=VARCHAR}, #{contactTel,jdbcType=VARCHAR}, #{contactFax,jdbcType=VARCHAR}, 
+      #{contactMobile,jdbcType=VARCHAR}, #{personAdult,jdbcType=INTEGER}, #{personChild,jdbcType=INTEGER}, 
+      #{personGuide,jdbcType=INTEGER}, #{dateArrival,jdbcType=DATE}, #{remark,jdbcType=VARCHAR}, 
+      #{total,jdbcType=DECIMAL}, #{stateBooking,jdbcType=TINYINT}, 
+      #{stateFinance,jdbcType=TINYINT}, #{userId,jdbcType=INTEGER},
+      #{userName,jdbcType=VARCHAR},#{bookingDate,jdbcType=DATE}, #{createTime,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingDelivery" useGeneratedKeys="true" keyProperty="id">
+    insert into booking_delivery
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="supplierId != null" >
+        supplier_id,
+      </if>
+      <if test="supplierName != null" >
+        supplier_name,
+      </if>
+      <if test="supplierOrderNo != null" >
+        supplier_order_no,
+      </if>
+      <if test="contact != null" >
+        contact,
+      </if>
+      <if test="contactTel != null" >
+        contact_tel,
+      </if>
+      <if test="contactFax != null" >
+        contact_fax,
+      </if>
+      <if test="contactMobile != null" >
+        contact_mobile,
+      </if>
+      <if test="personAdult != null" >
+        person_adult,
+      </if>
+      <if test="personChild != null" >
+        person_child,
+      </if>
+      <if test="personGuide != null" >
+        person_guide,
+      </if>
+      <if test="dateArrival != null" >
+        date_arrival,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="total != null" >
+        total,
+      </if>
+      <if test="totalCash != null" >
+        total_cash,
+      </if>
+      <if test="stateBooking != null" >
+        state_booking,
+      </if>
+      <if test="stateFinance != null" >
+        state_finance,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+       <if test="bookingDate != null" >
+        booking_date,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="supplierId != null" >
+        #{supplierId,jdbcType=INTEGER},
+      </if>
+      <if test="supplierName != null" >
+        #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierOrderNo != null" >
+        #{supplierOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="contact != null" >
+        #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="contactTel != null" >
+        #{contactTel,jdbcType=VARCHAR},
+      </if>
+      <if test="contactFax != null" >
+        #{contactFax,jdbcType=VARCHAR},
+      </if>
+      <if test="contactMobile != null" >
+        #{contactMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="personAdult != null" >
+        #{personAdult,jdbcType=INTEGER},
+      </if>
+      <if test="personChild != null" >
+        #{personChild,jdbcType=INTEGER},
+      </if>
+      <if test="personGuide != null" >
+        #{personGuide,jdbcType=INTEGER},
+      </if>
+      <if test="dateArrival != null" >
+        #{dateArrival,jdbcType=DATE},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null" >
+        #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="totalCash != null" >
+        #{totalCash,jdbcType=DECIMAL},
+      </if>
+      <if test="stateBooking != null" >
+        #{stateBooking,jdbcType=TINYINT},
+      </if>
+      <if test="stateFinance != null" >
+        #{stateFinance,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+       <if test="bookingDate != null" >
+       	#{bookingDate,jdbcType=DATE},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingDelivery" >
+    update booking_delivery
+    <set >
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="supplierId != null" >
+        supplier_id = #{supplierId,jdbcType=INTEGER},
+      </if>
+      <if test="supplierName != null" >
+        supplier_name=#{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierOrderNo != null" >
+        supplier_order_no=#{supplierOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="contact != null" >
+        contact = #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="contactTel != null" >
+        contact_tel = #{contactTel,jdbcType=VARCHAR},
+      </if>
+      <if test="contactFax != null" >
+        contact_fax = #{contactFax,jdbcType=VARCHAR},
+      </if>
+      <if test="contactMobile != null" >
+        contact_mobile = #{contactMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="personAdult != null" >
+        person_adult = #{personAdult,jdbcType=INTEGER},
+      </if>
+      <if test="personChild != null" >
+        person_child = #{personChild,jdbcType=INTEGER},
+      </if>
+      <if test="personGuide != null" >
+        person_guide = #{personGuide,jdbcType=INTEGER},
+      </if>
+      <if test="dateArrival != null" >
+        date_arrival = #{dateArrival,jdbcType=DATE},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null" >
+        total = #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="totalCash != null" >
+        total_cash = #{totalCash,jdbcType=DECIMAL},
+      </if>
+      <if test="stateBooking != null" >
+        state_booking = #{stateBooking,jdbcType=TINYINT},
+      </if>
+      <if test="stateFinance != null" >
+        state_finance = #{stateFinance,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+       <if test="bookingDate != null" >
+       	booking_date = #{bookingDate,jdbcType=DATE},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingDelivery" >
+    update booking_delivery
+    set group_id = #{groupId,jdbcType=INTEGER},
+      supplier_id = #{supplierId,jdbcType=INTEGER},
+      supplier_name=#{supplierName,jdbcType=VARCHAR},
+      supplier_order_no=#{supplierOrderNo,jdbcType=VARCHAR},
+      contact = #{contact,jdbcType=VARCHAR},
+      contact_tel = #{contactTel,jdbcType=VARCHAR},
+      contact_fax = #{contactFax,jdbcType=VARCHAR},
+      contact_mobile = #{contactMobile,jdbcType=VARCHAR},
+      person_adult = #{personAdult,jdbcType=INTEGER},
+      person_child = #{personChild,jdbcType=INTEGER},
+      person_guide = #{personGuide,jdbcType=INTEGER},
+      date_arrival = #{dateArrival,jdbcType=DATE},
+      remark = #{remark,jdbcType=VARCHAR},
+      total = #{total,jdbcType=DECIMAL},
+      total_cash = #{totalCash,jdbcType=DECIMAL},
+      state_booking = #{stateBooking,jdbcType=TINYINT},
+      state_finance = #{stateFinance,jdbcType=TINYINT},
+      user_id = #{userId,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      booking_date = #{bookingDate,jdbcType=DATE},
+      create_time = #{createTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getStaticsByGroupId" resultMap="staticsResultMap">
+  	SELECT COUNT(d.`id`) booking_count,SUM(total) booking_total_price
+	FROM `booking_delivery` d
+	WHERE d.group_id=#{groupId,jdbcType=INTEGER}
+  </select>
+  <select id="getDeliveryListByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_delivery
+    where group_id = #{groupId,jdbcType=INTEGER}
+    order by create_time
+  </select>
+  <select id="getDeliveryListByGroupIdAndName" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_delivery
+    where group_id = #{groupId,jdbcType=INTEGER} 
+    <if test="supplierName!=null and supplierName!=''">
+    and supplier_name LIKE
+			CONCAT('%',#{supplierName},'%')
+    </if> 
+    order by create_time
+  </select>
+  <update id="updateTotal" parameterType="java.lang.Integer" >
+    UPDATE `booking_delivery` d
+	SET d.`total`=(SELECT SUM(IFNULL(p.`total_price`,0))  FROM `booking_delivery_price` p WHERE p.`booking_id`=#{id,jdbcType=INTEGER})
+	WHERE d.`id`=#{id,jdbcType=INTEGER}
+  </update>
+  <!-- <select id="getBookingDeliveryByOrderId" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+  	SELECT bd.* FROM `booking_delivery_order` bdo JOIN `booking_delivery` bd ON bd.id=bdo.booking_id WHERE bdo.order_id=#{orderId}
+  </select> -->
+  <select id="getBookingIdListByGroupId" parameterType="java.lang.Integer" resultType="java.util.HashMap">
+  		SELECT id
+		FROM `booking_delivery` bd
+		WHERE bd.group_id=#{groupId}
+  </select>
+  <select id="getGuestCountByBookingId" parameterType="java.lang.Integer" resultType="java.util.HashMap">
+  	SELECT  SUM(IFNULL(num_adult,0)) adultNum,SUM(IFNULL(num_child,0)) childNum,SUM(IFNULL(num_guide,0)) guideNum
+	FROM group_order 
+	WHERE id IN (SELECT order_id
+	FROM booking_delivery_order bdo
+	WHERE booking_id=#{bookingId})
+  </select>
+  <update id="updateGuestCntByGroupId" parameterType="com.yihg.operation.po.BookingDelivery">
+  	update booking_delivery
+    <set >
+      <if test="personAdult != null" >
+        person_adult = #{personAdult,jdbcType=INTEGER},
+      </if>
+      <if test="personChild != null" >
+        person_child = #{personChild,jdbcType=INTEGER},
+      </if>
+      <if test="personGuide != null" >
+        person_guide = #{personGuide,jdbcType=INTEGER},
+      </if>
+    </set>
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </update>
+
+</mapper>

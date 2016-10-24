@@ -1,0 +1,919 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.operation.dao.BookingSupplierMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingSupplier" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
+    <result column="sub_type" property="subType" jdbcType="INTEGER" />
+    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+    <result column="contact" property="contact" jdbcType="VARCHAR" />
+    <result column="contact_tel" property="contactTel" jdbcType="VARCHAR" />
+    <result column="contact_fax" property="contactFax" jdbcType="VARCHAR" />
+    <result column="contact_mobile" property="contactMobile" jdbcType="VARCHAR" />
+    <result column="cash_type" property="cashType" jdbcType="VARCHAR" />
+    <result column="is_default" property="isDefault" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="total" property="total" jdbcType="DECIMAL" />
+    <result column="ftotal" property="ftotal" jdbcType="DECIMAL" />
+    <result column="fid" property="fid" jdbcType="INTEGER" />
+    <result column="total_cash" property="totalCash" jdbcType="DECIMAL" />
+    <result column="state_booking" property="stateBooking" jdbcType="INTEGER" />
+    <result column="state_finance" property="stateFinance" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+    <result column="booking_no" property="bookingNo" jdbcType="VARCHAR" />
+    <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+    <result column="booking_date" property="bookingDate" jdbcType="DATE" />
+    <result column="audit_user" property="auditUser" jdbcType="VARCHAR" />
+    <result column="audit_user_id" property="auditUserId" jdbcType="INTEGER" />
+    <result column="audit_time" property="auditTime" jdbcType="DATE" />
+    <result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+    <result column="operate_price" property="operatePrice" jdbcType="DECIMAL" />
+    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="guide_id" property="guideId" jdbcType="INTEGER" />
+    <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
+    <result column="finance_total" property="financeTotal" jdbcType="DECIMAL" />
+    <result column="pay_status" property="payStatus" jdbcType="INTEGER" />
+    
+  </resultMap>
+  
+  <resultMap id="AirTicketResultMap" type="com.yihg.operation.po.BookingAirTicket" >
+  	<id column="id" property="id" jdbcType="INTEGER" />
+    <result column="biz_id" property="bizId" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="group_code" property="groupCode" jdbcType="VARCHAR" />
+    <result column="operator_id" property="groupOperatorId" jdbcType="INTEGER" />
+    <result column="operator_name" property="groupOperatorName" jdbcType="VARCHAR" />
+    <result column="order_no" property="orderCode" jdbcType="VARCHAR" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="product_brand_name" property="productBrandName" jdbcType="VARCHAR" />
+    <result column="receive_mode" property="receiveMode" jdbcType="VARCHAR" />
+    <result column="group_mode" property="groupMode" jdbcType="INTEGER" />
+    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+    <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+    <result column="booking_no" property="supplierOrderNo" jdbcType="VARCHAR" />
+    <result column="contact" property="contact" jdbcType="VARCHAR" />
+    <result column="contact_tel" property="contactTel" jdbcType="VARCHAR" />
+    <result column="contact_fax" property="contactFax" jdbcType="VARCHAR" />
+    <result column="contact_mobile" property="contactMobile" jdbcType="VARCHAR" />
+    <result column="start_date" property="startDate" jdbcType="DATE" />
+    <result column="dep_date" property="depDate" jdbcType="DATE" />
+    <result column="cash_type" property="cashType" jdbcType="VARCHAR" />
+    <result column="total" property="total" jdbcType="DECIMAL" />
+    <result column="total_cash" property="totalCash" jdbcType="DECIMAL" />
+    <result column="state_finance" property="stateFinance" jdbcType="INTEGER" />
+    <result column="details" property="details" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, group_id, supplier_type,sub_type, supplier_id, contact, contact_tel, contact_fax, contact_mobile, 
+    cash_type, is_default, remark, total, total_cash, state_booking, state_finance, user_id,user_name, supplier_name,
+    create_time,booking_date,audit_user,audit_user_id,audit_time,operate_price,order_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    	a.*, c.guide_id, b.booking_id, IFNULL(b.total,0) finance_total, b.pay_status 
+    from booking_supplier a
+    LEFT JOIN finance_guide b ON a.id = b.booking_id_link
+	LEFT JOIN booking_guide c ON b.booking_id = c.id
+    where a.id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_supplier
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+   <select id="selectByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select DISTINCT supplier_type
+    from booking_supplier
+    where group_id = #{groupId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByPrimaryGroupIdAndType" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_supplier
+    where group_id = #{groupId,jdbcType=INTEGER} and is_default = 1 and supplier_type = 4
+  </select>
+  
+   <select id="selectByGroupIdAndSupplierType" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_supplier
+    where group_id = #{groupId,jdbcType=INTEGER} and supplier_type = #{supplierType,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from booking_supplier
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.operation.po.BookingSupplier" keyProperty="id" useGeneratedKeys="true" >
+    insert into booking_supplier (id, group_id, supplier_type,sub_type ,booking_no,
+      supplier_id, contact, contact_tel, 
+      contact_fax, contact_mobile, cash_type, 
+      is_default, remark, total, 
+      total_cash, state_booking, state_finance, booking_date,
+      user_id, user_name,create_time,supplier_name,order_id)
+    values (#{id,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, #{supplierType,jdbcType=INTEGER}, #{subType,jdbcType=INTEGER}, #{bookingNo,jdbcType=VARCHAR},
+      #{supplierId,jdbcType=INTEGER}, #{contact,jdbcType=VARCHAR}, #{contactTel,jdbcType=VARCHAR}, 
+      #{contactFax,jdbcType=VARCHAR}, #{contactMobile,jdbcType=VARCHAR}, #{cashType,jdbcType=VARCHAR}, 
+      #{isDefault,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, #{total,jdbcType=DECIMAL}, 
+      #{totalCash,jdbcType=DECIMAL}, #{stateBooking,jdbcType=TINYINT}, #{stateFinance,jdbcType=TINYINT},#{bookingDate,jdbcType=DATE},
+      #{userId,jdbcType=INTEGER},#{userName,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT},#{supplierName,jdbcType=VARCHAR},#{orderId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingSupplier" keyProperty="id" useGeneratedKeys="true" >
+    insert into booking_supplier
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="supplierType != null" >
+        supplier_type,
+      </if>
+      <if test="subType != null" >
+        sub_type,
+      </if>
+      <if test="supplierId != null" >
+        supplier_id,
+      </if>
+      <if test="contact != null" >
+        contact,
+      </if>
+      <if test="contactTel != null" >
+        contact_tel,
+      </if>
+      <if test="contactFax != null" >
+        contact_fax,
+      </if>
+      <if test="contactMobile != null" >
+        contact_mobile,
+      </if>
+      <if test="cashType != null" >
+        cash_type,
+      </if>
+      <if test="isDefault != null" >
+        is_default,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="total != null" >
+        total,
+      </if>
+      <if test="totalCash != null" >
+        total_cash,
+      </if>
+      <if test="stateBooking != null" >
+        state_booking,
+      </if>
+      <if test="stateFinance != null" >
+        state_finance,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null and userName!=''" >
+        user_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="bookingDate != null" >
+        booking_date,
+      </if>
+      <if test="supplierName != null" >
+        supplier_name,
+      </if>
+      <if test="bookingNo != null" >
+        booking_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="supplierType != null" >
+        #{supplierType,jdbcType=INTEGER},
+      </if>
+      <if test="subType != null" >
+        #{subType,jdbcType=INTEGER},
+      </if>
+      <if test="supplierId != null" >
+        #{supplierId,jdbcType=INTEGER},
+      </if>
+      <if test="contact != null" >
+        #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="contactTel != null" >
+        #{contactTel,jdbcType=VARCHAR},
+      </if>
+      <if test="contactFax != null" >
+        #{contactFax,jdbcType=VARCHAR},
+      </if>
+      <if test="contactMobile != null" >
+        #{contactMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="cashType != null" >
+        #{cashType,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null" >
+        #{isDefault,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null" >
+        #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="totalCash != null" >
+        #{totalCash,jdbcType=DECIMAL},
+      </if>
+      <if test="stateBooking != null" >
+        #{stateBooking,jdbcType=TINYINT},
+      </if>
+      <if test="stateFinance != null" >
+        #{stateFinance,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null  and userName!=''" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="bookingDate != null" >
+        #{bookingDate,jdbcType=DATE},
+      </if>
+      <if test="supplierName != null" >
+        #{supplierName,jdbcType=VARCHAR},
+      </if>
+      <if test="bookingNo != null" >
+        #{bookingNo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingSupplier" >
+    update booking_supplier
+    <set >
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="supplierType != null" >
+        supplier_type = #{supplierType,jdbcType=INTEGER},
+      </if>
+      <if test="subType != null" >
+        sub_type = #{subType,jdbcType=INTEGER},
+      </if>
+      <if test="supplierId != null" >
+        supplier_id = #{supplierId,jdbcType=INTEGER},
+      </if>
+      <if test="supplierName != null" >
+        supplier_name = #{supplierName,jdbcType=INTEGER},
+      </if>
+      <if test="contact != null" >
+        contact = #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="contactTel != null" >
+        contact_tel = #{contactTel,jdbcType=VARCHAR},
+      </if>
+      <if test="contactFax != null" >
+        contact_fax = #{contactFax,jdbcType=VARCHAR},
+      </if>
+      <if test="contactMobile != null" >
+        contact_mobile = #{contactMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="cashType != null" >
+        cash_type = #{cashType,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null" >
+        is_default = #{isDefault,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null" >
+        total = #{total,jdbcType=DECIMAL},
+      </if>
+      <if test="totalCash != null" >
+        total_cash = #{totalCash,jdbcType=DECIMAL},
+      </if>
+      <if test="stateBooking != null" >
+        state_booking = #{stateBooking,jdbcType=TINYINT},
+      </if>
+      <if test="stateFinance != null" >
+        state_finance = #{stateFinance,jdbcType=TINYINT},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="operatePrice != null" >
+        operate_price = #{operatePrice,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingSupplier" >
+    update booking_supplier
+    set group_id = #{groupId,jdbcType=INTEGER},
+      supplier_type = #{supplierType,jdbcType=INTEGER},
+      sub_type = #{subType,jdbcType=INTEGER},
+      supplier_id = #{supplierId,jdbcType=INTEGER},
+      supplier_name = #{supplierName,jdbcType=VARCHAR},
+      contact = #{contact,jdbcType=VARCHAR},
+      contact_tel = #{contactTel,jdbcType=VARCHAR},
+      contact_fax = #{contactFax,jdbcType=VARCHAR},
+      contact_mobile = #{contactMobile,jdbcType=VARCHAR},
+      cash_type = #{cashType,jdbcType=VARCHAR},
+      is_default = #{isDefault,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      total = #{total,jdbcType=DECIMAL},
+      total_cash = #{totalCash,jdbcType=DECIMAL},
+      state_booking = #{stateBooking,jdbcType=TINYINT},
+      state_finance = #{stateFinance,jdbcType=TINYINT},
+      user_id = #{userId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getBookingSupplierByGroupIdAndType" resultMap="BaseResultMap">
+		SELECT bs.*,(SELECT GROUP_CONCAT(DISTINCT CONCAT_WS('-' ,guide_name,guide_mobile))  FROM `booking_guide` WHERE group_id=#{groupId}  ) guideInfo
+		 FROM booking_supplier bs WHERE group_id=#{groupId} AND supplier_type= #{supplierType}
+  </select>
+	<resultMap type="com.yihg.operation.po.BookingSupplierPO" id="BookingSupplierPO">
+		 <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
+     <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+      <result column="cash_type" property="cashType" jdbcType="VARCHAR" />
+      <result column="total_cash" property="totalCash" jdbcType="DECIMAL" />
+    <result column="state_booking" property="stateBooking" jdbcType="INTEGER" />
+    <result column="state_finance" property="stateFinance" jdbcType="INTEGER" />
+    <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+    <result column="type1_id" property="type1Id" jdbcType="INTEGER" />
+    <result column="type1_name" property="type1Name" jdbcType="VARCHAR" />
+    <result column="type2_name" property="type2Name" jdbcType="VARCHAR" />
+     <result column="item_date" property="itemDate" jdbcType="DATE" />
+     <result column="item_date_to" property="itemDateTo" jdbcType="DATE" />
+    <result column="item_num" property="itemNum" jdbcType="DECIMAL" />
+    <result column="item_price" property="itemPrice" jdbcType="DECIMAL" />
+    <result column="item_total" property="itemTotal" jdbcType="DECIMAL" />
+    <result column="driver_id" property="driverId" jdbcType="INTEGER" />
+    <result column="driver_name" property="driverName" jdbcType="VARCHAR" />
+    <result column="driver_tel" property="driverTel" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="contact" property="contact" jdbcType="VARCHAR" />
+    <result column="contact_mobile" property="contactMobile" jdbcType="VARCHAR" />
+     <result column="car_lisence" property="carLisence" jdbcType="VARCHAR" />
+     <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Column_List">
+		bs.id, bs.supplier_name,bs.supplier_id,bs.remark,bs.state_booking,bs.state_finance,bs.total_cash,bs.group_id,bs.supplier_type,bs.cash_type,bs.contact,bs.contact_mobile,bs.user_id,bs.user_name,
+		det.type1_id,det.type1_name,det.type2_name,det.item_date,det.item_date_to,det.item_num,det.item_price,det.item_total,det.driver_id,det.driver_name,det.driver_tel,det.car_lisence
+		 
+	</sql>
+<!-- 散客导游单中的酒店预定信息 -->
+   <select id="getHotelInfoByGroupId" resultMap="BaseResultMap"  parameterType="Integer">
+   	 	SELECT
+		  pps.booking_date,
+		  GROUP_CONCAT(pps.hotelNum) as hotelNumStatic,
+		  pps.supplier_name,
+		  CONCAT_WS('-', pps.contact, pps.contact_tel) as contact,
+		  pps.cash_type,
+		  pps.supplier_id 
+		FROM
+		  (SELECT 
+		    GROUP_CONCAT(CONCAT_WS(' ',bsd.item_date,CONVERT(item_num, DECIMAL),type1_name)) AS hotelNum,
+		    pbs.*,
+		    bsd.type1_id,
+		    bsd.type1_name 
+		  FROM
+		    booking_supplier_detail bsd 
+		    INNER JOIN 
+		      (SELECT 
+		        bs.* 
+		      FROM
+		        booking_supplier bs 
+		      WHERE bs.group_id = #{groupId} 
+		        AND bs.supplier_type = 3) pbs 
+		      ON pbs.id = bsd.booking_id
+		  GROUP BY bsd.booking_id,
+		    bsd.type1_id) pps 
+		GROUP BY pps.id 
+   </select>
+  <select id="getBookingSupplierPOByGroupIdAndType" resultMap="BookingSupplierPO">
+		SELECT 
+		<include refid="Column_List" />,(SELECT GROUP_CONCAT(DISTINCT CONCAT_WS('-' ,guide_name,guide_mobile))  FROM `booking_guide` WHERE group_id=1341   ) guideInfo
+		FROM booking_supplier bs left join booking_supplier_detail det on bs.id=det.booking_id  WHERE  group_id=#{groupId} AND supplier_type= #{supplierType} 
+		 
+		  </select>
+  <select id="getBookingSupplierPOByGroupIdAndTypeAndName" resultMap="BookingSupplierPO">
+		SELECT <include refid="Column_List" /> 
+		FROM booking_supplier bs
+		<!-- <if test="driverName!=null and driverName!='' or carLisence!=null and carLisence!=''"> -->
+		
+		left join booking_supplier_detail det on bs.id=det.booking_id 
+		<!-- </if> -->
+		WHERE 
+		<!-- <if test="driverName!=null and driverName!='' or carLisence!=null and carLisence!=''"> -->
+		1=1
+		<!-- </if> -->
+		   
+		
+		<if test="groupId!=null ">and group_id=#{groupId}</if> 
+		<if test="supplierType!=null ">and  supplier_type= #{supplierType}</if> 
+		<if test="supplierName!=null and supplierName!=''">and supplier_name LIKE
+			CONCAT('%',#{supplierName},'%')</if> 
+		<if test="driverName!=null and driverName!=''">and driver_name LIKE
+			CONCAT('%',#{driverName},'%')</if> 
+		<if test="carLisence!=null and carLisence!=''">and car_lisence LIKE
+			CONCAT('%',#{carLisence},'%')</if> 
+		
+		 group by bs.supplier_id
+		  </select>
+		
+   <select id="getSupplierListByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_supplier
+    where group_id = #{groupId,jdbcType=INTEGER}
+    order by create_time
+  </select>
+  
+    <select id="getHotelAndFleetListByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT *
+	from booking_supplier
+    where group_id = #{groupId,jdbcType=INTEGER}  
+    and supplier_type in (3,4)
+  </select>
+  
+  <select id="getBookingCountByGroupIdAndSupplierType" resultType="java.math.BigDecimal">
+  	select count(id) from booking_supplier where group_id=#{groupId} AND supplier_type= #{supplierType} group by group_id
+   </select>
+   <select id="getBookingPriceSumByGroupIdAndSupplierType" resultType="java.math.BigDecimal">
+   	  	select sum(IFNULL(total,0)) from booking_supplier where group_id=#{groupId} AND supplier_type= #{supplierType} group by group_id
+   	
+   </select>
+   <select id="getBookingCountByTypeAndTime" resultType="java.lang.Integer">
+   	select count(id) from booking_supplier where supplier_type=#{supplierType} and create_time between #{curDay} and #{nextDay}
+   </select>
+   
+   
+   <select id="getFinanceSupplierByFinanceGuide" resultMap="BaseResultMap"  parameterType="com.yihg.finance.po.FinanceGuide">
+   
+   SELECT b.*,t.operator_name <if test="id == null" >,IFNULL(f.`total`, 0)  ftotal,f.`id` fid</if> 
+   FROM booking_supplier b,tour_group t<if test="id == null" >,finance_guide f </if>
+	WHERE t.id=b.group_id <if test="id == null" >and b.id = f.`booking_id_link` and f.booking_id = #{bookingId}</if>
+ 	<if test="id != null" >
+        and b.`group_id` = #{groupId} AND b.`supplier_type` = #{supplierType}
+      </if> 
+		AND b.id
+	  <if test="id != null" >
+       NOT IN(SELECT booking_id_link FROM finance_guide WHERE group_id = #{groupId} AND supplier_type = #{supplierType})
+      </if>
+      <if test="id == null" >
+       IN(SELECT booking_id_link FROM finance_guide WHERE group_id = #{groupId} AND 
+       		booking_id = #{bookingId} AND supplier_type = #{supplierType})
+      </if> 
+   </select>
+   
+   <select id="getFinanceSupplier" resultMap="BaseResultMap"  parameterType="com.yihg.finance.po.FinanceGuide">
+   
+   SELECT b.*,t.operator_name , f.pay_status pstatus,f.pay_user_name payusername,f.pay_time paytime <if test="id == null" >,IFNULL(f.`total`, 0)  ftotal,f.`id` fid</if> 
+   FROM booking_supplier b,tour_group t<if test="id == null" >,finance_guide f </if>
+WHERE t.id=b.group_id   <if test="id == null" >and b.id = f.`booking_id_link` and f.booking_id = #{bookingId}</if>
+ 	<if test="id != null" >
+        and b.`group_id` = #{groupId} AND b.`supplier_type` = #{supplierType}
+      </if> 
+		AND b.id
+	<if test="id != null" >
+       NOT
+      </if> 
+ IN(SELECT booking_id_link FROM finance_guide WHERE group_id = #{groupId} AND booking_id = #{bookingId} AND supplier_type = #{supplierType})
+   </select>
+   
+   <select id="getCountBySupplierId"  resultType="java.lang.Integer">
+  	SELECT 
+  IFNULL(SUM(IFNULL(item_num,0)) - SUM(IFNULL(item_num_minus,0)),0)
+FROM
+  `booking_supplier_detail` det 
+WHERE    booking_id IN 
+  (SELECT 
+    id 
+  FROM
+    booking_supplier bs WHERE supplier_type=#{parameter.supplierType}
+    <if test="parameter.supplierId!=null">
+     AND supplier_id=#{parameter.supplierId}</if> AND group_id IN 
+  (SELECT 
+    id 
+  FROM
+    tour_group 
+  WHERE biz_id = #{parameter.bizId} AND
+    group_state <![CDATA[>]]>-1 AND group_state<![CDATA[<]]> 2
+   
+    <if test="parameter.startTime != null">and date_start <![CDATA[>=]]> #{parameter.startTime} </if>
+	  	<if test="parameter.endTime != null">and date_start <![CDATA[<=]]> #{parameter.endTime} </if>
+   )
+     )
+   </select>
+   <select id="getCountBytypeId" resultType="java.lang.Integer">
+   	select IFNULL(SUM(IFNULL(item_num,0)) - SUM(IFNULL(item_num_minus,0)),0)
+	  from `booking_supplier_detail` det ,`booking_supplier` bs 
+	  where  det.booking_id=bs.id AND  booking_id IN 
+  (SELECT 
+    id 
+  FROM
+    booking_supplier bs WHERE supplier_type=#{supplierType}
+    <if test="type1Id!=null">
+     AND type1_id=#{type1Id}</if>
+     ) group by type1_id ) supplierCount
+   </select>
+   <select id="getOrderCountBySupplierId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+   
+   	SELECT COUNT(bs.id) FROM `booking_supplier` bs WHERE bs.supplier_id=#{supplierId}
+   </select>
+   
+    <select id="getBookingSupplierBySupplierType" resultMap="BaseResultMap">
+		SELECT * FROM booking_supplier WHERE supplier_type= #{supplierType} AND supplier_id <![CDATA[ <> 0 ]]>
+  	</select>
+	 <update id="updateGroupIdByOrderIds" >
+	 	UPDATE `booking_supplier` SET group_id=#{groupId} WHERE order_id IN 
+	 	<foreach item="item" index="index" collection="orderIds" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	 </update>
+
+
+  <resultMap  type="com.yihg.operation.vo.BookingSupplierAndDetailVO" id="BookingSupplierAndDetailVO">
+    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+    <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+    <result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
+    <result column="type2_id" property="type2Id" jdbcType="INTEGER" />
+  </resultMap>
+  <select id="getBookingSupplierByGroupIdAndSupplierTypeAndGroupDate" resultMap="BookingSupplierAndDetailVO">
+    select s.supplier_id, s.supplier_name, d.type2_id, supplier_type
+    from booking_supplier s JOIN booking_supplier_detail d
+    on s.id=d.booking_id
+    where  s.supplier_type IN (2,3,5)
+    AND s.group_id = #{groupId,jdbcType=INTEGER}
+    AND d.item_date = #{groupDate}
+    GROUP by s.supplier_id
+    order by s.create_time
+  </select>
+
+	<select id="selectAirTicketBookingListPage" resultMap="AirTicketResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
+	select b.id, o.biz_id, b.group_id, b.order_id, g.group_code, g.operator_id, g.operator_name, 
+		o.order_no, o.product_name, o.product_brand_name, o.receive_mode,
+		g.group_mode, b.supplier_id, b.supplier_name, b.booking_no,
+		b.contact, b.contact_tel, b.contact_fax, b.contact_mobile, o.departure_date as start_date, 
+		d.item_date as dep_date, b.cash_type, b.total, b.total_cash, b.state_finance
+		,GROUP_CONCAT(DISTINCT CONCAT (item_date,'【',ticket_Flight,'】',CAST(item_price AS DECIMAL (15, 0)),'*(',CAST(item_num AS DECIMAL (15, 0)),'-',CAST(item_num_minus AS DECIMAL (15, 1)),')') )details
+	FROM booking_supplier b 
+		LEFT JOIN group_order o ON b.order_id=o.id
+		LEFT JOIN tour_group g ON b.group_id=g.id
+		LEFT JOIN booking_supplier_detail d ON b.id=d.booking_id
+		WHERE o.biz_id=#{parameter.bizId} 
+		<if test="parameter.supplierType != null">
+			AND b.supplier_type = #{parameter.supplierType}</if>
+		<if test="parameter.dateFrom!=null">
+			<if test="parameter.dateType == 'dep'">
+				AND d.item_date<![CDATA[>=]]> #{parameter.dateFrom}</if>
+			<if test="parameter.dateType == 'start'">
+				AND g.date_start<![CDATA[>=]]> #{parameter.dateFrom}</if>
+			<if test="parameter.dateType == 'end'">
+				AND g.date_end<![CDATA[>=]]> #{parameter.dateFrom}</if>
+		</if>
+		<if test="parameter.dateTo!=null">
+			<if test="parameter.dateType == 'dep'">
+				AND d.item_date<![CDATA[<=]]> #{parameter.dateTo}</if>
+			<if test="parameter.dateType == 'start'">
+				AND g.date_start<![CDATA[<=]]> #{parameter.dateTo}</if>
+			<if test="parameter.dateType == 'end'">
+				AND g.date_end<![CDATA[<=]]> #{parameter.dateTo}</if>
+		</if>
+		<if test="parameter.supplierName != null">
+			AND b.supplier_name LIKE concat('%',#{parameter.supplierName},'%')</if>
+		<if test="parameter.groupCode != null">
+			AND g.`group_code` LIKE concat('%',#{parameter.groupCode},'%')</if>
+		<if test="parameter.paymentState=='PAID'">
+			AND b.total_cash=b.total</if>
+		<if test="parameter.paymentState=='NOTPAID'">
+			AND b.total_cash<![CDATA[<]]>b.total</if>
+		<if test="parameter.productName != null">
+			AND (o.product_name like concat('%',#{parameter.productName},'%') or o.product_brand_name like concat('%',#{parameter.productName},'%'))
+		</if>
+		<if test="parameter.lineName != null">
+			AND d.ticket_flight LIKE concat('%',#{parameter.lineName},'%')</if>
+		<if test="parameter.receiveMode != null">
+			AND o.`receive_mode` LIKE concat('%',#{parameter.receiveMode},'%')</if>
+		<if test="parameter.operatorIds!=null">
+			AND g.operator_id in (#{parameter.operatorIds})</if>
+		<if test="parameter.cashType != null">
+			AND b.`cash_type` = #{parameter.cashType}</if>
+		<if test="parameter.groupMode != null and parameter.groupMode!='0'.toString()">
+			AND g.group_mode!=0</if>
+		<if test="parameter.groupMode != null and parameter.groupMode=='0'.toString()">
+			AND (ISNULL(g.group_mode) or g.group_mode=0)</if>
+		GROUP BY b.id 
+	</select>
+	
+	<select id="sumAirTicketBooking" resultType="java.util.HashMap" parameterType="com.yihg.mybatis.utility.PageBean">
+	select sum(total) total, sum(total_cash) totalCash from (select b.total, b.total_cash FROM booking_supplier b 
+		LEFT JOIN group_order o ON b.order_id=o.id
+		LEFT JOIN tour_group g ON b.group_id=g.id
+		LEFT JOIN booking_supplier_detail d ON b.id=d.booking_id
+		WHERE o.biz_id=#{parameter.bizId} 
+		<if test="parameter.supplierType != null">
+			AND b.supplier_type = #{parameter.supplierType}</if>
+		<if test="parameter.dateFrom!=null">
+			<if test="parameter.dateType == 'dep'">
+				AND d.item_date<![CDATA[>=]]> #{parameter.dateFrom}</if>
+			<if test="parameter.dateType == 'start'">
+				AND g.date_start<![CDATA[>=]]> #{parameter.dateFrom}</if>
+			<if test="parameter.dateType == 'end'">
+				AND g.date_end<![CDATA[>=]]> #{parameter.dateFrom}</if>
+		</if>
+		<if test="parameter.dateTo!=null">
+			<if test="parameter.dateType == 'dep'">
+				AND d.item_date<![CDATA[<=]]> #{parameter.dateTo}</if>
+			<if test="parameter.dateType == 'start'">
+				AND g.date_start<![CDATA[<=]]> #{parameter.dateTo}</if>
+			<if test="parameter.dateType == 'end'">
+				AND g.date_end<![CDATA[<=]]> #{parameter.dateTo}</if>
+		</if>
+		<if test="parameter.supplierName != null">
+			AND b.supplier_name LIKE concat('%',#{parameter.supplierName},'%')</if>
+		<if test="parameter.groupCode != null">
+			AND g.`group_code` LIKE concat('%',#{parameter.groupCode},'%')</if>
+		<if test="parameter.paymentState=='PAID'">
+			AND b.total_cash=b.total</if>
+		<if test="parameter.paymentState=='NOTPAID'">
+			AND b.total_cash<![CDATA[<]]>b.total</if>
+		<if test="parameter.productName != null">
+			AND (o.product_name like concat('%',#{parameter.productName},'%') or o.product_brand_name like concat('%',#{parameter.productName},'%'))
+		</if>
+		<if test="parameter.lineName != null">
+			AND d.ticket_flight LIKE concat('%',#{parameter.lineName},'%')</if>
+		<if test="parameter.receiveMode != null">
+			AND o.`receive_mode` LIKE concat('%',#{parameter.receiveMode},'%')</if>
+		<if test="parameter.operatorIds!=null">
+			AND g.operator_id in (#{parameter.operatorIds})</if>
+		<if test="parameter.cashType != null">
+			AND b.`cash_type` = #{parameter.cashType}</if>
+		<if test="parameter.groupMode != null and parameter.groupMode!='0'.toString()">
+			AND g.group_mode!=0</if>
+		<if test="parameter.groupMode != null and parameter.groupMode=='0'.toString()">
+			AND (ISNULL(g.group_mode) or g.group_mode=0)</if>
+		GROUP BY b.id) t;
+	</select>
+	
+	
+	<select id="getsubjectSummaryListPage" resultType="java.util.HashMap" parameterType="com.yihg.mybatis.utility.PageBean">
+			SELECT t.`supplier_id`,t.supplier_name FROM booking_supplier t 
+		LEFT JOIN tour_group g ON t.`group_id`=g.id
+		WHERE g.biz_id=#{parameter.bizId} 
+		AND g.group_state in (1,3,4)
+		<if test="'groupDate'==parameter.dateType and parameter.startTime != null">and g.date_start <![CDATA[>=]]> #{parameter.startTime} </if>
+		<if test="'groupDate'==parameter.dateType and parameter.endTime != null">and g.date_start <![CDATA[<=]]> #{parameter.endTime}	</if>
+		<if test="'appliDate'==parameter.dateType and parameter.startTime != null">and t.booking_date <![CDATA[>=]]> #{parameter.startTime} </if>
+		<if test="'appliDate'==parameter.dateType and parameter.endTime != null">and t.booking_date <![CDATA[<=]]> #{parameter.endTime} </if>
+		<if test="parameter.set != null">
+			and g.operator_id in
+			<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+		</if>
+		<if test="parameter.supplierName != null">
+			and t.supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%') 
+		</if>
+		<if test="parameter.sjType != null">
+			and t.supplier_type = #{parameter.sjType}
+		</if>
+		<if test="parameter.operator_id != null">
+			and g.operator_id in (${parameter.operator_id})
+		</if>
+		GROUP BY t.supplier_id
+	</select>
+	
+	<select id="getsubjectSummary2ListPage" resultType="java.util.HashMap" parameterType="com.yihg.mybatis.utility.PageBean">
+			SELECT t0.supplier_type,t0.supplier_name, IFNULL(SUM(t0.`total`),0) total,IFNULL(SUM(t0.`total_cash`),0) total_cash FROM 
+
+			(SELECT t.supplier_type,t.group_id,t.`supplier_id`,t.`supplier_name`,t.`total`,t.`total_cash`,t.`booking_date` FROM `booking_supplier` t 
+			UNION ALL
+			SELECT 16 AS supplier_type, d.group_id, d.`supplier_id`,d.`supplier_name`,d.`total`,d.`total_cash`,d.`booking_date` FROM `booking_delivery` d ) t0
+			
+			LEFT JOIN tour_group g ON t0.group_id=g.id
+			WHERE g.biz_id=#{page.parameter.bizId} 
+			AND g.group_state in (1,3,4)
+		<if test="'groupDate'==page.parameter.dateType and page.parameter.startTime != null">and g.date_start <![CDATA[>=]]> #{page.parameter.startTime} </if>
+		<if test="'groupDate'==page.parameter.dateType and page.parameter.endTime != null">and g.date_start <![CDATA[<=]]> #{page.parameter.endTime}	</if>
+		<if test="'appliDate'==page.parameter.dateType and page.parameter.startTime != null">and t0.booking_date <![CDATA[>=]]> #{page.parameter.startTime} </if>
+		<if test="'appliDate'==page.parameter.dateType and page.parameter.endTime != null">and t0.booking_date <![CDATA[<=]]> #{page.parameter.endTime} </if>
+		<if test="page.parameter.set != null">
+			and g.operator_id in
+			<foreach item="item" index="index" collection="page.parameter.set" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+		</if>
+		<if test="page.parameter.supplierName != null">
+			and t0.supplier_name LIKE CONCAT('%',#{page.parameter.supplierName},'%') 
+		</if>
+		<if test="page.parameter.sjType != null">
+			and t0.supplier_type = #{page.parameter.sjType}
+		</if>
+		<if test="page.parameter.operator_id != null">
+			and g.operator_id in (${page.parameter.operator_id})
+		</if>
+		<if test="sum != 'sum' ">
+			GROUP BY t0.supplier_id
+		</if>
+	</select>
+	
+	<select id="getsubjectSummaryQDYJ" resultType="java.util.HashMap" parameterType="java.lang.Integer">
+		SELECT t.`supplier_id`,t.supplier_name,t.cash_type,IFNULL(SUM(t.`total`),0) total,IFNULL(SUM(t.`total_cash`),0) total_cash,IFNULL(SUM(t1.`total`),0) dybz_total 
+			FROM booking_supplier t 
+			LEFT JOIN finance_guide t1 ON t.id=t1.`booking_id_link`
+			LEFT JOIN tour_group g ON t.`group_id`=g.id
+			WHERE g.biz_id=#{page.parameter.bizId}   AND t.`supplier_id` = #{supplierId,jdbcType=INTEGER}
+			AND g.group_state in (1,3,4)
+		<if test="'groupDate'==page.parameter.dateType and page.parameter.startTime != null">and g.date_start <![CDATA[>=]]> #{page.parameter.startTime} </if>
+		<if test="'groupDate'==page.parameter.dateType and page.parameter.endTime != null">and g.date_start <![CDATA[<=]]> #{page.parameter.endTime}	</if>
+		<if test="'appliDate'==page.parameter.dateType and page.parameter.startTime != null">and t.booking_date <![CDATA[>=]]> #{page.parameter.startTime} </if>
+		<if test="'appliDate'==page.parameter.dateType and page.parameter.endTime != null">and t.booking_date <![CDATA[<=]]> #{page.parameter.endTime} </if>
+		<if test="page.parameter.set != null">
+			and g.operator_id in
+			<foreach item="item" index="index" collection="page.parameter.set" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+		</if>
+		<if test="page.parameter.supplierName != null">
+			and t.supplier_name LIKE CONCAT('%',#{page.parameter.supplierName},'%') 
+		</if>
+		<if test="sType != null">
+			and t.`cash_type` = #{sType}
+		</if>
+		<if test="page.parameter.sjType != null">
+			and t.supplier_type = #{page.parameter.sjType}
+		</if>
+		<if test="page.parameter.operator_id != null">
+			and g.operator_id in (${page.parameter.operator_id})
+		</if>
+			GROUP BY t.supplier_id
+	</select>
+	
+	<select id="getsubjectSummaryQDYJTotal" resultType="java.util.HashMap" parameterType="java.lang.Integer">
+		SELECT IFNULL(SUM(t.`total`),0) total,IFNULL(SUM(t.`total_cash`),0) total_cash FROM booking_supplier t 
+			LEFT JOIN tour_group g ON t.`group_id`=g.id
+			WHERE g.biz_id=#{page.parameter.bizId}  and t.`cash_type` = #{sType} 
+			AND g.group_state in (1,3,4)
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.startTime != null">and g.date_start <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.endTime != null">and g.date_start <![CDATA[<=]]> #{page.parameter.endTime}	</if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.startTime != null">and t.booking_date <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.endTime != null">and t.booking_date <![CDATA[<=]]> #{page.parameter.endTime} </if>
+			<if test="page.parameter.set != null">
+				and g.operator_id in
+				<foreach item="item" index="index" collection="page.parameter.set" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+			</if>
+			<if test="page.parameter.supplierName != null">
+				and t.supplier_name LIKE CONCAT('%',#{page.parameter.supplierName},'%') 
+			</if>
+			<if test="page.parameter.sjType != null">
+				and t.supplier_type = #{page.parameter.sjType}
+			</if>
+			<if test="page.parameter.operator_id != null">
+				and g.operator_id in (${page.parameter.operator_id})
+			</if>
+	</select>
+	
+	<select id="getsubjectSummaryQT" resultType="java.util.HashMap" parameterType="com.yihg.mybatis.utility.PageBean">
+		SELECT t.`supplier_id`,t.supplier_name,t.cash_type,IFNULL(SUM(t.`total`),0) total,IFNULL(SUM(t.`total_cash`),0) total_cash FROM booking_supplier t 
+			LEFT JOIN tour_group g ON t.`group_id`=g.id
+			WHERE g.biz_id=#{page.parameter.bizId}  and t.`cash_type` != #{sType} AND t.`cash_type` != #{sType2}  
+			<if test="sType3 != null">
+				AND t.`cash_type` != #{sType3}
+			</if>
+			AND t.`supplier_id` = #{supplierId,jdbcType=INTEGER}
+			AND g.group_state in (1,3,4)
+		<if test="'groupDate'==page.parameter.dateType and page.parameter.startTime != null">and g.date_start <![CDATA[>=]]> #{page.parameter.startTime} </if>
+		<if test="'groupDate'==page.parameter.dateType and page.parameter.endTime != null">and g.date_start <![CDATA[<=]]> #{page.parameter.endTime}	</if>
+		<if test="'appliDate'==page.parameter.dateType and page.parameter.startTime != null">and t.booking_date <![CDATA[>=]]> #{page.parameter.startTime} </if>
+		<if test="'appliDate'==page.parameter.dateType and page.parameter.endTime != null">and t.booking_date <![CDATA[<=]]> #{page.parameter.endTime} </if>
+		<if test="page.parameter.set != null">
+			and g.operator_id in
+			<foreach item="item" index="index" collection="page.parameter.set" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+		</if>
+		<if test="page.parameter.supplierName != null">
+				and t.supplier_name LIKE CONCAT('%',#{page.parameter.supplierName},'%') 
+			</if>
+		<if test="page.parameter.sjType != null">
+			and t.supplier_type = #{page.parameter.sjType}
+		</if>
+		<if test="page.parameter.operator_id != null">
+			and g.operator_id in (${page.parameter.operator_id})
+		</if>
+			GROUP BY t.supplier_id
+	</select>
+	
+	<select id="getsubjectSummaryQTTotal" resultType="java.util.HashMap" parameterType="com.yihg.mybatis.utility.PageBean">
+		SELECT  IFNULL(SUM(t.`total`),0) total,IFNULL(SUM(t.`total_cash`),0) total_cash FROM booking_supplier t 
+			LEFT JOIN tour_group g ON t.`group_id`=g.id
+			WHERE g.biz_id=#{page.parameter.bizId}  and t.`cash_type` != #{sType} AND t.`cash_type` != #{sType2} AND t.`cash_type` != #{sType3} 
+			AND g.group_state in (1,3,4)
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.startTime != null">and g.date_start <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'groupDate'==page.parameter.dateType and page.parameter.endTime != null">and g.date_start <![CDATA[<=]]> #{page.parameter.endTime}	</if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.startTime != null">and t.booking_date <![CDATA[>=]]> #{page.parameter.startTime} </if>
+			<if test="'appliDate'==page.parameter.dateType and page.parameter.endTime != null">and t.booking_date <![CDATA[<=]]> #{page.parameter.endTime} </if>
+			<if test="page.parameter.set != null">
+				and g.operator_id in
+				<foreach item="item" index="index" collection="page.parameter.set" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+			</if>
+			<if test="page.parameter.supplierName != null">
+				and t.supplier_name LIKE CONCAT('%',#{page.parameter.supplierName},'%') 
+			</if>
+			<if test="page.parameter.sjType != null">
+				and t.supplier_type = #{page.parameter.sjType}
+			</if>
+			<if test="page.parameter.operator_id != null">
+				and g.operator_id in (${page.parameter.operator_id})
+			</if>
+	</select>
+	
+	
+<select id="getGroupIdByCarInfo" parameterType="java.lang.String" resultType="java.lang.Integer">
+	select group_id groupId from `booking_supplier` bs JOIN `booking_supplier_detail` det ON bs.id=det.booking_id where 1=1
+	<if test="carInfo!=null and carInfo!=''">and ( bs.supplier_name like concat ('%',#{carInfo},'%') or det.car_lisence like concat ('%',#{carInfo},'%') )</if>
+	and supplier_type=4
+</select>
+	<update id="updateAirGroupIdNullByOrderId" >
+	 	UPDATE `booking_supplier` 
+	 	SET group_id=NULL WHERE order_id=#{orderId,jdbcType=INTEGER} AND supplier_type=9
+	 </update>
+	 
+	  <select id="selectIdList" resultMap="BaseResultMap" >
+	  	SELECT id FROM booking_supplier ORDER BY id ASC
+	  </select>
+	  
+	  <select id="selectPayOrIncomeOrderTotalCash" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	  	SELECT s.id, s.total, SUM(IFNULL(pd.cash,0)) total_cash FROM booking_supplier s
+		LEFT JOIN finance_pay_detail pd ON s.id = pd.loc_order_id
+		LEFT JOIN finance_pay p ON p.id = pd.pay_id 
+		WHERE p.TYPE = 0 AND p.supplier_type NOT IN (1, 16) AND s.id = #{bookingSupplierId,jdbcType=INTEGER}
+	  </select>
+	  
+	  <select id="selectPayOrIncomeGuideTotalCash" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	  	SELECT s.id, s.total, SUM(IFNULL(pd.cash,0)) total_cash FROM booking_supplier s
+		LEFT JOIN finance_pay_detail pd ON s.id = pd.loc_order_id
+		LEFT JOIN finance_pay p ON p.id = pd.pay_id 
+		WHERE p.TYPE = 2 AND s.id = #{bookingSupplierId,jdbcType=INTEGER}
+	  </select>
+	  
+	  <update id="updateGroupIdByOrderId" >
+	 	UPDATE `booking_supplier` SET group_id=#{groupId} WHERE order_id = #{orderId}
+	 </update>
+	 <!-- 修复因为更改了商家名称而导致与业务表冗余的名称不一致问题 -->
+	 <update id="fix_SupplierName_bookingSupplier" >
+				UPDATE booking_supplier SET `supplier_name`=#{supplierName,jdbcType=VARCHAR} WHERE `supplier_id`=#{supplierId,jdbcType=INTEGER};
+	</update>
+	 <update id="fix_SupplierName_financePay" >
+	 			UPDATE finance_pay SET `supplier_name`=#{supplierName,jdbcType=VARCHAR} WHERE `supplier_id`=#{supplierId,jdbcType=INTEGER};
+	</update>
+	 <update id="fix_SupplierName_financeVerify" >
+				UPDATE finance_verify   SET `supplier_name`=#{supplierName,jdbcType=VARCHAR} WHERE `supplier_id`=#{supplierId,jdbcType=INTEGER};
+	</update>
+	 <update id="fix_SupplierName_groupOrder" >
+				UPDATE group_order   SET `supplier_name`=#{supplierName,jdbcType=VARCHAR} WHERE `supplier_id`=#{supplierId,jdbcType=INTEGER};
+	</update>
+	<update id="fix_SupplierName_bookingShop" >
+				UPDATE booking_shop  SET `supplier_name`=#{supplierName,jdbcType=VARCHAR} WHERE `supplier_id`=#{supplierId,jdbcType=INTEGER};
+	</update>	
+	<update id="fix_SupplierName_bookingDelivery">
+				UPDATE booking_delivery   SET `supplier_name`=#{supplierName,jdbcType=VARCHAR} WHERE `supplier_id`=#{supplierId,jdbcType=INTEGER};
+	</update>	
+</mapper>

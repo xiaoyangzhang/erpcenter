@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="shop">
+	<!-- 购物统计-导游 -->
+	<select id="selectShopListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		SELECT tab1.guide_name,tab1.jds,tab1.planSales,tab1.factSales,tab1.person_num,tab1.payReturn,tab1.group_num,tab1.total_person,IFNULL(SUM(total),0) AS total_commission
+    ,tab1.total_adult,tab1.total_child,tab1.total_guide
+	FROM
+	(
+		SELECT bg.`guide_id`,bg.`guide_name`, IFNULL(SUM(cnt1),0) jds,IFNULL(SUM(jh),0) planSales,IFNULL(SUM(sj),0) factSales,IFNULL(SUM(jdrs),0) person_num,IFNULL(SUM(fkje),0) payReturn,COUNT(tg.id) group_num,SUM(IFNULL(tg.total_adult, 0)) + SUM(IFNULL(tg.total_child, 0)) + SUM(IFNULL(tg.total_guide, 0)) AS total_person
+		,IFNULL(SUM(com.total),0) total,SUM(IFNULL(tg.total_adult, 0)) total_adult,SUM(IFNULL(tg.total_child, 0)) total_child,SUM(IFNULL(tg.total_guide, 0)) total_guide
+		FROM booking_guide bg  JOIN 
+		(
+			SELECT COUNT(id) cnt1,SUM(IFNULL(person_num,0)*IFNULL(person_buy_avg,0)) jh,IFNULL(SUM(bs.total_face),0) sj,IFNULL(SUM(bs.total_repay),0) fkje,IFNULL(SUM(bs.person_num),0) jdrs, group_id,guide_id,supplier_name
+			FROM booking_shop bs WHERE 1=1
+			<if test="parameter.shopName != null">and bs.supplier_name LIKE CONCAT('%',#{parameter.shopName},'%') </if>
+			<if test="parameter.selectDate!=null and  parameter.selectDate==1">
+				<if test="parameter.startTime != null">and bs.shop_date <![CDATA[>=]]> #{parameter.startTime} </if>
+			  	<if test="parameter.endTime != null">and bs.shop_date <![CDATA[<=]]> #{parameter.endTime} </if>
+		  	</if> 
+			GROUP BY bs.group_id,bs.`guide_id`
+		) t ON bg.guide_id=t.guide_id AND bg.group_id=t.group_id
+		LEFT JOIN (SELECT guide_id,group_id,SUM(IFNULL(fc.total, 0)) total FROM finance_commission fc GROUP BY guide_id,group_id) com ON t.guide_id=com.guide_id AND t.group_id=com.group_id 
+		JOIN tour_group tg ON bg.group_id=tg.id
+		WHERE  
+		 tg.group_state in (1,3,4) and tg.biz_id=#{parameter.bizId} 
+		 <if test="parameter.set!=null">
+				AND tg.operator_id in
+				<foreach item="item" index="index" collection="parameter.set" open="("
+					separator="," close=")">
+					#{item}
+				</foreach>
+		</if>
+		<if test="parameter.saleOperatorIds != null and parameter.saleOperatorIds != ''">
+			and operator_id in (${parameter.saleOperatorIds})
+		</if>
+		<if test="parameter.guideName != null">and bg.guide_name LIKE CONCAT('%',#{parameter.guideName},'%') </if>
+		<if test="parameter.guideManageName != null">and bg.user_name LIKE CONCAT('%',#{parameter.guideManageName},'%') </if>
+		<if test="parameter.productName != null">
+			and (tg.product_brand_name like concat('%',#{parameter.productName},'%') 
+	    		or tg.product_name like concat('%',#{parameter.productName},'%'))
+		</if>
+		<if test="parameter.groupMode==0">and tg.group_mode <![CDATA[<]]>1 </if>
+		<if test="parameter.groupMode==1">and tg.group_mode <![CDATA[>]]>0 </if>
+		<if test="parameter.selectDate!=null and  parameter.selectDate==0">
+			<if test="parameter.startTime != null"> and tg.date_start <![CDATA[>=]]> #{parameter.startTime} </if>
+		  	<if test="parameter.endTime != null">and tg.date_start <![CDATA[<=]]> #{parameter.endTime} </if>
+	  	</if>
+		GROUP BY bg.`guide_id`
+	) tab1
+	where 1=1  
+		<if test="parameter.min != null">and tab1.factSales  <![CDATA[>=]]> (#{parameter.min}*(CASE WHEN tab1.total_adult = 0 THEN 1 ELSE tab1.total_adult END) ) </if> 
+		<if test="parameter.max != null">and tab1.factSales  <![CDATA[<=]]> (#{parameter.max}*(CASE WHEN tab1.total_adult = 0 THEN 1 ELSE tab1.total_adult END))  </if> 
+	GROUP BY tab1.`guide_id`
+	
+	</select>
+	<!-- 购物统计-导管 -->
+	<select id="selectGuideManageListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+	SELECT tab1.user_name,tab1.jds,tab1.planSales,tab1.factSales,tab1.person_num,tab1.payReturn,tab1.group_num,tab1.total_person,
+    tab1.total_adult,tab1.total_child,tab1.total_guide 
+	FROM
+	(
+		SELECT bg.`user_id`,bg.`user_name`, IFNULL(SUM(cnt1),0) jds,IFNULL(SUM(jh),0) planSales,IFNULL(SUM(sj),0) factSales,IFNULL(SUM(jdrs),0) person_num,IFNULL(SUM(fkje),0) payReturn,COUNT(tg.id) group_num,SUM(IFNULL(tg.total_adult, 0)) + SUM(IFNULL(tg.total_child, 0)) + SUM(IFNULL(tg.total_guide, 0)) AS total_person,
+		SUM(IFNULL(tg.total_adult, 0)) total_adult,SUM(IFNULL(tg.total_child, 0)) total_child,SUM(IFNULL(tg.total_guide, 0)) total_guide
+		FROM booking_guide bg  JOIN 
+		(
+			SELECT COUNT(id) cnt1,SUM(IFNULL(person_num,0)*IFNULL(person_buy_avg,0)) jh,IFNULL(sum(bs.total_face),0) sj,IFNULL(sum(bs.total_repay),0) fkje,IFNULL(sum(bs.person_num),0) jdrs, group_id,guide_id,supplier_name
+			FROM booking_shop bs where 1=1
+			<if test="parameter.shopName != null">and bs.supplier_name LIKE CONCAT('%',#{parameter.shopName},'%') </if>
+			<if test="parameter.selectDate!=null and  parameter.selectDate==1">
+				<if test="parameter.startTime != null">and bs.shop_date <![CDATA[>=]]> #{parameter.startTime} </if>
+			  	<if test="parameter.endTime != null">and bs.shop_date <![CDATA[<=]]> #{parameter.endTime} </if>
+		  	</if> 
+			GROUP BY bs.group_id,bs.`guide_id`
+		) t ON bg.guide_id=t.guide_id AND bg.group_id=t.group_id
+		JOIN tour_group tg ON bg.group_id=tg.id
+		WHERE biz_id=#{parameter.bizId} 
+		AND tg.group_state in (1,3,4) 
+		 <if test="parameter.set!=null">
+				AND tg.operator_id in
+				<foreach item="item" index="index" collection="parameter.set" open="("
+					separator="," close=")">
+					#{item}
+				</foreach>
+		</if>
+			<if test="parameter.saleOperatorIds != null and parameter.saleOperatorIds != ''">
+			and operator_id in (${parameter.saleOperatorIds})
+		</if>
+		<if test="parameter.guideName != null">and bg.guide_name LIKE CONCAT('%',#{parameter.guideName},'%') </if>
+		<if test="parameter.guideManageName != null">and bg.user_name LIKE CONCAT('%',#{parameter.guideManageName},'%') </if>
+		<if test="parameter.productName != null">
+			and (tg.product_brand_name like concat('%',#{parameter.productName},'%') 
+	    		or tg.product_name like concat('%',#{parameter.productName},'%'))
+		</if>
+		<if test="parameter.groupMode==0">and tg.group_mode <![CDATA[<]]>1 </if>
+		<if test="parameter.groupMode==1">and tg.group_mode <![CDATA[>]]>0 </if>
+		<if test="parameter.selectDate!=null and  parameter.selectDate==0">
+			<if test="parameter.startTime != null"> and tg.date_start <![CDATA[>=]]> #{parameter.startTime} </if>
+		  	<if test="parameter.endTime != null">and tg.date_start <![CDATA[<=]]> #{parameter.endTime} </if>
+	  	</if>
+		GROUP BY bg.`user_id`
+	) tab1
+	where 1=1 
+		<if test="parameter.min != null">and tab1.factSales  <![CDATA[>=]]> #{parameter.min}*(CASE WHEN tab1.total_adult = 0 THEN 1 ELSE tab1.total_adult END)  </if> 
+		<if test="parameter.max != null">and tab1.factSales  <![CDATA[<=]]> #{parameter.max}*(CASE WHEN tab1.total_adult = 0 THEN 1 ELSE tab1.total_adult END)  </if> 
+	GROUP BY tab1.`user_id`
+	
+	</select>
+	<!-- 购物统计-购物店 -->
+	<select id="selectShoppingListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		SELECT t.supplier_name,COUNT(DISTINCT t.group_id) group_num ,IFNULL(SUM(g.total_adult),0) as total_adult 
+		,IFNULL(SUM(g.total_child),0) as total_child,IFNULL(SUM(g.total_guide),0) as total_guide,SUM(t.person_num*t.person_buy_avg) AS planSales,
+			SUM(total_face) AS factSales,SUM(total_repay) AS payReturn,IFNULL(SUM(t.person_num),0) person_num
+			FROM booking_shop t 
+			LEFT JOIN tour_group g ON t.group_id = g.id
+			WHERE g.biz_id = #{parameter.bizId}
+			<if test="parameter.shopName != null">AND t.supplier_name LIKE CONCAT('%',#{parameter.shopName},'%') </if>
+			<if test="parameter.startTime != null">AND g.date_start <![CDATA[>=]]> #{parameter.startTime} </if>
+	  		<if test="parameter.endTime != null">AND g.date_start <![CDATA[<=]]> #{parameter.endTime} </if>
+	  		<if test="parameter.operatorIds != null">AND g.operator_id IN (${parameter.operatorIds})</if>
+	  		GROUP BY t.supplier_name
+			ORDER BY g.date_start ,g.create_time 
+	</select>
+	<!-- 购物统计-产品 -->
+	<select id="selectProductListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+<!-- 	SELECT tab1.`product_name`,tab1.`product_brand_name`,tab1.jds,tab1.planSales,tab1.factSales,
+	tab1.person_num,tab1.payReturn,tab1.group_num,tab1.total_person  -->
+	SELECT  tab1.`product_name`,tab1.`product_brand_name`,tab1.shop_count,tab1.planSales,
+					tab1.factSales,tab1.payReturn,tab1.group_num,tab1.total_adult,
+					tab1.total_child,tab1.total_guide
+	FROM
+	(
+		SELECT 	tg.`product_name`,
+						tg.`product_brand_name`, 
+						COUNT(tg.id) group_num,
+						SUM(shop_count) as shop_count,
+						<!-- FNULL(SUM(cnt1),0) jds, -->
+						IFNULL(SUM(jh),0) planSales,
+						IFNULL(SUM(sj),0) factSales,
+						<!-- IFNULL(SUM(jdrs),0) person_num, -->
+						IFNULL(SUM(fkje),0) payReturn,
+						IFNULL(SUM(tg.total_adult),0)AS total_adult, 
+						IFNULL(SUM(tg.total_child),0) AS total_child,
+						IFNULL(SUM(tg.total_guide),0) AS total_guide
+						<!-- (IFNULL(SUM(tg.total_adult),0)+IFNULL(SUM(tg.total_child),0)+IFNULL(SUM(tg.total_guide),0)) AS total_person -->
+		FROM tour_group tg left JOIN 
+		(
+			SELECT	bg.group_id,
+							count(bg.id) shop_count,
+							SUM(IFNULL(person_num,0)*IFNULL(person_buy_avg,0)) jh,IFNULL(sum(bs.total_face),0) sj,
+							IFNULL(sum(bs.total_repay),0) fkje,
+							IFNULL(sum(bs.person_num),0) jdrs
+			<!-- FROM booking_shop bs join booking_guide bg on (bs.guide_id=bg.guide_id) where 1=1 -->
+			FROM booking_shop bs LEFT JOIN booking_guide bg on bs.group_id=bg.group_id
+			<if test="parameter.guideName != null">and bg.guide_name LIKE CONCAT('%',#{parameter.guideName},'%') </if>
+			<if test="parameter.guideManageName != null">and bg.user_name LIKE CONCAT('%',#{parameter.guideManageName},'%') </if>
+			GROUP BY bs.group_id) t
+			ON t.group_id=tg.id
+			WHERE biz_id=#{parameter.bizId} AND tg.group_state in (1,3,4)
+			<if test="parameter.shopName != null">and bs.supplier_name LIKE CONCAT('%',#{parameter.shopName},'%') </if>
+			<if test="parameter.selectDate!=null and  parameter.selectDate==1">
+				<if test="parameter.startTime != null">and bs.shop_date <![CDATA[>=]]> #{parameter.startTime} </if>
+			  	<if test="parameter.endTime != null">and bs.shop_date <![CDATA[<=]]> #{parameter.endTime} </if>
+		  	</if> 
+	<!-- 		GROUP BY bs.group_id,bs.`guide_id`
+		) t ON bg.guide_id=t.guide_id AND bg.group_id=t.group_id
+		JOIN tour_group  tg ON bg.group_id=tg.id
+		WHERE biz_id=#{parameter.bizId} 
+		AND tg.group_state in (1,3,4)  -->
+		 <if test="parameter.set!=null">
+				AND tg.operator_id in
+				<foreach item="item" index="index" collection="parameter.set" open="("
+					separator="," close=")">
+					#{item}
+				</foreach>
+		</if>
+		
+		<if test="parameter.productName != null">
+			and (tg.product_brand_name like concat('%',#{parameter.productName},'%') 
+	    		or tg.product_name like concat('%',#{parameter.productName},'%'))
+		</if>
+		<if
+			test="parameter.productBrandId != null and parameter.productBrandId != -1">
+			and tg.prudct_brand_id =#{parameter.productBrandId}
+		</if>
+		<if test="parameter.groupMode==0">and tg.group_mode <![CDATA[<]]>1 </if>
+		<if test="parameter.groupMode==1">and tg.group_mode <![CDATA[>]]>0 </if>
+		<if test="parameter.selectDate!=null and  parameter.selectDate==0">
+			<if test="parameter.startTime != null"> and tg.date_start <![CDATA[>=]]> #{parameter.startTime} </if>
+		  	<if test="parameter.endTime != null">and tg.date_start <![CDATA[<=]]> #{parameter.endTime} </if>
+	  	</if>
+		GROUP BY tg.`product_name`,tg.`product_brand_name`
+	) tab1
+	where 1=1 
+		<if test="parameter.min != null">and tab1.factSales  <![CDATA[>=]]> #{parameter.min}*(CASE WHEN tab1.person_num = 0 THEN 1 ELSE tab1.person_num END)  </if> 
+		<if test="parameter.max != null">and tab1.factSales  <![CDATA[<=]]> #{parameter.max}*(CASE WHEN tab1.person_num = 0 THEN 1 ELSE tab1.person_num END)  </if> 
+	GROUP BY tab1.`product_name`,tab1.`product_brand_name`
+	</select>
+	<!-- 购物统计-组团社-->
+	<select id="selectSupplierListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+	SELECT * FROM (
+		SELECT 
+			go.supplier_name,
+			go.`departure_date`,
+			go.`operator_id`,
+			go.biz_id,
+			COUNT(group_id) AS countGroup,
+			(SELECT SUM(tg.total_adult+tg.total_child+tg.total_guide) FROM tour_group tg WHERE tg.id = go.group_id) AS numPersonGroup,
+			(SELECT COUNT(bs.id) FROM booking_shop bs WHERE bs.group_id = go.group_id) AS countShop,
+			(SELECT SUM(person_num*person_buy_avg) FROM booking_shop bs WHERE bs.group_id = go.group_id) AS planSales,
+			(SELECT SUM(total_face) FROM booking_shop bs WHERE bs.group_id = go.group_id) AS factSales,
+			(SELECT SUM(total_repay) FROM booking_shop bs WHERE bs.group_id = go.group_id) AS payReturn,go.create_time
+		FROM 
+			group_order go
+		WHERE go.order_type = 1
+		AND go.state !=-1
+		GROUP BY supplier_id ) bbb
+		where 1=1
+		and bbb.biz_id = #{parameter.bizId}
+		<if test="parameter.supplierName != null">AND bbb.supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%') </if>
+			<if test="parameter.startTime != null">AND bbb.departure_date <![CDATA[>=]]> #{parameter.startTime} </if>
+	  		<if test="parameter.endTime != null">AND bbb.departure_date <![CDATA[<=]]> #{parameter.endTime} </if>
+	  		<if test="parameter.operatorIds != null">AND bbb.operator_id IN (${parameter.operatorIds})</if>
+	  		order by bbb.create_time 
+	</select>
+</mapper>

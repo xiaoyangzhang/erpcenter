@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.operation.dao.BookingShopDetailDeployMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingShopDetailDeploy" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="booking_detail_id" property="bookingDetailId" jdbcType="INTEGER" />
+    <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+    <result column="buy_total" property="buyTotal" jdbcType="DECIMAL" />
+     <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, booking_detail_id, order_id, buy_total,remark,booking_id
+  </sql>
+  <select id="selectByDetailId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_shop_detail_deploy
+    where booking_detail_id = #{dId,jdbcType=INTEGER}
+  </select>
+  
+   <select id="selectByBookingId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_shop_detail_deploy
+    where booking_id = #{dId,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from booking_shop_detail_deploy
+    where booking_id = #{bdId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.operation.po.BookingShopDetailDeploy" >
+    insert into booking_shop_detail_deploy (id, booking_detail_id, order_id, 
+      buy_total)
+    values (#{id,jdbcType=INTEGER}, #{bookingDetailId,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER}, 
+      #{buyTotal,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingShopDetailDeploy" >
+   
+    insert into booking_shop_detail_deploy
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="bookingDetailId != null" >
+        booking_detail_id,
+      </if>
+       <if test="bookingId != null" >
+        booking_id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="buyTotal != null" >
+        buy_total,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bookingDetailId != null" >
+        #{bookingDetailId,jdbcType=INTEGER},
+      </if>
+       <if test="bookingId != null" >
+        #{bookingId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="buyTotal != null" >
+        #{buyTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingShopDetailDeploy" >
+    update booking_shop_detail_deploy
+    <set >
+      <if test="bookingDetailId != null" >
+        booking_detail_id = #{bookingDetailId,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="buyTotal != null" >
+        buy_total = #{buyTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingShopDetailDeploy" >
+    update booking_shop_detail_deploy
+    set booking_detail_id = #{bookingDetailId,jdbcType=INTEGER},
+      order_id = #{orderId,jdbcType=INTEGER},
+      buy_total = #{buyTotal,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectBuyTotalByProduct" resultType="java.lang.Integer">
+  	SELECT SUM(dep.buy_total) buyTotal FROM `tour_group` tg JOIN `group_order` go ON tg.`id`=go.`group_id` JOIN `booking_shop_detail_deploy` dep ON dep.order_id=go.id 
+  	WHERE 
+      tg.biz_id=#{parameter.bizId}
+ and  
+		 group_state <![CDATA[>]]>-1 AND group_state<![CDATA[<]]> 2
+		 <if test="parameter.groupMode == null">and group_mode <![CDATA[>]]> -1</if>
+	    <if test="parameter.groupMode == 0">and group_mode <![CDATA[=]]> 0</if>
+	    <if test="parameter.groupMode !=0 and parameter.groupMode!=null">and group_mode <![CDATA[>]]>0</if>
+	     <if test="parameter.startTime != null">and date_start <![CDATA[>=]]> #{parameter.startTime} </if>
+	  	<if test="parameter.endTime != null">and date_start <![CDATA[<=]]> #{parameter.endTime} </if>
+	  	<if test="parameter.supplierName != null and parameter.supplierName!=''">and go.supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%') </if>	
+		<if test="parameter.operType==0 or parameter.operType==null ">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and tg.operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.operType==1">
+			<if
+				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and go.sale_operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+        <if test="parameter.productBrandName!=null and parameter.productBrandName!=''"> AND tg.`product_brand_name`=#{parameter.productBrandName}</if>
+         <if test="parameter.productName!=null and parameter.productName!=''"> AND tg.`product_name`=#{parameter.productName}</if>
+  	
+  </select>
+  <select id="getByBookingIdAndOrderId" resultMap="BaseResultMap" parameterType="com.yihg.operation.po.BookingShopDetailDeploy" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM booking_shop_detail_deploy
+    WHERE booking_id = #{bookingId,jdbcType=INTEGER} AND order_id=#{orderId}
+  </select>
+  <delete id="deleteByBookingIdAndOrderId">
+  	DELETE FROM booking_shop_detail_deploy WHERE booking_id = #{bookingId,jdbcType=INTEGER} AND order_id=#{orderId}
+  </delete>
+  <delete id="deleteByBookingId">
+  	DELETE FROM booking_shop_detail_deploy WHERE booking_id = #{bookingId,jdbcType=INTEGER}
+  </delete>
+  <select id="getCountByBookingId" resultType="java.lang.Integer" >
+    SELECT COUNT(1)
+    FROM booking_shop_detail_deploy
+    WHERE booking_id = #{bookingId,jdbcType=INTEGER}
+  </select>
+  
+   <select id="getSumBuyTotalByBookingId" resultType="java.math.BigDecimal" >
+    SELECT IFNULL(SUM(buy_total),0)
+    FROM booking_shop_detail_deploy
+    WHERE booking_id = #{bookingId,jdbcType=INTEGER}
+  </select>
+</mapper>

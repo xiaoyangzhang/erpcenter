@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.airticket.dao.AirTicketOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.airticket.po.AirTicketOrder" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="biz_id" property="bizId" jdbcType="INTEGER" />
+    <result column="resource_id" property="resourceId" jdbcType="INTEGER" />
+    <result column="request_id" property="requestId" jdbcType="INTEGER" />
+    <result column="air_line_id" property="airLineId" jdbcType="INTEGER" />
+    <result column="guest_id" property="guestId" jdbcType="INTEGER" />
+    <result column="is_del" property="isDel" jdbcType="CHAR" />
+    <result column="operator_id" property="operatorId" jdbcType="INTEGER" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, biz_id, resource_id, request_id, air_line_id, guest_id, is_del, operator_id, 
+    add_time, update_time, price, comment
+  </sql>
+  
+  <!-- 插入   -->
+  <insert id="insert" parameterType="com.yihg.airticket.po.AirTicketOrder" >
+    insert into air_ticket_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bizId != null" >
+        biz_id,
+      </if>
+      <if test="resourceId != null" >
+        resource_id,
+      </if>
+      <if test="requestId != null" >
+        request_id,
+      </if>
+      <if test="airLineId != null" >
+        air_line_id,
+      </if>
+      <if test="guestId != null" >
+        guest_id,
+      </if>
+      	<!-- 是否删除   -->
+        is_del,
+      <if test="operatorId != null" >
+        operator_id,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bizId != null" >
+        #{bizId,jdbcType=INTEGER},
+      </if>
+      <if test="resourceId != null" >
+        #{resourceId,jdbcType=INTEGER},
+      </if>
+      <if test="requestId != null" >
+        #{requestId,jdbcType=INTEGER},
+      </if>
+      <if test="airLineId != null" >
+        #{airLineId,jdbcType=INTEGER},
+      </if>
+      <if test="guestId != null" >
+        #{guestId,jdbcType=INTEGER},
+      </if>
+      	'N',
+      <if test="operatorId != null" >
+        #{operatorId,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  	
+  <!-- 逻辑删除 -->  
+  <update id="delete">
+  	update air_ticket_order set is_del = 'Y' where id = #{id,jdbcType=INTEGER} and biz_id = #{bizId,jdbcType=INTEGER}
+  </update>
+  
+  <update id="deleteRequest">
+  	update air_ticket_order set is_del = 'Y' where request_id = #{id,jdbcType=INTEGER} and biz_id = #{bizId,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 查询当前请求下所有的机票订单 -->
+     <select id="findOrderList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from air_ticket_order
+    where biz_id = #{bizId,jdbcType=INTEGER} and request_id = #{requestId,jdbcType=INTEGER} and is_del = 'N'
+    order by add_time desc
+  </select>
+  
+  <select id="findIssuedGuestIdList"  resultType="java.lang.Integer" >
+  SELECT o.`guest_id` FROM air_ticket_order o JOIN air_ticket_request q ON o.`request_id`=q.id AND o.is_del='N' AND q.`is_del`='N'
+	WHERE q.`status`='ISSUED' AND q.`biz_id`=#{bizId, jdbcType=INTEGER} AND q.group_order_id=#{orderId, jdbcType=INTEGER}
+  </select>
+  
+  <!-- 更新 （暂未启用）-->
+  <update id="update" parameterType="com.yihg.airticket.po.AirTicketOrder" >
+    update air_ticket_order
+    <set >
+      <if test="resourceId != null" >
+        resource_id = #{resourceId,jdbcType=INTEGER},
+      </if>
+      <if test="requestId != null" >
+        request_id = #{requestId,jdbcType=INTEGER},
+      </if>
+      <if test="airLineId != null" >
+        air_line_id = #{airLineId,jdbcType=INTEGER},
+      </if>
+      <if test="guestId != null" >
+        guest_id = #{guestId,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=CHAR},
+      </if>
+      <if test="operatorId != null" >
+        operator_id = #{operatorId,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null" >
+        add_time = #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

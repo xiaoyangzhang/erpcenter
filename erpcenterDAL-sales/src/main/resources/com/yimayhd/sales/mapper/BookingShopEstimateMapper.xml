@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.operation.dao.BookingShopEstimateMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingShopEstimate" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="profit_person_avg" property="profitPersonAvg" jdbcType="DOUBLE" />
+    <result column="repay_rate_avg" property="repayRateAvg" jdbcType="DOUBLE" />
+    <result column="buy_person_avg" property="buyPersonAvg" jdbcType="DOUBLE" />
+    <result column="person_num" property="personNum" jdbcType="DOUBLE" />
+    <result column="buy_total" property="buyTotal" jdbcType="DOUBLE" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="BIGINT" />
+    <result column="update_last_time" property="updateLastTime" jdbcType="BIGINT" />
+    <result column="update_last_user" property="updateLastUser" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, group_id, profit_person_avg, repay_rate_avg, buy_person_avg, person_num, buy_total, 
+    user_id, create_time, update_last_time, update_last_user
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from booking_shop_estimate
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from booking_shop_estimate
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.operation.po.BookingShopEstimate" >
+    insert into booking_shop_estimate (id, group_id, profit_person_avg, 
+      repay_rate_avg, buy_person_avg, person_num, 
+      buy_total, user_id, create_time, 
+      update_last_time, update_last_user)
+    values (#{id,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, #{profitPersonAvg,jdbcType=DOUBLE}, 
+      #{repayRateAvg,jdbcType=DOUBLE}, #{buyPersonAvg,jdbcType=DOUBLE}, #{personNum,jdbcType=DOUBLE}, 
+      #{buyTotal,jdbcType=DOUBLE}, #{userId,jdbcType=INTEGER}, #{createTime,jdbcType=BIGINT}, 
+      #{updateLastTime,jdbcType=BIGINT}, #{updateLastUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingShopEstimate" >
+    insert into booking_shop_estimate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="profitPersonAvg != null" >
+        profit_person_avg,
+      </if>
+      <if test="repayRateAvg != null" >
+        repay_rate_avg,
+      </if>
+      <if test="buyPersonAvg != null" >
+        buy_person_avg,
+      </if>
+      <if test="personNum != null" >
+        person_num,
+      </if>
+      <if test="buyTotal != null" >
+        buy_total,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateLastTime != null" >
+        update_last_time,
+      </if>
+      <if test="updateLastUser != null" >
+        update_last_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="profitPersonAvg != null" >
+        #{profitPersonAvg,jdbcType=DOUBLE},
+      </if>
+      <if test="repayRateAvg != null" >
+        #{repayRateAvg,jdbcType=DOUBLE},
+      </if>
+      <if test="buyPersonAvg != null" >
+        #{buyPersonAvg,jdbcType=DOUBLE},
+      </if>
+      <if test="personNum != null" >
+        #{personNum,jdbcType=DOUBLE},
+      </if>
+      <if test="buyTotal != null" >
+        #{buyTotal,jdbcType=DOUBLE},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateLastTime != null" >
+        #{updateLastTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateLastUser != null" >
+        #{updateLastUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingShopEstimate" >
+    update booking_shop_estimate
+    <set >
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="profitPersonAvg != null" >
+        profit_person_avg = #{profitPersonAvg,jdbcType=DOUBLE},
+      </if>
+      <if test="repayRateAvg != null" >
+        repay_rate_avg = #{repayRateAvg,jdbcType=DOUBLE},
+      </if>
+      <if test="buyPersonAvg != null" >
+        buy_person_avg = #{buyPersonAvg,jdbcType=DOUBLE},
+      </if>
+      <if test="personNum != null" >
+        person_num = #{personNum,jdbcType=DOUBLE},
+      </if>
+      <if test="buyTotal != null" >
+        buy_total = #{buyTotal,jdbcType=DOUBLE},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateLastTime != null" >
+        update_last_time = #{updateLastTime,jdbcType=BIGINT},
+      </if>
+      <if test="updateLastUser != null" >
+        update_last_user = #{updateLastUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingShopEstimate" >
+    update booking_shop_estimate
+    set group_id = #{groupId,jdbcType=INTEGER},
+      profit_person_avg = #{profitPersonAvg,jdbcType=DOUBLE},
+      repay_rate_avg = #{repayRateAvg,jdbcType=DOUBLE},
+      buy_person_avg = #{buyPersonAvg,jdbcType=DOUBLE},
+      person_num = #{personNum,jdbcType=DOUBLE},
+      buy_total = #{buyTotal,jdbcType=DOUBLE},
+      user_id = #{userId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=BIGINT},
+      update_last_time = #{updateLastTime,jdbcType=BIGINT},
+      update_last_user = #{updateLastUser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

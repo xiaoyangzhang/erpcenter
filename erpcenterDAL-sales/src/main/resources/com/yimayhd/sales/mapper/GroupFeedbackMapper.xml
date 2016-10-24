@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yihg.sales.dao.GroupFeedbackMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.sales.po.GroupFeedback" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="guide_attitude" property="guideAttitude" jdbcType="DOUBLE" />
+    <result column="guide_profession" property="guideProfession" jdbcType="DOUBLE" />
+    <result column="food_quality" property="foodQuality" jdbcType="DOUBLE" />
+    <result column="food_environment" property="foodEnvironment" jdbcType="DOUBLE" />
+    <result column="hotel_quality" property="hotelQuality" jdbcType="DOUBLE" />
+    <result column="hotel_environment" property="hotelEnvironment" jdbcType="DOUBLE" />
+    <result column="driver_attitude" property="driverAttitude" jdbcType="DOUBLE" />
+    <result column="driver_environment" property="driverEnvironment" jdbcType="DOUBLE" />
+    <result column="scenic_whole" property="scenicWhole" jdbcType="DOUBLE" />
+    <result column="suggestion" property="suggestion" jdbcType="VARCHAR" />
+    <result column="creator_id" property="creatorId" jdbcType="INTEGER" />
+    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+    <result column="creator_pic" property="creatorPic" jdbcType="VARCHAR" />
+    <result column="creator_identity_no" property="creatorIdentityNo" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="PersonalStaticsResultMap" type="com.yihg.sales.vo.GroupFeedbackPersonalStaticsVO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="guide_attitude" property="guideAttitude" jdbcType="DOUBLE" />
+    <result column="guide_profession" property="guideProfession" jdbcType="DOUBLE" />
+    <result column="food_quality" property="foodQuality" jdbcType="DOUBLE" />
+    <result column="food_environment" property="foodEnvironment" jdbcType="DOUBLE" />
+    <result column="hotel_quality" property="hotelQuality" jdbcType="DOUBLE" />
+    <result column="hotel_environment" property="hotelEnvironment" jdbcType="DOUBLE" />
+    <result column="driver_attitude" property="driverAttitude" jdbcType="DOUBLE" />
+    <result column="driver_environment" property="driverEnvironment" jdbcType="DOUBLE" />
+    <result column="scenic_whole" property="scenicWhole" jdbcType="DOUBLE" />
+    <result column="suggestion" property="suggestion" jdbcType="VARCHAR" />
+    <result column="creator_id" property="creatorId" jdbcType="INTEGER" />
+    <result column="creator_name" property="creatorName" jdbcType="VARCHAR" />
+    <result column="creator_pic" property="creatorPic" jdbcType="VARCHAR" />
+    <result column="creator_identity_no" property="creatorIdentityNo" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="score" property="score" jdbcType="DOUBLE" />
+  </resultMap>
+  <resultMap id="GroupStaticsResultMap" type="com.yihg.sales.vo.GroupFeedbackGroupStaticsVO" >    
+    <result column="guide_attitude" property="guideAttitude" jdbcType="DOUBLE" />
+    <result column="guide_profession" property="guideProfession" jdbcType="DOUBLE" />
+    <result column="food_quality" property="foodQuality" jdbcType="DOUBLE" />
+    <result column="food_environment" property="foodEnvironment" jdbcType="DOUBLE" />
+    <result column="hotel_quality" property="hotelQuality" jdbcType="DOUBLE" />
+    <result column="hotel_environment" property="hotelEnvironment" jdbcType="DOUBLE" />
+    <result column="driver_attitude" property="driverAttitude" jdbcType="DOUBLE" />
+    <result column="driver_environment" property="driverEnvironment" jdbcType="DOUBLE" />
+    <result column="scenic_whole" property="scenicWhole" jdbcType="DOUBLE" />
+    <result column="suggestion" property="suggestion" jdbcType="VARCHAR" />    
+    <result column="score" property="score" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, group_id, guide_attitude, guide_profession, food_quality, food_environment, hotel_quality, 
+    hotel_environment, driver_attitude, driver_environment, scenic_whole, suggestion, 
+    creator_id, creator_name, creator_pic, creator_identity_no, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from group_feedback
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+   <select id="selectByPrimaryGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from group_feedback
+    where group_id = #{groupId,jdbcType=INTEGER}
+    and creator_id = #{createId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from group_feedback
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.sales.po.GroupFeedback" >
+    insert into group_feedback (id, group_id, guide_attitude, 
+      guide_profession, food_quality, food_environment, 
+      hotel_quality, hotel_environment, driver_attitude, 
+      driver_environment, scenic_whole, suggestion, 
+      creator_id, creator_name, creator_pic, 
+      creator_identity_no, create_time)
+    values (#{id,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, #{guideAttitude,jdbcType=DOUBLE}, 
+      #{guideProfession,jdbcType=DOUBLE}, #{foodQuality,jdbcType=DOUBLE}, #{foodEnvironment,jdbcType=DOUBLE}, 
+      #{hotelQuality,jdbcType=DOUBLE}, #{hotelEnvironment,jdbcType=DOUBLE}, #{driverAttitude,jdbcType=DOUBLE}, 
+      #{driverEnvironment,jdbcType=DOUBLE}, #{scenicWhole,jdbcType=DOUBLE}, #{suggestion,jdbcType=VARCHAR}, 
+      #{creatorId,jdbcType=INTEGER}, #{creatorName,jdbcType=VARCHAR}, #{creatorPic,jdbcType=VARCHAR}, 
+      #{creatorIdentityNo,jdbcType=VARCHAR}, #{createTime})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.sales.po.GroupFeedback" >
+    insert into group_feedback
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="guideAttitude != null" >
+        guide_attitude,
+      </if>
+      <if test="guideProfession != null" >
+        guide_profession,
+      </if>
+      <if test="foodQuality != null" >
+        food_quality,
+      </if>
+      <if test="foodEnvironment != null" >
+        food_environment,
+      </if>
+      <if test="hotelQuality != null" >
+        hotel_quality,
+      </if>
+      <if test="hotelEnvironment != null" >
+        hotel_environment,
+      </if>
+      <if test="driverAttitude != null" >
+        driver_attitude,
+      </if>
+      <if test="driverEnvironment != null" >
+        driver_environment,
+      </if>
+      <if test="scenicWhole != null" >
+        scenic_whole,
+      </if>
+      <if test="suggestion != null" >
+        suggestion,
+      </if>
+      <if test="creatorId != null" >
+        creator_id,
+      </if>
+      <if test="creatorName != null" >
+        creator_name,
+      </if>
+      <if test="creatorPic != null" >
+        creator_pic,
+      </if>
+      <if test="creatorIdentityNo != null" >
+        creator_identity_no,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="guideAttitude != null" >
+        #{guideAttitude,jdbcType=DOUBLE},
+      </if>
+      <if test="guideProfession != null" >
+        #{guideProfession,jdbcType=DOUBLE},
+      </if>
+      <if test="foodQuality != null" >
+        #{foodQuality,jdbcType=DOUBLE},
+      </if>
+      <if test="foodEnvironment != null" >
+        #{foodEnvironment,jdbcType=DOUBLE},
+      </if>
+      <if test="hotelQuality != null" >
+        #{hotelQuality,jdbcType=DOUBLE},
+      </if>
+      <if test="hotelEnvironment != null" >
+        #{hotelEnvironment,jdbcType=DOUBLE},
+      </if>
+      <if test="driverAttitude != null" >
+        #{driverAttitude,jdbcType=DOUBLE},
+      </if>
+      <if test="driverEnvironment != null" >
+        #{driverEnvironment,jdbcType=DOUBLE},
+      </if>
+      <if test="scenicWhole != null" >
+        #{scenicWhole,jdbcType=DOUBLE},
+      </if>
+      <if test="suggestion != null" >
+        #{suggestion,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorId != null" >
+        #{creatorId,jdbcType=INTEGER},
+      </if>
+      <if test="creatorName != null" >
+        #{creatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorPic != null" >
+        #{creatorPic,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorIdentityNo != null" >
+        #{creatorIdentityNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.sales.po.GroupFeedback" >
+    update group_feedback
+    <set >
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="guideAttitude != null" >
+        guide_attitude = #{guideAttitude,jdbcType=DOUBLE},
+      </if>
+      <if test="guideProfession != null" >
+        guide_profession = #{guideProfession,jdbcType=DOUBLE},
+      </if>
+      <if test="foodQuality != null" >
+        food_quality = #{foodQuality,jdbcType=DOUBLE},
+      </if>
+      <if test="foodEnvironment != null" >
+        food_environment = #{foodEnvironment,jdbcType=DOUBLE},
+      </if>
+      <if test="hotelQuality != null" >
+        hotel_quality = #{hotelQuality,jdbcType=DOUBLE},
+      </if>
+      <if test="hotelEnvironment != null" >
+        hotel_environment = #{hotelEnvironment,jdbcType=DOUBLE},
+      </if>
+      <if test="driverAttitude != null" >
+        driver_attitude = #{driverAttitude,jdbcType=DOUBLE},
+      </if>
+      <if test="driverEnvironment != null" >
+        driver_environment = #{driverEnvironment,jdbcType=DOUBLE},
+      </if>
+      <if test="scenicWhole != null" >
+        scenic_whole = #{scenicWhole,jdbcType=DOUBLE},
+      </if>
+      <if test="suggestion != null" >
+        suggestion = #{suggestion,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorId != null" >
+        creator_id = #{creatorId,jdbcType=INTEGER},
+      </if>
+      <if test="creatorName != null" >
+        creator_name = #{creatorName,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorPic != null" >
+        creator_pic = #{creatorPic,jdbcType=VARCHAR},
+      </if>
+      <if test="creatorIdentityNo != null" >
+        creator_identity_no = #{creatorIdentityNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yihg.sales.po.GroupFeedback" >
+    update group_feedback
+    set group_id = #{groupId,jdbcType=INTEGER},
+      guide_attitude = #{guideAttitude,jdbcType=DOUBLE},
+      guide_profession = #{guideProfession,jdbcType=DOUBLE},
+      food_quality = #{foodQuality,jdbcType=DOUBLE},
+      food_environment = #{foodEnvironment,jdbcType=DOUBLE},
+      hotel_quality = #{hotelQuality,jdbcType=DOUBLE},
+      hotel_environment = #{hotelEnvironment,jdbcType=DOUBLE},
+      driver_attitude = #{driverAttitude,jdbcType=DOUBLE},
+      driver_environment = #{driverEnvironment,jdbcType=DOUBLE},
+      scenic_whole = #{scenicWhole,jdbcType=DOUBLE},
+      suggestion = #{suggestion,jdbcType=VARCHAR},
+      creator_id = #{creatorId,jdbcType=INTEGER},
+      creator_name = #{creatorName,jdbcType=VARCHAR},
+      creator_pic = #{creatorPic,jdbcType=VARCHAR},
+      creator_identity_no = #{creatorIdentityNo,jdbcType=VARCHAR},
+      create_time = #{createTime}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectPersonalStaticsByGroupIdAndIdNo" resultMap="PersonalStaticsResultMap" >
+    select g.*,(IFNULL(guide_attitude,0)+IFNULL(guide_profession,0)+IFNULL(food_quality,0)+IFNULL(food_quality,0)+IFNULL(food_environment,0)
+			+IFNULL(driver_attitude,0)+IFNULL(driver_environment,0)+IFNULL(scenic_whole,0))/9 score
+    from group_feedback g
+    where g.group_id = #{groupId,jdbcType=INTEGER} AND g.creator_identity_no=#{idNo,jdbcType=VARCHAR} 
+  </select>
+  
+  <select id="selectGroupStaticsByGroupId" resultMap="GroupStaticsResultMap" >
+    SELECT SUM(guide_attitude)/COUNT(g.id) guide_attitude,SUM(guide_profession)/COUNT(g.id) guide_profession,
+			SUM(food_quality)/COUNT(g.id) food_quality,SUM(food_environment)/COUNT(g.id) food_environment,
+			SUM(hotel_quality)/COUNT(g.id) hotel_quality,SUM(hotel_environment)/COUNT(g.id) hotel_environment,
+			SUM(driver_attitude)/COUNT(g.id) driver_attitude,SUM(driver_environment)/COUNT(g.id) driver_environment,
+			SUM(scenic_whole)/COUNT(g.id) scenic_whole,
+			IFNULL((SUM(guide_attitude)+SUM(guide_profession)+SUM(food_quality)+SUM(food_environment)+SUM(hotel_quality)+SUM(hotel_environment)+
+			SUM(driver_attitude)+SUM(driver_environment)+SUM(scenic_whole))/(COUNT(g.id)*9),0) score
+	FROM group_feedback g
+	WHERE g.group_id=#{groupId,jdbcType=INTEGER}
+  </select>
+</mapper>
