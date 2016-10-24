@@ -12,7 +12,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierService;
+import com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketOrderMapper;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
@@ -72,8 +72,7 @@ public class FitOrderDalImpl implements FitOrderDal {
 	@Autowired
 	private GroupRouteService groupRouteService;
 	@Autowired
-	private BookingSupplierService bookingSupplierService;
-
+	private AirTicketOrderMapper orderMapper;
 	@Override
 	public Integer saveOrUpdateFitOrderInfo(FitOrderVO fitOrderVO,
 			Integer userId, String userName,Integer proOperId,String proOperName, Integer bizId, String bizCode,
@@ -92,7 +91,7 @@ public class FitOrderDalImpl implements FitOrderDal {
 			GroupOrder orderCodeSort = groupOrderMapper
 					.selectGroupOrderCodeSort(bizId,
 							groupOrder.getDepartureDate());
-			//GenerateCodeUtil
+			//GenerateCodeUtil 抽取了 GroupOrderService的makeCodeByMode方法
 			String makeCodeByMode = GenerateCodeUtil.makeCodeByMode(bizId,
 					groupOrder.getOrderNo(), groupOrder.getDepartureDate(),
 					orderCodeSort == null ? 1
@@ -470,9 +469,9 @@ public class FitOrderDalImpl implements FitOrderDal {
 					tourGroup.setGroupCodeSort(groupCodeSort == null ? 1: groupCodeSort.getGroupCodeSort() + 1);
 					
 					if(fitOrderVO.isAgency()){
-						tourGroup.setGroupCode(tourGroupService.makeCodeForAgency(bizCode,fitOrderVO.getProductCode(),sdf.format(tourGroup.getDateStart()), sdf.format(tourGroup.getDateEnd()),"", tourGroup.getGroupCodeSort()));
+						tourGroup.setGroupCode(GenerateCodeUtil.makeCodeForAgency(bizCode,fitOrderVO.getProductCode(),sdf.format(tourGroup.getDateStart()), sdf.format(tourGroup.getDateEnd()),"", tourGroup.getGroupCodeSort()));
 					}else{
-						tourGroup.setGroupCode(tourGroupService.makeCodeByMode(bizCode, 0, groupOrder.getDepartureDate(), "", tourGroup.getGroupCodeSort()));
+						tourGroup.setGroupCode(GenerateCodeUtil.makeCodeByMode(bizCode, 0, groupOrder.getDepartureDate(), "", tourGroup.getGroupCodeSort()));
 					}
 					tourGroupMapper.insertSelective(tourGroup);
 
@@ -553,7 +552,6 @@ public class FitOrderDalImpl implements FitOrderDal {
 
 	@Override
 	public FitOrderVO selectFitOrderVOById(Integer orderId) {
-		// TODO Auto-generated method stub
 		FitOrderVO vo = new FitOrderVO();
 		GroupOrder groupOrder = groupOrderMapper.selectByPrimaryKey(orderId);
 		TourGroup tg = tourGroupMapper.selectByPrimaryKey(groupOrder.getGroupId());
@@ -582,8 +580,7 @@ public class FitOrderDalImpl implements FitOrderDal {
 				.selectByOrderAndType(orderId, 0);
 		vo.setGroupOrderPriceList(inList);
 		// 客人
-		List<Integer> guestIdList = airTicketRequestService
-				.findIssuedGuestIdList(groupOrder.getBizId(), orderId);
+		List<Integer> guestIdList = orderMapper.findIssuedGuestIdList(groupOrder.getBizId(), orderId);
 		List<GroupOrderGuest> guestList = groupOrderGuestMapper
 				.selectByOrderId(orderId);
 		if (guestList != null && guestList.size() > 0) {
@@ -600,7 +597,6 @@ public class FitOrderDalImpl implements FitOrderDal {
 	public void mergetGroup(List<MergeGroupOrderVO> list, Integer bizId,
 			Integer operid, String operName, String supplierCode,boolean isAgency)
 			throws ParseException {
-		// TODO Auto-generated method stub
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		for (MergeGroupOrderVO mergeGroupOrderVO : list) {
 			GroupRouteVO groupRouteVO = new GroupRouteVO();
@@ -684,7 +680,8 @@ public class FitOrderDalImpl implements FitOrderDal {
 			
 			if(isAgency){  //组团社
 				TourGroup selectGroupCodeSort = tourGroupMapper.selectGroupCodeSort(bizId,null, go.getDepartureDate());
-				String makeCodeByMode =tourGroupService.makeCodeForAgency(supplierCode, mergeGroupOrderVO.getProductCode(), sdf.format(tourGroup.getDateStart()), sdf.format(tourGroup.getDateEnd()), "", selectGroupCodeSort == null ? 1 : selectGroupCodeSort
+				//GenerateCodeUtil抽取了tourGroupService.makeCodeByMode
+				String makeCodeByMode =GenerateCodeUtil.makeCodeForAgency(supplierCode, mergeGroupOrderVO.getProductCode(), sdf.format(tourGroup.getDateStart()), sdf.format(tourGroup.getDateEnd()), "", selectGroupCodeSort == null ? 1 : selectGroupCodeSort
 								.getGroupCodeSort() + 1);
 				
 				tourGroup.setGroupCode(makeCodeByMode);
@@ -692,7 +689,7 @@ public class FitOrderDalImpl implements FitOrderDal {
 				
 			}else{ //地接社
 				TourGroup selectGroupCodeSort = tourGroupMapper.selectGroupCodeSort(bizId,0, go.getDepartureDate());
-				String makeCodeByMode = tourGroupService.makeCodeByMode(supplierCode,0,go.getDepartureDate(),null,selectGroupCodeSort == null ? 1 : selectGroupCodeSort.getGroupCodeSort() + 1);
+				String makeCodeByMode = GenerateCodeUtil.makeCodeByMode(supplierCode,0,go.getDepartureDate(),null,selectGroupCodeSort == null ? 1 : selectGroupCodeSort.getGroupCodeSort() + 1);
 				tourGroup.setGroupCode(makeCodeByMode);
 				tourGroup.setGroupCodeSort(selectGroupCodeSort == null ? 1 : selectGroupCodeSort.getGroupCodeSort() + 1);
 			}

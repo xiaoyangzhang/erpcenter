@@ -481,7 +481,6 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Transactional
     @Override
     public void updateGroupPersonNum(Integer groupId) {
-        // TODO Auto-generated method stub
         groupOrderMapper.updateTourGroupPersonNum(groupId);
         bookingDeliveryService.updateDeliveryGuestCountOnModifySKGuestCount(groupId);
 
