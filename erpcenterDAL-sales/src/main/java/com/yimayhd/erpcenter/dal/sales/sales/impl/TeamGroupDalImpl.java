@@ -37,6 +37,7 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteSupplierMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteTrafficMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.util.GenerateCodeUtil;
 
 
 public class TeamGroupDalImpl implements TeamGroupDal {
@@ -169,7 +170,7 @@ public class TeamGroupDalImpl implements TeamGroupDal {
 			GroupOrder orderCodeSort = groupOrderMapper
 					.selectGroupOrderCodeSort(tourGroup.getBizId(),
 							sdf.format(tourGroup.getDateStart()));
-			makeCodeByMode = groupOrderDal.makeCodeByMode(groupOrder
+			makeCodeByMode = GenerateCodeUtil.makeCodeByMode(groupOrder
 					.getBizId(), groupOrder.getOrderNo(), sdf.format(tourGroup
 					.getDateStart()),
 					orderCodeSort == null ? 1

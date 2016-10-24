@@ -40,6 +40,7 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteSupplierMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteTrafficMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.util.GenerateCodeUtil;
 
 public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 	@Autowired
@@ -89,7 +90,7 @@ public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 			GroupOrder orderCodeSort = groupOrderMapper
 					.selectGroupOrderCodeSort(bizId,
 							groupOrder.getDepartureDate());
-			String makeCodeByMode = groupOrderDal.makeCodeByMode(bizId,groupOrder.getOrderNo(), groupOrder.getDepartureDate(),orderCodeSort == null ? 1: orderCodeSort.getOrderNoSort() + 1);
+			String makeCodeByMode = GenerateCodeUtil.makeCodeByMode(bizId,groupOrder.getOrderNo(), groupOrder.getDepartureDate(),orderCodeSort == null ? 1: orderCodeSort.getOrderNoSort() + 1);
 			groupOrder.setOrderNo(makeCodeByMode);
 			groupOrder.setOrderNoSort(orderCodeSort == null ? 1 : orderCodeSort.getOrderNoSort() + 1);
 			groupOrderMapper.insert(groupOrder);
