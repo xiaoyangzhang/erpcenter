@@ -29,7 +29,7 @@ import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceVerifyMapper;
 /**
  * 对账管理
  */
-public class FinanceVerifyServiceImpl implements FinanceVerifyDal {
+public class FinanceVerifyDalImpl implements FinanceVerifyDal {
 
 	@Autowired
 	private SqlSessionTemplate ss;

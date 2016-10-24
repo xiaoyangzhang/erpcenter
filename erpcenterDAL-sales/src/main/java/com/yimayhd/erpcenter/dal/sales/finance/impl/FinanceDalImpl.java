@@ -55,7 +55,7 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
  * @author Jing.Zhuo
  * @create 2015年7月28日 上午11:39:28
  */
-public class FinanceServiceImpl implements FinanceDal {
+public class FinanceDalImpl implements FinanceDal {
 
 	@Autowired
 	private SqlSessionTemplate ss;

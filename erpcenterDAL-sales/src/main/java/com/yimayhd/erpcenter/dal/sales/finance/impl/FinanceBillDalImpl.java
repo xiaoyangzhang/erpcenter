@@ -23,7 +23,7 @@ import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceBillMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 
 
-public class FinanceBillServiceImpl implements FinanceBillDal{
+public class FinanceBillDalImpl implements FinanceBillDal{
 	
 	@Autowired
 	private FinanceBillMapper bsMapper;
