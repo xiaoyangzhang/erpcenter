@@ -1,35 +1,21 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.service;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.PaymentExportVO;
+import com.yimayhd.erpcenter.dal.sales.client.query.vo.DeparentmentOrderCondition;
+import com.yimayhd.erpcenter.dal.sales.client.query.vo.DepartmentOrderResult;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.*;
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.finance.po.FinanceCommission;
-import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.po.BookingAirTicket;
-import com.yihg.operation.po.BookingDeliveryPrice;
-import com.yihg.operation.po.BookingSupplier;
-import com.yihg.operation.vo.PaymentExportVO;
-import com.yihg.query.vo.DeparentmentOrderCondition;
-import com.yihg.query.vo.DepartmentOrderResult;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.GroupOrderGuest;
-import com.yihg.sales.po.GroupOrderPrice;
-import com.yihg.sales.vo.GroupOrderVO;
-import com.yihg.sales.vo.GroupPriceVo;
-import com.yihg.sales.vo.GroupRouteVO;
-import com.yihg.sales.vo.MergeGroupOrderVO;
-import com.yihg.sales.vo.SaleOperatorOrderStatic;
-import com.yihg.sales.vo.SaleOperatorVo;
-import com.yihg.sales.vo.SalePrice;
-import com.yihg.sales.vo.SalesVO;
-import com.yihg.sales.vo.TourGroupVO;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.*;
+
+
 
 public interface GroupOrderService {
 
@@ -104,7 +90,6 @@ public interface GroupOrderService {
     /**
      * 未确认团查询
      *
-     * @param tourGroupConVO
      * @return
      */
     PageBean<GroupOrder> selectByConListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer listType);
@@ -162,7 +147,6 @@ public interface GroupOrderService {
      *
      * @param pageBean
      * @param bizId
-     * @param mode
      * @return
      */
     GroupOrder selectProfitByConAndMode(@Param("page") PageBean<GroupOrder> pageBean, @Param("bizId") Integer bizId, Set<Integer> set);
@@ -174,7 +158,6 @@ public interface GroupOrderService {
     /**
      * 查询所有团<查询统计-客户团量查询专用>
      *
-     * @param pageBean
      * @param curBizId
      * @param dataUserIdSet
      * @return
@@ -287,8 +270,6 @@ public interface GroupOrderService {
     /**
      * 部门订单分析统计数据
      *
-     * @param groupOrder
-     * @param bizId
      * @param set
      * @return
      */
@@ -329,8 +310,6 @@ public interface GroupOrderService {
      * 根据接站牌获取团id列表
      * 预定安排，查询条件
      *
-     * @param bizId
-     * @param receiveMode
      * @return
      */
     List<Map<String, Object>> selectGroupIdsByReceiveMode(TourGroupVO group);
@@ -342,8 +321,6 @@ public interface GroupOrderService {
 	/**
 	 * 产品收客趋势查询
 	 * @param pageBean
-	 * @param bizId
-	 * @param set
 	 * @return
 	 */
 	List<GroupOrder> selectProductTrendListPageInnerLayer(PageBean<GroupOrder> pageBean, Map parameters);

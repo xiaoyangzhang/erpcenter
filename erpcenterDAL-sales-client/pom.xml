@@ -21,7 +21,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-		<groupId>com.yihg</groupId>    
+      <groupId>com.yimayhd.erpcenter</groupId>
+      <artifactId>erpcenter-common</artifactId>
+    </dependency>
+    <dependency>
+		<groupId>com.yihg</groupId>
 		<artifactId>yihg-architect-mybatis</artifactId>
 	</dependency>
 	<dependency>
