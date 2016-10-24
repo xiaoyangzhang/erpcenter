@@ -1,18 +1,16 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.vo;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
-import com.yihg.sales.po.AssistantGroup;
-import com.yihg.sales.po.AssistantGroupGuide;
-import com.yihg.sales.po.AssistantGroupOrder;
-import com.yihg.sales.po.AssistantGroupOrderGuest;
-import com.yihg.sales.po.AssistantGroupOrderTransport;
-import com.yihg.sales.po.AssistantGroupRoute;
-import com.yihg.sales.po.AssistantGroupRouteAttachment;
-import com.yihg.sales.po.AssistantGroupRouteSupplier;
-import com.yihg.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupGuide;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupOrderTransport;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupRoute;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupRouteAttachment;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupRouteSupplier;
 
 public class AssistantGroupVO implements Serializable{
 	/**

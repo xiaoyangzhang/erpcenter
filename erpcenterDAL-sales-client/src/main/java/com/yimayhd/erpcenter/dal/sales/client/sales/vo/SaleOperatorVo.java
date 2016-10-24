@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.yihg.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 
 public class SaleOperatorVo implements Serializable {
 	/**

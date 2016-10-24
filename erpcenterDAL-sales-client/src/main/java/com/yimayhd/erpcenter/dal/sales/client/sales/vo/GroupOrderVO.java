@@ -3,9 +3,9 @@ package com.yimayhd.erpcenter.dal.sales.client.sales.vo;
 import java.io.Serializable;
 import java.util.List;
 
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.GroupOrderGuest;
-import com.yihg.sales.po.GroupOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
 
 public class GroupOrderVO implements Serializable{
 	/**
