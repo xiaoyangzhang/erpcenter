@@ -1,19 +1,21 @@
-package com.yihg.operation.impl;
+package com.yimayhd.erpcenter.dal.sales.operation.impl;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.basic.utils.NumberUtil;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryPrice;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryPriceDal;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingDeliveryPriceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.basic.util.NumberUtil;
-import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.api.BookingDeliveryPriceService;
-import com.yihg.operation.dao.BookingDeliveryPriceMapper;
-import com.yihg.operation.po.BookingDeliveryPrice;
 
-public class BookingDeliveryPriceServiceImpl implements BookingDeliveryPriceService{
+import com.yihg.mybatis.utility.PageBean;
+
+
+public class BookingDeliveryPriceServiceImpl implements BookingDeliveryPriceDal{
 
 	@Autowired
 	private BookingDeliveryPriceMapper bookingDeliveryPriceMapper;

@@ -1,4 +1,4 @@
-package com.yihg.operation.impl;
+package com.yimayhd.erpcenter.dal.sales.operation.impl;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -6,6 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.yimayhd.erpcenter.common.exception.ClientException;
+import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryOrder;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryPrice;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryRoute;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingDeliveryStatics;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingDeliveryMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingDeliveryOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingDeliveryPriceMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingDeliveryRouteMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.fastjson.util.TypeUtils;
-import com.yihg.basic.exception.ClientException;
-import com.yihg.finance.api.FinanceService;
-import com.yihg.operation.api.BookingDeliveryService;
-import com.yihg.operation.dao.BookingDeliveryMapper;
-import com.yihg.operation.dao.BookingDeliveryOrderMapper;
-import com.yihg.operation.dao.BookingDeliveryPriceMapper;
-import com.yihg.operation.dao.BookingDeliveryRouteMapper;
-import com.yihg.operation.po.BookingDelivery;
-import com.yihg.operation.po.BookingDeliveryOrder;
-import com.yihg.operation.po.BookingDeliveryPrice;
-import com.yihg.operation.po.BookingDeliveryRoute;
-import com.yihg.operation.vo.BookingDeliveryStatics;
 
-public class BookingDeliveryServiceImpl implements BookingDeliveryService {
+
+public class BookingDeliveryServiceImpl implements BookingDeliveryDal {
 	Logger logger = LoggerFactory.getLogger(BookingDeliveryServiceImpl.class);
 	@Autowired
 	private BookingDeliveryMapper deliveryDao;
@@ -38,7 +39,7 @@ public class BookingDeliveryServiceImpl implements BookingDeliveryService {
 	@Autowired
 	private BookingDeliveryPriceMapper deliveryPriceDao;
 	@Autowired
-	private FinanceService financeService;
+	private FinanceDal financeDal;
 	
 	@Override
 	public BookingDeliveryStatics getStaticsByGroupId(Integer groupId) {
@@ -67,7 +68,7 @@ public class BookingDeliveryServiceImpl implements BookingDeliveryService {
 			//新增
 			deliveryDao.insert(bookingDelivery);
 			Integer bookingId = bookingDelivery.getId();			
-			List<BookingDeliveryOrder> orderList =bookingDelivery.getOrderList(); 
+			List<BookingDeliveryOrder> orderList =bookingDelivery.getOrderList();
 			if(orderList!=null && orderList.size()>0){
 				for(BookingDeliveryOrder order : orderList){
 					if(order.getId()==null){
@@ -178,7 +179,7 @@ public class BookingDeliveryServiceImpl implements BookingDeliveryService {
 		}
 		 deliveryDao.updateTotal(bookingDelivery.getId());
 		 //更新团里的统计信息
-		 financeService.calcTourGroupAmount(bookingDelivery.getGroupId());
+		financeDal.calcTourGroupAmount(bookingDelivery.getGroupId());
 		 return bookingDelivery.getId();
 	}
 
@@ -241,7 +242,7 @@ public class BookingDeliveryServiceImpl implements BookingDeliveryService {
 				deliveryPriceDao.deleteByBookingId(id);
 				
 				//更新团里的统计信息
-				financeService.calcTourGroupAmount(delivery.getGroupId());
+				financeDal.calcTourGroupAmount(delivery.getGroupId());
 				
 				if(result==0){
 					throw new ClientException("删除失败！");
