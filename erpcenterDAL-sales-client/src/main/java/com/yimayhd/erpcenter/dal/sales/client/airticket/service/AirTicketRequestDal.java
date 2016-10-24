@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.yihg.airticket.po.AirTicketRequest;
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketRequest;
 
-public interface AirTicketRequestService {
+public interface AirTicketRequestDal {
 	
 	/**
 	 * 新增或变更申请前，检查申请的机票数是否超过了余票

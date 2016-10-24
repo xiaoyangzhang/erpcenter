@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.yihg.airticket.po.AirTicketLeg;
-import com.yihg.airticket.po.AirTicketResource;
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketLeg;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketResource;
 
-public interface AirTicketResourceService{
+public interface AirTicketResourceDal{
 	
 	/**
 	 * 增加机票资源
