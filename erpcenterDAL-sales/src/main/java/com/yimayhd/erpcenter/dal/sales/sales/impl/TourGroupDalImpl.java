@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +24,11 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideTimes;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierPO;
-import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingGuideService;
-import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierService;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingGuideDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.AutocompleteInfo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
@@ -46,6 +47,12 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupRouteDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.TourGroupDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.OperatorGroupStatic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingDeliveryMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingGuideMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingGuideTimesMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierDetailMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderTransportMapper;
@@ -56,6 +63,7 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteSupplierMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteTrafficMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupCommentMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.util.GenerateCodeUtil;
 
 public class TourGroupDalImpl implements TourGroupDal {
 
@@ -67,7 +75,7 @@ public class TourGroupDalImpl implements TourGroupDal {
 	@Autowired
 	private GroupOrderMapper groupOrderMapper;
 	@Autowired
-	private BookingGuideService guideService;
+	private BookingGuideDal guideDal;
 	@Autowired
 	private BookingGuideMapper guideMapper;
 	@Autowired
@@ -76,7 +84,7 @@ public class TourGroupDalImpl implements TourGroupDal {
 	@Autowired
 	private BookingSupplierDetailMapper detailMapper;
 	@Autowired
-	private BookingSupplierService supplierService;
+	private BookingSupplierDal supplierDal;
 	@Autowired
 	private BookingSupplierMapper supplierMapper;
 	@Autowired
@@ -344,7 +352,7 @@ public class TourGroupDalImpl implements TourGroupDal {
 				sdf.format(tourGroup.getDateStart()));
 		groupOrder.setOrderNoSort(orderCodeSort == null ? 1 : orderCodeSort.getOrderNoSort() + 1);
 
-		makeCodeByMode = groupOrderDal.makeCodeByMode(groupOrder.getBizId(), groupOrder.getOrderNo(),
+		makeCodeByMode = GenerateCodeUtil.makeCodeByMode(groupOrder.getBizId(), groupOrder.getOrderNo(),
 				sdf.format(tourGroup.getDateStart()), orderCodeSort == null ? 1 : orderCodeSort.getOrderNoSort() + 1);
 		groupOrder.setOrderNo(makeCodeByMode);
 		groupOrder.setOrderNoSort(orderCodeSort == null ? 1 : orderCodeSort.getOrderNoSort() + 1);
@@ -375,7 +383,7 @@ public class TourGroupDalImpl implements TourGroupDal {
 				sdf.format(tourGroup.getDateStart()));
 		groupOrder.setOrderNoSort(orderCodeSort == null ? 1 : orderCodeSort.getOrderNoSort() + 1);
 
-		makeCodeByMode = groupOrderDal.makeCodeByMode(groupOrder.getBizId(), groupOrder.getOrderNo(),
+		makeCodeByMode = GenerateCodeUtil.makeCodeByMode(groupOrder.getBizId(), groupOrder.getOrderNo(),
 				sdf.format(tourGroup.getDateStart()), orderCodeSort == null ? 1 : orderCodeSort.getOrderNoSort() + 1);
 		groupOrder.setOrderNo(makeCodeByMode);
 		groupOrder.setOrderNoSort(orderCodeSort == null ? 1 : orderCodeSort.getOrderNoSort() + 1);
@@ -447,7 +455,7 @@ public class TourGroupDalImpl implements TourGroupDal {
 					sdf.format(tourGroup.getDateStart()));
 			groupOrder.setOrderNoSort(orderCodeSort == null ? 1 : orderCodeSort.getOrderNoSort() + 1);
 
-			String makeCodeByMode = groupOrderDal.makeCodeByMode(groupOrder.getBizId(), groupOrder.getOrderNo(),
+			String makeCodeByMode = GenerateCodeUtil.makeCodeByMode(groupOrder.getBizId(), groupOrder.getOrderNo(),
 					sdf.format(tourGroup.getDateStart()),
 					orderCodeSort == null ? 1 : orderCodeSort.getOrderNoSort() + 1);
 			groupOrder.setOrderNo(makeCodeByMode);
