@@ -1,4 +1,4 @@
-package com.yihg.airticket.impl;
+package com.yimayhd.erpcenter.dal.sales.airticket.impl;
 
 import java.util.List;
 
@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yihg.airticket.api.AirTicketOrderService;
-import com.yihg.airticket.dao.AirTicketOrderMapper;
-import com.yihg.airticket.po.AirTicketOrder;
+import com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketOrder;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.service.AirTicketOrderDal;
 
-public class AirTicketOrderServiceImpl implements AirTicketOrderService {
+public class AirTicketOrderDalImpl implements AirTicketOrderDal {
 	
 	@Autowired
 	private AirTicketOrderMapper orderMapper;

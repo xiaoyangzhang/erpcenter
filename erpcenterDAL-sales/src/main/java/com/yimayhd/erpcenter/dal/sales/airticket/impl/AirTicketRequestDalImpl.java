@@ -1,29 +1,27 @@
-package com.yihg.airticket.impl;
+package com.yimayhd.erpcenter.dal.sales.airticket.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yihg.airticket.api.AirTicketRequestService;
-import com.yihg.airticket.api.AirTicketResourceService;
-import com.yihg.airticket.dao.AirTicketOrderMapper;
-import com.yihg.airticket.dao.AirTicketRequestMapper;
-import com.yihg.airticket.dao.AirTicketResourceMapper;
-import com.yihg.airticket.po.AirTicketOrder;
-import com.yihg.airticket.po.AirTicketRequest;
-import com.yihg.airticket.po.AirTicketResource;
-import com.yihg.basic.exception.ClientException;
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketRequestMapper;
+import com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketResourceMapper;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketOrder;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketRequest;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketResource;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.service.AirTicketRequestDal;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.service.AirTicketResourceDal;
 
-public class AirTicketRequestServiceImpl implements AirTicketRequestService{
+public class AirTicketRequestDalImpl implements AirTicketRequestDal{
 	
 	@Autowired
 	private AirTicketRequestMapper requestMapper;
@@ -32,12 +30,12 @@ public class AirTicketRequestServiceImpl implements AirTicketRequestService{
 	@Autowired
 	private AirTicketOrderMapper orderMapper;
 	@Autowired
-	private AirTicketResourceService resourceService;
+	private AirTicketResourceDal resourceDal;
 	
 	@Override
 	@Transactional
 	public boolean checkAvailable(Integer bizId, Integer resourceId, Integer requestId, Integer requestTicketNumber){
-		Integer availableTickets = resourceService.findResource(resourceId, bizId).getAvailableNumber();
+		Integer availableTickets = resourceDal.findResource(resourceId, bizId).getAvailableNumber();
 		if (requestId==null){ // new request
 			if (requestTicketNumber > availableTickets){
 				return false;
