@@ -1,10 +1,11 @@
-package com.yihg.sales.dao;
+package com.yimayhd.erpcenter.dal.sales.sales.dao;
 
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.sales.po.TourGroupComment;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupComment;
+
 
 public interface TourGroupCommentMapper {
 	List<TourGroupComment> getTourGroupComments(@Param("bizId")Integer bizId, @Param("groupIds")String groupIds);

@@ -1,4 +1,4 @@
-package com.yihg.sales.dao;
+package com.yimayhd.erpcenter.dal.sales.sales.dao;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -8,11 +8,10 @@ import java.util.Set;
 import org.apache.ibatis.annotations.Param;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.po.BookingShop;
-import com.yihg.operation.vo.BookingGroup;
-import com.yihg.quality.vo.QualityTourGroupVo;
-import com.yihg.sales.po.TourGroup;
-import com.yihg.sales.vo.OperatorGroupStatic;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
+import com.yimayhd.erpcenter.dal.sales.client.quality.vo.QualityTourGroupVo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.OperatorGroupStatic;
 
 public interface TourGroupMapper {
 	

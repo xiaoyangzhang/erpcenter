@@ -1,6 +1,7 @@
-package com.yihg.sales.dao;
+package com.yimayhd.erpcenter.dal.sales.sales.dao;
 
-import com.yihg.sales.po.GroupRouteExtra;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteExtra;
+
 
 public interface GroupRouteExtraMapper {
     int deleteByPrimaryKey(Integer id);
