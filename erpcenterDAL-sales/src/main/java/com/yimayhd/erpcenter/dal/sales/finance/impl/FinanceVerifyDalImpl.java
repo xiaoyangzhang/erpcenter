@@ -20,8 +20,6 @@ import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceVerifyDetail;
 import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceVerifyDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryPrice;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
-import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryPriceService;
-import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDetailService;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderPriceDal;
