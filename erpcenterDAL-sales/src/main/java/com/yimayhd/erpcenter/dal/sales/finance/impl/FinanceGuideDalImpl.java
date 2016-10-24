@@ -25,7 +25,6 @@ import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceDal;
 import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceGuideDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
-import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingGuideService;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceBillMapper;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceCommissionDeductionMapper;
