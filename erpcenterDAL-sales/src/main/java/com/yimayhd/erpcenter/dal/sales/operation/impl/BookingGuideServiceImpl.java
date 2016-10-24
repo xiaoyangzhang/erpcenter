@@ -1,4 +1,4 @@
-package com.yihg.operation.impl;
+package com.yimayhd.erpcenter.dal.sales.operation.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -6,31 +6,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.common.exception.ClientException;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.*;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingGuideDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGuidesVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBill;
+import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceBillMapper;
+import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceCommissionMapper;
+import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceGuideMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingGuideMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingGuideTimesMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingShopMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierDetailMapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.yihg.basic.exception.ClientException;
-import com.yihg.finance.dao.FinanceBillMapper;
-import com.yihg.finance.dao.FinanceCommissionMapper;
-import com.yihg.finance.dao.FinanceGuideMapper;
-import com.yihg.finance.po.FinanceGuide;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.api.BookingGuideService;
-import com.yihg.operation.dao.BookingGuideMapper;
-import com.yihg.operation.dao.BookingGuideTimesMapper;
-import com.yihg.operation.dao.BookingShopMapper;
-import com.yihg.operation.dao.BookingSupplierDetailMapper;
-import com.yihg.operation.po.BookingGuide;
-import com.yihg.operation.po.BookingGuideListCount;
-import com.yihg.operation.po.BookingGuideListSelect;
-import com.yihg.operation.po.BookingGuideTimes;
-import com.yihg.operation.po.BookingShop;
-import com.yihg.operation.po.BookingSupplierDetail;
-import com.yihg.operation.vo.BookingGuidesVO;
-import com.yihg.sales.po.FinanceBill;
 
-public class BookingGuideServiceImpl implements BookingGuideService{
+
+public class BookingGuideServiceImpl implements BookingGuideDal{
 
 	@Autowired
 	private BookingGuideMapper bookingGuideMapper;

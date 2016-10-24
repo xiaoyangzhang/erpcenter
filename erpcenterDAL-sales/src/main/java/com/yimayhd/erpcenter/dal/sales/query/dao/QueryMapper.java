@@ -1,4 +1,4 @@
-package com.yihg.query.dao;
+package com.yimayhd.erpcenter.dal.sales.query.dao;
 
 import java.util.List;
 import java.util.Map;
@@ -7,8 +7,6 @@ import java.util.Set;
 import org.apache.ibatis.annotations.Param;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.query.vo.ProductGuestShoppingCondition;
-import com.yihg.sales.po.GroupOrder;
 
 
 public interface QueryMapper {

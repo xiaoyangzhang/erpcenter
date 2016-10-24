@@ -1,22 +1,21 @@
-package com.yihg.operation.impl;
+package com.yimayhd.erpcenter.dal.sales.operation.impl;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
+import com.yimayhd.erpcenter.dal.basic.utils.NumberUtil;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingShopDetailDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingShopDetailVO;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingShopDetailDeployMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingShopDetailMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingShopMapper;
+import com.yimayhd.erpcenter.dal.sales.tj.dao.TJMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.basic.util.NumberUtil;
-import com.yihg.images.util.DateUtils;
-import com.yihg.operation.api.BookingShopDetailService;
-import com.yihg.operation.dao.BookingShopDetailDeployMapper;
-import com.yihg.operation.dao.BookingShopDetailMapper;
-import com.yihg.operation.dao.BookingShopMapper;
-import com.yihg.operation.po.BookingShopDetail;
-import com.yihg.operation.vo.BookingShopDetailVO;
-import com.yihg.tj.dao.TJMapper;
-import com.yihg.tj.po.TJShopProject;
 
-public class BookingShopDetailServiceImpl implements BookingShopDetailService{
+
+public class BookingShopDetailServiceImpl implements BookingShopDetailDal{
 
 	@Autowired
 	private BookingShopDetailMapper shopDetailMapper;

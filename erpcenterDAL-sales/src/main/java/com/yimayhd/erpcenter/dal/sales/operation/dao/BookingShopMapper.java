@@ -1,18 +1,19 @@
-package com.yihg.operation.dao;
+package com.yimayhd.erpcenter.dal.sales.operation.dao;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDet;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopSelect;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryGuideShop;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryShopInfo;
 import org.apache.ibatis.annotations.Param;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.po.BookingShop;
-import com.yihg.operation.po.BookingShopDet;
-import com.yihg.operation.po.BookingShopDetail;
-import com.yihg.operation.po.BookingShopSelect;
-import com.yihg.operation.vo.QueryGuideShop;
-import com.yihg.operation.vo.QueryShopInfo;
+
 
 public interface BookingShopMapper {
     int deleteByPrimaryKey(Integer id);

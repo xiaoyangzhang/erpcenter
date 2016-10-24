@@ -20,8 +20,8 @@ import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceVerifyDetail;
 import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceVerifyDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryPrice;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
-import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryPriceService;
-import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDetailService;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryPriceDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDetailDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderPriceDal;
@@ -39,13 +39,13 @@ public class FinanceVerifyDalImpl implements FinanceVerifyDal {
 	private FinanceVerifyMapper financeVerifyMapper;
 	
 	@Autowired
-	private BookingSupplierDetailService bookingSupplierDetailService;
+	private BookingSupplierDetailDal bookingSupplierDetailDal;
 	
 	@Autowired
 	private GroupOrderPriceDal groupOrderPriceDal;
 	
 	@Autowired
-	private BookingDeliveryPriceService bookingDeliveryPriceService;
+	private BookingDeliveryPriceDal bookingDeliveryPriceDal;
 	
 	/**
 	 * 修改对账单状态
@@ -287,12 +287,12 @@ public class FinanceVerifyDalImpl implements FinanceVerifyDal {
 					List<GroupOrderPrice> priceList = groupOrderPriceDal.selectByOrderAndType(bookingId, 0);
 					details = groupOrderPriceDal.concatDetail(priceList);
 				}else if(Constants.LOCALTRAVEL.equals(supplierType)){
-					List<BookingDeliveryPrice> priceList = bookingDeliveryPriceService.getPriceListByBookingId(bookingId);
-					details = bookingDeliveryPriceService.concatDetail(priceList);
+					List<BookingDeliveryPrice> priceList = bookingDeliveryPriceDal.getPriceListByBookingId(bookingId);
+					details = bookingDeliveryPriceDal.concatDetail(priceList);
 				}else{
 					String remark = map.get("remark") != null ? map.get("remark").toString() : "";
-					List<BookingSupplierDetail> detailList = bookingSupplierDetailService.selectByPrimaryBookId(bookingId);
-					details = bookingSupplierDetailService.concatDetail(supplierType, remark, detailList);
+					List<BookingSupplierDetail> detailList = bookingSupplierDetailDal.selectByPrimaryBookId(bookingId);
+					details = bookingSupplierDetailDal.concatDetail(supplierType, remark, detailList);
 				}
 				map.put("details", details);
 			}

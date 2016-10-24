@@ -1,6 +1,6 @@
-package com.yihg.operation.dao;
+package com.yimayhd.erpcenter.dal.sales.operation.dao;
 
-import com.yihg.operation.po.BookingShopEstimate;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopEstimate;
 
 public interface BookingShopEstimateMapper {
     int deleteByPrimaryKey(Integer id);

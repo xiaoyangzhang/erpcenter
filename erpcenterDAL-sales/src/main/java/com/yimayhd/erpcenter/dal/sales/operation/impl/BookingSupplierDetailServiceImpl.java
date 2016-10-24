@@ -1,76 +1,76 @@
-package com.yihg.operation.impl;
+package com.yimayhd.erpcenter.dal.sales.operation.impl;
 
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
+import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
+import com.yimayhd.erpcenter.dal.basic.utils.NumberUtil;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDetailDal;
+import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierDetailMapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.basic.util.NumberUtil;
-import com.yihg.images.util.DateUtils;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.api.BookingSupplierDetailService;
-import com.yihg.operation.dao.BookingSupplierDetailMapper;
-import com.yihg.operation.po.BookingDeliveryPrice;
-import com.yihg.operation.po.BookingSupplierDetail;
-import com.yihg.supplier.constants.Constants;
+
 
 public class BookingSupplierDetailServiceImpl implements
-		BookingSupplierDetailService {
+		BookingSupplierDetailDal {
 
 	@Autowired
-	private BookingSupplierDetailMapper BookingSupplierDetailMapper;
+	private BookingSupplierDetailMapper bookingSupplierDetailMapper;
 	
 	@Override
 	public int deleteByPrimaryKey(Integer id) {
-		return BookingSupplierDetailMapper.deleteByPrimaryKey(id);
+		return bookingSupplierDetailMapper.deleteByPrimaryKey(id);
 	}
 
 	@Override
 	public int insert(BookingSupplierDetail record) {
-		return BookingSupplierDetailMapper.insert(record);
+		return bookingSupplierDetailMapper.insert(record);
 	}
 
 	@Override
 	public int insertSelective(BookingSupplierDetail record) {
-		return BookingSupplierDetailMapper.insertSelective(record);
+		return bookingSupplierDetailMapper.insertSelective(record);
 	}
 
 	@Override
 	public BookingSupplierDetail selectByPrimaryKey(Integer id) {
-		return BookingSupplierDetailMapper.selectByPrimaryKey(id);
+		return bookingSupplierDetailMapper.selectByPrimaryKey(id);
 	}
 
 	@Override
 	public int updateByPrimaryKeySelective(BookingSupplierDetail record) {
-		return BookingSupplierDetailMapper.updateByPrimaryKeySelective(record);
+		return bookingSupplierDetailMapper.updateByPrimaryKeySelective(record);
 	}
 
 	@Override
 	public int updateByPrimaryKey(BookingSupplierDetail record) {
-		return BookingSupplierDetailMapper.updateByPrimaryKey(record);
+		return bookingSupplierDetailMapper.updateByPrimaryKey(record);
 	}
 
 	@Override
 	public List<BookingSupplierDetail> selectByPrimaryBookId(Integer bookId) {
-		return BookingSupplierDetailMapper.selectByPrimaryBookId(bookId);
+		return bookingSupplierDetailMapper.selectByPrimaryBookId(bookId);
 	}
 
 	@Override
 	public int deleteByBookingId(Integer bookingId) {
-		return BookingSupplierDetailMapper.deleteByBookingId(bookingId);
+		return bookingSupplierDetailMapper.deleteByBookingId(bookingId);
 	}
 
 	@Override
 	public List<BookingSupplierDetail> getDriversByGroupIdAndType(
 			Integer groupId, Integer supplierType) {		
-		return BookingSupplierDetailMapper.getListByGroupIdAndType(groupId, supplierType);
+		return bookingSupplierDetailMapper.getListByGroupIdAndType(groupId, supplierType);
 	}
 
 	@Override
 	public BookingSupplierDetail selectDriverInfoByGroupIdAndDriverId(Integer groupId, Integer driverId) {
-		return BookingSupplierDetailMapper.selectDriverInfoByGroupIdAndDriverId(groupId,driverId);
+		return bookingSupplierDetailMapper.selectDriverInfoByGroupIdAndDriverId(groupId,driverId);
 	}
 	
 	
@@ -285,13 +285,13 @@ public class BookingSupplierDetailServiceImpl implements
 
 	@Override
 	public List<Map<String, Integer>> getBookingIdsByType1Id(Map parameters) {
-		return BookingSupplierDetailMapper.getBookingIdsByType1Id(parameters);
+		return bookingSupplierDetailMapper.getBookingIdsByType1Id(parameters);
 	}
 
 	@Override
 	public List<BookingSupplierDetail> selectBookingSupplierDetailByGroupId(
 			Integer groupId) {
-		return BookingSupplierDetailMapper.selectBookingSupplierDetailByGroupId(groupId);
+		return bookingSupplierDetailMapper.selectBookingSupplierDetailByGroupId(groupId);
 	}
 	
 }

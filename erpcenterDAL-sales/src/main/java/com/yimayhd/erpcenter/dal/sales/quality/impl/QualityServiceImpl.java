@@ -1,17 +1,18 @@
-package com.yihg.quality.impl;
+package com.yimayhd.erpcenter.dal.sales.quality.impl;
+
+import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.client.quality.service.QualityDal;
+import com.yimayhd.erpcenter.dal.sales.client.quality.vo.QualityTourGroupVo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 
 import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.yihg.mybatis.utility.PageBean;
-import com.yihg.quality.api.QualityService;
-import com.yihg.quality.vo.QualityTourGroupVo;
-import com.yihg.sales.dao.GroupOrderMapper;
-import com.yihg.sales.dao.TourGroupMapper;
-import com.yihg.sales.po.GroupOrder;
 
-public class QualityServiceImpl implements QualityService {
+public class QualityServiceImpl implements QualityDal {
 
 	@Resource
 	private TourGroupMapper groupMapper;

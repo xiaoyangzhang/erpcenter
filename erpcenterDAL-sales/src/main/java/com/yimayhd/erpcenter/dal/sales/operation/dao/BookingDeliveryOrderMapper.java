@@ -1,10 +1,10 @@
-package com.yihg.operation.dao;
+package com.yimayhd.erpcenter.dal.sales.operation.dao;
 
 import java.util.List;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryOrder;
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.operation.po.BookingDeliveryOrder;
 
 public interface BookingDeliveryOrderMapper {
     int deleteByPrimaryKey(Integer id);
