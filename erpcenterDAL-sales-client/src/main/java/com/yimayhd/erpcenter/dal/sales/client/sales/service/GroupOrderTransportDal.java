@@ -2,15 +2,15 @@ package com.yimayhd.erpcenter.dal.sales.client.sales.service;
 
 import java.util.List;
 
-import com.yihg.sales.po.GroupOrderTransport;
-import com.yihg.sales.vo.Transport;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.Transport;
 
 /**
  * 销售订单-接送信息
  * @author qindz
  *
  */
-public interface GroupOrderTransportService {
+public interface GroupOrderTransportDal {
     int deleteByPrimaryKey(Integer id);
 
     int insert(GroupOrderTransport record);

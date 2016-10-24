@@ -4,24 +4,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.vo.BookingGroup;
-import com.yihg.sales.po.AutocompleteInfo;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.TourGroup;
-import com.yihg.sales.po.TourGroupComment;
-import com.yihg.sales.po.TourGroupPriceAndPersons;
-import com.yihg.sales.vo.OperatorGroupStatic;
-import com.yihg.sales.vo.TourGroupVO;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AutocompleteInfo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupComment;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupPriceAndPersons;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.OperatorGroupStatic;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 
 /**
  * 
  * @author qindz
  *
  */
-public interface TourGroupService {
+public interface TourGroupDal {
 	/**
 	 * 旅行团的删除属性
 	 * 

@@ -2,10 +2,9 @@ package com.yimayhd.erpcenter.dal.sales.client.finance.po;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
-import com.yihg.operation.po.BookingSupplier;
-import com.yihg.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 
 public class FinanceVerifyDetail implements Serializable{
     /**

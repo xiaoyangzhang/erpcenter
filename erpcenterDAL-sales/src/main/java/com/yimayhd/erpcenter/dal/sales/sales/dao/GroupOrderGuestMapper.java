@@ -1,15 +1,13 @@
-package com.yihg.sales.dao;
+package com.yimayhd.erpcenter.dal.sales.sales.dao;
+
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.ibatis.annotations.Param;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.GroupOrderGuest;
-import com.yihg.sales.vo.SaleOperatorVo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 
 public interface GroupOrderGuestMapper {
     int deleteByPrimaryKey(Integer id);

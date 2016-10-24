@@ -4,15 +4,13 @@ import java.util.List;
 import java.util.Set;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.taobao.po.PlatTaobaoTrade;
-import com.yihg.taobao.po.TaobaoOrder;
+import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade;
 
 /**
  * Created by zhoum on 2016/8/11.
  */
 
-public interface TaobaoOrderService {
+public interface TaobaoOrderDal {
 
 	/**
 	 * 查询淘宝原始单

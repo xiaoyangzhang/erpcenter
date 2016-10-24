@@ -3,13 +3,11 @@ package com.yimayhd.erpcenter.dal.sales.client.finance.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
-
-import com.yihg.finance.po.FinancePay;
-import com.yihg.finance.po.FinancePayDetail;
-import com.yihg.finance.po.InfoBean;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePayDetail;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.InfoBean;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 
 
 /**
@@ -18,7 +16,7 @@ import com.yihg.sales.po.TourGroup;
  * @author Jing.Zhuo
  * @create 2015年7月28日 上午11:39:28
  */
-public interface FinanceService{
+public interface FinanceDal{
 	
 	/**
 	 * 计算团的收入支出等费用项

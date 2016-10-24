@@ -6,14 +6,14 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.basic.exception.ClientException;
-import com.yihg.finance.po.CheckSheetFinance;
-import com.yihg.finance.po.FinanceCommission;
-import com.yihg.finance.po.FinanceGuide;
-import com.yihg.finance.po.FinancePay;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.po.BookingGuide;
-import com.yihg.operation.po.BookingSupplier;
+import com.yimayhd.erpcenter.common.exception.ClientException;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.CheckSheetFinance;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
 
 /**
  * 导游报账
@@ -21,7 +21,7 @@ import com.yihg.operation.po.BookingSupplier;
  * @author Jing.Zhuo
  * @create 2015年8月13日 上午10:07:03
  */
-public interface FinanceGuideService {
+public interface FinanceGuideDal {
 
 	/**
 	 * 审核导游报账单
