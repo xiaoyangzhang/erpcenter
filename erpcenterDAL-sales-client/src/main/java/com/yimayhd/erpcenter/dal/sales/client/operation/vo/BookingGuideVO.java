@@ -3,9 +3,6 @@ package com.yimayhd.erpcenter.dal.sales.client.operation.vo;
 import java.io.Serializable;
 import java.util.List;
 
-import com.yihg.operation.po.BookingGuide;
-import com.yihg.operation.po.BookingGuideTimes;
-
 public class BookingGuideVO implements Serializable{
 
 	/**
