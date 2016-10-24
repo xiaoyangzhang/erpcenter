@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,6 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryP
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDetailService;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
-import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderPriceService;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceVerifyMapper;
 
 /**

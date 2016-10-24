@@ -51,7 +51,7 @@ public class FinanceGuideServiceImpl implements FinanceGuideDal {
 	private SqlSessionTemplate ss;
 	
 	@Autowired
-	private FinanceDal financeService;
+	private FinanceDal financeDal;
 	@Autowired
 	private	BookingGuideService bookingGuideService;
 	
@@ -187,7 +187,7 @@ public class FinanceGuideServiceImpl implements FinanceGuideDal {
 			
 			BookingSupplier modify = new BookingSupplier();
 			modify.setId(fg.getBookingIdLink());
-			BigDecimal rowCash = financeService.calcTotalCashValue(fg.getBookingIdLink(), fg.getSupplierType());
+			BigDecimal rowCash = financeDal.calcTotalCashValue(fg.getBookingIdLink(), fg.getSupplierType());
 			modify.setTotalCash(rowCash);
 			supplierMapper.updateByPrimaryKeySelective(modify);//更新booking_supplier表的total_cash			
 		}
@@ -200,7 +200,7 @@ public class FinanceGuideServiceImpl implements FinanceGuideDal {
 		guideMapper.updateByPrimaryKeySelective(p2);
 
 		// 统计整团收支
-		financeService.calcTourGroupAmount(guide.getGroupId());
+		financeDal.calcTourGroupAmount(guide.getGroupId());
 	}
 	
 	/**
@@ -266,7 +266,7 @@ public class FinanceGuideServiceImpl implements FinanceGuideDal {
 			//ou注释以下两行 2016-06-15，直接在原来基础上直接加减是有问题，因为发现好多次本身totalCash字段的值是错的
 			//modify.setTotalCash(bs.getTotalCash() == null ? new BigDecimal(0) : bs.getTotalCash());
 			//modify.setTotalCash(modify.getTotalCash().add(fg.getTotal()));
-			rowCash = financeService.calcTotalCashValue(fg.getBookingIdLink(), fg.getSupplierType());
+			rowCash = financeDal.calcTotalCashValue(fg.getBookingIdLink(), fg.getSupplierType());
 			modify.setTotalCash(rowCash);
 			supplierMapper.updateByPrimaryKeySelective(modify);//更新booking_supplier表的total_cash
 		}
@@ -289,7 +289,7 @@ public class FinanceGuideServiceImpl implements FinanceGuideDal {
 		}
 		
 		// 统计整团收支
-		financeService.calcTourGroupAmount(guide.getGroupId());
+		financeDal.calcTourGroupAmount(guide.getGroupId());
 	}
 	
 	/**
@@ -334,12 +334,12 @@ public class FinanceGuideServiceImpl implements FinanceGuideDal {
 			
 			BookingSupplier modify = new BookingSupplier();
 			modify.setId(financeGuide.getBookingIdLink());
-			BigDecimal rowCash = financeService.calcTotalCashValue(financeGuide.getBookingIdLink(), financeGuide.getSupplierType());
+			BigDecimal rowCash = financeDal.calcTotalCashValue(financeGuide.getBookingIdLink(), financeGuide.getSupplierType());
 			modify.setTotalCash(rowCash);
 			supplierMapper.updateByPrimaryKeySelective(modify);//更新booking_supplier表的total_cash
 		}
 		// 统计整团收支
-		financeService.calcTourGroupAmount(groupId);
+		financeDal.calcTourGroupAmount(groupId);
 	}
 	
 	/**
@@ -387,7 +387,7 @@ public class FinanceGuideServiceImpl implements FinanceGuideDal {
 		
 		// 统计整团收支
 		if(pay.getGroupId() != null){
-			financeService.calcTourGroupAmount(pay.getGroupId());
+			financeDal.calcTourGroupAmount(pay.getGroupId());
 		}
 	}
 	
@@ -678,7 +678,7 @@ public class FinanceGuideServiceImpl implements FinanceGuideDal {
 			commissionMapper.insert(com);
 		}
 		
-		financeService.calcTourGroupAmount(groupId);
+		financeDal.calcTourGroupAmount(groupId);
 	}
 	
 	/**
@@ -965,7 +965,7 @@ public class FinanceGuideServiceImpl implements FinanceGuideDal {
 		payMapper.update(pay);
 		
 		// 统计整团收支
-		financeService.calcTourGroupAmount(groupId);
+		financeDal.calcTourGroupAmount(groupId);
 	}
 	
 	@Override
