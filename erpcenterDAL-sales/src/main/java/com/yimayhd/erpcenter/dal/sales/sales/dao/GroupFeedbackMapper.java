@@ -1,12 +1,14 @@
-package com.yihg.sales.dao;
+package com.yimayhd.erpcenter.dal.sales.sales.dao;
+
 
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.sales.po.GroupFeedback;
-import com.yihg.sales.vo.GroupFeedbackGroupStaticsVO;
-import com.yihg.sales.vo.GroupFeedbackPersonalStaticsVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupFeedback;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupFeedbackGroupStaticsVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupFeedbackPersonalStaticsVO;
+
 
 /**
  * 当前行程  旅游服务评价

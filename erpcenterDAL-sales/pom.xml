@@ -24,5 +24,9 @@
 		<groupId>com.yimayhd.erpcenter</groupId>
 		<artifactId>erpcenterDAL-sales-client</artifactId>
 	</dependency>
+	<dependency>
+		<groupId>com.yimayhd.erpcenter</groupId>
+	    <artifactId>erpcenter-common</artifactId>
+	</dependency>
   </dependencies>
 </project>
