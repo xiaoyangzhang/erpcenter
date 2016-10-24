@@ -1,23 +1,18 @@
-package com.yihg.sales.impl;
+package com.yimayhd.erpcenter.dal.sales.sales.impl;
 
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.yihg.operation.api.BookingDeliveryService;
-import com.yihg.sales.api.GroupOrderGuestService;
-import com.yihg.sales.api.GroupOrderService;
-import com.yihg.sales.dao.GroupOrderGuestMapper;
-import com.yihg.sales.dao.GroupOrderMapper;
-import com.yihg.sales.dao.TourGroupMapper;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.GroupOrderGuest;
-import com.yihg.sales.po.TourGroup;
-
 import org.springframework.transaction.annotation.Transactional;
 
-public class GroupOrderGuestServiceImpl implements GroupOrderGuestService {
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderGuestDAL;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
+
+public class GroupOrderGuestDalImpl implements GroupOrderGuestDAL {
 
 	@Autowired
 	private GroupOrderGuestMapper groupOrderGuestMapper;

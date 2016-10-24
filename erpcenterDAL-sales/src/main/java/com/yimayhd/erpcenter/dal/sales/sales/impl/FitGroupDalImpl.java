@@ -1,6 +1,5 @@
-package com.yihg.sales.impl;
+package com.yimayhd.erpcenter.dal.sales.sales.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -8,23 +7,23 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.sales.api.FitGroupService;
-import com.yihg.sales.dao.GroupOrderMapper;
-import com.yihg.sales.dao.GroupRouteAttachmentMapper;
-import com.yihg.sales.dao.GroupRouteMapper;
-import com.yihg.sales.dao.GroupRouteSupplierMapper;
-import com.yihg.sales.dao.GroupRouteTrafficMapper;
-import com.yihg.sales.dao.TourGroupMapper;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.GroupRoute;
-import com.yihg.sales.po.GroupRouteAttachment;
-import com.yihg.sales.po.GroupRouteSupplier;
-import com.yihg.sales.po.GroupRouteTraffic;
-import com.yihg.sales.po.TourGroup;
-import com.yihg.sales.vo.FitGroupInfoVO;
-import com.yihg.sales.vo.GroupRouteDayVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteAttachment;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteTraffic;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.FitGroupDAL;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.FitGroupInfoVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteAttachmentMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteSupplierMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteTrafficMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 
-public class FitGroupServiceImpl implements FitGroupService {
+public class FitGroupDalImpl implements FitGroupDAL {
 
 	@Autowired
 	private GroupOrderMapper groupOrderMapper;

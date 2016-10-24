@@ -1,6 +1,5 @@
-package com.yihg.query.impl;
+package com.yimayhd.erpcenter.dal.sales.query.impl;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,27 +10,27 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.util.TypeUtils;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.dao.OperationMapper;
-import com.yihg.operation.vo.GroupBookingInfo;
-import com.yihg.query.api.QueryService;
-import com.yihg.query.dao.QueryMapper;
-import com.yihg.query.vo.ProductGuestCondition;
-import com.yihg.query.vo.ProductGuestShoppingItem;
-import com.yihg.query.vo.ProductGuestStaticsVo;
-import com.yihg.sales.dao.GroupOrderGuestMapper;
-import com.yihg.sales.dao.GroupOrderMapper;
-import com.yihg.sales.dao.GroupOrderTransportMapper;
-import com.yihg.sales.dao.GroupRequirementMapper;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.GroupOrderGuest;
-import com.yihg.sales.vo.SaleOperatorVo;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.GroupBookingInfo;
+import com.yimayhd.erpcenter.dal.sales.client.query.service.QueryDAL;
+import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestCondition;
+import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestShoppingItem;
+import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestStaticsVo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorVo;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.OperationMapper;
+import com.yimayhd.erpcenter.dal.sales.query.dao.QueryMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderTransportMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRequirementMapper;
 
-public class QueryServiceImpl implements QueryService {
+public class QueryDalImpl implements QueryDAL {
 
 	@Resource
 	private GroupOrderMapper orderMapper;
@@ -699,7 +698,7 @@ public class QueryServiceImpl implements QueryService {
 		 }
 	public static void main(String[] args) {
 		double aa[] = {1.0,1.0,2.3,1.0};
-		QueryServiceImpl.mode(aa);
+		QueryDalImpl.mode(aa);
 	}
 
 }

@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class GroupBookingInfo implements Serializable {
+	/**
+	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么)
+	*/
+	private static final long serialVersionUID = 5864988127960197212L;
 	private Integer groupId;
 	private Integer orderId;
 	private String receiveMode;
