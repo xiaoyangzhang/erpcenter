@@ -25,6 +25,7 @@ import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceDal;
 import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceGuideDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingGuideDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceBillMapper;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceCommissionDeductionMapper;
@@ -52,7 +53,7 @@ public class FinanceGuideDalImpl implements FinanceGuideDal {
 	@Autowired
 	private FinanceDal financeDal;
 	@Autowired
-	private	BookingGuideService bookingGuideService;
+	private	BookingGuideDal bookingGuideDal;
 	
 	@Autowired
 	private TourGroupMapper groupMapper;
@@ -488,7 +489,7 @@ public class FinanceGuideDalImpl implements FinanceGuideDal {
 		
 		if(item.getBookingId() != null){
 			//如果导游不存在，则不添加导游报账单
-			BookingGuide bookingGuide = bookingGuideService.selectByPrimaryKey(item.getBookingId());
+			BookingGuide bookingGuide = bookingGuideDal.selectByPrimaryKey(item.getBookingId());
 			if(bookingGuide == null){
 				return;
 			}

@@ -34,6 +34,8 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingShopDetailDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDetailDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
@@ -76,9 +78,9 @@ public class FinanceDalImpl implements FinanceDal {
 	@Autowired
 	private FinanceCommissionMapper financeCommissionMapper;
 	@Autowired
-	private BookingShopDetailService bookingShopDetailService;
+	private BookingShopDetailDal bookingShopDetailDal;
 	@Autowired
-	private BookingSupplierDetailService bookingSupplierDetailService;
+	private BookingSupplierDetailDal bookingSupplierDetailDal;
 	@Autowired
 	private BookingGuideMapper bookingGuideMapper;
 	@Autowired
@@ -1081,13 +1083,13 @@ public class FinanceDalImpl implements FinanceDal {
 				Integer bookingId = map.get("id") != null ? Integer.parseInt(map.get("id").toString()) : 0; 
 				
 				if(supType.equals(6)){
-					List<BookingShopDetail> list = bookingShopDetailService.getShopDetailListByBookingId(bookingId);
-					details = bookingShopDetailService.concatDetail(list);
+					List<BookingShopDetail> list = bookingShopDetailDal.getShopDetailListByBookingId(bookingId);
+					details = bookingShopDetailDal.concatDetail(list);
 				}else if(supType.equals(12)){
 					Integer supplierType = map.get("supplier_type") != null ? Integer.parseInt(map.get("supplier_type").toString()) : 0; 
 					String remark = map.get("remark") != null ? map.get("supplier_type").toString() : ""; 
-					List<BookingSupplierDetail> list = bookingSupplierDetailService.selectByPrimaryBookId(bookingId);
-					details = bookingSupplierDetailService.concatDetail(supplierType, remark, list);
+					List<BookingSupplierDetail> list = bookingSupplierDetailDal.selectByPrimaryBookId(bookingId);
+					details = bookingSupplierDetailDal.concatDetail(supplierType, remark, list);
 				}
 				map.put("details", details);
 			}
