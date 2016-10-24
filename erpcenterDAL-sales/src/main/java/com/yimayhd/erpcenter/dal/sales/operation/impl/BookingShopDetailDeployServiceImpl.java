@@ -1,26 +1,26 @@
-package com.yihg.operation.impl;
+package com.yimayhd.erpcenter.dal.sales.operation.impl;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingShopDetailDeployDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingShopDetailDeployVO;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingShopDetailDeployMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingShopDetailMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingShopMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yihg.operation.api.BookingShopDetailDeployService;
-import com.yihg.operation.dao.BookingShopDetailDeployMapper;
-import com.yihg.operation.dao.BookingShopDetailMapper;
-import com.yihg.operation.dao.BookingShopMapper;
-import com.yihg.operation.po.BookingShop;
-import com.yihg.operation.po.BookingShopDetail;
-import com.yihg.operation.po.BookingShopDetailDeploy;
-import com.yihg.operation.vo.BookingShopDetailDeployVO;
 
-public class BookingShopDetailDeployServiceImpl implements BookingShopDetailDeployService{
+
+public class BookingShopDetailDeployServiceImpl implements BookingShopDetailDeployDal{
 	static Logger logger = LoggerFactory.getLogger(BookingShopDetailDeployServiceImpl.class);
 	@Autowired
 	private BookingShopDetailDeployMapper shopDetailDeployMapper;

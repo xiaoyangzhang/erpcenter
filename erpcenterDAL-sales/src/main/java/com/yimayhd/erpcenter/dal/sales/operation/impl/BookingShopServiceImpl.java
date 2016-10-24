@@ -1,4 +1,4 @@
-package com.yihg.operation.impl;
+package com.yimayhd.erpcenter.dal.sales.operation.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,41 +8,39 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDet;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopSelect;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingShopDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingShopDetailDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryGuideShop;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryShopInfo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingGuideMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingShopMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
+import com.yimayhd.erpcenter.dal.sales.tj.dao.TJMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yihg.finance.api.FinanceService;
-import com.yihg.images.util.DateUtils;
-import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.api.BookingShopDetailService;
-import com.yihg.operation.api.BookingShopService;
-import com.yihg.operation.dao.BookingGuideMapper;
-import com.yihg.operation.dao.BookingShopMapper;
-import com.yihg.operation.po.BookingShop;
-import com.yihg.operation.po.BookingShopDet;
-import com.yihg.operation.po.BookingShopDetail;
-import com.yihg.operation.po.BookingShopSelect;
-import com.yihg.operation.vo.QueryGuideShop;
-import com.yihg.operation.vo.QueryShopInfo;
-import com.yihg.sales.dao.GroupOrderMapper;
-import com.yihg.sales.dao.TourGroupMapper;
-import com.yihg.sales.po.FinanceBill;
-import com.yihg.sales.po.FinanceBillDetail;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.supplier.constants.Constants;
-import com.yihg.tj.dao.TJMapper;
-import com.yihg.tj.po.TJShopProject;
 
-public class BookingShopServiceImpl implements BookingShopService{
+import com.yihg.mybatis.utility.PageBean;
+
+
+public class BookingShopServiceImpl implements BookingShopDal{
 
 	@Autowired
 	private BookingShopMapper shopMapper;
 	@Autowired
 	private TJMapper tjMapper;
 	@Autowired
-	private BookingShopDetailService bookingShopDetailService;
+	private BookingShopDetailDal bookingShopDetailDal;
 	@Autowired
-	private FinanceService financeService;
+	private FinanceDal financeDal;
 	@Autowired
 	private TourGroupMapper tourGroupMapper;
 	@Autowired
@@ -232,7 +230,7 @@ public class BookingShopServiceImpl implements BookingShopService{
 		}
 		if(null==shop.getId()){
 			int No = this.getBookingCountByTime();
-			shop.setBookingNo(bizCode+Constants.SHOPPING+new SimpleDateFormat("yyMMdd").format(new Date())+(No+100));
+			shop.setBookingNo(bizCode+ Constants.SHOPPING+new SimpleDateFormat("yyMMdd").format(new Date())+(No+100));
 			shop.setUserId(userId);
 			shop.setUserName(userName);
 			shop.setPersonNumFact(shop.getPersonNum());
@@ -244,12 +242,12 @@ public class BookingShopServiceImpl implements BookingShopService{
 			for (BookingShopDetail bShopDetail : bShopDetails) {
 				bShopDetail.setType((byte)1);
 				bShopDetail.setBookingId(id);
-				bookingShopDetailService.save(bShopDetail);
+				bookingShopDetailDal.save(bShopDetail);
 			}
 		}
 		//整理团金额
 		if(shop!=null && shop.getGroupId()!=null){
-			financeService.calcTourGroupAmount(shop.getGroupId());
+			financeDal.calcTourGroupAmount(shop.getGroupId());
 		}
 	}
 

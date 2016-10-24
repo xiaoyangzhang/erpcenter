@@ -1,4 +1,4 @@
-package com.yihg.operation.impl;
+package com.yimayhd.erpcenter.dal.sales.operation.impl;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -10,32 +10,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.yimayhd.erpcenter.common.exception.ClientException;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide;
+import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceDal;
+import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceGuideDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.*;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingSupplierAndDetailVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
+import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceGuideMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingGuideMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierDetailMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRequirementMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.yihg.basic.exception.ClientException;
-import com.yihg.finance.api.FinanceGuideService;
-import com.yihg.finance.api.FinanceService;
-import com.yihg.finance.dao.FinanceGuideMapper;
-import com.yihg.finance.po.FinanceGuide;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.api.BookingSupplierService;
-import com.yihg.operation.dao.BookingGuideMapper;
-import com.yihg.operation.dao.BookingSupplierDetailMapper;
-import com.yihg.operation.dao.BookingSupplierMapper;
-import com.yihg.operation.po.BookingAirTicket;
-import com.yihg.operation.po.BookingGuide;
-import com.yihg.operation.po.BookingSupplier;
-import com.yihg.operation.po.BookingSupplierDetail;
-import com.yihg.operation.po.BookingSupplierPO;
-import com.yihg.operation.vo.BookingSupplierAndDetailVO;
-import com.yihg.sales.constants.Constants;
-import com.yihg.sales.dao.GroupOrderMapper;
-import com.yihg.sales.dao.GroupRequirementMapper;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.GroupRequirement;
-public class BookingSupplierServiceImpl implements BookingSupplierService{
+
+public class BookingSupplierServiceImpl implements BookingSupplierDal{
 
 	@Autowired
 	private BookingSupplierMapper bookingSupplierMapper;
@@ -48,13 +44,13 @@ public class BookingSupplierServiceImpl implements BookingSupplierService{
 	@Autowired
 	private GroupOrderMapper orderMapper;
 	@Autowired
-	private FinanceService financeService;
+	private FinanceDal financeDal;
 	@Autowired
 	private FinanceGuideMapper financeGuideMapper;
 	@Autowired
 	private BookingGuideMapper bookingGuideMapper;
 	@Autowired
-	private FinanceGuideService financeGuideService;
+	private FinanceGuideDal financeGuideDal;
 	
 	@Override
 	@Transactional
@@ -127,24 +123,24 @@ public class BookingSupplierServiceImpl implements BookingSupplierService{
 			
 			if(fg != null && bg != null){
 				//financeGuideMapper.deleteByBookingIdLink(id);
-				financeGuideService.financeDelete(bg.getGroupId(), id, bg.getId());
+				financeGuideDal.financeDelete(bg.getGroupId(), id, bg.getId());
 			}
-			
-			financeService.calcTourGroupAmount(bookingSupplier.getGroupId());
+
+			financeDal.calcTourGroupAmount(bookingSupplier.getGroupId());
 		}
 	}
 
 	@Override
 	public int insert(BookingSupplier record) {
 		  bookingSupplierMapper.insertSelective(record);
-		  financeService.calcTourGroupAmount(record.getGroupId());
+		financeDal.calcTourGroupAmount(record.getGroupId());
 		  return record.getId();
 	}
 
 	@Override
 	public int insertSelective(BookingSupplier record) {
 		bookingSupplierMapper.insertSelective(record);
-		financeService.calcTourGroupAmount(record.getGroupId());
+		financeDal.calcTourGroupAmount(record.getGroupId());
 		return record.getId();
 	}
 
@@ -361,9 +357,9 @@ public class BookingSupplierServiceImpl implements BookingSupplierService{
 		
 		//如果是车、其他收入、其他支出
 		//则不用删除明细数据，直接更新即可
-		Boolean flag = bookingSupplier.getSupplierType().equals(com.yihg.supplier.constants.Constants.FLEET)
-				|| bookingSupplier.getSupplierType().equals(com.yihg.supplier.constants.Constants.OTHERINCOME)
-				|| bookingSupplier.getSupplierType().equals(com.yihg.supplier.constants.Constants.OTHEROUTCOME);
+		Boolean flag = bookingSupplier.getSupplierType().equals(Constants.FLEET)
+				|| bookingSupplier.getSupplierType().equals(Constants.OTHERINCOME)
+				|| bookingSupplier.getSupplierType().equals(Constants.OTHEROUTCOME);
 		
 		//如果bookingId不为null,更新
 		if(bookingSupplier.getId()!=null){
@@ -381,7 +377,7 @@ public class BookingSupplierServiceImpl implements BookingSupplierService{
 					bookingSupplierDetailMapper.updateByPrimaryKey(detail);
 				}
 				//从新统计财务数据
-				financeService.calcTourGroupAmount(bookingSupplier.getGroupId());
+				financeDal.calcTourGroupAmount(bookingSupplier.getGroupId());
 				return bookingSupplier.getId(); 
 			}
 		}
@@ -400,7 +396,7 @@ public class BookingSupplierServiceImpl implements BookingSupplierService{
 		}
 		
 		//从新统计财务数据
-		financeService.calcTourGroupAmount(bookingSupplier.getGroupId());
+		financeDal.calcTourGroupAmount(bookingSupplier.getGroupId());
 		
 		return bookingSupplier.getId();
 		
