@@ -1,13 +1,11 @@
-package com.yihg.taobao.dao;
+package com.yimayhd.erpcenter.dal.sales.taobao.dao;
 
 import java.util.List;
-import java.util.Set;
 
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.taobao.po.TaobaoOrder;
+import com.yimayhd.erpcenter.dal.sales.client.taobao.po.TaobaoOrder;
 
 public interface TaobaoOrderMapper {
 	/**

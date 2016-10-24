@@ -1,10 +1,11 @@
-package com.yihg.taobao.dao;
+package com.yimayhd.erpcenter.dal.sales.taobao.dao;
 
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.taobao.po.PlatTaobaoTradeOrder;
+import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTradeOrder;
+
 
 public interface PlatTaobaoTradeOrderMapper {
     int deleteByPrimaryKey(Integer id);

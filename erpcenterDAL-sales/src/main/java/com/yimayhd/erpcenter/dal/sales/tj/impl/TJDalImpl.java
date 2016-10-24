@@ -1,25 +1,24 @@
-package com.yihg.tj.impl;
+package com.yimayhd.erpcenter.dal.sales.tj.impl;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.finance.dao.FinanceCommissionMapper;
-import com.yihg.finance.po.FinanceCommission;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.tj.api.TJService;
-import com.yihg.tj.dao.TJMapper;
-import com.yihg.tj.po.TJGroupProfit;
-import com.yihg.tj.po.TJGroupQueryId;
-import com.yihg.tj.po.TJGroupShop;
-import com.yihg.tj.po.TJRecord;
-import com.yihg.tj.po.TJShopProject;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission;
+import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupProfit;
+import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupQueryId;
+import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupShop;
+import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJRecord;
+import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJShopProject;
+import com.yimayhd.erpcenter.dal.sales.client.tj.service.TJDal;
+import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceCommissionMapper;
+import com.yimayhd.erpcenter.dal.sales.tj.dao.TJMapper;
 
-public class TJServiceImpl implements TJService {
+public class TJDalImpl implements TJDal {
 	@Autowired
 	private TJMapper tjMapper;
 	

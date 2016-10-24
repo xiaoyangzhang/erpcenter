@@ -1,35 +1,29 @@
-package com.yihg.taobao.impl;
+package com.yimayhd.erpcenter.dal.sales.taobao.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.yihg.sales.util.HttpUtil;
-import com.yihg.taobao.dao.PlatTaobaoTradeOrderMapper;
-import com.yihg.taobao.po.PlatTaobaoTradeOrder;
-import com.yihg.taobao.pojo.TaobaoTrade;
-import com.yihg.taobao.pojo.TaobaoTradeOrder;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.taobao.api.TaobaoOrderService;
-import com.yihg.taobao.po.PlatTaobaoTrade;
-import com.yihg.taobao.po.TaobaoOrder;
-import com.yihg.taobao.dao.PlatTaobaoTradeMapper;
-import com.yihg.taobao.dao.TaobaoOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade;
+import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTradeOrder;
+import com.yimayhd.erpcenter.dal.sales.client.taobao.pojo.TaobaoTrade;
+import com.yimayhd.erpcenter.dal.sales.client.taobao.pojo.TaobaoTradeOrder;
+import com.yimayhd.erpcenter.dal.sales.client.taobao.service.TaobaoOrderDal;
+import com.yimayhd.erpcenter.dal.sales.sales.util.HttpUtil;
+import com.yimayhd.erpcenter.dal.sales.taobao.dao.PlatTaobaoTradeMapper;
+import com.yimayhd.erpcenter.dal.sales.taobao.dao.PlatTaobaoTradeOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.taobao.dao.TaobaoOrderMapper;
 
-public class TaobaoOrderServiceImpl implements TaobaoOrderService {
+public class TaobaoOrderDalImpl implements TaobaoOrderDal {
     
     
     @Autowired

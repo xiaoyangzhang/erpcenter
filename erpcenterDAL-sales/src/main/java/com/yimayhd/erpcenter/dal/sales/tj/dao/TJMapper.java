@@ -1,19 +1,17 @@
-package com.yihg.tj.dao;
+package com.yimayhd.erpcenter.dal.sales.tj.dao;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.ibatis.annotations.Param;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.tj.po.TJGroupProfit;
-import com.yihg.tj.po.TJGroupQueryId;
-import com.yihg.tj.po.TJGroupShop;
-import com.yihg.tj.po.TJRecord;
-import com.yihg.tj.po.TJShopProject;
+import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupProfit;
+import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupQueryId;
+import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupShop;
+import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJRecord;
+import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJShopProject;
 
 public interface TJMapper {
 	void clearTjShopProject();
