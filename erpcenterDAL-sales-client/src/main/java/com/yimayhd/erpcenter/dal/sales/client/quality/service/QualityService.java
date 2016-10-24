@@ -1,7 +1,8 @@
 package com.yimayhd.erpcenter.dal.sales.client.quality.service;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.quality.vo.QualityTourGroupVo;
+import com.yimayhd.erpcenter.dal.sales.client.quality.vo.QualityTourGroupVo;
+
 
 public interface QualityService {
 	/**
