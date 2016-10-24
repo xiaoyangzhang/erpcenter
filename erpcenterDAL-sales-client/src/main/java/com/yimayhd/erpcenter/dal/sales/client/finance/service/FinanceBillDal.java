@@ -5,16 +5,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.sales.po.FinanceBill;
-import com.yihg.sales.po.FinanceBillDetail;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBill;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBillDetail;
 
 /**
  * 业务查询 - 领单查询
  */
-public interface FinanceBillService{
+public interface FinanceBillDal{
 	PageBean<Map> statisBillList(PageBean<Map> pageBean);
 	Map statisBillTotal(Map parameter);
 	

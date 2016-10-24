@@ -2,9 +2,9 @@ package com.yimayhd.erpcenter.dal.sales.client.airticket.service;
 
 import java.util.List;
 
-import com.yihg.airticket.po.AirTicketOrder;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketOrder;
 
-public interface AirTicketOrderService {
+public interface AirTicketOrderDal {
 	
 	
 	/**

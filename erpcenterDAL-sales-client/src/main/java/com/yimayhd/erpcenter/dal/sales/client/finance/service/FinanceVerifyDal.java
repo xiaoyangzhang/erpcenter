@@ -5,15 +5,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.yihg.basic.exception.ClientException;
-import com.yihg.finance.po.FinanceVerify;
-import com.yihg.finance.po.FinanceVerifyDetail;
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.common.exception.ClientException;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceVerify;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceVerifyDetail;
 
 /**
  * 对账管理
  */
-public interface FinanceVerifyService{
+public interface FinanceVerifyDal{
 
 	/**
 	 * 修改对账单状态

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.yihg.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 
 public class FinanceCommission implements Serializable{
     

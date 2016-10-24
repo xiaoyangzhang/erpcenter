@@ -2,15 +2,15 @@ package com.yimayhd.erpcenter.dal.sales.client.b2b.service;
 
 import java.util.List;
 
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.GroupOrderGuest;
-import com.yihg.sales.po.GroupOrderPrice;
-import com.yihg.sales.po.GroupRoute;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
 
 /**
  * Created by zm on 2016/6/17.
  */
-public interface B2BGroupOrderService {
+public interface B2BGroupOrderDal {
 
 	/**
 	 * B2B 查询销售订单信息
