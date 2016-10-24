@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketOrderMapper;
 import com.yimayhd.erpcenter.dal.sales.client.airticket.service.AirTicketRequestDal;
 import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
@@ -78,8 +79,8 @@ public class FitOrderDalImpl implements FitOrderDal {
 	private GroupRouteDal groupRouteDal;
 	@Autowired
 	private AirTicketOrderMapper orderMapper;
-//	@Autowired
-//	private bookingsu
+	@Autowired
+	private BookingSupplierDal bookingSupplierDal;
 	@Override
 	public Integer saveOrUpdateFitOrderInfo(FitOrderVO fitOrderVO,
 			Integer userId, String userName,Integer proOperId,String proOperName, Integer bizId, String bizCode,
@@ -738,7 +739,7 @@ public class FitOrderDalImpl implements FitOrderDal {
 				idList.add(groupOrder.getId());
 			}
 		}
-		bookingSupplierService.updateOperationAfterMergeGroupOrder(
+		bookingSupplierDal.updateOperationAfterMergeGroupOrder(
 				tourGroup.getId(), idList);
 		groupOrderMapper.updateTourGroupPersonNum(tourGroup.getId());
 		// groupOrderMapper.updateGroupPrice(tourGroup.getId());

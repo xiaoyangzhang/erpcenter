@@ -25,8 +25,8 @@ import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission;
 import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
-import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryService;
-import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierService;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.PaymentExportVO;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.DeparentmentOrderCondition;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.DepartmentOrderResult;
@@ -86,9 +86,9 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Autowired
     private GroupRouteDal groupRouteDal;
     @Autowired
-    private BookingSupplierService bookingSupplierService;
+    private BookingSupplierDal bookingSupplierDal;
     @Autowired
-    private BookingDeliveryService bookingDeliveryService;
+    private BookingDeliveryDal bookingDeliveryDal;
     @Autowired
     private GroupRouteMapper groupRouteMapper;
     @Autowired
@@ -306,7 +306,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
             tourGroup.setTotalIncome(new BigDecimal(total));
             tourGroup.setCreateTime(System.currentTimeMillis());
             tourGroupMapper.insertSelective(tourGroup);
-            bookingSupplierService.updateOperationAfterMergeGroupOrder(tourGroup.getId(), idList);
+            bookingSupplierDal.updateOperationAfterMergeGroupOrder(tourGroup.getId(), idList);
             for (GroupOrder groupOrder : orderList2) {
                 groupOrder.setGroupId(tourGroup.getId());
                 groupOrder.setOperatorId(operid);
@@ -474,7 +474,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public void updateGroupPersonNum(Integer groupId) {
         groupOrderMapper.updateTourGroupPersonNum(groupId);
-        bookingDeliveryService.updateDeliveryGuestCountOnModifySKGuestCount(groupId);
+        bookingDeliveryDal.updateDeliveryGuestCountOnModifySKGuestCount(groupId);
 
     }
 
@@ -702,7 +702,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
         // 团信息
         TourGroup tourGroup = salesVO.getTourGroup();
         List<BookingDelivery> bookingDeliveryList = salesVO.getDeliveryList();
-        List<BookingDelivery> bookingDeliveryList2 = bookingDeliveryService.selectInitDeliveryList(tourGroup.getId());
+        List<BookingDelivery> bookingDeliveryList2 = bookingDeliveryDal.selectInitDeliveryList(tourGroup.getId());
         if (null != bookingDeliveryList && bookingDeliveryList.size() > 0) {
             for (BookingDelivery bookingDelivery : bookingDeliveryList) {
                 if (null == bookingDelivery.getId()) {
@@ -760,7 +760,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
         } else if (type.intValue() == Constants.TRAINTICKETAGENT.intValue()) {
             hotel = salesVO.getTrainList();
         }
-        List<BookingSupplier> hotel2 = bookingSupplierService.selectByGroupIdAndSupplierType(tourGroup.getId(), type);
+        List<BookingSupplier> hotel2 = bookingSupplierDal.selectByGroupIdAndSupplierType(tourGroup.getId(), type);
         if (null != hotel && hotel.size() > 0) {
             for (BookingSupplier bookingSupplier : hotel) {
                 if (null == bookingSupplier.getId()) {
