@@ -3,12 +3,16 @@ package com.yimayhd.erpcenter.dal.sales.client.sales.vo;
 import java.io.Serializable;
 import java.util.List;
 
-import com.yihg.operation.po.BookingDelivery;
-import com.yihg.operation.po.BookingSupplier;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 
 public class SalesVO implements Serializable {
+	/**
+	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么)
+	*/
+	private static final long serialVersionUID = -4433880740994279444L;
 	private TourGroup  tourGroup;
 	private List<GroupOrder> groupOrderList;
 	private List<BookingDelivery> deliveryList;

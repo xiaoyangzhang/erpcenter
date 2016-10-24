@@ -3,6 +3,11 @@ package com.yimayhd.erpcenter.dal.sales.client.sales.vo;
 import java.io.Serializable;
 
 public class GroupFeedbackPersonalStaticsVO implements Serializable {
+	/**
+	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么)
+	*/
+	private static final long serialVersionUID = -2310626312466469248L;
+
 	private Integer id;
 
     private Integer groupId;
