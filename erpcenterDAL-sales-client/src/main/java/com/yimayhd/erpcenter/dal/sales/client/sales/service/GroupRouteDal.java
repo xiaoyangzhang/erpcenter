@@ -2,8 +2,6 @@ package com.yimayhd.erpcenter.dal.sales.client.sales.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteAttachment;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier;
