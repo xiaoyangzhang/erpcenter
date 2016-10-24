@@ -23,7 +23,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteAttachment;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteTraffic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
-import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderService;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.SpecialGroupOrderDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.TourGroupDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
@@ -63,7 +63,7 @@ public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 	@Autowired
 	private GroupRouteMapper groupRouteMapper;
 	@Autowired
-	private GroupOrderService groupOrderService;
+	private GroupOrderDal groupOrderDal;
 	@Autowired
 	private TourGroupDal tourGroupDal;
 	@Autowired
@@ -89,7 +89,7 @@ public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 			GroupOrder orderCodeSort = groupOrderMapper
 					.selectGroupOrderCodeSort(bizId,
 							groupOrder.getDepartureDate());
-			String makeCodeByMode = groupOrderService.makeCodeByMode(bizId,groupOrder.getOrderNo(), groupOrder.getDepartureDate(),orderCodeSort == null ? 1: orderCodeSort.getOrderNoSort() + 1);
+			String makeCodeByMode = groupOrderDal.makeCodeByMode(bizId,groupOrder.getOrderNo(), groupOrder.getDepartureDate(),orderCodeSort == null ? 1: orderCodeSort.getOrderNoSort() + 1);
 			groupOrder.setOrderNo(makeCodeByMode);
 			groupOrder.setOrderNoSort(orderCodeSort == null ? 1 : orderCodeSort.getOrderNoSort() + 1);
 			groupOrderMapper.insert(groupOrder);
@@ -100,7 +100,7 @@ public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 		groupOrder=groupOrderMapper.selectByPrimaryKey(groupOrder.getId());
 		
 		if(groupOrder.getGroupId()!=null){
-			groupOrderService.updateGroupPersonNum(groupOrder.getGroupId());
+			groupOrderDal.updateGroupPersonNum(groupOrder.getGroupId());
 		}
 		// 酒店
 		GroupRequirement hotelInfo = sgovo.getHotelInfo();
@@ -185,7 +185,7 @@ public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 						.getId());
 			}
 		}
-		groupOrderService.updateOrderAndGroupPrice(groupOrder.getId());
+		groupOrderDal.updateOrderAndGroupPrice(groupOrder.getId());
 		
 	
 		// 接送信息
@@ -619,7 +619,7 @@ public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 			// 设置行程
 			groupRouteVO.setGroupRouteDayVOList(groupRouteDayVOList);
 			// 设置团
-			GroupOrder groupOrder=groupOrderService.findById(orderId);
+			GroupOrder groupOrder=groupOrderDal.findById(orderId);
 			if(groupOrder.getGroupId()==null){ //插入
 			TourGroup tourGroup = new TourGroup();
 			tourGroup.setCreateTime(System.currentTimeMillis());
@@ -750,7 +750,7 @@ public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 			// 设置行程
 			groupRouteVO.setGroupRouteDayVOList(groupRouteDayVOList);
 			// 设置团
-			GroupOrder groupOrder=groupOrderService.findById(orderId);
+			GroupOrder groupOrder=groupOrderDal.findById(orderId);
 			if(groupOrder.getGroupId()==null){ //插入
 			TourGroup tourGroup = new TourGroup();
 			tourGroup.setCreateTime(System.currentTimeMillis());

@@ -22,7 +22,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteAttachment;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteTraffic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
-import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderService;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.TeamGroupDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.TourGroupDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
@@ -65,7 +65,7 @@ public class TeamGroupDalImpl implements TeamGroupDal {
 	@Autowired
 	private TourGroupDal tourGroupDal;
 	@Autowired
-	private GroupOrderService groupOrderService;
+	private GroupOrderDal groupOrderDal;
 	@Autowired
 	private AirTicketRequestDal airTicketRequestDal;
 	
@@ -169,7 +169,7 @@ public class TeamGroupDalImpl implements TeamGroupDal {
 			GroupOrder orderCodeSort = groupOrderMapper
 					.selectGroupOrderCodeSort(tourGroup.getBizId(),
 							sdf.format(tourGroup.getDateStart()));
-			makeCodeByMode = groupOrderService.makeCodeByMode(groupOrder
+			makeCodeByMode = groupOrderDal.makeCodeByMode(groupOrder
 					.getBizId(), groupOrder.getOrderNo(), sdf.format(tourGroup
 					.getDateStart()),
 					orderCodeSort == null ? 1
@@ -281,7 +281,7 @@ public class TeamGroupDalImpl implements TeamGroupDal {
 						.getId());
 			}
 		}
-		groupOrderService.updateOrderAndGroupPrice(groupOrder.getId());
+		groupOrderDal.updateOrderAndGroupPrice(groupOrder.getId());
 		// 接送信息
 
 		List<GroupOrderTransport> transportList = teamGroupVO
