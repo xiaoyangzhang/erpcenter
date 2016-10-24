@@ -99,12 +99,13 @@ public class ProductStockConverter {
 	public static SolrQuery queryDTO2SolrQuery(ProductStockPageQueryDTO queryDTO) {
 
 		SolrQuery solrQuery = new SolrQuery();
-//		if (queryDTO.getId() != null) {
-//			solrQuery.addFilterQuery("id:" + queryDTO.getId());
-//		}
-
-		solrQuery.setStart(queryDTO.getStartRow());
-		solrQuery.setRows(queryDTO.getOldPageSize());
+		
+		solrQuery.setParam("group","true");
+		solrQuery.add("group.field","infoBrandName");
+		solrQuery.add("group.field","infoNameCity");
+		solrQuery.set("group.sort","infoBrandName asc,infoNameCity asc");
+		solrQuery.setRows(queryDTO.getPageSize());
+		solrQuery.setParam("group.limit",queryDTO.getStartRow() + "");
 
 		return solrQuery;
 	}
