@@ -1,11 +1,9 @@
-package com.yihg.operation.dao;
+package com.yimayhd.erpcenter.dal.sales.operation.dao;
 
 import java.util.List;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import org.apache.ibatis.annotations.Param;
-
-import com.yihg.operation.po.BookingShopDetail;
-import com.yihg.operation.po.BookingSupplierDetail;
 
 public interface BookingShopDetailMapper {
     int deleteByPrimaryKey(Integer id);

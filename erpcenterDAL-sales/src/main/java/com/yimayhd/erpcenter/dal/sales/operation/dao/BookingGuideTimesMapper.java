@@ -1,8 +1,9 @@
-package com.yihg.operation.dao;
+package com.yimayhd.erpcenter.dal.sales.operation.dao;
+
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideTimes;
 
 import java.util.List;
 
-import com.yihg.operation.po.BookingGuideTimes;
 
 public interface BookingGuideTimesMapper {
     int deleteByPrimaryKey(Integer id);

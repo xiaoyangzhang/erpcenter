@@ -1,6 +1,7 @@
-package com.yihg.operation.dao;
+package com.yimayhd.erpcenter.dal.sales.operation.dao;
 
-import com.yihg.operation.po.BookingDeliverySupplier;
+
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliverySupplier;
 
 public interface BookingDeliverySupplierMapper {
     int deleteByPrimaryKey(Integer id);
