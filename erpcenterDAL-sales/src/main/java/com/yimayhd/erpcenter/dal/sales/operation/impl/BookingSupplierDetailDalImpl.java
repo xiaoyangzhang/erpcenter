@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.yihg.mybatis.utility.PageBean;
 
 
-public class BookingSupplierDetailServiceImpl implements
+public class BookingSupplierDetailDalImpl implements
 		BookingSupplierDetailDal {
 
 	@Autowired

@@ -20,8 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 
-public class BookingShopDetailDeployServiceImpl implements BookingShopDetailDeployDal{
-	static Logger logger = LoggerFactory.getLogger(BookingShopDetailDeployServiceImpl.class);
+public class BookingShopDetailDeployDalImpl implements BookingShopDetailDeployDal{
+	static Logger logger = LoggerFactory.getLogger(BookingShopDetailDeployDalImpl.class);
 	@Autowired
 	private BookingShopDetailDeployMapper shopDetailDeployMapper;
 	@Autowired

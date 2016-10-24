@@ -1,7 +1,6 @@
 package com.yimayhd.erpcenter.dal.sales.operation.impl;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +27,8 @@ import com.alibaba.dubbo.common.json.JSON;
 import com.alibaba.fastjson.util.TypeUtils;
 
 
-public class BookingDeliveryServiceImpl implements BookingDeliveryDal {
-	Logger logger = LoggerFactory.getLogger(BookingDeliveryServiceImpl.class);
+public class BookingDeliveryDalImpl implements BookingDeliveryDal {
+	Logger logger = LoggerFactory.getLogger(BookingDeliveryDalImpl.class);
 	@Autowired
 	private BookingDeliveryMapper deliveryDao;
 	@Autowired

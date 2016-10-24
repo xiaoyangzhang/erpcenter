@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import com.yihg.mybatis.utility.PageBean;
 
-public class BookingSupplierServiceImpl implements BookingSupplierDal{
+public class BookingSupplierDalImpl implements BookingSupplierDal{
 
 	@Autowired
 	private BookingSupplierMapper bookingSupplierMapper;

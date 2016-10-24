@@ -12,7 +12,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 
-public class QualityServiceImpl implements QualityDal {
+public class QualityDalImpl implements QualityDal {
 
 	@Resource
 	private TourGroupMapper groupMapper;
