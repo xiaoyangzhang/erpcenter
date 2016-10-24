@@ -100,7 +100,7 @@
 		<dependency>
     			<groupId>com.yimayhd.erpcenter</groupId>
     			<artifactId>erpcenterBiz-sys</artifactId>
-    	</dependency>
+    	</dependency> 
     	<dependency>
     			<groupId>com.yimayhd.erpcenter</groupId>
     			<artifactId>erpcenterBiz-basic</artifactId>
