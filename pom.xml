@@ -223,6 +223,17 @@
     	<artifactId>erpcenterDAL-basic-client</artifactId>
     	<version>${project.version}</version>
     </dependency>
+    
+    <dependency>
+    	<groupId>com.yimayhd.erpcenter</groupId>
+    	<artifactId>erpcenterDAL-sales-client</artifactId>
+    	<version>${project.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.yimayhd.erpcenter</groupId>
+    	<artifactId>erpcenterDAL-sales</artifactId>
+    	<version>${project.version}</version>
+    </dependency>
 
 			<dependency>
 			   <groupId>ledis</groupId>
