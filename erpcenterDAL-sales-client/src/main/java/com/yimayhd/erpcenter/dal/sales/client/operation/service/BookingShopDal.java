@@ -5,12 +5,13 @@ import java.util.Map;
 import java.util.Set;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.po.BookingShop;
-import com.yihg.operation.po.BookingShopDet;
-import com.yihg.operation.po.BookingShopDetail;
-import com.yihg.operation.po.BookingShopSelect;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDet;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopSelect;
 
-public interface BookingShopService {
+
+public interface BookingShopDal {
 	
 	int updateByPrimaryKeySelective(BookingShop record);
 

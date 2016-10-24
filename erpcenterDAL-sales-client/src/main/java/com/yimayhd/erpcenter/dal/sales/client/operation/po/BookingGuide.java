@@ -1,12 +1,12 @@
 package com.yimayhd.erpcenter.dal.sales.client.operation.po;
 
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
-import com.yihg.finance.po.FinanceCommission;
-import com.yihg.sales.po.TourGroup;
 
 public class BookingGuide implements Serializable{
     /**

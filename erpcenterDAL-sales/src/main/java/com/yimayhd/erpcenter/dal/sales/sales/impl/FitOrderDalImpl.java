@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.client.airticket.service.AirTicketRequestDal;
+import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
@@ -24,6 +26,9 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteTraffic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.FitOrderDal;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderDal;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupRouteDal;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.TourGroupDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.FitOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
@@ -60,19 +65,21 @@ public class FitOrderDalImpl implements FitOrderDal {
 	@Autowired
 	private GroupRouteMapper groupRouteMapper;
 	@Autowired
-	private GroupOrderService groupOrderService;
+	private GroupOrderDal groupOrderDal;
 	@Autowired
-	private FinanceService financeService;
+	private FinanceDal financeDal;
 	@Autowired
-	private AirTicketRequestService airTicketRequestService;
+	private AirTicketRequestDal airTicketRequestDal;
 	@Autowired
 	private TourGroupMapper tourGroupMapper;
 	@Autowired
-	private TourGroupService tourGroupService;
+	private TourGroupDal tourGroupDal;
 	@Autowired
-	private GroupRouteService groupRouteService;
+	private GroupRouteDal groupRouteDal;
 	@Autowired
 	private AirTicketOrderMapper orderMapper;
+//	@Autowired
+//	private bookingsu
 	@Override
 	public Integer saveOrUpdateFitOrderInfo(FitOrderVO fitOrderVO,
 			Integer userId, String userName,Integer proOperId,String proOperName, Integer bizId, String bizCode,
@@ -110,7 +117,7 @@ public class FitOrderDalImpl implements FitOrderDal {
 		groupOrder=groupOrderMapper.selectByPrimaryKey(groupOrder.getId());
 		
 		if(groupOrder.getGroupId()!=null){
-			groupOrderService.updateGroupPersonNum(groupOrder.getGroupId());
+			groupOrderDal.updateGroupPersonNum(groupOrder.getGroupId());
 		}
 		
 		// 酒店
@@ -194,7 +201,7 @@ public class FitOrderDalImpl implements FitOrderDal {
 						.getId());
 			}
 		}
-		groupOrderService.updateOrderAndGroupPrice(groupOrder.getId());
+		groupOrderDal.updateOrderAndGroupPrice(groupOrder.getId());
 		
 		
 		
@@ -435,7 +442,7 @@ public class FitOrderDalImpl implements FitOrderDal {
 					tourGroupMapper.updateByPrimaryKeySelective(tourGroup);
 				} else { // 如果不存在新建团并加入
 					tourGroup = new TourGroup();
-					GroupRouteVO groupRouteVO = groupRouteService
+					GroupRouteVO groupRouteVO = groupRouteDal
 							.findGroupRouteByOrderId(groupOrder.getId());
 					groupRouteDayVOList = groupRouteVO.getGroupRouteDayVOList();
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -541,8 +548,8 @@ public class FitOrderDalImpl implements FitOrderDal {
 				}
 				groupOrder.setGroupId(tourGroup.getId());
 				groupOrderMapper.updateByPrimaryKeySelective(groupOrder);
-				groupOrderService.updateOrderAndGroupPrice(groupOrder.getId());
-				groupOrderService.updateGroupPersonNum(tourGroup.getId());
+				groupOrderDal.updateOrderAndGroupPrice(groupOrder.getId());
+				groupOrderDal.updateGroupPersonNum(tourGroup.getId());
 			}
 		
 		
@@ -735,7 +742,7 @@ public class FitOrderDalImpl implements FitOrderDal {
 				tourGroup.getId(), idList);
 		groupOrderMapper.updateTourGroupPersonNum(tourGroup.getId());
 		// groupOrderMapper.updateGroupPrice(tourGroup.getId());
-		financeService.calcTourGroupAmount(tourGroup.getId());
+		financeDal.calcTourGroupAmount(tourGroup.getId());
 
 		List<GroupRouteDayVO> groupRouteDayVOList = groupRouteVO
 				.getGroupRouteDayVOList();
@@ -797,7 +804,6 @@ public class FitOrderDalImpl implements FitOrderDal {
 
 	@Override
 	public List<GroupOrder> selectReserveOrderList() {
-		// TODO Auto-generated method stub
 		return groupOrderMapper.selectReserveOrderList();
 	}
 	

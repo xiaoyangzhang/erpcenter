@@ -5,13 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryPrice;
 import org.apache.ibatis.annotations.Param;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.po.BookingDeliveryPrice;
-import com.yihg.sales.po.GroupOrderPrice;
 
-public interface BookingDeliveryPriceService {
+public interface BookingDeliveryPriceDal {
 	int deleteByPrimaryKey(Integer id);
 
     int insert(BookingDeliveryPrice record);

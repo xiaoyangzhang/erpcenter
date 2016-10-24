@@ -2,13 +2,13 @@ package com.yimayhd.erpcenter.dal.sales.client.operation.service;
 
 import java.util.List;
 
+import com.yimayhd.erpcenter.common.exception.ClientException;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingDeliveryStatics;
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.basic.exception.ClientException;
-import com.yihg.operation.po.BookingDelivery;
-import com.yihg.operation.vo.BookingDeliveryStatics;
 
-public interface BookingDeliveryService {
+public interface BookingDeliveryDal {
 	BookingDeliveryStatics getStaticsByGroupId(Integer groupId);
 	List<BookingDelivery> getDeliveryListByGroupId(Integer groupId);
 	int saveBooking(BookingDelivery bookingDelivery);	
@@ -28,7 +28,7 @@ public interface BookingDeliveryService {
 	 * 删除下接单
 	 * @param id
 	 */
-	void angencyDelete(Integer id) throws ClientException;	
+	void angencyDelete(Integer id) throws ClientException;
 	//BookingDelivery getBookingDeliveryByOrderId(Integer orderId);
 	
 	/**

@@ -1,9 +1,10 @@
 package com.yimayhd.erpcenter.dal.sales.client.quality.vo;
 
+import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
+
 import java.io.Serializable;
 import java.util.Date;
 
-import com.yihg.supplier.constants.Constants;
 
 /**
  * 质量列表查询条件

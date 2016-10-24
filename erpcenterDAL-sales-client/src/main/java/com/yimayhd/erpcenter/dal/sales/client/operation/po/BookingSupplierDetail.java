@@ -1,9 +1,11 @@
 package com.yimayhd.erpcenter.dal.sales.client.operation.po;
 
+import com.yimayhd.erpcenter.dal.basic.utils.LogFieldAnno;
+
 import java.io.Serializable;
 import java.util.Date;
 
-import com.yihg.basic.util.LogFieldAnno;
+
 
 public class BookingSupplierDetail implements Serializable{
 	/**

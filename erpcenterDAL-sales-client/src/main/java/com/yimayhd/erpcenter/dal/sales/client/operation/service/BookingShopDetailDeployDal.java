@@ -1,13 +1,14 @@
 package com.yimayhd.erpcenter.dal.sales.client.operation.service;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingShopDetailDeployVO;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import com.yihg.operation.po.BookingShopDetailDeploy;
-import com.yihg.operation.vo.BookingShopDetailDeployVO;
 
-public interface BookingShopDetailDeployService {
+public interface BookingShopDetailDeployDal {
 	int deleteByPrimaryKey(Integer bdId);
 
 	List<BookingShopDetailDeploy> selectByDetailId(Integer dId);

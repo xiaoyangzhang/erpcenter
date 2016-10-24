@@ -1,11 +1,13 @@
 package com.yimayhd.erpcenter.dal.sales.client.operation.po;
 
+import com.yimayhd.erpcenter.dal.basic.utils.LogFieldAnno;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Date;
 
-import com.yihg.basic.util.LogFieldAnno;
+
 
 public class BookingSupplier implements Serializable{
 	@LogFieldAnno(isKey = true)

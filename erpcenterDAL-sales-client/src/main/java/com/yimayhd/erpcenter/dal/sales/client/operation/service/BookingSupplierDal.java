@@ -6,19 +6,19 @@ import java.util.List;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import com.yihg.basic.exception.ClientException;
-import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.vo.BookingSupplierAndDetailVO;
 
+import com.yihg.mybatis.utility.PageBean;
+
+
+import com.yimayhd.erpcenter.common.exception.ClientException;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingAirTicket;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierPO;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingSupplierAndDetailVO;
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.operation.po.BookingAirTicket;
-import com.yihg.operation.po.BookingDelivery;
-import com.yihg.operation.po.BookingSupplier;
-import com.yihg.operation.po.BookingSupplierDetail;
-import com.yihg.operation.po.BookingSupplierPO;
 
-public interface BookingSupplierService {
+public interface BookingSupplierDal {
 	void deleteByPrimaryKey(Integer id) throws ClientException;
 	
 	/**

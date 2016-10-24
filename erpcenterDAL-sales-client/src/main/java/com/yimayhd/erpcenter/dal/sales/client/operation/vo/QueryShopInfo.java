@@ -1,11 +1,12 @@
 package com.yimayhd.erpcenter.dal.sales.client.operation.vo;
 
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import com.yihg.sales.po.GroupOrder;
 
 public class QueryShopInfo implements Serializable {
 
@@ -32,7 +33,7 @@ public class QueryShopInfo implements Serializable {
 	private Integer pageSize;
 	private Integer page=1;
 	private Integer selectDate;//日期类型的选择
-	private List<GroupOrder> groupOrders; 
+	private List<GroupOrder> groupOrders;
 	
 	public List<GroupOrder> getGroupOrders() {
 		return groupOrders;
