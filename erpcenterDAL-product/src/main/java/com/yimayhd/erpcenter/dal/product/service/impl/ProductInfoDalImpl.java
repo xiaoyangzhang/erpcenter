@@ -455,19 +455,40 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		pageBean.setParameter(condition);
 		pageBean.setPage(condition.getPage());
 		List<StockStaticsResultVOPlus> list =new ArrayList<StockStaticsResultVOPlus>(); 
-		list=infoMapper.getProductStockListPage(pageBean);
-		//SimpleDateFormat sdf=new SimpleDateFormat();
-		if(list!=null && list.size()>0){
-			for (StockStaticsResultVOPlus voPlus : list) {
-				List<ProductStock> stockList=new ArrayList<ProductStock>();
-				String[] stockInfoStrs = voPlus.getStockInfo().split(",");
-				for (int i = 0; i < 7; i++) {
-				stockList.add(getResultByDate2(DateUtils.addDays(condition.getGroupDate(),i),stockInfoStrs));
-				}
-				voPlus.setStockList(stockList);
-			}
+		if(1== 0){
+			list=infoMapper.getProductStockListPage(pageBean);
 			
+			if(list!=null && list.size()>0){
+				for (StockStaticsResultVOPlus voPlus : list) {
+					List<ProductStock> stockList=new ArrayList<ProductStock>();
+					String[] stockInfoStrs = voPlus.getStockInfo().split(",");
+					for (int i = 0; i < 7; i++) {
+					stockList.add(getResultByDate2(DateUtils.addDays(condition.getGroupDate(),i),stockInfoStrs));
+					}
+					voPlus.setStockList(stockList);
+				}
+				
+			}
+		}else{
+			ProductStockPageQueryDTO queryDTO = ProductStockConverter.toQueryDTO(pageBean);
+			SolrSearchPageDTO<StockStaticsResultVOPlus> solrPageResult  = productSolrQueryManager.searchProductStock(queryDTO);
+			list=solrPageResult.getList();
+			if(list!=null && list.size()>0){
+				for (StockStaticsResultVOPlus voPlus : list) {
+					List<ProductStock> stockList=new ArrayList<ProductStock>();
+					String[] stockInfoStrs = voPlus.getStockInfo().split(",");
+					for (int i = 0; i < 7; i++) {
+					stockList.add(getResultByDate2(DateUtils.addDays(condition.getGroupDate(),i),stockInfoStrs));
+					}
+					voPlus.setStockList(stockList);
+				}
+				
+			}
+
 		}
+		
+		//SimpleDateFormat sdf=new SimpleDateFormat();
+		
 		/*if(list!=null && list.size()>0){
 			for(StockStaticsResultVOPlus result : list){
 				List<StockStaticsResultItemVo> itemList = productGroupPriceMapper.getStockStatics(result.getProductId(), DateUtils.addDays(condition.getGroupDate(),-1), DateUtils.addDays(condition.getToGroupDate(),1));
@@ -490,26 +511,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 			}			
 		}	*/
 		
-		if(1==1){
-			ProductStockPageQueryDTO queryDTO = ProductStockConverter.toQueryDTO(pageBean);
-			SolrSearchPageDTO<StockStaticsResultVOPlus> solrPageResult  = productSolrQueryManager.searchProductStock(queryDTO);
-			list=solrPageResult.getList();
-			if(list!=null && list.size()>0){
-				for (StockStaticsResultVOPlus voPlus : list) {
-					List<ProductStock> stockList=new ArrayList<ProductStock>();
-					String[] stockInfoStrs = voPlus.getStockInfo().split(",");
-					for (int i = 0; i < 7; i++) {
-					stockList.add(getResultByDate2(DateUtils.addDays(condition.getGroupDate(),i),stockInfoStrs));
-					}
-					voPlus.setStockList(stockList);
-				}
-				
-			}
-			pageBean.setResult(list);
-			return pageBean;
-		}else{
-			
-		}
+	
 		pageBean.setResult(list);
 		return pageBean;
 	}

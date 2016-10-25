@@ -69,7 +69,7 @@ public class ProductStockConverter {
 		dto.setInfoNameCity(stock.getProductName());
 		dto.setInfoState((byte) -1);//状态是固定值
 		//dto.setPrOrgId(stock.getOrgId()+"");
-		dto.setPrOrgId("10,");
+		dto.setPrOrgId(stock.getOrgId()+"");
 		dto.setPsState(-1);
 		dto.setPsItemDateStart(stock.getGroupDate());
 		dto.setPsItemDateEnd(stock.getToGroupDate());
@@ -140,14 +140,7 @@ public class ProductStockConverter {
 	 */
 	public static SolrQuery queryDTO2SolrQuery(ProductStockPageQueryDTO queryDTO) {
 		SolrQuery solrQuery = new SolrQuery("*:*");
-//		StringBuffer fq = new StringBuffer(); 
-//		fq.append("-psState:").append("-1");
-//		fq.append(" ").append("AND ").append("-infoState:").append("-1");
-//		String ffq = fq.toString();
-//		solrQuery.addFilterQuery(new String[ ]{ffq});
-//		
-		
-		
+
 		if(!StringUtils.isEmpty(queryDTO.getPrOrgId())){
 			String orgIdQuery = "prOrgId:*" + queryDTO.getPrOrgId() + ",*";
 			solrQuery.addFilterQuery(orgIdQuery);
@@ -164,7 +157,7 @@ public class ProductStockConverter {
 		}
 		
 		if(queryDTO.getPsItemDateStart()!=null&&queryDTO.getPsItemDateEnd()!=null){
-			String dateQuery="psItemDate" + ":["+queryDTO.getPsItemDateStart().getTime()+"TO" +queryDTO.getPsItemDateEnd().getTime()+"]";
+			String dateQuery="psItemDate" + ":["+queryDTO.getPsItemDateStart().getTime()+" TO " +queryDTO.getPsItemDateEnd().getTime()+"]";
 			solrQuery.addFacetQuery(dateQuery);
 
 		}

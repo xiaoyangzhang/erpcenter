@@ -75,7 +75,7 @@ public class ProductStateConverter {
 		//dto.setInfoOperatorId(info.getOperatorIds());//传过来的是字符串，solr里是int，条件是in
 		dto.setInfoOperatorIds(info.getOperatorIds());
 		dto.setInfoState(info.getState());//状态是固定值
-		dto.setPrOrgId((String) parameters.get("orgId"));
+		dto.setPrOrgId(parameters.get("orgId").toString());
 		dto.setPageNo(pageBean.getPage());
 		dto.setPageSize(pageBean.getPageSize());
 		
@@ -131,7 +131,7 @@ public class ProductStateConverter {
 			solrQuery.addFilterQuery(orgIdQuery);
 		}
 		
-		if(!StringUtils.isEmpty(queryDTO.getInfoCode())){
+		if(!StringUtils.isEmpty(queryDTO.getInfoCode())&&!"".equals(queryDTO.getInfoCode())){
 			String codeQuery = "infoCode:" + queryDTO.getInfoCode();
 			solrQuery.addFilterQuery(codeQuery);
 		}
@@ -147,7 +147,7 @@ public class ProductStateConverter {
 		}
 		
 		if(queryDTO.getInfoBizId() != null){
-			String bizQuery = "infoBizId:" + queryDTO.getInfoNameCity();
+			String bizQuery = "infoBizId:" + queryDTO.getInfoBizId();
 			solrQuery.addFilterQuery(bizQuery);
 		}
 		
