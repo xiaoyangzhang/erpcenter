@@ -23,6 +23,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.rocketmq.client.producer.LocalTransactionExecuter;
 import com.alibaba.rocketmq.client.producer.LocalTransactionState;
+import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.client.producer.SendStatus;
 import com.alibaba.rocketmq.client.producer.TransactionSendResult;
 import com.alibaba.rocketmq.common.message.Message;
@@ -190,6 +191,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	@Override
 	public int saveProductInfo(final ProductInfoVo productInfoVo,final String bizCode,final String brandCode) {
 		
+		final ProductInfoUpdateMessageDTO msgDTO = new ProductInfoUpdateMessageDTO();
 		
 		final ProductInfo info = productInfoVo.getProductInfo();
 		final List<ProductContact> productContacts = productInfoVo.getProductContacts();
@@ -204,7 +206,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 			public Boolean doInTransaction(TransactionStatus status) {
 				try {
 					if(null!=productInfoVo.getProductInfo().getId()){
-						
+						msgDTO.setProductId(productInfoVo.getProductInfo().getId());
 						//修改
 						i= infoMapper.updateByPrimaryKeySelective(info);
 						if (i < 1) {
@@ -235,6 +237,8 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 						info.setState((byte) 1);
 						info.setCreateTime(System.currentTimeMillis());
 						i=infoMapper.insertSelective(info);
+						msgDTO.setProductId(i);
+						
 						if (i < 1) {
 							status.setRollbackOnly();
 							LOGGER.error("infoMapper.insertSelective error,params:info={},result:{}",JSON.toJSONString(info),i);
@@ -308,7 +312,15 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		if (dbResult == null || !dbResult) {
 			LOGGER.error("save productInfo failed ,params:productInfoVo={},bizCode={},brandCode={}",JSON.toJSONString(productInfoVo),bizCode,brandCode);
 			return -1;
+		}else{
+			
+			SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(),  ProductTopic.PRODUCT_MODIFY.getTags());
+			if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+				LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+			}
 		}
+		
+		
 		return info.getId();
 	}
 
