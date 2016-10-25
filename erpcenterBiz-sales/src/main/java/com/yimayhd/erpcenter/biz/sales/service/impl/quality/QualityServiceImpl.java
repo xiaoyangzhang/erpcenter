@@ -5,23 +5,23 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.quality.api.QualityService;
-import com.yihg.quality.vo.QualityTourGroupVo;
-import com.yihg.sales.dao.GroupOrderMapper;
-import com.yihg.sales.dao.TourGroupMapper;
-import com.yihg.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.biz.sales.client.service.quality.QualityBiz;
+import com.yimayhd.erpcenter.dal.sales.client.quality.vo.QualityTourGroupVo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderDal;
+import com.yimayhd.erpcenter.dal.sales.client.sales.service.TourGroupDal;
 
-public class QualityServiceImpl implements QualityService {
+public class QualityServiceImpl implements QualityBiz {
 
 	@Resource
-	private TourGroupMapper groupMapper;
+	private TourGroupDal tourGroupDal;
 	@Resource
-	private GroupOrderMapper groupOrderMapper;
+	private GroupOrderDal groupOrderDal;
 	
 	@Override
 	public PageBean getQualityTourGroupList(
-			PageBean<QualityTourGroupVo> pageBean) {		
-		List<QualityTourGroupVo> list = groupMapper.selectQualityTourGroupListPage(pageBean);		
+			PageBean<QualityTourGroupVo> pageBean) {
+		List<QualityTourGroupVo> list = tourGroupDal.selectQualityTourGroupListPage(pageBean);
 		pageBean.setResult(fillGroupInfo(list));		
 		return pageBean;
 	}
@@ -30,7 +30,7 @@ public class QualityServiceImpl implements QualityService {
 		if(list!=null && list.size()>0){
 			for(QualityTourGroupVo vo : list){
 				if(vo.getGroupMode()>0){
-					List<GroupOrder> orderList = groupOrderMapper.selectOrderByGroupId(vo.getGroupId());
+					List<GroupOrder> orderList = groupOrderDal.selectOrderByGroupId(vo.getGroupId());
 					if(orderList!=null && orderList.size()>0){
 						vo.setSupplierId(orderList.get(0).getSupplierId());
 						vo.setSupplierName(orderList.get(0).getSupplierName());
