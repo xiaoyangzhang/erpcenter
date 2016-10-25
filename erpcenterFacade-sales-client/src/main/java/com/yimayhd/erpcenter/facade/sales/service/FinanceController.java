@@ -89,80 +89,13 @@ public interface FinanceFacade{
 	 */
 	public List<TourGroup> settleSealList();
 	
-	@RequestMapping(value = "settleSealList.do")
-	public String settleSealList(HttpServletRequest request,HttpServletResponse reponse, ModelMap model, String sl, String ssl,
-			String rp, Integer page, Integer pageSize, String svc,TourGroupVO group) {
-
-		PageBean pb = new PageBean();
-		pb.setPage(page);
-		if (pageSize == null) {
-			pageSize = Constants.PAGESIZE;
-		}
-		pb.setPageSize(pageSize);
-		//如果人员为空并且部门不为空，则取部门下的人id
-		if(StringUtils.isBlank(group.getSaleOperatorIds()) && StringUtils.isNotBlank(group.getOrgIds())){
-			Set<Integer> set = new HashSet<Integer>();
-			String[] orgIdArr = group.getOrgIds().split(",");
-			for(String orgIdStr : orgIdArr){
-				set.add(Integer.valueOf(orgIdStr));
-			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(WebUtils.getCurBizId(request), set);
-			String salesOperatorIds="";
-			for(Integer usrId : set){
-				salesOperatorIds+=usrId+",";
-			}
-			if(!salesOperatorIds.equals("")){
-				group.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length()-1));
-			}
-		}
-		Map<String,Object> pms  = WebUtils.getQueryParamters(request);
-		if(null!=group.getSaleOperatorIds() && !"".equals(group.getSaleOperatorIds())){
-			pms.put("operator_id", group.getSaleOperatorIds());
-		}
-		pms.put("set", WebUtils.getDataUserIdSet(request));
-		pb.setParameter(pms);
-		pb = getCommonService(svc).queryListPage(sl, pb);
-		Map<Integer, String> guideMap = new HashMap<Integer, String>();
-		List<Map> results = pb.getResult();
-		Map item = null;
-		for (int i = 0; i < results.size(); i++) {
-			item = results.get(i);
-			Integer groupId = Integer.parseInt(item.get("id").toString());
-			
-			List<BookingGuide> bookingGuides = bookingGuideService.selectGuidesByGroupId(groupId);
-			StringBuffer s = new StringBuffer();
-			for (int j = 0; j < bookingGuides.size(); j++) {
-				if (j == (bookingGuides.size() - 1)) {
-					s.append(bookingGuides.get(j).getGuideName());
-				} else {
-					s.append(bookingGuides.get(j).getGuideName() + ",");
-				}
-			}
-			guideMap.put(groupId, s.toString());
-			
-			BigDecimal totalIncome = NumberUtil.parseObj2Num(item.get("total_income"));
-			BigDecimal totalIncomeShop = NumberUtil.parseObj2Num(item.get("total_income_shop"));
-			BigDecimal totalCost = NumberUtil.parseObj2Num(item.get("total_cost"));
-			
-			//团收入 = 团收入 - 购物收入
-			totalIncome = totalIncome.subtract(totalIncomeShop);
-			
-			item.put("total_income", totalIncome);
-			item.put("total_profit", totalIncome.subtract(totalCost));
-
-		}
-		model.addAttribute("guideMap", guideMap);
-		model.addAttribute("pageBean", pb);
-		return rp;
-	}
-
+	public SettleSealListResult settleSealList(SettleSealListDTO settleSealListDTO);
 
 	/**
 	 * 跳转到收款记录详情页面
 	 */
 	@RequestMapping(value = "incomeView.htm")
-	public String incomeView(HttpServletRequest request,
-			HttpServletResponse reponse, ModelMap model, Integer payId) {
+	public String incomeView(HttpServletRequest request,HttpServletResponse reponse, ModelMap model, Integer payId) {
 		handResponse(request, model);
 		model.addAttribute("pay", financeService.queryPayById(payId));
 		return "finance/cash/income-view";
