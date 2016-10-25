@@ -344,14 +344,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 			@Override
 			public LocalTransactionState executeLocalTransactionBranch(Message msg, Object arg) {
 				
-				try{
-					infoMapper.updateByPrimaryKeySelective(productInfo);
-				}catch(Exception e){
-					LOGGER.error("updateByPrimaryKeySelective error, productInfo={}",JSONObject.toJSONString(productInfo));
-					
-					return LocalTransactionState.ROLLBACK_MESSAGE;
-				}
-				
+				infoMapper.updateByPrimaryKeySelective(productInfo);
 				
 				return LocalTransactionState.COMMIT_MESSAGE;
 			}
@@ -360,12 +353,10 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		
 		if(sendResult.getSendStatus() != SendStatus.SEND_OK){
 			LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
-			return -1;
-		}else{
-			return 1;
 		}
 		
-		
+		return 1;
+
 	}
 
 	@Override
@@ -470,6 +461,9 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 
 	@Override
 	public void saveProductRight(final Integer productId,final Set<Integer> orgIdSet) {
+		
+		final ProductInfoUpdateMessageDTO msgDTO = new ProductInfoUpdateMessageDTO();
+		msgDTO.setProductId(productId);
 		final List<ProductRight> productRights = getRightListByProductId(productId);
 		final int size = orgIdSet.size();
 		Boolean dbResult = transactionTemplateProduct.execute(new TransactionCallback<Boolean>() {
@@ -497,6 +491,13 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 				}
 			}
 		});
+		
+		
+		SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(),  ProductTopic.PRODUCT_MODIFY.getTags());
+		if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+			LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+		}
+		
 	}
 
 	@Override
@@ -658,8 +659,25 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	}
 
 	@Override
-	public void updateProductSysId(Integer productId,Integer productSysId) {
-	infoMapper.updateProductSysId(productId, productSysId);
+	public void updateProductSysId(final Integer productId,final Integer productSysId) {
+		
+	final ProductInfoUpdateMessageDTO msgDTO = new ProductInfoUpdateMessageDTO();
+	msgDTO.setProductId(productId);	
+	
+	SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(),ProductTopic.PRODUCT_MODIFY.getTags(), new LocalTransactionExecuter() {
+		@Override
+		public LocalTransactionState executeLocalTransactionBranch(Message msg, Object arg) {
+			infoMapper.updateProductSysId(productId, productSysId);
+						
+			return LocalTransactionState.COMMIT_MESSAGE;
+		}
+	 });
+	
+	if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+		LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+	}
+	
+	
 	}
 	
 	@Override
