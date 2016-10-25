@@ -5,7 +5,7 @@ import java.text.ParseException;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TeamGroupVO;
 
 
-public interface TeamGroupDal {
+public interface TeamGroupBiz {
 	public TeamGroupVO selectTeamGroupVOByGroupId(Integer groupId,Integer bizId);
 	
 	public TeamGroupVO saveOrUpdateTeamGroupVO(Integer bizId,Integer userId,String userName,TeamGroupVO teamGroupVO)throws ParseException;

@@ -9,7 +9,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteTraffic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 
 
-public interface GroupRouteDal {
+public interface GroupRouteBiz {
 
 	List<GroupRoute> selectByGroupId(Integer groupId);
 	List<GroupRoute> selectByGroupIdAndBookingId(Integer groupId,Integer bookingId);

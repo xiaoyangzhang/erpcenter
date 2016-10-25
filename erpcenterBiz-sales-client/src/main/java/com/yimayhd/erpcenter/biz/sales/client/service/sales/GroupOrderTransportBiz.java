@@ -10,7 +10,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.vo.Transport;
  * @author qindz
  *
  */
-public interface GroupOrderTransportDal {
+public interface GroupOrderTransportBiz {
     int deleteByPrimaryKey(Integer id);
 
     int insert(GroupOrderTransport record);

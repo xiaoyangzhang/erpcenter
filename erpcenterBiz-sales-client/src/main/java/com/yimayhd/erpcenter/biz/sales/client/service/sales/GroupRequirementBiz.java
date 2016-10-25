@@ -5,7 +5,7 @@ import java.util.List;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
 
 
-public interface GroupRequirementDal {
+public interface GroupRequirementBiz {
 	 int deleteByPrimaryKey(Integer id);
 
 	    int insert(GroupRequirement record);

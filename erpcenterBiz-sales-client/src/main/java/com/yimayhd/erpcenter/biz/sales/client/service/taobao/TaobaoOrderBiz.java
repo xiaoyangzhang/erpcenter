@@ -10,7 +10,7 @@ import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade;
  * Created by zhoum on 2016/8/11.
  */
 
-public interface TaobaoOrderDal {
+public interface TaobaoOrderBiz {
 
 	/**
 	 * 查询淘宝原始单

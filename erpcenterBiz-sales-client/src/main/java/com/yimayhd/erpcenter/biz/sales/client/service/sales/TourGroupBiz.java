@@ -19,7 +19,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
  * @author qindz
  *
  */
-public interface TourGroupDal {
+public interface TourGroupBiz {
 	/**
 	 * 旅行团的删除属性
 	 * 

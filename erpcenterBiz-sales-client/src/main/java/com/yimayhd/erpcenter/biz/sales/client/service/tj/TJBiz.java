@@ -11,7 +11,7 @@ import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupShop;
 import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJRecord;
 import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJShopProject;
 
-public interface TJDal {
+public interface TJBiz {
 
 	PageBean  tjShopProject(PageBean pageBean,String start);
 	

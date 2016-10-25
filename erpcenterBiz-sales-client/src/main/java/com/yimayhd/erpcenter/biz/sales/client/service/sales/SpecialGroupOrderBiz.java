@@ -7,7 +7,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SpecialGroupOrderVO;
 
 
-public interface SpecialGroupOrderDal {
+public interface SpecialGroupOrderBiz {
 	public Integer saveOrUpdateSpecialOrderInfo(SpecialGroupOrderVO sgovo,Integer userId,String userName,Integer bizId) throws ParseException;
 	public SpecialGroupOrderVO selectSpeciaOrderlInfoByOrderId(Integer orderId);
 	public void mergetGroup(List<MergeGroupOrderVO> list,Integer bizId,Integer operid, String operName, String supplierCode)throws ParseException;
