@@ -106,7 +106,6 @@ public class QueryDalImpl implements QueryDAL {
 
 	@Override
 	public String getGroupNumStatics(List<GroupOrder> list,Integer dataType) {
-		// TODO Auto-generated method stub
 		
 		if(list!=null && list.size()>0){
 			int len = list.size();
