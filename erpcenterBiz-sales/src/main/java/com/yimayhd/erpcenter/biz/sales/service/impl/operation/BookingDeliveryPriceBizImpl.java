@@ -5,72 +5,73 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryPriceBiz;
+import com.yimayhd.erpcenter.dal.basic.utils.NumberUtil;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryPrice;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryPriceDal;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.yihg.basic.util.NumberUtil;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.api.BookingDeliveryPriceService;
-import com.yihg.operation.dao.BookingDeliveryPriceMapper;
-import com.yihg.operation.po.BookingDeliveryPrice;
 
-public class BookingDeliveryPriceServiceImpl implements BookingDeliveryPriceService{
+
+
+public class BookingDeliveryPriceBizImpl implements BookingDeliveryPriceBiz{
 
 	@Autowired
-	private BookingDeliveryPriceMapper bookingDeliveryPriceMapper;
+	private BookingDeliveryPriceDal bookingDeliveryPriceDal;
 	
 	@Override
 	public int deleteByPrimaryKey(Integer id) {
-		return bookingDeliveryPriceMapper.deleteByPrimaryKey(id);
+		return bookingDeliveryPriceDal.deleteByPrimaryKey(id);
 	}
 
 	@Override
 	public int insert(BookingDeliveryPrice record) {
-		return bookingDeliveryPriceMapper.insert(record);
+		return bookingDeliveryPriceDal.insert(record);
 	}
 
 	@Override
 	public int insertSelective(BookingDeliveryPrice record) {
-		return bookingDeliveryPriceMapper.insertSelective(record);
+		return bookingDeliveryPriceDal.insertSelective(record);
 	}
 
 	@Override
 	public BookingDeliveryPrice selectByPrimaryKey(Integer id) {
-		return bookingDeliveryPriceMapper.selectByPrimaryKey(id);
+		return bookingDeliveryPriceDal.selectByPrimaryKey(id);
 	}
 
 	@Override
 	public int updateByPrimaryKeySelective(BookingDeliveryPrice record) {
-		return bookingDeliveryPriceMapper.updateByPrimaryKeySelective(record);
+		return bookingDeliveryPriceDal.updateByPrimaryKeySelective(record);
 	}
 
 	@Override
 	public int updateByPrimaryKey(BookingDeliveryPrice record) {
-		return bookingDeliveryPriceMapper.updateByPrimaryKey(record);
+		return bookingDeliveryPriceDal.updateByPrimaryKey(record);
 	}
 
 	@Override
 	public int insertBatch(List<BookingDeliveryPrice> list) {
-		return bookingDeliveryPriceMapper.insertBatch(list);
+		return bookingDeliveryPriceDal.insertBatch(list);
 	}
 
 	@Override
 	public int deleteBatch(List<BookingDeliveryPrice> list) {
-		return bookingDeliveryPriceMapper.deleteBatch(list);
+		return bookingDeliveryPriceDal.deleteBatch(list);
 	}
 
 	@Override
 	public List<BookingDeliveryPrice> getPriceListByBookingId(Integer bookingId) {
-		return bookingDeliveryPriceMapper.getPriceListByBookingId(bookingId);
+		return bookingDeliveryPriceDal.getPriceListByBookingId(bookingId);
 	}
 
 	@Override
 	public void updateBatch(List<BookingDeliveryPrice> list) {
-		bookingDeliveryPriceMapper.updateBatch(list);
+		bookingDeliveryPriceDal.updateBatch(list);
 	}
 
 	@Override
 	public int deleteByBookingId(Integer bookingId) {
-		return bookingDeliveryPriceMapper.deleteByBookingId(bookingId);
+		return bookingDeliveryPriceDal.deleteByBookingId(bookingId);
 	}
 	
 	@Override
@@ -141,7 +142,7 @@ public class BookingDeliveryPriceServiceImpl implements BookingDeliveryPriceServ
 	public PageBean<BookingDeliveryPrice> getSupplierPriceListPage(
 			PageBean<BookingDeliveryPrice> pageBean, Integer bizId,Set<Integer> set) {
 		
-		List<BookingDeliveryPrice> bookingDeliveryPrices = bookingDeliveryPriceMapper.getSupplierPriceListPage(pageBean, bizId,set);
+		List<BookingDeliveryPrice> bookingDeliveryPrices = bookingDeliveryPriceDal.getSupplierPriceListPage(pageBean, bizId,set);
 		pageBean.setResult(bookingDeliveryPrices);
 		return pageBean ;
 	}
@@ -149,13 +150,13 @@ public class BookingDeliveryPriceServiceImpl implements BookingDeliveryPriceServ
 	@Override
 	public Map<String, Object> getSupplierPriceTotal(
 			PageBean<BookingDeliveryPrice> pageBean, Integer bizId,Set<Integer> set) {
-		return bookingDeliveryPriceMapper.getSupplierPriceTotal(pageBean, bizId,set);
+		return bookingDeliveryPriceDal.getSupplierPriceTotal(pageBean, bizId,set);
 	}
 
 	/*@Override
 	public Map<String, Object> getSupplierPriceTotalPerson(
 			PageBean<BookingDeliveryPrice> pageBean, Integer bizId,
 			Set<Integer> set) {
-		return bookingDeliveryPriceMapper.getSupplierPriceTotalPerson(pageBean, bizId, set);
+		return bookingDeliveryPriceDal.getSupplierPriceTotalPerson(pageBean, bizId, set);
 	}*/
 }

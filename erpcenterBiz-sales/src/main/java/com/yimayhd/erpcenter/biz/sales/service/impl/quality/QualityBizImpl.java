@@ -11,7 +11,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.TourGroupDal;
 
-public class QualityServiceImpl implements QualityBiz {
+public class QualityBizImpl implements QualityBiz {
 
 	@Resource
 	private TourGroupDal tourGroupDal;
