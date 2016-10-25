@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.dal.sales.sales.impl;
+package com.yimayhd.erpcenter.biz.sales.service.impl.sales;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -20,13 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.common.util.NumberUtil;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission;
-import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
-import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryDal;
-import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryService;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierService;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.PaymentExportVO;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.DeparentmentOrderCondition;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.DepartmentOrderResult;
@@ -38,8 +38,6 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderDal;
-import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupRequirementDal;
-import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupRouteDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupPriceVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
@@ -59,11 +57,10 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.util.GenerateCodeUtil;
 
-public class GroupOrderDalImpl implements GroupOrderDal {
+public class GroupOrderBizImpl implements GroupOrderBiz {
     private static final Logger log = LoggerFactory
-            .getLogger(GroupOrderDalImpl.class);
+            .getLogger(GroupOrderBizImpl.class);
     @Autowired
     private GroupOrderMapper groupOrderMapper;
     @Autowired
@@ -76,18 +73,18 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     private BookingDeliveryMapper bookingDeliveryMapper;
     @Autowired
     private BookingSupplierMapper bookingSupplierMapper;
-//    @Autowired
-//    private TourGroupDal tourGroupDal;
     @Autowired
-    private FinanceDal financeDal;
+    private TourGroupService tourGroupService;
     @Autowired
-    private GroupRequirementDal groupRequirementDal;
+    private FinanceService financeService;
     @Autowired
-    private GroupRouteDal groupRouteDal;
+    private GroupRequirementService groupRequirementService;
     @Autowired
-    private BookingSupplierDal bookingSupplierDal;
+    private GroupRouteService groupRouteService;
     @Autowired
-    private BookingDeliveryDal bookingDeliveryDal;
+    private BookingSupplierService bookingSupplierService;
+    @Autowired
+    private BookingDeliveryService bookingDeliveryService;
     @Autowired
     private GroupRouteMapper groupRouteMapper;
     @Autowired
@@ -135,7 +132,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
         groupOrder.setOrderNoSort(orderCodeSort == null ? 1 : orderCodeSort
                 .getOrderNoSort() + 1);
 
-        String makeCodeByMode = GenerateCodeUtil.makeCodeByMode(groupOrder.getBizId(),
+        String makeCodeByMode = makeCodeByMode(groupOrder.getBizId(),
                 groupOrder.getOrderNo(), groupOrder.getDepartureDate(),
                 orderCodeSort == null ? 1 : orderCodeSort.getOrderNoSort() + 1);
         groupOrder.setOrderNo(makeCodeByMode);
@@ -195,7 +192,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
                 groupRoute.setCreateTime(System.currentTimeMillis());
             }
         }
-        groupRouteDal.saveGroupRoute(groupRouteVO);
+        groupRouteService.saveGroupRoute(groupRouteVO);
     }
 
     @Transactional
@@ -283,7 +280,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
             TourGroup selectGroupCodeSort = tourGroupMapper
                     .selectGroupCodeSort(bizId, 0, orderList2.get(0)
                             .getDepartureDate());
-            String makeCodeByMode = GenerateCodeUtil.makeCodeByMode(
+            String makeCodeByMode = tourGroupService.makeCodeByMode(
                     supplierCode,
                     0,
                     orderList2.get(0).getDepartureDate(), "",
@@ -305,18 +302,18 @@ public class GroupOrderDalImpl implements GroupOrderDal {
             tourGroup.setTotalIncome(new BigDecimal(total));
             tourGroup.setCreateTime(System.currentTimeMillis());
             tourGroupMapper.insertSelective(tourGroup);
-            bookingSupplierDal.updateOperationAfterMergeGroupOrder(tourGroup.getId(), idList);
+            bookingSupplierService.updateOperationAfterMergeGroupOrder(tourGroup.getId(), idList);
             for (GroupOrder groupOrder : orderList2) {
                 groupOrder.setGroupId(tourGroup.getId());
                 groupOrder.setOperatorId(operid);
                 groupOrder.setOperatorName(operName);
                 groupOrderMapper.updateByPrimaryKeySelective(groupOrder);
-                List<GroupRequirement> list2 = groupRequirementDal
+                List<GroupRequirement> list2 = groupRequirementService
                         .selectByOrderId(groupOrder.getId());
                 if (list2 != null && list2.size() > 0) {
                     for (GroupRequirement groupRequirement : list2) {
                         groupRequirement.setGroupId(tourGroup.getId());
-                        groupRequirementDal
+                        groupRequirementService
                                 .updateByPrimaryKeySelective(groupRequirement);
                     }
                 }
@@ -335,7 +332,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
                     groupRoute.setCreateTime(System.currentTimeMillis());
                 }
             }
-            groupRouteDal.saveGroupRoute(groupRouteVO);
+            groupRouteService.saveGroupRoute(groupRouteVO);
 
 
         }
@@ -445,6 +442,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public List<GroupOrder> selectGroupNumForQuery(GroupOrder groupOrder, Integer curBizId,
                                                    Set<Integer> dataUserIdSet) {
+        // TODO Auto-generated method stub
         List<GroupOrder> list = groupOrderMapper.selectGroupNumForQuery(groupOrder, curBizId, dataUserIdSet);
         return list;
     }
@@ -468,28 +466,42 @@ public class GroupOrderDalImpl implements GroupOrderDal {
         return groupOrderMapper.selectSupplierByGroupId(groupId);
     }
 
-   
+    //	@Transactional
+//	@Override
+//	public void updateOrderAndGroupPersonNum(Integer orderId) {
+//		GroupOrder groupOrder = groupOrderMapper.selectByPrimaryKey(orderId);
+//		if(groupOrder.getOrderType()!=1 && groupOrder.getPriceId()!=null){
+//			groupOrderMapper.updateGroupOrderPersonNum(orderId);
+//		}
+//		if(groupOrder.getGroupId()!=null){
+//			groupOrderMapper.updateTourGroupPersonNum(groupOrder.getGroupId());
+//			bookingDeliveryService.updateDeliveryGuestCountOnModifySKGuestCount(groupOrder.getGroupId());
+//		}
+//		
+//	}
     @Transactional
     @Override
     public void updateGroupPersonNum(Integer groupId) {
         groupOrderMapper.updateTourGroupPersonNum(groupId);
-        bookingDeliveryDal.updateDeliveryGuestCountOnModifySKGuestCount(groupId);
+        bookingDeliveryService.updateDeliveryGuestCountOnModifySKGuestCount(groupId);
 
     }
 
     @Override
     public void updateOrderAndGroupPrice(Integer orderId) {
+        // TODO Auto-generated method stub
         GroupOrder groupOrder = groupOrderMapper.selectByPrimaryKey(orderId);
         groupOrderMapper.updateOrderPrice(orderId);
         if (groupOrder.getGroupId() != null) {
-            financeDal.calcTourGroupAmount(groupOrder.getGroupId());
+            financeService.calcTourGroupAmount(groupOrder.getGroupId());
         }
 
     }
 
     @Override
     public void updateGroupPrice(Integer groupId) {
-        financeDal.calcTourGroupAmount(groupId);
+        // TODO Auto-generated method stub
+        financeService.calcTourGroupAmount(groupId);
     }
 
     @Override
@@ -527,6 +539,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public PageBean<GroupOrder> selectSpecialOrderListPage(
             PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set) {
+        // TODO Auto-generated method stub
         List<GroupOrder> list = groupOrderMapper.selectSpecialOrderListPage(pageBean, bizId, set);
         pageBean.setResult(list);
         return pageBean;
@@ -534,6 +547,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 
     @Override
     public GroupOrder selectTotalSpecialOrder(GroupOrder groupOrder, Integer bizId, Set<Integer> set) {
+        // TODO Auto-generated method stub
         return groupOrderMapper.selectTotalSpecialOrder(groupOrder, bizId, set);
     }
 
@@ -633,7 +647,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
         this.initHotel(bizId, salesVO, userId, userName, Constants.TRAINTICKETAGENT);
 
         //统计团里的金额
-        financeDal.calcTourGroupAmount(tourGroup.getId());
+        financeService.calcTourGroupAmount(tourGroup.getId());
 
 
     }
@@ -701,7 +715,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
         // 团信息
         TourGroup tourGroup = salesVO.getTourGroup();
         List<BookingDelivery> bookingDeliveryList = salesVO.getDeliveryList();
-        List<BookingDelivery> bookingDeliveryList2 = bookingDeliveryDal.selectInitDeliveryList(tourGroup.getId());
+        List<BookingDelivery> bookingDeliveryList2 = bookingDeliveryService.selectInitDeliveryList(tourGroup.getId());
         if (null != bookingDeliveryList && bookingDeliveryList.size() > 0) {
             for (BookingDelivery bookingDelivery : bookingDeliveryList) {
                 if (null == bookingDelivery.getId()) {
@@ -759,7 +773,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
         } else if (type.intValue() == Constants.TRAINTICKETAGENT.intValue()) {
             hotel = salesVO.getTrainList();
         }
-        List<BookingSupplier> hotel2 = bookingSupplierDal.selectByGroupIdAndSupplierType(tourGroup.getId(), type);
+        List<BookingSupplier> hotel2 = bookingSupplierService.selectByGroupIdAndSupplierType(tourGroup.getId(), type);
         if (null != hotel && hotel.size() > 0) {
             for (BookingSupplier bookingSupplier : hotel) {
                 if (null == bookingSupplier.getId()) {
@@ -820,12 +834,23 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public PageBean getDeservedCashGroupByOrderId(PageBean pageBean, Set<Integer> set) {
         List<GroupOrder> orders = groupOrderMapper.getDeservedCashGroupByOrderIdListPage(pageBean, set);
+//		 StringBuilder sb=new StringBuilder();
+//		 String orderIds="";
         if (orders != null && orders.size() > 0) {
             for (GroupOrder groupOrder : orders) {
+                //sb.append(groupOrder.getId()+",");
                 groupOrder.setGuestInfo(groupOrderGuestMapper.getGuestInfoByOrderId(groupOrder.getId()));
+                //groupOrder.setOrderPrices(groupOrderPriceMapper.getPriceInfoByOrderId(orderIds));
                 groupOrder.setPriceInfo(convertListToStr(groupOrderPriceMapper.getPriceInfoByOrderId(groupOrder.getId())));
             }
+            //	orderIds =sb.substring(0, sb.length()-1);
+            //for (GroupOrder groupOrder : orders) {
+            //}
         }
+//		 else {
+//			throw new ClientException();
+//		}
+
         pageBean.setResult(orders);
         return pageBean;
     }
@@ -884,6 +909,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 
     @Override
     public List<GroupOrder> selectAiYouOrders(Integer bizId, String startTime, String endTime) {
+        // TODO Auto-generated method stub
         return groupOrderMapper.selectAiYouOrders(bizId, startTime, endTime);
     }
 
@@ -895,6 +921,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 
     @Override
     public List<GroupOrder> selectTopAiYouOrders(Integer bizId, String startTime, Integer limit) {
+        // TODO Auto-generated method stub
         return groupOrderMapper.selectTopAiYouOrders(bizId, startTime, limit);
     }
 
