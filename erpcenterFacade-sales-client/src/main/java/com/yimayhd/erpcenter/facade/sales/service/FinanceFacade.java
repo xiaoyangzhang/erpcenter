@@ -3,18 +3,23 @@ package com.yimayhd.erpcenter.facade.sales.service;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
+import com.yimayhd.erpcenter.facade.sales.query.finance.AduditStatisticsListDTO;
+import com.yimayhd.erpcenter.facade.sales.query.finance.IncomeJoinTableListDTO;
 import com.yimayhd.erpcenter.facade.sales.query.finance.IncomeOrPayDTO;
 import com.yimayhd.erpcenter.facade.sales.query.finance.SettleSealListDTO;
 import com.yimayhd.erpcenter.facade.sales.query.finance.StatementCheckPreviewDTO;
+import com.yimayhd.erpcenter.facade.sales.result.finance.IncomeOrPaytResult;
 import com.yimayhd.erpcenter.facade.sales.result.finance.SettleSealListResult;
 import com.yimayhd.erpcenter.facade.sales.result.finance.StatementCheckPreviewResult;
 
@@ -76,9 +81,10 @@ public interface FinanceFacade{
 	public void calcGroupTotalCashBath(String startTime, String endTime,Integer bizId) throws IOException;
 
 	/**
-	 * 跳转到结算单页面
+	 * 获取审核人列表
+	 * @return
 	 */
-	public List<TourGroup> settleList();
+	public List<TourGroup> getAuditorList();
 	
 	/**
 	 * 结算单审核预览
@@ -87,303 +93,74 @@ public interface FinanceFacade{
 	 */
 	public StatementCheckPreviewResult statementCheckPreview(StatementCheckPreviewDTO statementCheckPreviewDTO);
 	
-	/**
-	 * 跳转到结算单封存页面
-	 */
-	public List<TourGroup> settleSealList();
-	
 	public SettleSealListResult settleSealList(SettleSealListDTO settleSealListDTO);
 
 	/**
 	 * 跳转到收款记录详情页面
 	 */
-	@RequestMapping(value = "incomeView.htm")
-	public String incomeView(IncomeOrPayDTO incomeOrPayDTO) {
-		handResponse(request, model);
-		model.addAttribute("pay", financeService.queryPayById(payId));
-		return "finance/cash/income-view";
-	}
+	public IncomeOrPaytResult incomeView(IncomeOrPayDTO incomeOrPayDTO);
 
 	/**
 	 * 跳转到付款记录详情页面
 	 */
-	@RequestMapping(value = "payView.htm")
-	public String payView(HttpServletRequest request,
-			HttpServletResponse reponse, ModelMap model, Integer payId) {
-		model.addAttribute("pay", financeService.queryPayById(payId));
-		return "finance/cash/pay-view";
-	}
-
-	/**
-	 * 跳转到收款订单关联页面
-	 */
-	@RequestMapping(value = "incomeJoinList.htm")
-	public String incomeJoinList(HttpServletRequest request,
-			HttpServletResponse reponse, ModelMap model) {
-		
-		Integer bizId = WebUtils.getCurBizId(request);
-		model.addAttribute("orgJsonStr",
-				orgService.getComponentOrgTreeJsonStr(bizId));
-		model.addAttribute("orgUserJsonStr",
-				platformEmployeeService.getComponentOrgUserTreeJsonStr(bizId));
-		
-		return "finance/cash/income-join-list";
-	}
+	public IncomeOrPaytResult payView(IncomeOrPayDTO incomeOrPayDTO);
 	
 	/**
 	 * 跳转到收款订单关联页面列表
-	 * @param request
-	 * @param model
-	 * @param guide
-	 * @param pageSize
-	 * @param page
-	 * @return
+	 * @param queryDTO
+	 * @return PageBean
 	 */
-	@RequestMapping(value = "/incomeJoinTableList.do")
-	public String incomeJoinTableList(HttpServletRequest request, ModelMap model, 
-			Integer pageSize, Integer page, TourGroupVO group) {
-		PageBean pageBean = new PageBean();
-		if(page==null){
-			pageBean.setPage(1);
-		}else{
-			pageBean.setPage(page);
-		}
-		if(pageSize==null){
-			pageBean.setPageSize(Constants.PAGESIZE);
-		}else{
-			pageBean.setPageSize(pageSize);
-		}
-		
-		//如果人员为空并且部门不为空，则取部门下的人id
-		if(StringUtils.isBlank(group.getSaleOperatorIds()) && StringUtils.isNotBlank(group.getOrgIds())){
-			Set<Integer> set = new HashSet<Integer>();
-			String[] orgIdArr = group.getOrgIds().split(",");
-			for(String orgIdStr : orgIdArr){
-				set.add(Integer.valueOf(orgIdStr));
-			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(WebUtils.getCurBizId(request), set);
-			String salesOperatorIds="";
-			for(Integer usrId : set){
-				salesOperatorIds+=usrId+",";
-			}
-			if(!salesOperatorIds.equals("")){
-				group.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length()-1));
-			}
-		}
-		Map<String,Object> pm  = WebUtils.getQueryParamters(request);
-		if(null!=group.getSaleOperatorIds() && !"".equals(group.getSaleOperatorIds())){
-			pm.put("saleOperatorIds", group.getSaleOperatorIds());
-		}
-		pm.put("set", WebUtils.getDataUserIdSet(request));
-		pageBean.setParameter(pm);
-		pageBean = financeService.selectIncomeJoinTableListPage(pageBean, WebUtils.getCurBizId(request));
-		model.addAttribute("pageBean", pageBean);
-		
-		return "finance/cash/income-join-list-table";
-	}
-
-	/**
-	 * 跳转到付款订单关联页面
-	 */
-	@RequestMapping(value = "payJoinList.htm")
-	public String payJoinList(HttpServletRequest request,
-			HttpServletResponse reponse, ModelMap model) {
-		model.addAttribute("start_min", DateUtils.getMonthFirstDay());
-		model.addAttribute("start_max", DateUtils.getMonthLastDay());
-		
-		Integer bizId = WebUtils.getCurBizId(request);
-		model.addAttribute("orgJsonStr",
-				orgService.getComponentOrgTreeJsonStr(bizId));
-		model.addAttribute("orgUserJsonStr",
-				platformEmployeeService.getComponentOrgUserTreeJsonStr(bizId));
-		
-		return "finance/cash/pay-join-list";
-	}
+	public PageBean incomeJoinTableList(IncomeJoinTableListDTO queryDTO);
 
 	/**
 	 * 跳转到收款新增页面
 	 */
-	@RequestMapping(value = "incomeAdd.htm")
-	public String incomeAdd(HttpServletRequest request,
-			HttpServletResponse reponse, ModelMap model, Integer payId) {
-		handResponse(request, model);
-		if (payId != null) {
-			model.addAttribute("pay", financeService.queryPayById(payId));
-		}else{
-			model.addAttribute("currDate", new Date());
-		}
-		return "finance/cash/income-add";
-	}
+	public IncomeOrPaytResult incomeAdd(IncomeOrPayDTO incomeOrPayDTO);
 
 	/**
 	 * 跳转到付款新增页面
 	 */
-	@RequestMapping(value = "payAdd.htm")
-	public String payAdd(HttpServletRequest request,
-			HttpServletResponse reponse, ModelMap model, Integer payId) {
-		handResponse(request, model);
-		if (payId != null) {
-			model.addAttribute("pay", financeService.queryPayById(payId));
-		}else{
-			model.addAttribute("currDate", new Date());
-		}
-		return "finance/cash/pay-add";
-	}
-
+	public IncomeOrPaytResult payAdd(IncomeOrPayDTO incomeOrPayDTO);
+	
 	/**
 	 * 跳转收款记录页面
 	 */
-	@RequestMapping(value = "incomeRecordList.htm")
-	public String incomeRecordList(HttpServletRequest request,
-			HttpServletResponse reponse, ModelMap model) {
-		handResponse(request, model);
-		return "finance/cash/income-list";
-	}
+	public IncomeOrPaytResult incomeRecordList(IncomeOrPayDTO incomeOrPayDTO);
 
 	/**
 	 * 跳转付款记录页面
 	 */
-	@RequestMapping(value = "payRecordList.htm")
-	public String cashRecordList(HttpServletRequest request,
-			HttpServletResponse reponse, ModelMap model) {
-		handResponse(request, model);
-		return "finance/cash/pay-list";
-	}
+	public IncomeOrPaytResult cashRecordList(IncomeOrPayDTO incomeOrPayDTO);
 
 	/**
 	 * 跳转到收款审核
 	 */
-	@RequestMapping(value = "auditList.htm")
-	@RequiresPermissions(PermissionConstants.CWGL_JSDSH)
-	public String auditList(HttpServletRequest request,
-			HttpServletResponse reponse, ModelMap model, Integer groupId) {
-		model.addAttribute("group",
-				tourGroupService.selectByPrimaryKey(groupId));
-		return "finance/audit-list";
-	}
+	public TourGroup auditList(Integer groupId);
 
 	/**
-	 * 跳转到审核汇总页面
+	 * 团收入支出汇总
+	 * 
+	 * @author Jing.Zhuo
+	 * @create 2015年7月30日 下午6:13:51
+	 * @param groupId
+	 * @return
 	 */
-	@RequestMapping(value = "auditGroup.htm")
-	@RequiresPermissions(PermissionConstants.CWGL_JSDSH)
-	public String auditGroup(HttpServletRequest request,
-			HttpServletResponse reponse, ModelMap model, Integer groupId) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		model.addAllAttributes(financeService.queryAuditViewInfo(groupId, bizId));
-		return "finance/audit-group";
-	}
-	
-	/**
-	 * 跳转到审核汇总页面
-	 */
-	@RequestMapping(value = "auditGroupList.htm")
-	@RequiresPermissions(PermissionConstants.CWGL_JSDSH)
-	public String auditGroupList(HttpServletRequest request,
-			HttpServletResponse reponse, ModelMap model, Integer groupId) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		model.addAllAttributes(financeService.queryAuditViewInfo(groupId, bizId));
-		return "finance/audit-group-list";
-	}
-	
-	/**
-	 * 跳转到审核汇总打印页面
-	 */
-	@RequestMapping(value = "auditGroupListPrint.htm")
-	public String auditGroupListPrint(HttpServletRequest request,
-			HttpServletResponse reponse, ModelMap model, Integer groupId) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		model.addAllAttributes(financeService.queryAuditViewInfo(groupId, bizId));
-		model.addAttribute("printMsg", "打印人："+WebUtils.getCurUser(request).getName()+" 打印时间："+DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-		return "finance/audit-group-list-print";
-	}
+	public Map queryAuditViewInfo(Integer bizId, Integer groupId);
 
-	/**
-	 * 跳转到审核查询页面
-	 */
-	@RequestMapping(value = "aduditStatisticsList.htm")
-	public String aduditStatisticsList(HttpServletRequest request,
-			HttpServletResponse reponse, ModelMap model) {
-		List<TourGroup> auditorList = tourGroupService.getAuditorList();
-		model.addAttribute("auditorList", auditorList);
-		Integer bizId = WebUtils.getCurBizId(request);
-		model.addAttribute("orgJsonStr", orgService.getComponentOrgTreeJsonStr(bizId));
-		model.addAttribute("orgUserJsonStr", platformEmployeeService.getComponentOrgUserTreeJsonStr(bizId));
-		return "finance/aduditStatisticsList-list";
-	}
-	
-	@RequestMapping(value = "aduditStatisticsList.do")
-	public String aduditStatisticsList(HttpServletRequest request,
-			HttpServletResponse reponse, ModelMap model, String sl, String ssl,
-			String rp, Integer page, Integer pageSize, String svc,TourGroupVO group) {
-
-		PageBean pb = new PageBean();
-		pb.setPage(page);
-		if (pageSize == null) {
-			pageSize = Constants.PAGESIZE;
-		}
-		pb.setPageSize(pageSize);
-		//如果人员为空并且部门不为空，则取部门下的人id
-		if(StringUtils.isBlank(group.getSaleOperatorIds()) && StringUtils.isNotBlank(group.getOrgIds())){
-			Set<Integer> set = new HashSet<Integer>();
-			String[] orgIdArr = group.getOrgIds().split(",");
-			for(String orgIdStr : orgIdArr){
-				set.add(Integer.valueOf(orgIdStr));
-			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(WebUtils.getCurBizId(request), set);
-			String salesOperatorIds="";
-			for(Integer usrId : set){
-				salesOperatorIds+=usrId+",";
-			}
-			if(!salesOperatorIds.equals("")){
-				group.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length()-1));
-			}
-		}
-		Map<String,Object> pms  = WebUtils.getQueryParamters(request);
-		if(null!=group.getSaleOperatorIds() && !"".equals(group.getSaleOperatorIds())){
-			pms.put("operator_id", group.getSaleOperatorIds());
-		}
-		pms.put("set", WebUtils.getDataUserIdSet(request));
-		pb.setParameter(pms);
-		pb = getCommonService(svc).queryListPage(sl, pb);
-		model.addAttribute("pageBean", pb);
-		
-		return rp;
-	}
+	public PageBean aduditStatisticsList(AduditStatisticsListDTO queryDTO);
 
 	/**
 	 * 获取审核人列表
-	 * 
-	 * @param request
-	 * @param reponse
 	 * @param name
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 */
-	@RequestMapping(value = "getAuditUserList.do", method = RequestMethod.GET)
-	@ResponseBody
-	public String getAuditUserList(HttpServletRequest request,
-			HttpServletResponse reponse, String name)
-			throws UnsupportedEncodingException {
-		List<Map<String, String>> list = tourGroupService.getAuditUserList(
-				WebUtils.getCurBizId(request),
-				java.net.URLDecoder.decode(name, "UTF-8"));
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("success", "true");
-		map.put("result", list);
-		return JSON.toJSONString(map);
-	}
+	public String getAuditUserList(String name, Integer bizId) throws UnsupportedEncodingException;
 
 	/**
 	 * 跳转到操作记录页面
 	 */
-	@RequestMapping(value = "operateLog.htm")
-	public String operateLog(HttpServletRequest request,
-			HttpServletResponse reponse, ModelMap model, Integer groupId) {
-		List<TourGroup> operateLogs = financeService.getOperateLogs(groupId);
-		model.addAttribute("operateLogs", operateLogs);
-		return "finance/operate-log";
-	}
+	public List<TourGroup> operateLog(Integer groupId);
 
 	/**
 	 * 批量审核
@@ -553,24 +330,6 @@ public interface FinanceFacade{
 		map.put("success", "true");
 		map.put("accountList", supplierService.selectBankBySupplierId(sid));
 		return JSON.toJSONString(map);
-	}
-
-	private void handResponse(HttpServletRequest request, ModelMap model) {
-		List<DicInfo> payTypeList = dicService
-				.getListByTypeCode(BasicConstants.CW_ZFFS);
-		model.addAttribute("payTypeList", payTypeList);
-		Integer biz_id = WebUtils.getCurBizId(request);
-		List<SysBizBankAccount> bizAccountList = sysBizBankAccountService
-				.getListByBizId(biz_id);
-		model.addAttribute("bizAccountList", bizAccountList);
-		model.addAttribute("supplierTypeMapIn",
-				SupplierConstant.supplierTypeMapIn);
-		model.addAttribute("supplierTypeMapPay",
-				SupplierConstant.supplierTypeMapPay);
-		PlatformEmployeePo employee = WebUtils.getCurUser(request);
-		if (employee != null) {
-			model.addAttribute("operatePerson", employee.getName());
-		}
 	}
 
 	/**
