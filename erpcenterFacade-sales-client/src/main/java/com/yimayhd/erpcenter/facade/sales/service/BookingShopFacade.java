@@ -1,5 +1,8 @@
 package com.yimayhd.erpcenter.facade.sales.service;
 
+import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.facade.sales.query.BookingShopListDTO;
+
 /**
  * 
 * @ClassName: BookingShopFacade 
@@ -9,5 +12,5 @@ package com.yimayhd.erpcenter.facade.sales.service;
 *
  */
 public interface BookingShopFacade {
-	
+	PageBean bookingShopList(BookingShopListDTO bookingShopListDTO);
 }
