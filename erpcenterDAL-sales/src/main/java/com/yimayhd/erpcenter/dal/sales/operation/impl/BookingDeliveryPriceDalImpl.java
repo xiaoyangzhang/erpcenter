@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.yihg.mybatis.utility.PageBean;
 
 
-public class BookingDeliveryPriceServiceImpl implements BookingDeliveryPriceDal{
+public class BookingDeliveryPriceDalImpl implements BookingDeliveryPriceDal{
 
 	@Autowired
 	private BookingDeliveryPriceMapper bookingDeliveryPriceMapper;

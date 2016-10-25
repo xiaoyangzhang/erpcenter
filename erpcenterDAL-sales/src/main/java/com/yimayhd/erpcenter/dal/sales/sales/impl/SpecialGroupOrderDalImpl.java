@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.dal.sales.client.airticket.service.AirTicketRequestDal;
 import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceDal;
-import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierService;
+import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;

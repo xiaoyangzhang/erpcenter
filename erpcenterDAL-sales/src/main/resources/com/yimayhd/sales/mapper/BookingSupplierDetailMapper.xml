@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.operation.dao.BookingSupplierDetailMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingSupplierDetail" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
     <result column="type1_id" property="type1Id" jdbcType="INTEGER" />
@@ -70,7 +70,7 @@
     delete from booking_supplier_detail
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.operation.po.BookingSupplierDetail" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail" >
     insert into booking_supplier_detail (id, booking_id, type1_id, 
       type1_name, type2_id, type2_name, 
       item_date, item_date_to, item_num, item_price, 
@@ -85,7 +85,7 @@
       #{driverId,jdbcType=INTEGER}, #{driverName,jdbcType=VARCHAR},#{driverTel,jdbcType=VARCHAR},#{carLisence,jdbcType=VARCHAR},
       #{fangDiaoLuRu,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingSupplierDetail" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail" >
     insert into booking_supplier_detail
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -212,7 +212,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingSupplierDetail" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail" >
     update booking_supplier_detail
     <set >
       <if test="bookingId != null" >
@@ -275,7 +275,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingSupplierDetail" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail" >
     update booking_supplier_detail
     set booking_id = #{bookingId,jdbcType=INTEGER},
       type1_id = #{type1Id,jdbcType=INTEGER},

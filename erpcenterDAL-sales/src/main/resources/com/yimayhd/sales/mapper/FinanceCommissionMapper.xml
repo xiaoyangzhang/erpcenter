@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.finance.dao.FinanceCommissionMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.finance.po.FinanceCommission" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceCommissionMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="biz_id" property="bizId" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
@@ -62,7 +62,7 @@
     where group_id = #{groupId,jdbcType=INTEGER} and biz_id = #{bizId,jdbcType=INTEGER} 
     and state_finance != 1 and total_cash = 0.0000
   </delete>
-  <insert id="insert" parameterType="com.yihg.finance.po.FinanceCommission" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission" >
     insert into finance_commission
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -169,7 +169,7 @@
   </insert>
   
   <!-- 单条记录更新  -->
-  <update id="update" parameterType="com.yihg.finance.po.FinanceCommission" >
+  <update id="update" parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission" >
     update finance_commission
     <set>
       <if test="groupId != null" >

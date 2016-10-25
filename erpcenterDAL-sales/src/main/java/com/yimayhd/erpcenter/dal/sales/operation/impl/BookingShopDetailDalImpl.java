@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 
 
-public class BookingShopDetailServiceImpl implements BookingShopDetailDal{
+public class BookingShopDetailDalImpl implements BookingShopDetailDal{
 
 	@Autowired
 	private BookingShopDetailMapper shopDetailMapper;

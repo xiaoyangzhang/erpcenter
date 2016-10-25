@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.query.dao.QueryMapper">
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.query.dao.QueryMapper">
   
 	<select id="getProductGuestShoppingGroupOrderListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
 		SELECT gog.product_brand_name,GROUP_CONCAT(DISTINCT gog.id) order_ids

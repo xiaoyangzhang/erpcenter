@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.finance.dao.FinanceBillMapper" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceBillMapper" >
   <select id="statisBillListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
     select t.id, t.group_code,t.group_mode, t.date_start, t.product_brand_name, t.product_name, t.operator_id, t.operator_name,
     t.total_adult,  t.total_child, t.total_guide, b.guide_name, d.bill_type, d.bill_business, d.num, d.received_num, d.returned_num,
@@ -177,7 +177,7 @@
 	</select>	
   
 	<!-- 添加领单 -->
-	<insert id="insertBillOrder" parameterType="com.yihg.sales.po.FinanceBill"
+	<insert id="insertBillOrder" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBill"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into finance_bill_order 
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -231,7 +231,7 @@
 	</insert>
 	
 	<!-- 查询领单 -->
-	<select id="selectBillOrder" parameterType="java.lang.Integer" resultType="com.yihg.sales.po.FinanceBill">
+	<select id="selectBillOrder" parameterType="java.lang.Integer" resultType="com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBill">
 		SELECT * FROM finance_bill_order WHERE 1 = 1
 		<if test="bizId != null">
 			and biz_id = ${bizId}  
@@ -245,7 +245,7 @@
 	</select>
 	
 		<!-- 查询领单详情 -->
-	<select id="selectBillOrderDetail" parameterType="java.lang.Integer" resultType="com.yihg.sales.po.FinanceBillDetail">
+	<select id="selectBillOrderDetail" parameterType="java.lang.Integer" resultType="com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBillDetail">
 		SELECT * FROM finance_bill_detail WHERE 1 = 1
 		<if test="bizId != null">
 			and biz_id = ${bizId}  
@@ -265,7 +265,7 @@
 	</delete>
 	
 	<!-- 添加领单详情 -->
-	<insert id="insertBillDetail" parameterType="com.yihg.sales.po.FinanceBillDetail"
+	<insert id="insertBillDetail" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBillDetail"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into finance_bill_detail
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -423,7 +423,7 @@
 	</select>
 	
 	<!-- 根据导游安排张的groupID查询领单申请信息 -->
-	<select id="selectByGroupId"  parameterType="com.yihg.sales.po.FinanceBill" resultType="com.yihg.sales.po.FinanceBill">
+	<select id="selectByGroupId"  parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBill" resultType="com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBill">
 	    select * 
 	    from finance_bill_order
 	    where group_id = #{groupId} and guide_id = #{guideId} 

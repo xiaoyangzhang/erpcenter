@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sales.dao.GroupRouteSupplierMapper">
-	<resultMap id="BaseResultMap" type="com.yihg.sales.po.GroupRouteSupplier">
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteSupplierMapper">
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="route_id" property="routeId" jdbcType="INTEGER" />
 		<result column="supplier_type" property="supplierType"
@@ -31,7 +31,7 @@
 	</delete>
 
 
-	<insert id="insert" parameterType="com.yihg.sales.po.GroupRouteSupplier">
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier">
 		insert into
 		group_route_supplier (id, route_id, supplier_type,
 		sub_type,
@@ -44,7 +44,7 @@
 		#{supplierId,jdbcType=INTEGER}, #{supplierName,jdbcType=VARCHAR},
 		#{createTime,jdbcType=BIGINT})
 	</insert>
-	<insert id="insertSelective" parameterType="com.yihg.sales.po.GroupRouteSupplier">
+	<insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier">
 		insert into group_route_supplier
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -93,7 +93,7 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.sales.po.GroupRouteSupplier">
+	<update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier">
 		update group_route_supplier
 		<set>
 			<if test="routeId != null">
@@ -117,7 +117,7 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yihg.sales.po.GroupRouteSupplier">
+	<update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier">
 		update
 		group_route_supplier
 		set route_id = #{routeId,jdbcType=INTEGER},

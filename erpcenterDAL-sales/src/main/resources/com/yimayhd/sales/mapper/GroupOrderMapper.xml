@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sales.dao.GroupOrderMapper">
-	<resultMap id="BaseResultMap" type="com.yihg.sales.po.GroupOrder">
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper">
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		<id column="id" property="id" jdbcType="INTEGER"/>
 		<result column="biz_id" property="bizId" jdbcType="INTEGER"/>
 		<result column="group_id" property="groupId" jdbcType="INTEGER"/>
@@ -2651,7 +2651,7 @@
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
 	
-	<insert id="insert" parameterType="com.yihg.sales.po.GroupOrder"
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder"
 	        useGeneratedKeys="true" keyProperty="id">
 	insert into group_order
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -2996,7 +2996,7 @@
 			LAST_INSERT_ID()
 		</selectKey>
 	</insert>
-	<insert id="insertSelective" parameterType="com.yihg.sales.po.GroupOrder"
+	<insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder"
 	        useGeneratedKeys="true" keyProperty="id">
 		insert into group_order
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -3306,7 +3306,7 @@
 			LAST_INSERT_ID()
 		</selectKey>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.sales.po.GroupOrder">
+	<update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		update group_order
 		<set>
 			<if test="bizId != null">
@@ -3485,7 +3485,7 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yihg.sales.po.GroupOrder">
+	<update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		update group_order
 		set biz_id = #{bizId,jdbcType=INTEGER},
 		group_id =
@@ -3866,7 +3866,7 @@
 		#{groupId}
 	</select>
 	<select id="selectGroupNumForQuery" resultMap="BaseResultMap"
-	        parameterType="com.yihg.sales.po.GroupOrder">
+	        parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		SELECT
 		p.supplier_name AS supplierName,
 		COUNT(p.supplier_name) AS
@@ -4141,7 +4141,7 @@
 	</select>
 
 	<select id="selectTotalSpecialOrder" resultMap="BaseResultMap"
-	        parameterType="com.yihg.sales.po.GroupOrder">
+	        parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		select IFNULL(sum(a.num_adult),0) as numAdult ,
 		IFNULL(sum(a.num_child),0) as numChild, IFNULL(sum(a.num_guide),0) as
 		numGuide, IFNULL(sum(a.total),0) as total from group_order a left join
@@ -4355,7 +4355,7 @@
 		order by go.`sale_operator_name`
 	</select>
 	<!-- <select id="getDeservedCashGroupByOrderIdListPage" resultMap="BaseResultMap" 
-		parameterType="com.yihg.sales.po.GroupOrder"> SELECT tg.`group_code`,go.`product_brand_name`,go.`product_name`,go.`operator_id`,go.`operator_name`, 
+		parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder"> SELECT tg.`group_code`,go.`product_brand_name`,go.`product_name`,go.`operator_id`,go.`operator_name`, 
 		go.`sale_operator_id`,go.`sale_operator_name`,go.`num_adult`,go.`num_child`,go.`num_guide`,go.`supplier_name`,go.`receive_mode`, 
 		guest.guestInfo,price.priceInfo,SUM(totalPrice) totalSum,IFNULL(got.pickUpInfo,'') 
 		pickUpInfo,IFNULL(got.transferInfo,'') transferInfo FROM `tour_group` tg 
@@ -5043,7 +5043,7 @@
 			order by departure_date,create_time	
   	</select>
   	
-  	<update id="updateResOrderState" parameterType="com.yihg.sales.po.GroupOrder">
+  	<update id="updateResOrderState" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
   		update group_order
 		<set>
 			<if test="remarkInternal != null">
@@ -5238,7 +5238,7 @@
 			order by departure_date,create_time	
   	</select>
   	
-  	<update id="updateResAdminOrderState" parameterType="com.yihg.sales.po.GroupOrder">
+  	<update id="updateResAdminOrderState" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
   		update group_order
 		<set>
 			<if test="remarkInternal != null">
@@ -5334,7 +5334,7 @@
 			order by departure_date,create_time	
   	</select>
 	
-	<update id="updateExtResState" parameterType="com.yihg.sales.po.GroupOrder">
+	<update id="updateExtResState" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		update group_order
 		<set>
 			<if test="extResState != null">

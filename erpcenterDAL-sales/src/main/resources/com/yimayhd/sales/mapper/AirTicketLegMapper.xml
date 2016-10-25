@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.airticket.dao.AirTicketLegMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.airticket.po.AirTicketLeg" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketLegMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketLeg" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="resource_id" property="resourceId" jdbcType="INTEGER" />
     <result column="dep_date" property="depDate" jdbcType="DATE" />
@@ -17,7 +17,7 @@
   </sql>
   
   <!-- 插入   -->
-  <insert id="save" parameterType="com.yihg.airticket.po.AirTicketLeg" useGeneratedKeys="true" keyProperty="id">
+  <insert id="save" parameterType="com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketLeg" useGeneratedKeys="true" keyProperty="id">
     insert into air_ticket_leg
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="resourceId != null" >

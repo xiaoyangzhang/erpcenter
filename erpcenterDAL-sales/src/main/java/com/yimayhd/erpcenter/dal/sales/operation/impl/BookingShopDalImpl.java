@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yihg.mybatis.utility.PageBean;
 
 
-public class BookingShopServiceImpl implements BookingShopDal{
+public class BookingShopDalImpl implements BookingShopDal{
 
 	@Autowired
 	private BookingShopMapper shopMapper;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sales.dao.GroupOrderTransportMapper">
-	<resultMap id="BaseResultMap" type="com.yihg.sales.po.GroupOrderTransport">
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderTransportMapper">
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="order_id" property="orderId" jdbcType="INTEGER" />
 		<result column="method" property="method" jdbcType="INTEGER" />
@@ -74,7 +74,7 @@
 		group_order_transport
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
-	<insert id="insert" parameterType="com.yihg.sales.po.GroupOrderTransport">
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport">
 		insert into
 		group_order_transport (id, order_id, method,
 		type, class_no,
@@ -95,7 +95,7 @@
 		#{createTime,jdbcType=BIGINT},
 		#{sourceType,jdbcType=INTEGER})
 	</insert>
-	<insert id="insertSelective" parameterType="com.yihg.sales.po.GroupOrderTransport">
+	<insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport">
 		insert into group_order_transport
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -204,7 +204,7 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.sales.po.GroupOrderTransport">
+	<update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport">
 		update group_order_transport
 		<set>
 			<if test="orderId != null">
@@ -258,7 +258,7 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yihg.sales.po.GroupOrderTransport">
+	<update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport">
 		update
 		group_order_transport
 		set order_id = #{orderId,jdbcType=INTEGER},

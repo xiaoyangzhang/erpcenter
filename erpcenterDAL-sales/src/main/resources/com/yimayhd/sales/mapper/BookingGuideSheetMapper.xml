@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.operation.dao.BookingGuideSheetMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingGuideSheet" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.operation.dao.BookingGuideSheetMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideSheet" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
     <result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
@@ -37,7 +37,7 @@
     delete from booking_guide_sheet
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.operation.po.BookingGuideSheet" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideSheet" >
     insert into booking_guide_sheet (id, booking_id, supplier_type, 
       supplier_id, apply_num, apply_remark, 
       apply_time, apply_user_id, get_num, 
@@ -53,7 +53,7 @@
       #{returnCodes,jdbcType=VARCHAR}, #{returnUserId,jdbcType=INTEGER}, #{returnTime,jdbcType=TIMESTAMP}, 
       #{column19,jdbcType=CHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingGuideSheet" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideSheet" >
     insert into booking_guide_sheet
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -174,7 +174,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingGuideSheet" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideSheet" >
     update booking_guide_sheet
     <set >
       <if test="bookingId != null" >
@@ -234,7 +234,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingGuideSheet" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideSheet" >
     update booking_guide_sheet
     set booking_id = #{bookingId,jdbcType=INTEGER},
       supplier_type = #{supplierType,jdbcType=INTEGER},

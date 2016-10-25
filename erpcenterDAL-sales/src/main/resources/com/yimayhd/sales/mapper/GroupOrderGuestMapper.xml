@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sales.dao.GroupOrderGuestMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.sales.po.GroupOrderGuest" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="order_id" property="orderId" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
@@ -108,7 +108,7 @@
     delete from group_order_guest
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.sales.po.GroupOrderGuest" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest" >
     insert into group_order_guest (id, order_id, name, 
       type, certificate_type_id, certificate_num, 
       gender, mobile, native_place, 
@@ -122,7 +122,7 @@
       #{isLeader,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT},#{isGuide,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.sales.po.GroupOrderGuest" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest" >
     insert into group_order_guest
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -225,7 +225,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.sales.po.GroupOrderGuest" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest" >
     update group_order_guest
     <set >
       <if test="orderId != null" >
@@ -276,7 +276,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.sales.po.GroupOrderGuest" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest" >
     update group_order_guest
     set order_id = #{orderId,jdbcType=INTEGER},
       name = #{name,jdbcType=VARCHAR},

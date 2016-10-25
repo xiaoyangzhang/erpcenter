@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.airticket.dao.AirTicketRequestMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.airticket.po.AirTicketRequest" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketRequestMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketRequest" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="biz_id" property="bizId" jdbcType="INTEGER" />
     <result column="resource_id" property="resourceId" jdbcType="INTEGER" />
@@ -32,7 +32,7 @@
   
   
   <!--  单条插入  -->
-  <insert id="insert"  parameterType="com.yihg.airticket.po.AirTicketRequest"  useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert"  parameterType="com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketRequest"  useGeneratedKeys="true" keyProperty="id">
     insert into air_ticket_request
     <trim prefix="(" suffix=")" suffixOverrides="," >
         biz_id, resource_id, is_del,
@@ -94,7 +94,7 @@
   </select>
   
   <!-- 更新 -->
-  <update id="update" parameterType="com.yihg.airticket.po.AirTicketRequest" >
+  <update id="update" parameterType="com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketRequest" >
     update air_ticket_request
     <set >
       <if test="resourceId != null" >
