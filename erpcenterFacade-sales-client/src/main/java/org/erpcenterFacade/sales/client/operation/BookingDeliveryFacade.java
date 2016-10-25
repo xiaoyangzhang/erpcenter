@@ -35,6 +35,16 @@ public interface BookingDeliveryFacade {
 	* @return List<BookingDelivery>
 	* @throws
 	 */
-	BookingDeliveryResult DeliveryBookingArrangeList(Integer groupId);
+	BookingDeliveryResult getDeliveryBookingArrangeList(Integer groupId);
+	/**
+	 * 新增/编辑地接订单
+	* created by zhangxiaoyang
+	* @date 2016年10月25日
+	* @Description:
+	* @param 
+	* @return BookingDeliveryResult
+	* @throws
+	 */
+	BookingDeliveryResult getDeliveryEditInfo(Integer groupId,Integer bid);
 	
 }
