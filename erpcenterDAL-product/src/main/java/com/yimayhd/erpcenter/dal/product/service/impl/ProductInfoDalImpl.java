@@ -92,17 +92,10 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	@Override
 	public int insertSelective(final ProductInfo record) {
 		final ProductInfoUpdateMessageDTO msgDTO = new ProductInfoUpdateMessageDTO();
-		TransactionSendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(), ProductTopic.PRODUCT_MODIFY.getTags(), new LocalTransactionExecuter(){
-
-			@Override
-			public LocalTransactionState executeLocalTransactionBranch(Message msg, Object arg) {
-				int productId = infoMapper.insertSelective(record);
-				msgDTO.setProductId(productId);
-				
-				return LocalTransactionState.COMMIT_MESSAGE;
-			}
-			
-		});
+		
+		infoMapper.insertSelective(record);
+		msgDTO.setProductId(record.getId());
+		SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(), ProductTopic.PRODUCT_MODIFY.getTags());
 		
 		if(sendResult.getSendStatus() != SendStatus.SEND_OK){
 			LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
@@ -342,9 +335,37 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	}
 
 	@Override
-	public int updateProductInfo(ProductInfo productInfo) {
+	public int updateProductInfo(final ProductInfo productInfo) {
+		final ProductInfoUpdateMessageDTO msgDTO = new ProductInfoUpdateMessageDTO();
+		msgDTO.setProductId(productInfo.getId());
 		
-		return infoMapper.updateByPrimaryKeySelective(productInfo);
+		TransactionSendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(), ProductTopic.PRODUCT_MODIFY.getTags(), new LocalTransactionExecuter(){
+
+			@Override
+			public LocalTransactionState executeLocalTransactionBranch(Message msg, Object arg) {
+				
+				try{
+					infoMapper.updateByPrimaryKeySelective(productInfo);
+				}catch(Exception e){
+					LOGGER.error("updateByPrimaryKeySelective error, productInfo={}",JSONObject.toJSONString(productInfo));
+					
+					return LocalTransactionState.ROLLBACK_MESSAGE;
+				}
+				
+				
+				return LocalTransactionState.COMMIT_MESSAGE;
+			}
+			
+		});
+		
+		if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+			LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+			return -1;
+		}else{
+			return 1;
+		}
+		
+		
 	}
 
 	@Override
