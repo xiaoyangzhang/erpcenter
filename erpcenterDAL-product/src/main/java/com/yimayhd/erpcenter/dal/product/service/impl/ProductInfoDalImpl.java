@@ -20,8 +20,11 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.rocketmq.client.producer.LocalTransactionExecuter;
 import com.alibaba.rocketmq.client.producer.LocalTransactionState;
+import com.alibaba.rocketmq.client.producer.SendStatus;
+import com.alibaba.rocketmq.client.producer.TransactionSendResult;
 import com.alibaba.rocketmq.common.message.Message;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.common.mq.MsgSenderService;
@@ -88,7 +91,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	@Override
 	public int insertSelective(final ProductInfo record) {
 		final ProductInfoUpdateMessageDTO msgDTO = new ProductInfoUpdateMessageDTO();
-		msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(), ProductTopic.PRODUCT_MODIFY.getTags(), new LocalTransactionExecuter(){
+		TransactionSendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(), ProductTopic.PRODUCT_MODIFY.getTags(), new LocalTransactionExecuter(){
 
 			@Override
 			public LocalTransactionState executeLocalTransactionBranch(Message msg, Object arg) {
@@ -100,7 +103,9 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 			
 		});
 		
-		
+		if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+			LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+		}
 		
 		return record.getId();
 	}
