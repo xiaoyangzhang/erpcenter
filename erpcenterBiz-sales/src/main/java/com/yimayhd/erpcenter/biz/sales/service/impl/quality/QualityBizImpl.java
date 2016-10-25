@@ -15,11 +15,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.service.TourGroupDal;
 public class QualityBizImpl implements QualityBiz {
 	@Resource
 	private QualityDal qualityDal;
-	@Resource
-	private TourGroupDal tourGroupDal;
-	@Resource
-	private GroupOrderDal groupOrderDal;
-	
+
 	@Override
 	public PageBean getQualityTourGroupList(
 			PageBean<QualityTourGroupVo> pageBean) {
