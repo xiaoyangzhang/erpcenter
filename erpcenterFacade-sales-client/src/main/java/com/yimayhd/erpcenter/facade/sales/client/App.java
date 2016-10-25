@@ -1,4 +1,4 @@
-package org.erpcenterFacade.sales.client;
+package com.yimayhd.erpcenter.facade.sales.client;
 
 /**
  * Hello world!
