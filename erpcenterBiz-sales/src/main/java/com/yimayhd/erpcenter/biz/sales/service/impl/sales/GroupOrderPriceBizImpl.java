@@ -4,102 +4,96 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderPriceBiz;
 import com.yimayhd.erpcenter.common.util.NumberUtil;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderPriceDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.CostIncome;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 
 public class GroupOrderPriceBizImpl implements GroupOrderPriceBiz {
 
 	@Autowired
-	private GroupOrderPriceMapper groupOrderPriceMapper;
+	private GroupOrderPriceDal groupOrderPriceDal;
 
-	@Autowired
-	private GroupOrderMapper groupOrderMapper;
-	@Autowired
-	private TourGroupMapper tourGroupMapper;
 	
-	@Transactional
+	//@Transactional
 	@Override
 	public int deleteByPrimaryKey(Integer id) {
-		GroupOrderPrice record = groupOrderPriceMapper.selectByPrimaryKey(id);
-		groupOrderPriceMapper.deleteByPrimaryKey(id);
-		if (record.getMode() == 0) {
-			GroupOrder groupOrder = groupOrderMapper.selectByPrimaryKey(record
-					.getOrderId());
-			groupOrderMapper.updateTotalByPrice(groupOrder.getId());
-			if (groupOrder.getGroupId() != null) {
-				tourGroupMapper.updateTotalIncome(groupOrder.getGroupId());
-			}
-		}
-
-		return 1;
+		return groupOrderPriceDal.deleteByPrimaryKey(id);
+//		GroupOrderPrice record = groupOrderPriceDal.selectByPrimaryKey(id);
+//		groupOrderPriceDal.deleteByPrimaryKey(id);
+//		if (record.getMode() == 0) {
+//			GroupOrder groupOrder = groupOrderMapper.selectByPrimaryKey(record
+//					.getOrderId());
+//			groupOrderMapper.updateTotalByPrice(groupOrder.getId());
+//			if (groupOrder.getGroupId() != null) {
+//				tourGroupMapper.updateTotalIncome(groupOrder.getGroupId());
+//			}
+//		}
+//
+//		return 1;
 	}
 
 	@Override
 	public int insert(GroupOrderPrice record) {
-		return groupOrderPriceMapper.insert(record);
+		return groupOrderPriceDal.insert(record);
 	}
 
-	@Transactional
+	//@Transactional
 	@Override
 	public int insertSelective(GroupOrderPrice record) {
-		groupOrderPriceMapper.insertSelective(record);
-		if (record.getMode() == 0) {
-			GroupOrder groupOrder = groupOrderMapper.selectByPrimaryKey(record
-					.getOrderId());
-			groupOrderMapper.updateTotalByPrice(groupOrder.getId());
-			if (groupOrder.getGroupId() != null) {
-				tourGroupMapper.updateTotalIncome(groupOrder.getGroupId());
-			}
-		}
-		return 1;
+		return groupOrderPriceDal.insertSelective(record);
+//		groupOrderPriceDal.insertSelective(record);
+//		if (record.getMode() == 0) {
+//			GroupOrder groupOrder = groupOrderMapper.selectByPrimaryKey(record
+//					.getOrderId());
+//			groupOrderMapper.updateTotalByPrice(groupOrder.getId());
+//			if (groupOrder.getGroupId() != null) {
+//				tourGroupMapper.updateTotalIncome(groupOrder.getGroupId());
+//			}
+//		}
+//		return 1;
 	}
 
 	@Override
 	public GroupOrderPrice selectByPrimaryKey(Integer id) {
-		return groupOrderPriceMapper.selectByPrimaryKey(id);
+		return groupOrderPriceDal.selectByPrimaryKey(id);
 	}
 
-	@Transactional
+	//@Transactional
 	@Override
 	public int updateByPrimaryKeySelective(GroupOrderPrice record) {
-		groupOrderPriceMapper.updateByPrimaryKeySelective(record);
-		//更新收入
-		if (record.getMode() == 0) {
-			GroupOrder groupOrder = groupOrderMapper.selectByPrimaryKey(record
-					.getOrderId());
-			groupOrderMapper.updateTotalByPrice(groupOrder.getId());
-			if (groupOrder.getGroupId() != null) {
-				tourGroupMapper.updateTotalIncome(groupOrder.getGroupId());
-			}
-		}
-		return 1;
+		return groupOrderPriceDal.updateByPrimaryKeySelective(record);
+//		groupOrderPriceDal.updateByPrimaryKeySelective(record);
+//		//更新收入
+//		if (record.getMode() == 0) {
+//			GroupOrder groupOrder = groupOrderMapper.selectByPrimaryKey(record
+//					.getOrderId());
+//			groupOrderMapper.updateTotalByPrice(groupOrder.getId());
+//			if (groupOrder.getGroupId() != null) {
+//				tourGroupMapper.updateTotalIncome(groupOrder.getGroupId());
+//			}
+//		}
+//		return 1;
 	}
 
 	@Override
 	public int updateByPrimaryKey(GroupOrderPrice record) {
-		return groupOrderPriceMapper.updateByPrimaryKey(record);
+		return groupOrderPriceDal.updateByPrimaryKey(record);
 	}
 
 	@Override
 	public List<GroupOrderPrice> selectByOrderAndType(Integer orderId,
 			Integer mode) {
-		return groupOrderPriceMapper.selectByOrderAndType(orderId, mode);
+		return groupOrderPriceDal.selectByOrderAndType(orderId, mode);
 	}
 
 	@Override
 	public Boolean selectByOrderAndType(Integer orderId) {
 		Boolean flag = false ;
-		List<GroupOrderPrice> gopList = groupOrderPriceMapper.selectByOrderAndType(orderId, 1) ;
+		List<GroupOrderPrice> gopList = groupOrderPriceDal.selectByOrderAndType(orderId, 1) ;
 		Double num = (double) 0 ;
 		for (GroupOrderPrice groupOrderPrice : gopList) {
 		num+=groupOrderPrice.getTotalPrice() ;
@@ -111,7 +105,7 @@ public class GroupOrderPriceBizImpl implements GroupOrderPriceBiz {
 	}
 	@Override
 	public List<GroupOrderPrice> selectByOrder(Integer orderId) {
-		List<GroupOrderPrice> prices = groupOrderPriceMapper.selectByOrder(orderId);
+		List<GroupOrderPrice> prices = groupOrderPriceDal.selectByOrder(orderId);
 		return prices ;
 	}
 
@@ -224,16 +218,16 @@ public class GroupOrderPriceBizImpl implements GroupOrderPriceBiz {
 	
 	@Override
 	public void auditPriceByIds(String priceCheckedIds, String priceUnCheckedIds){
-		
-		//审核
-		if(!StringUtils.isEmpty(priceCheckedIds)){
-			groupOrderPriceMapper.auditPriceByIds(priceCheckedIds, 1);
-		}
-		
-		//取消审核
-		if(!StringUtils.isEmpty(priceUnCheckedIds)){
-			groupOrderPriceMapper.auditPriceByIds(priceUnCheckedIds, 0);
-		}
+		groupOrderPriceDal.auditPriceByIds(priceCheckedIds, priceUnCheckedIds);
+//		//审核
+//		if(!StringUtils.isEmpty(priceCheckedIds)){
+//			groupOrderPriceDal.auditPriceByIds(priceCheckedIds, 1);
+//		}
+//		
+//		//取消审核
+//		if(!StringUtils.isEmpty(priceUnCheckedIds)){
+//			groupOrderPriceDal.auditPriceByIds(priceUnCheckedIds, 0);
+//		}
 	}
 
 }

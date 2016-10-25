@@ -16,7 +16,7 @@ public interface QueryDAL {
 	 * @param condition
 	 * @return
 	 */
-	String productGuestStatics(ProductGuestCondition condition,Set<Integer> userIds);
+	List<ProductGuestStaticsVo> productGuestStatics(ProductGuestCondition condition,Set<Integer> userIds);
 	//导出使用
 	List<ProductGuestStaticsVo> productGuestStatics2(ProductGuestCondition condition,Set<Integer> userIds);
 	
@@ -25,7 +25,7 @@ public interface QueryDAL {
 	 * @param condition
 	 * @return
 	 */
-	String guestSourceStatics(ProductGuestCondition condition,Set<Integer> userIds);
+	List<Map<String,Object>> guestSourceStatics(ProductGuestCondition condition,Set<Integer> userIds);
 	//导出使用
 	List<Map<String, Object>> guestSourceStatics2(ProductGuestCondition condition,Set<Integer> userIds);
 	

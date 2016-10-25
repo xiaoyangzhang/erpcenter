@@ -10,52 +10,51 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupFeedback;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupFeedbackDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupFeedbackGroupStaticsVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupFeedbackPersonalStaticsVO;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupFeedbackMapper;
 
 public class GroupFeedbackBizImpl implements GroupFeedbackBiz{
 
 	@Autowired
-	private GroupFeedbackMapper groupFeedbackMapper;
+	private GroupFeedbackDal groupFeedbackDal;
 	
 	@Override
 	public int deleteByPrimaryKey(Integer id) {
-		return groupFeedbackMapper.deleteByPrimaryKey(id);
+		return groupFeedbackDal.deleteByPrimaryKey(id);
 	}
 
 	@Override
 	public int insert(GroupFeedback record) {
-		return groupFeedbackMapper.insert(record);
+		return groupFeedbackDal.insert(record);
 	}
 
 	@Override
 	public int insertSelective(GroupFeedback record) {
-		return groupFeedbackMapper.insertSelective(record);
+		return groupFeedbackDal.insertSelective(record);
 	}
 
 	@Override
 	public GroupFeedback selectByPrimaryKey(Integer id) {
-		return groupFeedbackMapper.selectByPrimaryKey(id);
+		return groupFeedbackDal.selectByPrimaryKey(id);
 	}
 
 	@Override
 	public int updateByPrimaryKeySelective(GroupFeedback record) {
-		return groupFeedbackMapper.updateByPrimaryKeySelective(record);
+		return groupFeedbackDal.updateByPrimaryKeySelective(record);
 	}
 
 	@Override
 	public int updateByPrimaryKey(GroupFeedback record) {
-		return groupFeedbackMapper.updateByPrimaryKey(record);
+		return groupFeedbackDal.updateByPrimaryKey(record);
 	}
 
 	@Override
 	public GroupFeedback selectByPrimaryGroupId(Integer groupId,Integer createId) {
-		return groupFeedbackMapper.selectByPrimaryGroupId(groupId,createId);
+		return groupFeedbackDal.selectByPrimaryGroupId(groupId,createId);
 	}
 
 	@Override
 	public GroupFeedbackGroupStaticsVO getGroupStaticsByGroupId(Integer groupId) {
 		if(groupId!=null){
-			return groupFeedbackMapper.selectGroupStaticsByGroupId(groupId);
+			return groupFeedbackDal.getGroupStaticsByGroupId(groupId);
 		}
 		return null;
 	}
@@ -63,13 +62,14 @@ public class GroupFeedbackBizImpl implements GroupFeedbackBiz{
 	@Override
 	public GroupFeedbackPersonalStaticsVO getPersonalStaticsByGroupIdAndIdNo(
 			Integer groupId, String idNo) {
-		if(groupId!=null && StringUtils.isNotBlank(idNo)){
-			List<GroupFeedbackPersonalStaticsVO> list = groupFeedbackMapper.selectPersonalStaticsByGroupIdAndIdNo(groupId, idNo);
-			if(list!=null && list.size()>0){
-				return list.get(0);
-			}
-		}
-		return null;
+		return groupFeedbackDal.getPersonalStaticsByGroupIdAndIdNo(groupId, idNo);
+//		if(groupId!=null && StringUtils.isNotBlank(idNo)){
+//			List<GroupFeedbackPersonalStaticsVO> list = groupFeedbackDal.getPersonalStaticsByGroupIdAndIdNo(groupId, idNo);
+//			if(list!=null && list.size()>0){
+//				return list.get(0);
+//			}
+//		}
+//		return null;
 	}
 
 }
