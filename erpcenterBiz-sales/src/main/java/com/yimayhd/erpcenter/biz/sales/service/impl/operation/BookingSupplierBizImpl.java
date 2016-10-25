@@ -42,14 +42,13 @@ public class BookingSupplierBizImpl implements BookingSupplierBiz{
 
 	@Override
 	public int insert(BookingSupplier record) {
-		 bookingSupplierDal.insert(record);
-		  return record.getId();
+		  return  bookingSupplierDal.insert(record);
 	}
 
 	@Override
 	public int insertSelective(BookingSupplier record) {
-		bookingSupplierDal.insertSelective(record);
-		return record.getId();
+
+		return bookingSupplierDal.insertSelective(record);
 	}
 
 	@Override

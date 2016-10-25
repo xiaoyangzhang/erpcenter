@@ -34,8 +34,7 @@ public class BookingShopBizImpl implements BookingShopBiz{
 
 	@Override
 	public int save(BookingShop shop) {
-		bookingShopDal.save(shop);
-		return shop.getId() ;
+		return bookingShopDal.save(shop);
 	}
 
 	@Override
