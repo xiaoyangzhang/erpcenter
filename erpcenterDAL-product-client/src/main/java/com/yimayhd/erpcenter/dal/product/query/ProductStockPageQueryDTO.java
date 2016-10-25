@@ -19,6 +19,7 @@ public class ProductStockPageQueryDTO extends PageQuery implements Serializable{
 	 private Date psItemDateEnd;//ps表时间-------必须
 	 private Integer psState;//ps表状态1正常 -1删除--------必须!=-1
 	 private String prOrgId;//pr表机构id--------必须
+	 private String stockInfo;//pr表机构id--------必须
 	/**
 	 * @return the infoBizId
 	 */

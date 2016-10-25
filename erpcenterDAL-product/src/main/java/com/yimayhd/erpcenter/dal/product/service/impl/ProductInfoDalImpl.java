@@ -440,8 +440,8 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		
 		if(1==1){
 			ProductStockPageQueryDTO queryDTO = ProductStockConverter.toQueryDTO(pageBean);
-			SolrSearchPageDTO<ProductStockDTO> solrPageResult  = productSolrQueryManager.searchProductStock(queryDTO);
-			list= ProductStockConverter.dto2PageBean(solrPageResult);
+			SolrSearchPageDTO<StockStaticsResultVOPlus> solrPageResult  = productSolrQueryManager.searchProductStock(queryDTO);
+			list=solrPageResult.getList();
 			if(list!=null && list.size()>0){
 				for (StockStaticsResultVOPlus voPlus : list) {
 					List<ProductStock> stockList=new ArrayList<ProductStock>();

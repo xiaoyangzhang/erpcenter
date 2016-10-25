@@ -120,7 +120,11 @@ public class ProductStateConverter {
 	 */
 	public static SolrQuery queryDTO2SolrQuery(ProductStatePageQueryDTO queryDTO) {
 
-		SolrQuery solrQuery = new SolrQuery();
+		SolrQuery solrQuery = new SolrQuery("*:*");
+		StringBuffer q_sb = new StringBuffer();
+		String two = "-1";
+		q_sb.append("-infoState:" + "\""+two+"\"");
+		solrQuery.addFilterQuery(q_sb.toString());
 		
 		if(!StringUtils.isEmpty(queryDTO.getPrOrgId())){
 			String orgIdQuery = "prOrgId:*" + queryDTO.getPrOrgId() + ",*";
@@ -141,6 +145,16 @@ public class ProductStateConverter {
 			String cityQuery = "infoNameCity:*" + queryDTO.getInfoNameCity() + "*";
 			solrQuery.addFilterQuery(cityQuery);
 		}
+		
+		if(queryDTO.getInfoBizId() != null){
+			String bizQuery = "infoBizId:" + queryDTO.getInfoNameCity();
+			solrQuery.addFilterQuery(bizQuery);
+		}
+		
+//		if(queryDTO.getInfoOperatorIds()!= null){
+//			String infoOperatorIdsQuery = "infoNameCity:*" + queryDTO.getInfoNameCity() + "*";
+//			solrQuery.addFilterQuery(infoOperatorIdsQuery);
+//		}
 		
 		solrQuery.setStart(queryDTO.getStartRow());
 		solrQuery.setRows(queryDTO.getOldPageSize());
