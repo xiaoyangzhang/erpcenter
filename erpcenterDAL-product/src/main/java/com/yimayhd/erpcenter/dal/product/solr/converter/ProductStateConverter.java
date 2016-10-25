@@ -151,10 +151,13 @@ public class ProductStateConverter {
 			solrQuery.addFilterQuery(bizQuery);
 		}
 		
-//		if(queryDTO.getInfoOperatorIds()!= null){
-//			String infoOperatorIdsQuery = "infoNameCity:*" + queryDTO.getInfoNameCity() + "*";
-//			solrQuery.addFilterQuery(infoOperatorIdsQuery);
-//		}
+		if(queryDTO.getInfoOperatorIds()!= null){
+			String infoOperatorIdsQuery = "infoNameCity:*" + queryDTO.getInfoNameCity() + "*";
+			if(queryDTO.getInfoOperatorIds()==1){
+				
+			}else{}
+			solrQuery.addFilterQuery(infoOperatorIdsQuery);
+		}
 		
 		solrQuery.setStart(queryDTO.getStartRow());
 		solrQuery.setRows(queryDTO.getOldPageSize());
