@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yihg.mybatis.utility.PageBean;
 
 
-public class BookingGuideServiceImpl implements BookingGuideBiz{
+public class BookingGuideBizImpl implements BookingGuideBiz{
 
 	@Autowired
 	private BookingGuideDal bookingGuideDal;
