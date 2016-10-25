@@ -7,7 +7,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.FitOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
 
-public interface FitOrderDal {
+public interface FitOrderBiz {
   public FitOrderVO selectFitOrderVOById(Integer orderId);
   public Integer  saveOrUpdateFitOrderInfo(FitOrderVO fitOrderVO,Integer userId,String userName,Integer proOperId,String proOperName ,Integer bizId,String bizCode,boolean mergerGroup)throws ParseException;
   public void mergetGroup(List<MergeGroupOrderVO> list,Integer bizId,Integer operid, String operName, String supplierCode,boolean isAgency)throws ParseException;

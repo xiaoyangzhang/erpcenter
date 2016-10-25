@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.common.util.NumberUtil;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
@@ -57,9 +58,9 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 
-public class GroupOrderDalImpl implements GroupOrderDal {
+public class GroupOrderBizImpl implements GroupOrderBiz {
     private static final Logger log = LoggerFactory
-            .getLogger(GroupOrderDalImpl.class);
+            .getLogger(GroupOrderBizImpl.class);
     @Autowired
     private GroupOrderMapper groupOrderMapper;
     @Autowired

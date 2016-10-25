@@ -10,7 +10,7 @@ import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestStaticsVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorVo;
 
-public interface QueryDAL {
+public interface QueryBiz {
 	/**
 	 * 根据订单和订单收客情况进行产品收客统计
 	 * @param condition

@@ -40,7 +40,6 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupRequirementDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupRouteDal;
-import com.yimayhd.erpcenter.dal.sales.client.sales.service.TourGroupDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupPriceVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
@@ -77,8 +76,8 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     private BookingDeliveryMapper bookingDeliveryMapper;
     @Autowired
     private BookingSupplierMapper bookingSupplierMapper;
-    @Autowired
-    private TourGroupDal tourGroupDal;
+//    @Autowired
+//    private TourGroupDal tourGroupDal;
     @Autowired
     private FinanceDal financeDal;
     @Autowired
@@ -284,7 +283,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
             TourGroup selectGroupCodeSort = tourGroupMapper
                     .selectGroupCodeSort(bizId, 0, orderList2.get(0)
                             .getDepartureDate());
-            String makeCodeByMode = tourGroupDal.makeCodeByMode(
+            String makeCodeByMode = GenerateCodeUtil.makeCodeByMode(
                     supplierCode,
                     0,
                     orderList2.get(0).getDepartureDate(), "",

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.util.TypeUtils;
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.biz.sales.client.service.query.QueryBiz;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.GroupBookingInfo;
 import com.yimayhd.erpcenter.dal.sales.client.query.service.QueryDAL;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestCondition;
@@ -30,7 +31,7 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderTransportMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRequirementMapper;
 
-public class QueryDalImpl implements QueryDAL {
+public class QueryBizImpl implements QueryBiz {
 
 	@Resource
 	private GroupOrderMapper orderMapper;
@@ -698,7 +699,7 @@ public class QueryDalImpl implements QueryDAL {
 		 }
 	public static void main(String[] args) {
 		double aa[] = {1.0,1.0,2.3,1.0};
-		QueryDalImpl.mode(aa);
+		QueryBizImpl.mode(aa);
 	}
 
 }

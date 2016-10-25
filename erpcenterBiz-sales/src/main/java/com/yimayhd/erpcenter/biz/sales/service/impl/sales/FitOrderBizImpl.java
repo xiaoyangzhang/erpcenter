@@ -12,6 +12,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.FitOrderBiz;
 import com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketOrderMapper;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
@@ -40,7 +41,7 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteTrafficMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.util.GenerateCodeUtil;
 
-public class FitOrderDalImpl implements FitOrderDal {
+public class FitOrderBizImpl implements FitOrderBiz {
 	@Autowired
 	private GroupOrderMapper groupOrderMapper;
 	@Autowired

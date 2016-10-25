@@ -5,13 +5,14 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupFeedbackBiz;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupFeedback;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupFeedbackDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupFeedbackGroupStaticsVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupFeedbackPersonalStaticsVO;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupFeedbackMapper;
 
-public class GroupFeedbackDalImpl implements GroupFeedbackDal{
+public class GroupFeedbackBizImpl implements GroupFeedbackBiz{
 
 	@Autowired
 	private GroupFeedbackMapper groupFeedbackMapper;

@@ -4,13 +4,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
 import org.apache.ibatis.annotations.Param;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.po.BookingSupplier;
-import com.yihg.operation.po.BookingSupplierDetail;
 
-public interface BookingSupplierDetailService {
+
+public interface BookingSupplierDetailBiz {
 	int deleteByPrimaryKey(Integer id);
 	int deleteByBookingId(Integer bookingId);
 

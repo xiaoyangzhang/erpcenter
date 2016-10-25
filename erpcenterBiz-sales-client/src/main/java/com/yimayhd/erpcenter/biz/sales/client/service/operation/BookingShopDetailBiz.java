@@ -1,12 +1,12 @@
 package com.yimayhd.erpcenter.biz.sales.client.service.operation;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingShopDetailVO;
+
 import java.util.List;
 
-import com.yihg.operation.po.BookingDeliveryPrice;
-import com.yihg.operation.po.BookingShopDetail;
-import com.yihg.operation.vo.BookingShopDetailVO;
 
-public interface BookingShopDetailService {
+public interface BookingShopDetailBiz {
 
 	int updateByPrimaryKeySelective(BookingShopDetail record);
 

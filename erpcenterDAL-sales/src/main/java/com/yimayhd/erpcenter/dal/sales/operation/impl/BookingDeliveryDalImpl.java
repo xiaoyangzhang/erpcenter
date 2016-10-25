@@ -30,27 +30,27 @@ import com.alibaba.fastjson.util.TypeUtils;
 public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 	Logger logger = LoggerFactory.getLogger(BookingDeliveryDalImpl.class);
 	@Autowired
-	private BookingDeliveryMapper deliveryDao;
+	private BookingDeliveryMapper bookingDeliveryMapper;
 	@Autowired
-	private BookingDeliveryOrderMapper deliveryOrderDao;
+	private BookingDeliveryOrderMapper bookingDeliveryOrderMapper;
 	@Autowired
-	private BookingDeliveryRouteMapper deliveryRouteDao;
+	private BookingDeliveryRouteMapper bookingDeliveryRouteMapper;
 	@Autowired
-	private BookingDeliveryPriceMapper deliveryPriceDao;
+	private BookingDeliveryPriceMapper bookingDeliveryPriceMapper;
 	@Autowired
 	private FinanceDal financeDal;
 	
 	@Override
 	public BookingDeliveryStatics getStaticsByGroupId(Integer groupId) {
-		return deliveryDao.getStaticsByGroupId(groupId);
+		return bookingDeliveryMapper.getStaticsByGroupId(groupId);
 	}
 
 	@Override
 	public List<BookingDelivery> getDeliveryListByGroupId(Integer groupId) {
-		  List<BookingDelivery> bookingDeliveries = deliveryDao.getDeliveryListByGroupId(groupId);
+		  List<BookingDelivery> bookingDeliveries = bookingDeliveryMapper.getDeliveryListByGroupId(groupId);
 //		  for (BookingDelivery bd : bookingDeliveries) {
 //			
-//			  List<BookingDeliveryOrder> orderList = deliveryOrderDao.getOrderListByBookingId(bd.getId());
+//			  List<BookingDeliveryOrder> orderList = bookingDeliveryOrderMapper.getOrderListByBookingId(bd.getId());
 //			  bd.setOrderList(orderList);
 //		}
 		return bookingDeliveries;
@@ -65,7 +65,7 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 
 		if(bookingDelivery.getId()==null){
 			//新增
-			deliveryDao.insert(bookingDelivery);
+			bookingDeliveryMapper.insert(bookingDelivery);
 			Integer bookingId = bookingDelivery.getId();			
 			List<BookingDeliveryOrder> orderList =bookingDelivery.getOrderList();
 			if(orderList!=null && orderList.size()>0){
@@ -74,7 +74,7 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 						order.setBookingId(bookingId);
 					}
 				}
-				deliveryOrderDao.insertBatch(orderList);
+				bookingDeliveryOrderMapper.insertBatch(orderList);
 			}
 			List<BookingDeliveryRoute> routeList = bookingDelivery.getRouteList();
 			if(routeList!=null && routeList.size()>0){
@@ -83,7 +83,7 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 						route.setBookingId(bookingId);
 					}
 				}
-				deliveryRouteDao.insertBatch(routeList);
+				bookingDeliveryRouteMapper.insertBatch(routeList);
 			}	
 			List<BookingDeliveryPrice> priceList = bookingDelivery.getPriceList();
 			if(priceList!=null && priceList.size()>0){
@@ -93,7 +93,7 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 					price.setCreatorId(bookingDelivery.getUserId());
 					price.setCreatorName(bookingDelivery.getUserName());					
 				}
-				deliveryPriceDao.insertBatch(priceList);
+				bookingDeliveryPriceMapper.insertBatch(priceList);
 			}
 			
 		}else{
@@ -102,7 +102,7 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 				//改为变更
 				bookingDelivery.setStateBooking(2);
 			}
-			deliveryDao.updateByPrimaryKeySelective(bookingDelivery);
+			bookingDeliveryMapper.updateByPrimaryKeySelective(bookingDelivery);
 			List<BookingDeliveryOrder> orderList =bookingDelivery.getOrderList();
 			List<BookingDeliveryOrder> addOrderList = new ArrayList<BookingDeliveryOrder>();
 			List<BookingDeliveryOrder> updateOrderList = new ArrayList<BookingDeliveryOrder>();
@@ -117,12 +117,12 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 				}
 				//删除除updateList之外的数据库数据
 				if(updateOrderList.size()>0){
-					deliveryOrderDao.deleteBatch(updateOrderList);
+					bookingDeliveryOrderMapper.deleteBatch(updateOrderList);
 				}
 				if(addOrderList.size()>0){
-					deliveryOrderDao.insertBatch(addOrderList);					
+					bookingDeliveryOrderMapper.insertBatch(addOrderList);					
 				}
-				//deliveryOrderDao.updateBatch(updateOrderList);
+				//bookingDeliveryOrderMapper.updateBatch(updateOrderList);
 			}
 			
 			List<BookingDeliveryRoute> routeList = bookingDelivery.getRouteList();
@@ -138,16 +138,16 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 					}
 				}
 				if(updateRouteList.size()>0){
-					deliveryRouteDao.deleteBatch(updateRouteList);
+					bookingDeliveryRouteMapper.deleteBatch(updateRouteList);
 				}
 				if(addRouteList.size()>0){
-					deliveryRouteDao.insertBatch(addRouteList);
+					bookingDeliveryRouteMapper.insertBatch(addRouteList);
 				}
 			}
 			//修改更新方式：全部删除，然后全部插入
 			List<BookingDeliveryPrice> priceList = bookingDelivery.getPriceList();
-			deliveryPriceDao.deleteByBookingId(bookingDelivery.getId());			
-			//deliveryPriceDao.deleteByBookingId(bookingDelivery.getId());
+			bookingDeliveryPriceMapper.deleteByBookingId(bookingDelivery.getId());			
+			//bookingDeliveryPriceMapper.deleteByBookingId(bookingDelivery.getId());
 			//List<BookingDeliveryPrice> addPriceList = new ArrayList<BookingDeliveryPrice>();
 			//List<BookingDeliveryPrice> updatePriceList = new ArrayList<BookingDeliveryPrice>();
 			if(priceList!=null && priceList.size()>0){
@@ -165,18 +165,18 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 				}
 				/*
 				if(updatePriceList.size()>0){
-					deliveryPriceDao.deleteBatch(updatePriceList);
-					//deliveryPriceDao.updateBatch(updatePriceList);					
+					bookingDeliveryPriceMapper.deleteBatch(updatePriceList);
+					//bookingDeliveryPriceMapper.updateBatch(updatePriceList);					
 					//System.out.println(delete);
 				}
 				if(addPriceList.size()>0){
-					deliveryPriceDao.insertBatch(addPriceList);
+					bookingDeliveryPriceMapper.insertBatch(addPriceList);
 					//System.out.println(insert);
 				}*/
-				deliveryPriceDao.insertBatch(priceList);
+				bookingDeliveryPriceMapper.insertBatch(priceList);
 			}
 		}
-		 deliveryDao.updateTotal(bookingDelivery.getId());
+		 bookingDeliveryMapper.updateTotal(bookingDelivery.getId());
 		 //更新团里的统计信息
 		financeDal.calcTourGroupAmount(bookingDelivery.getGroupId());
 		 return bookingDelivery.getId();
@@ -184,11 +184,11 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 
 	@Override
 	public BookingDelivery getBookingInfoById(Integer bookingId) {
-		BookingDelivery delivery = deliveryDao.selectByPrimaryKey(bookingId);
+		BookingDelivery delivery = bookingDeliveryMapper.selectByPrimaryKey(bookingId);
 		if(delivery!=null){
-			List<BookingDeliveryOrder> orderList = deliveryOrderDao.getOrderListByBookingId(bookingId);
-			List<BookingDeliveryRoute> routeList = deliveryRouteDao.getRouteListByBookingId(bookingId);
-			List<BookingDeliveryPrice> priceList = deliveryPriceDao.getPriceListByBookingId(bookingId);
+			List<BookingDeliveryOrder> orderList = bookingDeliveryOrderMapper.getOrderListByBookingId(bookingId);
+			List<BookingDeliveryRoute> routeList = bookingDeliveryRouteMapper.getRouteListByBookingId(bookingId);
+			List<BookingDeliveryPrice> priceList = bookingDeliveryPriceMapper.getPriceListByBookingId(bookingId);
 			delivery.setOrderList(orderList);
 			delivery.setRouteList(routeList);
 			delivery.setPriceList(priceList);
@@ -209,14 +209,14 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 		BookingDelivery delivery = new BookingDelivery();
 		delivery.setId(id);		
 		delivery.setStateBooking(1);
-		deliveryDao.updateByPrimaryKeySelective(delivery);
+		bookingDeliveryMapper.updateByPrimaryKeySelective(delivery);
 	}
 
 	public void agencyStateChange(Integer id) {
 		BookingDelivery delivery = new BookingDelivery();
 		delivery.setId(id);		
 		delivery.setStateBooking(2);
-		deliveryDao.updateByPrimaryKeySelective(delivery);
+		bookingDeliveryMapper.updateByPrimaryKeySelective(delivery);
 	}
 
 	@Override
@@ -224,21 +224,21 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 		BookingDelivery delivery = new BookingDelivery();
 		delivery.setId(id);		
 		delivery.setStateFinance(1);
-		deliveryDao.updateByPrimaryKeySelective(delivery);
+		bookingDeliveryMapper.updateByPrimaryKeySelective(delivery);
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
 	public void angencyDelete(Integer id) throws ClientException {
-		BookingDelivery delivery = deliveryDao.selectByPrimaryKey(id);
+		BookingDelivery delivery = bookingDeliveryMapper.selectByPrimaryKey(id);
 		if(delivery==null){
 			throw new ClientException("下接单已不存在！");
 		}else{
 			if(delivery.getCanDelete()){
-				int result = deliveryDao.deleteByPrimaryKey(id);
-				deliveryOrderDao.deleteByBookingId(id);
-				deliveryRouteDao.deleteByBookingId(id);
-				deliveryPriceDao.deleteByBookingId(id);
+				int result = bookingDeliveryMapper.deleteByPrimaryKey(id);
+				bookingDeliveryOrderMapper.deleteByBookingId(id);
+				bookingDeliveryRouteMapper.deleteByBookingId(id);
+				bookingDeliveryPriceMapper.deleteByBookingId(id);
 				
 				//更新团里的统计信息
 				financeDal.calcTourGroupAmount(delivery.getGroupId());
@@ -262,11 +262,11 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 		if(groupId==null){
 			return -1;
 		}
-		List<Map<String,Integer>> list = deliveryDao.getBookingIdListByGroupId(groupId);
+		List<Map<String,Integer>> list = bookingDeliveryMapper.getBookingIdListByGroupId(groupId);
 		if(list!=null && list.size()>0){
 			for(Map<String,Integer> map :list){
 				Integer bookingId = map.get("id");
-				Map<String,Object> guestCntMap = deliveryDao.getGuestCountByBookingId(bookingId);
+				Map<String,Object> guestCntMap = bookingDeliveryMapper.getGuestCountByBookingId(bookingId);
 				if(guestCntMap == null){//如果下接订单没关联订单则map为空
 					continue;
 				}
@@ -278,7 +278,7 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 				delivery.setPersonAdult(adultNum);
 				delivery.setPersonChild(childNum);
 				delivery.setPersonGuide(guideNum);
-				deliveryDao.updateByPrimaryKeySelective(delivery);
+				bookingDeliveryMapper.updateByPrimaryKeySelective(delivery);
 			}			
 			return 1;
 		}
@@ -310,17 +310,17 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 		delivery.setPersonAdult(adultCnt);
 		delivery.setPersonChild(childCnt);
 		delivery.setPersonGuide(guideCnt);
-		return deliveryDao.updateGuestCntByGroupId(delivery);
+		return bookingDeliveryMapper.updateGuestCntByGroupId(delivery);
 	}
 
 	@Override
 	public List<BookingDelivery> selectInitDeliveryList(Integer groupId) {
-		return deliveryDao.selectInitDeliveryList(groupId);
+		return bookingDeliveryMapper.selectInitDeliveryList(groupId);
 	}
 
 	/*@Override
 	public BookingDelivery getBookingDeliveryByOrderId(Integer orderId) {
-		return deliveryDao.getBookingDeliveryByOrderId(orderId);
+		return bookingDeliveryMapper.getBookingDeliveryByOrderId(orderId);
 	}
 	*/
 	

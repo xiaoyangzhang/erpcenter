@@ -9,7 +9,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupFeedbackPersonalStat
  * @author lyl
  *
  */
-public interface GroupFeedbackDal {
+public interface GroupFeedbackBiz {
 	int deleteByPrimaryKey(Integer id);
 
 	int insert(GroupFeedback record);
