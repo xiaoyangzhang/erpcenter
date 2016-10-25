@@ -15,6 +15,14 @@
   </properties>
   <dependencies>
     <dependency>
+		<groupId>com.yimayhd.erpcenter</groupId>
+		<artifactId>erpcenterDAL-sales-client</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>com.yimayhd.erpcenter</groupId>
+		<artifactId>erpcenterBiz-sales-client</artifactId>
+	</dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>

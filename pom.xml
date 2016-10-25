@@ -22,32 +22,32 @@
 		<module>erpcenterBiz-product</module>
 		<module>erpcenterDAL-product</module>
 		<module>erpcenter-web</module>
-    <module>erpcenterDAL-sys</module>
-    <module>erpcenterDAL-client</module>
-    <module>erpcenterBiz-sys-client</module>
-    <module>erpcenterBiz-sys</module>
-    <module>erpcenterFacade-sys-client</module>
-    <module>erpcenterFacade-sys</module>
-    <module>erpcenterDAL-basic-client</module>
-    <module>erpcenterDAL-basic</module>
-    <module>erpcenterBiz-basic-client</module>
-    <module>erpcenterBiz-basic</module>
-    <module>erpcenterFacade-basic-client</module>
-    <module>erpcenterFacade-basic</module>
-    <module>erpcenterDAL-sys-client</module>
-    <module>erpcenter-common</module>
-    <module>erpcenterFacade-common</module>
-    <module>erpcenterFacade-common-client</module>
-    <module>erpcenterDAL-sales-client</module>
-    <module>erpcenterDAL-sales</module>
-    <module>erpcenterBiz-sales-client</module>
-    <module>erpcenterBiz-sales</module>
-    <module>erpcenterFacade-sales-client</module>
-    <module>erpcenterFacade-sales</module>
-    <module>erpcenterFacade-operation-client</module>
-    <module>erpcenterFacade-operation</module>
-    <module>erpcenterFacade-supplier-client</module>
-    <module>erpcenterFacade-supplier</module>
+	    <module>erpcenterDAL-sys</module>
+	    <module>erpcenterDAL-client</module>
+	    <module>erpcenterBiz-sys-client</module>
+	    <module>erpcenterBiz-sys</module>
+	    <module>erpcenterFacade-sys-client</module>
+	    <module>erpcenterFacade-sys</module>
+	    <module>erpcenterDAL-basic-client</module>
+	    <module>erpcenterDAL-basic</module>
+	    <module>erpcenterBiz-basic-client</module>
+	    <module>erpcenterBiz-basic</module>
+	    <module>erpcenterFacade-basic-client</module>
+	    <module>erpcenterFacade-basic</module>
+	    <module>erpcenterDAL-sys-client</module>
+	    <module>erpcenter-common</module>
+	    <module>erpcenterFacade-common</module>
+	    <module>erpcenterFacade-common-client</module>
+	    <module>erpcenterDAL-sales-client</module>
+	    <module>erpcenterDAL-sales</module>
+	    <module>erpcenterBiz-sales-client</module>
+	    <module>erpcenterBiz-sales</module>
+	    <module>erpcenterFacade-sales-client</module>
+	    <module>erpcenterFacade-sales</module>
+	    <module>erpcenterFacade-operation-client</module>
+	    <module>erpcenterFacade-operation</module>
+	    <module>erpcenterFacade-supplier-client</module>
+	    <module>erpcenterFacade-supplier</module>
   </modules>
 
 	<properties>
@@ -188,52 +188,62 @@
 				<version>${project.version}</version>
 			</dependency>
 
-	<dependency>
-		<groupId>com.yimayhd.erpcenter</groupId>
-		<artifactId>erpcenterBiz-sys</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>com.yimayhd.erpcenter</groupId>
-		<artifactId>erpcenterBiz-basic</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>com.yimayhd.erpcenter</groupId>
-		<artifactId>erpcenterBiz-product</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>com.yimayhd.erpcenter</groupId>
-		<artifactId>erpcenterFacade-sys</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>com.yimayhd.erpcenter</groupId>
-		<artifactId>erpcenterFacade-basic</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>com.yimayhd.erpcenter</groupId>
-		<artifactId>erpcenterFacade-product</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-    	<groupId>com.yimayhd.erpcenter</groupId>
-    	<artifactId>erpcenterDAL-basic-client</artifactId>
-    	<version>${project.version}</version>
-    </dependency>
-    
-    <dependency>
-    	<groupId>com.yimayhd.erpcenter</groupId>
-    	<artifactId>erpcenterDAL-sales-client</artifactId>
-    	<version>${project.version}</version>
-    </dependency>
-    <dependency>
-    	<groupId>com.yimayhd.erpcenter</groupId>
-    	<artifactId>erpcenterDAL-sales</artifactId>
-    	<version>${project.version}</version>
-    </dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterBiz-sys</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterBiz-basic</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterBiz-product</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-sys</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-basic</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-product</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+		    	<groupId>com.yimayhd.erpcenter</groupId>
+		    	<artifactId>erpcenterDAL-basic-client</artifactId>
+		    	<version>${project.version}</version>
+		    </dependency>
+		    
+		    <dependency>
+		    	<groupId>com.yimayhd.erpcenter</groupId>
+		    	<artifactId>erpcenterDAL-sales-client</artifactId>
+		    	<version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+		    	<groupId>com.yimayhd.erpcenter</groupId>
+		    	<artifactId>erpcenterDAL-sales</artifactId>
+		    	<version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+		    	<groupId>com.yimayhd.erpcenter</groupId>
+		    	<artifactId>erpcenterBiz-sales-client</artifactId>
+		    	<version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+		    	<groupId>com.yimayhd.erpcenter</groupId>
+		    	<artifactId>erpcenterBiz-sales</artifactId>
+		    	<version>${project.version}</version>
+		    </dependency>
 
 			<dependency>
 			   <groupId>ledis</groupId>
