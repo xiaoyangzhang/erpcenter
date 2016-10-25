@@ -4,57 +4,48 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.yimayhd.erpcenter.biz.sales.client.service.b2b.B2BGroupOrderBiz;
 import com.yimayhd.erpcenter.dal.sales.client.b2b.service.B2BGroupOrderDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
 
 /**
  * Created by zm on 2016/6/17.
  */
-public class B2BGroupOrderDalImpl implements B2BGroupOrderDal {
+public class B2BGroupOrderBizImpl implements B2BGroupOrderBiz {
 
 	@Autowired
-	private GroupOrderMapper groupOrderMapper;
-	@Autowired
-	private GroupOrderGuestMapper groupOrderGuestMapper;
-	@Autowired
-	private GroupOrderPriceMapper groupOrderPriceMapper;
-	@Autowired
-	private GroupRouteMapper groupRouteMapper;
+	private B2BGroupOrderDal b2BGroupOrderDal;
 
 	@Override
 	public List<GroupOrder> findGroupOrder(Integer bizId, String dateStart, String dateEnd, String clientName,Integer exports) {
-		return groupOrderMapper.selectGroupOrderListToB2B(bizId, dateStart, dateEnd, clientName,exports);
+		return b2BGroupOrderDal.findGroupOrder(bizId, dateStart, dateEnd, clientName, exports);
 	}
 
 	@Override
 	public boolean updateB2bExportState(String ids) {
-		return groupOrderMapper.updateB2bExportState(ids);
+		return b2BGroupOrderDal.updateB2bExportState(ids);
 	}
 
 	@Override
 	public List<GroupOrder> findGroupOrderDetailByIds(String ids) {
-		return groupOrderMapper.selectGroupOrderDetailByIds(ids);
+		return b2BGroupOrderDal.findGroupOrderDetailByIds(ids);
 	}
 
 	@Override
 	public List<GroupOrderGuest> findGroupOrderGuestByOrderId(Integer orderId) {
-		return groupOrderGuestMapper.selectByOrderId(orderId);
+		return b2BGroupOrderDal.findGroupOrderGuestByOrderId(orderId);
 	}
 
 	@Override
 	public List<GroupOrderPrice> findGroupOrderPriceByOrderId(Integer orderId) {
-		return groupOrderPriceMapper.getPriceInfoByOrderId(orderId);
+		return b2BGroupOrderDal.findGroupOrderPriceByOrderId(orderId);
 	}
 
 	@Override
 	public List<GroupRoute> findGroupRouteByOrderId(Integer orderId) {
-		return groupRouteMapper.selectByOrderId(orderId);
+		return b2BGroupOrderDal.findGroupRouteByOrderId(orderId);
 	}
 }

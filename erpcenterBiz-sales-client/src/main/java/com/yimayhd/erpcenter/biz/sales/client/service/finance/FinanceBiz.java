@@ -16,7 +16,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
  * @author Jing.Zhuo
  * @create 2015年7月28日 上午11:39:28
  */
-public interface FinanceDal{
+public interface FinanceBiz{
 	
 	/**
 	 * 计算团的收入支出等费用项

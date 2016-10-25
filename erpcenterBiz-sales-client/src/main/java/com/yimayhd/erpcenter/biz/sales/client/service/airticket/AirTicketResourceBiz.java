@@ -10,7 +10,7 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketLeg;
 import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketResource;
 
-public interface AirTicketResourceDal{
+public interface AirTicketResourceBiz{
 	
 	/**
 	 * 增加机票资源

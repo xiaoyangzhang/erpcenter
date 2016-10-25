@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketOrder;
 
-public interface AirTicketOrderDal {
+public interface AirTicketOrderBiz {
 	
 	
 	/**

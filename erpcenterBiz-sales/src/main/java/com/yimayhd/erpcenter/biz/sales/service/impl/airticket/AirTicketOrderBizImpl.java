@@ -6,30 +6,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketOrderMapper;
+import com.yimayhd.erpcenter.biz.sales.client.service.airticket.AirTicketOrderBiz;
 import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketOrder;
 import com.yimayhd.erpcenter.dal.sales.client.airticket.service.AirTicketOrderDal;
 
-public class AirTicketOrderDalImpl implements AirTicketOrderDal {
+public class AirTicketOrderBizImpl implements AirTicketOrderBiz {
 	
 	@Autowired
-	private AirTicketOrderMapper orderMapper;
+	private AirTicketOrderDal airTicketOrderDal;
 	
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public Integer saveOrder(AirTicketOrder airTicketOrder) {
-		return orderMapper.insert(airTicketOrder);
+		return airTicketOrderDal.saveOrder(airTicketOrder);
 	}
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void deleteOrder(Integer orderId,Integer bizId){
-		orderMapper.delete(orderId,bizId);
+		airTicketOrderDal.deleteOrder(orderId,bizId);
 	}
 	
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void updateOrder(AirTicketOrder airTicketOrder){
-		orderMapper.update(airTicketOrder);
+		airTicketOrderDal.updateOrder(airTicketOrder);
 	}
 	
 	@Override
@@ -44,11 +44,11 @@ public class AirTicketOrderDalImpl implements AirTicketOrderDal {
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void deleteRequestOrder(Integer requestId,Integer bizId){
-		orderMapper.deleteRequest(requestId,bizId);
+		airTicketOrderDal.deleteRequestOrder(requestId,bizId);
 	}
 
 	@Override
 	public List<AirTicketOrder> findOrderList(Integer requestId,Integer bizId){
-		return orderMapper.findOrderList(requestId,bizId);
+		return airTicketOrderDal.findOrderList(requestId,bizId);
 	}
 }

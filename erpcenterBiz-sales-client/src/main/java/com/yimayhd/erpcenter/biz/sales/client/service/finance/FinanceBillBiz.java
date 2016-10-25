@@ -12,7 +12,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBillDetail;
 /**
  * 业务查询 - 领单查询
  */
-public interface FinanceBillDal{
+public interface FinanceBillBiz{
 	PageBean<Map> statisBillList(PageBean<Map> pageBean);
 	Map statisBillTotal(Map parameter);
 	

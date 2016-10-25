@@ -21,7 +21,7 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
  * @author Jing.Zhuo
  * @create 2015年8月13日 上午10:07:03
  */
-public interface FinanceGuideDal {
+public interface FinanceGuideBiz {
 
 	/**
 	 * 审核导游报账单

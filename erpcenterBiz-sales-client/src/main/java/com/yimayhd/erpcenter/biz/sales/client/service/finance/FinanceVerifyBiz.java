@@ -13,7 +13,7 @@ import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceVerifyDetail;
 /**
  * 对账管理
  */
-public interface FinanceVerifyDal{
+public interface FinanceVerifyBiz{
 
 	/**
 	 * 修改对账单状态
