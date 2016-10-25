@@ -140,11 +140,8 @@ public class BookingDeliveryPriceBizImpl implements BookingDeliveryPriceBiz{
 
 	@Override
 	public PageBean<BookingDeliveryPrice> getSupplierPriceListPage(
-			PageBean<BookingDeliveryPrice> pageBean, Integer bizId,Set<Integer> set) {
-		
-		List<BookingDeliveryPrice> bookingDeliveryPrices = bookingDeliveryPriceDal.getSupplierPriceListPage(pageBean, bizId,set);
-		pageBean.setResult(bookingDeliveryPrices);
-		return pageBean ;
+			PageBean<BookingDeliveryPrice> pageBean, Integer bizId,Set<Integer> set) {;
+		return bookingDeliveryPriceDal.getSupplierPriceListPage(pageBean, bizId,set) ;
 	}
 
 	@Override
