@@ -6,7 +6,12 @@ import java.util.Date;
 import java.util.List;
 
 public class BookingDelivery implements Serializable {
-    private Integer id;
+    /**
+	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么)
+	*/
+	private static final long serialVersionUID = 5448505386292207048L;
+
+	private Integer id;
 
     private Integer groupId;
 
@@ -65,6 +70,10 @@ public class BookingDelivery implements Serializable {
 	private String auditUser;
 	private Integer auditUserId;
 	private Date auditTime;
+	
+	private boolean groupCanEdit;
+	
+	
 //	private String guideInfo;
 //	
 //	public String getGuideInfo() {
@@ -74,6 +83,14 @@ public class BookingDelivery implements Serializable {
 //	public void setGuideInfo(String guideInfo) {
 //		this.guideInfo = guideInfo;
 //	}
+
+	public boolean isGroupCanEdit() {
+		return groupCanEdit;
+	}
+
+	public void setGroupCanEdit(boolean groupCanEdit) {
+		this.groupCanEdit = groupCanEdit;
+	}
 
 	public String getAuditUser() {
 		return auditUser;

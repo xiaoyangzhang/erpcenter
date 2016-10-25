@@ -21,9 +21,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-
     	<groupId>com.yimayhd.erpcenter</groupId>
   		<artifactId>erpcenterBiz-sales-client</artifactId>
+    </dependency>
+    <dependency>
+    	<groupId>com.yimayhd.erpcenter</groupId>
+  		<artifactId>erpcenterBiz-sys-client</artifactId>
     </dependency>
   </dependencies>
 </project>
