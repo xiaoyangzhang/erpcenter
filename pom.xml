@@ -110,6 +110,11 @@
 				<artifactId>erpcenterFacade-sys-client</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-sales-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
