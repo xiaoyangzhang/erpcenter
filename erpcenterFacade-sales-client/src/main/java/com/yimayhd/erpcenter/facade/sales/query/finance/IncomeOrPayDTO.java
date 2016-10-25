@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 
 
-public class IncomeViewDTO implements Serializable{
+public class IncomeOrPayDTO implements Serializable{
     private static final long serialVersionUID = -5738945525593633404L;
     
     private Integer payId;

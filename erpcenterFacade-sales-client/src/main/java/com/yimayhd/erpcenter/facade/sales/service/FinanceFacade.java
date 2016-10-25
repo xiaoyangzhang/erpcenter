@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
+import com.yimayhd.erpcenter.facade.sales.query.finance.IncomeOrPayDTO;
+import com.yimayhd.erpcenter.facade.sales.query.finance.SettleSealListDTO;
 import com.yimayhd.erpcenter.facade.sales.query.finance.StatementCheckPreviewDTO;
+import com.yimayhd.erpcenter.facade.sales.result.finance.SettleSealListResult;
 import com.yimayhd.erpcenter.facade.sales.result.finance.StatementCheckPreviewResult;
 
 /**
@@ -95,7 +98,7 @@ public interface FinanceFacade{
 	 * 跳转到收款记录详情页面
 	 */
 	@RequestMapping(value = "incomeView.htm")
-	public String incomeView(HttpServletRequest request,HttpServletResponse reponse, ModelMap model, Integer payId) {
+	public String incomeView(IncomeOrPayDTO incomeOrPayDTO) {
 		handResponse(request, model);
 		model.addAttribute("pay", financeService.queryPayById(payId));
 		return "finance/cash/income-view";
