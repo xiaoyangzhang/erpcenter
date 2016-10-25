@@ -20,7 +20,11 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.rocketmq.client.producer.LocalTransactionExecuter;
+import com.alibaba.rocketmq.client.producer.LocalTransactionState;
+import com.alibaba.rocketmq.common.message.Message;
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.common.mq.MsgSenderService;
 import com.yimayhd.erpcenter.dal.product.dao.ProductAttachmentMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductContactMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductGroupPriceMapper;
@@ -30,6 +34,7 @@ import com.yimayhd.erpcenter.dal.product.dao.ProductRightMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductRouteMapper;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStockDTO;
+import com.yimayhd.erpcenter.dal.product.message.ProductInfoUpdateMessageDTO;
 import com.yimayhd.erpcenter.dal.product.po.PriceView;
 import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
 import com.yimayhd.erpcenter.dal.product.po.ProductContact;
@@ -46,6 +51,7 @@ import com.yimayhd.erpcenter.dal.product.solr.SolrSearchPageDTO;
 import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStateConverter;
 import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStockConverter;
 import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
+import com.yimayhd.erpcenter.dal.product.topic.ProductTopic;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultItemVo;
@@ -75,10 +81,27 @@ public class ProductInfoDalImpl implements ProductInfoDal{
     private  ProductRightMapper productRightMapper;
     @Autowired
     private TransactionTemplate transactionTemplateProduct;
+    
+    @Autowired
+    private MsgSenderService msgSender;
 
 	@Override
-	public int insertSelective(ProductInfo record) {
-		infoMapper.insertSelective(record);
+	public int insertSelective(final ProductInfo record) {
+		final ProductInfoUpdateMessageDTO msgDTO = new ProductInfoUpdateMessageDTO();
+		msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(), ProductTopic.PRODUCT_MODIFY.getTags(), new LocalTransactionExecuter(){
+
+			@Override
+			public LocalTransactionState executeLocalTransactionBranch(Message msg, Object arg) {
+				int productId = infoMapper.insertSelective(record);
+				msgDTO.setProductId(productId);
+				
+				return LocalTransactionState.COMMIT_MESSAGE;
+			}
+			
+		});
+		
+		
+		
 		return record.getId();
 	}
 
