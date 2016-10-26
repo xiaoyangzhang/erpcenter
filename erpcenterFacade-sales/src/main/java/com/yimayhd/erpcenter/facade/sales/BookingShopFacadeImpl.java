@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.facade.sales;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -12,20 +13,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.util.TypeUtils;
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingGuideBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopDetailBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopDetailDeployBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingShopDetailDeployVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupPriceAndPersons;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopDTO;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopDetailDeployDTO;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopListDTO;
+import com.yimayhd.erpcenter.facade.sales.result.LoadBookingShopInfoResult;
+import com.yimayhd.erpcenter.facade.sales.result.LoadShopInfoResult;
 import com.yimayhd.erpcenter.facade.sales.result.ToFactShopResult;
 import com.yimayhd.erpcenter.facade.sales.service.BookingShopFacade;
 
@@ -40,6 +48,10 @@ public class BookingShopFacadeImpl implements BookingShopFacade{
 	private BookingShopBiz bookingShopBiz;
 	@Autowired
 	private BookingShopDetailDeployBiz bookingShopDetailDeployBiz;
+	@Autowired
+	private BookingShopDetailBiz bookingShopDetailBiz;
+	@Autowired
+	private BookingGuideBiz bookingGuideBiz;
 	
 	/**
 	 * 客人购物录入查询
@@ -154,7 +166,7 @@ public class BookingShopFacadeImpl implements BookingShopFacade{
 	}
 
 	@Override
-	public int saveShopDetail(
+	public int saveDeploy(
 			BookingShopDetailDeployDTO bookingShopDetailDeployDTO) {
 		return bookingShopDetailDeployBiz.insertSelective(bookingShopDetailDeployDTO.getBookingShopDetailDeployVO());
 	}
@@ -162,6 +174,39 @@ public class BookingShopFacadeImpl implements BookingShopFacade{
 	@Override
 	public int delBookingShop(int bookingId) {
 		return bookingShopDetailDeployBiz.deleteByShopId(bookingId);
+	}
+
+	@Override
+	public LoadBookingShopInfoResult loadBookingShopInfo(int groupId) {
+		LoadBookingShopInfoResult result = new LoadBookingShopInfoResult();
+		List<BookingShop> shoplist = bookingShopBiz.getShopListByGroupId(groupId);
+		TourGroupPriceAndPersons tourGroupInfo = tourGroupBiz.selectTourGroupInfo(groupId);
+		result.setBookingShops(shoplist);
+		result.setTourGroupPriceAndPersons(tourGroupInfo);
+		return result;
+	}
+
+	@Override
+	public LoadShopInfoResult loadShopInfo(BookingShopDTO bookingShopDTO) {
+		LoadShopInfoResult result = new LoadShopInfoResult();
+		int groupId = bookingShopDTO.getGroupId();
+		int shopId = bookingShopDTO.getShopId();
+		if(shopId > 0){
+			BookingShop shop = bookingShopBiz.selectByPrimaryKey(shopId);
+			result.setBookingShop(shop);
+			int count = bookingShopDetailDeployBiz.getCountByShopId(shopId);
+			BigDecimal total = bookingShopDetailDeployBiz.getSumBuyTotalByBookingId(shopId);
+			List<BookingShopDetail> lists = bookingShopDetailBiz.getShopDetailListByBookingId(shopId);
+			if(!((count>0 && (total.compareTo(BigDecimal.ZERO))!=0) || lists.size()>0)){
+				result.setIsEdit("edit");
+			}
+		}else{
+			result.setIsEdit("edit");
+		}
+		//查询导游列表
+		List<BookingGuide> guides = bookingGuideBiz.selectGuidesByGroupId(groupId);
+		result.setBookingGuides(guides);
+		return result;
 	}
 
 }

@@ -9,7 +9,7 @@ import com.yimayhd.erpcenter.facade.sales.result.FitGroupInfoQueryResult;
 import com.yimayhd.erpcenter.facade.sales.result.FitTotalSKGroupQueryResult;
 
 /**
- * 散客团管理
+ * 销售-散客团管理
  * 
  * @author gaotingping
  * 2016年10月25日
@@ -19,7 +19,7 @@ public interface FitGroupFacade {
 	//散客团查询
 	public FitTotalSKGroupQueryResult toFitGroupList(FitTotalSKGroupQueryDTO totalSKGroupQueryDTO);
 
-	//查询团信息
+	//去查询团信息
 	public FitGroupInfoQueryResult toFitGroupInfo(FitGroupInfoQueryDTO fitGroupInfoQueryDTO);
 
 	//从散客团里批量删除散客订单

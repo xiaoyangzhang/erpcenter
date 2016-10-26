@@ -1,13 +1,9 @@
 package com.yimayhd.erpcenter.facade.sales.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
-import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AiYouBean;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.facade.sales.errorcode.SalesErrorCode;
-import com.yimayhd.erpcenter.facade.sales.result.ListResultSupport;
-import com.yimayhd.erpcenter.facade.sales.service.GroupOrderFacade;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -21,9 +17,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.alibaba.fastjson.JSONArray;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
+import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AiYouBean;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.facade.sales.result.ListResultSupport;
+import com.yimayhd.erpcenter.facade.sales.service.GroupOrderFacade;
 
 
 /**
@@ -33,10 +33,12 @@ import java.util.List;
  * @date 16/10/25
  */
 public class GroupOrderFacadeImpl implements GroupOrderFacade {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GroupOrderFacadeImpl.class);
+   
+	private static final Logger LOGGER = LoggerFactory.getLogger(GroupOrderFacadeImpl.class);
+   
     @Autowired
     private GroupOrderBiz groupOrderBiz;
-
+    
     @Override
     public ListResultSupport<AiYouBean> getAiYourOrders(String code, String port, String startDate, String endDate, String groupNum, Integer bizId) {
 
