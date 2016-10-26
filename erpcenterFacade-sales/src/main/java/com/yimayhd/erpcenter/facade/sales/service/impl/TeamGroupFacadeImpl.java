@@ -5,6 +5,7 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRouteBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
@@ -12,16 +13,15 @@ import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TeamGroupVO;
 import com.yimayhd.erpcenter.facade.sales.query.FindTourGroupByConditionDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ToAddTeamGroupInfoDTO;
-import com.yimayhd.erpcenter.facade.sales.result.ContactManListResult;
-import com.yimayhd.erpcenter.facade.sales.result.FindTourGroupByConditionResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToAddTeamGroupInfoResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToGroupListResult;
+import com.yimayhd.erpcenter.facade.sales.query.ToSearchListDTO;
+import com.yimayhd.erpcenter.facade.sales.result.*;
 import com.yimayhd.erpcenter.facade.sales.service.TeamGroupFacade;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import org.apache.commons.lang3.StringUtils;
@@ -56,6 +56,8 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
     private PlatformOrgBiz platformOrgBiz;
     @Autowired
     private SupplierBiz supplierBiz;
+    @Autowired
+    private ProductInfoBiz productInfoBiz;
 
 
     @Override
@@ -196,6 +198,41 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
             logger.error("", e);
         }
         return contactManListResult;
+    }
+
+    @Override
+    public ToSearchListResult toSearchList(ToSearchListDTO toSearchListDTO) {
+        ToSearchListResult toSearchListResult = new ToSearchListResult();
+        try {
+            List<DicInfo> brandList = dicBiz
+                    .getListByTypeCode(BasicConstants.CPXL_PP,toSearchListDTO.getBizId());
+            if(toSearchListDTO.getPage()==null){
+                toSearchListDTO.setPage(1);
+            }
+            PageBean<ProductInfo> pageBean = new PageBean<ProductInfo>();
+            if(toSearchListDTO.getPageSize() ==null){
+                pageBean.setPageSize(Constants.PAGESIZE);
+            }else{
+                pageBean.setPageSize(toSearchListDTO.getPageSize());
+            }
+            toSearchListDTO.getProductInfo().setTravelDays(1);
+            pageBean.setParameter(toSearchListDTO.getProductInfo());
+            pageBean.setPage(toSearchListDTO.getPage());
+            Map parameters=new HashMap();
+            parameters.put("bizId", toSearchListDTO.getBizId());
+            parameters.put("name", toSearchListDTO.getName());
+            parameters.put("productName", toSearchListDTO.getProductName());
+            //parameters.put("orgId", WebUtils.getCurUser(request).getOrgId());
+            //parameters.put("set", WebUtils.getDataUserIdSet(request));
+
+            pageBean = productInfoBiz.findProductRoutes(pageBean, parameters);
+
+            toSearchListResult.setBrandList(brandList);
+            toSearchListResult.setPageBean(pageBean);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toSearchListResult;
     }
 
     @Override
