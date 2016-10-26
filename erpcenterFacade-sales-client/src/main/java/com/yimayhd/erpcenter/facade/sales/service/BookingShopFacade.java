@@ -8,6 +8,8 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopDTO;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopDetailDeployDTO;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopListDTO;
+import com.yimayhd.erpcenter.facade.sales.result.LoadBookingShopInfoResult;
+import com.yimayhd.erpcenter.facade.sales.result.LoadShopInfoResult;
 import com.yimayhd.erpcenter.facade.sales.result.ToFactShopResult;
 
 /**
@@ -61,7 +63,7 @@ public interface BookingShopFacade {
 	 * @return
 	 * @author wangjun
 	 */
-	int saveShopDetail(BookingShopDetailDeployDTO bookingShopDetailDeployDTO);
+	int saveDeploy(BookingShopDetailDeployDTO bookingShopDetailDeployDTO);
 	/**
 	 * 删除购物单
 	 * @param bookingId
@@ -69,5 +71,21 @@ public interface BookingShopFacade {
 	 * @author wangjun
 	 */
 	int delBookingShop(int bookingId);
+	
+	/**
+	 * 分配购物店公用接口（bookingshop.toFinanceBookingShopView.htm）
+	 * @param groupId
+	 * @return
+	 * @author wangjun
+	 */
+	LoadBookingShopInfoResult loadBookingShopInfo(int groupId);
+	
+	/**
+	 * 编辑购物店公用接口（bookingshop.editFinanceShop.htm）
+	 * @param bookingShopDTO
+	 * @return
+	 * @author wangjun
+	 */
+	LoadShopInfoResult loadShopInfo(BookingShopDTO bookingShopDTO);
 	
 }
