@@ -17,6 +17,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TeamGroupVO;
 import com.yimayhd.erpcenter.facade.sales.query.*;
@@ -29,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.WebUtils;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -63,6 +65,8 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
     private GroupOrderGuestBiz groupOrderGuestBiz;
     @Autowired
     private GroupRequirementBiz groupRequirementBiz;
+    @Autowired
+    private TourGroupBiz tourGroupBiz;
 
 
 
@@ -341,6 +345,50 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
             logger.error("", e);
         }
         return toRequirementResult;
+    }
+
+    @Override
+    public String copyTourGroup(CopyTourGroupDTO copyTourGroupDTO) {
+        try {
+            TourGroup group = tourGroupBiz.selectByPrimaryKey(copyTourGroupDTO.getGroupId());
+            group.setId(null);
+            group.setCreateTime(System.currentTimeMillis());
+            group.setTotalAdult(copyTourGroupDTO.getTourGroup().getTotalAdult());
+            group.setTotalChild(copyTourGroupDTO.getTourGroup().getTotalChild());
+            group.setTotalGuide(copyTourGroupDTO.getTourGroup().getTotalGuide());
+            group.setGroupCode(platformOrgBiz.getCompanyCodeByOrgId(copyTourGroupDTO.getCurBizId(), copyTourGroupDTO.getCurUserOrgId()));
+            group.setGroupState(0); // 团状态，默认为0
+            group.setDateStart(copyTourGroupDTO.getTourGroup().getDateStart());
+            group.setDateEnd(copyTourGroupDTO.getTourGroup().getDateEnd());
+            group.setTotalIncome(new BigDecimal(0));
+            group.setTotalIncomeCash(new BigDecimal(0));
+            group.setTotalCostCash(new BigDecimal(0));
+            GroupOrder go = groupOrderBiz.selectByPrimaryKey(copyTourGroupDTO.getOrderId());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            go.setDepartureDate(sdf.format(copyTourGroupDTO.getTourGroup().getDateStart()));
+            go.setId(null);
+            go.setCreateTime(System.currentTimeMillis());
+            go.setSaleOperatorId(copyTourGroupDTO.getGroupOrder().getSaleOperatorId());
+            go.setSaleOperatorName(copyTourGroupDTO.getGroupOrder().getSaleOperatorName());
+            go.setOperatorId(copyTourGroupDTO.getGroupOrder().getOperatorId());
+            go.setOperatorName(copyTourGroupDTO.getGroupOrder().getOperatorName());
+            go.setContactName(copyTourGroupDTO.getGroupOrder().getContactName());
+            go.setContactTel(copyTourGroupDTO.getGroupOrder().getContactMobile());
+            go.setContactMobile(copyTourGroupDTO.getGroupOrder().getContactMobile());
+            go.setContactFax(copyTourGroupDTO.getGroupOrder().getContactFax());
+            go.setStateFinance(0);
+            go.setOrderNo(platformOrgBiz.getCompanyCodeByOrgId(copyTourGroupDTO.getCurBizId(), copyTourGroupDTO.getCurUserOrgId()));// 订单号调用接口获取
+            go.setNumAdult(copyTourGroupDTO.getTourGroup().getTotalAdult());
+            go.setNumChild(copyTourGroupDTO.getTourGroup().getTotalChild());
+            go.setNumGuide(copyTourGroupDTO.getTourGroup().getTotalGuide());
+            go.setSupplierName(copyTourGroupDTO.getGroupOrder().getSupplierName());
+            go.setSupplierId(copyTourGroupDTO.getGroupOrder().getSupplierId());
+            go.setTotalCash(new BigDecimal(0));
+            tourGroupBiz.copyGroup(group, go, copyTourGroupDTO.getGroupId(), copyTourGroupDTO.getOrderId(), copyTourGroupDTO.getInfo(),copyTourGroupDTO.getCurUserId(),copyTourGroupDTO.getCurUserName());
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return "";
     }
 
     @Override
