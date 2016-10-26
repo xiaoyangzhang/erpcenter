@@ -50,12 +50,12 @@
 	    <module>erpcenterFacade-supplier</module>
 	    <module>erpcenterFacade-finance-client</module>
 	    <module>erpcenterFacade-ticket-client</module>
-	    <module>erpcenterFacade-shoppingcart-client</module>
 	    <module>erpcenterFacade-finance</module>
 	    <module>erpcenterFacade-ticket</module>
-	    <module>erpcenterFacade-shoppingcart</module>
 	    <module>erpcenterFacade-tj-client</module>
 	    <module>erpcenterFacade-tj</module>
+	    <module>erpcenterFacade-shopping-client</module>
+	    <module>erpcenterFacade-shopping</module>
 	</modules>
 
 	<properties>
