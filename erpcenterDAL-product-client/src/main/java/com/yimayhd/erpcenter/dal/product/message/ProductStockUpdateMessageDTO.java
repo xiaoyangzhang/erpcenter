@@ -19,17 +19,30 @@ public class ProductStockUpdateMessageDTO implements Serializable{
 	private Integer productId;
 	
 	/**
-	 * 库存日期
+	 * 库存开始日期
 	 */
-	private Date itemDate;
+	private Date itemStartDate;
+	
+	/**
+	 * 库存结束日期
+	 */
+	private Date itemEndDate;
 
 	
-	public Date getItemDate() {
-		return itemDate;
+	public Date getItemStartDate() {
+		return itemStartDate;
 	}
 
-	public void setItemDate(Date itemDate) {
-		this.itemDate = itemDate;
+	public void setItemStartDate(Date itemStartDate) {
+		this.itemStartDate = itemStartDate;
+	}
+
+	public Date getItemEndDate() {
+		return itemEndDate;
+	}
+
+	public void setItemEndDate(Date itemEndDate) {
+		this.itemEndDate = itemEndDate;
 	}
 
 	public Integer getProductId() {

@@ -24,6 +24,7 @@ import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
 import com.yimayhd.erpcenter.dal.sys.service.SettleApplyDal;
 import com.yimayhd.erpcenter.facade.query.ToSearchListStateDTO;
+import com.yimayhd.erpcenter.facade.service.ProductStockFacade;
 import com.yimayhd.erpcenter.facade.service.ProductUpAndDownFrameFacade;
 
 @RestController
@@ -39,8 +40,16 @@ public class TestController {
 	private ProductUpAndDownFrameFacade productUpAndDownFrameFacade;
 	@Autowired
 	private ProductInfoDal productInfoDal;
+
 	@Autowired
 	private ProductSolrQueryManager productSolrQueryManager;
+
+	
+	@Autowired
+	private ProductSolrQueryManager productSolrQueryManager;
+	@Autowired
+	private ProductStockFacade productStockFacade;
+>>>>>>> refs/remotes/origin/develop
 	
 	@RequestMapping(value = "/testBasicDal")
 	public Object testBasicDal(){
@@ -91,8 +100,15 @@ public class TestController {
 //		}
 		
 		ProductStockPageQueryDTO queryDTO = new ProductStockPageQueryDTO();
+<<<<<<< HEAD
 		return productSolrQueryManager.searchProductStock(queryDTO);
 
 	}
 	
+=======
+		queryDTO.setPrOrgId("10");
+		return productSolrQueryManager.searchProductStock(queryDTO);
+
+	}
+>>>>>>> refs/remotes/origin/develop
 }

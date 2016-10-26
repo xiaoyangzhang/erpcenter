@@ -3,9 +3,14 @@ package com.yimayhd.erpcenter.facade.sales.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingGuideBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierDetailBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderTransportBiz;
@@ -14,7 +19,10 @@ import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRouteBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrintPo;
@@ -26,6 +34,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.facade.sales.query.ToSKConfirmPreviewDTO;
+import com.yimayhd.erpcenter.facade.sales.result.PreviewFitTransferResult;
 import com.yimayhd.erpcenter.facade.sales.result.ToSKConfirmPreviewResult;
 import com.yimayhd.erpcenter.facade.sales.service.GroupQueryPrintFacade;
 import com.yimayhd.erpcenter.facade.sales.utils.DateUtils;
@@ -64,8 +73,17 @@ public class GroupQueryPrintFacadeImpl implements GroupQueryPrintFacade{
 	@Autowired
 	private BookingGuideBiz bookingGuideService;
 	
-//	@Autowired
-//	private DicBiz dicService;
+	@Autowired
+	private DicBiz dicService;
+	
+	@Autowired
+	private BookingDeliveryBiz deliveryService;
+	
+	@Autowired
+	private BookingSupplierBiz bookingSupplierService;
+	
+	@Autowired
+	private BookingSupplierDetailBiz detailService;
 	
 	@Override
 	public ToSKConfirmPreviewResult toSKConfirmPreview(ToSKConfirmPreviewDTO toSKConfirmPreviewDTO) {
@@ -174,6 +192,225 @@ public class GroupQueryPrintFacadeImpl implements GroupQueryPrintFacade{
 		result.setVos(vos);
 		
 		return result;
+	}
+	
+	@Override
+	public PreviewFitTransferResult previewFitTransfer(Integer groupId) {
+		
+		//FIXME 这个在web中做了单独的封装
+		String imgPath = null;
+	
+		TourGroup tourGroup = tourGroupService.selectByPrimaryKey(groupId);
+		List<BookingGuide> guides = bookingGuideService.selectGuidesByGroupId(groupId);
+		String guideString = "";
+		String driverString = "";
+		if (guides.size() > 0) {
+			guideString = getGuides(guides);
+			driverString = getDrivers(guides);
+		}
+		//预定车信息
+		List<BookingSupplier> bs4 = bookingSupplierService.getBookingSupplierByGroupIdAndSupplierType(groupId, 4) ;
+		StringBuilder sbsb = new StringBuilder() ;
+		for (BookingSupplier bs : bs4) {
+			List<BookingSupplierDetail> details = detailService.selectByPrimaryBookId(bs.getId()) ;
+			for (BookingSupplierDetail bsd : details) {
+				sbsb.append(bsd.getDriverName()+" "+bsd.getDriverTel()+" "+bsd.getCarLisence()+"\n") ;
+			}
+		}
+		driverString = sbsb.toString() ;
+		
+		List<GroupOrder> orders = groupOrderService.selectOrderByGroupId(groupId);
+		List<GroupOrderPrintPo> gopps = new ArrayList<GroupOrderPrintPo>();
+		GroupOrderPrintPo gopp = null;
+		String total = getHotelTotalNum(orders);
+		for (GroupOrder order : orders) {
+			// 拿到单条订单信息
+			gopp = new GroupOrderPrintPo();
+			gopp.setSupplierName(order.getSupplierName()+"\n"+order.getContactName());
+			gopp.setReceiveMode(order.getReceiveMode());
+			
+			gopp.setSaleOperatorName(order.getSaleOperatorName());
+			gopp.setRemark(order.getRemarkInternal());
+			gopp.setPlace((order.getProvinceName() == null ? "" : order
+					.getProvinceName())
+					+ (order.getCityName() == null ? "" : order.getCityName()));
+			// 根据散客订单统计人数
+			/*Integer numAdult = groupOrderGuestService
+					.selectNumAdultByOrderID(order.getId());
+			Integer numChild = groupOrderGuestService
+					.selectNumChildByOrderID(order.getId());*/
+			gopp.setPersonNum(order.getNumAdult()+"+"+order.getNumChild());
+			// 根据散客订单统计客人信息
+			List<GroupOrderGuest> guests = groupOrderGuestService
+					.selectByOrderId(order.getId());
+			/*for (GroupOrderGuest guest : guests) {
+				if (guest.getIsLeader() == 1) {
+					gopp.setGuesStatic(guest.getName() + " " + guests.size()
+							+ "人" + "\n" + guest.getMobile());
+					break;
+				}
+			}
+			if (gopp.getGuesStatic() == null || gopp.getGuesStatic() == "") {
+				// 如果客人中没有领队，默认取一条数据显示
+				gopp.setGuesStatic(guests.get(0).getName() + "\n"
+						+ guests.get(0).getMobile());
+			}*/
+			gopp.setGuesStatic(order.getReceiveMode());
+			gopp.setGuestInfo(getGuestInfo2(guests));
+			gopp.setGuests(guests);
+			// 根据散客订单统计酒店信息
+			List<GroupRequirement> grogShopList = groupRequirementService
+					.selectByOrderAndType(order.getId(), 3);
+			StringBuilder sb = new StringBuilder();
+			for (GroupRequirement gsl : grogShopList) {
+				if (gsl.getHotelLevel() != null) {
+					//FIXME 待修复
+					//sb.append(dicService.getById(gsl.getHotelLevel()).getValue() + "\n");
+				}
+			}
+			gopp.setHotelLevel(sb.toString());
+			gopp.setHotelNum(getHotelNum(grogShopList));
+			// 省外交通
+			// 根据散客订单统计接机信息
+			List<GroupOrderTransport> groupOrderTransports = groupOrderTransportService
+					.selectByOrderId(order.getId());
+			gopp.setAirPickup(getAirInfo(groupOrderTransports, 0));
+			// 根据散客订单统计送机信息
+			gopp.setAirOff(getAirInfo(groupOrderTransports, 1));
+			// 省内交通
+			gopp.setTrans(getSourceType(groupOrderTransports));
+			gopps.add(gopp);
+		}
+
+		List<BookingDelivery> bds = deliveryService.getDeliveryListByGroupId(groupId);
+		String deliveryDetail = getDeliveryInfo(bds);
+		
+		
+		PreviewFitTransferResult result=new PreviewFitTransferResult();
+		
+		result.setDeliveryDetail(deliveryDetail);
+		result.setDriverString(driverString);
+		result.setGopps(gopps);
+		result.setGuideString(guideString);
+		result.setImgPath(imgPath);
+		result.setTotal(total);
+		result.setTourGroup(tourGroup);
+		
+		return result;
+	}
+	
+	/**
+	 * 返回客人信息
+	 * 格式如下：
+	 * 	张三(13787654321)  530111198307276576   有手机号的显示方式
+	 *  李四  530111198307276576				 没有手机号的显示形式
+	 * @param guests
+	 * @return
+	 */
+	public String getGuestInfo2(List<GroupOrderGuest> guests) {
+		StringBuilder sb = new StringBuilder();
+		if(guests == null || guests.size() == 0){
+			return sb.toString();
+		}
+		
+		GroupOrderGuest guest = null;
+		for (int i = 0; i < guests.size(); i++) {
+			if(i > 0){
+				sb.append("\n");
+			}
+			guest = guests.get(i);
+			sb.append(guest.getName());
+			if(StringUtils.isNotEmpty(guest.getMobile())){
+				sb.append("【"+ guest.getMobile() +"】  ");
+			}
+			sb.append(guest.getCertificateNum());
+			
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * 统计所有订单酒店总房间数
+	 * 
+	 * @param grogShopList
+	 * @return
+	 */
+	public String getHotelTotalNum(List<GroupOrder> orders) {
+		StringBuilder sb = new StringBuilder();
+		Integer sr = 0;
+		Integer dr = 0;
+		Integer tr = 0;
+		Integer eb = 0;
+		Integer pf = 0;
+		for (GroupOrder order : orders) {
+			List<GroupRequirement> grogShopList = groupRequirementService
+					.selectByOrderAndType(order.getId(), 3);
+			for (GroupRequirement gr : grogShopList) {
+				if (gr.getCountSingleRoom() != null
+						&& gr.getCountSingleRoom() != 0) {
+					sr += gr.getCountSingleRoom();
+				}
+				if (gr.getCountDoubleRoom() != null
+						&& gr.getCountDoubleRoom() != 0) {
+					dr += gr.getCountDoubleRoom();
+				}
+				if (gr.getCountTripleRoom() != null
+						&& gr.getCountTripleRoom() != 0) {
+					tr += gr.getCountTripleRoom();
+				}
+				if (gr.getExtraBed() != null && gr.getExtraBed() != 0) {
+					eb += gr.getExtraBed();
+				}
+				if (gr.getPeiFang() != null && gr.getPeiFang() != 0) {
+					pf += gr.getPeiFang();
+				}
+			}
+		}
+
+		if (sr != 0) {
+			sb.append(sr + "单 ");
+		}
+		if (dr != 0) {
+			sb.append(dr + "标 ");
+		}
+		if (tr != 0) {
+			sb.append(tr + "三人间 ");
+		}
+		if (eb != 0) {
+			sb.append(eb + "加床 ");
+		}
+		if (pf != 0) {
+			sb.append(pf + "陪房 ");
+		}
+		return sb.toString();
+	}
+	
+	
+	/**
+	 * 组织所有司机信息
+	 */
+	public String getDrivers(List<BookingGuide> guides) {
+		StringBuilder sb = new StringBuilder();
+		for (BookingGuide guide : guides) {
+			BookingSupplierDetail bsd = detailService.selectByPrimaryKey(guide.getBookingDetailId());
+			if (bsd != null) {
+				sb.append(bsd.getDriverName() + " " + bsd.getDriverTel() + "\n");
+			}
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * 返回地接社信息
+	 */
+	public String getDeliveryInfo(List<BookingDelivery> bds) {
+		StringBuilder sb = new StringBuilder();
+		for (BookingDelivery bd : bds) {
+			sb.append(bd.getSupplierName() + " " + bd.getContact() + " "
+					+ bd.getContactMobile() + " " + "Tel:" + bd.getContactTel()
+					+ " " + "Fax:" + bd.getContactFax() + "\n");
+		}
+		return sb.toString();
 	}
 	
 	/**

@@ -1,3 +1,4 @@
+
 /**
  * 
  */
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
+import com.yimayhd.erpresource.dal.constants.Constants;
 
 /**
  * @ClassName: SaleCommonFacadeImpl
@@ -26,6 +28,17 @@ public class SaleCommonFacadeImpl implements SaleCommonFacade {
 	public List<DicInfo> getDeliveryItemList(Integer bizId) {
 		List<DicInfo> typeList = dicBiz.getListByTypeCode(BasicConstants.XMFY_DJXM, bizId);
 		return typeList;
+	}
+	
+	@Override
+	public List<DicInfo> getTransportListByTypeCode(Integer bizId) {
+		return dicBiz.getListByTypeCode(BasicConstants.GYXX_JTFS, bizId);
+	}
+
+	
+	@Override
+	public List<DicInfo> getCarListByTypeCode() {
+		return dicBiz.getListByTypeCode(Constants.FLEET_TYPE_CODE);
 	}
 
 }
