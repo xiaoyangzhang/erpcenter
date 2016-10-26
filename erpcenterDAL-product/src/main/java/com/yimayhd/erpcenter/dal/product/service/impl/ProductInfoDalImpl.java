@@ -20,7 +20,15 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.rocketmq.client.producer.LocalTransactionExecuter;
+import com.alibaba.rocketmq.client.producer.LocalTransactionState;
+import com.alibaba.rocketmq.client.producer.SendResult;
+import com.alibaba.rocketmq.client.producer.SendStatus;
+import com.alibaba.rocketmq.client.producer.TransactionSendResult;
+import com.alibaba.rocketmq.common.message.Message;
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.common.mq.MsgSenderService;
 import com.yimayhd.erpcenter.dal.product.dao.ProductAttachmentMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductContactMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductGroupPriceMapper;
@@ -30,6 +38,7 @@ import com.yimayhd.erpcenter.dal.product.dao.ProductRightMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductRouteMapper;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStockDTO;
+import com.yimayhd.erpcenter.dal.product.message.ProductInfoUpdateMessageDTO;
 import com.yimayhd.erpcenter.dal.product.po.PriceView;
 import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
 import com.yimayhd.erpcenter.dal.product.po.ProductContact;
@@ -46,6 +55,7 @@ import com.yimayhd.erpcenter.dal.product.solr.SolrSearchPageDTO;
 import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStateConverter;
 import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStockConverter;
 import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
+import com.yimayhd.erpcenter.dal.product.topic.ProductTopic;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultItemVo;
@@ -75,10 +85,22 @@ public class ProductInfoDalImpl implements ProductInfoDal{
     private  ProductRightMapper productRightMapper;
     @Autowired
     private TransactionTemplate transactionTemplateProduct;
+    
+    @Autowired
+    private MsgSenderService msgSender;
 
 	@Override
-	public int insertSelective(ProductInfo record) {
+	public int insertSelective(final ProductInfo record) {
+		final ProductInfoUpdateMessageDTO msgDTO = new ProductInfoUpdateMessageDTO();
+		
 		infoMapper.insertSelective(record);
+		msgDTO.setProductId(record.getId());
+		SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(), ProductTopic.PRODUCT_MODIFY.getTags());
+		
+		if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+			LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+		}
+		
 		return record.getId();
 	}
 
@@ -162,6 +184,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	@Override
 	public int saveProductInfo(final ProductInfoVo productInfoVo,final String bizCode,final String brandCode) {
 		
+		final ProductInfoUpdateMessageDTO msgDTO = new ProductInfoUpdateMessageDTO();
 		
 		final ProductInfo info = productInfoVo.getProductInfo();
 		final List<ProductContact> productContacts = productInfoVo.getProductContacts();
@@ -176,7 +199,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 			public Boolean doInTransaction(TransactionStatus status) {
 				try {
 					if(null!=productInfoVo.getProductInfo().getId()){
-						
+						msgDTO.setProductId(productInfoVo.getProductInfo().getId());
 						//修改
 						i= infoMapper.updateByPrimaryKeySelective(info);
 						if (i < 1) {
@@ -207,6 +230,8 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 						info.setState((byte) 1);
 						info.setCreateTime(System.currentTimeMillis());
 						i=infoMapper.insertSelective(info);
+						msgDTO.setProductId(i);
+						
 						if (i < 1) {
 							status.setRollbackOnly();
 							LOGGER.error("infoMapper.insertSelective error,params:info={},result:{}",JSON.toJSONString(info),i);
@@ -280,7 +305,15 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		if (dbResult == null || !dbResult) {
 			LOGGER.error("save productInfo failed ,params:productInfoVo={},bizCode={},brandCode={}",JSON.toJSONString(productInfoVo),bizCode,brandCode);
 			return -1;
+		}else{
+			
+			SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(),  ProductTopic.PRODUCT_MODIFY.getTags());
+			if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+				LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+			}
 		}
+		
+		
 		return info.getId();
 	}
 
@@ -302,9 +335,28 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	}
 
 	@Override
-	public int updateProductInfo(ProductInfo productInfo) {
+	public int updateProductInfo(final ProductInfo productInfo) {
+		final ProductInfoUpdateMessageDTO msgDTO = new ProductInfoUpdateMessageDTO();
+		msgDTO.setProductId(productInfo.getId());
 		
-		return infoMapper.updateByPrimaryKeySelective(productInfo);
+		TransactionSendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(), ProductTopic.PRODUCT_MODIFY.getTags(), new LocalTransactionExecuter(){
+
+			@Override
+			public LocalTransactionState executeLocalTransactionBranch(Message msg, Object arg) {
+				
+				infoMapper.updateByPrimaryKeySelective(productInfo);
+				
+				return LocalTransactionState.COMMIT_MESSAGE;
+			}
+			
+		});
+		
+		if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+			LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+		}
+		
+		return 1;
+
 	}
 
 	@Override
@@ -409,6 +461,9 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 
 	@Override
 	public void saveProductRight(final Integer productId,final Set<Integer> orgIdSet) {
+		
+		final ProductInfoUpdateMessageDTO msgDTO = new ProductInfoUpdateMessageDTO();
+		msgDTO.setProductId(productId);
 		final List<ProductRight> productRights = getRightListByProductId(productId);
 		final int size = orgIdSet.size();
 		Boolean dbResult = transactionTemplateProduct.execute(new TransactionCallback<Boolean>() {
@@ -436,6 +491,13 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 				}
 			}
 		});
+		
+		
+		SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(),  ProductTopic.PRODUCT_MODIFY.getTags());
+		if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+			LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+		}
+		
 	}
 
 	@Override
@@ -455,19 +517,40 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		pageBean.setParameter(condition);
 		pageBean.setPage(condition.getPage());
 		List<StockStaticsResultVOPlus> list =new ArrayList<StockStaticsResultVOPlus>(); 
-		list=infoMapper.getProductStockListPage(pageBean);
-		//SimpleDateFormat sdf=new SimpleDateFormat();
-		if(list!=null && list.size()>0){
-			for (StockStaticsResultVOPlus voPlus : list) {
-				List<ProductStock> stockList=new ArrayList<ProductStock>();
-				String[] stockInfoStrs = voPlus.getStockInfo().split(",");
-				for (int i = 0; i < 7; i++) {
-				stockList.add(getResultByDate2(DateUtils.addDays(condition.getGroupDate(),i),stockInfoStrs));
-				}
-				voPlus.setStockList(stockList);
-			}
+		if(1== 0){
+			list=infoMapper.getProductStockListPage(pageBean);
 			
+			if(list!=null && list.size()>0){
+				for (StockStaticsResultVOPlus voPlus : list) {
+					List<ProductStock> stockList=new ArrayList<ProductStock>();
+					String[] stockInfoStrs = voPlus.getStockInfo().split(",");
+					for (int i = 0; i < 7; i++) {
+					stockList.add(getResultByDate2(DateUtils.addDays(condition.getGroupDate(),i),stockInfoStrs));
+					}
+					voPlus.setStockList(stockList);
+				}
+				
+			}
+		}else{
+			ProductStockPageQueryDTO queryDTO = ProductStockConverter.toQueryDTO(pageBean);
+			SolrSearchPageDTO<StockStaticsResultVOPlus> solrPageResult  = productSolrQueryManager.searchProductStock(queryDTO);
+			list=solrPageResult.getList();
+			if(list!=null && list.size()>0){
+				for (StockStaticsResultVOPlus voPlus : list) {
+					List<ProductStock> stockList=new ArrayList<ProductStock>();
+					String[] stockInfoStrs = voPlus.getStockInfo().split(",");
+					for (int i = 0; i < 7; i++) {
+					stockList.add(getResultByDate2(DateUtils.addDays(condition.getGroupDate(),i),stockInfoStrs));
+					}
+					voPlus.setStockList(stockList);
+				}
+				
+			}
+
 		}
+		
+		//SimpleDateFormat sdf=new SimpleDateFormat();
+		
 		/*if(list!=null && list.size()>0){
 			for(StockStaticsResultVOPlus result : list){
 				List<StockStaticsResultItemVo> itemList = productGroupPriceMapper.getStockStatics(result.getProductId(), DateUtils.addDays(condition.getGroupDate(),-1), DateUtils.addDays(condition.getToGroupDate(),1));
@@ -490,26 +573,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 			}			
 		}	*/
 		
-		if(1==1){
-			ProductStockPageQueryDTO queryDTO = ProductStockConverter.toQueryDTO(pageBean);
-			SolrSearchPageDTO<ProductStockDTO> solrPageResult  = productSolrQueryManager.searchProductStock(queryDTO);
-			list= ProductStockConverter.dto2PageBean(solrPageResult);
-			if(list!=null && list.size()>0){
-				for (StockStaticsResultVOPlus voPlus : list) {
-					List<ProductStock> stockList=new ArrayList<ProductStock>();
-					String[] stockInfoStrs = voPlus.getStockInfo().split(",");
-					for (int i = 0; i < 7; i++) {
-					stockList.add(getResultByDate2(DateUtils.addDays(condition.getGroupDate(),i),stockInfoStrs));
-					}
-					voPlus.setStockList(stockList);
-				}
-				
-			}
-			pageBean.setResult(list);
-			return pageBean;
-		}else{
-			
-		}
+	
 		pageBean.setResult(list);
 		return pageBean;
 	}
@@ -595,8 +659,25 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	}
 
 	@Override
-	public void updateProductSysId(Integer productId,Integer productSysId) {
-	infoMapper.updateProductSysId(productId, productSysId);
+	public void updateProductSysId(final Integer productId,final Integer productSysId) {
+		
+	final ProductInfoUpdateMessageDTO msgDTO = new ProductInfoUpdateMessageDTO();
+	msgDTO.setProductId(productId);	
+	
+	SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(),ProductTopic.PRODUCT_MODIFY.getTags(), new LocalTransactionExecuter() {
+		@Override
+		public LocalTransactionState executeLocalTransactionBranch(Message msg, Object arg) {
+			infoMapper.updateProductSysId(productId, productSysId);
+						
+			return LocalTransactionState.COMMIT_MESSAGE;
+		}
+	 });
+	
+	if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+		LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+	}
+	
+	
 	}
 	
 	@Override
