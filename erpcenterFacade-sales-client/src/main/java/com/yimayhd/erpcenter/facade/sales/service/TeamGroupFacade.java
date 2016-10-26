@@ -1,8 +1,6 @@
 package com.yimayhd.erpcenter.facade.sales.service;
 
-import com.yimayhd.erpcenter.facade.sales.query.FindTourGroupByConditionDTO;
-import com.yimayhd.erpcenter.facade.sales.query.ToAddTeamGroupInfoDTO;
-import com.yimayhd.erpcenter.facade.sales.query.ToSearchListDTO;
+import com.yimayhd.erpcenter.facade.sales.query.*;
 import com.yimayhd.erpcenter.facade.sales.result.*;
 
 /**
@@ -23,15 +21,17 @@ public interface TeamGroupFacade {
      */
     public FindTourGroupByConditionResult findTourGroupByConditionLoadModel(FindTourGroupByConditionDTO findTourGroupByConditionDTO);
 
-
     public ToAddTeamGroupInfoResult toAddTeamGroupInfo(ToAddTeamGroupInfoDTO toAddTeamGroupInfoDTO);
 
     public ToAddTeamGroupInfoResult getDataByGroupId(ToAddTeamGroupInfoDTO toAddTeamGroupInfoDTO);
 
-
     public ContactManListResult contactManList(int curBizId, int id);
 
     public ToSearchListResult toSearchList(ToSearchListDTO toSearchListDTO);
+
+    public SaveTeamGroupInfoResult saveTeamGroupInfo(SaveTeamGroupInfoDTO saveTeamGroupInfoDTO);
+
+    public ToEditTeamGroupInfoResult toEditTeamGroupInfo(ToEditTeamGroupInfoDTO toEditTeamGroupInfoDTO);
 
 
 
