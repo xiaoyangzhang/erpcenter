@@ -1,13 +1,14 @@
 /**
  * 
  */
-package org.erpcenterFacade.sales.client.operation;
+package com.yimayhd.erpcenter.facade.sales.service;
 
-import java.util.List;
+import java.util.Map;
 
-import org.erpcenterFacade.sales.client.result.BookingDeliveryResult;
-
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
+import com.yimayhd.erpcenter.facade.sales.result.BookingDeliveryResult;
+import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
+import com.yimayhd.erpcenter.facade.sales.result.WebResult;
 
 /**
  * @ClassName: BookingDeliveryFacade
@@ -46,5 +47,18 @@ public interface BookingDeliveryFacade {
 	* @throws
 	 */
 	BookingDeliveryResult getDeliveryEditInfo(Integer groupId,Integer bid);
+	/**
+	 * 保存地接计调订单
+	* created by zhangxiaoyang
+	* @date 2016年10月25日
+	* @Description:
+	* @param 
+	* @return ResultSupport
+	* @throws
+	 */
+	WebResult<Map<String, Object>> saveDeliveryBooking(String bookingStr,PlatformEmployeePo userInfo);
 	
+	ResultSupport angencyConfirm(Integer id);
+	
+	ResultSupport angencyDelete(Integer id);
 }

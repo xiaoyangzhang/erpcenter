@@ -14,8 +14,6 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
-import com.yimayhd.erpcenter.facade.sales.query.finance.AduditStatisticsListDTO;
-import com.yimayhd.erpcenter.facade.sales.query.finance.IncomeJoinTableListDTO;
 import com.yimayhd.erpcenter.facade.sales.query.finance.IncomeOrPayDTO;
 import com.yimayhd.erpcenter.facade.sales.query.finance.SettleSealListDTO;
 import com.yimayhd.erpcenter.facade.sales.query.finance.StatementCheckPreviewDTO;
