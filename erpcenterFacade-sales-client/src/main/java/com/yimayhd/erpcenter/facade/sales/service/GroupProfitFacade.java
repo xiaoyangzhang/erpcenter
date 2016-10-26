@@ -13,7 +13,7 @@ import com.yimayhd.erpcenter.facade.sales.result.ToProfitQueryTableResult;
  * @author gaotingping
  * 2016年10月26日
  */
-public interface TourGroupProfitFacade {
+public interface GroupProfitFacade {
 
 	//预算利润查询分页(按订单)(地接版)
 	ToProfitQueryTableResult toProfitQueryTable(ToOrderLockTableDTO orderLockTableDTO);

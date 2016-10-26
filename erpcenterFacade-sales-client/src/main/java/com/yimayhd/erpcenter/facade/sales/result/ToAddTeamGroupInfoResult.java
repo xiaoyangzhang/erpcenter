@@ -20,7 +20,6 @@ public class ToAddTeamGroupInfoResult extends ResultSupport {
     private List<DicInfo> jtfsList;
     private List<DicInfo> zjlxList;
     private List<DicInfo> lysfxmList;
-    private String jsonStr;
 
     public List<DicInfo> getLysfxmList() {
         return lysfxmList;
@@ -78,11 +77,4 @@ public class ToAddTeamGroupInfoResult extends ResultSupport {
         this.zjlxList = zjlxList;
     }
 
-    public String getJsonStr() {
-        return jsonStr;
-    }
-
-    public void setJsonStr(String jsonStr) {
-        this.jsonStr = jsonStr;
-    }
 }

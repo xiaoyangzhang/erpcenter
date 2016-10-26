@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package com.yimayhd.erpcenter.facade.sales.operation;
 
 import java.util.Date;
@@ -22,9 +20,9 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.facade.sales.errorcode.SaleErrorCode;
-import com.yimayhd.erpcenter.facade.sales.result.BookingDeliveryResult;
 import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.sales.result.WebResult;
+import com.yimayhd.erpcenter.facade.sales.result.operation.BookingDeliveryResult;
 import com.yimayhd.erpcenter.facade.sales.service.BookingDeliveryFacade;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.dal.po.SupplierInfo;
@@ -137,6 +135,17 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 	public ResultSupport angencyDelete(Integer id) {
 		ResultSupport result = new ResultSupport();
 		bookingDeliveryBiz.angencyDelete(id);
+		return result;
+	}
+
+	
+	@Override
+	public BookingDeliveryResult getBookingDeliveryInfo(Integer bookingId) {
+		BookingDeliveryResult result = new BookingDeliveryResult();
+		BookingDelivery bookingDelivery = bookingDeliveryBiz.getBookingInfoById(bookingId);
+		result.setBookingDelivery(bookingDelivery);
+		TourGroup tourGroup = tourGroupBiz.selectByPrimaryKey(bookingDelivery.getGroupId());
+		result.setTourGroup(tourGroup);
 		return result;
 	}
 

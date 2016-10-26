@@ -5,8 +5,6 @@ import java.util.Map;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
-import com.yimayhd.erpcenter.facade.sales.query.BookingShopDTO;
-import com.yimayhd.erpcenter.facade.sales.query.BookingShopDetailDeployDTO;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopListDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ContractPriceExtDTO;
 import com.yimayhd.erpcenter.facade.sales.result.BookingShopInputResult;

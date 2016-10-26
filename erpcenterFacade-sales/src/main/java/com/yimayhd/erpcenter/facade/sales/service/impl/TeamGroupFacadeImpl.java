@@ -6,8 +6,7 @@ import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRouteBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
@@ -16,11 +15,11 @@ import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TeamGroupVO;
-import com.yimayhd.erpcenter.facade.sales.query.FindTourGroupByConditionDTO;
-import com.yimayhd.erpcenter.facade.sales.query.ToAddTeamGroupInfoDTO;
-import com.yimayhd.erpcenter.facade.sales.query.ToSearchListDTO;
+import com.yimayhd.erpcenter.facade.sales.query.*;
 import com.yimayhd.erpcenter.facade.sales.result.*;
 import com.yimayhd.erpcenter.facade.sales.service.TeamGroupFacade;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
@@ -58,6 +57,14 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
     private SupplierBiz supplierBiz;
     @Autowired
     private ProductInfoBiz productInfoBiz;
+    @Autowired
+    private TeamGroupBiz teamGroupBiz;
+    @Autowired
+    private GroupOrderGuestBiz groupOrderGuestBiz;
+    @Autowired
+    private GroupRequirementBiz groupRequirementBiz;
+
+
 
 
     @Override
@@ -177,16 +184,14 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
     }
 
     @Override
-    public ToAddTeamGroupInfoResult getDataByGroupId(ToAddTeamGroupInfoDTO toAddTeamGroupInfoDTO) {
-        ToAddTeamGroupInfoResult toAddTeamGroupInfoResult = new ToAddTeamGroupInfoResult();
+    public String getDataByGroupId(int groupId) {
         try {
-            GroupRouteVO groupRouteVO = groupRouteBiz
-                    .findGroupRouteByGroupId(toAddTeamGroupInfoDTO.getGroupId());
-            toAddTeamGroupInfoResult.setJsonStr(JSON.toJSONString(groupRouteVO));
+            GroupRouteVO groupRouteVO = groupRouteBiz.findGroupRouteByGroupId(groupId);
+           return  JSON.toJSONString(groupRouteVO);
         } catch (Exception e) {
             logger.error("", e);
         }
-        return toAddTeamGroupInfoResult;
+        return "";
     }
 
     @Override
@@ -205,20 +210,20 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
         ToSearchListResult toSearchListResult = new ToSearchListResult();
         try {
             List<DicInfo> brandList = dicBiz
-                    .getListByTypeCode(BasicConstants.CPXL_PP,toSearchListDTO.getBizId());
-            if(toSearchListDTO.getPage()==null){
+                    .getListByTypeCode(BasicConstants.CPXL_PP, toSearchListDTO.getBizId());
+            if (toSearchListDTO.getPage() == null) {
                 toSearchListDTO.setPage(1);
             }
             PageBean<ProductInfo> pageBean = new PageBean<ProductInfo>();
-            if(toSearchListDTO.getPageSize() ==null){
+            if (toSearchListDTO.getPageSize() == null) {
                 pageBean.setPageSize(Constants.PAGESIZE);
-            }else{
+            } else {
                 pageBean.setPageSize(toSearchListDTO.getPageSize());
             }
             toSearchListDTO.getProductInfo().setTravelDays(1);
             pageBean.setParameter(toSearchListDTO.getProductInfo());
             pageBean.setPage(toSearchListDTO.getPage());
-            Map parameters=new HashMap();
+            Map parameters = new HashMap();
             parameters.put("bizId", toSearchListDTO.getBizId());
             parameters.put("name", toSearchListDTO.getName());
             parameters.put("productName", toSearchListDTO.getProductName());
@@ -233,6 +238,109 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
             logger.error("", e);
         }
         return toSearchListResult;
+    }
+
+    @Override
+    public SaveTeamGroupInfoResult saveTeamGroupInfo(SaveTeamGroupInfoDTO saveTeamGroupInfoDTO) {
+        SaveTeamGroupInfoResult saveTeamGroupInfoResult = new SaveTeamGroupInfoResult();
+        try {
+            saveTeamGroupInfoResult.setTeamGroupVO(teamGroupBiz.saveOrUpdateTeamGroupVO(saveTeamGroupInfoDTO.getCurBizId(), saveTeamGroupInfoDTO.getCurUserId(), saveTeamGroupInfoDTO.getCurUserName(), saveTeamGroupInfoDTO.getTeamGroupVO()));
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return saveTeamGroupInfoResult;
+    }
+
+    @Override
+    public ToEditTeamGroupInfoResult toEditTeamGroupInfo(ToEditTeamGroupInfoDTO toEditTeamGroupInfoDTO) {
+        ToEditTeamGroupInfoResult toEditTeamGroupInfoResult = new ToEditTeamGroupInfoResult();
+        try {
+            int bizId = toEditTeamGroupInfoDTO.getCurBizId();
+            TeamGroupVO teamGroupVO = teamGroupBiz.selectTeamGroupVOByGroupId(toEditTeamGroupInfoDTO.getGroupId(), toEditTeamGroupInfoDTO.getCurBizId());
+            // 收费类型
+            List<DicInfo> typeList = dicBiz.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE, bizId);
+            List<DicInfo> sourceTypeList = dicBiz
+                    .getListByTypeCode(Constants.GUEST_SOURCE_TYPE, bizId);
+            List<RegionInfo> allProvince = regionBiz.getAllProvince();
+            List<DicInfo> jtfsList = dicBiz
+                    .getListByTypeCode(BasicConstants.GYXX_JTFS, bizId);
+            List<DicInfo> zjlxList = dicBiz
+                    .getListByTypeCode(BasicConstants.GYXX_ZJLX);
+            List<DicInfo> lysfxmList = dicBiz.getListByTypeCode(
+                    BasicConstants.GYXX_LYSFXM, bizId);
+            List<RegionInfo> cityList = null;
+            if (teamGroupVO.getGroupOrder().getProvinceId() != null
+                    && teamGroupVO.getGroupOrder().getProvinceId() != -1) {
+                cityList = regionBiz.getRegionById(teamGroupVO.getGroupOrder()
+                        .getProvinceId() + "");
+            }
+            String guideStr = "";
+            List<GroupOrderGuest> guestList = groupOrderGuestBiz.selectByOrderId(teamGroupVO.getGroupOrder().getId());
+            if (guestList != null) {
+                for (GroupOrderGuest groupOrderGuest : guestList) {
+                    if (groupOrderGuest.getType() == 3) {
+                        guideStr = ("".equals(guideStr) ? "" : (guideStr + " | ")) + groupOrderGuest.getName() + " " + groupOrderGuest.getMobile();
+                    }
+                }
+            }
+
+            toEditTeamGroupInfoResult.setTeamGroupVO(teamGroupVO);
+            toEditTeamGroupInfoResult.setAllProvince(allProvince);
+            toEditTeamGroupInfoResult.setTypeList(typeList);
+            toEditTeamGroupInfoResult.setSourceTypeList(sourceTypeList);
+            toEditTeamGroupInfoResult.setJtfsList(jtfsList);
+            toEditTeamGroupInfoResult.setZjlxList(zjlxList);
+            toEditTeamGroupInfoResult.setLysfxmList(lysfxmList);
+            toEditTeamGroupInfoResult.setCityList(cityList);
+            toEditTeamGroupInfoResult.setGuideStr(guideStr);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toEditTeamGroupInfoResult;
+    }
+
+    @Override
+    public ToRequirementResult toRequirement(Integer orderId, Integer operType) {
+        ToRequirementResult toRequirementResult = new ToRequirementResult();
+        try {
+            GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
+            toRequirementResult.setGroupId(groupOrder.getGroupId());
+            // 车辆型号
+            List<DicInfo> ftcList = dicBiz
+                    .getListByTypeCode(Constants.FLEET_TYPE_CODE);
+            toRequirementResult.setFtcList(ftcList);
+            // 酒店星级
+            List<DicInfo> jdxjList = dicBiz
+                    .getListByTypeCode(BasicConstants.GYXX_JDXJ);
+            toRequirementResult.setJdxjList(jdxjList);
+            // 酒店信息
+            List<GroupRequirement> hotelList = groupRequirementBiz
+                    .selectByOrderAndType(orderId, 3);
+            toRequirementResult.setHotelList(hotelList);
+            // 车队信息
+            List<GroupRequirement> fleetList = groupRequirementBiz
+                    .selectByOrderAndType(orderId, 4);
+            toRequirementResult.setFleetList(fleetList);
+            // 机票信息
+            List<GroupRequirement> airTicketList = groupRequirementBiz
+                    .selectByOrderAndType(orderId, 9);
+            toRequirementResult.setAirTicketList(airTicketList);
+            // 火车信息
+            List<GroupRequirement> railwayTicketList = groupRequirementBiz
+                    .selectByOrderAndType(orderId, 10);
+            toRequirementResult.setRailwayTicketList(railwayTicketList);
+            // 导游信息
+            List<GroupRequirement> guideList = groupRequirementBiz
+                    .selectByOrderAndType(orderId, 8);
+            toRequirementResult.setGuideList(guideList);
+            // 餐厅信息
+            List<GroupRequirement> restaurantList = groupRequirementBiz
+                    .selectByOrderAndType(orderId, 2);
+            toRequirementResult.setRestaurantList(restaurantList);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toRequirementResult;
     }
 
     @Override

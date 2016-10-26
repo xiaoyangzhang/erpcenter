@@ -24,9 +24,9 @@ import com.yimayhd.erpcenter.facade.sales.query.ToOrderLockTableDTO;
 import com.yimayhd.erpcenter.facade.sales.result.FitUpdateStateResult;
 import com.yimayhd.erpcenter.facade.sales.result.ProfitQueryByTourResult;
 import com.yimayhd.erpcenter.facade.sales.result.ToProfitQueryTableResult;
-import com.yimayhd.erpcenter.facade.sales.service.TourGroupProfitFacade;
+import com.yimayhd.erpcenter.facade.sales.service.GroupProfitFacade;
 
-public class TourGroupProfitFacadeImpl implements TourGroupProfitFacade {
+public class GroupProfitFacadeImpl implements GroupProfitFacade {
 
 	// @Autowired
 	// private SupplierGuideService guideService;

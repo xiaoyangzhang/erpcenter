@@ -13,10 +13,21 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.rocketmq.client.producer.LocalTransactionExecuter;
+import com.alibaba.rocketmq.client.producer.LocalTransactionState;
+import com.alibaba.rocketmq.client.producer.SendResult;
+import com.alibaba.rocketmq.client.producer.SendStatus;
+import com.alibaba.rocketmq.client.producer.TransactionSendResult;
+import com.alibaba.rocketmq.common.message.Message;
+import com.yimayhd.erpcenter.common.mq.MsgSenderService;
 import com.yimayhd.erpcenter.dal.product.dao.ProductStockMapper;
+import com.yimayhd.erpcenter.dal.product.message.ProductInfoUpdateMessageDTO;
+import com.yimayhd.erpcenter.dal.product.message.ProductStockUpdateMessageDTO;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
 import com.yimayhd.erpcenter.dal.product.query.StockQueryDTO;
 import com.yimayhd.erpcenter.dal.product.service.ProductStockDal;
+import com.yimayhd.erpcenter.dal.product.topic.ProductTopic;
 
 
 public class ProductStockDalImpl implements ProductStockDal {
@@ -26,6 +37,8 @@ public class ProductStockDalImpl implements ProductStockDal {
 	private ProductStockMapper stockMapper;
 	@Autowired
     private TransactionTemplate transactionTemplateProduct;
+	@Autowired
+    private MsgSenderService msgSender;
 	
 	@Override
 	public List<ProductStock> getStocksByProductIdAndDateSpan(Integer productId,
@@ -36,6 +49,10 @@ public class ProductStockDalImpl implements ProductStockDal {
 	
 	@Override
 	public void saveStock(final Integer productId,final List<ProductStock> stockList,final Date startDate,final Date endDate) {
+		final ProductStockUpdateMessageDTO msgDTO = new ProductStockUpdateMessageDTO();
+		msgDTO.setProductId(productId);
+		msgDTO.setItemStartDate(startDate);
+		msgDTO.setItemEndDate(endDate);
 		Boolean dbResult = transactionTemplateProduct.execute(new TransactionCallback<Boolean>() {
 			@Override
 			public Boolean doInTransaction(TransactionStatus status) {
@@ -65,6 +82,7 @@ public class ProductStockDalImpl implements ProductStockDal {
 							}
 						}
 					}
+					
 					return true;
 				}catch(Exception e){
 					status.setRollbackOnly(); 
@@ -75,6 +93,11 @@ public class ProductStockDalImpl implements ProductStockDal {
 		});
 		if( dbResult == null || !dbResult ){
 			LOGGER.error("saveStock failed!  productId={},stockList={}", JSON.toJSONString(productId),JSON.toJSONString(stockList));
+		}else{
+			SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_STOCK_MODIFY.getTopic(),  ProductTopic.PRODUCT_STOCK_MODIFY.getTags());
+			if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+				LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+			}
 		}
 	}
 
@@ -93,8 +116,30 @@ public class ProductStockDalImpl implements ProductStockDal {
 	}
 
 	@Override
-	public int updateStockCount(Integer productId, Date itemDate, int count) {		
-		return stockMapper.updateStockCount(productId, itemDate, count);
+	public int updateStockCount(final Integer productId, final Date itemDate, final int count) {		
+		
+		final ProductStockUpdateMessageDTO msgDTO = new ProductStockUpdateMessageDTO();
+		msgDTO.setProductId(productId);
+		msgDTO.setItemStartDate(itemDate);
+		msgDTO.setItemEndDate(itemDate);
+		
+		TransactionSendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_STOCK_MODIFY.getTopic(), ProductTopic.PRODUCT_STOCK_MODIFY.getTags(), new LocalTransactionExecuter(){
+
+			@Override
+			public LocalTransactionState executeLocalTransactionBranch(Message msg, Object arg) {
+				
+				stockMapper.updateStockCount(productId, itemDate, count);
+				
+				return LocalTransactionState.COMMIT_MESSAGE;
+			}
+			
+		});
+		
+		if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+			LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+		}
+		
+		return 1;
 	}
 
 	@Override
@@ -104,7 +149,16 @@ public class ProductStockDalImpl implements ProductStockDal {
 			count = 0 - count;
 			type = "D";
 		}		
-		return stockMapper.updateReserveCount(productId, itemDate, count,type);
+		int i=stockMapper.updateReserveCount(productId, itemDate, count,type);
+		 ProductStockUpdateMessageDTO msgDTO = new ProductStockUpdateMessageDTO();
+			msgDTO.setProductId(productId);
+			msgDTO.setItemStartDate(itemDate);
+			msgDTO.setItemEndDate(itemDate);
+			SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_STOCK_MODIFY.getTopic(),  ProductTopic.PRODUCT_STOCK_MODIFY.getTags());
+			if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+				LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+			}
+		return i;
 	}
 
 
@@ -120,7 +174,16 @@ public class ProductStockDalImpl implements ProductStockDal {
 
 	@Override
 	public int stockCntAddAndReserveCntReduce(Integer productId, Date itemDate,int count) {
-		return stockMapper.updateReserveCount(productId, itemDate, count,"Z");
+		int i=stockMapper.updateReserveCount(productId, itemDate, count,"Z");
+		 ProductStockUpdateMessageDTO msgDTO = new ProductStockUpdateMessageDTO();
+			msgDTO.setProductId(productId);
+			msgDTO.setItemStartDate(itemDate);
+			msgDTO.setItemEndDate(itemDate);
+			SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_STOCK_MODIFY.getTopic(),  ProductTopic.PRODUCT_STOCK_MODIFY.getTags());
+			if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+				LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+			}
+		return i;
 	}
 
 

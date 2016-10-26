@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package org.erpcenterFacade.common.client.service;
 
 import java.util.List;
@@ -24,4 +22,8 @@ public interface SaleCommonFacade {
 	* @throws
 	 */
 	List<DicInfo> getDeliveryItemList(Integer bizId);
+	
+	List<DicInfo> getTransportListByTypeCode(Integer bizId);
+	
+	List<DicInfo> getCarListByTypeCode();
 }
