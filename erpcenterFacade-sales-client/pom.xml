@@ -1,4 +1,3 @@
-<<<<<<< 8a989fc60c5453369ca5ddcb7a3b0a2d11ffa98f
 <?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -43,45 +42,4 @@
     </dependency>
   </dependencies>
 </project>
-=======
-<?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.yimayhd.erpcenter</groupId>
-    <artifactId>erpcenter</artifactId>
-    <version>0.0.8-SNAPSHOT</version>
-  </parent>
-  <artifactId>erpcenterFacade-sales-client</artifactId>
-  <name>erpcenterFacade-sales-client</name>
-  <url>http://maven.apache.org</url>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>    
-    </dependency>
-    <dependency>
-    	<groupId>com.yimayhd.erpcenter</groupId>
-  		<artifactId>erpcenterBiz-sales-client</artifactId>
-    </dependency>
-    <dependency>
-    	<groupId>com.yimayhd.erpcenter</groupId>
-  		<artifactId>erpcenterBiz-sys-client</artifactId>
-    </dependency>
-    <dependency>
-    	<groupId>com.yimayhd.erpresource</groupId>
-  		<artifactId>erpresourceBiz-client</artifactId>
-    </dependency>  
-    <dependency>
-    	<groupId>com.yimayhd.erpresource</groupId>
-  		<artifactId>erpresourceDAL-client</artifactId>
-    </dependency>  
-  </dependencies>
-</project>
->>>>>>> 添加结果类
+
