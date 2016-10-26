@@ -63,14 +63,14 @@ public interface FinanceFacade{
 	 * @param groupId
 	 * @return
 	 */
-	public String calcTourGroupAmount(Integer groupId);
+	String calcTourGroupAmount(Integer groupId);
 	
 	/**
 	 * 此方法用来批量维护团金额的一致性
 	 * @param bizId
 	 * @return
 	 */
-	public String batchCalcTourGroupAmount(Integer bizId);
+	String batchCalcTourGroupAmount(Integer bizId);
 	
 	/**
 	 * 此方法用来批量维护 单条 booking_supplier total_cash的数据
@@ -78,14 +78,14 @@ public interface FinanceFacade{
 	 * @return
 	 * @throws IOException 
 	 */
-	public String calcBookingSupplierTotalCash(Integer bookingSupplierId) throws IOException;
+	String calcBookingSupplierTotalCash(Integer bookingSupplierId) throws IOException;
 		
 	/**
 	 * 此方法用来批量维护booking_supplier total_cash的数据
 	 * @return
 	 * @throws IOException 
 	 */
-	public void batchCalcBookingSupplierTotalCash() throws IOException;
+	void batchCalcBookingSupplierTotalCash() throws IOException;
 	
 	/**
 	 * 此方法用来批量维护 单条 group_order total_cash的数据
@@ -93,7 +93,7 @@ public interface FinanceFacade{
 	 * @return
 	 * @throws IOException 
 	 */
-	public String calcGroupOrderTotalCash(Integer groupOrderId) throws IOException;
+	String calcGroupOrderTotalCash(Integer groupOrderId) throws IOException;
 	
 	/**
 	 * 此方法用来批量维护group_order total_cash的数据
@@ -101,68 +101,68 @@ public interface FinanceFacade{
 	 * @return
 	 * @throws IOException 
 	 */
-	public void batchCalcGroupOrderTotalCash(Integer supplierId) throws IOException;
+	void batchCalcGroupOrderTotalCash(Integer supplierId) throws IOException;
 	
-	public String calcGroupTotalCash(Integer groupId);
+	String calcGroupTotalCash(Integer groupId);
 	
-	public void calcGroupTotalCashBath(String startTime, String endTime,Integer bizId) throws IOException;
+	void calcGroupTotalCashBath(String startTime, String endTime,Integer bizId) throws IOException;
 
 	/**
 	 * 获取审核人列表
 	 * @return
 	 */
-	public List<TourGroup> getAuditorList();
+	List<TourGroup> getAuditorList();
 	
 	/**
 	 * 结算单审核预览
 	 * @param statementCheckPreviewDTO
 	 * @return
 	 */
-	public StatementCheckPreviewResult statementCheckPreview(StatementCheckPreviewDTO statementCheckPreviewDTO);
+	StatementCheckPreviewResult statementCheckPreview(StatementCheckPreviewDTO statementCheckPreviewDTO);
 	
-	public SettleSealListResult settleSealList(SettleSealListDTO settleSealListDTO);
+	SettleSealListResult settleSealList(SettleSealListDTO settleSealListDTO);
 
 	/**
 	 * 跳转到收款记录详情页面
 	 */
-	public IncomeOrPaytResult incomeView(IncomeOrPayDTO incomeOrPayDTO);
+	IncomeOrPaytResult incomeView(IncomeOrPayDTO incomeOrPayDTO);
 
 	/**
 	 * 跳转到付款记录详情页面
 	 */
-	public IncomeOrPaytResult payView(IncomeOrPayDTO incomeOrPayDTO);
+	IncomeOrPaytResult payView(IncomeOrPayDTO incomeOrPayDTO);
 	
 	/**
 	 * 跳转到收款订单关联页面列表
 	 * @param queryDTO
 	 * @return PageBean
 	 */
-	public PageBean incomeJoinTableList(IncomeJoinTableListDTO queryDTO);
+	PageBean incomeJoinTableList(IncomeJoinTableListDTO queryDTO);
 
 	/**
 	 * 跳转到收款新增页面
 	 */
-	public IncomeOrPaytResult incomeAdd(IncomeOrPayDTO incomeOrPayDTO);
+	IncomeOrPaytResult incomeAdd(IncomeOrPayDTO incomeOrPayDTO);
 
 	/**
 	 * 跳转到付款新增页面
 	 */
-	public IncomeOrPaytResult payAdd(IncomeOrPayDTO incomeOrPayDTO);
+	IncomeOrPaytResult payAdd(IncomeOrPayDTO incomeOrPayDTO);
 	
 	/**
 	 * 跳转收款记录页面
 	 */
-	public IncomeOrPaytResult incomeRecordList(IncomeOrPayDTO incomeOrPayDTO);
+	IncomeOrPaytResult incomeRecordList(IncomeOrPayDTO incomeOrPayDTO);
 
 	/**
 	 * 跳转付款记录页面
 	 */
-	public IncomeOrPaytResult cashRecordList(IncomeOrPayDTO incomeOrPayDTO);
+	IncomeOrPaytResult cashRecordList(IncomeOrPayDTO incomeOrPayDTO);
 
 	/**
 	 * 跳转到收款审核
 	 */
-	public TourGroup auditList(Integer groupId);
+	TourGroup auditList(Integer groupId);
 
 	/**
 	 * 团收入支出汇总
@@ -172,9 +172,9 @@ public interface FinanceFacade{
 	 * @param groupId
 	 * @return
 	 */
-	public Map queryAuditViewInfo(Integer bizId, Integer groupId);
+	Map queryAuditViewInfo(Integer bizId, Integer groupId);
 
-	public PageBean aduditStatisticsList(AduditStatisticsListDTO queryDTO);
+	PageBean aduditStatisticsList(AduditStatisticsListDTO queryDTO);
 
 	/**
 	 * 获取审核人列表
@@ -182,234 +182,224 @@ public interface FinanceFacade{
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 */
-	public String getAuditUserList(String name, Integer bizId) throws UnsupportedEncodingException;
+	String getAuditUserList(String name, Integer bizId) throws UnsupportedEncodingException;
 
 	/**
 	 * 跳转到操作记录页面
 	 */
-	public List<TourGroup> operateLog(Integer groupId);
+	List<TourGroup> operateLog(Integer groupId);
 
 	/**
 	 * 批量审核
 	 */
-	public void audit(AuditDTO auditDTO);
+	void audit(AuditDTO auditDTO);
 	
 	/**
 	 * 批量审核
 	 */
-	public String auditList(AuditListDTO auditListDTO);
+	String auditList(AuditListDTO auditListDTO);
 
 	/**
 	 * 结算单审核
 	 */
-	public String finAudit(FinAuditDTO finAuditDTO);
+	String finAudit(FinAuditDTO finAuditDTO);
 
 	/**
 	 * 结算单取消审核
 	 */
-	public String finUnAudit(FinAuditDTO finAuditDTO);
+	String finUnAudit(FinAuditDTO finAuditDTO);
 
 	/**
 	 * 批量封存
 	 */
-	public String batchSeal(UnsealDTO unsealDTO);
+	String batchSeal(UnsealDTO unsealDTO);
 
 	/**
 	 * 解封
 	 */
-	public String unseal(UnsealDTO unsealDTO);
+	String unseal(UnsealDTO unsealDTO);
 
 	/**
 	 * 付款/收款
 	 */
-	/**
-	 * @param pay
-	 * @return
-	 */
-	public String pay(PayDTO payDTO);
+	String pay(PayDTO payDTO);
 
 	/**
 	 * 请求供应商账户列表
 	 * @param sid
 	 * @return
 	 */
-	public String querySupplierBankAccountList(Integer sid);
+	String querySupplierBankAccountList(Integer sid);
 
 	/**
 	 * 领单-查询
 	 */
-	public ReceiveOrderListSelectResult receiveOrderListSelect(ReceiveOrderListSelectDTO queryDTO);
+	ReceiveOrderListSelectResult receiveOrderListSelect(ReceiveOrderListSelectDTO queryDTO);
 
 	/**
 	 * 获取申请人列表
 	 * @param bizId
 	 * @param name
 	 */
-	public List<Map<String, String>> fuzzyApplicantList(Integer bizId, String name);
+	List<Map<String, String>> fuzzyApplicantList(Integer bizId, String name);
 
 	/**
 	 * 派单
 	 */
-	public DiatributeBillResult diatributeBill(DiatributeBillDTO diatributeBillDTO);
+	DiatributeBillResult diatributeBill(DiatributeBillDTO diatributeBillDTO);
 
 	/**
 	 * 销单
 	 */
-	public VerifyBillResult verifyBill(VerifyBillDTO verifyBillDTO);
+	VerifyBillResult verifyBill(VerifyBillDTO verifyBillDTO);
 	/**
 	 * 查单
 	 */
-	public CheckBillResult checkBill(CheckBillDTO checkBillDTO);
+	CheckBillResult checkBill(CheckBillDTO checkBillDTO);
 	
 	/**
 	 * 查单-打印
 	 */
-	public CheckBillResult checkBillPrint(CheckBillDTO checkBillDTO);
+	CheckBillResult checkBillPrint(CheckBillDTO checkBillDTO);
 
 	/**
 	 * 派单保存
 	 * @return
 	 */
-	public ResultSupport saveDistributeBill(SaveDistributeBillDTO saveDistributeBillDTO);
+	ResultSupport saveDistributeBill(SaveDistributeBillDTO saveDistributeBillDTO);
 
 	/**
 	 * 销单保存
 	 * @return
 	 */
-	public ResultSupport saveVerifyBill(SaveVerifyBillDTO saveVerifyBillDTO);
+	ResultSupport saveVerifyBill(SaveVerifyBillDTO saveVerifyBillDTO);
 	
 	/**
 	 * 取消销单
 	 * @return
 	 */
-	public ResultSupport delVerify(String orderId, String type);
+	ResultSupport delVerify(String orderId, String type);
 	
 	/**
 	 * 取消领单
 	 * @return
 	 */
-	public ResultSupport delReceived(String groupId, String guideId);
+	ResultSupport delReceived(String groupId, String guideId);
 
 	/**
 	 * 获取操作员列表
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 */
-	public List<Map<String, String>> getUserNameList(Integer bizId, String name) throws UnsupportedEncodingException;
+	List<Map<String, String>> getUserNameList(Integer bizId, String name) throws UnsupportedEncodingException;
 
 	/**
 	 * 结算单审核分页查询
 	 */
-	public SettleListPageResult settleListPage(SettleListPageDTO settleListPageDTO);
+	SettleListPageResult settleListPage(SettleListPageDTO settleListPageDTO);
 
 	/**
 	 * 结算单审核列表查询
 	 */
-	public QuerySettleListResult querySettleList(QuerySettleListDTO querySettleListDTO);
+	QuerySettleListResult querySettleList(QuerySettleListDTO querySettleListDTO);
 
 	/**
 	 * 删除财务-收款付款
 	 */
-	public ResultSupport deleteFinancePay(Integer id);
+	ResultSupport deleteFinancePay(Integer id);
 
 	/**
 	 * 删除财务-收款付款详情
 	 */
-	public ResultSupport deleteFinancePayDetail(Integer supplierType, Integer locOrderId, Integer payId);
+	ResultSupport deleteFinancePayDetail(Integer supplierType, Integer locOrderId, Integer payId);
 	
 	/**
 	 * 批量删除财务-收款付款详情
 	 */
-	public ResultSupport batchDeleteFinancePayDetail(Integer supplierType, String locOrderIds, Integer payId);
+	ResultSupport batchDeleteFinancePayDetail(Integer supplierType, String locOrderIds, Integer payId);
 
 	/**
 	 * 购物审核列表
 	 */
-	public ToBookingShopVerifyListlResult toBookingShopVerifyList(ToBookingShopVerifyListDTO queryDTO);
+	ToBookingShopVerifyListlResult toBookingShopVerifyList(ToBookingShopVerifyListDTO queryDTO);
 
 	/**
 	 * 批量审核购物店
 	 */
-	public ResultSupport auditShop(AuditShopDTO auditShopDTO);
+	ResultSupport auditShop(AuditShopDTO auditShopDTO);
 
 	/**
 	 * 购物佣金发放统计
 	 */
-	public ResultSupport shopCommissionStatsList(Integer bizId);
+	ResultSupport shopCommissionStatsList(Integer bizId);
 	
 	/**
 	 * 购物佣金扣除统计
 	 */
-	public String shopCommissionDeductionStatsList(Integer bizId);
+	String shopCommissionDeductionStatsList(Integer bizId);
 
-	public ViewShopCommissionStatsListResult viewShopCommissionStatsList(Integer bizId);
+	ViewShopCommissionStatsListResult viewShopCommissionStatsList(Integer bizId);
 	
-	public ViewShopCommissionStatsListResult viewShopCommissionDeductionStatsList(Integer bizId);
+	ViewShopCommissionStatsListResult viewShopCommissionDeductionStatsList(Integer bizId);
 
 	/**
 	 * 购物佣金发放统计列表
 	 */
-	public QueryShopCommissionStatsResult toShopStatisticsList(QueryShopCommissionStatsDTO queryDTO);
+	QueryShopCommissionStatsResult toShopStatisticsList(QueryShopCommissionStatsDTO queryDTO);
 	
 	
-	public QueryShopCommissionStatsResult toShopStatisticsList2(QueryShopCommissionStatsDTO queryDTO);
+	QueryShopCommissionStatsResult toShopStatisticsList2(QueryShopCommissionStatsDTO queryDTO);
 	
 	/**
 	 * 购物佣金扣除统计列表
 	 */
-	public QueryShopCommissionStatsResult queryShopCommissionDeductionStats(QueryShopCommissionStatsDTO queryDTO);
+	QueryShopCommissionStatsResult queryShopCommissionDeductionStats(QueryShopCommissionStatsDTO queryDTO);
 
-	public QueryShopCommissionStatsResult queryShopCommissionDeductionStats2(QueryShopCommissionStatsDTO queryDTO);
+	QueryShopCommissionStatsResult queryShopCommissionDeductionStats2(QueryShopCommissionStatsDTO queryDTO);
 
 	/**
 	 * 批量审核购物发放佣金
 	 */
-	public ResultSupport auditComm(AuditCommDTO auditCommDTO);
+	ResultSupport auditComm(AuditCommDTO auditCommDTO);
 	
 	/**
 	 * 批量审核购物扣除佣金
 	 */
-	public ResultSupport auditCommDeduction(AuditCommDTO auditCommDTO);
+	ResultSupport auditCommDeduction(AuditCommDTO auditCommDTO);
 
 	/**
 	 * 跳转到购物佣金发放结算页面
 	 */
-	public SettleCommissionListResult settleCommissionList(Integer bizId, Integer groupId);
+	SettleCommissionListResult settleCommissionList(Integer bizId, Integer groupId);
 	
 	/**
 	 * 跳转到购物佣金扣除结算页面
 	 */
-	public SettleCommissionListResult settleCommissionDeductionList(Integer bizId, Integer groupId);
+	SettleCommissionListResult settleCommissionDeductionList(Integer bizId, Integer groupId);
 
 	/**
 	 * 购物佣金发放统计列表
 	 */
-	public QuerySettleCommissionResult querySettleCommission(QuerySettleCommissionDTO queryDTO);
+	QuerySettleCommissionResult querySettleCommission(QuerySettleCommissionDTO queryDTO);
 	
 	/**
 	 * 购物佣金扣除统计列表
 	 */
-	public QuerySettleCommissionResult querySettleCommissionDeduction(QuerySettleCommissionDTO queryDTO);
+	QuerySettleCommissionResult querySettleCommissionDeduction(QuerySettleCommissionDTO queryDTO);
 	
 	/**
 	 * 科目汇总表1
 	 */
-	public SubjectSummaryResult subjectSummary(SubjectSummaryDTO queryDTO);
+	SubjectSummaryResult subjectSummary(SubjectSummaryDTO queryDTO);
 	
 	
 	/**
 	 * 科目汇总表2
 	 */
-	public SubjectSummaryResult subjectSummary2(SubjectSummaryDTO queryDTO);
+	SubjectSummaryResult subjectSummary2(SubjectSummaryDTO queryDTO);
 	
 	/**
 	 * 科目汇总表3
-	 * @param request
-	 * @param model
-	 * @param pageSize
-	 * @param page
-	 * @return
 	 */
-	@RequestMapping(value="/subjectSummary3.do")
-	public SubjectSummaryResult subjectSummary3(SubjectSummaryDTO queryDTO);
+	SubjectSummaryResult subjectSummary3(SubjectSummaryDTO queryDTO);
 }
