@@ -9,7 +9,7 @@ import com.yimayhd.erpcenter.facade.sales.result.FitGroupInfoQueryResult;
 import com.yimayhd.erpcenter.facade.sales.result.FitTotalSKGroupQueryResult;
 
 /**
- * 散客团管理
+ * 销售-散客团管理
  * 
  * @author gaotingping
  * 2016年10月25日
