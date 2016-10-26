@@ -19,7 +19,7 @@ public interface FitGroupFacade {
 	//散客团查询
 	public FitTotalSKGroupQueryResult toFitGroupList(FitTotalSKGroupQueryDTO totalSKGroupQueryDTO);
 
-	//查询团信息
+	//去查询团信息
 	public FitGroupInfoQueryResult toFitGroupInfo(FitGroupInfoQueryDTO fitGroupInfoQueryDTO);
 
 	//从散客团里批量删除散客订单
