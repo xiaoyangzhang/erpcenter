@@ -36,6 +36,9 @@ public interface TeamGroupFacade {
 
     public ToRequirementResult toRequirement(Integer orderId,Integer operType);
 
+    public String copyTourGroup(CopyTourGroupDTO copyTourGroupDTO);
+
+
 
 
 
