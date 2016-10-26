@@ -16,6 +16,8 @@ public class BookingShopDTO implements Serializable{
 	
 	private int shopId;
 	
+	private int guideId;
+	
 	public int getBizId() {
 		return bizId;
 	}
@@ -33,6 +35,12 @@ public class BookingShopDTO implements Serializable{
 	}
 	public void setShopId(int shopId) {
 		this.shopId = shopId;
+	}
+	public int getGuideId() {
+		return guideId;
+	}
+	public void setGuideId(int guideId) {
+		this.guideId = guideId;
 	}
 	
 	

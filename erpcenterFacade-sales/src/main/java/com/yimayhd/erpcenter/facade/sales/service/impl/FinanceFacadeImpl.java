@@ -2,11 +2,28 @@ package com.yimayhd.erpcenter.facade.sales.service.impl;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.biz.basic.service.CommonBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingGuideBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
+import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
+import com.yimayhd.erpcenter.common.util.NumberUtil;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.InfoBean;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.facade.sales.errorcode.SaleErrorCode;
 import com.yimayhd.erpcenter.facade.sales.query.finance.AduditStatisticsListDTO;
 import com.yimayhd.erpcenter.facade.sales.query.finance.AuditCommDTO;
 import com.yimayhd.erpcenter.facade.sales.query.finance.AuditDTO;
@@ -51,69 +68,193 @@ import com.yimayhd.erpcenter.facade.sales.service.FinanceFacade;
 
 public class FinanceFacadeImpl implements FinanceFacade{
 
+	@Autowired
+	private FinanceBiz financeBiz;
+	
+	@Autowired
+	private TourGroupBiz tourGroupBiz;
+	
+	@Autowired
+	private PlatformEmployeeBiz platformEmployeeBiz;
+	
+	@Autowired
+	private ApplicationContext appContext;
+	
+	@Autowired
+	private BookingGuideBiz bookingGuideBiz;
+	
+	
+	/**
+	 * 此方法用来维护团金额的一致性
+	 * @param request
+	 * @param reponse
+	 * @param model
+	 * @param groupId
+	 * @return
+	 */
 	@Override
-	public String calcTourGroupAmount(Integer groupId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String batchCalcTourGroupAmount(Integer bizId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String calcBookingSupplierTotalCash(Integer bookingSupplierId)
-			throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void batchCalcBookingSupplierTotalCash() throws IOException {
-		// TODO Auto-generated method stub
+	public ResultSupport calcTourGroupAmount(Integer groupId) {
 		
+		if(groupId != null){
+			financeBiz.calcTourGroupAmount(groupId);
+		}
+		ResultSupport result = new ResultSupport();
+		result.setResultMsg("calculate over!");
+		return result;
 	}
 
+	/**
+	 * 此方法用来批量维护团金额的一致性
+	 * @param request
+	 * @param reponse
+	 * @param model
+	 * @param startTime 出团开始日期
+	 * @param endTime	出团结束日期
+	 * @param bizId
+	 * @return
+	 */
 	@Override
-	public String calcGroupOrderTotalCash(Integer groupOrderId)
-			throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void batchCalcGroupOrderTotalCash(Integer supplierId)
-			throws IOException {
-		// TODO Auto-generated method stub
+	public ResultSupport batchCalcTourGroupAmount(Integer bizId, Map paramters) {
 		
-	}
-
-	@Override
-	public String calcGroupTotalCash(Integer groupId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void calcGroupTotalCashBath(String startTime, String endTime,
-			Integer bizId) throws IOException {
-		// TODO Auto-generated method stub
+		PageBean pb = new PageBean();
+		if(bizId != null){
+			paramters.put("bizId", bizId);
+		}
+		pb.setParameter(paramters);
+		List<TourGroup> results = tourGroupBiz.selectIdList(pb);
 		
+		if(results != null && results.size() > 0){
+			TourGroup group = null;
+			for(int i = 0; i < results.size(); i++){
+				group = results.get(i);
+				financeBiz.calcTourGroupAmount(group.getId());
+			}
+		}
+		
+		ResultSupport result = new ResultSupport();
+		result.setResultMsg("calculate over! fixed "+ results.size() +" tour groups");
+		return result;
 	}
 
+	@Override
+	public ResultSupport calcBookingSupplierTotalCash(Integer bookingSupplierId) throws IOException {
+		
+		ResultSupport result = new ResultSupport();
+		if(bookingSupplierId == null){
+			result.setSuccess(false);
+			result.setErrorCode(SaleErrorCode.PARAM_ERROR);
+			result.setResultMsg("请输入bookingSupplierId!");
+			return result;
+		}
+		
+		financeBiz.calcBookingSupplierTotalCash(bookingSupplierId);
+
+		result.setResultMsg("calculate over!");
+		return result;
+	}
+
+	@Override
+	public ResultSupport calcGroupOrderTotalCash(Integer groupOrderId) throws IOException {
+		
+		ResultSupport result = new ResultSupport();
+		if(groupOrderId == null){
+			result.setSuccess(false);
+			result.setResultMsg("请输入groupOrderId!");
+			return result;
+		}
+		
+		financeBiz.calcGroupOrderTotalCash(groupOrderId);
+		
+		result.setResultMsg("calculate over!");
+		return result;
+	}
+
+	@Override
+	public ResultSupport calcGroupTotalCash(Integer groupId) {
+		if(groupId != null){
+			financeBiz.calcTotalCash_collection(groupId);
+		}
+		ResultSupport result = new ResultSupport();
+		result.setResultMsg("completed!");
+		return result;
+	}
+	
+	/**
+	 * 获取审核人列表
+	 * @return
+	 */
 	@Override
 	public List<TourGroup> getAuditorList() {
-		// TODO Auto-generated method stub
-		return null;
+		List<TourGroup> auditorList = tourGroupBiz.getAuditorList();
+		return auditorList;
 	}
 
 	@Override
-	public StatementCheckPreviewResult statementCheckPreview(
-			StatementCheckPreviewDTO statementCheckPreviewDTO) {
-		// TODO Auto-generated method stub
-		return null;
+	public StatementCheckPreviewResult statementCheckPreview(StatementCheckPreviewDTO queryDTO) {
+
+		PageBean pb = new PageBean();
+		pb.setPage(1);
+		pb.setPageSize(100000);
+		//如果人员为空并且部门不为空，则取部门下的人id
+		if(StringUtils.isBlank(queryDTO.getSaleOperatorIds()) && StringUtils.isNotBlank(queryDTO.getOrgIds())){
+			Set<Integer> set = new HashSet<Integer>();
+			String[] orgIdArr = queryDTO.getOrgIds().split(",");
+			for(String orgIdStr : orgIdArr){
+				set.add(Integer.valueOf(orgIdStr));
+			}
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(queryDTO.getBizId(), set);
+			String salesOperatorIds="";
+			for(Integer usrId : set){
+				salesOperatorIds+=usrId+",";
+			}
+			if(!salesOperatorIds.equals("")){
+				queryDTO.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length()-1));
+			}
+		}
+		Map<String,Object> pms  = queryDTO.getParamters();
+		if(null!=queryDTO.getSaleOperatorIds() && !"".equals(queryDTO.getSaleOperatorIds())){
+			pms.put("operator_id", queryDTO.getSaleOperatorIds());
+		}
+		pms.put("set", queryDTO.getSet());
+		pb.setParameter(pms);
+		pb = getCommonService(queryDTO.getSvc()).queryListPage(queryDTO.getSl(), pb);
+		
+		Map<Integer, String> guideMap = new HashMap<Integer, String>();
+		List<Map> results = pb.getResult();
+		Map item = null;
+		for (int i = 0; i < results.size(); i++) {
+			item = results.get(i);
+			Integer groupId = Integer.parseInt(item.get("id").toString());
+			List<BookingGuide> bookingGuides = bookingGuideBiz.selectGuidesByGroupId(groupId);
+			StringBuffer s = new StringBuffer();
+			for (int j = 0; j < bookingGuides.size(); j++) {
+				if (j == (bookingGuides.size() - 1)) {
+					s.append(bookingGuides.get(j).getGuideName());
+				} else {
+					s.append(bookingGuides.get(j).getGuideName() + ",");
+				}
+				item.put("userName", bookingGuides.get(j).getUserName());
+			}
+			guideMap.put(groupId, s.toString());
+			
+			BigDecimal totalIncome = NumberUtil.parseObj2Num(item.get("total_income"));
+			BigDecimal totalCost = NumberUtil.parseObj2Num(item.get("total_cost"));
+			
+			//团收入 = 团收入 - 购物汇总
+			InfoBean shop = financeBiz.statsShopWithCommInfoBean(groupId);
+			totalIncome = totalIncome.subtract(shop.getNum());
+			
+			item.put("total_income", totalIncome);
+			item.put("total_cost", totalCost);
+			item.put("total_profit", totalIncome.subtract(totalCost));
+
+		}
+		
+		StatementCheckPreviewResult result = new StatementCheckPreviewResult();
+		result.setGuideMap(guideMap);
+		result.setPageBean(pb);
+		
+		return result;
 	}
 
 	@Override
@@ -474,7 +615,20 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		return null;
 	}
 
-	
+	/**
+	 * 获取查询服务
+	 * 
+	 * @author Jing.Zhuo
+	 * @create 2015年8月18日 上午9:34:25
+	 * @param svc
+	 * @return
+	 */
+	private CommonBiz getCommonService(String svc) {
+		if (StringUtils.isBlank(svc)) {
+			svc = "commonsaleService";
+		}
+		return appContext.getBean(svc, CommonBiz.class);
+	}
 	
 	
 }

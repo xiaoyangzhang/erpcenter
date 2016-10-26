@@ -8,9 +8,15 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopDTO;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopDetailDeployDTO;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopListDTO;
+import com.yimayhd.erpcenter.facade.sales.query.ContractPriceExtDTO;
+import com.yimayhd.erpcenter.facade.sales.result.BookingShopInputResult;
+import com.yimayhd.erpcenter.facade.sales.result.GuestShopListResult;
+import com.yimayhd.erpcenter.facade.sales.result.GuestShopResult;
 import com.yimayhd.erpcenter.facade.sales.result.LoadBookingShopInfoResult;
 import com.yimayhd.erpcenter.facade.sales.result.LoadShopInfoResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToAddShopResult;
 import com.yimayhd.erpcenter.facade.sales.result.ToFactShopResult;
+import com.yimayhd.erpresource.dal.po.SupplierItem;
 
 /**
  * 
@@ -87,5 +93,60 @@ public interface BookingShopFacade {
 	 * @author wangjun
 	 */
 	LoadShopInfoResult loadShopInfo(BookingShopDTO bookingShopDTO);
+	
+	/**
+	 * 客人购物统计列表
+	 * @param bizId
+	 * @return
+	 * @author wangjun
+	 */
+	GuestShopListResult toGuestShopList(int bizId);
+	
+	/**
+	 * 客人购物统计列表do
+	 * @param bookingShopListDTO
+	 * @return
+	 * @author wangjun
+	 */
+	GuestShopResult guestShopList(BookingShopListDTO bookingShopListDTO);
+	
+	/**
+	 * 购物录入列表
+	 * @param bookingShopListDTO
+	 * @return
+	 * @author wangjun
+	 */
+	BookingShopInputResult bookingShopInputList(BookingShopListDTO bookingShopListDTO);
+	
+	/**
+	 * 新增购物页面
+	 * @param groupId
+	 * @return
+	 * @author wangjun
+	 */
+	ToAddShopResult toAddShop(int groupId);
+	
+	/**
+	 * 根据导游获取结对司机
+	 * @param bookingShopDTO
+	 * @return
+	 * @author wangjun
+	 */
+	Map<String, Object> getMatchedDriver(BookingShopDTO bookingShopDTO);
+	/**
+	 * 根据新增时所选商家ID加载该商家项目
+	 * @param supplierId
+	 * @return
+	 * @author wangjun
+	 */
+	List<SupplierItem> selectItems(int supplierId);
+	
+	/**
+	 * 查询购物项目协议
+	 * @param contractPriceExtDTO
+	 * @return
+	 * @author wangjun
+	 */
+	String contractPriceExt(ContractPriceExtDTO contractPriceExtDTO);
 	
 }

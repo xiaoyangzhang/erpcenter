@@ -63,14 +63,14 @@ public interface FinanceFacade{
 	 * @param groupId
 	 * @return
 	 */
-	String calcTourGroupAmount(Integer groupId);
+	ResultSupport calcTourGroupAmount(Integer groupId);
 	
 	/**
 	 * 此方法用来批量维护团金额的一致性
 	 * @param bizId
 	 * @return
 	 */
-	String batchCalcTourGroupAmount(Integer bizId);
+	ResultSupport batchCalcTourGroupAmount(Integer bizId, Map paramters);
 	
 	/**
 	 * 此方法用来批量维护 单条 booking_supplier total_cash的数据
@@ -78,14 +78,7 @@ public interface FinanceFacade{
 	 * @return
 	 * @throws IOException 
 	 */
-	String calcBookingSupplierTotalCash(Integer bookingSupplierId) throws IOException;
-		
-	/**
-	 * 此方法用来批量维护booking_supplier total_cash的数据
-	 * @return
-	 * @throws IOException 
-	 */
-	void batchCalcBookingSupplierTotalCash() throws IOException;
+	ResultSupport calcBookingSupplierTotalCash(Integer bookingSupplierId) throws IOException;
 	
 	/**
 	 * 此方法用来批量维护 单条 group_order total_cash的数据
@@ -93,20 +86,11 @@ public interface FinanceFacade{
 	 * @return
 	 * @throws IOException 
 	 */
-	String calcGroupOrderTotalCash(Integer groupOrderId) throws IOException;
+	ResultSupport calcGroupOrderTotalCash(Integer groupOrderId) throws IOException;
 	
-	/**
-	 * 此方法用来批量维护group_order total_cash的数据
-	 * @param supplierId
-	 * @return
-	 * @throws IOException 
-	 */
-	void batchCalcGroupOrderTotalCash(Integer supplierId) throws IOException;
 	
-	String calcGroupTotalCash(Integer groupId);
+	ResultSupport calcGroupTotalCash(Integer groupId);
 	
-	void calcGroupTotalCashBath(String startTime, String endTime,Integer bizId) throws IOException;
-
 	/**
 	 * 获取审核人列表
 	 * @return
@@ -118,7 +102,7 @@ public interface FinanceFacade{
 	 * @param statementCheckPreviewDTO
 	 * @return
 	 */
-	StatementCheckPreviewResult statementCheckPreview(StatementCheckPreviewDTO statementCheckPreviewDTO);
+	StatementCheckPreviewResult statementCheckPreview(StatementCheckPreviewDTO queryDTO);
 	
 	SettleSealListResult settleSealList(SettleSealListDTO settleSealListDTO);
 
