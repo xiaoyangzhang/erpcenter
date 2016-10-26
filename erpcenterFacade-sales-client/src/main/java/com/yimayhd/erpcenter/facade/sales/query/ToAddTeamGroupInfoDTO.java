@@ -15,8 +15,6 @@ public class ToAddTeamGroupInfoDTO implements Serializable {
     private int curBizId;
     private GroupOrder groupOrder;
 
-    private int groupId;
-
     public int getCurBizId() {
         return curBizId;
     }
@@ -33,11 +31,4 @@ public class ToAddTeamGroupInfoDTO implements Serializable {
         this.groupOrder = groupOrder;
     }
 
-    public int getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
-    }
 }

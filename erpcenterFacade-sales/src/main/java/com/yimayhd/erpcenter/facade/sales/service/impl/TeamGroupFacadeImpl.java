@@ -6,10 +6,7 @@ import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRouteBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.TeamGroupBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
@@ -19,6 +16,7 @@ import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TeamGroupVO;
 import com.yimayhd.erpcenter.facade.sales.query.*;
@@ -63,6 +61,10 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
     private TeamGroupBiz teamGroupBiz;
     @Autowired
     private GroupOrderGuestBiz groupOrderGuestBiz;
+    @Autowired
+    private GroupRequirementBiz groupRequirementBiz;
+
+
 
 
     @Override
@@ -182,16 +184,14 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
     }
 
     @Override
-    public ToAddTeamGroupInfoResult getDataByGroupId(ToAddTeamGroupInfoDTO toAddTeamGroupInfoDTO) {
-        ToAddTeamGroupInfoResult toAddTeamGroupInfoResult = new ToAddTeamGroupInfoResult();
+    public String getDataByGroupId(int groupId) {
         try {
-            GroupRouteVO groupRouteVO = groupRouteBiz
-                    .findGroupRouteByGroupId(toAddTeamGroupInfoDTO.getGroupId());
-            toAddTeamGroupInfoResult.setJsonStr(JSON.toJSONString(groupRouteVO));
+            GroupRouteVO groupRouteVO = groupRouteBiz.findGroupRouteByGroupId(groupId);
+           return  JSON.toJSONString(groupRouteVO);
         } catch (Exception e) {
             logger.error("", e);
         }
-        return toAddTeamGroupInfoResult;
+        return "";
     }
 
     @Override
@@ -297,6 +297,50 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
             logger.error("", e);
         }
         return toEditTeamGroupInfoResult;
+    }
+
+    @Override
+    public ToRequirementResult toRequirement(Integer orderId, Integer operType) {
+        ToRequirementResult toRequirementResult = new ToRequirementResult();
+        try {
+            GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
+            toRequirementResult.setGroupId(groupOrder.getGroupId());
+            // 车辆型号
+            List<DicInfo> ftcList = dicBiz
+                    .getListByTypeCode(Constants.FLEET_TYPE_CODE);
+            toRequirementResult.setFtcList(ftcList);
+            // 酒店星级
+            List<DicInfo> jdxjList = dicBiz
+                    .getListByTypeCode(BasicConstants.GYXX_JDXJ);
+            toRequirementResult.setJdxjList(jdxjList);
+            // 酒店信息
+            List<GroupRequirement> hotelList = groupRequirementBiz
+                    .selectByOrderAndType(orderId, 3);
+            toRequirementResult.setHotelList(hotelList);
+            // 车队信息
+            List<GroupRequirement> fleetList = groupRequirementBiz
+                    .selectByOrderAndType(orderId, 4);
+            toRequirementResult.setFleetList(fleetList);
+            // 机票信息
+            List<GroupRequirement> airTicketList = groupRequirementBiz
+                    .selectByOrderAndType(orderId, 9);
+            toRequirementResult.setAirTicketList(airTicketList);
+            // 火车信息
+            List<GroupRequirement> railwayTicketList = groupRequirementBiz
+                    .selectByOrderAndType(orderId, 10);
+            toRequirementResult.setRailwayTicketList(railwayTicketList);
+            // 导游信息
+            List<GroupRequirement> guideList = groupRequirementBiz
+                    .selectByOrderAndType(orderId, 8);
+            toRequirementResult.setGuideList(guideList);
+            // 餐厅信息
+            List<GroupRequirement> restaurantList = groupRequirementBiz
+                    .selectByOrderAndType(orderId, 2);
+            toRequirementResult.setRestaurantList(restaurantList);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toRequirementResult;
     }
 
     @Override
