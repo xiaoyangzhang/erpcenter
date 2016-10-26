@@ -18,7 +18,7 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
-      <scope>test</scope>
+      <scope>test</scope>  
     </dependency>
     <dependency>
     	<groupId>com.yimayhd.erpcenter</groupId>
@@ -28,5 +28,13 @@
     	<groupId>com.yimayhd.erpcenter</groupId>
   		<artifactId>erpcenterBiz-sys-client</artifactId>
     </dependency>
+    <dependency>
+    	<groupId>com.yimayhd.erpresource</groupId>
+  		<artifactId>erpresourceBiz-client</artifactId>
+    </dependency>  
+    <dependency>
+    	<groupId>com.yimayhd.erpresource</groupId>
+  		<artifactId>erpresourceDAL-client</artifactId>
+    </dependency>  
   </dependencies>
 </project>

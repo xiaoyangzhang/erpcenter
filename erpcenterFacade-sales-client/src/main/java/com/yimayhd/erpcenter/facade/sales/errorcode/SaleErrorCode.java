@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.erpcenterFacade.sales.client.errorcode;
+package com.yimayhd.erpcenter.facade.sales.errorcode;
 
 import java.io.Serializable;
 
@@ -17,7 +17,13 @@ public class SaleErrorCode implements Serializable {
 	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么)
 	*/
 	private static final long serialVersionUID = -2487018306971150021L;
-	
+	public static final SaleErrorCode UNABLE_EDIT_ERROR = new SaleErrorCode("2000", "该团已审核或封存，不允许修改该信息");
+	public static final SaleErrorCode SYSTEM_ERROR = new SaleErrorCode("1001","系统错误");
+    public static final SaleErrorCode PARAM_ERROR = new SaleErrorCode("1002","参数错误");
+    public static final SaleErrorCode QUERY_ERROR = new SaleErrorCode("1003","查询失败");
+    public static final SaleErrorCode PRODUCT_NO_ROUTE_ERROR = new SaleErrorCode("1004","产品内无行程内容");
+    public static final SaleErrorCode MODIFY_ERROR = new SaleErrorCode("1005","操作失败");
+
 	 public SaleErrorCode() {
 		super();
 	}
