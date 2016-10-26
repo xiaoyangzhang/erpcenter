@@ -18,23 +18,9 @@ public class StatementCheckPreviewResult extends ResultSupport implements Serial
 
 	private static final long serialVersionUID = -5895100754940754874L;
 
-	private String imgPath;
-	private String printName;
 	private PageBean pageBean;
 	private Map<Integer, String> guideMap;
 	
-	public String getImgPath() {
-		return imgPath;
-	}
-	public void setImgPath(String imgPath) {
-		this.imgPath = imgPath;
-	}
-	public String getPrintName() {
-		return printName;
-	}
-	public void setPrintName(String printName) {
-		this.printName = printName;
-	}
 	public PageBean getPageBean() {
 		return pageBean;
 	}
