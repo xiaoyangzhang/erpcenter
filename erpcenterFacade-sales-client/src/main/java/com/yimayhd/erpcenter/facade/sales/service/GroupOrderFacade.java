@@ -1,6 +1,5 @@
 package com.yimayhd.erpcenter.facade.sales.service;
 
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AiYouBean;
 import com.yimayhd.erpcenter.facade.sales.result.ListResultSupport;
 
 /**
