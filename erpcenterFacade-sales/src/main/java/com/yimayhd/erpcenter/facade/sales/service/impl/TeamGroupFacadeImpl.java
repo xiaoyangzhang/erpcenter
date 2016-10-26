@@ -6,6 +6,8 @@ import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.airticket.AirTicketRequestBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
@@ -67,6 +69,10 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
     private GroupRequirementBiz groupRequirementBiz;
     @Autowired
     private TourGroupBiz tourGroupBiz;
+    @Autowired
+    private FinanceBiz financeBiz;
+    @Autowired
+    private AirTicketRequestBiz airTicketRequestBiz;
 
 
 
@@ -386,6 +392,34 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
             go.setTotalCash(new BigDecimal(0));
             tourGroupBiz.copyGroup(group, go, copyTourGroupDTO.getGroupId(), copyTourGroupDTO.getOrderId(), copyTourGroupDTO.getInfo(),copyTourGroupDTO.getCurUserId(),copyTourGroupDTO.getCurUserName());
         } catch (Exception e) {
+            logger.error("", e);
+        }
+        return "";
+    }
+
+    @Override
+    public String deleteGroupOrderById(Integer orderId, Integer groupId,Integer curBizId) {
+        try {
+            if (financeBiz.hasAuditOrder(groupId)) {
+                return "该团有已审核的订单,不允许删除！";
+            }
+
+            if (financeBiz.hasPayOrIncomeRecord(groupId)) {
+                return "该团有收付款记录,不允许删除！";
+            }
+            if (airTicketRequestBiz.doesOrderhaveRequested(curBizId, orderId)) {
+                return "删除订单前请先取消机票申请。";
+            }
+            if (financeBiz.hasHotelOrder(groupId)) {
+                return "该团有酒、车队订单,不允许删除！";
+            }
+            int i = tourGroupBiz.deleteTourGroupById(groupId, orderId);
+            if (i == 1) {
+                return "成功";
+            } else {
+                return "服务器忙！";
+            }
+        }catch (Exception e){
             logger.error("", e);
         }
         return "";

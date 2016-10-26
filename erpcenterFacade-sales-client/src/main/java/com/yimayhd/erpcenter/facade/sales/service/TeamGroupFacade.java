@@ -38,6 +38,8 @@ public interface TeamGroupFacade {
 
     public String copyTourGroup(CopyTourGroupDTO copyTourGroupDTO);
 
+    public String deleteGroupOrderById(Integer orderId, Integer groupId,Integer curBizId);
+
 
 
 
