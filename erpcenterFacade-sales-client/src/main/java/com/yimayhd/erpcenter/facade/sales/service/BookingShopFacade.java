@@ -69,4 +69,5 @@ public interface BookingShopFacade {
 	 * @author wangjun
 	 */
 	int delBookingShop(int bookingId);
+	
 }
