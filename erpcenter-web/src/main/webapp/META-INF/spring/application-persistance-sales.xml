@@ -26,12 +26,12 @@
 	<bean id="sqlSessionFactorySales" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSourceSales"/>
 		<property name="mapperLocations" value="classpath:com/yimayhd/sales/mapper/*.xml"/>
-		<property name="typeAliasesPackage" value="com.yimayhd.erpcenter.dal.airticket.client.po,com.yimayhd.erpcenter.dal.client.finance.po,com.yimayhd.erpcenter.dal.client.operation.po,com.yimayhd.erpcenter.dal.client.quality.po,com.yimayhd.erpcenter.dal.client.sales.po,com.yimayhd.erpcenter.dal.client.taobao.po,com.yimayhd.erpcenter.dal.client.tj.po"/>
+		<property name="typeAliasesPackage" value="com.yimayhd.erpcenter.dal.airticket.client.po,com.yimayhd.erpcenter.dal.client.finance.po,com.yimayhd.erpdal.client.operation.po,com.yimayhd.erpcenter.dal.client.quality.po,com.yimayhd.erpcenter.dal.client.sales.po,com.yimayhd.erpcenter.dal.client.taobao.po,com.yimayhd.erpcenter.dal.client.tj.po"/>
 		<property name="configLocation" value="classpath:mybatis-config.xml"/>
 	</bean>
 
 	<bean id="salesMapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.yimayhd.erpcenter.dal.airticket.client.dao,com.yimayhd.erpcenter.dal.client.finance.dao,com.yimayhd.erpcenter.dal.client.operation.dao,com.yimayhd.erpcenter.dal.client.quality.dao,com.yimayhd.erpcenter.dal.client.sales.dao,com.yimayhd.erpcenter.dal.client.taobao.dao,com.yimayhd.erpcenter.dal.client.tj.dao" />
+		<property name="basePackage" value="com.yimayhd.erpcenter.dal.sales.query.dao,com.yimayhd.erpcenter.dal.sales.airticket.dao,com.yimayhd.erpcenter.dal.sales.finance.dao,com.yimayhd.erpcenter.dal.sales.operation.dao,com.yimayhd.erpcenter.dal.sales.quality.dao,com.yimayhd.erpcenter.dal.sales.sales.dao,com.yimayhd.erpcenter.dal.sales.taobao.dao,com.yimayhd.erpcenter.dal.sales.tj.dao" />
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactorySales"/>
 	</bean>
 

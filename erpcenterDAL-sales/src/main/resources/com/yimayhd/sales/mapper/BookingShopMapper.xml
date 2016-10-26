@@ -417,7 +417,7 @@
 	</select>
 
 
-	<select id="getGuideShopListPage" resultType="com.yihg.operation.vo.QueryGuideShop"
+	<select id="getGuideShopListPage" resultType="com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryGuideShop"
 		parameterType="com.yihg.mybatis.utility.PageBean">
 		SELECT
 		t.id AS groupId,
@@ -540,7 +540,7 @@
   	</select>
   	
   	
-  	 <select id="getshopInfoDetailListPage" resultType="com.yihg.operation.vo.QueryShopInfo" parameterType="com.yihg.mybatis.utility.PageBean">
+  	 <select id="getshopInfoDetailListPage" resultType="com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryShopInfo" parameterType="com.yihg.mybatis.utility.PageBean">
 				SELECT shop.id,tgroup.id groupId,gorder.id orderId,tgroup.group_mode groupMode,tgroup.group_code groupCode,shop.user_name userName,tgroup.operator_name operatorName,guide.guide_name guideName
 		,shop.supplier_name supplierName,shop.shop_date shopDate,shop.person_num personNum,shop.person_repay_price personRepayPrice,
 		(shop.person_num*shop.person_buy_avg) jhSales,shop.total_face totalFace,shop.total_repay totalRepay

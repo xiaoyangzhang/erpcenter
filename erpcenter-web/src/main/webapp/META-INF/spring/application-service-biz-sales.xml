@@ -7,34 +7,34 @@
 	<context:annotation-config />
 
 	<!-- airticket -->
-	<bean id="airTicketOrderBiz" class="com.yimayhd.erpcenter.biz.sales.service.service.impl.airticket.AirTicketOrderBizImpl" />
-	<bean id="airTicketRequestBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.airticket.AirTicketRequestBizImpl" />
-	<bean id="airTicketResourceBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.airticket.AirTicketResourceBizImpl" />
+	<bean id="airTicketOrderBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.airticket.AirTicketOrderBizImpl" />
+	<bean id="airTicketRequestBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.airticket.AirTicketRequestBizImpl" />
+	<bean id="airTicketResourceBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.airticket.AirTicketResourceBizImpl" />
 	
 	<!-- b2b -->                       
-	<bean id="b2BGroupOrderBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.b2b.B2BGroupOrderBizImpl" />
+	<bean id="b2BGroupOrderBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.b2b.B2BGroupOrderBizImpl" />
 	
 	<!-- finance -->
-	<bean id="financeBillBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.finance.FinanceBillBizImpl" />
-	<bean id="financeBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.finance.FinanceBizImpl" />
-	<bean id="financeGuideBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.finance.FinanceGuideBizImpl" />
-	<bean id="financeVerifyBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.finance.FinanceVerifyBizImpl" />
+	<bean id="financeBillBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.finance.FinanceBillBizImpl" />
+	<bean id="financeBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.finance.FinanceBizImpl" />
+	<bean id="financeGuideBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.finance.FinanceGuideBizImpl" />
+	<bean id="financeVerifyBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.finance.FinanceVerifyBizImpl" />
 	
 	<!-- operation -->
-	<bean id="bookingDeliveryBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingDeliveryBizImpl" />
-	<bean id="bookingDeliveryPriceBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingDeliveryPriceBizImpl" />
-	<bean id="bookingGuideBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingGuideBizImpl" />
-	<bean id="bookingShopBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingShopBizImpl" />
-	<bean id="bookingShopDetailBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingShopDetailBizImpl" />
-	<bean id="bookingShopDetailDeployBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingShopDetailDeployBizImpl" />
-	<bean id="bookingSupplierBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingSupplierBizImpl" />
-	<bean id="bookingSupplierDetailBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingSupplierDetailBizImpl" />
+	<bean id="bookingDeliveryBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.operation.BookingDeliveryBizImpl" />
+	<bean id="bookingDeliveryPriceBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.operation.BookingDeliveryPriceBizImpl" />
+	<bean id="bookingGuideBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.operation.BookingGuideBizImpl" />
+	<bean id="bookingShopBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.operation.BookingShopBizImpl" />
+	<bean id="bookingShopDetailBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.operation.BookingShopDetailBizImpl" />
+	<bean id="bookingShopDetailDeployBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.operation.BookingShopDetailDeployBizImpl" />
+	<bean id="bookingSupplierBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.operation.BookingSupplierBizImpl" />
+	<bean id="bookingSupplierDetailBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.operation.BookingSupplierDetailBizImpl" />
 	
 	<!-- quality -->
-	<bean id="qualityBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.quality.QualityBizImpl" />
+	<bean id="qualityBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.quality.QualityBizImpl" />
 	
 	<!-- query -->
-	<bean id="queryBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.query.QueryBizImpl" />
+	<bean id="queryBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.query.QueryBizImpl" />
 	
 	<!-- sales -->
 	<bean id="fitGroupBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.FitGroupBizImpl" />

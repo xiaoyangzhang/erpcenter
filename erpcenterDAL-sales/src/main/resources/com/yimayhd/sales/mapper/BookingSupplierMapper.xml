@@ -479,7 +479,7 @@
    </select>
    
    
-   <select id="getFinanceSupplierByFinanceGuide" resultMap="BaseResultMap"  parameterType="com.yihg.finance.po.FinanceGuide">
+   <select id="getFinanceSupplierByFinanceGuide" resultMap="BaseResultMap"  parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide">
    
    SELECT b.*,t.operator_name <if test="id == null" >,IFNULL(f.`total`, 0)  ftotal,f.`id` fid</if> 
    FROM booking_supplier b,tour_group t<if test="id == null" >,finance_guide f </if>
@@ -497,7 +497,7 @@
       </if> 
    </select>
    
-   <select id="getFinanceSupplier" resultMap="BaseResultMap"  parameterType="com.yihg.finance.po.FinanceGuide">
+   <select id="getFinanceSupplier" resultMap="BaseResultMap"  parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide">
    
    SELECT b.*,t.operator_name , f.pay_status pstatus,f.pay_user_name payusername,f.pay_time paytime <if test="id == null" >,IFNULL(f.`total`, 0)  ftotal,f.`id` fid</if> 
    FROM booking_supplier b,tour_group t<if test="id == null" >,finance_guide f </if>
@@ -565,7 +565,7 @@ WHERE    booking_id IN
 	 </update>
 
 
-  <resultMap  type="com.yihg.operation.vo.BookingSupplierAndDetailVO" id="BookingSupplierAndDetailVO">
+  <resultMap  type="com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingSupplierAndDetailVO" id="BookingSupplierAndDetailVO">
     <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
     <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
     <result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
