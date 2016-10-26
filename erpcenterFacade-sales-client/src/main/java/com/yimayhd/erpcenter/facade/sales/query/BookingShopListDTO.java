@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.facade.sales.query;
 import java.io.Serializable;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryGuideShop;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 
 
@@ -17,7 +18,8 @@ public class BookingShopListDTO implements Serializable{
 	private String orgIds;
 	private String saleOperatorIds;
 	private TourGroup group;
-	private Set<Integer> ids;
+	private QueryGuideShop queryGuideShop;
+	private Set<Integer> dataUserIds;
 	public int getBizId() {
 		return bizId;
 	}
@@ -42,11 +44,18 @@ public class BookingShopListDTO implements Serializable{
 	public void setGroup(TourGroup group) {
 		this.group = group;
 	}
-	public Set<Integer> getIds() {
-		return ids;
+	
+	public Set<Integer> getDataUserIds() {
+		return dataUserIds;
 	}
-	public void setIds(Set<Integer> ids) {
-		this.ids = ids;
+	public void setDataUserIds(Set<Integer> dataUserIds) {
+		this.dataUserIds = dataUserIds;
+	}
+	public QueryGuideShop getQueryGuideShop() {
+		return queryGuideShop;
+	}
+	public void setQueryGuideShop(QueryGuideShop queryGuideShop) {
+		this.queryGuideShop = queryGuideShop;
 	}
 	
 	
