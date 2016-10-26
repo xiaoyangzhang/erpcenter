@@ -6,21 +6,54 @@
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 	<context:annotation-config />
 
-	<bean id="productAttachmentBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.ProductAttachmentBizImpl" />
-	<bean id="productGroupBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.ProductGroupBizImpl" />
-	<bean id="productGroupExtraItemBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.ProductGroupExtraItemBizImpl" />
-	<bean id="productGroupPriceBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.ProductGroupPriceBizImpl" />
-	<bean id="productGroupPriceStockallocateBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.ProductGroupPriceStockallocateBizImpl" />
-	<bean id="productGroupSellerBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.ProductGroupSellerBizImpl" />
-	<bean id="productGroupSupplierBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.ProductGroupSupplierBizImpl" />
-	<bean id="productInfoBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.ProductInfoBizImpl" />
-	<bean id="productRemarkBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.ProductRemarkBizImpl" />
-	<bean id="productRouteBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.ProductRouteBizImpl" />
-	<bean id="productRouteSupplierBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.ProductRouteSupplierBizImpl" />
-	<bean id="productRouteTrafficBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.ProductRouteTrafficBizImpl" />
-	<bean id="productStockBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.ProductStockBizImpl" />
-	<bean id="productTagBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.ProductTagBizImpl" />
-	<bean id="trafficResBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.TrafficResBizImpl" />
-	<bean id="trafficResProductBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.TrafficResProductBizImpl" />
+	<!-- airticket -->
+	<bean id="airTicketOrderBiz" class="com.yimayhd.erpcenter.biz.sales.service.service.impl.airticket.AirTicketOrderBizImpl" />
+	<bean id="airTicketRequestBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.airticket.AirTicketRequestBizImpl" />
+	<bean id="airTicketResourceBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.airticket.AirTicketResourceBizImpl" />
+	
+	<!-- b2b -->                       
+	<bean id="b2BGroupOrderBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.b2b.B2BGroupOrderBizImpl" />
+	
+	<!-- finance -->
+	<bean id="financeBillBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.finance.FinanceBillBizImpl" />
+	<bean id="financeBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.finance.FinanceBizImpl" />
+	<bean id="financeGuideBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.finance.FinanceGuideBizImpl" />
+	<bean id="financeVerifyBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.finance.FinanceVerifyBizImpl" />
+	
+	<!-- operation -->
+	<bean id="bookingDeliveryBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingDeliveryBizImpl" />
+	<bean id="bookingDeliveryPriceBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingDeliveryPriceBizImpl" />
+	<bean id="bookingGuideBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingGuideBizImpl" />
+	<bean id="bookingShopBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingShopBizImpl" />
+	<bean id="bookingShopDetailBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingShopDetailBizImpl" />
+	<bean id="bookingShopDetailDeployBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingShopDetailDeployBizImpl" />
+	<bean id="bookingSupplierBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingSupplierBizImpl" />
+	<bean id="bookingSupplierDetailBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.operation.BookingSupplierDetailBizImpl" />
+	
+	<!-- quality -->
+	<bean id="qualityBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.quality.QualityBizImpl" />
+	
+	<!-- query -->
+	<bean id="queryBiz" class="com.yimayhd.erpcenter.biz.service.impl.sales.query.QueryBizImpl" />
+	
+	<!-- sales -->
+	<bean id="fitGroupBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.FitGroupBizImpl" />
+	<bean id="fitOrderBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.FitOrderBizImpl" />
+	<bean id="groupFeedbackBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.GroupFeedbackBizImpl" />
+	<bean id="groupOrderBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.GroupOrderBizImpl" />
+	<bean id="groupOrderGuestBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.GroupOrderGuestBizImpl" />
+	<bean id="groupOrderPriceBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.GroupOrderPriceBizImpl" />
+	<bean id="groupOrderTransportBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.GroupOrderTransportBizImpl" />
+	<bean id="groupRequirementBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.GroupRequirementBizImpl" />
+	<bean id="groupRouteBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.GroupRouteBizImpl" />
+	<bean id="specialGroupOrderBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.SpecialGroupOrderBizImpl" />
+	<bean id="teamGroupBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.TeamGroupBizImpl" />
+	<bean id="tourGroupBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.TourGroupBizImpl" />
+	
+	<!-- taobao -->
+	<bean id="taobaoOrderBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.taobao.TaobaoOrderBizImpl" />
+	
+	<!-- tj -->
+	<bean id="tJBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.tj.TJBizImpl" />
 	
 </beans>

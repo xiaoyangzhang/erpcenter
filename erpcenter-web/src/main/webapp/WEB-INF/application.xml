@@ -31,6 +31,7 @@
 	<import resource="../META-INF/spring/application-service-biz-basic.xml" />
 	<import resource="../META-INF/spring/application-service-biz-product.xml" />
 	<import resource="../META-INF/spring/application-service-biz-sys.xml" />
+	<import resource="../META-INF/spring/application-service-biz-sales.xml" />
 	
 	<import resource="../META-INF/spring/application-service-dal-product.xml" />
 	<import resource="../META-INF/spring/application-service-dal-sys.xml" />
