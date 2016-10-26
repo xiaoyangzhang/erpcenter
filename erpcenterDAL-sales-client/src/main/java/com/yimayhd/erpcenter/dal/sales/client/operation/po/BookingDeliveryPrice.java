@@ -1,4 +1,4 @@
-<<<<<<< 8a989fc60c5453369ca5ddcb7a3b0a2d11ffa98f
+
 package com.yimayhd.erpcenter.dal.sales.client.operation.po;
 
 import java.io.Serializable;
@@ -609,5 +609,5 @@ public class BookingDeliveryPrice implements Serializable  {
     public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
->>>>>>> 添加结果类
+
 }

@@ -44,12 +44,9 @@ public class TestController {
 	@Autowired
 	private ProductSolrQueryManager productSolrQueryManager;
 
-	
-	@Autowired
-	private ProductSolrQueryManager productSolrQueryManager;
 	@Autowired
 	private ProductStockFacade productStockFacade;
->>>>>>> refs/remotes/origin/develop
+
 	
 	@RequestMapping(value = "/testBasicDal")
 	public Object testBasicDal(){
@@ -85,30 +82,5 @@ public class TestController {
 //		return productUpAndDownFrameFacade.toSearchListState(toSearchListStateDTO);
 	}
 	
-	@RequestMapping(value = "/testQueryStock")
-	public Object testQueryStock(){
-
-//		StockStaticCondition stockCondition = new StockStaticCondition();
-//		stockCondition.setPage(1);
-//		stockCondition.setPageSize(10);
-//		
-//		try {
-//			return productInfoDal.getStockStaticsList2(stockCondition);
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		ProductStockPageQueryDTO queryDTO = new ProductStockPageQueryDTO();
-<<<<<<< HEAD
-		return productSolrQueryManager.searchProductStock(queryDTO);
-
-	}
 	
-=======
-		queryDTO.setPrOrgId("10");
-		return productSolrQueryManager.searchProductStock(queryDTO);
-
-	}
->>>>>>> refs/remotes/origin/develop
 }
