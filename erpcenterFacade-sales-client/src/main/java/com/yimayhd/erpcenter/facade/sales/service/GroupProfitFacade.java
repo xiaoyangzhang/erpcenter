@@ -1,8 +1,8 @@
 package com.yimayhd.erpcenter.facade.sales.service;
 
 import com.yimayhd.erpcenter.facade.sales.query.ProfitQueryByTourDTO;
-import com.yimayhd.erpcenter.facade.sales.query.ToAddProfitChangeDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ToOrderLockTableDTO;
+import com.yimayhd.erpcenter.facade.sales.query.costitem.ToAddProfitChangeDTO;
 import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
 import com.yimayhd.erpcenter.facade.sales.result.ProfitQueryByTourResult;
 import com.yimayhd.erpcenter.facade.sales.result.ToProfitQueryTableResult;
