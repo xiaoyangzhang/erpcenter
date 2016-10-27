@@ -40,7 +40,7 @@
 	</dependency>
 	<dependency>
 		<groupId>com.yimayhd.erpcenter</groupId>
-		<artifactId>erpcenterFacade-sales-client</artifactId>
+		<artifactId>erpcenterFacade-finance-client</artifactId>
 	</dependency>
 	<dependency>
 		<groupId>com.yimayhd.erpcenter</groupId>
