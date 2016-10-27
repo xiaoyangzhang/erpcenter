@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo;
 /**
  * 
@@ -20,6 +21,7 @@ public class PlatformMenuPoListResult extends ResultSupport implements Serializa
 	 */
 	private static final long serialVersionUID = 1L;
 	private List<PlatformMenuPo> platformMenuPos = new ArrayList<PlatformMenuPo>();
+	private List<DicInfo> roleGroup;
 	
 	public void setPlatformMenuPos(List<PlatformMenuPo> platformMenuPos) {
 		this.platformMenuPos = platformMenuPos;
@@ -28,5 +30,14 @@ public class PlatformMenuPoListResult extends ResultSupport implements Serializa
 	public List<PlatformMenuPo> getPlatformMenuPos() {
 		return platformMenuPos;
 	}
+
+	public List<DicInfo> getRoleGroup() {
+		return roleGroup;
+	}
+
+	public void setRoleGroup(List<DicInfo> roleGroup) {
+		this.roleGroup = roleGroup;
+	}
+	
 
 }

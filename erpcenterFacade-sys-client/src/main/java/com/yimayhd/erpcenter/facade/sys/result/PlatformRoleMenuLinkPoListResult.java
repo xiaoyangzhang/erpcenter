@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformRoleMenuLinkPo;
 /**
  * 
@@ -20,6 +21,7 @@ public class PlatformRoleMenuLinkPoListResult extends ResultSupport implements S
 	 */
 	private static final long serialVersionUID = 2402647226627831887L;
 	private List<PlatformRoleMenuLinkPo> platformRoleMenuLinkPos = new ArrayList<PlatformRoleMenuLinkPo>();
+	private List<DicInfo> roleGroup;
 	public void setPlatformRoleMenuLinkPos(List<PlatformRoleMenuLinkPo> platformRoleMenuLinkPos) {
 		this.platformRoleMenuLinkPos = platformRoleMenuLinkPos;
 	}
@@ -27,5 +29,14 @@ public class PlatformRoleMenuLinkPoListResult extends ResultSupport implements S
 	public List<PlatformRoleMenuLinkPo> getPlatformRoleMenuLinkPos() {
 		return platformRoleMenuLinkPos;
 	}
+
+	public List<DicInfo> getRoleGroup() {
+		return roleGroup;
+	}
+
+	public void setRoleGroup(List<DicInfo> roleGroup) {
+		this.roleGroup = roleGroup;
+	}
+	
 
 }

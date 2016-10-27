@@ -273,6 +273,16 @@
   				<artifactId>erpresourceDAL-client</artifactId>
 		    	<version>${erpresource.version}</version>
 		    </dependency>
+		    <dependency>
+		    	<groupId>com.yimayhd.erpresource</groupId>
+  				<artifactId>erpcenterFacade-tj</artifactId>
+		    	<version>${erpresource.version}</version>
+		    </dependency>
+		    <dependency>
+		    	<groupId>com.yimayhd.erpresource</groupId>
+  				<artifactId>erpcenterFacade-tj-client</artifactId>
+		    	<version>${erpresource.version}</version>
+		    </dependency>
 
 			<dependency>
 			   <groupId>ledis</groupId>
