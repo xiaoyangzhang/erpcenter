@@ -6,6 +6,7 @@ package com.yimayhd.erpcenter.facade.sales.result.operation;
 import java.io.Serializable;
 import java.util.List;
 
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
@@ -14,6 +15,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
 import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
+import com.yimayhd.erpresource.dal.vo.SupplierCarVO;
 
 /**
  * @ClassName: BookingSupplierResult
@@ -33,9 +35,23 @@ public class BookingSupplierResult extends ResultSupport implements
 	private List<BookingGuide> bGuides;
 	private List<GroupOrder> orderList;
 	private List<GroupOrderGuest> guestList;
-	List<GroupRequirement> groupRequirements;
-	List<GroupOrderTransport> groupOrderTransports;
+	private List<GroupRequirement> groupRequirements;
+	private List<GroupOrderTransport> groupOrderTransports;
+	private List<SupplierCarVO> carVOList;
+	private PageBean pageBean;
 	
+	public PageBean getPageBean() {
+		return pageBean;
+	}
+	public void setPageBean(PageBean pageBean) {
+		this.pageBean = pageBean;
+	}
+	public List<SupplierCarVO> getCarVOList() {
+		return carVOList;
+	}
+	public void setCarVOList(List<SupplierCarVO> carVOList) {
+		this.carVOList = carVOList;
+	}
 	public List<GroupRoute> getRouteList() {
 		return routeList;
 	}
