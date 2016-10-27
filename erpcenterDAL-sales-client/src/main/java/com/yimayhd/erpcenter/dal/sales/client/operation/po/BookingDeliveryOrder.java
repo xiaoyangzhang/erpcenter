@@ -1,9 +1,15 @@
+
 package com.yimayhd.erpcenter.dal.sales.client.operation.po;
 
 import java.io.Serializable;
 
 public class BookingDeliveryOrder implements Serializable  {
-    private Integer id;
+    /**
+	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么)
+	*/
+	private static final long serialVersionUID = -7458603995683210343L;
+
+	private Integer id;
 
     private Integer bookingId;
 
@@ -32,4 +38,5 @@ public class BookingDeliveryOrder implements Serializable  {
     public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
+
 }

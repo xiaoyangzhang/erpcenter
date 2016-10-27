@@ -116,7 +116,7 @@
 	</resultMap>
 
 
-	<resultMap id="SaleOperatorOrderStaticMap" type="com.yihg.sales.vo.SaleOperatorOrderStatic">
+	<resultMap id="SaleOperatorOrderStaticMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorOrderStatic">
 		<result column="orderNum" property="orderNum" jdbcType="INTEGER"/>
 		<result column="saleOperatorName" property="saleOperatorName"
 		        jdbcType="VARCHAR"/>
@@ -133,7 +133,7 @@
 	</resultMap>
 
 
-	<resultMap id="SaleOperatorMap" type="com.yihg.sales.vo.SaleOperatorVo">
+	<resultMap id="SaleOperatorMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorVo">
 		<id column="id" property="id" jdbcType="INTEGER"/>
 		<result column="group_id" property="groupId" jdbcType="INTEGER"/>
 		<result column="order_type" property="orderType" jdbcType="INTEGER"/>
@@ -166,7 +166,7 @@
 		<result column="saleOperatorName" property="saleOperatorName"
 		        jdbcType="VARCHAR"/>
 	</resultMap>
-	<resultMap id="SalePriceMap" type="com.yihg.sales.vo.SalePrice">
+	<resultMap id="SalePriceMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalePrice">
 		<id column="id" property="id" jdbcType="INTEGER"/>
 		<result column="mode" property="mode" jdbcType="INTEGER"/>
 		<result column="order_id" property="orderId" jdbcType="INTEGER"/>
@@ -3585,7 +3585,7 @@
 		WHERE id=#{orderId,jdbcType=INTEGER}
 	</update>
 
-	<resultMap id="ProductGuestStaticsMap" type="com.yihg.query.vo.ProductGuestStaticsVo">
+	<resultMap id="ProductGuestStaticsMap" type="com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestStaticsVo">
 		<result column="product_brand_name" property="productBrandName"
 		        jdbcType="VARCHAR"/>
 		<result column="product_name" property="productName" jdbcType="VARCHAR"/>
@@ -3990,7 +3990,7 @@
 	</update>
 
 	<select id="selectGroupIdsByReceiveMode" resultType="java.util.HashMap"
-	        parameterType="com.yihg.sales.vo.TourGroupVO">
+	        parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO">
 		SELECT DISTINCT group_id FROM `group_order`
 		WHERE
 		<if test="receiveMode==null or receiveMode==''">
@@ -4670,7 +4670,7 @@
 		ORDER BY ttt.guestCnt DESC
 
 	</select>
-	<select id="departmentOrderStatistics" resultType="com.yihg.query.vo.DepartmentOrderResult">
+	<select id="departmentOrderStatistics" resultType="com.yimayhd.erpcenter.dal.sales.client.query.vo.DepartmentOrderResult">
 		SELECT SUM(go.`num_adult`) numAdult,SUM(go.`num_child`)
 		numChild,DATE_FORMAT(FROM_UNIXTIME(go.`create_time`/1000,'%Y-%m-%d'),'%Y-%m-%d')
 		createDate,

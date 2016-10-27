@@ -12,11 +12,11 @@ import org.apache.solr.common.SolrInputDocument;
 import org.springframework.util.CollectionUtils;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.common.solr.SolrSearchPageDTO;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.query.ProductStatePageQueryDTO;
-import com.yimayhd.erpcenter.dal.product.solr.SolrSearchPageDTO;
-import com.yimayhd.erpcenter.dal.product.solr.util.ParamCheckUtil;
+import com.yimayhd.erpcenter.dal.product.utils.ParamCheckUtil;
 
 
 
@@ -75,7 +75,7 @@ public class ProductStateConverter {
 		//dto.setInfoOperatorId(info.getOperatorIds());//传过来的是字符串，solr里是int，条件是in
 		dto.setInfoOperatorIds(info.getOperatorIds());
 		dto.setInfoState(info.getState());//状态是固定值
-		dto.setPrOrgId((String) parameters.get("orgId"));
+		dto.setPrOrgId(parameters.get("orgId").toString());
 		dto.setPageNo(pageBean.getPage());
 		dto.setPageSize(pageBean.getPageSize());
 		
@@ -120,14 +120,18 @@ public class ProductStateConverter {
 	 */
 	public static SolrQuery queryDTO2SolrQuery(ProductStatePageQueryDTO queryDTO) {
 
-		SolrQuery solrQuery = new SolrQuery();
+		SolrQuery solrQuery = new SolrQuery("*:*");
+		StringBuffer q_sb = new StringBuffer();
+		String two = "-1";
+		q_sb.append("-infoState:" + "\""+two+"\"");
+		solrQuery.addFilterQuery(q_sb.toString());
 		
 		if(!StringUtils.isEmpty(queryDTO.getPrOrgId())){
 			String orgIdQuery = "prOrgId:*" + queryDTO.getPrOrgId() + ",*";
 			solrQuery.addFilterQuery(orgIdQuery);
 		}
 		
-		if(!StringUtils.isEmpty(queryDTO.getInfoCode())){
+		if(!StringUtils.isEmpty(queryDTO.getInfoCode())&&!"".equals(queryDTO.getInfoCode())){
 			String codeQuery = "infoCode:" + queryDTO.getInfoCode();
 			solrQuery.addFilterQuery(codeQuery);
 		}
@@ -141,6 +145,19 @@ public class ProductStateConverter {
 			String cityQuery = "infoNameCity:*" + queryDTO.getInfoNameCity() + "*";
 			solrQuery.addFilterQuery(cityQuery);
 		}
+		
+		if(queryDTO.getInfoBizId() != null){
+			String bizQuery = "infoBizId:" + queryDTO.getInfoBizId();
+			solrQuery.addFilterQuery(bizQuery);
+		}
+		
+//		if(queryDTO.getInfoOperatorIds()!= null){
+//			String infoOperatorIdsQuery = "infoNameCity:*" + queryDTO.getInfoNameCity() + "*";
+//			if(queryDTO.getInfoOperatorIds()==1){
+//				
+//			}else{}
+//			solrQuery.addFilterQuery(infoOperatorIdsQuery);
+//		}
 		
 		solrQuery.setStart(queryDTO.getStartRow());
 		solrQuery.setRows(queryDTO.getOldPageSize());

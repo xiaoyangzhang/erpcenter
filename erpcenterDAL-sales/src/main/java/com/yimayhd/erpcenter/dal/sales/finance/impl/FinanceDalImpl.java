@@ -60,7 +60,7 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 public class FinanceDalImpl implements FinanceDal {
 
 	@Autowired
-	private SqlSessionTemplate ss;
+	private SqlSessionTemplate sqlSessionSales;
 
 	@Autowired
 	private TourGroupMapper groupMapper;
@@ -96,7 +96,7 @@ public class FinanceDalImpl implements FinanceDal {
 		Map pm = new HashMap();
 		pm.put("groupId", groupId);
 		pm.put("bizId", bizId);
-		Map group = ss.selectOne("fin.selectGroupList", pm);
+		Map group = sqlSessionSales.selectOne("fin.selectGroupList", pm);
 		view.put("group", group);
 		List<BookingGuide> bookingGuides = bookingGuideMapper.selectByGroupId(groupId);
 		view.put("bookingGuides", bookingGuides);
@@ -456,7 +456,7 @@ public class FinanceDalImpl implements FinanceDal {
 			pm.put("ids", unCheckedIds);
 			pm.put("stateFinance", 0);
 			pm.put("operateLog", userName +"取消审核通过"+ type +" ");
-			ss.update("fin.updateAuditByIds", pm);
+			sqlSessionSales.update("fin.updateAuditByIds", pm);
 		}
 
 		// 审核
@@ -467,7 +467,7 @@ public class FinanceDalImpl implements FinanceDal {
 			pm.put("ids", checkedIds);
 			pm.put("stateFinance", 1);
 			pm.put("operateLog", userName +"审核通过"+ type +" ");
-			ss.update("fin.updateAuditByIds", pm);
+			sqlSessionSales.update("fin.updateAuditByIds", pm);
 		}
 		
 		pm.put("feeType", "com");
@@ -480,7 +480,7 @@ public class FinanceDalImpl implements FinanceDal {
 			pm.put("ids", comUnCheckedIds);
 			pm.put("stateFinance", 0);
 			pm.put("operateLog", userName +"取消审核通过"+ type +" ");
-			ss.update("fin.updateAuditByIds", pm);
+			sqlSessionSales.update("fin.updateAuditByIds", pm);
 		}
 		
 		//审核 佣金
@@ -491,7 +491,7 @@ public class FinanceDalImpl implements FinanceDal {
 			pm.put("ids", comCheckedIds);
 			pm.put("stateFinance", 1);
 			pm.put("operateLog", userName +"审核通过"+ type +" ");
-			ss.update("fin.updateAuditByIds", pm);
+			sqlSessionSales.update("fin.updateAuditByIds", pm);
 		}
 		
 		//修改团更新时间，已方便之后根据团时间归档
@@ -517,7 +517,7 @@ public class FinanceDalImpl implements FinanceDal {
 			pm.put("ids", comUnCheckedIds);
 			pm.put("stateFinance", 0);
 			pm.put("operateLog", userName +"取消审核通过"+ type +" ");
-			ss.update("fin.updateAuditByIds", pm);
+			sqlSessionSales.update("fin.updateAuditByIds", pm);
 		}
 		
 		//审核 佣金
@@ -528,7 +528,7 @@ public class FinanceDalImpl implements FinanceDal {
 			pm.put("ids", comCheckedIds);
 			pm.put("stateFinance", 1);
 			pm.put("operateLog", userName +"审核通过"+ type +" ");
-			ss.update("fin.updateAuditByIds", pm);
+			sqlSessionSales.update("fin.updateAuditByIds", pm);
 		}
 	}
 	
@@ -868,7 +868,7 @@ public class FinanceDalImpl implements FinanceDal {
 			for(int j = 0; j < arr.length; j++){
 				String item = arr[j];
 				String dateStr = item.substring(0, 18);
-				SimpleDateFormat dafaFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+				SimpleDateFormat dafaFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:sqlSessionSales");
 				
 				tourGroup = new TourGroup();
 				tourGroup.setOperateLog(item + "<br/>");
@@ -909,19 +909,19 @@ public class FinanceDalImpl implements FinanceDal {
 		String type = "order";
 		pm.put("feeType", type);
 		pm.put("operateLog", userName + typeText +"收入");
-		ss.update("fin.updateSealByGroupIds", pm);
+		sqlSessionSales.update("fin.updateSealByGroupIds", pm);
 		
 		// 商家  
 		type = "del";
 		pm.put("feeType", type);
 		pm.put("operateLog", userName + typeText +"支出");
-		ss.update("fin.updateSealByGroupIds", pm);
+		sqlSessionSales.update("fin.updateSealByGroupIds", pm);
 		
 		// 地接
 		type = "sup";
 		pm.put("feeType", type);
 		pm.put("operateLog", userName + typeText +"支出");
-		ss.update("fin.updateSealByGroupIds", pm);
+		sqlSessionSales.update("fin.updateSealByGroupIds", pm);
 	}
 
 	@Override

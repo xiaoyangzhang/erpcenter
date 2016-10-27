@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.airticket.AirTicketOrderBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SettleApplyBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.service.DicDal;
@@ -24,6 +26,7 @@ import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
 import com.yimayhd.erpcenter.dal.sys.service.SettleApplyDal;
 import com.yimayhd.erpcenter.facade.query.ToSearchListStateDTO;
+import com.yimayhd.erpcenter.facade.service.ProductStockFacade;
 import com.yimayhd.erpcenter.facade.service.ProductUpAndDownFrameFacade;
 
 @RestController
@@ -39,8 +42,15 @@ public class TestController {
 	private ProductUpAndDownFrameFacade productUpAndDownFrameFacade;
 	@Autowired
 	private ProductInfoDal productInfoDal;
+
 	@Autowired
 	private ProductSolrQueryManager productSolrQueryManager;
+
+	@Autowired
+	private ProductStockFacade productStockFacade;
+	
+	@Autowired
+	private TourGroupBiz tourGroupBiz;
 	
 	@RequestMapping(value = "/testBasicDal")
 	public Object testBasicDal(){
@@ -56,6 +66,12 @@ public class TestController {
 	@RequestMapping(value = "/testSysDal")
 	public Object testSysDal(){
 		return settleApplyBiz.getSettleApplyResults();
+	}
+	
+
+	@RequestMapping(value = "/testSalessDal")
+	public Object testSalessDal(){
+		return tourGroupBiz.getAuditorList();
 	}
 	
 	@RequestMapping(value = "/testSolrState")
@@ -76,6 +92,7 @@ public class TestController {
 //		return productUpAndDownFrameFacade.toSearchListState(toSearchListStateDTO);
 	}
 	
+
 	@RequestMapping(value = "/testQueryStock")
 	public Object testQueryStock(){
 
@@ -92,7 +109,6 @@ public class TestController {
 		
 		ProductStockPageQueryDTO queryDTO = new ProductStockPageQueryDTO();
 		return productSolrQueryManager.searchProductStock(queryDTO);
-
 	}
-	
+
 }

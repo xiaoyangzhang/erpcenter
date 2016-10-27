@@ -907,7 +907,7 @@
 		where  1=1
 		<include refid="selectGroupProfitListPage_Where"/>
    	</select>
-	 <insert id="insertGroupProfit" parameterType="com.yihg.tj.po.TJGroupProfit">
+	 <insert id="insertGroupProfit" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupProfit">
 	 INSERT INTO `tj_group_profit` (
 	 	biz_id, group_id, group_mode,
 	 	group_code, group_state, 
@@ -971,7 +971,7 @@
 	</select>
 	
 	
-	 <insert id="insetTJRecord" parameterType="com.yihg.tj.po.TJRecord" >
+	 <insert id="insetTJRecord" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJRecord" >
 	   	INSERT INTO tj_record
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="bizId != null">
@@ -1013,7 +1013,7 @@
 	  </insert>
 	
 	
-	<resultMap id="GroupShopResultMap" type="com.yihg.tj.po.TJGroupShop" >
+	<resultMap id="GroupShopResultMap" type="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupShop" >
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="biz_id" property="bizId" jdbcType="INTEGER" />
 		<result column="group_id" property="groupId" jdbcType="INTEGER" />
@@ -1051,7 +1051,7 @@
 	</resultMap>
 	
 	
-	<insert id="insertTJGroupShop" parameterType="com.yihg.tj.po.TJGroupShop" >
+	<insert id="insertTJGroupShop" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupShop" >
 	   	INSERT INTO tj_group_shop
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="bizId != null">
