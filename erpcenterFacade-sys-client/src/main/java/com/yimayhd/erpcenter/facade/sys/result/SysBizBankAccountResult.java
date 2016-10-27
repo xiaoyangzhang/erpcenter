@@ -1,7 +1,9 @@
 package com.yimayhd.erpcenter.facade.sys.result;
 
 import java.io.Serializable;
+import java.util.List;
 
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount;
 /**
  * 
@@ -19,7 +21,7 @@ public class SysBizBankAccountResult extends ResultSupport implements Serializab
 	private static final long serialVersionUID = 1L;
 	
 	private SysBizBankAccount sysBizBankAccount = new SysBizBankAccount();
-
+	private List<DicInfo> bankList;
 	public SysBizBankAccount getSysBizBankAccount() {
 		return sysBizBankAccount;
 	}
@@ -28,5 +30,14 @@ public class SysBizBankAccountResult extends ResultSupport implements Serializab
 		this.sysBizBankAccount = sysBizBankAccount;
 	}
 
+	public List<DicInfo> getBankList() {
+		return bankList;
+	}
+
+	public void setBankList(List<DicInfo> bankList) {
+		this.bankList = bankList;
+	}
+
+	
 	
 }

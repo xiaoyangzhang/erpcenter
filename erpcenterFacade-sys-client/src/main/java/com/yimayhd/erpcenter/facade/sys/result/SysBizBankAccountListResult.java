@@ -9,6 +9,7 @@ import java.util.ArrayList;
  */
 import java.util.List;
 
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount;
 public class SysBizBankAccountListResult extends ResultSupport implements Serializable{
 
@@ -19,6 +20,8 @@ public class SysBizBankAccountListResult extends ResultSupport implements Serial
 	private static final long serialVersionUID = 1L;
 	
 	private List<SysBizBankAccount> sysBizBankAccounts = new ArrayList<SysBizBankAccount>();
+	
+	private List<DicInfo> bankList;
 
 	public List<SysBizBankAccount> getSysBizBankAccounts() {
 		return sysBizBankAccounts;
@@ -26,6 +29,14 @@ public class SysBizBankAccountListResult extends ResultSupport implements Serial
 
 	public void setSysBizBankAccounts(List<SysBizBankAccount> sysBizBankAccounts) {
 		this.sysBizBankAccounts = sysBizBankAccounts;
+	}
+
+	public List<DicInfo> getBankList() {
+		return bankList;
+	}
+
+	public void setBankList(List<DicInfo> bankList) {
+		this.bankList = bankList;
 	}
 	
 	
