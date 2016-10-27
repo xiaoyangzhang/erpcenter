@@ -40,7 +40,7 @@ public interface TeamGroupFacade {
 
     public String deleteGroupOrderById(Integer orderId, Integer groupId,Integer curBizId);
 
-
+    public ResultSupport saveRequireMent(SaveRequireMentDTO saveRequireMentDTO);
 
 
 
