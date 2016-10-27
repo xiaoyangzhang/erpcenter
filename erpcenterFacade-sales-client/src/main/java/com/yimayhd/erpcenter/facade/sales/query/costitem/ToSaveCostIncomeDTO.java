@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.facade.sales.query;
+package com.yimayhd.erpcenter.facade.sales.query.costitem;
 
 import java.io.Serializable;
 
