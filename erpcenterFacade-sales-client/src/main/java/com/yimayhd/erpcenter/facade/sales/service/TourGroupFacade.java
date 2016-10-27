@@ -20,7 +20,7 @@ public interface TourGroupFacade {
     public ResultSupport updateGuide(Integer groupId, Integer driverId, Integer guideId);
     public ResultSupport updateShop(String guideName, Integer guideId, Integer shopId);
     public ResultSupport pushInfo(Integer groupId);
-    public ResultSupport pushWap(Integer groupId);
+    public PushWapResult pushWap(Integer groupId);
     public ToChangeGroupResult toEditGroup(Integer groupId);
     public ToAddTourGroupOrderResult toAddTourGroupOrder(Integer groupId, Integer orderId,Integer state,String curUserName,Integer CurUserId,Integer bizId);
     public ToChangeGroupResult saveTourGroupOrder(TourGroup tourGroup,GroupOrder groupOrder,Integer curBizId,Integer curUserOrgId,Integer curUserId, String curUserName);

@@ -333,8 +333,8 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
     }
 
     @Override
-    public ResultSupport pushWap(Integer groupId) {
-        ResultSupport resultSupport = new ResultSupport();
+    public PushWapResult pushWap(Integer groupId) {
+        PushWapResult pushWapResult = new PushWapResult();
         try {
             TourGroup tourGroup = tourGroupBiz.selectByPrimaryKey(groupId);
 
@@ -625,56 +625,12 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                 }
             }
 
-            String resultString = "{result: 'success',resultCode: '0',msg: ''}";
-            try {
-                String appKey = OpenPlatformConstannt.openAPI_AssistantMap.get("appKey");
-                String secretKey = OpenPlatformConstannt.openAPI_AssistantMap.get("secretKey");
-                String timeStamp = DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
-                String jsonStr = JSON.toJSONString(groupVo);
-                String supplierInfo = JSON.toJSONString(supplierVo);
-                //签名
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("appKey", appKey);
-                params.put("timestamp", timeStamp);
-                String getSign = MD5Util.getSign_Taobao(secretKey, params);
-
-                // 访问接口
-                CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
-                HttpPost httpPost = new HttpPost(OpenPlatformConstannt.openAPI_AssistantMap.get("Url")
-                        + OpenPlatformConstannt.openAPI_AssistantMap.get("pushMethod"));
-
-                // 设置连接超时时间
-                RequestConfig requestConfig = RequestConfig.custom()
-                        .setConnectTimeout(5000).setConnectionRequestTimeout(1000)
-                        .setSocketTimeout(5000).build();
-                httpPost.setConfig(requestConfig);
-
-                // 访问参数
-                List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-                nameValuePairList.add(new BasicNameValuePair("appKey", appKey));
-                nameValuePairList.add(new BasicNameValuePair("timestamp", timeStamp));
-                nameValuePairList.add(new BasicNameValuePair("sign", getSign));
-                nameValuePairList.add(new BasicNameValuePair("jsonStr", jsonStr));
-                nameValuePairList.add(new BasicNameValuePair("supplierInfo", supplierInfo));
-                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairList, "utf-8"));
-
-                CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpPost);
-
-                try {
-                    HttpEntity httpEntity = closeableHttpResponse.getEntity();
-                    resultString = EntityUtils.toString(httpEntity);
-                } finally {
-                    closeableHttpResponse.close();
-                }
-
-            } catch (Exception e) {
-               // log.error("推送APP错误信息:" + e.getMessage());
-               // return errorJson("推送信息失败"+e.getMessage());
-            }
+            pushWapResult.setGroupVo(groupVo);
+            pushWapResult.setSupplierVo(supplierVo);
         } catch (Exception e) {
             logger.error("", e);
         }
-        return resultSupport;
+        return pushWapResult;
     }
 
     @Override
