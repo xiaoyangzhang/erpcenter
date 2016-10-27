@@ -5,7 +5,11 @@ public enum SalesTopic {
 
     GROUP_ORDER_UPDATED(SalesTopic.TOPIC,"ORDER_UPDATED","团订单修改"),
 	
-    TOUR_GROUP_UPDATED(SalesTopic.TOPIC,"GROUP_UPDATED","团信息修改");
+    TOUR_GROUP_UPDATED(SalesTopic.TOPIC,"GROUP_UPDATED","团信息修改"),
+    
+    ORDER_GUEST_UPDATED(SalesTopic.TOPIC,"GUEST_UPDATED","游客信息修改"),
+    
+    ORDER_PRICE_UPDATED(SalesTopic.TOPIC,"PRICE_UPDATED","订单价格信息修改");
 	
     public static final String TOPIC = "ERP_SALES";
     /**
