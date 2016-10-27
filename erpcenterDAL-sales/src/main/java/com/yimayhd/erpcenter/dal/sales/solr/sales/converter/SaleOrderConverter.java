@@ -28,81 +28,81 @@ public class SaleOrderConverter {
 	 * @param solrPageResult
 	 * @return
 	 */
-	public static PageBean<ProductInfo> dto2PageBean(SolrSearchPageDTO<ProductStateDTO> solrPageResult) {
-		PageBean<ProductInfo> pageBean=new PageBean<ProductInfo>();
-			List<ProductStateDTO> list=solrPageResult.getList();
-			List<ProductInfo> resultList=new ArrayList<ProductInfo>();
-
-				for(ProductStateDTO dto:list){
-					ProductInfo info=new ProductInfo();
-					info.setCode(dto.getInfoCode());
-					info.setBrandName(dto.getInfoBrandName());
-					info.setNameCity(dto.getInfoNameCity());
-					info.setState(dto.getInfoState().byteValue());
-					info.setOperatorName(dto.getInfoOperatorName());
-					info.setCreatorName(dto.getInfoCreatorName());
-					info.setNameBrief(dto.getInfoNameBrief());
-					resultList.add(info);
-				}
-				
-				pageBean.setPageSize(solrPageResult.getPageSize());
-				pageBean.setTotalCount(solrPageResult.getTotalCount());
-				pageBean.setPage(solrPageResult.getPageNo());
-				pageBean.setResult(resultList);
-				
-				return pageBean;
-		
-	}
-
-	/**
-	 * 
-	 * @param queryDTO
-	 * @return
-	 */
-	public static SolrQuery queryDTO2SolrQuery(ProductStatePageQueryDTO queryDTO) {
-
-		SolrQuery solrQuery = new SolrQuery("*:*");
-		StringBuffer q_sb = new StringBuffer();
-		String two = "-1";
-		q_sb.append("-infoState:" + "\""+two+"\"");
-		solrQuery.addFilterQuery(q_sb.toString());
-		
-		if(!StringUtils.isEmpty(queryDTO.getPrOrgId())){
-			String orgIdQuery = "prOrgId:*" + queryDTO.getPrOrgId() + ",*";
-			solrQuery.addFilterQuery(orgIdQuery);
-		}
-		
-		if(!StringUtils.isEmpty(queryDTO.getInfoCode())&&!"".equals(queryDTO.getInfoCode())){
-			String codeQuery = "infoCode:" + queryDTO.getInfoCode();
-			solrQuery.addFilterQuery(codeQuery);
-		}
-		
-		if(queryDTO.getInfoBrandId() != null){
-			String brandQuery = "infoBrandId:" + queryDTO.getInfoBrandId();
-			solrQuery.addFilterQuery(brandQuery);
-		}
-		
-		if(queryDTO.getInfoNameCity() != null){
-			String cityQuery = "infoNameCity:*" + queryDTO.getInfoNameCity() + "*";
-			solrQuery.addFilterQuery(cityQuery);
-		}
-		
-		if(queryDTO.getInfoBizId() != null){
-			String bizQuery = "infoBizId:" + queryDTO.getInfoBizId();
-			solrQuery.addFilterQuery(bizQuery);
-		}
-		
-//		if(queryDTO.getInfoOperatorIds()!= null){
-//			String infoOperatorIdsQuery = "infoNameCity:*" + queryDTO.getInfoNameCity() + "*";
-//			if(queryDTO.getInfoOperatorIds()==1){
+//	public static PageBean<ProductInfo> dto2PageBean(SolrSearchPageDTO<ProductStateDTO> solrPageResult) {
+//		PageBean<ProductInfo> pageBean=new PageBean<ProductInfo>();
+//			List<ProductStateDTO> list=solrPageResult.getList();
+//			List<ProductInfo> resultList=new ArrayList<ProductInfo>();
+//
+//				for(ProductStateDTO dto:list){
+//					ProductInfo info=new ProductInfo();
+//					info.setCode(dto.getInfoCode());
+//					info.setBrandName(dto.getInfoBrandName());
+//					info.setNameCity(dto.getInfoNameCity());
+//					info.setState(dto.getInfoState().byteValue());
+//					info.setOperatorName(dto.getInfoOperatorName());
+//					info.setCreatorName(dto.getInfoCreatorName());
+//					info.setNameBrief(dto.getInfoNameBrief());
+//					resultList.add(info);
+//				}
 //				
-//			}else{}
-//			solrQuery.addFilterQuery(infoOperatorIdsQuery);
+//				pageBean.setPageSize(solrPageResult.getPageSize());
+//				pageBean.setTotalCount(solrPageResult.getTotalCount());
+//				pageBean.setPage(solrPageResult.getPageNo());
+//				pageBean.setResult(resultList);
+//				
+//				return pageBean;
+//		
+//	}
+//
+//	/**
+//	 * 
+//	 * @param queryDTO
+//	 * @return
+//	 */
+//	public static SolrQuery queryDTO2SolrQuery(ProductStatePageQueryDTO queryDTO) {
+//
+//		SolrQuery solrQuery = new SolrQuery("*:*");
+//		StringBuffer q_sb = new StringBuffer();
+//		String two = "-1";
+//		q_sb.append("-infoState:" + "\""+two+"\"");
+//		solrQuery.addFilterQuery(q_sb.toString());
+//		
+//		if(!StringUtils.isEmpty(queryDTO.getPrOrgId())){
+//			String orgIdQuery = "prOrgId:*" + queryDTO.getPrOrgId() + ",*";
+//			solrQuery.addFilterQuery(orgIdQuery);
 //		}
-		
-		solrQuery.setStart(queryDTO.getStartRow());
-		solrQuery.setRows(queryDTO.getOldPageSize());
-
-		return solrQuery;
-	}
+//		
+//		if(!StringUtils.isEmpty(queryDTO.getInfoCode())&&!"".equals(queryDTO.getInfoCode())){
+//			String codeQuery = "infoCode:" + queryDTO.getInfoCode();
+//			solrQuery.addFilterQuery(codeQuery);
+//		}
+//		
+//		if(queryDTO.getInfoBrandId() != null){
+//			String brandQuery = "infoBrandId:" + queryDTO.getInfoBrandId();
+//			solrQuery.addFilterQuery(brandQuery);
+//		}
+//		
+//		if(queryDTO.getInfoNameCity() != null){
+//			String cityQuery = "infoNameCity:*" + queryDTO.getInfoNameCity() + "*";
+//			solrQuery.addFilterQuery(cityQuery);
+//		}
+//		
+//		if(queryDTO.getInfoBizId() != null){
+//			String bizQuery = "infoBizId:" + queryDTO.getInfoBizId();
+//			solrQuery.addFilterQuery(bizQuery);
+//		}
+//		
+////		if(queryDTO.getInfoOperatorIds()!= null){
+////			String infoOperatorIdsQuery = "infoNameCity:*" + queryDTO.getInfoNameCity() + "*";
+////			if(queryDTO.getInfoOperatorIds()==1){
+////				
+////			}else{}
+////			solrQuery.addFilterQuery(infoOperatorIdsQuery);
+////		}
+//		
+//		solrQuery.setStart(queryDTO.getStartRow());
+//		solrQuery.setRows(queryDTO.getOldPageSize());
+//
+//		return solrQuery;
+//	}
 }
