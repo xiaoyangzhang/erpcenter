@@ -7,7 +7,7 @@ public class FinAuditDTO implements Serializable{
 	private static final long serialVersionUID = 2667687338405333546L;
 	
 	private Integer groupId;
-	private String employeeId;
+	private Integer employeeId;
 	private String employeeName;
 	
 	public Integer getGroupId() {
@@ -16,10 +16,10 @@ public class FinAuditDTO implements Serializable{
 	public void setGroupId(Integer groupId) {
 		this.groupId = groupId;
 	}
-	public String getEmployeeId() {
+	public Integer getEmployeeId() {
 		return employeeId;
 	}
-	public void setEmployeeId(String employeeId) {
+	public void setEmployeeId(Integer employeeId) {
 		this.employeeId = employeeId;
 	}
 	public String getEmployeeName() {

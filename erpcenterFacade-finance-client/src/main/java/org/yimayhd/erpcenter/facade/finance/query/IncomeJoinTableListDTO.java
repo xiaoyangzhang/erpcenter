@@ -5,22 +5,27 @@ import java.util.Set;
 
 import org.yimayhd.erpcenter.facade.finance.BaseListPage;
 
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
-
 public class IncomeJoinTableListDTO extends BaseListPage{
 	
 	private static final long serialVersionUID = 6707676794554415017L;
 	
-	private TourGroupVO group;
 	private Map<String,Object> paramters;
     private Set<Integer> set;
     private Integer bizId;
+    private String saleOperatorIds;
+	private String orgIds;
     
-    public TourGroupVO getGroup() {
-		return group;
+	public String getSaleOperatorIds() {
+		return saleOperatorIds;
 	}
-	public void setGroup(TourGroupVO group) {
-		this.group = group;
+	public void setSaleOperatorIds(String saleOperatorIds) {
+		this.saleOperatorIds = saleOperatorIds;
+	}
+	public String getOrgIds() {
+		return orgIds;
+	}
+	public void setOrgIds(String orgIds) {
+		this.orgIds = orgIds;
 	}
 	public Map<String, Object> getParamters() {
 		return paramters;

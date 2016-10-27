@@ -21,7 +21,7 @@ public class DicDalImpl implements DicDal {
 	private DicTypeMapper dicTypeMapper;
 
 	@Override
-	public DicInfo getById(int id) {
+	public DicInfo getById(String id) {
 		return dicMapper.getById(id);
 	}
 

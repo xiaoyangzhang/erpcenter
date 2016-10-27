@@ -48,4 +48,5 @@ public class ToGroupListResult extends ResultSupport {
     public void setSourceTypeList(List<DicInfo> sourceTypeList) {
         this.sourceTypeList = sourceTypeList;
     }
+
 }

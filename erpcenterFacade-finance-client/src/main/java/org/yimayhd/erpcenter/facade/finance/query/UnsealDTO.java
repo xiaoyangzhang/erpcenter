@@ -7,7 +7,7 @@ public class UnsealDTO implements Serializable{
 	private static final long serialVersionUID = -2196121659966197045L;
 	
 	private String groupIds;
-	private String employeeId;
+	private Integer employeeId;
 	private String employeeName;
 	
 	public String getGroupIds() {
@@ -16,10 +16,10 @@ public class UnsealDTO implements Serializable{
 	public void setGroupIds(String groupIds) {
 		this.groupIds = groupIds;
 	}
-	public String getEmployeeId() {
+	public Integer getEmployeeId() {
 		return employeeId;
 	}
-	public void setEmployeeId(String employeeId) {
+	public void setEmployeeId(Integer employeeId) {
 		this.employeeId = employeeId;
 	}
 	public String getEmployeeName() {

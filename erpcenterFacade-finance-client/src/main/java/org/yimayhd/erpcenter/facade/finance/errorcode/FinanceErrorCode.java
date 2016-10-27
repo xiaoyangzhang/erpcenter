@@ -21,7 +21,6 @@ public class FinanceErrorCode implements Serializable {
 	public static final FinanceErrorCode SYSTEM_ERROR = new FinanceErrorCode("1001","系统错误");
     public static final FinanceErrorCode PARAM_ERROR = new FinanceErrorCode("1002","参数错误");
     public static final FinanceErrorCode QUERY_ERROR = new FinanceErrorCode("1003","查询失败");
-    public static final FinanceErrorCode PRODUCT_NO_ROUTE_ERROR = new FinanceErrorCode("1004","产品内无行程内容");
     public static final FinanceErrorCode MODIFY_ERROR = new FinanceErrorCode("1005","操作失败");
 
 	 public FinanceErrorCode() {

@@ -19,7 +19,7 @@ public class BaseListPage implements Serializable {
 	private static final long serialVersionUID = -2556824914327988809L;
 
 	private int page = 1;
-	private int pageSize = 20;
+	private int pageSize = 15;
 	public int getPage() {
 		return page;
 	}

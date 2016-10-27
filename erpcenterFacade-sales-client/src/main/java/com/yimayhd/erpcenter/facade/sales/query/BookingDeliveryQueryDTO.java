@@ -6,6 +6,7 @@ package com.yimayhd.erpcenter.facade.sales.query;
 import java.io.Serializable;
 import java.util.List;
 
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryOrder;
 
 /**
@@ -27,7 +28,21 @@ public class BookingDeliveryQueryDTO implements Serializable {
 	private Integer supplierId;
 	private Integer groupMode;
 	private List<BookingDeliveryOrder> orderList;
+	private PageBean pageBean;
+	private Integer bizSupplierRelationId;
 	
+	public Integer getBizSupplierRelationId() {
+		return bizSupplierRelationId;
+	}
+	public void setBizSupplierRelationId(Integer bizSupplierRelationId) {
+		this.bizSupplierRelationId = bizSupplierRelationId;
+	}
+	public PageBean getPageBean() {
+		return pageBean;
+	}
+	public void setPageBean(PageBean pageBean) {
+		this.pageBean = pageBean;
+	}
 	public List<BookingDeliveryOrder> getOrderList() {
 		return orderList;
 	}

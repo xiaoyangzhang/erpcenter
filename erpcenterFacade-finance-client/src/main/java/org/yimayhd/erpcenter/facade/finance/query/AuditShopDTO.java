@@ -8,7 +8,7 @@ public class AuditShopDTO implements Serializable{
 
 	private String checkedIds;
 	private String unCheckedIds;
-	private String employeeId;
+	private Integer employeeId;
 	private String employeeName;
 	
 	public String getCheckedIds() {
@@ -23,10 +23,10 @@ public class AuditShopDTO implements Serializable{
 	public void setUnCheckedIds(String unCheckedIds) {
 		this.unCheckedIds = unCheckedIds;
 	}
-	public String getEmployeeId() {
+	public Integer getEmployeeId() {
 		return employeeId;
 	}
-	public void setEmployeeId(String employeeId) {
+	public void setEmployeeId(Integer employeeId) {
 		this.employeeId = employeeId;
 	}
 	public String getEmployeeName() {

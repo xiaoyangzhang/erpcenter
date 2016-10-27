@@ -11,8 +11,11 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.util.WebUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderTransportBiz;
@@ -25,11 +28,21 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
+import com.yimayhd.erpcenter.facade.sales.query.BookingDeliveryQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ContractQueryDTO;
+import com.yimayhd.erpcenter.facade.sales.result.operation.BookingSupplierResult;
 import com.yimayhd.erpcenter.facade.sales.result.operation.TourGroupInfoResult;
 import com.yimayhd.erpcenter.facade.sales.service.BookingComponentFacade;
+import com.yimayhd.erpresource.biz.service.BizSupplierRelationBiz;
 import com.yimayhd.erpresource.biz.service.ContractBiz;
+import com.yimayhd.erpresource.biz.service.SupplierCarBiz;
+import com.yimayhd.erpresource.biz.service.SupplierImgBiz;
+import com.yimayhd.erpresource.dal.po.BizSupplierRelation;
+import com.yimayhd.erpresource.dal.po.SupplierCar;
+import com.yimayhd.erpresource.dal.po.SupplierContract;
+import com.yimayhd.erpresource.dal.po.SupplierContractPrice;
 import com.yimayhd.erpresource.dal.po.SupplierContractPriceDateInfo;
+import com.yimayhd.erpresource.dal.vo.SupplierCarVO;
 
 /**
  * @ClassName: BookingComponentFacadeImpl
@@ -54,6 +67,12 @@ public class BookingComponentFacadeImpl implements BookingComponentFacade {
 	private GroupOrderBiz groupOrderBiz;
 	@Autowired
 	private ContractBiz contractBiz;
+	@Autowired
+	private SupplierCarBiz supplierCarBiz;
+	@Autowired
+	private SupplierImgBiz supplierImgBiz;
+	@Autowired
+	private BizSupplierRelationBiz bizSupplierRelationBiz;
 	@Override
 	public List<GroupOrderGuest> selectGuestByOrderId(Integer orderId) {
 		return groupOrderGuestBiz.selectByOrderId(orderId);
@@ -154,6 +173,56 @@ public class BookingComponentFacadeImpl implements BookingComponentFacade {
 		}
 		List<SupplierContractPriceDateInfo> contractList = contractBiz.getContractPriceByPramas(queryDTO.getBizId(), queryDTO.getSupplierId(), queryDTO.getGoodsId(), queryDTO.getDateList());
 		return contractList;
+	}
+
+	@Override
+	public BookingSupplierResult selectPrivateCarListPage(PageBean pageBean,
+			Integer bizId) {
+		BookingSupplierResult result = new BookingSupplierResult();
+		
+		PageBean page = supplierCarBiz.selectPrivateCarListPage(pageBean,bizId);
+		result.setPageBean(page);
+		List<SupplierCarVO> voList = new ArrayList<SupplierCarVO>();
+		List<SupplierCar> supplierCarList = page.getResult();
+		if (!CollectionUtils.isEmpty(supplierCarList)) {
+			for (SupplierCar sc : supplierCarList) {
+				SupplierCarVO scv = new SupplierCarVO();
+				scv.setSupplierCar(sc);
+				scv.setImgList(supplierImgBiz.selectBySupplierCommentImgId(
+						sc.getId(), 5));
+				voList.add(scv);
+			}
+		}
+		result.setCarVOList(voList);
+		return result;
+	}
+
+	@Override
+	public PageBean deliveryContract(BookingDeliveryQueryDTO queryDTO) {
+		SupplierContract supplierContract = new SupplierContract();
+		//有效的协议
+		supplierContract.setState(1);
+		BizSupplierRelation bizSupplierRelation = bizSupplierRelationBiz.getByBizIdAndSupplierId(queryDTO.getBizId(),queryDTO.getSupplierId());
+		PageBean<SupplierContract> pageBean = new PageBean<SupplierContract>();
+		pageBean.setPageSize(100);
+        pageBean.setPage(supplierContract.getPage());
+        pageBean.setParameter(supplierContract);
+        if(bizSupplierRelation != null){
+            pageBean = contractBiz.findContracts(queryDTO.getPageBean(), bizSupplierRelation.getId());
+        }
+		return null;
+	}
+
+	
+	@Override
+	public List<SupplierContractPrice> getContractPriceListByContractId(
+			Integer contractId) {
+		if (contractId <= 0) {
+			LOGGER.error("params:contractId={}",contractId);
+			return new ArrayList<SupplierContractPrice>();
+		}
+		List<SupplierContractPrice> contractPrices = contractBiz.getContractPriceListByContractId(contractId);
+		return contractPrices;
 	}
 
 }

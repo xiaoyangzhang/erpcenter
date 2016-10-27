@@ -50,11 +50,10 @@
 	  <groupId>com.yimayhd.erpcenter</groupId>
 	  <artifactId>erpcenterDAL-product-client</artifactId>
   </dependency>
-	<!-- <dependency>
+	<dependency>
 		<groupId>com.yimayhd.erpresource</groupId>
 		<artifactId>erpresourceDAL-client</artifactId>
-		<version>0.0.8-SNAPSHOT</version>
-	</dependency> -->
+	</dependency>
 	<dependency>
 		<groupId>org.apache.poi</groupId>
 		<artifactId>poi</artifactId>

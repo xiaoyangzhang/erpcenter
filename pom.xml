@@ -129,6 +129,11 @@
 				<artifactId>erpcenterFacade-finance-client</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-supplier-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>

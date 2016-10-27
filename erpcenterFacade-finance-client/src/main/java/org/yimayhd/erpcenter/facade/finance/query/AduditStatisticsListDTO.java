@@ -15,11 +15,25 @@ public class AduditStatisticsListDTO extends BaseListPage{
 	private String ssl;
 	private String rp;
 	private String svc;
-	private TourGroupVO group;
 	private Integer bizId;
 	private Map<String,Object> paramters;
 	private Set<Integer> set;
+	private String saleOperatorIds;
+	private String orgIds;
 	
+	
+	public String getSaleOperatorIds() {
+		return saleOperatorIds;
+	}
+	public void setSaleOperatorIds(String saleOperatorIds) {
+		this.saleOperatorIds = saleOperatorIds;
+	}
+	public String getOrgIds() {
+		return orgIds;
+	}
+	public void setOrgIds(String orgIds) {
+		this.orgIds = orgIds;
+	}
 	public Integer getBizId() {
 		return bizId;
 	}
@@ -61,11 +75,5 @@ public class AduditStatisticsListDTO extends BaseListPage{
 	}
 	public void setSvc(String svc) {
 		this.svc = svc;
-	}
-	public TourGroupVO getGroup() {
-		return group;
-	}
-	public void setGroup(TourGroupVO group) {
-		this.group = group;
 	}
 }

@@ -7,8 +7,8 @@ public class SaveDistributeBillDTO implements Serializable{
 	private static final long serialVersionUID = 2667687338405333546L;
 	
 	private String billList;
-	private String groupId;
-	private String guideId;
+	private Integer groupId;
+	private Integer guideId;
 	private String type;
 	private String loginName;
 	public String getBillList() {
@@ -17,16 +17,16 @@ public class SaveDistributeBillDTO implements Serializable{
 	public void setBillList(String billList) {
 		this.billList = billList;
 	}
-	public String getGroupId() {
+	public Integer getGroupId() {
 		return groupId;
 	}
-	public void setGroupId(String groupId) {
+	public void setGroupId(Integer groupId) {
 		this.groupId = groupId;
 	}
-	public String getGuideId() {
+	public Integer getGuideId() {
 		return guideId;
 	}
-	public void setGuideId(String guideId) {
+	public void setGuideId(Integer guideId) {
 		this.guideId = guideId;
 	}
 	public String getType() {

@@ -48,6 +48,7 @@ import org.yimayhd.erpcenter.facade.finance.result.ViewShopCommissionStatsListRe
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpresource.dal.po.SupplierBankaccount;
 
 /**
  * 财务管理
@@ -140,7 +141,7 @@ public interface FinanceFacade{
 	/**
 	 * 跳转付款记录页面
 	 */
-	IncomeOrPaytResult cashRecordList(IncomeOrPayDTO incomeOrPayDTO);
+	IncomeOrPaytResult payRecordList(IncomeOrPayDTO incomeOrPayDTO);
 
 	/**
 	 * 跳转到收款审核
@@ -165,7 +166,7 @@ public interface FinanceFacade{
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 */
-	String getAuditUserList(String name, Integer bizId) throws UnsupportedEncodingException;
+	List<Map<String, String>> getAuditUserList(String name, Integer bizId) throws UnsupportedEncodingException;
 
 	/**
 	 * 跳转到操作记录页面
@@ -175,32 +176,32 @@ public interface FinanceFacade{
 	/**
 	 * 批量审核
 	 */
-	void audit(AuditDTO auditDTO);
+	ResultSupport audit(AuditDTO auditDTO);
 	
 	/**
 	 * 批量审核
 	 */
-	String auditList(AuditListDTO auditListDTO);
+	ResultSupport auditList(AuditListDTO auditListDTO);
 
 	/**
 	 * 结算单审核
 	 */
-	String finAudit(FinAuditDTO finAuditDTO);
+	ResultSupport finAudit(FinAuditDTO finAuditDTO);
 
 	/**
 	 * 结算单取消审核
 	 */
-	String finUnAudit(FinAuditDTO finAuditDTO);
+	ResultSupport finUnAudit(FinAuditDTO finAuditDTO);
 
 	/**
 	 * 批量封存
 	 */
-	String batchSeal(UnsealDTO unsealDTO);
+	ResultSupport batchSeal(UnsealDTO unsealDTO);
 
 	/**
 	 * 解封
 	 */
-	String unseal(UnsealDTO unsealDTO);
+	ResultSupport unseal(UnsealDTO unsealDTO);
 
 	/**
 	 * 付款/收款
@@ -212,7 +213,7 @@ public interface FinanceFacade{
 	 * @param sid
 	 * @return
 	 */
-	String querySupplierBankAccountList(Integer sid);
+	List<SupplierBankaccount> querySupplierBankAccountList(Integer sid);
 
 	/**
 	 * 领单-查询
@@ -314,7 +315,7 @@ public interface FinanceFacade{
 	/**
 	 * 购物佣金发放统计
 	 */
-	ResultSupport shopCommissionStatsList(Integer bizId);
+	String shopCommissionStatsList(Integer bizId);
 	
 	/**
 	 * 购物佣金扣除统计
@@ -328,10 +329,10 @@ public interface FinanceFacade{
 	/**
 	 * 购物佣金发放统计列表
 	 */
-	QueryShopCommissionStatsResult toShopStatisticsList(QueryShopCommissionStatsDTO queryDTO);
+	QueryShopCommissionStatsResult queryShopCommissionStats(QueryShopCommissionStatsDTO queryDTO);
 	
 	
-	QueryShopCommissionStatsResult toShopStatisticsList2(QueryShopCommissionStatsDTO queryDTO);
+	QueryShopCommissionStatsResult queryShopCommissionStats2(QueryShopCommissionStatsDTO queryDTO);
 	
 	/**
 	 * 购物佣金扣除统计列表
