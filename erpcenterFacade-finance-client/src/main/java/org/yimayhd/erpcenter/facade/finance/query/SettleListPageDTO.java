@@ -12,11 +12,20 @@ public class SettleListPageDTO extends BaseListPage{
 	private String sl;
 	private String ssl;
 	private String rp;
+	private String svc;
 	private String saleOperatorIds;
 	private String orgIds;
 	private Map<String,Object> paramters;
 	private Set<Integer> set;
 	private Integer bizId;
+	
+	
+	public String getSvc() {
+		return svc;
+	}
+	public void setSvc(String svc) {
+		this.svc = svc;
+	}
 	public String getSl() {
 		return sl;
 	}

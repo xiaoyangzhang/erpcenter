@@ -15,11 +15,31 @@ public class SettleSealListDTO extends BaseListPage{
 	private String ssl;
 	private String rp;  
 	private String svc;
-	private TourGroupVO group;
 	private int bizId;
-	private Map<String,Object> pms;
+	private Map<String,Object> paramters;
 	private Set<Integer> set;
+	private String saleOperatorIds;
+	private String orgIds;
 	
+	
+	public Map<String, Object> getParamters() {
+		return paramters;
+	}
+	public void setParamters(Map<String, Object> paramters) {
+		this.paramters = paramters;
+	}
+	public String getSaleOperatorIds() {
+		return saleOperatorIds;
+	}
+	public void setSaleOperatorIds(String saleOperatorIds) {
+		this.saleOperatorIds = saleOperatorIds;
+	}
+	public String getOrgIds() {
+		return orgIds;
+	}
+	public void setOrgIds(String orgIds) {
+		this.orgIds = orgIds;
+	}
 	public String getSl() {
 		return sl;
 	}
@@ -44,23 +64,11 @@ public class SettleSealListDTO extends BaseListPage{
 	public void setSvc(String svc) {
 		this.svc = svc;
 	}
-	public TourGroupVO getGroup() {
-		return group;
-	}
-	public void setGroup(TourGroupVO group) {
-		this.group = group;
-	}
 	public int getBizId() {
 		return bizId;
 	}
 	public void setBizId(int bizId) {
 		this.bizId = bizId;
-	}
-	public Map<String, Object> getPms() {
-		return pms;
-	}
-	public void setPms(Map<String, Object> pms) {
-		this.pms = pms;
 	}
 	public Set<Integer> getSet() {
 		return set;

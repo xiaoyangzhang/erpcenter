@@ -10,7 +10,7 @@ public class PayDTO implements Serializable{
 	
 	private FinancePay financePay;
 	private Integer bizId;
-	private String employeeId;
+	private Integer employeeId;
 	private String employeeName;
 	
 	public FinancePay getFinancePay() {
@@ -25,10 +25,10 @@ public class PayDTO implements Serializable{
 	public void setBizId(Integer bizId) {
 		this.bizId = bizId;
 	}
-	public String getEmployeeId() {
+	public Integer getEmployeeId() {
 		return employeeId;
 	}
-	public void setEmployeeId(String employeeId) {
+	public void setEmployeeId(Integer employeeId) {
 		this.employeeId = employeeId;
 	}
 	public String getEmployeeName() {

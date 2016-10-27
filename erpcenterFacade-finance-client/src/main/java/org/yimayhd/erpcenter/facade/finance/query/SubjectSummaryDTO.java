@@ -1,10 +1,11 @@
 package org.yimayhd.erpcenter.facade.finance.query;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
-public class SubjectSummaryDTO implements Serializable{
+import org.yimayhd.erpcenter.facade.finance.BaseListPage;
+
+public class SubjectSummaryDTO extends BaseListPage{
 	
 	private static final long serialVersionUID = 2667687338405333546L;
 	

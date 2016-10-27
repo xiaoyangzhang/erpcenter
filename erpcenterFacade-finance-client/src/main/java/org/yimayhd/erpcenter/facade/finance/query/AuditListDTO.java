@@ -8,7 +8,7 @@ public class AuditListDTO implements Serializable{
 	
 	private String data;
 	private String financeGuides;
-	private String employeeId;
+	private Integer employeeId;
 	private String employeeName;
 	
 	public String getData() {
@@ -23,10 +23,10 @@ public class AuditListDTO implements Serializable{
 	public void setFinanceGuides(String financeGuides) {
 		this.financeGuides = financeGuides;
 	}
-	public String getEmployeeId() {
+	public Integer getEmployeeId() {
 		return employeeId;
 	}
-	public void setEmployeeId(String employeeId) {
+	public void setEmployeeId(Integer employeeId) {
 		this.employeeId = employeeId;
 	}
 	public String getEmployeeName() {

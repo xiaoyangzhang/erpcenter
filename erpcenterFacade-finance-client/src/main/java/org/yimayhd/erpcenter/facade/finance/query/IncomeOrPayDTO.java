@@ -2,15 +2,12 @@ package org.yimayhd.erpcenter.facade.finance.query;
 
 import java.io.Serializable;
 
-import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
-
 
 public class IncomeOrPayDTO implements Serializable{
     private static final long serialVersionUID = -5738945525593633404L;
     
     private Integer payId;
 	private int bizId;
-    private PlatformEmployeePo employee;
     
     public Integer getPayId() {
 		return payId;
@@ -23,11 +20,5 @@ public class IncomeOrPayDTO implements Serializable{
 	}
 	public void setBizId(int bizId) {
 		this.bizId = bizId;
-	}
-	public PlatformEmployeePo getEmployee() {
-		return employee;
-	}
-	public void setEmployee(PlatformEmployeePo employee) {
-		this.employee = employee;
 	}
 }

@@ -15,7 +15,7 @@ public class AuditDTO implements Serializable{
 	private String financeGuides;
 	private String priceCheckedIds;
 	private String priceUnCheckedIds;
-	private String employeeId;
+	private Integer employeeId;
 	private String employeeName;
 	
 	public Integer getGroupId() {
@@ -72,10 +72,10 @@ public class AuditDTO implements Serializable{
 	public void setPriceUnCheckedIds(String priceUnCheckedIds) {
 		this.priceUnCheckedIds = priceUnCheckedIds;
 	}
-	public String getEmployeeId() {
+	public Integer getEmployeeId() {
 		return employeeId;
 	}
-	public void setEmployeeId(String employeeId) {
+	public void setEmployeeId(Integer employeeId) {
 		this.employeeId = employeeId;
 	}
 	public String getEmployeeName() {
