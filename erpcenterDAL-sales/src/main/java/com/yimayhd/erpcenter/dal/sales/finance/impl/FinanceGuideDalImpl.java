@@ -48,7 +48,7 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 public class FinanceGuideDalImpl implements FinanceGuideDal {
 
 	@Autowired
-	private SqlSessionTemplate ss;
+	private SqlSessionTemplate sqlSessionSales;
 	
 	@Autowired
 	private FinanceDal financeDal;

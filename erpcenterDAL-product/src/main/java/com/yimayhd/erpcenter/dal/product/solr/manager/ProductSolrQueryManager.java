@@ -11,12 +11,12 @@ import org.apache.solr.common.SolrDocumentList;
 import org.springframework.util.CollectionUtils;
 
 import com.yimayhd.erpcenter.common.solr.BaseSolrQueryManager;
+import com.yimayhd.erpcenter.common.solr.SolrSearchPageDTO;
 import com.yimayhd.erpcenter.dal.product.constants.ProductCollectionEnum;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStockDTO;
 import com.yimayhd.erpcenter.dal.product.query.ProductStatePageQueryDTO;
 import com.yimayhd.erpcenter.dal.product.query.ProductStockPageQueryDTO;
-import com.yimayhd.erpcenter.dal.product.solr.SolrSearchPageDTO;
 import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStateConverter;
 import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStockConverter;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultVOPlus;

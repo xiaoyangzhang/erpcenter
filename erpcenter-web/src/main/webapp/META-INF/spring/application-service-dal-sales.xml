@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+           http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	<context:annotation-config />
+	
+	<!-- airticket -->
+	<bean id="airTicketOrderDal" class="com.yimayhd.erpcenter.dal.sales.airticket.impl.AirTicketOrderDalImpl" />
+	<bean id="airTicketRequestDal" class="com.yimayhd.erpcenter.dal.sales.airticket.impl.AirTicketRequestDalImpl" />
+	<bean id="airTicketResourceDal" class="com.yimayhd.erpcenter.dal.sales.airticket.impl.AirTicketResourceDalImpl" />
+	
+	<!-- b2b -->
+	<bean id="b2BGroupOrderDal" class="com.yimayhd.erpcenter.dal.sales.b2b.impl.B2BGroupOrderDalImpl" />
+	
+	<!-- finance -->
+	<bean id="financeBillDal" class="com.yimayhd.erpcenter.dal.sales.finance.impl.FinanceBillDalImpl" />
+	<bean id="financeDal" class="com.yimayhd.erpcenter.dal.sales.finance.impl.FinanceDalImpl" />
+	<bean id="financeGuideDal" class="com.yimayhd.erpcenter.dal.sales.finance.impl.FinanceGuideDalImpl" />
+	<bean id="financeVerifyDal" class="com.yimayhd.erpcenter.dal.sales.finance.impl.FinanceVerifyDalImpl" />
+	
+	<!-- operation -->
+	<bean id="bookingDeliveryDal" class="com.yimayhd.erpcenter.dal.sales.operation.impl.BookingDeliveryDalImpl" />
+	<bean id="bookingDeliveryPriceDal" class="com.yimayhd.erpcenter.dal.sales.operation.impl.BookingDeliveryPriceDalImpl" />
+	<bean id="bookingGuideDal" class="com.yimayhd.erpcenter.dal.sales.operation.impl.BookingGuideDalImpl" />
+	<bean id="bookingShopDal" class="com.yimayhd.erpcenter.dal.sales.operation.impl.BookingShopDalImpl" />
+	<bean id="bookingShopDetailDal" class="com.yimayhd.erpcenter.dal.sales.operation.impl.BookingShopDetailDalImpl" />
+	<bean id="bookingShopDetailDeployDal" class="com.yimayhd.erpcenter.dal.sales.operation.impl.BookingShopDetailDeployDalImpl" />
+	<bean id="bookingSupplierDal" class="com.yimayhd.erpcenter.dal.sales.operation.impl.BookingSupplierDalImpl" />
+	<bean id="bookingSupplierDetailDal" class="com.yimayhd.erpcenter.dal.sales.operation.impl.BookingSupplierDetailDalImpl" />
+	
+	<!-- quality -->
+	<bean id="qualityDal" class="com.yimayhd.erpcenter.dal.sales.quality.impl.QualityDalImpl" />
+	
+	<!-- query -->
+	<bean id="queryDal" class="com.yimayhd.erpcenter.dal.sales.query.impl.QueryDalImpl" />
+	
+	<!-- sales -->
+	<bean id="fitGroupDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.FitGroupDalImpl" />
+	<bean id="fitOrderDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.FitOrderDalImpl" />
+	<bean id="groupFeedbackDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.GroupFeedbackDalImpl" />
+	<bean id="groupOrderDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.GroupOrderDalImpl" />
+	<bean id="groupOrderGuestDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.GroupOrderGuestDalImpl" />
+	<bean id="groupOrderPriceDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.GroupOrderPriceDalImpl" />
+	<bean id="groupOrderTransportDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.GroupOrderTransportDalImpl" />
+	<bean id="groupRequirementDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.GroupRequirementDalImpl" />
+	<bean id="groupRouteDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.GroupRouteDalImpl" />
+	<bean id="specialGroupOrderDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.SpecialGroupOrderDalImpl" />
+	<bean id="teamGroupDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.TeamGroupDalImpl" />
+	<bean id="tourGroupDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.TourGroupDalImpl" />
+	
+	<!-- taobao -->
+	<bean id="taobaoOrderDal" class="com.yimayhd.erpcenter.dal.sales.taobao.impl.TaobaoOrderDalImpl" />
+	
+	<!-- tj -->
+	<bean id="tJDal" class="com.yimayhd.erpcenter.dal.sales.tj.impl.TJDalImpl" />
+	
+</beans>

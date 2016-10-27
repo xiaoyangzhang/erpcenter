@@ -6,6 +6,8 @@ import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.airticket.AirTicketRequestBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
@@ -17,6 +19,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TeamGroupVO;
 import com.yimayhd.erpcenter.facade.sales.query.*;
@@ -29,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.WebUtils;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -63,6 +67,12 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
     private GroupOrderGuestBiz groupOrderGuestBiz;
     @Autowired
     private GroupRequirementBiz groupRequirementBiz;
+    @Autowired
+    private TourGroupBiz tourGroupBiz;
+    @Autowired
+    private FinanceBiz financeBiz;
+    @Autowired
+    private AirTicketRequestBiz airTicketRequestBiz;
 
 
 
@@ -341,6 +351,90 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
             logger.error("", e);
         }
         return toRequirementResult;
+    }
+
+    @Override
+    public String copyTourGroup(CopyTourGroupDTO copyTourGroupDTO) {
+        try {
+            TourGroup group = tourGroupBiz.selectByPrimaryKey(copyTourGroupDTO.getGroupId());
+            group.setId(null);
+            group.setCreateTime(System.currentTimeMillis());
+            group.setTotalAdult(copyTourGroupDTO.getTourGroup().getTotalAdult());
+            group.setTotalChild(copyTourGroupDTO.getTourGroup().getTotalChild());
+            group.setTotalGuide(copyTourGroupDTO.getTourGroup().getTotalGuide());
+            group.setGroupCode(platformOrgBiz.getCompanyCodeByOrgId(copyTourGroupDTO.getCurBizId(), copyTourGroupDTO.getCurUserOrgId()));
+            group.setGroupState(0); // 团状态，默认为0
+            group.setDateStart(copyTourGroupDTO.getTourGroup().getDateStart());
+            group.setDateEnd(copyTourGroupDTO.getTourGroup().getDateEnd());
+            group.setTotalIncome(new BigDecimal(0));
+            group.setTotalIncomeCash(new BigDecimal(0));
+            group.setTotalCostCash(new BigDecimal(0));
+            GroupOrder go = groupOrderBiz.selectByPrimaryKey(copyTourGroupDTO.getOrderId());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            go.setDepartureDate(sdf.format(copyTourGroupDTO.getTourGroup().getDateStart()));
+            go.setId(null);
+            go.setCreateTime(System.currentTimeMillis());
+            go.setSaleOperatorId(copyTourGroupDTO.getGroupOrder().getSaleOperatorId());
+            go.setSaleOperatorName(copyTourGroupDTO.getGroupOrder().getSaleOperatorName());
+            go.setOperatorId(copyTourGroupDTO.getGroupOrder().getOperatorId());
+            go.setOperatorName(copyTourGroupDTO.getGroupOrder().getOperatorName());
+            go.setContactName(copyTourGroupDTO.getGroupOrder().getContactName());
+            go.setContactTel(copyTourGroupDTO.getGroupOrder().getContactMobile());
+            go.setContactMobile(copyTourGroupDTO.getGroupOrder().getContactMobile());
+            go.setContactFax(copyTourGroupDTO.getGroupOrder().getContactFax());
+            go.setStateFinance(0);
+            go.setOrderNo(platformOrgBiz.getCompanyCodeByOrgId(copyTourGroupDTO.getCurBizId(), copyTourGroupDTO.getCurUserOrgId()));// 订单号调用接口获取
+            go.setNumAdult(copyTourGroupDTO.getTourGroup().getTotalAdult());
+            go.setNumChild(copyTourGroupDTO.getTourGroup().getTotalChild());
+            go.setNumGuide(copyTourGroupDTO.getTourGroup().getTotalGuide());
+            go.setSupplierName(copyTourGroupDTO.getGroupOrder().getSupplierName());
+            go.setSupplierId(copyTourGroupDTO.getGroupOrder().getSupplierId());
+            go.setTotalCash(new BigDecimal(0));
+            tourGroupBiz.copyGroup(group, go, copyTourGroupDTO.getGroupId(), copyTourGroupDTO.getOrderId(), copyTourGroupDTO.getInfo(),copyTourGroupDTO.getCurUserId(),copyTourGroupDTO.getCurUserName());
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return "";
+    }
+
+    @Override
+    public String deleteGroupOrderById(Integer orderId, Integer groupId,Integer curBizId) {
+        try {
+            if (financeBiz.hasAuditOrder(groupId)) {
+                return "该团有已审核的订单,不允许删除！";
+            }
+
+            if (financeBiz.hasPayOrIncomeRecord(groupId)) {
+                return "该团有收付款记录,不允许删除！";
+            }
+            if (airTicketRequestBiz.doesOrderhaveRequested(curBizId, orderId)) {
+                return "删除订单前请先取消机票申请。";
+            }
+            if (financeBiz.hasHotelOrder(groupId)) {
+                return "该团有酒、车队订单,不允许删除！";
+            }
+            int i = tourGroupBiz.deleteTourGroupById(groupId, orderId);
+            if (i == 1) {
+                return "成功";
+            } else {
+                return "服务器忙！";
+            }
+        }catch (Exception e){
+            logger.error("", e);
+        }
+        return "";
+    }
+
+    @Override
+    public ResultSupport saveRequireMent(SaveRequireMentDTO saveRequireMentDTO) {
+        ResultSupport resultSupport = new ResultSupport();
+        try {
+            teamGroupBiz.saveOrUpdateRequirement(saveRequireMentDTO.getTeamGroupVO(), saveRequireMentDTO.getCurBizId(), saveRequireMentDTO.getCurUserName());
+        } catch (Exception e) {
+            resultSupport.setSuccess(false);
+            logger.error("", e);
+        }
+        return resultSupport;
     }
 
     @Override

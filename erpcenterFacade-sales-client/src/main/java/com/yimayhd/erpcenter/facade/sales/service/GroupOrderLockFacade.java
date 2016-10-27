@@ -3,7 +3,7 @@ package com.yimayhd.erpcenter.facade.sales.service;
 import java.text.ParseException;
 
 import com.yimayhd.erpcenter.facade.sales.query.ToOrderLockTableDTO;
-import com.yimayhd.erpcenter.facade.sales.result.FitUpdateStateResult;
+import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
 import com.yimayhd.erpcenter.facade.sales.result.ToOrderLockListResult;
 import com.yimayhd.erpcenter.facade.sales.result.ToOrderLockTableResult;
 
@@ -22,5 +22,5 @@ public interface GroupOrderLockFacade {
    	ToOrderLockTableResult toOrderLockTable(ToOrderLockTableDTO orderLockTableDTO) throws ParseException;
 
    	//更新订单锁单状态
-   	FitUpdateStateResult updateOrderLockState(Integer orderId, Integer orderLockState);
+   	BaseStateResult updateOrderLockState(Integer orderId, Integer orderLockState);
 }

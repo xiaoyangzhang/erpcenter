@@ -32,8 +32,6 @@ import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceVerifyMapper;
  */
 public class FinanceVerifyDalImpl implements FinanceVerifyDal {
 
-	@Autowired
-	private SqlSessionTemplate ss;
 
 	@Autowired
 	private FinanceVerifyMapper financeVerifyMapper;

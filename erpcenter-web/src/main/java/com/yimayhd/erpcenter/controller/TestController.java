@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.airticket.AirTicketOrderBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SettleApplyBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.service.DicDal;
@@ -43,8 +45,12 @@ public class TestController {
 
 	@Autowired
 	private ProductSolrQueryManager productSolrQueryManager;
+
 	@Autowired
 	private ProductStockFacade productStockFacade;
+	
+	@Autowired
+	private TourGroupBiz tourGroupBiz;
 	
 	@RequestMapping(value = "/testBasicDal")
 	public Object testBasicDal(){
@@ -60,6 +66,12 @@ public class TestController {
 	@RequestMapping(value = "/testSysDal")
 	public Object testSysDal(){
 		return settleApplyBiz.getSettleApplyResults();
+	}
+	
+
+	@RequestMapping(value = "/testSalessDal")
+	public Object testSalessDal(){
+		return tourGroupBiz.getAuditorList();
 	}
 	
 	@RequestMapping(value = "/testSolrState")
@@ -80,6 +92,7 @@ public class TestController {
 //		return productUpAndDownFrameFacade.toSearchListState(toSearchListStateDTO);
 	}
 	
+
 	@RequestMapping(value = "/testQueryStock")
 	public Object testQueryStock(){
 

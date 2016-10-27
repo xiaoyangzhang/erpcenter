@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+	<bean id="statFilter" class="com.alibaba.druid.filter.stat.StatFilter">
+		<property name="slowSqlMillis" value="10000" />
+		<property name="logSlowSql" value="true" />
+		<property name="mergeSql" value="true" />
+	</bean>
+	<!-- 配置数据源信息 -->
+	<bean id="dataSourceSales" class="com.alibaba.druid.pool.DruidDataSource"
+		  destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<property name="url" value="${jdbc.url.sales}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+		<property name="filters" value="config" />
+		<property name="connectionProperties" value="config.decrypt=false"/>
+		<property name="proxyFilters">
+			<list>
+				<ref bean="statFilter"/>
+			</list>
+		</property>
+	</bean>
+	<!-- 配置ibatis映射信息 -->
+	<bean id="sqlSessionFactorySales" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSourceSales"/>
+		<property name="mapperLocations" value="classpath:com/yimayhd/sales/mapper/*.xml"/>
+		<property name="typeAliasesPackage" value="com.yimayhd.erpcenter.dal.airticket.client.po,com.yimayhd.erpcenter.dal.client.finance.po,com.yimayhd.erpdal.client.operation.po,com.yimayhd.erpcenter.dal.client.quality.po,com.yimayhd.erpcenter.dal.client.sales.po,com.yimayhd.erpcenter.dal.client.taobao.po,com.yimayhd.erpcenter.dal.client.tj.po"/>
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+	</bean>
+
+	<bean id="salesMapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.yimayhd.erpcenter.dal.sales.query.dao,com.yimayhd.erpcenter.dal.sales.airticket.dao,com.yimayhd.erpcenter.dal.sales.finance.dao,com.yimayhd.erpcenter.dal.sales.operation.dao,com.yimayhd.erpcenter.dal.sales.quality.dao,com.yimayhd.erpcenter.dal.sales.sales.dao,com.yimayhd.erpcenter.dal.sales.taobao.dao,com.yimayhd.erpcenter.dal.sales.tj.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactorySales"/>
+	</bean>
+
+	<bean id="sqlSessionSales" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactorySales"/>
+	</bean>
+
+	<bean id="transactionManagerSales" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSourceSales"/>
+	</bean>
+
+	<bean id="transactionTemplateSales"  class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager" ref="transactionManagerSales" />
+	</bean>
+
+</beans>

@@ -22,6 +22,7 @@ import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.AiYouBean;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.facade.sales.errorcode.SaleErrorCode;
 import com.yimayhd.erpcenter.facade.sales.result.ListResultSupport;
 import com.yimayhd.erpcenter.facade.sales.service.GroupOrderFacade;
 
@@ -71,7 +72,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
                 orderString = EntityUtils.toString(httpEntity);
             } catch (IOException e) {
                 LOGGER.error("", e);
-                result.setErrorCode(SalesErrorCode.QUERY_ERROR);
+                result.setErrorCode(SaleErrorCode.QUERY_ERROR);
                 return result;
             } finally {
                 closeableHttpResponse.close();
@@ -103,7 +104,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
             httpPost.abort();
         } catch (Exception ex) {
             LOGGER.error("",ex);
-            result.setErrorCode(SalesErrorCode.QUERY_ERROR);
+            result.setErrorCode(SaleErrorCode.QUERY_ERROR);
             return result;
         }
         result.setValues(aiyouOrderList);

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformRolePo;
 /**
  * 
@@ -20,6 +21,8 @@ public class PlatformRolePoListResult extends ResultSupport implements Serializa
 	 */
 	private static final long serialVersionUID = 1L;
 	private List<PlatformRolePo> platformRolePos = new ArrayList<PlatformRolePo>();
+	
+	private List<DicInfo> roleGroup;
 
 	public void setPlatformRolePos(List<PlatformRolePo> platformRolePos) {
 		this.platformRolePos = platformRolePos;
@@ -27,4 +30,11 @@ public class PlatformRolePoListResult extends ResultSupport implements Serializa
 	public List<PlatformRolePo> getPlatformRolePos() {
 		return platformRolePos;
 	}
+	public List<DicInfo> getRoleGroup() {
+		return roleGroup;
+	}
+	public void setRoleGroup(List<DicInfo> roleGroup) {
+		this.roleGroup = roleGroup;
+	}
+	
 }
