@@ -7,7 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformRoleBiz;
+import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformRoleMenuLinkPo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformRolePo;
 import com.yimayhd.erpcenter.facade.sys.query.PlatformRolePoDTO;
@@ -22,6 +25,8 @@ public class SysPlatformRoleFacadeImpl implements SysPlatformRoleFacade {
 
 	@Autowired
 	private PlatformRoleBiz platformRoleBiz;
+	@Autowired
+	private DicBiz dicBiz;
 	
 	@Override
 	public PageBean getRoleList(PlatformRolePoDTO platformRolePo ,Integer page) {
@@ -59,6 +64,8 @@ public class SysPlatformRoleFacadeImpl implements SysPlatformRoleFacade {
 		if(platformRolePos!=null){
 			result.setPlatformRolePos(platformRolePos);
 		}
+		List<DicInfo> roleGroup = dicBiz.getListByTypeCode(BasicConstants.ROLE_GROUP,bizId);
+		result.setRoleGroup(roleGroup);
 		return result;
 	}
 	@Override
