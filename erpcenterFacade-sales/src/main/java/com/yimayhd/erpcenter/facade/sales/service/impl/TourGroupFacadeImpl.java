@@ -866,7 +866,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                 for (GroupOrderPrice groupOrderPrice : priceList) {
                     groupOrderPrice.setCreateTime(System.currentTimeMillis());
                     groupOrderPrice.setRowState(0);
-                    groupOrderPrice.setItemName(dicBiz.getById(groupOrderPrice.getItemId()).getValue());
+                    groupOrderPrice.setItemName(dicBiz.getById(String.valueOf(groupOrderPrice.getItemId())).getValue());
                     groupOrderPrice.setCreatorId(CurUserId);
                     groupOrderPrice.setCreatorName(curUserName);
                     groupOrderPriceBiz.insertSelective(groupOrderPrice);
@@ -886,7 +886,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                 for (GroupOrderPrice groupOrderPrice : costList) {
                     groupOrderPrice.setCreateTime(System.currentTimeMillis());
                     groupOrderPrice.setRowState(0);
-                    groupOrderPrice.setItemName(dicBiz.getById(groupOrderPrice.getItemId()).getValue());
+                    groupOrderPrice.setItemName(dicBiz.getById(String.valueOf(groupOrderPrice.getItemId())).getValue());
                     groupOrderPrice.setCreatorId(CurUserId);
                     groupOrderPrice.setCreatorName(curUserName);
                     groupOrderPriceBiz.insertSelective(groupOrderPrice);
