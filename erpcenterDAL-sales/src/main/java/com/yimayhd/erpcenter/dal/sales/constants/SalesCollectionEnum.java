@@ -9,8 +9,10 @@ import org.apache.commons.lang3.StringUtils;
  */
 public enum SalesCollectionEnum {
 
-    PRODUCT_STATE("产品状态", 1, "productManager"),PRODUCT_STOCK("产品状态", 2, "productStock")
-    ;
+
+    SALES_GROUPORDER("订单查询", 1, "saleOrder"),
+    SALES_TOURGROUP("团查询", 2, "saleTour"),
+    SALES_SALELIST("产品销售列表", 3, "productManager");
     
     private String name;
     private int id;
@@ -56,6 +58,7 @@ public enum SalesCollectionEnum {
         }
         return null;
     }
+
 
 
 }
