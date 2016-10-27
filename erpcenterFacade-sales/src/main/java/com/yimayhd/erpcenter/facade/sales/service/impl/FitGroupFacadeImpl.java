@@ -19,8 +19,8 @@ import com.yimayhd.erpcenter.biz.sales.client.service.sales.FitGroupBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
-import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
-import com.yimayhd.erpcenter.biz.sys.service.SysBizConfigBiz;
+import com.yimayhd.erpcenter.common.contants.BasicConstants;
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
@@ -31,21 +31,17 @@ import com.yimayhd.erpcenter.facade.sales.query.FitGroupInfoQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.query.FitGroupInfoUpdateDTO;
 import com.yimayhd.erpcenter.facade.sales.query.FitTotalSKGroupQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.query.FitUpdateTourGroupDTO;
+import com.yimayhd.erpcenter.facade.sales.query.ToSecImpNotGroupListDTO;
+import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
 import com.yimayhd.erpcenter.facade.sales.result.FitGroupInfoQueryResult;
 import com.yimayhd.erpcenter.facade.sales.result.FitTotalSKGroupQueryResult;
-import com.yimayhd.erpcenter.facade.sales.result.FitUpdateStateResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToSecImpNotGroupListResult;
 import com.yimayhd.erpcenter.facade.sales.service.FitGroupFacade;
 
 public class FitGroupFacadeImpl implements FitGroupFacade{
 	
 	@Autowired
-	private PlatformOrgBiz orgService;
-	
-	@Autowired
 	private DicBiz dicService;
-	
-	@Autowired
-	private SysBizConfigBiz config;
 	
 	@Autowired
 	private FitGroupBiz fitGroupService;
@@ -68,6 +64,7 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 	@Autowired
 	private BookingSupplierBiz bookingSupplierService ;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public FitTotalSKGroupQueryResult toFitGroupList(FitTotalSKGroupQueryDTO totalSKGroupQueryDTO) {
 		
@@ -79,7 +76,7 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 			Calendar c = Calendar.getInstance();
 			int year = c.get(Calendar.YEAR);
 			int month = c.get(Calendar.MONTH);
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			//SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 			c.set(year, month, 1, 0, 0, 0);
 			tourGroup.setStartTime(c.getTime());
 			c.set(year, month, c.getActualMaximum(Calendar.DAY_OF_MONTH));
@@ -90,7 +87,7 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 			tourGroup.setGroupState(-2);
 		}
 		
-		PageBean pageBean = new PageBean();
+		PageBean<TourGroup> pageBean = new PageBean<TourGroup>();
 		pageBean.setPageSize(tourGroup.getPageSize() == null ? Constants.PAGESIZE : tourGroup.getPageSize());
 		pageBean.setPage(tourGroup.getPage());
 
@@ -191,9 +188,9 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 	}
 	
 	@Override
-	public FitUpdateStateResult delFitTourGroup(Integer groupId) {
+	public BaseStateResult delFitTourGroup(Integer groupId) {
 		
-		FitUpdateStateResult result=new FitUpdateStateResult();
+		BaseStateResult result=new BaseStateResult();
 		result.setSuccess(false);
 		
 		if(financeService.hasAuditOrder(groupId)){
@@ -212,9 +209,9 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 	}
 	
 	@Override
-	public FitUpdateStateResult updateFitTourGroup(FitUpdateTourGroupDTO fitUpdateTourGroupDTO) {
+	public BaseStateResult updateFitTourGroup(FitUpdateTourGroupDTO fitUpdateTourGroupDTO) {
 		
-		FitUpdateStateResult result=new FitUpdateStateResult();
+		BaseStateResult result=new BaseStateResult();
 		result.setSuccess(false);
 		
 		TourGroup tourGroup = fitUpdateTourGroupDTO.getTourGroup();
@@ -261,5 +258,39 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 		for (String str : split) {
 			tourGroupService.addFitOrder(groupId, Integer.parseInt(str));
 		}
+	}
+	
+	public ToSecImpNotGroupListResult toSecImpNotGroupList(ToSecImpNotGroupListDTO toSecImpNotGroupListDTO){
+		
+		GroupOrder groupOrder = toSecImpNotGroupListDTO.getGroupOrder();
+		Integer curBizId = toSecImpNotGroupListDTO.getCurBizId();
+		Set<Integer> userIdSet = toSecImpNotGroupListDTO.getUserIdSet();
+		
+		if (groupOrder.getReqType() != null && groupOrder.getReqType() == 0) {
+			Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			//SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			c.set(year, month, 1);
+			groupOrder.setDepartureDate(c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-01");
+			c.set(year, month, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			groupOrder.setEndTime(c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DATE));
+			groupOrder.setDateType(1);
+		}
+		
+		PageBean pageBean = new PageBean();
+		pageBean.setPageSize(groupOrder.getPageSize() == null ? Constants.PAGESIZE : groupOrder.getPageSize());
+		pageBean.setPage(groupOrder.getPage() == null ? 1 : groupOrder.getPage());
+		pageBean.setParameter(groupOrder);
+		pageBean = groupOrderService.selectNotGroupListPage(pageBean, curBizId,userIdSet);
+		//List<GroupOrder> result = pageBean.getResult();
+		List<DicInfo> pp = dicService.getListByTypeCode(BasicConstants.CPXL_PP, curBizId);
+
+		ToSecImpNotGroupListResult result=new ToSecImpNotGroupListResult();
+		result.setGroupOrder(groupOrder);
+		result.setPageBean(pageBean);
+		result.setPp(pp);
+		
+		return result;
 	}
 }
