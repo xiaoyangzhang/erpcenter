@@ -426,6 +426,18 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
     }
 
     @Override
+    public ResultSupport saveRequireMent(SaveRequireMentDTO saveRequireMentDTO) {
+        ResultSupport resultSupport = new ResultSupport();
+        try {
+            teamGroupBiz.saveOrUpdateRequirement(saveRequireMentDTO.getTeamGroupVO(), saveRequireMentDTO.getCurBizId(), saveRequireMentDTO.getCurUserName());
+        } catch (Exception e) {
+            resultSupport.setSuccess(false);
+            logger.error("", e);
+        }
+        return resultSupport;
+    }
+
+    @Override
     public ToGroupListResult toGroupList(int bizId) {
         ToGroupListResult toGroupListResult = new ToGroupListResult();
         try {
