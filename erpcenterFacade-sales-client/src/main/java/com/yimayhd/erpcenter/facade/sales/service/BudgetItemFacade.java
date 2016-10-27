@@ -1,8 +1,8 @@
 package com.yimayhd.erpcenter.facade.sales.service;
 
-import com.yimayhd.erpcenter.facade.sales.query.SaveBudgetItemDTO;
+import com.yimayhd.erpcenter.facade.sales.query.budgetitem.SaveBudgetItemDTO;
 import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
-import com.yimayhd.erpcenter.facade.sales.result.BudgetItemResult;
+import com.yimayhd.erpcenter.facade.sales.result.budgetitem.BudgetItemResult;
 
 /**
  * BudgetItemFacade

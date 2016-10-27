@@ -1,10 +1,10 @@
 package com.yimayhd.erpcenter.facade.sales.service;
 
-import com.yimayhd.erpcenter.facade.sales.query.SaveCostItemDTO;
-import com.yimayhd.erpcenter.facade.sales.query.ToAddProfitChangeDTO;
-import com.yimayhd.erpcenter.facade.sales.query.ToSaveCostIncomeDTO;
+import com.yimayhd.erpcenter.facade.sales.query.costitem.SaveCostItemDTO;
+import com.yimayhd.erpcenter.facade.sales.query.costitem.ToAddProfitChangeDTO;
+import com.yimayhd.erpcenter.facade.sales.query.costitem.ToSaveCostIncomeDTO;
 import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
-import com.yimayhd.erpcenter.facade.sales.result.CostItemResult;
+import com.yimayhd.erpcenter.facade.sales.result.costitem.CostItemResult;
 
 /**
  * CostItemFacade

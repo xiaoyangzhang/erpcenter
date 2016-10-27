@@ -41,4 +41,10 @@ public class SaleCommonFacadeImpl implements SaleCommonFacade {
 		return dicBiz.getListByTypeCode(Constants.FLEET_TYPE_CODE);
 	}
 
+	
+	@Override
+	public List<DicInfo> getShopListByTypeCode() {
+		return dicBiz.getListByTypeCode(Constants.SHOPPING_TYPE_CODE);
+	}
+
 }

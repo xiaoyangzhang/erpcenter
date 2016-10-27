@@ -18,7 +18,7 @@ public class DicBizImpl implements DicBiz {
 	}
 
 	@Override
-	public DicInfo getById(int id) {
+	public DicInfo getById(String id) {
 		return dicDal.getById(id);
 	}
 

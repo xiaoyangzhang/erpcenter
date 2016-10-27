@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderPriceBiz;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
-import com.yimayhd.erpcenter.facade.sales.query.SaveBudgetItemDTO;
+import com.yimayhd.erpcenter.facade.sales.query.budgetitem.SaveBudgetItemDTO;
 import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
-import com.yimayhd.erpcenter.facade.sales.result.BudgetItemResult;
+import com.yimayhd.erpcenter.facade.sales.result.budgetitem.BudgetItemResult;
 import com.yimayhd.erpcenter.facade.sales.service.BudgetItemFacade;
 
 public class BudgetItemFacadeImpl implements BudgetItemFacade {

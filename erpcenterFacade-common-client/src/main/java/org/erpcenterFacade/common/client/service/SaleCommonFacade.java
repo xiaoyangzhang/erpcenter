@@ -26,4 +26,5 @@ public interface SaleCommonFacade {
 	List<DicInfo> getTransportListByTypeCode(Integer bizId);
 	
 	List<DicInfo> getCarListByTypeCode();
+	List<DicInfo> getShopListByTypeCode();
 }
