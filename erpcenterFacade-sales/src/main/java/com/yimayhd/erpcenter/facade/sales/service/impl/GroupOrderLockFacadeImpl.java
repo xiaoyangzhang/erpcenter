@@ -19,7 +19,7 @@ import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.facade.sales.query.ToOrderLockTableDTO;
-import com.yimayhd.erpcenter.facade.sales.result.FitUpdateStateResult;
+import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
 import com.yimayhd.erpcenter.facade.sales.result.ToOrderLockListResult;
 import com.yimayhd.erpcenter.facade.sales.result.ToOrderLockTableResult;
 import com.yimayhd.erpcenter.facade.sales.service.GroupOrderLockFacade;
@@ -110,8 +110,8 @@ public class GroupOrderLockFacadeImpl implements GroupOrderLockFacade {
     }
     
     @Override
-    public FitUpdateStateResult updateOrderLockState(Integer orderId, Integer orderLockState) {
-    	FitUpdateStateResult result=new FitUpdateStateResult();
+    public BaseStateResult updateOrderLockState(Integer orderId, Integer orderLockState) {
+    	BaseStateResult result=new BaseStateResult();
 		int i = groupOrderBiz.updateOrderLockState(orderId, orderLockState);
 		if(i==1){
 			result.setSuccess(true);
