@@ -43,13 +43,8 @@ public class TestController {
 
 	@Autowired
 	private ProductSolrQueryManager productSolrQueryManager;
-
-	
-	@Autowired
-	private ProductSolrQueryManager productSolrQueryManager;
 	@Autowired
 	private ProductStockFacade productStockFacade;
->>>>>>> refs/remotes/origin/develop
 	
 	@RequestMapping(value = "/testBasicDal")
 	public Object testBasicDal(){
@@ -100,15 +95,7 @@ public class TestController {
 //		}
 		
 		ProductStockPageQueryDTO queryDTO = new ProductStockPageQueryDTO();
-<<<<<<< HEAD
 		return productSolrQueryManager.searchProductStock(queryDTO);
-
 	}
-	
-=======
-		queryDTO.setPrOrgId("10");
-		return productSolrQueryManager.searchProductStock(queryDTO);
 
-	}
->>>>>>> refs/remotes/origin/develop
 }
