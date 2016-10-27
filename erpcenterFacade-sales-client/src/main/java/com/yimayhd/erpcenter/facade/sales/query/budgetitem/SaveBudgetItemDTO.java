@@ -1,9 +1,13 @@
-package com.yimayhd.erpcenter.facade.sales.result;
+package com.yimayhd.erpcenter.facade.sales.query.budgetitem;
+
+import java.io.Serializable;
 
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
 
-public class BudgetItemResult extends BaseStateResult {
-	private static final long serialVersionUID = -1361931041677525975L;
+public class SaveBudgetItemDTO implements Serializable{
+
+	private static final long serialVersionUID = 1533028810337611970L;
+	
 	private GroupOrderPrice groupOrderPrice;
 
 	public GroupOrderPrice getGroupOrderPrice() {
