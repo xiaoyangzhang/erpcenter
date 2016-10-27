@@ -12,11 +12,11 @@ import org.apache.solr.common.SolrInputDocument;
 import org.springframework.util.CollectionUtils;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.common.solr.SolrSearchPageDTO;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.query.ProductStatePageQueryDTO;
-import com.yimayhd.erpcenter.dal.product.solr.SolrSearchPageDTO;
-import com.yimayhd.erpcenter.dal.product.solr.util.ParamCheckUtil;
+import com.yimayhd.erpcenter.dal.product.utils.ParamCheckUtil;
 
 
 

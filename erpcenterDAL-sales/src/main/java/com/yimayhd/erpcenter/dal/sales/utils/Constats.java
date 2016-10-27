@@ -7,7 +7,7 @@
  * <author>      <time>      <version>    <desc>
  * 修改人姓名             修改时间            版本号                  描述
  */
-package com.yimayhd.erpcenter.dal.product.solr.util;
+package com.yimayhd.erpcenter.dal.sales.utils;
 
 /**
  * 〈一句话功能简述〉<br> 

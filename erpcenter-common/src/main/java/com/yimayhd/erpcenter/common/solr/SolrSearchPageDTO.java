@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.dal.product.solr;
+package com.yimayhd.erpcenter.common.solr;
 
 import java.io.Serializable;
 import java.util.List;
