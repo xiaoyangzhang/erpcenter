@@ -2,14 +2,13 @@ package com.yimayhd.erpcenter.dal.sales.solr.sales.converter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.common.solr.SolrSearchPageDTO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.solr.dto.GroupOrderDTO;
 import com.yimayhd.erpcenter.dal.sales.client.solr.query.GroupOrderPageQueryDTO;
 
 
@@ -28,13 +27,13 @@ public class SaleOrderConverter {
 	 * @param solrPageResult
 	 * @return
 	 */
-//	public static PageBean<ProductInfo> dto2PageBean(SolrSearchPageDTO<ProductStateDTO> solrPageResult) {
-//		PageBean<ProductInfo> pageBean=new PageBean<ProductInfo>();
-//			List<ProductStateDTO> list=solrPageResult.getList();
-//			List<ProductInfo> resultList=new ArrayList<ProductInfo>();
-//
-//				for(ProductStateDTO dto:list){
-//					ProductInfo info=new ProductInfo();
+	public static PageBean<GroupOrder> dto2PageBean(SolrSearchPageDTO<GroupOrderDTO> solrPageResult) {
+		PageBean<GroupOrder> pageBean=new PageBean<GroupOrder>();
+			List<GroupOrderDTO> list=solrPageResult.getList();
+			List<GroupOrder> resultList=new ArrayList<GroupOrder>();
+
+				for(GroupOrderDTO dto:list){
+					GroupOrder info=new GroupOrder();
 //					info.setCode(dto.getInfoCode());
 //					info.setBrandName(dto.getInfoBrandName());
 //					info.setNameCity(dto.getInfoNameCity());
@@ -42,31 +41,31 @@ public class SaleOrderConverter {
 //					info.setOperatorName(dto.getInfoOperatorName());
 //					info.setCreatorName(dto.getInfoCreatorName());
 //					info.setNameBrief(dto.getInfoNameBrief());
-//					resultList.add(info);
-//				}
-//				
-//				pageBean.setPageSize(solrPageResult.getPageSize());
-//				pageBean.setTotalCount(solrPageResult.getTotalCount());
-//				pageBean.setPage(solrPageResult.getPageNo());
-//				pageBean.setResult(resultList);
-//				
-//				return pageBean;
-//		
-//	}
-//
-//	/**
-//	 * 
-//	 * @param queryDTO
-//	 * @return
-//	 */
-//	public static SolrQuery queryDTO2SolrQuery(ProductStatePageQueryDTO queryDTO) {
-//
-//		SolrQuery solrQuery = new SolrQuery("*:*");
-//		StringBuffer q_sb = new StringBuffer();
-//		String two = "-1";
-//		q_sb.append("-infoState:" + "\""+two+"\"");
-//		solrQuery.addFilterQuery(q_sb.toString());
-//		
+					resultList.add(info);
+				}
+				
+				pageBean.setPageSize(solrPageResult.getPageSize());
+				pageBean.setTotalCount(solrPageResult.getTotalCount());
+				pageBean.setPage(solrPageResult.getPageNo());
+				pageBean.setResult(resultList);
+				
+				return pageBean;
+		
+	}
+
+	/**
+	 * 
+	 * @param queryDTO
+	 * @return
+	 */
+	public static SolrQuery queryDTO2SolrQuery(GroupOrderPageQueryDTO queryDTO) {
+
+		SolrQuery solrQuery = new SolrQuery("*:*");
+		StringBuffer q_sb = new StringBuffer();
+		String two = "-1";
+		q_sb.append("-infoState:" + "\""+two+"\"");
+		solrQuery.addFilterQuery(q_sb.toString());
+		
 //		if(!StringUtils.isEmpty(queryDTO.getPrOrgId())){
 //			String orgIdQuery = "prOrgId:*" + queryDTO.getPrOrgId() + ",*";
 //			solrQuery.addFilterQuery(orgIdQuery);
@@ -91,18 +90,18 @@ public class SaleOrderConverter {
 //			String bizQuery = "infoBizId:" + queryDTO.getInfoBizId();
 //			solrQuery.addFilterQuery(bizQuery);
 //		}
-//		
-////		if(queryDTO.getInfoOperatorIds()!= null){
-////			String infoOperatorIdsQuery = "infoNameCity:*" + queryDTO.getInfoNameCity() + "*";
-////			if(queryDTO.getInfoOperatorIds()==1){
-////				
-////			}else{}
-////			solrQuery.addFilterQuery(infoOperatorIdsQuery);
-////		}
-//		
-//		solrQuery.setStart(queryDTO.getStartRow());
-//		solrQuery.setRows(queryDTO.getOldPageSize());
-//
-//		return solrQuery;
-//	}
+		
+//		if(queryDTO.getInfoOperatorIds()!= null){
+//			String infoOperatorIdsQuery = "infoNameCity:*" + queryDTO.getInfoNameCity() + "*";
+//			if(queryDTO.getInfoOperatorIds()==1){
+//				
+//			}else{}
+//			solrQuery.addFilterQuery(infoOperatorIdsQuery);
+//		}
+		
+		solrQuery.setStart(queryDTO.getStartRow());
+		solrQuery.setRows(queryDTO.getOldPageSize());
+
+		return solrQuery;
+	}
 }

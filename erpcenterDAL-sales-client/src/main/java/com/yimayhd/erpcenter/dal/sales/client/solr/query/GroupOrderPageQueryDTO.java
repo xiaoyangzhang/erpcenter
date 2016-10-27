@@ -1,6 +1,10 @@
 package com.yimayhd.erpcenter.dal.sales.client.solr.query;
 
-public class GroupOrderPageQueryDTO {
+import java.io.Serializable;
+
+import com.yimayhd.erpcenter.common.query.PageQuery;
+
+public class GroupOrderPageQueryDTO extends PageQuery implements Serializable {
 
 	   private Integer goId ;//主键--------
 	   private Integer goBizId ;//----------
