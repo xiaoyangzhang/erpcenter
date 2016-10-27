@@ -2,22 +2,31 @@ package com.yimayhd.erpcenter.facade.sales.result;
 
 import java.io.Serializable;
 
-public class FitUpdateStateResult implements Serializable {
-
-	private boolean success=true;
+/**
+ * 状态类返回结果封装
+ * 
+ * @author gaotingping
+ * 2016年10月26日
+ */
+public class BaseStateResult implements Serializable {
+	
+	private static final long serialVersionUID = 527184517257839033L;
+	
+	private boolean success=false;
+	
 	private String error;
 
-	public FitUpdateStateResult() {
+	public BaseStateResult() {
 		super();
 	}
 	
-	public FitUpdateStateResult(String error) {
+	public BaseStateResult(String error) {
 		super();
 		this.success = false;
 		this.error = error;
 	}
 
-	public FitUpdateStateResult(boolean success, String error) {
+	public BaseStateResult(boolean success, String error) {
 		super();
 		this.success = success;
 		this.error = error;
@@ -36,6 +45,7 @@ public class FitUpdateStateResult implements Serializable {
 	}
 
 	public void setError(String error) {
+		this.success=false;
 		this.error = error;
 	}
 }

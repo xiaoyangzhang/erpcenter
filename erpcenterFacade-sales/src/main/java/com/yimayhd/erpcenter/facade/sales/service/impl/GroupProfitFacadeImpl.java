@@ -21,7 +21,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.facade.sales.query.ProfitQueryByTourDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ToAddProfitChangeDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ToOrderLockTableDTO;
-import com.yimayhd.erpcenter.facade.sales.result.FitUpdateStateResult;
+import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
 import com.yimayhd.erpcenter.facade.sales.result.ProfitQueryByTourResult;
 import com.yimayhd.erpcenter.facade.sales.result.ToProfitQueryTableResult;
 import com.yimayhd.erpcenter.facade.sales.service.GroupProfitFacade;
@@ -197,7 +197,7 @@ public class GroupProfitFacadeImpl implements GroupProfitFacade {
 	}
 	
 	@Override
-	public FitUpdateStateResult toAddProfitChange(ToAddProfitChangeDTO profitChangeDTO) {
+	public BaseStateResult toAddProfitChange(ToAddProfitChangeDTO profitChangeDTO) {
 		
 		GroupOrderPrice gop = new GroupOrderPrice() ;
 		gop.setOrderId(profitChangeDTO.getId());
@@ -216,7 +216,7 @@ public class GroupProfitFacadeImpl implements GroupProfitFacade {
 		
 		groupOrderPriceService.insertSelective(gop) ;
 		
-		FitUpdateStateResult result=new FitUpdateStateResult();
+		BaseStateResult result=new BaseStateResult();
 		result.setSuccess(true);
 		
 		return result;

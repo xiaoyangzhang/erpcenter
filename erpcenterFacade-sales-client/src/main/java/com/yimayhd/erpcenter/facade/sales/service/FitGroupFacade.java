@@ -4,9 +4,11 @@ import com.yimayhd.erpcenter.facade.sales.query.FitGroupInfoQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.query.FitGroupInfoUpdateDTO;
 import com.yimayhd.erpcenter.facade.sales.query.FitTotalSKGroupQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.query.FitUpdateTourGroupDTO;
-import com.yimayhd.erpcenter.facade.sales.result.FitUpdateStateResult;
+import com.yimayhd.erpcenter.facade.sales.query.ToSecImpNotGroupListDTO;
+import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
 import com.yimayhd.erpcenter.facade.sales.result.FitGroupInfoQueryResult;
 import com.yimayhd.erpcenter.facade.sales.result.FitTotalSKGroupQueryResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToSecImpNotGroupListResult;
 
 /**
  * 销售-散客团管理
@@ -32,11 +34,14 @@ public interface FitGroupFacade {
 	public void updateFitGroupInfo(FitGroupInfoUpdateDTO fitGroupInfoUpdateDTO);
 
 	//删除散客团
-	public FitUpdateStateResult delFitTourGroup(Integer groupId);
+	public BaseStateResult delFitTourGroup(Integer groupId);
 
 	//修改散客团信息
-	public FitUpdateStateResult updateFitTourGroup(FitUpdateTourGroupDTO fitUpdateTourGroupDTO);
+	public BaseStateResult updateFitTourGroup(FitUpdateTourGroupDTO fitUpdateTourGroupDTO);
 
 	//散客团订单列表中添加订单
 	public void addOrderToTourGroup(Integer groupId, String ids);
+
+	//合团
+	public ToSecImpNotGroupListResult toSecImpNotGroupList(ToSecImpNotGroupListDTO toSecImpNotGroupListDTO);
 }
