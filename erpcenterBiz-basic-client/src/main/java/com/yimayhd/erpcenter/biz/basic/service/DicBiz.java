@@ -8,7 +8,7 @@ import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 public interface DicBiz {
 	List<DicInfo> getListByTypeId(String type);
 
-	DicInfo getById(int id);
+	DicInfo getById(String id);
 
 	void update(DicInfo dicInfo);
 
