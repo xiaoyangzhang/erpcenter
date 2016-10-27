@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.dal.sales.client.solr.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class TourGroupDTO implements Serializable{
 
@@ -29,6 +30,10 @@ public class TourGroupDTO implements Serializable{
      */
     private String gOsupplierName;
     
+    /**
+     * 出团日期
+     */
+    private Date tgDateStart;
     
     
     
