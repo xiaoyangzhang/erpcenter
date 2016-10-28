@@ -59,9 +59,9 @@ public class TourGroupConverter {
 		if(queryDTO.getEndTime() != null && queryDTO.getStartTime() != null){
 			query.addFilterQuery("tgDateStart:[" + queryDTO.getStartTime().getTime() + " TO " + queryDTO.getEndTime() + "]");
 		}else if(queryDTO.getEndTime() != null){
-			query.addFilterQuery("tgDateStart:" + queryDTO.getEndTime());
+			query.addFilterQuery("tgDateStart:" + queryDTO.getEndTime().getTime());
 		}else if(queryDTO.getStartTime() != null){
-			query.addFilterQuery("tgDateStart:" + queryDTO.getStartTime());
+			query.addFilterQuery("tgDateStart:" + queryDTO.getStartTime().getTime());
 		}
 		
 		if(queryDTO.getGroupCodeLike() != null){
@@ -79,8 +79,14 @@ public class TourGroupConverter {
 		}
 		
 		if(queryDTO.getProductNameLike() != null){
-			query.addFilterQuery("productName:*" + queryDTO.getProductNameLike() + "*");
+			String productNameLike = queryDTO.getProductNameLike().replace("【","");
+			productNameLike = productNameLike.replace("】", "");
+			
+			query.addFilterQuery("productName:*" + productNameLike + "*" + "OR tgProductBrandName:*" + productNameLike  + "*");
 		}
+		
+		query.setStart(queryDTO.getStartRow());
+		query.setRows(queryDTO.getOldPageSize());
 		
 		return query;
 	}

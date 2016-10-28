@@ -13,7 +13,7 @@ import com.yimayhd.erpcenter.dal.sales.constants.SalesCollectionEnum;
 import com.yimayhd.erpcenter.dal.sales.converter.TourGroupConverter;
 
 
-public class ProductSolrQueryManager extends BaseSolrQueryManager{
+public class TourGroupSolrQueryManager extends BaseSolrQueryManager{
 	
 	public SolrSearchPageDTO<TourGroupDTO> searchTourGroupList(TourProfitQueryDTO queryDTO){
 		    
@@ -34,6 +34,4 @@ public class ProductSolrQueryManager extends BaseSolrQueryManager{
 			return pageResult;
 	}
 	
-
-
 }
