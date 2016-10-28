@@ -50,7 +50,21 @@ public class GroupOrderPrintPo implements Serializable{
 	private String trans ;
 	
 	private List<GroupOrderGuest> guests = new ArrayList<GroupOrderGuest>() ;
+	private GroupOrder groupOrder;
+	private List<GroupOrderTransport> orderTransports;
 	
+	public List<GroupOrderTransport> getOrderTransports() {
+		return orderTransports;
+	}
+	public void setOrderTransports(List<GroupOrderTransport> orderTransports) {
+		this.orderTransports = orderTransports;
+	}
+	public GroupOrder getGroupOrder() {
+		return groupOrder;
+	}
+	public void setGroupOrder(GroupOrder groupOrder) {
+		this.groupOrder = groupOrder;
+	}
 	public List<GroupOrderGuest> getGuests() {
 		return guests;
 	}

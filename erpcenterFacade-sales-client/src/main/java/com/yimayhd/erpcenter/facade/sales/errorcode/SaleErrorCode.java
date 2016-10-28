@@ -23,6 +23,8 @@ public class SaleErrorCode implements Serializable {
     public static final SaleErrorCode QUERY_ERROR = new SaleErrorCode("1003","查询失败");
     public static final SaleErrorCode PRODUCT_NO_ROUTE_ERROR = new SaleErrorCode("1004","产品内无行程内容");
     public static final SaleErrorCode MODIFY_ERROR = new SaleErrorCode("1005","操作失败");
+    public static final SaleErrorCode GUIDE_EXISTED = new SaleErrorCode("1006","该团已安排此导游，不允许重复安排");
+    public static final SaleErrorCode CHECKED = new SaleErrorCode("1007","已审核");
 
 	 public SaleErrorCode() {
 		super();

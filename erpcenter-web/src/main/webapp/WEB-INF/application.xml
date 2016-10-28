@@ -12,8 +12,10 @@
 	<import resource="../META-INF/spring/application-config.xml" />
 	<import resource="../META-INF/spring/application-common.xml" />
 	<import resource="../META-INF/spring/application-consumer.xml" />
+	<import resource="../META-INF/spring/application-consumer-supplier.xml" />
 	<import resource="../META-INF/spring/application-export-facade-sys.xml" />
 	<import resource="../META-INF/spring/application-export-facade-product.xml" />
+	<import resource="../META-INF/spring/application-export-facade-supplier.xml" />
 	<import resource="../META-INF/spring/application-export-facade-basic.xml" />
 	<import resource="../META-INF/spring/application-export-facade-common.xml" />
 	<import resource="../META-INF/spring/application-export-dal-product.xml" />
@@ -41,6 +43,7 @@
 	<import resource="../META-INF/spring/application-service-facade-common.xml" />
 	<import resource="../META-INF/spring/application-service-facade-product.xml" />
 	<import resource="../META-INF/spring/application-service-facade-sys.xml" />
+	<import resource="../META-INF/spring/application-service-facade-supplier.xml" />
 	
 	<import resource="../META-INF/spring/application-manager-dal-solr.xml" />
 

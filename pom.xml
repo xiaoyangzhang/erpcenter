@@ -192,6 +192,11 @@
 			</dependency>
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-supplier</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenterFacade-basic</artifactId>
 				<version>${project.version}</version>
 			</dependency>
