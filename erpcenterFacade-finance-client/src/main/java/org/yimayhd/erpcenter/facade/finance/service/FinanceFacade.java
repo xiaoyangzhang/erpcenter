@@ -43,12 +43,18 @@ import org.yimayhd.erpcenter.facade.finance.result.SettleSealListResult;
 import org.yimayhd.erpcenter.facade.finance.result.StatementCheckPreviewResult;
 import org.yimayhd.erpcenter.facade.finance.result.SubjectSummaryResult;
 import org.yimayhd.erpcenter.facade.finance.result.ToBookingShopVerifyListlResult;
+import org.yimayhd.erpcenter.facade.finance.result.TourGroupDetiailsResult;
 import org.yimayhd.erpcenter.facade.finance.result.VerifyBillResult;
 import org.yimayhd.erpcenter.facade.finance.result.ViewShopCommissionStatsListResult;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpresource.dal.po.SupplierBankaccount;
+import com.yimayhd.erpresource.dal.po.SupplierInfo;
 
 /**
  * 财务管理
@@ -386,4 +392,26 @@ public interface FinanceFacade{
 	 * 科目汇总表3
 	 */
 	SubjectSummaryResult subjectSummary3(SubjectSummaryDTO queryDTO);
+	
+	
+	List<BookingSupplier> getBookingSupplierIdList();
+	
+	List<GroupOrder> getGroupOrderIdList(Integer supplierId);
+	
+	List<TourGroup> selectGroupByDateZone(String startTime, String endTime, Integer bizId);
+	
+	/**
+	 * 查询旅行团信息、销售订单、购物店收入、其他收入、地接社支出、供应商支出
+	 * @param groupId
+	 * @return
+	 */
+	TourGroupDetiailsResult getTourGroupDetails(Integer groupId);
+	
+	
+	List<GroupOrderPrice> getOrderPriceByOrder(Integer id); 
+	
+	
+	List<BookingSupplierDetail> getBookingSupplierDetailById(Integer bookingSupplierId);
+	
+	SupplierInfo getSupplierById(Integer supplierId);
 }
