@@ -7,6 +7,8 @@ import com.yimayhd.erpcenter.facade.sales.query.ChangeGroupDTO;
 import com.yimayhd.erpcenter.facade.sales.result.*;
 import org.springframework.ui.Model;
 
+import java.util.Set;
+
 /**
  * @ClassName: ${ClassName}
  * @Description: TODO(这里用一句话描述这个类的作用)
@@ -26,10 +28,32 @@ public interface TourGroupFacade {
     public ToChangeGroupResult saveTourGroupOrder(TourGroup tourGroup,GroupOrder groupOrder,Integer curBizId,Integer curUserOrgId,Integer curUserId, String curUserName);
     public ResultSupport unifiedSaveOtherInfo(OtherInfoVO otherInfoVO,String curUserName,Integer CurUserId);
     public ToOtherInfoResult toOtherInfo(Integer orderId,Integer stateFinance, Integer state,Integer curBizId );
-    public TogroupRequirementResult togroupRequirement(Integer orderId,Integer stateFinance, Integer state,Integer curBizId );
+    public TogroupRequirementResult togroupRequirement(Integer orderId,Integer stateFinance, Integer state);
     public ToGroupListResult findTourGroupByCondition(	String yesOrNo, GroupOrder groupOrder,Integer curBizId );
 
 
+    public ToPreviewResult createSalesConfirm(Integer orderId,Integer agency,Integer curBizId);
+    public ToPreviewResult createSalesChargeNoRoute(Integer orderId,Integer curBizId);
+    public ToPreviewResult createSalesConfirmNoRoute(Integer orderId,Integer curBizId);
+    public ToPreviewResult createSalesCharge(Integer orderId,Integer curBizId);
+    public ToPreviewResult createGuestNames(Integer orderId,Integer curBizId);
+    public ToPreviewResult saleTravelContract(Integer orderId,Integer curBizId);
+    public ToPreviewResult saleInsurance(Integer orderId,Integer curBizId);
+    public ToPreviewResult toProfitQueryTableZT( GroupOrder order,Set<Integer> set, String supplierType,Integer curBizId);
+    public ToPreviewResult getSupplier( String prefixText, String supplierType,Integer curBizId);
+    public ToPreviewResult getPriceSupplierName(String keyword, Integer productId,Integer curBizId);
+    public ToPreviewResult getSupplierNameForAgency(String keyword, Integer groupId,Integer priceId, String supplierType,Integer curBizId);
+    public ToPreviewResult getSupplierName(String keyword, String supplierType,Integer curBizId);
+    public ToPreviewResult getSupplierAndContact(String prefixText, Integer supplierId,Integer curBizId);
+    public ToPreviewResult getContactName(String keyword, Integer supplierId,Integer curBizId);
+    public ToPreviewResult validatorSupplier(String supplierName, Integer supplierId);
+    public ToPreviewResult getSelSupplier( Integer groupId,Integer priceId, String prefixText, String supplierType);
+    public ToPreviewResult toPreview(Integer orderId, Integer num,Integer agency,Integer curBizId);
+    public ToSaleChargeResult toSaleCharge(Integer orderId, Integer num,Integer curUserId ,Integer curBizId);
+    public ToSKChargePreviewResult toSKChargePreview(Integer groupId,Integer curUserId ,Integer curBizId,Integer supplierId);
+    public BookingProfitTableResult getSupplierInfo(Integer supplierId);
+    public BookingProfitTableResult getBankInfo(Integer curBizId);
+    public BookingProfitTableResult bookingProfitTable(TourGroup tourGroup ,Integer curBizId, Set<Integer>orgIdSet);
 
 
 
