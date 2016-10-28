@@ -139,7 +139,7 @@ public class SupplierGuestFacadeImpl implements SupplierGuestFacade {
 		return webResult;
 	}
 	@Override
-	public WebResult<PageBean> guestList(Integer page, Integer pageSize,String chooseIds,PageBean pageBean) {
+	public WebResult<PageBean> guestListDo(PageBean pageBean) {
 		
 		WebResult<PageBean> webResult = new WebResult<PageBean>();
 		try{

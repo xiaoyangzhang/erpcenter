@@ -558,7 +558,7 @@ public class BookingGuideFacadeImpl implements BookingGuideFacade {
 			StringBuilder sb = new StringBuilder();
 			for (GroupRequirement groupRequirement : grogShopList) {
 				sb.append(groupRequirement.getRequireDate() + " "
-						+ dicBiz.getById(Integer.parseInt(groupRequirement.getHotelLevel())).getValue() + " "
+						+ dicBiz.getById(Integer.parseInt(groupRequirement.getHotelLevel())+"").getValue() + " "
 						+ groupRequirement.getCountSingleRoom() + "单间" + " "
 						+ groupRequirement.getCountDoubleRoom() + "标间" + " "
 						+ groupRequirement.getCountTripleRoom() + "三人间");
