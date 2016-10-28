@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.facade.sales.result;
+package com.yimayhd.erpcenter.facade.sales.result.grouporder;
 
 import java.util.List;
 

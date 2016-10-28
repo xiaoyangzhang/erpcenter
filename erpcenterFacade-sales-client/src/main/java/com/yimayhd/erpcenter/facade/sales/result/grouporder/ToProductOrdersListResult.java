@@ -1,12 +1,12 @@
-package com.yimayhd.erpcenter.facade.sales.result;
+package com.yimayhd.erpcenter.facade.sales.result.grouporder;
 
-import java.io.Serializable;
 import java.util.List;
 
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
+import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
 
-public class ToOrderLockListResult implements Serializable {
-	private static final long serialVersionUID = -2709812611753065916L;
+public class ToProductOrdersListResult extends BaseStateResult {
+	private static final long serialVersionUID = 4680877637453715153L;
 	private List<RegionInfo> allProvince;
 	private String orgJsonStr;
 	private String orgUserJsonStr;

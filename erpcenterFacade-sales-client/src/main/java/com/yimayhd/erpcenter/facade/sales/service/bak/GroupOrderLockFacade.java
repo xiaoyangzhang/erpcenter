@@ -1,11 +1,11 @@
-package com.yimayhd.erpcenter.facade.sales.service;
+package com.yimayhd.erpcenter.facade.sales.service.bak;
 
 import java.text.ParseException;
 
-import com.yimayhd.erpcenter.facade.sales.query.ToOrderLockTableDTO;
+import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToOrderLockTableDTO;
 import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToOrderLockListResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToOrderLockTableResult;
+import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToOrderLockListResult;
+import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToOrderLockTableResult;
 
 /**
  * 销售-锁单管理
