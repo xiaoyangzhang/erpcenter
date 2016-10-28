@@ -83,9 +83,6 @@ public class SaleOrderConverter {
 	public static PageBean<GroupOrder> dto2PageBean(SolrSearchPageDTO<GroupOrderDTO> solrPageResult,PageBean<GroupOrder> pageBean) {
 			List<GroupOrderDTO> list=solrPageResult.getList();
 			List<GroupOrder> resultList=new ArrayList<GroupOrder>();
-			Integer pageTotalAudit = 0;
-            Integer pageTotalChild = 0;
-            Integer pageTotalGuide = 0;
 				for(GroupOrderDTO dto:list){
 					GroupOrder order=new GroupOrder();
 					TourGroup tourGroup=new TourGroup();
@@ -124,24 +121,16 @@ public class SaleOrderConverter {
 					//${gl.id},${gl.tourGroup.groupState},${gl.tourGroup.id}后两个上面已有
 					order.setId(dto.getGoId());
 					//gl.orderLockState 
-					
-
-					
-					
-					
-					
-					
+					order.setOrderLockState(dto.getGoOrderLockState());
 					order.setTourGroup(tourGroup);
 					resultList.add(order);
 				}
-				
 				pageBean.setPageSize(solrPageResult.getPageSize());
 				pageBean.setTotalCount(solrPageResult.getTotalCount());
 				pageBean.setPage(solrPageResult.getPageNo());
 				pageBean.setResult(resultList);
 				
 				return pageBean;
-		
 	}
 
 	/**
@@ -151,7 +140,6 @@ public class SaleOrderConverter {
 	 */
 	public static SolrQuery queryDTO2SolrQuery(GroupOrderPageQueryDTO queryDTO) {
 
-		
 		SolrQuery solrQuery = new SolrQuery("*:*");
 		
 		StringBuffer q_sb = new StringBuffer();
@@ -173,15 +161,19 @@ public class SaleOrderConverter {
 				for(Integer id:set){
 					idsIn=id+",";
 				}
+				idsIn=idsIn.substring(0,idsIn.length()-1);
 				if(idsIn.contains(",")){
-					idsIn=idsIn.substring(0,idsIn.length()-1);
+					
+					idsIn=idsIn.replace("," , " OR ");
 				}
+				if(queryDTO.getListType()==0){
+					solrQuery.addFilterQuery("goSaleOperatorId:(" + idsIn + ")");
+				}else{
+					solrQuery.addFilterQuery("goOperatorId:(" + idsIn + ")");
+				}
+				
 			}
-			if(queryDTO.getListType()==0){
-				solrQuery.addFilterQuery("goSaleOperatorId:*" + idsIn + "*");
-			}else{
-				solrQuery.addFilterQuery("goOperatorId:*" + idsIn + "*");
-			}
+			
 		}
 		//tg.date_start  #{page.parameter.startTime} <tg.date_start< #{page.parameter.endTime} page.parameter.dateType == 1
 		//tg.create_time  #{page.parameter.startTime} <tg.date_start< #{page.parameter.endTime} page.parameter.dateType == 2
@@ -235,23 +227,45 @@ public class SaleOrderConverter {
 		if(queryDTO.getGoCityId()!=null&&queryDTO.getGoCityId()!=-1){
 			solrQuery.addFilterQuery("goCityId:"+queryDTO.getGoCityId());
 		}
+		//	and tg.group_code LIKE CONCAT('%','${page.parameter.tourGroup.groupCode}','%')
+		if(!StringUtils.isEmpty(queryDTO.getTourGroupCode())){
+			solrQuery.addFilterQuery("tourGroupCode:*"+queryDTO.getTourGroupCode()+"*");
+		}
+		//	and go.supplier_name LIKE CONCAT('%','${page.parameter.supplierName}','%')
+		if(!StringUtils.isEmpty(queryDTO.getGoSupplierName())){
+			solrQuery.addFilterQuery("goSupplierName:*"+queryDTO.getGoSupplierName()+"*");
+		}
+		//test="page.parameter.tourGroup.productName!=null and page.parameter.tourGroup.productName!=''">
+		//and CONCAT('【',tg.product_brand_name,'】',tg.product_name) LIKE CONCAT('%','${page.parameter.tourGroup.productName}','%')
+		if(!StringUtils.isEmpty(queryDTO.getTourProductName())){
+			solrQuery.addFilterQuery("tourProductName:*"+queryDTO.getTourProductName()+"* OR tourProductBrandName:*"+queryDTO.getTourProductName());
+		}
 		//go.sale_operator_id in    page.parameter.operType==1
 		//go.operator_id in    page.parameter.operType==2
 		//go.creator_id in    page.parameter.operType==3
 		if(queryDTO.getOperType()!=null){
-			if(queryDTO.getOperType()==1){
-				solrQuery.addFilterQuery("goSaleOperatorId:*"+queryDTO.getGoSaleOperatorId()+"*");
-			}else if(queryDTO.getOperType()==2){
-				solrQuery.addFilterQuery("goOperatorId:*"+queryDTO.getGoSaleOperatorId()+"*");
-			}else if(queryDTO.getOperType()==3){
-				solrQuery.addFilterQuery("goCreatorId:*"+queryDTO.getGoSaleOperatorId()+"*");
+			String query="";
+			if(!StringUtils.isEmpty(queryDTO.getGoSaleOperatorId())){
+				if(queryDTO.getGoSaleOperatorId().contains(",")){
+					query=queryDTO.getGoSaleOperatorId().replace(",", " OR ");
+				}else{
+					query=queryDTO.getGoSaleOperatorId();
+				}
+				if(queryDTO.getOperType()==1){
+					solrQuery.addFilterQuery("goSaleOperatorId:("+query+")");
+				}else if(queryDTO.getOperType()==2){
+					solrQuery.addFilterQuery("goOperatorId:("+query+")");
+				}else if(queryDTO.getOperType()==3){
+					solrQuery.addFilterQuery("goCreatorId:("+query+")");
+				}
 			}
+			
 		}
 		//go.source_type_id page.parameter.sourceTypeId !=-1
 		if(queryDTO.getGoSourcetypeId()!=null&&queryDTO.getGoCityId()!=-1){
 			solrQuery.addFilterQuery("goCityId:"+queryDTO.getGoSourcetypeId());
 		}
-
+		
 		solrQuery.setParam("sort", "tourDateStart asc");
 		solrQuery.setStart(queryDTO.getStartRow());
 		solrQuery.setRows(queryDTO.getOldPageSize());
