@@ -90,6 +90,20 @@ public class TourGroupDTO implements Serializable{
      */
     
     private BigDecimal opIncome;
+    
+    /**
+     * 
+     */
+    private Integer tgBizId;
+    
+
+	public Integer getTgBizId() {
+		return tgBizId;
+	}
+
+	public void setTgBizId(Integer tgBizId) {
+		this.tgBizId = tgBizId;
+	}
 
 	public Integer getTgGroupId() {
 		return tgGroupId;

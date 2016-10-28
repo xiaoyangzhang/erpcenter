@@ -188,4 +188,11 @@
     
     where product_id = #{productId,jdbcType=INTEGER} AND item_date=#{date} AND state=1
   </update>
+  
+  <!-- dump数据查询 -->
+  <select id="selectProductStockListDumpPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
+	SELECT 
+   <include refid="Base_Column_List" />
+    FROM product_stock ps
+ </select>
 </mapper>

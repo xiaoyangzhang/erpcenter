@@ -156,4 +156,12 @@ public interface ProductInfoDal {
 	void updateProductSysId(Integer productId, Integer productSysId);
 	
 	ProductInfo selectProductInfoByPsId(Integer productSysId);
+	
+	
+	/**
+	 * dump数据查询
+	 * @param pageBean
+	 * @return
+	 */
+	public PageBean<ProductInfo> getProductInfoDumpList(PageBean<ProductInfo> pageBean);
 }

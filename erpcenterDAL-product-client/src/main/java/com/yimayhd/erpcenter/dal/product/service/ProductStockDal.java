@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.dal.product.service;
 import java.util.Date;
 import java.util.List;
 
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
 import com.yimayhd.erpcenter.dal.product.query.StockQueryDTO;
 
@@ -55,4 +56,11 @@ public interface ProductStockDal {
 	 * @return
 	 */
 	List<ProductStock> getStockListByCondition(StockQueryDTO queryDTO);
+	
+	/**
+	 * dump查询数据
+	 * @param pageBean
+	 * @return
+	 */
+	public PageBean<ProductStock> getProductStockDumpList(PageBean<ProductStock> pageBean);
 }
