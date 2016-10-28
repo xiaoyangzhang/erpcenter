@@ -59,7 +59,7 @@ public interface SupplierGuestFacade {
 	 * @param pageBean
 	 * @return
 	 */
-	public WebResult<PageBean> guestList(Integer page, Integer pageSize,String chooseIds,PageBean pageBean);
+	public WebResult<PageBean> guestListDo(PageBean pageBean);
 	
 	/**
 	 * 删除客人
