@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
 import com.yimayhd.erpcenter.dal.product.query.StockQueryDTO;
 
@@ -51,5 +53,12 @@ public interface ProductStockMapper {
 	 * @return
 	 */
 	List<ProductStock> getStockListByCondition(StockQueryDTO queryDTO);
+	
+	/**
+	 * dump数据查询
+	 * @param pageBean
+	 * @return
+	 */
+	List<ProductStock> selectProductStockListDumpPage(@Param("page") PageBean pageBean);
 
 }

@@ -685,6 +685,12 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		return infoMapper.selectProductInfoByPsId(productSysId);
 	}
 	
-	
+	@Override
+	public PageBean<ProductInfo> getProductInfoDumpList(
+			PageBean<ProductInfo> pageBean) {
+		 List<ProductInfo> productInfoList = infoMapper.selectProductListDumpPage(pageBean);
+		 pageBean.setResult(productInfoList);
+		 return pageBean;
+	}
 }
 

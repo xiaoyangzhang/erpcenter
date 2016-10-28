@@ -83,6 +83,22 @@ public class ParmUtil {
         solrQuery.addFilterQuery(StringUtils.join(params, OR));
         return solrQuery;
     }
+    
+    public static SolrQuery getQueryParm(String filedName, Integer[] vals, SolrQuery solrQuery) {
+        if (vals==null || vals.length==0) {
+            return solrQuery;
+        }
+        List<String> params = new ArrayList<String>();
+        for (int val : vals) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(filedName);
+            sb.append(PARAMT);
+            sb.append(val);
+            params.add(sb.toString());
+        }
+        solrQuery.addFilterQuery(StringUtils.join(params, OR));
+        return solrQuery;
+    }
 
 
     public static SolrQuery getQueryParm(String filedName, String[] strs, SolrQuery solrQuery, boolean all) {
