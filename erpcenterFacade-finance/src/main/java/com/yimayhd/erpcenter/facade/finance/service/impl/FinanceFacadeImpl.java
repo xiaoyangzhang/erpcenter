@@ -1752,9 +1752,15 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		pm.put("set", queryDTO.getSet());
 		pageBean.setParameter(pm);
 		pageBean = financeBiz.getsubjectSummary2ListPage(pageBean,"");
+		
+		PageBean pageBean2 = new PageBean();
+		if(queryDTO.isHasSum()){
+			pageBean2 = financeBiz.getsubjectSummary2ListPage(pageBean,"sum");
+		}
 
 		SubjectSummaryResult result = new SubjectSummaryResult();
 		result.setPageBean(pageBean);
+		result.setPageBeanSum(pageBean2);
 		return result;
 	}
 
