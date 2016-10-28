@@ -275,7 +275,7 @@ public interface FinanceFacade{
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 */
-	List<Map<String, String>> getUserNameList(Integer bizId, String name) throws UnsupportedEncodingException;
+	List<Map<String, String>> getUserNameList(Integer bizId, String name);
 
 	/**
 	 * 结算单审核分页查询

@@ -162,11 +162,15 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	@Override
 	public ResultSupport calcTourGroupAmount(Integer groupId) {
 		
-		if(groupId != null){
-			financeBiz.calcTourGroupAmount(groupId);
-		}
 		ResultSupport result = new ResultSupport();
-		result.setResultMsg("calculate over!");
+		try{
+			if(groupId != null){
+				financeBiz.calcTourGroupAmount(groupId);
+			}
+		}catch(Exception ex){
+			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
+		}
 		return result;
 	}
 
@@ -183,23 +187,29 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	@Override
 	public ResultSupport batchCalcTourGroupAmount(Integer bizId, Map paramters) {
 		
-		PageBean pb = new PageBean();
-		if(bizId != null){
-			paramters.put("bizId", bizId);
-		}
-		pb.setParameter(paramters);
-		List<TourGroup> results = tourGroupBiz.selectIdList(pb);
-		
-		if(results != null && results.size() > 0){
-			TourGroup group = null;
-			for(int i = 0; i < results.size(); i++){
-				group = results.get(i);
-				financeBiz.calcTourGroupAmount(group.getId());
-			}
-		}
-		
 		ResultSupport result = new ResultSupport();
-		result.setResultMsg("calculate over! fixed "+ results.size() +" tour groups");
+		try{
+			PageBean pb = new PageBean();
+			if(bizId != null){
+				paramters.put("bizId", bizId);
+			}
+			pb.setParameter(paramters);
+			List<TourGroup> results = tourGroupBiz.selectIdList(pb);
+			
+			if(results != null && results.size() > 0){
+				TourGroup group = null;
+				for(int i = 0; i < results.size(); i++){
+					group = results.get(i);
+					financeBiz.calcTourGroupAmount(group.getId());
+				}
+			}
+			
+			result.setResultMsg("calculate over! fixed "+ results.size() +" tour groups");
+			
+		}catch(Exception ex){
+			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
+		}
 		return result;
 	}
 
@@ -207,16 +217,17 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	public ResultSupport calcBookingSupplierTotalCash(Integer bookingSupplierId) throws IOException {
 		
 		ResultSupport result = new ResultSupport();
-		if(bookingSupplierId == null){
-			result.setSuccess(false);
-			result.setErrorCode(FinanceErrorCode.PARAM_ERROR);
-			result.setResultMsg("请输入bookingSupplierId!");
-			return result;
+		try{
+			if(bookingSupplierId == null){
+				result.setErrorCode(FinanceErrorCode.PARAM_ERROR);
+				return result;
+			}
+			
+			financeBiz.calcBookingSupplierTotalCash(bookingSupplierId);
+		}catch(Exception ex){
+			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
-		
-		financeBiz.calcBookingSupplierTotalCash(bookingSupplierId);
-
-		result.setResultMsg("calculate over!");
 		return result;
 	}
 
@@ -225,14 +236,16 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		
 		ResultSupport result = new ResultSupport();
 		if(groupOrderId == null){
-			result.setSuccess(false);
-			result.setResultMsg("请输入groupOrderId!");
+			result.setErrorCode(FinanceErrorCode.PARAM_ERROR);
 			return result;
 		}
 		
-		financeBiz.calcGroupOrderTotalCash(groupOrderId);
-		
-		result.setResultMsg("calculate over!");
+		try{
+			financeBiz.calcGroupOrderTotalCash(groupOrderId);
+		}catch(Exception ex){
+			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
+		}
 		return result;
 	}
 
@@ -591,6 +604,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			groupOrderPriceBiz.auditPriceByIds(auditDTO.getPriceCheckedIds(), auditDTO.getPriceUnCheckedIds());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		
 		return result;
@@ -625,6 +639,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			}
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -640,6 +655,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			financeBiz.audit(finAuditDTO.getGroupId(), finAuditDTO.getEmployeeId(), finAuditDTO.getEmployeeName());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -654,6 +670,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			financeBiz.unAudit(finAuditDTO.getGroupId(), finAuditDTO.getEmployeeName());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -666,6 +683,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			financeBiz.batchSeal(unsealDTO.getGroupIds(), unsealDTO.getEmployeeId(), unsealDTO.getEmployeeName());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -677,6 +695,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			financeBiz.unseal(unsealDTO.getGroupIds(), unsealDTO.getEmployeeId(), unsealDTO.getEmployeeName());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -861,6 +880,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 					saveDistributeBillDTO.getGuideId(), new Date(), saveDistributeBillDTO.getType());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -874,6 +894,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 					saveVerifyBillDTO.getGuideId(), new Date(), saveVerifyBillDTO.getType());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -885,6 +906,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			financeBillBiz.delVerify(orderId, type);
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -897,6 +919,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			financeBillBiz.delReceived(groupId, guideId);
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -1450,6 +1473,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 					auditCommDTO.getEmployeeId(), auditCommDTO.getEmployeeName());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -1462,6 +1486,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 					auditCommDTO.getEmployeeId(), auditCommDTO.getEmployeeName());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -1727,9 +1752,15 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		pm.put("set", queryDTO.getSet());
 		pageBean.setParameter(pm);
 		pageBean = financeBiz.getsubjectSummary2ListPage(pageBean,"");
+		
+		PageBean pageBean2 = new PageBean();
+		if(queryDTO.isHasSum()){
+			pageBean2 = financeBiz.getsubjectSummary2ListPage(pageBean,"sum");
+		}
 
 		SubjectSummaryResult result = new SubjectSummaryResult();
 		result.setPageBean(pageBean);
+		result.setPageBeanSum(pageBean2);
 		return result;
 	}
 

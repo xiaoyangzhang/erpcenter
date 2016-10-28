@@ -6,7 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformMenuBiz;
+import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformRolePo;
 import com.yimayhd.erpcenter.dal.sys.vo.MenuOptVo;
@@ -26,6 +29,8 @@ public class SysPlatformMenuFacadeImpl implements SysPlatformMenuFacade {
 	
 	@Autowired
 	private PlatformMenuBiz platformMenuBiz;
+	@Autowired
+	private DicBiz dicBiz;
 	/**
 	 * @Description: 根据系统ID查询菜单
 	 */
@@ -172,8 +177,11 @@ public class SysPlatformMenuFacadeImpl implements SysPlatformMenuFacade {
 	public PlatformMenuPoListResult getMenuListByBizId(Integer bizId, Integer parentId) {
 		List<PlatformMenuPo> platformMenuPos = platformMenuBiz.getMenuListByBizId(bizId, parentId);
 		PlatformMenuPoListResult result = new PlatformMenuPoListResult();
-		if(platformMenuPos!=null)
+		if(platformMenuPos!=null){
 			result.setPlatformMenuPos(platformMenuPos);
+		}
+		List<DicInfo> roleGroup = dicBiz.getListByTypeCode(BasicConstants.ROLE_GROUP,bizId);
+		result.setRoleGroup(roleGroup);
 		return result;
 	}
 

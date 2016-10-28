@@ -19,6 +19,14 @@ public class SubjectSummaryResult extends ResultSupport{
 
 	private PageBean pageBean;
 	private List<DicInfo> dicInfoList;
+	private PageBean pageBeanSum;
+	
+	public PageBean getPageBeanSum() {
+		return pageBeanSum;
+	}
+	public void setPageBeanSum(PageBean pageBeanSum) {
+		this.pageBeanSum = pageBeanSum;
+	}
 	public PageBean getPageBean() {
 		return pageBean;
 	}
