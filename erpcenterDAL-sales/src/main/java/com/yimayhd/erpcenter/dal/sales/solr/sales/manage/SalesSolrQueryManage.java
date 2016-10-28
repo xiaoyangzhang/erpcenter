@@ -15,7 +15,7 @@ import com.yimayhd.erpcenter.dal.sales.solr.sales.converter.SaleOrderConverter;
 
 public class SalesSolrQueryManage extends BaseSolrQueryManager{
 
-	public SolrSearchPageDTO<GroupOrderDTO> searchProductState(GroupOrderPageQueryDTO  queryDTO){
+	public SolrSearchPageDTO<GroupOrderDTO> searchSalesOrder(GroupOrderPageQueryDTO  queryDTO){
 	    
 		 SolrSearchPageDTO<GroupOrderDTO> pageResult = new SolrSearchPageDTO<GroupOrderDTO>();
 	
