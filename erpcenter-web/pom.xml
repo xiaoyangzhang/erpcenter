@@ -119,6 +119,10 @@
     	</dependency>
     	<dependency>
     			<groupId>com.yimayhd.erpcenter</groupId>
+    			<artifactId>erpcenterFacade-supplier</artifactId>
+    	</dependency>
+    	<dependency>
+    			<groupId>com.yimayhd.erpcenter</groupId>
     			<artifactId>erpcenterFacade-basic</artifactId>
     	</dependency>
     	<dependency>

@@ -116,7 +116,7 @@ public class SupplierCarFacadeImpl implements SupplierCarFacade {
 		WebResult<List<DicInfo>> webResult = new WebResult<List<DicInfo>>();
 		try{
 			List<DicInfo> list = dicBiz
-					.getListByTypeCode(Constants.FLEET_TYPE_CODE);
+					.getListByTypeCode(fileTypeCode);
 			webResult.setValue(list);
 		}catch (Exception e) {
 			log.error(e.getMessage());
@@ -150,7 +150,7 @@ public class SupplierCarFacadeImpl implements SupplierCarFacade {
 			SupplierCarVO supplierCarVO = supplierCarBiz.selectById(id);
 			webResult.setSupplierCarVO(supplierCarVO);
 			List<DicInfo> list = dicBiz
-					.getListByTypeCode(Constants.FLEET_TYPE_CODE);
+					.getListByTypeCode(fileTypeCode);
 			webResult.setList(list);
 		}catch (Exception e) {
 			log.error(e.getMessage());
