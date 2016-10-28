@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.common.solr.SolrSearchPageDTO;
 import com.yimayhd.erpcenter.common.util.NumberUtil;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission;
 import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceDal;
@@ -50,6 +51,8 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalePrice;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalesVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
+import com.yimayhd.erpcenter.dal.sales.client.solr.dto.GroupOrderDTO;
+import com.yimayhd.erpcenter.dal.sales.client.solr.query.GroupOrderPageQueryDTO;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceCommissionDeductionMapper;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceCommissionMapper;
 import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingDeliveryMapper;
@@ -60,6 +63,8 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.util.GenerateCodeUtil;
+import com.yimayhd.erpcenter.dal.sales.solr.sales.converter.SaleOrderConverter;
+import com.yimayhd.erpcenter.dal.sales.solr.sales.manage.SalesSolrQueryManage;
 
 public class GroupOrderDalImpl implements GroupOrderDal {
     private static final Logger log = LoggerFactory
@@ -94,6 +99,10 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     private FinanceCommissionMapper financeCommissionMapper;
     @Autowired
     private FinanceCommissionDeductionMapper financeCommissionDeductionMapper;
+    @Autowired
+    private SalesSolrQueryManage salesSolrQueryManage;
+    
+    
     @Override
     public GroupOrder findById(Integer id) {
         GroupOrder order = groupOrderMapper.selectByPrimaryKey(id);
@@ -375,9 +384,17 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public PageBean<GroupOrder> selectByConListPage(
             PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer listType) {
-        List<GroupOrder> result = groupOrderMapper.selectByConListPage(
-                pageBean, bizId, set, listType);
-        pageBean.setResult(result);
+        
+        if(1==0){
+        	List<GroupOrder> result = groupOrderMapper.selectByConListPage(
+                    pageBean, bizId, set, listType);
+            pageBean.setResult(result);
+        }else{
+        	GroupOrderPageQueryDTO queryDTO=SaleOrderConverter.toQueryDTO( pageBean, bizId, set, listType);
+        	SolrSearchPageDTO<GroupOrderDTO> solrPageResult=salesSolrQueryManage.searchSalesOrder(queryDTO);
+        	return SaleOrderConverter.dto2PageBean(solrPageResult,pageBean);
+        }
+        
         return pageBean;
     }
 

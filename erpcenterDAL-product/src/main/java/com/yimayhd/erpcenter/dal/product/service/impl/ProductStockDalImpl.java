@@ -20,10 +20,12 @@ import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.client.producer.SendStatus;
 import com.alibaba.rocketmq.client.producer.TransactionSendResult;
 import com.alibaba.rocketmq.common.message.Message;
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.common.mq.MsgSenderService;
 import com.yimayhd.erpcenter.dal.product.dao.ProductStockMapper;
 import com.yimayhd.erpcenter.dal.product.message.ProductInfoUpdateMessageDTO;
 import com.yimayhd.erpcenter.dal.product.message.ProductStockUpdateMessageDTO;
+import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
 import com.yimayhd.erpcenter.dal.product.query.StockQueryDTO;
 import com.yimayhd.erpcenter.dal.product.service.ProductStockDal;
@@ -192,5 +194,12 @@ public class ProductStockDalImpl implements ProductStockDal {
 		return stockMapper.getStockListByCondition(queryDTO);
 	}
 
+	@Override
+	public PageBean<ProductStock> getProductStockDumpList(PageBean<ProductStock> pageBean) {
+		 List<ProductStock> productInfoList = stockMapper.selectProductStockListDumpPage(pageBean);
+		 pageBean.setResult(productInfoList);
+		 
+		 return pageBean;
+	}
 
 }

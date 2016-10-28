@@ -970,6 +970,11 @@ public class TourGroupDalImpl implements TourGroupDal {
 				}
 			}
 		}
+		
+		//solr
+		
+		
+		
 		pageBean.setResult(tours);
 		return pageBean;
 	}
