@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.poi.ss.usermodel.Sheet;
+
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingShopDetailDeployVO;
+import com.yimayhd.erpcenter.facade.sales.query.BookingFinanceShopQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.result.BookingShopResult;
 import com.yimayhd.erpcenter.facade.sales.result.FinanceShopResult;
 import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
@@ -55,4 +58,5 @@ public interface BookingFinanceShopFacade {
 	ResultSupport delBookingShop(Integer bookingId);
 	
 	ResultSupport delShopAndDetail(Integer bookingId);
+	String toSaveExcelData(BookingFinanceShopQueryDTO queryDTO) ;
 }
