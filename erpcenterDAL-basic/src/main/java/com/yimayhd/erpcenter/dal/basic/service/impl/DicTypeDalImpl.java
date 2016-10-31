@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
+import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.dao.DicTypeMapper;
 import com.yimayhd.erpcenter.dal.basic.po.DicTypeInfo;
 import com.yimayhd.erpcenter.dal.basic.service.DicTypeDal;

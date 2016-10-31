@@ -18,7 +18,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.common.exception.ClientException;
-import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
+import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketLegMapper;
 import com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketResourceMapper;
 import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketLeg;

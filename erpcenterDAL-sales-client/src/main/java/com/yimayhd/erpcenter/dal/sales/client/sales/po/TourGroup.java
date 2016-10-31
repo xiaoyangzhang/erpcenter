@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.yimayhd.erpcenter.dal.basic.utils.LogFieldAnno;
+import com.yimayhd.erpcenter.common.util.LogFieldAnno;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 
 public class TourGroup implements Serializable {

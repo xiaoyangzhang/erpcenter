@@ -29,7 +29,7 @@ public interface TjGroupFacade {
 	
 	public SelectShopProjectListResult toGroupProfitPrint(TjSearchDTO tjSearchDTO);
 	
-	public PageBean<TJGroupProfit> aaa(PageBean pageBean,int bizId,String dataUser);
+	public PageBean<TJGroupProfit> selectGroupProfitListPageOu(PageBean pageBean,int bizId,String dataUser);
 	
 	/**
 	 * 线路利润统计

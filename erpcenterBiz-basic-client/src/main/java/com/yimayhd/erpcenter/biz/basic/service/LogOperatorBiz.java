@@ -3,7 +3,8 @@ package com.yimayhd.erpcenter.biz.basic.service;
 import java.util.List;
 import java.util.Map;
 
-import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
+import com.yimayhd.erpcenter.common.po.LogOperator;
+
 
 
 public interface LogOperatorBiz {

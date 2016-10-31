@@ -56,7 +56,7 @@
 	    <module>erpcenterFacade-tj</module>
 	    <module>erpcenterFacade-shopping-client</module>
 	    <module>erpcenterFacade-shopping</module>
-	    <module>erpresourceBiz-client</module>
+	    <!--  <module>erpresourceBiz-client</module>-->
 	</modules>
 
 	<properties>
@@ -138,6 +138,11 @@
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenterFacade-basic-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-ticket-client</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			
