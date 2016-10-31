@@ -65,7 +65,7 @@ public class TjGroupFacadeImpl implements TjGroupFacade{
 		String page = tjSearchDTO.getPage()+"";
 		String pageSize = tjSearchDTO.getPageSize()+"";
 		Map<String, Object> pm = tjSearchDTO.getPm();
-		Set<Integer> dataUserIdSet = tjSearchDTO.getDataUserIdSet();
+		String dataUserIdSet = tjSearchDTO.getDataUserIdString();
 		String from = tjSearchDTO.getDateFrom();
 		String to = tjSearchDTO.getDateTo();
 		result.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(bizId));
@@ -156,13 +156,7 @@ public class TjGroupFacadeImpl implements TjGroupFacade{
 		ToGroupListResult result = new ToGroupListResult();
 		int bizId = tjSearchDTO.getBizId();
 		TourGroupVO group = tjSearchDTO.getGroup();
-//		String page = tjSearchDTO.getPage()+"";
-//		String pageSize = tjSearchDTO.getPageSize()+"";
-		Map<String, Object> pm = tjSearchDTO.getPm();
-		Set<Integer> dataUserIdSet = tjSearchDTO.getDataUserIdSet();
 		String dataUserIdString = tjSearchDTO.getDataUserIdString();
-		String from = tjSearchDTO.getDateFrom();
-		String to = tjSearchDTO.getDateTo();
 		// 如果人员为空并且部门不为空，则取部门下的人id
 		if (StringUtils.isBlank(group.getSaleOperatorIds()) && StringUtils.isNotBlank(group.getOrgIds())) {
 			Set<Integer> set = new HashSet<Integer>();
@@ -312,7 +306,7 @@ public class TjGroupFacadeImpl implements TjGroupFacade{
 		return result;
 	}
 	
-	public PageBean<TJGroupProfit> aaa(PageBean pageBean,int bizId,String dataUser){
+	public PageBean<TJGroupProfit> selectGroupProfitListPageOu(PageBean pageBean,int bizId,String dataUser){
 		return tjBiz.selectGroupProfitListPageOu(pageBean, bizId, dataUser);
 	}
 	

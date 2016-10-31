@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.FieldStatsInfo;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.common.solr.BaseSolrQueryManager;
 import com.yimayhd.erpcenter.common.solr.SolrSearchPageDTO;
@@ -18,7 +19,10 @@ import com.yimayhd.erpcenter.dal.sales.constants.SalesCollectionEnum;
 import com.yimayhd.erpcenter.dal.sales.converter.TourGroupConverter;
 
 
-public class TourGroupSolrQueryManager extends BaseSolrQueryManager{
+public class TourGroupSolrQueryManager {
+	
+	@Autowired
+	private BaseSolrQueryManager solrQueryManager;
 	
 	public SolrSearchPageDTO<TourGroupDTO> searchTourGroupList(TourProfitQueryDTO queryDTO){
 		    
@@ -27,7 +31,7 @@ public class TourGroupSolrQueryManager extends BaseSolrQueryManager{
 
 			 SolrQuery solrQuery = TourGroupConverter.convert2SolrQuery(queryDTO);
 		     
-             QueryResponse response =  this.querySolrDataByFilters(SalesCollectionEnum.SALES_TOURGROUP.getCollection(), solrQuery);
+             QueryResponse response =  solrQueryManager.querySolrDataByFilters(SalesCollectionEnum.SALES_TOURGROUP.getCollection(), solrQuery);
              
              List<TourGroupDTO> dtoList = response.getBeans(TourGroupDTO.class);
              
@@ -43,7 +47,7 @@ public class TourGroupSolrQueryManager extends BaseSolrQueryManager{
 		
 		SolrQuery solrQuery = TourGroupConverter.convert2SolrQuery(queryDTO);
 	     
-        QueryResponse response =  this.querySolrDataByFilters(SalesCollectionEnum.SALES_TOURGROUP.getCollection(), solrQuery);
+        QueryResponse response =  solrQueryManager.querySolrDataByFilters(SalesCollectionEnum.SALES_TOURGROUP.getCollection(), solrQuery);
         
         Map<String, FieldStatsInfo> statsMap = response.getFieldStatsInfo();
         FieldStatsInfo opBudgetStatsInfo = statsMap.get("opBudget");

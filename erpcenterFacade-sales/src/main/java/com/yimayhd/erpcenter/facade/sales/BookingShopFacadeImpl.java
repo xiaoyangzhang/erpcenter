@@ -2,6 +2,7 @@ package com.yimayhd.erpcenter.facade.sales;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,7 +13,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.zookeeper.proto.op_result_t;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
@@ -20,6 +20,8 @@ import com.alibaba.fastjson.util.TypeUtils;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceGuideBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingGuideBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopDetailBiz;
@@ -28,6 +30,7 @@ import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierD
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
+import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
@@ -42,17 +45,23 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupPriceAndPersons;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
+import com.yimayhd.erpcenter.facade.sales.errorcode.SaleErrorCode;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopDTO;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopDetailDeployDTO;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopListDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ContractPriceExtDTO;
 import com.yimayhd.erpcenter.facade.sales.result.BookingShopInputResult;
+import com.yimayhd.erpcenter.facade.sales.result.BookingShopResult;
 import com.yimayhd.erpcenter.facade.sales.result.GuestShopListResult;
 import com.yimayhd.erpcenter.facade.sales.result.GuestShopResult;
 import com.yimayhd.erpcenter.facade.sales.result.LoadBookingShopInfoResult;
 import com.yimayhd.erpcenter.facade.sales.result.LoadShopInfoResult;
+import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.sales.result.ToAddShopResult;
 import com.yimayhd.erpcenter.facade.sales.result.ToFactShopResult;
+import com.yimayhd.erpcenter.facade.sales.result.WebResult;
 import com.yimayhd.erpcenter.facade.sales.service.BookingShopFacade;
 import com.yimayhd.erpresource.biz.service.ContractBiz;
 import com.yimayhd.erpresource.biz.service.SupplierItemBiz;
@@ -84,7 +93,12 @@ public class BookingShopFacadeImpl implements BookingShopFacade{
 	private SupplierItemBiz supplierItemBiz;
 	@Autowired
 	private ContractBiz contractBiz;
-	
+	@Autowired
+	private FinanceGuideBiz financeGuideBiz;
+	@Autowired
+	private FinanceBiz financeBiz;
+	@Autowired
+	private PlatformOrgBiz platformOrgBiz;
 	/**
 	 * 客人购物录入查询
 	 */
@@ -387,6 +401,145 @@ public class BookingShopFacadeImpl implements BookingShopFacade{
 			return "[]";
 		}
 		return JSON.toJSONString(priceList);
+	}
+
+	@Override
+	public PageBean getShopGroupList(PageBean pageBean, TourGroupVO groupVO,
+			Set<Integer> set) {
+		PageBean page = tourGroupBiz.getShopGroupList(pageBean, groupVO, set);
+		return page;
+	}
+
+	@Override
+	public BookingShopResult groupShopBookingList(Integer groupId) {
+		BookingShopResult result = new BookingShopResult();
+		List<BookingShop> bookingShops=bookingShopBiz.getShopListByGroupId(groupId);
+		result.setBookingShops(bookingShops);
+		Boolean checkGroupCanEdit = checkGroupCanEdit(groupId);
+		result.setGroupAbleEdit(checkGroupCanEdit);
+		return result;
+	}
+
+	@Override
+	public boolean checkGroupCanEdit(Integer groupId) {
+		Boolean checkGroupCanEdit = tourGroupBiz.checkGroupCanEdit(groupId);
+		return checkGroupCanEdit;
+	}
+
+	@Override
+	public ResultSupport saveShopInfo(BookingShop bookingShop, String bizCode) {
+		ResultSupport resultSupport = new ResultSupport();
+		if(null == bookingShop.getId()){
+			int No = bookingShopBiz.getBookingCountByTime();
+			bookingShop.setBookingNo(bizCode+Constants.SHOPPING+new SimpleDateFormat("yyMMdd").format(new Date())+(No+100));
+		}
+		int saveResult = bookingShopBiz.save(bookingShop);
+		if(bookingShop.getId()!=null){
+			financeBiz.calcTourGroupAmount(bookingShop.getGroupId());
+		}
+		if (saveResult < 1) {
+			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+		}
+		return resultSupport;
+	}
+
+	@Override
+	public WebResult<Map<String, Boolean>> deldetailGuide(Integer bookingShopId) {
+		WebResult<Map<String, Boolean>> result = new WebResult<Map<String, Boolean>>();
+		int count = bookingShopDetailDeployBiz.getCountByShopId(bookingShopId);
+		BigDecimal total = bookingShopDetailDeployBiz.getSumBuyTotalByBookingId(bookingShopId);
+		List<BookingShopDetail> lists = bookingShopDetailBiz.getShopDetailListByBookingId(bookingShopId);
+		if((count>0 && (total.compareTo(BigDecimal.ZERO))!=0) || lists.size()>0){
+			result.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+			Map<String, Boolean> map = new HashMap<String, Boolean>();
+			map.put("fail", true);
+			result.setValue(map);
+			return result;
+		}else{
+			int delResult = bookingShopBiz.deleteByPrimaryKey(bookingShopId);
+			if (delResult < 1) {
+				result.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public BookingShopResult toFactShop(Integer bookingShopId) {
+		BookingShopResult result = new BookingShopResult();
+		BookingShop shop =bookingShopBiz.selectByPrimaryKey(bookingShopId);
+		result.setBookingShop(shop);
+		//查询实际消费返款列表
+		List<BookingShopDetail> shopDetails =bookingShopDetailBiz.getShopDetailListByBookingId(bookingShopId);
+		result.setShopDetails(shopDetails);
+		return result;
+	}
+
+	@Override
+	public BookingShopResult editFactShop(Integer orderId,
+			Integer bookingShopDetailId) {
+		BookingShopResult result = new BookingShopResult();
+		List<BookingShopDetailDeploy> deploys = bookingShopDetailDeployBiz.selectByDetailId(bookingShopDetailId);
+		result.setShopDetailDeploys(deploys);
+		List<GroupOrder> groupOrders = tourGroupBiz.selectOrderAndGuestInfoByGroupId(orderId);
+		result.setGroupOrders(groupOrders);
+		return result;
+	}
+
+	@Override
+	public BookingShopDetail getShopDetailById(Integer bookingShopDetailId) {
+		BookingShopDetail shopDetail = bookingShopDetailBiz.getShopDetailById(bookingShopDetailId);
+		return shopDetail;
+	}
+
+	@Override
+	public ResultSupport saveShopDetail(BookingShopDetail shopDetail) {
+		ResultSupport resultSupport = new ResultSupport();
+		int saveResult = bookingShopDetailBiz.save(shopDetail);
+		
+		if(shopDetail.getId()!=null){
+			financeBiz.calcTourGroupAmount(shopDetail.getBookingId());
+		}
+		if (saveResult < 1) {
+			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+		}
+		return resultSupport;
+	}
+
+	@Override
+	public ResultSupport delShopDetail(Integer bookingShopDetailId,
+			Integer groupId) {
+		ResultSupport resultSupport = new ResultSupport();
+		int delResult = bookingShopDetailBiz.deleteByPrimaryKey(bookingShopDetailId);
+		financeBiz.calcTourGroupAmount(groupId);
+		if (delResult < 1) {
+			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+		}
+		return resultSupport;
+	}
+
+	@Override
+	public ResultSupport saveShopDetail(BookingShopDetailDeployVO vo) {
+		ResultSupport resultSupport = new ResultSupport();
+		int insertResult = bookingShopDetailDeployBiz.insertSelective(vo);
+		if(insertResult < 1) {
+			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+		}
+		return resultSupport;
+	}
+
+	@Override
+	public PageBean shopTJList(PageBean pageBean, Integer bizId) {
+		BookingShopResult result = new BookingShopResult();
+		PageBean page= bookingShopBiz.selectShopTJListPage(pageBean);
+		List<Map<String,Object>> lists = pageBean.getResult();
+		for (Map<String, Object> map : lists) {
+			PlatformOrgPo platformOrgPo = platformOrgBiz.getCompanyByEmployeeId(bizId, (Integer)map.get("operator_id"));
+			if(null!=platformOrgPo){
+				map.put("company", platformOrgPo.getName());
+			}
+		}
+		return page;
 	}
 
 }

@@ -36,5 +36,14 @@ public class Constants {
     public static final Integer SUPPLIERCOMMENT = 14; // 商家评论
     public static final Integer INSURANCE = 15; // 保险
     public static final Integer LOCALTRAVEL = 16; // 地接社
+    
+    /**
+     * 资源系统，调整库存动作
+     * @author zm
+     *STOCK调整库存、STOCK_DISABLE调整机动位、ORDER_RESERVE预留订单、ORDER_SOLD全款下单、ORDER_CANCEL取消订单、ORDER_CLEAN系统清位
+     */
+    public static enum TRAFFICRES_STOCK_ACTION {
+    	STOCK, STOCK_DISABLE,  ORDER_RESERVE, ORDER_SOLD, ORDER_CANCEL, ORDER_CLEAN
+    }
 
 }

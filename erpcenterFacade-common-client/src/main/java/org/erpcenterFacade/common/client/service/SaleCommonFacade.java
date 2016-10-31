@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.erpcenterFacade.common.client.result.DicListResult;
 
+import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
+import com.yimayhd.erpresource.dal.constants.Constants;
 
 /**
  * @ClassName: SaleCommonFacade
@@ -31,4 +33,21 @@ public interface SaleCommonFacade {
 	List<DicInfo> getShopListByTypeCode();
 	List<DicInfo> getCommissionItemListByTypeCode(Integer bizId);
 	DicListResult getDicList(Integer bizId);
+	List<DicInfo> getCouponListByTypeCode(Integer bizId);
+	List<DicInfo> getHotelLevelListByTypeCode();
+	List<DicInfo> getHotelTypeListByTypeCode();
+	List<DicInfo> getEatListByTypeCode( );
+	List<DicInfo> getGolfListByTypeCode( );
+	List<DicInfo> getOtherListByTypeCode( );
+	List<DicInfo> getAirticketListByTypeCode( );
+	List<DicInfo> getTrainTicketListByTypeCode( );
+	List<DicInfo> getInsuranceListByTypeCode( );
+	List<DicInfo> getSettleWayListByTypeCode(Integer bizId);
+	List<DicInfo> getEntainmentListByTypeCode( );
+	List<DicInfo> getIncomeTypeListByTypeCode(Integer bizId);
+	List<DicInfo> getIncomeTypeListByTypeCode();
+	List<DicInfo> getGuideListByTypeCode();
+    List<DicInfo> getInsuranceItemsByTypeCode();
+    List<DicInfo> getTrainTicketTypesByTypeCode();
+    List<DicInfo> getAirTicketTypesByTypeCode();
 }

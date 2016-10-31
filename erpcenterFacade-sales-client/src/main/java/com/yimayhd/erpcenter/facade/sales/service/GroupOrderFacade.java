@@ -177,11 +177,11 @@ public interface GroupOrderFacade {
 
 	ToShoppingDetailPreviewResult toShoppingDetailPreview(Integer groupId);
 
-	CreateShoppingDetailResult createShoppingDetail(Integer groupId,String imgPath,String userName);
+	CreateShoppingDetailResult createShoppingDetail(Integer groupId,String userName);
 
 	ToShoppingDetailPreviewResult toShoppingDetailPreview1(Integer groupId, String userName);
 
-	CreateShoppingDetailResult createShoppingDetail2(Integer groupId,String imgPath,String userName);
+	CreateShoppingDetailResult createShoppingDetail2(Integer groupId,String userName);
 
 	CreatetTicklingResult createtTickling(Integer groupId);
 
