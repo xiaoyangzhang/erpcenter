@@ -5,6 +5,7 @@ import java.util.List;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
 
 public class ToSecImpNotGroupListResult extends BaseStateResult {
 	private GroupOrder groupOrder;

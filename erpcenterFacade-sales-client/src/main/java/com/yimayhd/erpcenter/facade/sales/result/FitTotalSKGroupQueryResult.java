@@ -12,6 +12,9 @@ public class FitTotalSKGroupQueryResult implements Serializable {
 	private TourGroup group;
 	private PageBean pageBean;
 	private TourGroup tourGroup;
+	
+	private String orgJsonStr;
+	private String orgUserJsonStr;
 
 	public TourGroup getGroup() {
 		return group;
@@ -35,5 +38,21 @@ public class FitTotalSKGroupQueryResult implements Serializable {
 
 	public void setTourGroup(TourGroup tourGroup) {
 		this.tourGroup = tourGroup;
+	}
+
+	public String getOrgJsonStr() {
+		return orgJsonStr;
+	}
+
+	public void setOrgJsonStr(String orgJsonStr) {
+		this.orgJsonStr = orgJsonStr;
+	}
+
+	public String getOrgUserJsonStr() {
+		return orgUserJsonStr;
+	}
+
+	public void setOrgUserJsonStr(String orgUserJsonStr) {
+		this.orgUserJsonStr = orgUserJsonStr;
 	}
 }
