@@ -15,6 +15,7 @@ public class ToChangeGroupResult extends ResultSupport{
     private int groupId;
     private TourGroup tourGroup;
     private List<GroupOrder> orderList;
+    private GroupOrder groupOrde;
 
     public int getGroupId() {
         return groupId;
@@ -38,5 +39,13 @@ public class ToChangeGroupResult extends ResultSupport{
 
     public void setOrderList(List<GroupOrder> orderList) {
         this.orderList = orderList;
+    }
+
+    public GroupOrder getGroupOrde() {
+        return groupOrde;
+    }
+
+    public void setGroupOrde(GroupOrder groupOrde) {
+        this.groupOrde = groupOrde;
     }
 }

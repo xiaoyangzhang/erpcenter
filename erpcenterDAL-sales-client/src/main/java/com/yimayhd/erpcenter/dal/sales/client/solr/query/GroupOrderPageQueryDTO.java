@@ -30,6 +30,9 @@ public class GroupOrderPageQueryDTO extends PageQuery implements Serializable {
 	private Integer operType;//1sale_operator_id,2operator_id,3creator_id
 	private String goCreatorId;//IN
 	private Integer goSourcetypeId;//!=-1&&!=NULL
+	private String tourGroupCode;//!=-1&&!=NULL
+	private String goSupplierName;//!=-1&&!=NULL
+	private String tourProductName;//!=-1&&!=NULL
 	private Set<Integer> listTypeIds;//什么都不判
 	//排序条件ORDER BY tg.date_start ,tg.`create_time`
 	//tg.group_mode > 0
@@ -314,6 +317,42 @@ public class GroupOrderPageQueryDTO extends PageQuery implements Serializable {
 	 */
 	public void setListTypeIds(Set<Integer> listTypeIds) {
 		this.listTypeIds = listTypeIds;
+	}
+	/**
+	 * @return the tourGroupCode
+	 */
+	public String getTourGroupCode() {
+		return tourGroupCode;
+	}
+	/**
+	 * @param tourGroupCode the tourGroupCode to set
+	 */
+	public void setTourGroupCode(String tourGroupCode) {
+		this.tourGroupCode = tourGroupCode;
+	}
+	/**
+	 * @return the goSupplierName
+	 */
+	public String getGoSupplierName() {
+		return goSupplierName;
+	}
+	/**
+	 * @param goSupplierName the goSupplierName to set
+	 */
+	public void setGoSupplierName(String goSupplierName) {
+		this.goSupplierName = goSupplierName;
+	}
+	/**
+	 * @return the tourProductName
+	 */
+	public String getTourProductName() {
+		return tourProductName;
+	}
+	/**
+	 * @param tourProductName the tourProductName to set
+	 */
+	public void setTourProductName(String tourProductName) {
+		this.tourProductName = tourProductName;
 	}
 	
 	
