@@ -140,6 +140,11 @@
 				<artifactId>erpcenterFacade-basic-client</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-ticket-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
