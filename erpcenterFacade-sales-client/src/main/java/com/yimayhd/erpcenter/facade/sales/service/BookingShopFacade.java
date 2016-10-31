@@ -2,20 +2,27 @@ package com.yimayhd.erpcenter.facade.sales.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingShopDetailDeployVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopDTO;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopDetailDeployDTO;
 import com.yimayhd.erpcenter.facade.sales.query.BookingShopListDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ContractPriceExtDTO;
 import com.yimayhd.erpcenter.facade.sales.result.BookingShopInputResult;
+import com.yimayhd.erpcenter.facade.sales.result.BookingShopResult;
 import com.yimayhd.erpcenter.facade.sales.result.GuestShopListResult;
 import com.yimayhd.erpcenter.facade.sales.result.GuestShopResult;
 import com.yimayhd.erpcenter.facade.sales.result.LoadBookingShopInfoResult;
 import com.yimayhd.erpcenter.facade.sales.result.LoadShopInfoResult;
+import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.sales.result.ToAddShopResult;
 import com.yimayhd.erpcenter.facade.sales.result.ToFactShopResult;
+import com.yimayhd.erpcenter.facade.sales.result.WebResult;
 import com.yimayhd.erpresource.dal.po.SupplierItem;
 
 /**
@@ -149,4 +156,18 @@ public interface BookingShopFacade {
 	 */
 	String contractPriceExt(ContractPriceExtDTO contractPriceExtDTO);
 	
+	PageBean getShopGroupList(PageBean pageBean,TourGroupVO groupVO,Set<Integer> set);
+	BookingShopResult groupShopBookingList(Integer groupId);
+	boolean checkGroupCanEdit(Integer groupId);
+	
+	ResultSupport saveShopInfo(BookingShop bookingShop ,String bizCode);
+	
+	WebResult<Map<String, Boolean>> deldetailGuide(Integer bookingShopId);
+	BookingShopResult toFactShop(Integer bookingShopId);
+	BookingShopResult editFactShop(Integer orderId,Integer bookingShopDetailId);
+	BookingShopDetail getShopDetailById(Integer bookingShopDetailId);
+	ResultSupport saveShopDetail(BookingShopDetail shopDetail);
+	ResultSupport delShopDetail(Integer bookingShopDetailId,Integer groupId);
+	ResultSupport saveShopDetail(BookingShopDetailDeployVO vo);
+	PageBean shopTJList(PageBean pageBean,Integer bizId);
 }
