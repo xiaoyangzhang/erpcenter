@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONObject;
 import com.yimayhd.base.cache.core.factory.ManagerFactory;
-import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
+import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.dao.RegionMapper;
 import com.yimayhd.erpcenter.dal.basic.dto.ReginCacheDTO;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;

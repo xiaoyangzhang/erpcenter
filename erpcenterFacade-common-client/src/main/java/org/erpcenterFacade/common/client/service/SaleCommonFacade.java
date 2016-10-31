@@ -5,9 +5,7 @@ import java.util.List;
 
 import org.erpcenterFacade.common.client.result.DicListResult;
 
-import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
-import com.yimayhd.erpresource.dal.constants.Constants;
 
 /**
  * @ClassName: SaleCommonFacade

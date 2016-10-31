@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformMenuBiz;
-import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
+import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformRolePo;
@@ -17,7 +17,6 @@ import com.yimayhd.erpcenter.facade.sys.query.PlatformMenuPoDTO;
 import com.yimayhd.erpcenter.facade.sys.query.PlatformRolePoListDTO;
 import com.yimayhd.erpcenter.facade.sys.result.MenuOptVoResult;
 import com.yimayhd.erpcenter.facade.sys.result.PlatformMenuPoListResult;
-import com.yimayhd.erpcenter.facade.sys.result.PlatformOrgPoListResult;
 import com.yimayhd.erpcenter.facade.sys.service.SysPlatformMenuFacade;
 
 /**
