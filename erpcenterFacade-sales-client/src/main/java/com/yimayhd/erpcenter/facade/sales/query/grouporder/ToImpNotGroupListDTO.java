@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.facade.sales.result.grouporder;
+package com.yimayhd.erpcenter.facade.sales.query.grouporder;
 
 import java.io.Serializable;
 import java.util.Set;
