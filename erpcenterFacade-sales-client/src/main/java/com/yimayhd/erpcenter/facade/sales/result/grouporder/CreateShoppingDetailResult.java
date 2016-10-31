@@ -1,37 +1,38 @@
 package com.yimayhd.erpcenter.facade.sales.result.grouporder;
 
 import java.util.List;
-import java.util.Map;
 
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrintPo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
 
 public class CreateShoppingDetailResult extends BaseStateResult {
-	private static final long serialVersionUID = -605812753076086951L;
-	private List<Map<String, String>> guestList;
-	private Map<String, Object> params1;
-	private Map<String, Object> map0;
+	private static final long serialVersionUID = -6111089658141423946L;
+	private TourGroup tg;
+	private List<GroupOrderPrintPo> gops;
+	private String guideString;
 
-	public List<Map<String, String>> getGuestList() {
-		return guestList;
+	public TourGroup getTg() {
+		return tg;
 	}
 
-	public void setGuestList(List<Map<String, String>> guestList) {
-		this.guestList = guestList;
+	public void setTg(TourGroup tg) {
+		this.tg = tg;
 	}
 
-	public Map<String, Object> getParams1() {
-		return params1;
+	public List<GroupOrderPrintPo> getGops() {
+		return gops;
 	}
 
-	public void setParams1(Map<String, Object> params1) {
-		this.params1 = params1;
+	public void setGops(List<GroupOrderPrintPo> gops) {
+		this.gops = gops;
 	}
 
-	public Map<String, Object> getMap0() {
-		return map0;
+	public String getGuideString() {
+		return guideString;
 	}
 
-	public void setMap0(Map<String, Object> map0) {
-		this.map0 = map0;
+	public void setGuideString(String guideString) {
+		this.guideString = guideString;
 	}
 }
