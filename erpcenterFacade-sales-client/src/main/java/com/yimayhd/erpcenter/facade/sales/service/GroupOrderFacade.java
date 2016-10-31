@@ -88,7 +88,6 @@ public interface GroupOrderFacade {
 
 	ToDeliveryPriceTableResult toDeliveryPriceTable(ToDeliveryPriceTableDTO toDeliveryPriceTableDTO);
 
-	//FIXME 下面两个方法有重复的
 	BaseStateResult insertGroupMany(String ids, String code);
 
 	BaseStateResult insertGroup(Integer id, String code);
@@ -102,7 +101,6 @@ public interface GroupOrderFacade {
 
 	ToFitEditResult toFitEdit(Integer groupId, Integer bizId);
 
-	//FIXME 这个和fitGroup好像有冗余
 	BaseStateResult mergeGroup(MergeGroupDTO mergeGroupDTO) throws ParseException;
 
 	BaseStateResult secMergeGroup(Integer groupId, String ids);

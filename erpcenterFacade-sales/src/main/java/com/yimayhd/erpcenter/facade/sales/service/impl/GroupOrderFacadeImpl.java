@@ -806,7 +806,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		return new BaseStateResult(true, null);
 	}
 
-	@Override // FIXME 此方法重复
+	@Override
 	public BaseStateResult beforeInsertGroup(String ids) {
 
 		BaseStateResult result = new BaseStateResult();
@@ -1389,7 +1389,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			groupOrderService.saveGroupOrder(groupOrderVO, groupRouteVO, insertList);
 			// 更新库存信息
 			ProductGroup group = productGroupService.getGroupInfoById(priceGroupId);
-			boolean updateStock = productGroupPriceService.updateStock(priceId,
+			productGroupPriceService.updateStock(priceId,
 					group.getGroupSetting() == 0 ? groupOrderVO.getGroupOrder().getSupplierId() : null,
 					groupOrderVO.getGroupOrderGuestList().size());
 		} catch (Exception ex) {
@@ -2048,7 +2048,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 	
 	public CreateSKGuideResult createSKGuide(Integer groupId,String imgPath,String userName){
 		
-		Map<String, Object> datas = bookingSupplierService.selectBookingInfo(groupId, 1);
+		//Map<String, Object> datas = bookingSupplierService.selectBookingInfo(groupId, 1);
 		
 		// 查询导游信息
 		List<BookingGuide> guides = bookingGuideService.selectGuidesByGroupId(groupId);
@@ -2072,11 +2072,11 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		/**
 		 * 获取全陪，定制团一个团对应一个订单
 		 */
-		List<GroupOrder> orders = groupOrderService.selectOrderByGroupId(tourGroup.getId());
-		GroupOrder order = orders.get(0);
+//		List<GroupOrder> orders = groupOrderService.selectOrderByGroupId(tourGroup.getId());
+//		GroupOrder order = orders.get(0);
 		
 //		/**
-//		 * logo图片 FIXME 待修复
+//		 * logo图片
 //		 */
 //		String imgPath = settingCommon.getMyBizLogo(request);
 		Map<String, Object> params1 = new HashMap<String, Object>();
