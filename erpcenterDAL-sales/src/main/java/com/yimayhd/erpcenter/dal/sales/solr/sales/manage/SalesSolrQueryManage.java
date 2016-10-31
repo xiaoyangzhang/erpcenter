@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.common.solr.BaseSolrQueryManager;
 import com.yimayhd.erpcenter.common.solr.SolrSearchPageDTO;
@@ -13,7 +14,10 @@ import com.yimayhd.erpcenter.dal.sales.constants.SalesCollectionEnum;
 import com.yimayhd.erpcenter.dal.sales.solr.sales.converter.SaleOrderConverter;
 
 
-public class SalesSolrQueryManage extends BaseSolrQueryManager{
+public class SalesSolrQueryManage  {
+	
+	@Autowired
+	private BaseSolrQueryManager solrQueryManager;
 
 	public SolrSearchPageDTO<GroupOrderDTO> searchSalesOrder(GroupOrderPageQueryDTO  queryDTO){
 	    
@@ -22,7 +26,7 @@ public class SalesSolrQueryManage extends BaseSolrQueryManager{
 
 		 SolrQuery solrQuery = SaleOrderConverter.queryDTO2SolrQuery(queryDTO);
 	     
-        QueryResponse response =  this.querySolrDataByFilters(SalesCollectionEnum.SALES_GROUPORDER.getCollection(), solrQuery);
+        QueryResponse response =  solrQueryManager.querySolrDataByFilters(SalesCollectionEnum.SALES_GROUPORDER.getCollection(), solrQuery);
         List<GroupOrderDTO> dtoList = response.getBeans(GroupOrderDTO.class);
         
         pageResult.setList(dtoList);

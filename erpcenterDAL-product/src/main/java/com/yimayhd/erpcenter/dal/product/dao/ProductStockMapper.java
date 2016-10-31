@@ -59,6 +59,6 @@ public interface ProductStockMapper {
 	 * @param pageBean
 	 * @return
 	 */
-	List<ProductStock> selectProductStockListDumpPage(@Param("page") PageBean pageBean);
+	List<ProductStock> selectProductStockDumpListPage(@Param("page") PageBean pageBean);
 
 }

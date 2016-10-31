@@ -76,6 +76,6 @@ public interface ProductInfoMapper {
 	 * @param pageBean
 	 * @return
 	 */
-	List<ProductInfo> selectProductListDumpPage(@Param("page") PageBean pageBean);
+	List<ProductInfo> selectProductDumpListPage(@Param("page") PageBean pageBean);
 	
 }

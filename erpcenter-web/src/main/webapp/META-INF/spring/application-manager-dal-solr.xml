@@ -12,7 +12,14 @@
 		<constructor-arg index="2" value="${zk.connect.timeout}"></constructor-arg>
 	</bean>
 	
+	<bean id="solrQueryManager" class="com.yimayhd.erpcenter.common.solr.BaseSolrQueryManager" />
+	
 	
 	<bean id="productSolrQueryManager" class="com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager" />
+	
+	<bean id="salesSolrQueryManage" class="com.yimayhd.erpcenter.dal.sales.solr.sales.manage.SalesSolrQueryManage" />
+	
+	<bean id="tourGroupSolrQueryManager" class="com.yimayhd.erpcenter.dal.sales.solr.manager.TourGroupSolrQueryManager" />
+	
 	
 </beans>
