@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.facade.sales.result;
+package com.yimayhd.erpcenter.facade.sales.result.grouporder;
 
 import java.io.Serializable;
 import java.util.List;
@@ -7,7 +7,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrintPo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 
 public class PreviewFitTransferResult implements Serializable {
-
+	private static final long serialVersionUID = -5474445530545179886L;
 	private String DeliveryDetail;
 	private List<GroupOrderPrintPo> gopps;
 	private String total;
@@ -15,6 +15,15 @@ public class PreviewFitTransferResult implements Serializable {
 	private TourGroup tourGroup;
 	private String guideString = "";
 	private String driverString = "";
+	private String operatormobile;
+
+	public String getOperatormobile() {
+		return operatormobile;
+	}
+
+	public void setOperatormobile(String operatormobile) {
+		this.operatormobile = operatormobile;
+	}
 
 	public String getDeliveryDetail() {
 		return DeliveryDetail;

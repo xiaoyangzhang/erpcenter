@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.facade.sales.result;
+package com.yimayhd.erpcenter.facade.sales.result.grouporder;
 
 import java.util.List;
 
@@ -7,10 +7,11 @@ import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
 
-public class ToSecImpNotGroupListResult extends BaseStateResult {
+public class ToImpNotGroupListResult extends BaseStateResult {
+	private static final long serialVersionUID = -61522686279328518L;
 	private GroupOrder groupOrder;
-	private List<DicInfo> pp;
 	private PageBean pageBean;
+	private List<DicInfo> pp;
 
 	public GroupOrder getGroupOrder() {
 		return groupOrder;
@@ -20,19 +21,19 @@ public class ToSecImpNotGroupListResult extends BaseStateResult {
 		this.groupOrder = groupOrder;
 	}
 
-	public List<DicInfo> getPp() {
-		return pp;
-	}
-
-	public void setPp(List<DicInfo> pp) {
-		this.pp = pp;
-	}
-
 	public PageBean getPageBean() {
 		return pageBean;
 	}
 
 	public void setPageBean(PageBean pageBean) {
 		this.pageBean = pageBean;
+	}
+
+	public List<DicInfo> getPp() {
+		return pp;
+	}
+
+	public void setPp(List<DicInfo> pp) {
+		this.pp = pp;
 	}
 }

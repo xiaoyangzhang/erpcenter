@@ -1,8 +1,8 @@
-package com.yimayhd.erpcenter.facade.sales.service;
+package com.yimayhd.erpcenter.facade.sales.service.bak;
 
 import com.yimayhd.erpcenter.facade.sales.query.ToSKConfirmPreviewDTO;
-import com.yimayhd.erpcenter.facade.sales.result.PreviewFitTransferResult;
 import com.yimayhd.erpcenter.facade.sales.result.ToSKConfirmPreviewResult;
+import com.yimayhd.erpcenter.facade.sales.result.grouporder.PreviewFitTransferResult;
 
 /**
  * 销售-团信息等查询打印
