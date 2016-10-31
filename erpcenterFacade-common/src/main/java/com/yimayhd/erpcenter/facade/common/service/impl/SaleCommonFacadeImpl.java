@@ -71,4 +71,108 @@ public class SaleCommonFacadeImpl implements SaleCommonFacade {
 		return result;
 	}
 
+	@Override
+	public List<DicInfo> getCouponListByTypeCode(Integer bizId) {
+		List<DicInfo> dicInfos = dicBiz.getListByTypeCode(BasicConstants.LD_DJLX, bizId);
+		return dicInfos;
+	}
+
+	@Override
+	public List<DicInfo> getHotelLevelListByTypeCode() {
+		List<DicInfo> hotelLevels = dicBiz.getListByTypeCode(BasicConstants.GYXX_JDXJ);
+		return hotelLevels;
+	}
+
+	@Override
+	public List<DicInfo> getHotelTypeListByTypeCode() {
+		List<DicInfo> hotelTypes = dicBiz.getListByTypeCode(Constants.HOTEL_TYPE_CODE_1);
+		return hotelTypes;
+	}
+
+	@Override
+	public List<DicInfo> getSettleWayListByTypeCode(Integer bizId) {
+		List<DicInfo> settleWays = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		return settleWays;
+	}
+
+	@Override
+	public List<DicInfo> getEatListByTypeCode() {
+		List<DicInfo> eatTypes = dicBiz.getListByTypeCode(Constants.RESTAURANT_TYPE_CODE);
+		return eatTypes;
+	}
+
+	@Override
+	public List<DicInfo> getGolfListByTypeCode() {
+		List<DicInfo> golfTypes = dicBiz.getListByTypeCode(Constants.GOLF_TYPE_CODE);
+		return golfTypes;
+	}
+
+	@Override
+	public List<DicInfo> getOtherListByTypeCode() {
+		List<DicInfo> otherTypes = dicBiz.getListByTypeCode(Constants.OTHER_TYPE_CODE);
+		return otherTypes;
+	}
+
+	@Override
+	public List<DicInfo> getAirticketListByTypeCode() {
+		List<DicInfo> airTicketTypes = dicBiz.getListByTypeCode(Constants.AIRTICKET_TYPE_CODE);
+		return airTicketTypes;
+	}
+
+	@Override
+	public List<DicInfo> getTrainTicketListByTypeCode() {
+		List<DicInfo> trainTicketTypes = dicBiz.getListByTypeCode(Constants.TRAINTICKET_TYPE_CODE);
+		return trainTicketTypes;
+	}
+
+	@Override
+	public List<DicInfo> getInsuranceListByTypeCode() {
+		List<DicInfo> insuranceTypes = dicBiz.getListByTypeCode(Constants.INSURANCE_TYPE_CODE);
+		return insuranceTypes;
+	}
+
+	
+
+	@Override
+	public List<DicInfo> getEntainmentListByTypeCode() {
+		List<DicInfo> entainmentTypes = dicBiz.getListByTypeCode(Constants.ENTERTAINMENT_TYPE_CODE);
+		return entainmentTypes;
+	}
+
+	@Override
+	public List<DicInfo> getIncomeTypeListByTypeCode(Integer bizId) {
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.QTSR_JSFS, bizId);
+		return cashTypes;
+	}
+
+	@Override
+	public List<DicInfo> getIncomeTypeListByTypeCode() {
+		List<DicInfo> incomeTypes = dicBiz.getListByTypeCode(BasicConstants.GYS_QT_SR);
+		return incomeTypes;
+	}
+
+	@Override
+	public List<DicInfo> getGuideListByTypeCode() {
+		List<DicInfo> guideTypes = dicBiz.getListByTypeCode(Constants.GUIDE_TYPE_CODE);
+		return guideTypes;
+	}
+
+	@Override
+	public List<DicInfo> getInsuranceItemsByTypeCode() {
+		List<DicInfo> insuranceTypes = dicBiz.getListByTypeCode(Constants.GYS_BX_XM);
+		return insuranceTypes;
+	}
+
+	@Override
+	public List<DicInfo> getTrainTicketTypesByTypeCode() {
+		List<DicInfo> trainTypes = dicBiz.getListByTypeCode(Constants.GYS_HCP_LB);
+		return trainTypes;
+	}
+
+	@Override
+	public List<DicInfo> getAirTicketTypesByTypeCode() {
+		List<DicInfo> airTypes = dicBiz.getListByTypeCode(Constants.GYS_JP_LB);
+		return airTypes;
+	}
+
 }

@@ -135,6 +135,11 @@
 				<artifactId>erpcenterFacade-supplier-client</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-basic-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
@@ -618,7 +623,36 @@
 				<artifactId>solr-solrj</artifactId>
 				<version>5.3.0</version>
 			</dependency>
-			
+			<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml-schemas</artifactId>
+			<version>3.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-excelant</artifactId>
+			<version>3.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-scratchpad</artifactId>
+			<version>3.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>ooxml-schemas</artifactId>
+			<version>1.1</version>
+		</dependency>
 			<dependency>
 				<groupId>com.yihg</groupId>    
 				<artifactId>yihg-architect-mybatis</artifactId>

@@ -42,7 +42,13 @@ public class BookingShopResult extends ResultSupport implements Serializable {
 	private List<BookingShopDetailDeploy> shopDetailDeploys;
 	private List<GroupOrder> groupOrders;
 	private TourGroup tourGroup;
-	
+	private boolean groupAbleEdit;
+	public boolean isGroupAbleEdit() {
+		return groupAbleEdit;
+	}
+	public void setGroupAbleEdit(boolean groupAbleEdit) {
+		this.groupAbleEdit = groupAbleEdit;
+	}
 	public TourGroup getTourGroup() {
 		return tourGroup;
 	}

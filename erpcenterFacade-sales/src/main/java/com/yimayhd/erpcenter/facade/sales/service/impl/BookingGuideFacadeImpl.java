@@ -3,7 +3,6 @@
  */
 package com.yimayhd.erpcenter.facade.sales.service.impl;
 
-import java.security.interfaces.RSAKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.util.WebUtils;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
@@ -53,7 +51,6 @@ import com.yimayhd.erpcenter.facade.sales.result.WebResult;
 import com.yimayhd.erpcenter.facade.sales.service.BookingGuideFacade;
 import com.yimayhd.erpresource.biz.service.SupplierGuideBiz;
 import com.yimayhd.erpresource.dal.constants.Constants;
-import com.yimayhd.erpresource.dal.constants.SupplierConstant;
 import com.yimayhd.erpresource.dal.po.SupplierGuide;
 
 /**
@@ -417,6 +414,7 @@ public class BookingGuideFacadeImpl implements BookingGuideFacade {
 		result.setSupplierGuide(sg);
 		List<GroupRoute> routeList = groupRouteBiz.selectByGroupId(tourGroup.getId());
 		result.setGroupRoutes(routeList);
+//		String operatorMobile = platformEmployeeBiz.findByEmployeeId(tourGroup.getOperatorId()).getMobile();
 		return result;
 	}
 
@@ -559,6 +557,7 @@ public class BookingGuideFacadeImpl implements BookingGuideFacade {
 			for (GroupRequirement groupRequirement : grogShopList) {
 				sb.append(groupRequirement.getRequireDate() + " "
 						+ dicBiz.getById(Integer.parseInt(groupRequirement.getHotelLevel())+"").getValue() + " "
+				  		+ dicBiz.getById(groupRequirement.getHotelLevel()).getValue() + " "
 						+ groupRequirement.getCountSingleRoom() + "单间" + " "
 						+ groupRequirement.getCountDoubleRoom() + "标间" + " "
 						+ groupRequirement.getCountTripleRoom() + "三人间");

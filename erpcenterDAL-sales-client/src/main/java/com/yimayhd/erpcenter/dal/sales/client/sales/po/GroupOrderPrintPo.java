@@ -49,10 +49,17 @@ public class GroupOrderPrintPo implements Serializable{
 	//线路类型
 	private String trans ;
 	
-	private List<GroupOrderGuest> guests = new ArrayList<GroupOrderGuest>() ;
+	private List<GroupOrderGuest> guests  ;
 	private GroupOrder groupOrder;
 	private List<GroupOrderTransport> orderTransports;
+	private List<GroupRequirement> groupRequirements;
 	
+	public List<GroupRequirement> getGroupRequirements() {
+		return groupRequirements;
+	}
+	public void setGroupRequirements(List<GroupRequirement> groupRequirements) {
+		this.groupRequirements = groupRequirements;
+	}
 	public List<GroupOrderTransport> getOrderTransports() {
 		return orderTransports;
 	}
@@ -66,7 +73,7 @@ public class GroupOrderPrintPo implements Serializable{
 		this.groupOrder = groupOrder;
 	}
 	public List<GroupOrderGuest> getGuests() {
-		return guests;
+		return new ArrayList<GroupOrderGuest>();
 	}
 	public void setGuests(List<GroupOrderGuest> guests) {
 		this.guests = guests;

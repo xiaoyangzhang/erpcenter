@@ -16,5 +16,6 @@
 	<bean id="msgDal" class="com.yimayhd.erpcenter.dal.basic.service.impl.MsgDalImpl" />
 	<bean id="regionCardDal" class="com.yimayhd.erpcenter.dal.basic.service.impl.RegionCardDalImpl" />
 	<bean id="regionDal" class="com.yimayhd.erpcenter.dal.basic.service.impl.RegionDalImpl" />
+	<bean id="logOperatorDal" class="com.yimayhd.erpcenter.dal.basic.service.impl.LogOperatorDalImpl" />
 	
 </beans>

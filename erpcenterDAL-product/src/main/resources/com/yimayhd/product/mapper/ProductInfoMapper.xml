@@ -770,7 +770,7 @@ ORDER BY info.create_time
   </select>
   
   <!-- dump数据查询 -->
-  <select id="selectProductListDumpPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
+  <select id="selectProductDumpListPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
 	SELECT 
    <include refid="Base_Column_List" />
     FROM product_info info

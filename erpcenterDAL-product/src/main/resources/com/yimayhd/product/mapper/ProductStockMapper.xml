@@ -190,7 +190,7 @@
   </update>
   
   <!-- dump数据查询 -->
-  <select id="selectProductStockListDumpPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
+  <select id="selectProductStockDumpListPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
 	SELECT 
    <include refid="Base_Column_List" />
     FROM product_stock ps
