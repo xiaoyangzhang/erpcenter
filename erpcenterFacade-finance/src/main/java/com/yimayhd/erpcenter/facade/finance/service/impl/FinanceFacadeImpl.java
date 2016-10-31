@@ -53,6 +53,7 @@ import org.yimayhd.erpcenter.facade.finance.result.SettleSealListResult;
 import org.yimayhd.erpcenter.facade.finance.result.StatementCheckPreviewResult;
 import org.yimayhd.erpcenter.facade.finance.result.SubjectSummaryResult;
 import org.yimayhd.erpcenter.facade.finance.result.ToBookingShopVerifyListlResult;
+import org.yimayhd.erpcenter.facade.finance.result.TourGroupDetiailsResult;
 import org.yimayhd.erpcenter.facade.finance.result.VerifyBillResult;
 import org.yimayhd.erpcenter.facade.finance.result.ViewShopCommissionStatsListResult;
 import org.yimayhd.erpcenter.facade.finance.service.FinanceFacade;
@@ -65,12 +66,14 @@ import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceBillBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceGuideBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryPriceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingGuideBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopDetailBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierDetailBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderPriceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
@@ -81,12 +84,15 @@ import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePayDetail;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.InfoBean;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryPrice;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBillDetail;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount;
@@ -151,6 +157,12 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	@Autowired
 	private SupplierGuideBiz supplierGuideBiz;
 	
+	@Autowired
+	private GroupOrderBiz groupOrderBiz;
+	
+	@Autowired
+	private BookingDeliveryBiz bookingDeliveryBiz;
+	
 	/**
 	 * 此方法用来维护团金额的一致性
 	 * @param request
@@ -162,11 +174,15 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	@Override
 	public ResultSupport calcTourGroupAmount(Integer groupId) {
 		
-		if(groupId != null){
-			financeBiz.calcTourGroupAmount(groupId);
-		}
 		ResultSupport result = new ResultSupport();
-		result.setResultMsg("calculate over!");
+		try{
+			if(groupId != null){
+				financeBiz.calcTourGroupAmount(groupId);
+			}
+		}catch(Exception ex){
+			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
+		}
 		return result;
 	}
 
@@ -183,23 +199,29 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	@Override
 	public ResultSupport batchCalcTourGroupAmount(Integer bizId, Map paramters) {
 		
-		PageBean pb = new PageBean();
-		if(bizId != null){
-			paramters.put("bizId", bizId);
-		}
-		pb.setParameter(paramters);
-		List<TourGroup> results = tourGroupBiz.selectIdList(pb);
-		
-		if(results != null && results.size() > 0){
-			TourGroup group = null;
-			for(int i = 0; i < results.size(); i++){
-				group = results.get(i);
-				financeBiz.calcTourGroupAmount(group.getId());
-			}
-		}
-		
 		ResultSupport result = new ResultSupport();
-		result.setResultMsg("calculate over! fixed "+ results.size() +" tour groups");
+		try{
+			PageBean pb = new PageBean();
+			if(bizId != null){
+				paramters.put("bizId", bizId);
+			}
+			pb.setParameter(paramters);
+			List<TourGroup> results = tourGroupBiz.selectIdList(pb);
+			
+			if(results != null && results.size() > 0){
+				TourGroup group = null;
+				for(int i = 0; i < results.size(); i++){
+					group = results.get(i);
+					financeBiz.calcTourGroupAmount(group.getId());
+				}
+			}
+			
+			result.setResultMsg("calculate over! fixed "+ results.size() +" tour groups");
+			
+		}catch(Exception ex){
+			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
+		}
 		return result;
 	}
 
@@ -207,16 +229,17 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	public ResultSupport calcBookingSupplierTotalCash(Integer bookingSupplierId) throws IOException {
 		
 		ResultSupport result = new ResultSupport();
-		if(bookingSupplierId == null){
-			result.setSuccess(false);
-			result.setErrorCode(FinanceErrorCode.PARAM_ERROR);
-			result.setResultMsg("请输入bookingSupplierId!");
-			return result;
+		try{
+			if(bookingSupplierId == null){
+				result.setErrorCode(FinanceErrorCode.PARAM_ERROR);
+				return result;
+			}
+			
+			financeBiz.calcBookingSupplierTotalCash(bookingSupplierId);
+		}catch(Exception ex){
+			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
-		
-		financeBiz.calcBookingSupplierTotalCash(bookingSupplierId);
-
-		result.setResultMsg("calculate over!");
 		return result;
 	}
 
@@ -225,14 +248,16 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		
 		ResultSupport result = new ResultSupport();
 		if(groupOrderId == null){
-			result.setSuccess(false);
-			result.setResultMsg("请输入groupOrderId!");
+			result.setErrorCode(FinanceErrorCode.PARAM_ERROR);
 			return result;
 		}
 		
-		financeBiz.calcGroupOrderTotalCash(groupOrderId);
-		
-		result.setResultMsg("calculate over!");
+		try{
+			financeBiz.calcGroupOrderTotalCash(groupOrderId);
+		}catch(Exception ex){
+			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
+		}
 		return result;
 	}
 
@@ -591,6 +616,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			groupOrderPriceBiz.auditPriceByIds(auditDTO.getPriceCheckedIds(), auditDTO.getPriceUnCheckedIds());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		
 		return result;
@@ -625,6 +651,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			}
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -640,6 +667,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			financeBiz.audit(finAuditDTO.getGroupId(), finAuditDTO.getEmployeeId(), finAuditDTO.getEmployeeName());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -654,6 +682,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			financeBiz.unAudit(finAuditDTO.getGroupId(), finAuditDTO.getEmployeeName());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -666,6 +695,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			financeBiz.batchSeal(unsealDTO.getGroupIds(), unsealDTO.getEmployeeId(), unsealDTO.getEmployeeName());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -677,6 +707,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			financeBiz.unseal(unsealDTO.getGroupIds(), unsealDTO.getEmployeeId(), unsealDTO.getEmployeeName());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -861,6 +892,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 					saveDistributeBillDTO.getGuideId(), new Date(), saveDistributeBillDTO.getType());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -874,6 +906,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 					saveVerifyBillDTO.getGuideId(), new Date(), saveVerifyBillDTO.getType());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -885,6 +918,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			financeBillBiz.delVerify(orderId, type);
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -897,6 +931,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			financeBillBiz.delReceived(groupId, guideId);
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -1450,6 +1485,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 					auditCommDTO.getEmployeeId(), auditCommDTO.getEmployeeName());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -1462,6 +1498,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 					auditCommDTO.getEmployeeId(), auditCommDTO.getEmployeeName());
 		}catch(Exception ex){
 			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+			ex.printStackTrace();
 		}
 		return result;
 	}
@@ -1727,9 +1764,15 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		pm.put("set", queryDTO.getSet());
 		pageBean.setParameter(pm);
 		pageBean = financeBiz.getsubjectSummary2ListPage(pageBean,"");
+		
+		PageBean pageBean2 = new PageBean();
+		if(queryDTO.isHasSum()){
+			pageBean2 = financeBiz.getsubjectSummary2ListPage(pageBean,"sum");
+		}
 
 		SubjectSummaryResult result = new SubjectSummaryResult();
 		result.setPageBean(pageBean);
+		result.setPageBeanSum(pageBean2);
 		return result;
 	}
 
@@ -1801,6 +1844,74 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		}
 		return appContext.getBean(svc, CommonBiz.class);
 	}
-	
-	
+
+	@Override
+	public List<BookingSupplier> getBookingSupplierIdList() {
+		
+		List<BookingSupplier> results = bookingSupplierBiz.selectIdList();
+		return results;
+	}
+
+	@Override
+	public List<GroupOrder> getGroupOrderIdList(Integer supplierId) {
+		List<GroupOrder> results = groupOrderBiz.selectIdList(supplierId);
+		return results;
+	}
+
+	@Override
+	public List<TourGroup> selectGroupByDateZone(String startTime, String endTime, Integer bizId) {
+		List<TourGroup> results = tourGroupBiz.selectGroupByDateZone(startTime, endTime, bizId);
+		return results;
+	}
+
+	@Override
+	public TourGroupDetiailsResult getTourGroupDetails(Integer groupId) {
+		
+		TourGroupDetiailsResult result = new TourGroupDetiailsResult();
+		
+		// 旅行团信息
+		TourGroup tourGroup = tourGroupBiz.selectByPrimaryKey(groupId);
+		result.setTourGroup(tourGroup);
+		
+		// 销售订单
+		List<GroupOrder> orderList = groupOrderBiz.selectOrderByGroupId(groupId);
+		result.setOrderList(orderList);
+		
+		// 购物店收入
+		List<BookingShop> shoppingList = bookingShopBiz.getShopListByGroupId(groupId);
+		result.setShoppingList(shoppingList);
+		
+		// 其他收入
+		List<BookingSupplier> otherList = bookingSupplierBiz.getBookingSupplierByGroupIdAndSupplierType(groupId,
+						com.yimayhd.erpresource.dal.constants.Constants.OTHERINCOME);
+		result.setOtherList(otherList);
+		
+		// 地接社支出
+		List<BookingDelivery> deliveryList = bookingDeliveryBiz.getDeliveryListByGroupId(groupId);
+		result.setDeliveryList(deliveryList);
+		
+		// 供应商支出
+		List<BookingSupplier> paymentList = bookingSupplierBiz.selectByPrimaryGroupId(groupId);
+		result.setPaymentList(paymentList);
+		return result;
+	}
+
+	@Override
+	public List<GroupOrderPrice> getOrderPriceByOrder(Integer id) {
+		List<GroupOrderPrice> priceList = groupOrderPriceBiz.selectByOrder(id);
+		return priceList;
+	}
+
+	@Override
+	public List<BookingSupplierDetail> getBookingSupplierDetailById(Integer bookingSupplierId) {
+		
+		List<BookingSupplierDetail> detailList = bookingSupplierDetailBiz.selectByPrimaryBookId(bookingSupplierId);
+		return detailList;
+	}
+
+	@Override
+	public SupplierInfo getSupplierById(Integer supplierId) {
+		SupplierInfo info = supplierBiz.selectBySupplierId(supplierId);
+		return info;
+	}
 }

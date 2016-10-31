@@ -14,6 +14,14 @@ public class SubjectSummaryDTO extends BaseListPage{
 	private Integer bizId;
 	private Map<String, Object> paramters;
 	private Set<Integer> set;
+	private boolean hasSum;
+	
+	public boolean isHasSum() {
+		return hasSum;
+	}
+	public void setHasSum(boolean hasSum) {
+		this.hasSum = hasSum;
+	}
 	public String getSaleOperatorIds() {
 		return saleOperatorIds;
 	}

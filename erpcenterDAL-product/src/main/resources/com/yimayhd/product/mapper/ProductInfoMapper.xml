@@ -768,4 +768,13 @@ ORDER BY info.create_time
     FROM product_info
     where product_sys_id=#{productSysId,jdbcType=INTEGER}
   </select>
+  
+  <!-- dump数据查询 -->
+  <select id="selectProductListDumpPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
+	SELECT 
+   <include refid="Base_Column_List" />
+    FROM product_info info
+	WHERE info.state !=-1
+ </select>
+ 
 </mapper>

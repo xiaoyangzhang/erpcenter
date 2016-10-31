@@ -158,7 +158,7 @@ public class ProductStockConverter {
 		
 		if(queryDTO.getPsItemDateStart()!=null&&queryDTO.getPsItemDateEnd()!=null){
 			String dateQuery="psItemDate" + ":["+queryDTO.getPsItemDateStart().getTime()+" TO " +queryDTO.getPsItemDateEnd().getTime()+"]";
-			solrQuery.addFacetQuery(dateQuery);
+			solrQuery.addFilterQuery(dateQuery);
 
 		}
 		
@@ -170,7 +170,7 @@ public class ProductStockConverter {
 		String two = "-1";
 		q_sb.append("-infoState:" + "\""+two+"\"");
 
-		solrQuery.addFacetQuery(q_sb.toString());
+		solrQuery.addFilterQuery(q_sb.toString());
 		solrQuery.setParam(GroupParams.GROUP, true);
 		solrQuery.setParam(GroupParams.GROUP_FIELD, "infoId");
 		solrQuery.setParam("group.limit", "7");//每组显示的个数，默认为1

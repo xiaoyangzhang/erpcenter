@@ -1,10 +1,11 @@
 package com.yimayhd.erpcenter.facade.sales.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
-import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.airticket.AirTicketRequestBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductGroupSupplierBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingGuideBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopBiz;
@@ -13,8 +14,13 @@ import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierD
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
+import com.yimayhd.erpcenter.biz.sys.service.SysBizBankAccountBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;
+import com.yimayhd.erpcenter.dal.product.vo.ProductGroupSupplierVo;
+import com.yimayhd.erpcenter.dal.product.vo.ProductSupplierCondition;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
@@ -22,33 +28,24 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.*;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
+import com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount;
 import com.yimayhd.erpcenter.facade.sales.query.ChangeGroupDTO;
 import com.yimayhd.erpcenter.facade.sales.result.*;
 import com.yimayhd.erpcenter.facade.sales.service.TourGroupFacade;
 import com.yimayhd.erpcenter.facade.sales.utils.DateUtils;
 import com.yimayhd.erpcenter.facade.sales.utils.GroupCodeUtil;
-import com.yimayhd.erpcenter.facade.sales.utils.MD5Util;
-import com.yimayhd.erpcenter.facade.sales.utils.OpenPlatformConstannt;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.biz.service.SupplierDriverBiz;
 import com.yimayhd.erpresource.biz.service.SupplierGuideBiz;
 import com.yimayhd.erpresource.biz.service.SupplierImgBiz;
 import com.yimayhd.erpresource.dal.constants.BasicConstants;
 import com.yimayhd.erpresource.dal.po.*;
-import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.util.WebUtils;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -102,7 +99,12 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
     private GroupOrderPriceBiz groupOrderPriceBiz;
     @Autowired
     private GroupRequirementBiz groupRequirementBiz;
-
+    @Autowired
+    private SysBizBankAccountBiz sysBizBankAccountBiz;
+    @Autowired
+    private ProductGroupSupplierBiz productGroupSupplierBiz;
+    @Autowired
+    private ProductGroupBiz productGroupBiz;
 
 
     @Override
@@ -804,6 +806,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                 tourGroup.setUpdateTime(System.currentTimeMillis());
                 groupOrder = tourGroupBiz.updateByPrimaryKeySelective(
                         tourGroup, groupOrder);
+                toChangeGroupResult.setGroupOrde(groupOrder);
                 logger.info("后台更新旅行团和旅行团订单信息成功");
             }
         } catch (Exception e) {
@@ -916,7 +919,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
     }
 
     @Override
-    public TogroupRequirementResult togroupRequirement(Integer orderId, Integer stateFinance, Integer state, Integer curBizId) {
+    public TogroupRequirementResult togroupRequirement(Integer orderId, Integer stateFinance, Integer state) {
         TogroupRequirementResult togroupRequirementResult = new TogroupRequirementResult();
         try {
             GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
@@ -974,6 +977,969 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             logger.error("", e);
         }
         return toGroupListResult;
+    }
+
+    @Override
+    public ToPreviewResult createSalesConfirm(Integer orderId, Integer agency, Integer curBizId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
+            List<GroupOrderGuest> guests = groupOrderGuestBiz
+                    .selectByOrderId(orderId);
+            List<GroupOrderPrice> prices = groupOrderPriceBiz
+                    .selectByOrder(orderId);
+            if(agency!=1){
+                GroupOrderPrice gop = new GroupOrderPrice();
+               // gop.setItemName(com.yihg.sales.constants.Constants.PRICETYPE);
+              //  gop.setUnitPrice(com.yihg.sales.constants.Constants.PRICE);
+              //  gop.setNumTimes(com.yihg.sales.constants.Constants.TIMES);
+                gop.setNumPerson(new Double(groupOrderBiz.selectTotalNumByOrderId(orderId)))  ;
+                gop.setTotalPrice(gop.getUnitPrice()*gop.getNumPerson());
+                prices.add(gop) ;
+            }
+            List<GroupRoute> routes = groupRouteBiz.selectByOrderId(orderId);
+            SupplierInfo supplier = supplierBiz.selectBySupplierId(groupOrder
+                    .getSupplierId());
+
+           // String imgPath = bizSettingCommon.getMyBizLogo(request);
+            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orderId);
+
+           // PlatformEmployeePo employee = sysPlatformEmployeeFacade
+                   // .findByEmployeeId(groupOrder.getSaleOperatorId()).getPlatformEmployeePo();
+            PlatformEmployeePo employee =  platformEmployeeBiz.findByEmployeeId(groupOrder.getSaleOperatorId());
+            String  company = platformOrgBiz.findByOrgId(employee.getOrgId()).getName(); // 当前单位
+
+
+            // 统计订单下的全陪
+            String guestGuideString = "";
+            // 订单所属团下的所有导游
+            String guideString = "";
+            // 根据散客订单统计客人信息
+            List<BookingGuide> guides = null;
+            if (null != groupOrder.getGroupId()) {
+                guides = bookingGuideBiz.selectGuidesByGroupId(groupOrder
+                        .getGroupId());
+                StringBuilder sb = new StringBuilder();
+                SupplierGuide sg = null;
+                for (BookingGuide guide : guides) {
+                    sg = supplierGuideBiz.getGuideInfoById(guide.getGuideId());
+                    sb.append(guide.getGuideName() + " " + guide.getGuideMobile()
+                            + " " + sg.getLicenseNo() + "\n");
+                }
+                guideString = sb.toString();
+            }
+
+            if (guests.size() > 0) {
+                StringBuilder sb = new StringBuilder();
+                for (GroupOrderGuest guest : guests) {
+                    if (guest.getType() == 3) {
+                        sb.append(guest.getName() + " " + guest.getMobile());
+                    }
+                }
+                guestGuideString = sb.toString();
+            }
+
+
+            // 根据散客订单统计酒店信息
+            List<GroupRequirement> grogShopList = groupRequirementBiz
+                    .selectByOrderAndType(groupOrder.getId(), 3);
+            // 根据散客订单统计接机信息
+            List<GroupOrderTransport> groupOrderTransports = groupOrderTransportBiz
+                    .selectByOrderId(groupOrder.getId());
+
+            toPreviewResult.setGroupOrder(groupOrder);
+            toPreviewResult.setGuests(guests);
+            toPreviewResult.setPriceList(prices);
+            toPreviewResult.setRouteList(routes);
+            toPreviewResult.setSupplier(supplier);
+            toPreviewResult.setImgPath(imgPath);
+            toPreviewResult.setCompany(company);
+            toPreviewResult.setGuestGuideString(guestGuideString);
+            toPreviewResult.setGuideString(guideString);
+            toPreviewResult.setGrogShopList(grogShopList);
+            toPreviewResult.setGroupOrderTransports(groupOrderTransports);
+
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToPreviewResult createSalesChargeNoRoute(Integer orderId, Integer curBizId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
+            List<GroupOrderGuest> guests = groupOrderGuestBiz
+                    .selectByOrderId(orderId);
+            List<GroupOrderPrice> prices = groupOrderPriceBiz
+                    .selectByOrder(orderId);
+            GroupOrderPrice gop = new GroupOrderPrice();
+            //gop.setItemName(com.yihg.sales.constants.Constants.PRICETYPE);
+          //  gop.setUnitPrice(com.yihg.sales.constants.Constants.PRICE);
+            //gop.setNumTimes(com.yihg.sales.constants.Constants.TIMES);
+          //  gop.setNumPerson(new Double(groupOrderBiz.selectTotalNumByOrderId(orderId)))  ;
+            gop.setTotalPrice(gop.getUnitPrice()*gop.getNumPerson());
+            prices.add(gop) ;
+            List<GroupRoute> routes = groupRouteBiz.selectByOrderId(orderId);
+          //  PlatformEmployeePo employeePo = WebUtils.getCurUser(request);
+          //  PlatformEmployeePo employee =  platformEmployeeBiz.findByEmployeeId(groupOrder.getSaleOperatorId());
+            SupplierInfo supplier = supplierBiz.selectBySupplierId(groupOrder
+                    .getSupplierId());
+
+           // String imgPath = bizSettingCommon.getMyBizLogo(request);
+            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orderId);
+            List<SysBizBankAccount> sysBizBankAccountList = sysBizBankAccountBiz
+                    .getListByBizId(curBizId);
+            toPreviewResult.setGroupOrder(groupOrder);
+            toPreviewResult.setGuests(guests);
+            toPreviewResult.setPriceList(prices);
+            toPreviewResult.setGroupOrderPrice(gop);
+            toPreviewResult.setRouteList(routes);
+            toPreviewResult.setSupplier(supplier);
+            toPreviewResult.setImgPath(imgPath);
+            toPreviewResult.setSysBizBankAccountList(sysBizBankAccountList);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToPreviewResult createSalesConfirmNoRoute(Integer orderId, Integer curBizId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
+            List<GroupOrderGuest> guests = groupOrderGuestBiz
+                    .selectByOrderId(orderId);
+            List<GroupOrderPrice> prices = groupOrderPriceBiz
+                    .selectByOrder(orderId);
+            GroupOrderPrice gop = new GroupOrderPrice();
+            //gop.setItemName(com.yihg.sales.constants.Constants.PRICETYPE);
+           // gop.setUnitPrice(com.yihg.sales.constants.Constants.PRICE);
+           // gop.setNumTimes(com.yihg.sales.constants.Constants.TIMES);
+            gop.setNumPerson(new Double(groupOrderBiz.selectTotalNumByOrderId(orderId)))  ;
+            gop.setTotalPrice(gop.getUnitPrice()*gop.getNumPerson());
+            prices.add(gop) ;
+            SupplierInfo supplier = supplierBiz.selectBySupplierId(groupOrder
+                    .getSupplierId());
+
+         //   PlatformEmployeePo employee = sysPlatformEmployeeFacade
+            //        .findByEmployeeId(groupOrder.getSaleOperatorId()).getPlatformEmployeePo();
+            PlatformEmployeePo employee =  platformEmployeeBiz.findByEmployeeId(groupOrder.getSaleOperatorId());
+            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orderId);
+            String company = platformOrgBiz.findByOrgId(employee.getOrgId()).getName();
+
+
+
+            // 统计订单下的全陪
+            String guestGuideString = "";
+            // 订单所属团下的所有导游
+            String guideString = "";
+            // 根据散客订单统计客人信息
+            List<BookingGuide> guides = null;
+            if (null != groupOrder.getGroupId()) {
+                guides = bookingGuideBiz.selectGuidesByGroupId(groupOrder
+                        .getGroupId());
+                StringBuilder sb = new StringBuilder();
+                SupplierGuide sg = null;
+                for (BookingGuide guide : guides) {
+                    sg = supplierGuideBiz.getGuideInfoById(guide.getGuideId());
+                    sb.append(guide.getGuideName() + " " + guide.getGuideMobile()
+                            + " " + sg.getLicenseNo() + "\n");
+                }
+                guideString = sb.toString();
+            }
+
+            if (guests.size() > 0) {
+                StringBuilder sb = new StringBuilder();
+                for (GroupOrderGuest guest : guests) {
+                    if (guest.getType() == 3) {
+                        sb.append(guest.getName() + " " + guest.getMobile());
+                    }
+                }
+                guestGuideString = sb.toString();
+            }
+
+            toPreviewResult.setGuideString(guideString);
+            toPreviewResult.setGuestGuideString(guestGuideString);
+
+            // 根据散客订单统计酒店信息
+            List<GroupRequirement> grogShopList = groupRequirementBiz
+                    .selectByOrderAndType(groupOrder.getId(), 3);
+            // 根据散客订单统计接机信息
+            List<GroupOrderTransport> groupOrderTransports = groupOrderTransportBiz
+                    .selectByOrderId(groupOrder.getId());
+
+            toPreviewResult.setGrogShopList(grogShopList);
+            toPreviewResult.setGroupOrderTransports(groupOrderTransports);
+
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToPreviewResult createSalesCharge(Integer orderId, Integer curBizId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
+            List<GroupOrderGuest> guests = groupOrderGuestBiz.selectByOrderId(orderId);
+            List<GroupOrderPrice> prices = groupOrderPriceBiz.selectByOrder(orderId);
+            GroupOrderPrice gop = new GroupOrderPrice();
+           // gop.setItemName(Constants.PRICETYPE);
+          //  gop.setUnitPrice(Constants.PRICE);
+          //  gop.setNumTimes(Constants.TIMES);
+            gop.setNumPerson(new Double(groupOrderBiz.selectTotalNumByOrderId(orderId)))  ;
+            gop.setTotalPrice(gop.getUnitPrice()*gop.getNumPerson());
+            prices.add(gop) ;
+            List<GroupRoute> routes = groupRouteBiz.selectByOrderId(orderId);
+            SupplierInfo supplier = supplierBiz.selectBySupplierId(groupOrder .getSupplierId());
+            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orderId);
+            List<SysBizBankAccount> sysBizBankAccountList = sysBizBankAccountBiz
+                    .getListByBizId(curBizId);
+            toPreviewResult.setGroupOrder(groupOrder);
+            toPreviewResult.setGuests(guests);
+            toPreviewResult.setPriceList(prices);
+            toPreviewResult.setRouteList(routes);
+            toPreviewResult.setSupplier(supplier);
+            toPreviewResult.setImgPath(imgPath);
+            toPreviewResult.setSysBizBankAccountList(sysBizBankAccountList);
+
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToPreviewResult createGuestNames(Integer orderId, Integer curBizId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
+            List<GroupOrderGuest> guests = groupOrderGuestBiz.selectByOrderId(orderId);
+            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orderId);
+            toPreviewResult.setGroupOrder(groupOrder);
+            toPreviewResult.setGuests(guests);
+            toPreviewResult.setImgPath(imgPath);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+
+    }
+
+    @Override
+    public ToPreviewResult saleTravelContract(Integer orderId, Integer curBizId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
+            List<GroupOrderGuest> guests = groupOrderGuestBiz
+                    .selectByOrderId(orderId);
+            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(orderId);
+            GroupOrderGuest genderSum=groupOrderGuestBiz.selectGenderSum(orderId);
+            toPreviewResult.setGroupOrder(groupOrder);
+            toPreviewResult.setGuests(guests);
+            toPreviewResult.setGroupRoute(groupRoute);
+            toPreviewResult.setGroupOrderGuest(genderSum);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToPreviewResult saleInsurance(Integer orderId, Integer curBizId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
+            List<GroupOrderGuest> guests = groupOrderGuestBiz
+                    .selectByOrderId(orderId);
+            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(orderId);
+            toPreviewResult.setGroupOrder(groupOrder);
+            toPreviewResult.setGuests(guests);
+            toPreviewResult.setGroupRoute(groupRoute);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToPreviewResult toProfitQueryTableZT(GroupOrder order, Set<Integer> orgIdSet, String supplierType, Integer curBizId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
+            pageBean.setPage(order.getPage());
+            pageBean.setPageSize(order.getPageSize() == null ? Constants.PAGESIZE
+                    : order.getPageSize());
+            pageBean.setParameter(order);
+            // 如果人员为空并且部门不为空，则取部门下的人id
+            if (StringUtils.isBlank(order.getSaleOperatorIds())
+                    && StringUtils.isNotBlank(order.getOrgIds())) {
+                Set<Integer> set = new HashSet<Integer>();
+                String[] orgIdArr = order.getOrgIds().split(",");
+                for (String orgIdStr : orgIdArr) {
+                    set.add(Integer.valueOf(orgIdStr));
+                }
+                //set = sysPlatformEmployeeFacade.getUserIdListByOrgIdList(
+                 //       WebUtils.getCurBizId(request), set);
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(curBizId, orgIdSet);
+                String salesOperatorIds = "";
+                for (Integer usrId : set) {
+                    salesOperatorIds += usrId + ",";
+                }
+                if (!salesOperatorIds.equals("")) {
+                    order.setSaleOperatorIds(salesOperatorIds.substring(0,
+                            salesOperatorIds.length() - 1));
+                }
+            }
+            pageBean = groupOrderBiz.selectProfitByConListPage(pageBean,curBizId,orgIdSet);
+            GroupOrder staticInfo = groupOrderBiz.selectProfitByCon(pageBean,curBizId,orgIdSet);
+            GroupOrder groupOrder = groupOrderBiz.selectProfitByConAndMode(pageBean,curBizId,orgIdSet);
+            toPreviewResult.setGroupOrder(groupOrder);
+            toPreviewResult.setStaticInfo(staticInfo);
+            toPreviewResult.setPageBean(pageBean);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToPreviewResult getSupplier(String prefixText, String supplierType, Integer curBizId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            toPreviewResult.setSupplierInfos(supplierBiz.findSupplierListByTypeAndName(supplierType, prefixText,
+                    curBizId));
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToPreviewResult getPriceSupplierName(String keyword, Integer productId, Integer curBizId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            ProductSupplierCondition psc = new ProductSupplierCondition();
+            psc.setPageSize(10);
+            psc.setSupplierName(keyword);
+            psc.setProductId(productId);
+            List<ProductGroupSupplier> supplierList = productGroupSupplierBiz
+                    .selectSupplierList(psc);
+            toPreviewResult.setSupplierList(supplierList);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToPreviewResult getSupplierNameForAgency(String keyword, Integer groupId, Integer priceId, String supplierType,Integer curBizId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            List<ProductGroupSupplierVo> groupSuppliersList = null;
+            ProductGroup group = productGroupBiz.getGroupInfoById(groupId);
+            if (group.getGroupSetting() == 0) {
+                groupSuppliersList = productGroupSupplierBiz.selectProductGroupSupplierVos(groupId, priceId);
+                toPreviewResult.getJson().put("result", groupSuppliersList);
+                toPreviewResult.getJson().put("type", 0);
+            }else{
+                List<SupplierInfo> supplierInfos = supplierBiz
+                        .findSupplierListByTypeAndName(supplierType,keyword,curBizId);
+                toPreviewResult.getJson().put("result", supplierInfos);
+                toPreviewResult.getJson().put("type", 1);
+            }
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToPreviewResult getSupplierName(String keyword, String supplierType, Integer curBizId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            toPreviewResult.setSupplierInfos(supplierBiz
+                    .findSupplierListByTypeAndName(supplierType, keyword, curBizId));
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToPreviewResult getSupplierAndContact(String prefixText, Integer supplierId, Integer curBizId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            toPreviewResult.setSupplierContactManList(supplierBiz.selectPrivateManBySupplierIdAndName(curBizId, supplierId, prefixText));
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToPreviewResult getContactName(String keyword, Integer supplierId,Integer curBizId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            toPreviewResult.setSupplierContactManList(supplierBiz.selectPrivateManBySupplierIdAndName(curBizId, supplierId, keyword));
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToPreviewResult validatorSupplier(String supplierName, Integer supplierId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            toPreviewResult.setSupplier(supplierBiz.selectBySupplierId(supplierId));
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToPreviewResult getSelSupplier(Integer groupId, Integer priceId, String prefixText, String supplierType) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            List<ProductGroupSupplierVo> groupSuppliersList = productGroupSupplierBiz
+                    .selectProductGroupSupplierVos(groupId, priceId);
+            List<AutocompleteInfo> infoList = new ArrayList<AutocompleteInfo>();
+            AutocompleteInfo info = null;
+            for (ProductGroupSupplierVo vo : groupSuppliersList) {
+                info = new AutocompleteInfo();
+                info.setId(vo.getGroupId() + "");
+                info.setText(vo.getSupplierName());
+                infoList.add(info);
+            }
+            toPreviewResult.setInfoList(infoList);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToPreviewResult toPreview(Integer orderId, Integer num, Integer agency, Integer curBizId) {
+        ToPreviewResult toPreviewResult = new ToPreviewResult();
+        try {
+            if(null==agency){
+                agency = 0 ;
+            }
+          //  String imgPath = bizSettingCommon.getMyBizLogo(request);
+            GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
+            SupplierInfo supplier = supplierBiz.selectBySupplierId(groupOrder
+                    .getSupplierId());
+
+         //   PlatformEmployeePo employee = sysPlatformEmployeeFacade
+             //       .findByEmployeeId(groupOrder.getSaleOperatorId()).getPlatformEmployeePo();
+            PlatformEmployeePo employee =  platformEmployeeBiz.findByEmployeeId(groupOrder.getSaleOperatorId());
+
+            List<GroupOrderGuest> guests = groupOrderGuestBiz
+                    .selectByOrderId(orderId);
+            List<GroupOrderPrice> priceList = groupOrderPriceBiz
+                    .selectByOrder(orderId);
+            if(agency!=1){
+                GroupOrderPrice gop = new GroupOrderPrice();
+               // gop.setItemName(Constants.PRICETYPE);
+               // gop.setUnitPrice(Constants.PRICE);
+              //  gop.setNumTimes(Constants.TIMES);
+                gop.setNumPerson(new Double(groupOrderBiz.selectTotalNumByOrderId(orderId)))  ;
+                gop.setTotalPrice(gop.getUnitPrice()*gop.getNumPerson());
+                priceList.add(gop) ;
+            }
+
+            List<GroupRoute> routeList = groupRouteBiz.selectByOrderId(orderId);
+
+            // 客人接送信息
+            GroupOrderPrintPo gopp = new GroupOrderPrintPo();
+            gopp.setSupplierName(groupOrder.getSupplierName());
+            gopp.setSaleOperatorName(groupOrder.getSaleOperatorName());
+            gopp.setRemark(groupOrder.getRemark());
+            gopp.setPlace((groupOrder.getProvinceName() == null ? "" : groupOrder
+                    .getProvinceName())
+                    + (groupOrder.getCityName() == null ? "" : groupOrder
+                    .getCityName()));
+            // 根据散客订单统计人数
+            Integer numAdult = groupOrderGuestBiz
+                    .selectNumAdultByOrderID(groupOrder.getId());
+            Integer numChild = groupOrderGuestBiz
+                    .selectNumChildByOrderID(groupOrder.getId());
+            Integer numGuide = groupOrderGuestBiz
+                    .selectNumGuideByOrderID(groupOrder.getId());
+            gopp.setPersonNum(numAdult + "+" + numChild + "+" + numGuide);
+            // 统计订单下的全陪
+            String guestGuideString = "";
+            // 订单所属团下的所有导游
+            String guideString = "";
+            // 根据散客订单统计客人信息
+            List<BookingGuide> guides = null;
+            if (null != groupOrder.getGroupId()) {
+                guides = bookingGuideBiz.selectGuidesByGroupId(groupOrder
+                        .getGroupId());
+                StringBuilder sb = new StringBuilder();
+                SupplierGuide sg = null;
+                for (BookingGuide guide : guides) {
+                    sg = supplierGuideBiz.getGuideInfoById(guide.getGuideId());
+                    sb.append(guide.getGuideName() + " " + guide.getGuideMobile()
+                            + " " + sg.getLicenseNo() + "\n");
+                }
+                guideString = sb.toString();
+            }
+
+            if (guests.size() > 0) {
+                StringBuilder sb = new StringBuilder();
+                for (GroupOrderGuest guest : guests) {
+                    if (guest.getType() == 3) {
+                        sb.append(guest.getName() + " " + guest.getMobile());
+                    }
+                }
+                guestGuideString = sb.toString();
+                for (GroupOrderGuest guest : guests) {
+                    if (guest.getIsLeader() == 1) {
+                        gopp.setGuesStatic(guest.getName() + "\n"
+                                + guest.getMobile());
+                        break;
+                    }
+                }
+                if (gopp.getGuestInfo() == null || gopp.getGuestInfo() == "") {
+                    // 如果客人中没有领队，默认取一条数据显示
+                    gopp.setGuesStatic(guests.get(0).getName() + "\n"
+                            + guests.get(0).getMobile());
+                }
+                // gopp.setGuestInfo(getGuestInfoNoPhone(guests));
+            }
+
+            // 根据散客订单统计酒店信息
+            List<GroupRequirement> grogShopList = groupRequirementBiz
+                    .selectByOrderAndType(groupOrder.getId(), 3);
+            if (grogShopList.size() > 0) {
+                if (grogShopList.get(0).getHotelLevel() != null && grogShopList.get(0).getHotelLevel() !="" ) {
+                    DicInfo info = dicBiz.getById(grogShopList.get(0).getHotelLevel());
+                    if(info!=null){
+                        gopp.setHotelLevel(info.getValue()+ "\n");
+                    }
+                }
+                gopp.setHotelNum(getHotelNum(grogShopList));
+            }
+            // 省外交通
+            // 根据散客订单统计接机信息
+            List<GroupOrderTransport> groupOrderTransports = groupOrderTransportBiz
+                    .selectByOrderId(groupOrder.getId());
+            gopp.setAirPickup(getAirInfo(groupOrderTransports, 0));
+            // 根据散客订单统计送机信息
+            gopp.setAirOff(getAirInfo(groupOrderTransports, 1));
+            // 省内交通
+            gopp.setTrans(getSourceType(groupOrderTransports));
+            String  company = platformOrgBiz.findByOrgId(employee.getOrgId()).getName(); // 当前单位
+
+            toPreviewResult.setGuideString(guideString);
+            toPreviewResult.setGuestGuideString(guestGuideString);
+            toPreviewResult.setImgPath("");
+            toPreviewResult.setGroupOrder(groupOrder);
+            toPreviewResult.setSupplier(supplier);
+            toPreviewResult.setCompany(company);
+            toPreviewResult.setEmployee(employee);
+            toPreviewResult.setRouteList(routeList);
+            toPreviewResult.setPriceList(priceList);
+            toPreviewResult.setGopp(gopp);
+            toPreviewResult.setGuests(guests);
+            toPreviewResult.setGrogShopList(grogShopList);
+            toPreviewResult.setGroupOrderTransports(groupOrderTransports);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toPreviewResult;
+    }
+
+    @Override
+    public ToSaleChargeResult toSaleCharge(Integer orderId, Integer num, Integer curUserId, Integer curBizId) {
+        ToSaleChargeResult toSaleChargeResult = new ToSaleChargeResult();
+        try {
+          //  String imgPath = bizSettingCommon.getMyBizLogo(request);
+            GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
+            SupplierInfo supplier = supplierBiz.selectBySupplierId(groupOrder.getSupplierId());
+
+          //  PlatformEmployeePo employee = sysPlatformEmployeeFacade
+           //         .findByEmployeeId(groupOrder.getSaleOperatorId()).getPlatformEmployeePo();
+            PlatformEmployeePo employee =  platformEmployeeBiz.findByEmployeeId(groupOrder.getSaleOperatorId());
+
+            List<GroupOrderGuest> guests = groupOrderGuestBiz
+                    .selectByOrderId(orderId);
+            List<GroupOrderPrice> priceList = groupOrderPriceBiz
+                    .selectByOrder(orderId);
+            GroupOrderPrice gop = new GroupOrderPrice();
+           // gop.setItemName(Constants.PRICETYPE);
+           // gop.setUnitPrice(Constants.PRICE);
+           // gop.setNumTimes(Constants.TIMES);
+            gop.setNumPerson(new Double(groupOrderBiz.selectTotalNumByOrderId(orderId)))  ;
+            gop.setTotalPrice(gop.getUnitPrice()*gop.getNumPerson());
+            priceList.add(gop) ;
+            List<GroupRoute> routeList = groupRouteBiz.selectByOrderId(orderId);
+            List<SysBizBankAccount> accountList = sysBizBankAccountBiz
+                    .getListByBizId(curBizId);
+            if (null != priceList && priceList.size() > 0) {
+              //  model.addAttribute("otherPrice", priceList
+                //        .get(priceList.size() - 1).getTotalPrice());
+                toSaleChargeResult.setOtherPrice(String.valueOf(priceList
+                        .get(priceList.size() - 1).getTotalPrice()));
+            } else {
+               // model.addAttribute("otherPrice", 0);
+                toSaleChargeResult.setOtherPrice("0");
+            }
+
+            toSaleChargeResult.setGroupOrder(groupOrder);
+            toSaleChargeResult.setGuests(guests);
+            toSaleChargeResult.setImgPath("");
+            toSaleChargeResult.setSupplier(supplier);
+            toSaleChargeResult.setCompany(platformOrgBiz.findByOrgId(employee.getOrgId()).getName());
+            toSaleChargeResult.setEmployee(employee);
+            toSaleChargeResult.setRouteList(routeList);
+            toSaleChargeResult.setPriceList(priceList);
+            toSaleChargeResult.setAccountList(accountList);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toSaleChargeResult;
+    }
+
+    @Override
+    public ToSKChargePreviewResult toSKChargePreview(Integer groupId,Integer curUserId ,Integer curBizId,Integer supplierId) {
+        ToSKChargePreviewResult toSKChargePreviewResult = new ToSKChargePreviewResult();
+        try {
+           // String imgPath = bizSettingCommon.getMyBizLogo(request);
+            TourGroup tour = tourGroupBiz.selectByPrimaryKey(groupId);
+         //   PlatformEmployeePo po = sysPlatformEmployeeFacade
+            //        .findByEmployeeId(WebUtils.getCurUserId(request)).getPlatformEmployeePo();
+            PlatformEmployeePo po =  platformEmployeeBiz.findByEmployeeId(curUserId);
+            po.setOrgName(platformOrgBiz.findByOrgId(po.getOrgId()).getName());
+            List<GroupOrder> suppliers = groupOrderBiz
+                    .selectSupplierByGroupId(groupId);
+            SupplierInfo supplierInfo = null;
+            List<SupplierInfo> supplierList = new ArrayList<SupplierInfo>();
+
+            for (GroupOrder order : suppliers) {
+                supplierInfo = supplierBiz.selectBySupplierId(order
+                        .getSupplierId());
+                supplierList.add(supplierInfo);
+            }
+            // 行程
+            GroupOrder supplier = null;
+            if (null == supplierId && supplierList.size() > 0) {
+                supplierId = supplierList.get(0).getId();
+            }
+            GroupRouteVO vo = groupRouteBiz
+                    .findGroupRouteByGroupIdAndSupplierId(groupId, supplierId);
+
+            // List<GroupRouteDayVO> groupRouteDayVOs = vo.getGroupRouteDayVOList();
+
+            List<GroupPriceVo> vos = groupOrderBiz
+                    .selectSupplierByGroupIdAndSupplierId(groupId, supplierId);
+
+            List<GroupOrder> orders = groupOrderBiz
+                    .selectOrderByGroupIdAndBizIdAndSupplierId(groupId, supplierId,curBizId);
+            for (GroupOrder groupOrder : orders) {
+                if (groupOrder.getSupplierId() == supplierId) {
+                    supplier = groupOrder;
+                }
+            }
+            GroupOrderPrintPo gopp = null;
+            List<GroupOrderPrintPo> gopps = new ArrayList<GroupOrderPrintPo>();
+            for (GroupOrder order : orders) {
+                List<GroupOrderGuest> guests = groupOrderGuestBiz
+                        .selectByOrderId(order.getId());
+                gopp = new GroupOrderPrintPo();
+                // 客人接送信息
+                gopp.setSupplierName(order.getSupplierName());
+                gopp.setSaleOperatorName(order.getSaleOperatorName());
+                gopp.setRemark(order.getRemarkInternal());
+                gopp.setPlace((order.getProvinceName() == null ? "" : order
+                        .getProvinceName())
+                        + (order.getCityName() == null ? "" : order.getCityName()));
+                gopp.setPersonNum(order.getNumAdult()+"+"+order.getNumChild());
+                // 根据散客订单统计客人信息
+                if (guests.size() > 0) {
+                    gopp.setCertificateNums(getGuestInfoNoPhone(guests));
+                }
+                gopp.setReceiveMode(order.getReceiveMode());
+                // 根据散客订单统计酒店信息
+                List<GroupRequirement> grogShopList = groupRequirementBiz
+                        .selectByOrderAndType(order.getId(), 3);
+                if (grogShopList.size() > 0) {
+                    if (grogShopList.get(0).getHotelLevel() != null) {
+                        gopp.setHotelLevel(dicBiz.getById(
+                                grogShopList.get(0).getHotelLevel()).getValue()
+                                + "\n");
+                    }
+                    gopp.setHotelNum(getHotelNum(grogShopList));
+                }
+                // 省外交通
+                // 根据散客订单统计接机信息
+                List<GroupOrderTransport> groupOrderTransports = groupOrderTransportBiz
+                        .selectByOrderId(order.getId());
+                gopp.setAirPickup("接机：" + getAirInfo(groupOrderTransports, 0));
+                // 根据散客订单统计送机信息
+                gopp.setAirOff("送机：" + getAirInfo(groupOrderTransports, 1));
+
+                // 省内交通
+                gopp.setTrans("省内：" + getSourceType(groupOrderTransports));
+                gopps.add(gopp);
+            }
+            List<BookingGuide> guides = bookingGuideBiz
+                    .selectGuidesByGroupId(groupId);
+
+            toSKChargePreviewResult.setSupplier(supplier);
+            toSKChargePreviewResult.setGuides(guides);
+            toSKChargePreviewResult.setGopps(gopps);
+            toSKChargePreviewResult.setVos(vos);
+            toSKChargePreviewResult.setSupplierList(supplierList);
+            toSKChargePreviewResult.setPo(po);
+            toSKChargePreviewResult.setImgPath("");
+            toSKChargePreviewResult.setTour(tour);
+
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return toSKChargePreviewResult;
+    }
+
+
+    /**
+     * 省内交通
+     *
+     * @param groupOrderTransports
+     * @param flag
+     *            0表示接信息 1表示送信息
+     * @return
+     */
+    public String getSourceType(List<GroupOrderTransport> groupOrderTransports) {
+        StringBuilder sb = new StringBuilder();
+        for (GroupOrderTransport transport : groupOrderTransports) {
+            if (transport.getSourceType() == 0) {
+                sb.append((transport.getDepartureCity() == null ? ""
+                        : transport.getDepartureCity())
+                        + "/"
+                        + (transport.getArrivalCity() == null ? "" : transport
+                        .getArrivalCity())
+                        + " "
+                        + (transport.getClassNo() == null ? "" : transport
+                        .getClassNo())
+                        + " "
+                        + " 发出时间："
+                        + (DateUtils.format(transport.getDepartureDate(),
+                        "MM-dd") == null ? "" : DateUtils.format(
+                        transport.getDepartureDate(), "MM-dd"))
+                        + " "
+                        + (transport.getDepartureTime() == null ? ""
+                        : transport.getDepartureTime()) + "\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 接送信息
+     *
+     * @param groupOrderTransports
+     * @param flag
+     *            0表示接信息 1表示送信息
+     * @return
+     */
+    public String getAirInfo(List<GroupOrderTransport> groupOrderTransports,
+                             Integer flag) {
+        StringBuilder sb = new StringBuilder();
+        if (flag == 0) {
+            for (GroupOrderTransport transport : groupOrderTransports) {
+                if (transport.getType() == 0 && transport.getSourceType() == 1) {
+                    sb.append((transport.getDepartureCity() == null ? ""
+                            : transport.getDepartureCity())
+                            + "/"
+                            + (transport.getArrivalCity() == null ? ""
+                            : transport.getArrivalCity())
+                            + " "
+                            + (transport.getClassNo() == null ? "" : transport
+                            .getClassNo())
+                            + " "
+                            + " 发出时间："
+                            + (DateUtils.format(transport.getDepartureDate(),
+                            "MM-dd") == null ? "" : DateUtils.format(
+                            transport.getDepartureDate(), "MM-dd"))
+                            + " "
+                            + (transport.getDepartureTime() == null ? ""
+                            : transport.getDepartureTime()) + "\n");
+                }
+            }
+        }
+        if (flag == 1) {
+            for (GroupOrderTransport transport : groupOrderTransports) {
+                if (transport.getType() == 1 && transport.getSourceType() == 1) {
+                    sb.append((transport.getDepartureCity() == null ? ""
+                            : transport.getDepartureCity())
+                            + "/"
+                            + (transport.getArrivalCity() == null ? ""
+                            : transport.getArrivalCity())
+                            + " "
+                            + (transport.getClassNo() == null ? "" : transport
+                            .getClassNo())
+                            + " "
+                            + " 发出时间："
+                            + (DateUtils.format(transport.getDepartureDate(),
+                            "MM-dd") == null ? "" : DateUtils.format(
+                            transport.getDepartureDate(), "MM-dd"))
+                            + " "
+                            + (transport.getDepartureTime() == null ? ""
+                            : transport.getDepartureTime()) + "\n");
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+
+
+    /**
+     * 返回客人信息(不包含电话号码)
+     *
+     * @param guests
+     * @return
+     */
+    public String getGuestInfoNoPhone(List<GroupOrderGuest> guests) {
+        StringBuilder sb = new StringBuilder();
+        for (GroupOrderGuest guest : guests) {
+            sb.append(guest.getName() + " " + guest.getCertificateNum() + "\n");
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 返回酒店信息（不包含星级）
+     *
+     * @param grogShopList
+     * @return
+     */
+    public String getHotelNum(List<GroupRequirement> grogShopList) {
+        StringBuilder sb = new StringBuilder();
+        if (grogShopList.size() > 0) {
+            String sr = "";
+            String dr = "";
+            String tr = "";
+            String eb = "";
+            String pf = "";
+            GroupRequirement gr = grogShopList.get(0);
+            if (gr.getCountSingleRoom() != null && gr.getCountSingleRoom() != 0) {
+                sr = gr.getCountSingleRoom() + "单间" + " ";
+            }
+            if (gr.getCountDoubleRoom() != null && gr.getCountDoubleRoom() != 0) {
+                dr = gr.getCountDoubleRoom() + "标间" + " ";
+            }
+            if (gr.getCountTripleRoom() != null && gr.getCountTripleRoom() != 0) {
+                tr = gr.getCountTripleRoom() + "三人间" + "";
+            }
+            if (gr.getExtraBed() != null && gr.getExtraBed() != 0) {
+                eb = gr.getExtraBed() + "加床" + "";
+            }
+            if (gr.getPeiFang() != null && gr.getPeiFang() != 0) {
+                pf = gr.getPeiFang() + "陪房";
+            }
+            sb.append(sr + dr + tr + eb + pf);
+        }
+        return sb.toString();
+    }
+
+
+    @Override
+    public BookingProfitTableResult getSupplierInfo(Integer supplierId) {
+        BookingProfitTableResult bookingProfitTableResult = new BookingProfitTableResult();
+        try {
+            bookingProfitTableResult.setSupplierInfo(supplierBiz.selectBySupplierId(supplierId));
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return bookingProfitTableResult;
+    }
+
+    @Override
+    public BookingProfitTableResult getBankInfo(Integer curBizId) {
+        BookingProfitTableResult bookingProfitTableResult = new BookingProfitTableResult();
+        try {
+            bookingProfitTableResult.setSysBizBankAccountList(sysBizBankAccountBiz.getListByBizId(curBizId));
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return bookingProfitTableResult;
+    }
+
+    @Override
+    public BookingProfitTableResult bookingProfitTable(TourGroup tourGroup, Integer curBizId, Set<Integer> orgIdSet) {
+        BookingProfitTableResult bookingProfitTableResult = new BookingProfitTableResult();
+        try {
+            PageBean pageBean=new PageBean();
+            if (tourGroup.getPage()==null) {
+                pageBean.setPage(1);
+            }
+            else {
+
+                pageBean.setPage(tourGroup.getPage());
+            }
+            if (tourGroup.getPageSize()==null) {
+                pageBean.setPageSize(Constants.PAGESIZE);
+            }
+            else {
+                pageBean.setPageSize(tourGroup.getPageSize());
+            }
+            if (StringUtils.isBlank(tourGroup.getSaleOperatorIds())
+                    && StringUtils.isNotBlank(tourGroup.getOrgIds())) {
+                Set<Integer> set = new HashSet<Integer>();
+                String[] orgIdArr = tourGroup.getOrgIds().split(",");
+                for (String orgIdStr : orgIdArr) {
+                    set.add(Integer.valueOf(orgIdStr));
+                }
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(curBizId, set);
+                String operatorIds = "";
+                for (Integer usrId : set) {
+                    operatorIds += usrId + ",";
+                }
+                if (!operatorIds.equals("")) {
+                    tourGroup.setSaleOperatorIds(operatorIds.substring(0,
+                            operatorIds.length() - 1));
+                }
+            }
+            pageBean.setParameter(tourGroup);
+         //   model.addAttribute("sum", tourGroupBiz.selectBookingProfitTotal(pageBean, curBizId, WebUtils.getDataUserIdSet(request)));
+            bookingProfitTableResult.setSum(tourGroupBiz.selectBookingProfitTotal(pageBean, curBizId,orgIdSet));
+            pageBean= tourGroupBiz.selectBookingProfitList(pageBean, curBizId, orgIdSet);
+            List result = pageBean.getResult();
+            if (result !=null && result.size()>0) {
+                for (Object obj : result) {
+                    TourGroup	tGroup=(TourGroup)obj;
+                    //List<GroupOrder> groupOrderList = tGroup.getGroupOrderList();
+                    //if (groupOrderList !=null && groupOrderList.size()>0) {
+                    if (tGroup.getGroupMode()<1) {
+                        tGroup.setSupplierName("散客团");
+                    }
+//				else {
+//					tGroup.setSupplierName(groupOrderList.get(0).getSupplierName()==null?"":groupOrderList.get(0).getSupplierName());
+//				}
+//				 for (GroupOrder gOrder : groupOrderList) {
+//					List<GroupOrderPrice> orderPrices = gOrder.getOrderPrices();
+//					if (orderPrices !=null && orderPrices.size()>0) {
+//						tGroup.setTotalBudget(orderPrices.get(0).getTotalPrice()==null?new BigDecimal(0):new BigDecimal(orderPrices.get(0).getTotalPrice()));
+//					}
+//				}
+                    //}
+                }
+            }
+            //model.addAttribute("page", pageBean);
+            bookingProfitTableResult.setPageBean(pageBean);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return bookingProfitTableResult;
     }
 
 

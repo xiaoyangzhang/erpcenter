@@ -71,4 +71,11 @@ public interface ProductInfoMapper {
 	
 	ProductInfo selectProductInfoByPsId(@Param("productSysId")Integer productSysId);
 	
+	/**
+	 * dump数据查询
+	 * @param pageBean
+	 * @return
+	 */
+	List<ProductInfo> selectProductListDumpPage(@Param("page") PageBean pageBean);
+	
 }

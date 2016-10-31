@@ -1,73 +1,359 @@
 package com.yimayhd.erpcenter.dal.sales.client.solr.query;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import com.yimayhd.erpcenter.common.query.PageQuery;
 
 public class GroupOrderPageQueryDTO extends PageQuery implements Serializable {
 
-	   private Integer goId ;//主键--------
-	   private Integer goBizId ;//----------
-	   private Integer goGroupId ;//'散客订单并团后才有',----------
-	   private Integer goOrderType;//'0散客订单 1定制订单 -1一地散  -2初始订单',-------------
-	   private String  goSupplierName ;// '组团社名称',-----------
-	   private Integer goSupplierId ;//'组团社id',---------------
-	   private Integer goOrderNoSort ;//------------------
-	   private String  goOrderNo ;//--------------
-	   private String goSupplierCode ;//
-	   private String goContactName ;//'选择后直接带入姓名电话等，可以修改，不关联id',
-	   private Integer goOperatorId ;//'当前登录人员',----------
-	   private String goOperatorName ;// '当前登录人员',
-	   private Integer goSaleOperatorId ;//'销售员id',---------------
-	   private String goSaleOperatorName ;// '销售员名称',
-	   private Integer goNumAdult ;//'人数：成人',
-	   private Integer goNumChild ;// '人数：儿童',
-	   private Integer goNumGuide ;// DEFAULT '0' COMMENT '人数：导演',
-	   private Integer goNumChildBaby ;//DEFAULT '0' COMMENT '婴儿',
-	   private Long goDepartureDate ;//'订单出发日期',
-	   private Integer goProductId ;// '产品id',
-	   private Integer goProductBrandId ;// '产品品牌id',
-	   private String goProductBrandName ;//
-	   private String goProductName ;//
-	   private String goProductShortName ;// '产品简称',
-	   private String goReceiveMode ;//'客人接站牌',--------
-	   private Integer goCreatorId ;//-----------
-	   private String goCreatorName ;//
-	   private Integer goCreateTime ;//----------
-	   private Integer goState ;//'订单状态 1正常 -1删除',---------
-	   private Double goTotal ;//decimal(18,4) DEFAULT '0.0000' '订单金额',-------------
-	   private Double goTotalCash ;//decimal(18,4) DEFAULT '0.0000' '订单已收款金额',
-	   private Integer goPriceId ;//----------
-	   private Integer goStateSeal ;//DEFAULT '0'  '封存状态 0未封存 1已封存',------------
-	   private String goSourceTypeName ;//'客源类别：同行，直客等；组团版使用agencyFit/toEditFirOrder.htm',
-	   private Integer goProvinceId ;//-----------
-	   private String goProvinceName ;//
-	   private Integer goCityId ;//------------------
-	   private String goCityName ;//
-	   private Integer goOrderLockState ;//DEFAULT '0' '1是锁单状态，0是解锁状态，默认0',-----------------
-
-	   
-	   //tour_group
-	   private Integer tourGroupId;//------------
-	   private Integer tourGroupMode ;//0时为散客团，>0时为定制团(字典为团类别) -1一地散 -2初始团，',----------
-	   private String tourGroupCode ;//'自动生成',--------------
-	   private Long tourDateStart ;//,----------
-	   private Long tourDateEnd ;//,------------
-	   private Long tourCreateTime ;//------------
-	   private Integer tourGroupState ;//'0.未确认  1.已确认（待出团，行程中，已离开） 2.作废  3审核 4封存',-------------
-	   private String tourProductBrandName ;//----------------
-	   private String tourProductName ;//-----------------
-	   private String tourOperatorName;//计调-----------
-	   private Integer tourOperatorId ;//计调--------------
-	   private Integer tourTotalAdult;//成人
-	   private Integer tourTotalChild;//儿童
-	   private Integer tourTotalGuide;//导游
-	   //group_order_guest
-	   private String guestGuestName ;//客人名字---------------
-	   
-	   //group_order_price
-	   private Double priceMode0 ;// '0收入1预算成本sum值',
-	   private Double priceMode1 ;//'0收入1预算成本sum值',
-
-
+	private static final long serialVersionUID = 1514932164589646916L;
+	
+	private Integer tourGroupMode;//> 0 必须
+	private Integer goState;//!= -1 必须
+	private Integer goOrderType;//=1必须
+	private Integer goBizId;//原mapper没判断，必传
+	private Integer listType;//判断状态只判数字不判空0goSaleOperatorId，1goOperatorId
+	private String goSaleOperatorId ;//IN没有判断
+	private String goOperatorId;//IN没有判断
+	private Integer dateType;//只盘数字不判空1tg.date_start，2tg.create_time
+	private Long startTime;//判空和判null
+	private Long endTime;//判空和判null
+	private Integer tourGroupState;//判空判null
+	private Integer cashState;//只判数字不判null，0goTotal=goTotalCache,1goTotal!=goTotalCache
+	private Integer goTotal;//无具体数值
+	private Integer goTotalCache;//无具体数值
+	private String  goReceiveMode;//判空判null，LIKE
+	private Integer goOrderLockState;//判空判null
+	private Integer goProvinceId;//判null不等于空不等于-1
+	private Integer goCityId;//判null不等于空不等于-1
+	private Integer operType;//1sale_operator_id,2operator_id,3creator_id
+	private String goCreatorId;//IN
+	private Integer goSourcetypeId;//!=-1&&!=NULL
+	private String tourGroupCode;//!=-1&&!=NULL
+	private String goSupplierName;//!=-1&&!=NULL
+	private String tourProductName;//!=-1&&!=NULL
+	private Set<Integer> listTypeIds;//什么都不判
+	//排序条件ORDER BY tg.date_start ,tg.`create_time`
+	//tg.group_mode > 0
+	//go.state != -1
+	//go.order_type = 1
+    //go.biz_id = #{bizId,jdbcType=INTEGER}
+	//go.sale_operator_id (listType==0)
+	//go.operator_id in    (listType==1)
+//	tg.date_start  #{page.parameter.startTime} <tg.date_start< #{page.parameter.endTime} page.parameter.dateType == 1
+//	tg.create_time  #{page.parameter.startTime} <tg.date_start< #{page.parameter.endTime} page.parameter.dateType == 2
+//	tg.group_state 
+//	go.total != total_cash  page.parameter.cashState == 0
+//	go.total = total_cash   page.parameter.cashState ==1
+//	go.receive_mode LIKE
+//	go.order_lock_state
+//	and go.province_id page.parameter.provinceId !=-1
+//	go.city_id =#{page.parameter.cityId} page.parameter.cityId
+//	go.sale_operator_id in    page.parameter.operType==1
+//	go.operator_id in    page.parameter.operType==2
+//	go.creator_id in    page.parameter.operType==3
+//	go.source_type_id page.parameter.sourceTypeId !=-1
+	/**
+	 * @return the tourGroupMode
+	 */
+	public Integer getTourGroupMode() {
+		return tourGroupMode;
+	}
+	/**
+	 * @param tourGroupMode the tourGroupMode to set
+	 */
+	public void setTourGroupMode(Integer tourGroupMode) {
+		this.tourGroupMode = tourGroupMode;
+	}
+	/**
+	 * @return the goState
+	 */
+	public Integer getGoState() {
+		return goState;
+	}
+	/**
+	 * @param goState the goState to set
+	 */
+	public void setGoState(Integer goState) {
+		this.goState = goState;
+	}
+	/**
+	 * @return the goOrderType
+	 */
+	public Integer getGoOrderType() {
+		return goOrderType;
+	}
+	/**
+	 * @param goOrderType the goOrderType to set
+	 */
+	public void setGoOrderType(Integer goOrderType) {
+		this.goOrderType = goOrderType;
+	}
+	/**
+	 * @return the goBizId
+	 */
+	public Integer getGoBizId() {
+		return goBizId;
+	}
+	/**
+	 * @param goBizId the goBizId to set
+	 */
+	public void setGoBizId(Integer goBizId) {
+		this.goBizId = goBizId;
+	}
+	/**
+	 * @return the listType
+	 */
+	public Integer getListType() {
+		return listType;
+	}
+	/**
+	 * @param listType the listType to set
+	 */
+	public void setListType(Integer listType) {
+		this.listType = listType;
+	}
+	/**
+	 * @return the goSaleOperatorId
+	 */
+	public String getGoSaleOperatorId() {
+		return goSaleOperatorId;
+	}
+	/**
+	 * @param goSaleOperatorId the goSaleOperatorId to set
+	 */
+	public void setGoSaleOperatorId(String goSaleOperatorId) {
+		this.goSaleOperatorId = goSaleOperatorId;
+	}
+	/**
+	 * @return the goOperatorId
+	 */
+	public String getGoOperatorId() {
+		return goOperatorId;
+	}
+	/**
+	 * @param goOperatorId the goOperatorId to set
+	 */
+	public void setGoOperatorId(String goOperatorId) {
+		this.goOperatorId = goOperatorId;
+	}
+	/**
+	 * @return the dateType
+	 */
+	public Integer getDateType() {
+		return dateType;
+	}
+	/**
+	 * @param dateType the dateType to set
+	 */
+	public void setDateType(Integer dateType) {
+		this.dateType = dateType;
+	}
+	/**
+	 * @return the startTime
+	 */
+	public Long getStartTime() {
+		return startTime;
+	}
+	/**
+	 * @param startTime the startTime to set
+	 */
+	public void setStartTime(Long startTime) {
+		this.startTime = startTime;
+	}
+	/**
+	 * @return the endTime
+	 */
+	public Long getEndTime() {
+		return endTime;
+	}
+	/**
+	 * @param endTime the endTime to set
+	 */
+	public void setEndTime(Long endTime) {
+		this.endTime = endTime;
+	}
+	/**
+	 * @return the tourGroupState
+	 */
+	public Integer getTourGroupState() {
+		return tourGroupState;
+	}
+	/**
+	 * @param tourGroupState the tourGroupState to set
+	 */
+	public void setTourGroupState(Integer tourGroupState) {
+		this.tourGroupState = tourGroupState;
+	}
+	/**
+	 * @return the cashState
+	 */
+	public Integer getCashState() {
+		return cashState;
+	}
+	/**
+	 * @param cashState the cashState to set
+	 */
+	public void setCashState(Integer cashState) {
+		this.cashState = cashState;
+	}
+	/**
+	 * @return the goTotal
+	 */
+	public Integer getGoTotal() {
+		return goTotal;
+	}
+	/**
+	 * @param goTotal the goTotal to set
+	 */
+	public void setGoTotal(Integer goTotal) {
+		this.goTotal = goTotal;
+	}
+	/**
+	 * @return the goTotalCache
+	 */
+	public Integer getGoTotalCache() {
+		return goTotalCache;
+	}
+	/**
+	 * @param goTotalCache the goTotalCache to set
+	 */
+	public void setGoTotalCache(Integer goTotalCache) {
+		this.goTotalCache = goTotalCache;
+	}
+	/**
+	 * @return the goReceiveMode
+	 */
+	public String getGoReceiveMode() {
+		return goReceiveMode;
+	}
+	/**
+	 * @param goReceiveMode the goReceiveMode to set
+	 */
+	public void setGoReceiveMode(String goReceiveMode) {
+		this.goReceiveMode = goReceiveMode;
+	}
+	/**
+	 * @return the goOrderLockState
+	 */
+	public Integer getGoOrderLockState() {
+		return goOrderLockState;
+	}
+	/**
+	 * @param goOrderLockState the goOrderLockState to set
+	 */
+	public void setGoOrderLockState(Integer goOrderLockState) {
+		this.goOrderLockState = goOrderLockState;
+	}
+	/**
+	 * @return the goProvinceId
+	 */
+	public Integer getGoProvinceId() {
+		return goProvinceId;
+	}
+	/**
+	 * @param goProvinceId the goProvinceId to set
+	 */
+	public void setGoProvinceId(Integer goProvinceId) {
+		this.goProvinceId = goProvinceId;
+	}
+	/**
+	 * @return the goCityId
+	 */
+	public Integer getGoCityId() {
+		return goCityId;
+	}
+	/**
+	 * @param goCityId the goCityId to set
+	 */
+	public void setGoCityId(Integer goCityId) {
+		this.goCityId = goCityId;
+	}
+	/**
+	 * @return the operType
+	 */
+	public Integer getOperType() {
+		return operType;
+	}
+	/**
+	 * @param operType the operType to set
+	 */
+	public void setOperType(Integer operType) {
+		this.operType = operType;
+	}
+	/**
+	 * @return the goCreatorId
+	 */
+	public String getGoCreatorId() {
+		return goCreatorId;
+	}
+	/**
+	 * @param goCreatorId the goCreatorId to set
+	 */
+	public void setGoCreatorId(String goCreatorId) {
+		this.goCreatorId = goCreatorId;
+	}
+	/**
+	 * @return the goSourcetypeId
+	 */
+	public Integer getGoSourcetypeId() {
+		return goSourcetypeId;
+	}
+	/**
+	 * @param goSourcetypeId the goSourcetypeId to set
+	 */
+	public void setGoSourcetypeId(Integer goSourcetypeId) {
+		this.goSourcetypeId = goSourcetypeId;
+	}
+	/**
+	 * @return the listTypeIds
+	 */
+	public Set<Integer> getListTypeIds() {
+		return listTypeIds;
+	}
+	/**
+	 * @param listTypeIds the listTypeIds to set
+	 */
+	public void setListTypeIds(Set<Integer> listTypeIds) {
+		this.listTypeIds = listTypeIds;
+	}
+	/**
+	 * @return the tourGroupCode
+	 */
+	public String getTourGroupCode() {
+		return tourGroupCode;
+	}
+	/**
+	 * @param tourGroupCode the tourGroupCode to set
+	 */
+	public void setTourGroupCode(String tourGroupCode) {
+		this.tourGroupCode = tourGroupCode;
+	}
+	/**
+	 * @return the goSupplierName
+	 */
+	public String getGoSupplierName() {
+		return goSupplierName;
+	}
+	/**
+	 * @param goSupplierName the goSupplierName to set
+	 */
+	public void setGoSupplierName(String goSupplierName) {
+		this.goSupplierName = goSupplierName;
+	}
+	/**
+	 * @return the tourProductName
+	 */
+	public String getTourProductName() {
+		return tourProductName;
+	}
+	/**
+	 * @param tourProductName the tourProductName to set
+	 */
+	public void setTourProductName(String tourProductName) {
+		this.tourProductName = tourProductName;
+	}
+	
+	
 }
