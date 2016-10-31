@@ -19,6 +19,7 @@ import com.yimayhd.erpcenter.biz.sales.client.service.sales.FitGroupBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
+import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission;
@@ -63,6 +64,9 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 	
 	@Autowired
 	private BookingSupplierBiz bookingSupplierService ;
+	
+	@Autowired
+	private PlatformOrgBiz orgService;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -138,6 +142,8 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 		totalSKGroupQueryResult.setGroup(group);
 		totalSKGroupQueryResult.setTourGroup(tourGroup);
 		totalSKGroupQueryResult.setPageBean(pageBean);
+		totalSKGroupQueryResult.setOrgJsonStr(orgService.getComponentOrgTreeJsonStr(bizId));
+		totalSKGroupQueryResult.setOrgUserJsonStr(platformEmployeeService.getComponentOrgUserTreeJsonStr(bizId));
 		
 		return totalSKGroupQueryResult;
 	}

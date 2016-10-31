@@ -5,18 +5,24 @@ package com.yimayhd.erpcenter.facade.sales.operation;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.util.WebUtils;
 
-import com.alibaba.fastjson.JSONObject;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingGuideBiz;
@@ -26,23 +32,29 @@ import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopDetai
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierDetailBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
+import com.yimayhd.erpcenter.common.util.NumberUtil;
+import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGuidesVO;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingShopDetailDeployVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupPriceAndPersons;
 import com.yimayhd.erpcenter.facade.sales.errorcode.SaleErrorCode;
+import com.yimayhd.erpcenter.facade.sales.query.BookingFinanceShopQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.result.BookingShopResult;
 import com.yimayhd.erpcenter.facade.sales.result.FinanceShopResult;
 import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.sales.result.operation.BookingFinanceShopFacade;
+import com.yimayhd.erpresource.biz.service.ContractBiz;
 import com.yimayhd.erpresource.biz.service.SupplierItemBiz;
 import com.yimayhd.erpresource.dal.constants.Constants;
+import com.yimayhd.erpresource.dal.po.SupplierContractPriceDateInfo;
 import com.yimayhd.erpresource.dal.po.SupplierItem;
 
 /**
@@ -72,6 +84,9 @@ public class BookingFinanceShopFacadeImpl implements BookingFinanceShopFacade {
 	private GroupOrderBiz groupOrderBiz;
 	@Autowired
 	private BookingShopDetailDeployBiz bookingShopDetailDeployBiz;
+	@Autowired
+	private ContractBiz contractBiz;
+	
 	@Override
 	public FinanceShopResult financeShopList(PageBean pageBean, Integer bizId,
 			Set<Integer> set) {
@@ -300,10 +315,7 @@ public class BookingFinanceShopFacadeImpl implements BookingFinanceShopFacade {
 		ResultSupport resultSupport = new ResultSupport();
 		int s = bookingShopDetailDeployBiz.getCountByShopId(bookingId);
 		if(s>0){
-//			JSONObject json = new JSONObject();
-//			json.put("fail", true);
 			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
-//			return json.toString();
 			return resultSupport;
 		}else{
 			BookingShop shop = bookingShopBiz.selectByPrimaryKey(bookingId);
@@ -312,6 +324,139 @@ public class BookingFinanceShopFacadeImpl implements BookingFinanceShopFacade {
 			financeBiz.calcTourGroupAmount(shop.getGroupId());
 			return resultSupport;
 		}
+	}
+
+	@Override
+	public String toSaveExcelData(BookingFinanceShopQueryDTO queryDTO) {
+		StringBuffer str =new StringBuffer();
+		Integer supplierId = queryDTO.getSupplierId();
+		String bizCode = queryDTO.getBizCode();
+		Integer bizId = queryDTO.getBizId();
+		String userName = queryDTO.getUserName();
+		Sheet sheet = queryDTO.getSheet();
+		Integer userId = queryDTO.getUserId();
+		String supplierName = queryDTO.getSupplierName();
+		Map<String, Object> map = queryDTO.getMap();
+		List<SupplierItem> supplierItems = supplierItemBiz.findSupplierItemBySupplierId(supplierId);
+		//比较表中购物项目，去掉不存在的购物项目
+		String imp = null;
+		
+		//筛选后，保留下来的购物项目集合
+		List<SupplierItem> supplierItemList = new ArrayList<SupplierItem>();
+		Iterator<Map.Entry<String,Object>> it = map.entrySet().iterator();  
+        while(it.hasNext()){  
+            Map.Entry<String,Object> entry=it.next();  
+            for (SupplierItem supplierItem : supplierItems) {
+				if(supplierItem.getItemName().trim().equals(entry.getKey())){
+					imp = "HAVE";
+					supplierItem.setExclId((Integer)entry.getValue());
+					supplierItemList.add(supplierItem);
+				}
+			}
+            if(null==imp){
+            	str.append(supplierName+"没有"+entry.getKey()+"\r\n");
+            	it.remove();  
+			}
+			imp =null;
+        }  
+		Row row = null ;
+		Cell cell = null ;
+		TourGroup tour = null;
+		 for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+			row = sheet.getRow(rowIndex) ;
+			//团号
+			String groupCode="";
+			cell = row.getCell(0) ;
+			if(null!=cell){
+				cell.setCellType(1) ;
+				str.append(cell.getStringCellValue()+",");
+				groupCode = cell.getStringCellValue().trim();
+			}
+			//导游姓名
+			String guideName="";
+			Integer guideId = null;
+			cell = row.getCell(1) ;
+			if(null!=cell){
+				cell.setCellType(1) ;
+				str.append(cell.getStringCellValue()+":");
+				tour = tourGroupBiz.selectByGroupCode(groupCode);
+				if(null==tour){
+					str.append("找不到该团！\r\n");
+					continue;
+				}
+				List<BookingGuidesVO> guide = bookingGuideBiz.selectBookingGuideVoByGroupId(tour.getId());
+				for (BookingGuidesVO bookingGuidesVO : guide) {
+					if(bookingGuidesVO.getGuide().getGuideName().equals(cell.getStringCellValue().trim())){
+						guideName = cell.getStringCellValue().trim();
+						guideId = bookingGuidesVO.getGuide().getGuideId();
+					}
+				}
+				if(StringUtils.isBlank(guideName)){
+					str.append("该团找不到此导游！\r\n");
+					continue;
+				}
+			}
+			
+			//进店人数
+			String personNum = null;
+			cell = row.getCell(2) ;
+			if(null!=cell){
+				cell.setCellType(1) ;
+				personNum = cell.getStringCellValue().trim();
+				if(!NumberUtil.isNumeric(personNum)){
+					str.append("该团进店人数不是数字！\r\n");
+					continue;
+				}
+			}
+			//进店日期
+			Date date = null;
+			cell = row.getCell(3) ;
+			if(null!=cell){
+				cell.setCellType(Cell.CELL_TYPE_NUMERIC) ;
+				date = cell.getDateCellValue();
+			}
+			
+			//购物店信息
+			BookingShop shop =new BookingShop();
+			shop.setGroupId(tour.getId());
+			shop.setGuideId(guideId);
+			shop.setGuideName(guideName);
+			shop.setPersonNum(personNum==null?0:Integer.parseInt(personNum));
+			shop.setShopDate(date == null ? "" : DateUtils.format(date));
+			shop.setSupplierId(supplierId);
+			shop.setSupplierName(supplierName);
+			
+			
+			List<BookingShopDetail> bShopDetails= new ArrayList<BookingShopDetail>();
+			BookingShopDetail bookingShopDetail = null;
+			
+			for (SupplierItem supplierItem : supplierItemList) {
+				bookingShopDetail = new BookingShopDetail();
+				bookingShopDetail.setGoodsId(supplierItem.getId());
+				bookingShopDetail.setGoodsName(supplierItem.getItemName());
+				cell = row.getCell(supplierItem.getExclId()) ;
+				if(null!=cell){
+					bookingShopDetail.setBuyTotal(new BigDecimal(cell.getNumericCellValue()));
+				}
+				//返款协议
+				List<Date> dateList = new ArrayList<Date>();
+				dateList.add(tour.getDateStart());
+				List<SupplierContractPriceDateInfo> priceList = contractBiz.getContractPriceByPramas(bizId, supplierId,supplierItem.getId(), dateList);
+				if(null!=priceList && priceList.size()>0){
+					bookingShopDetail.setRepayVal(new BigDecimal(priceList.get(priceList.size()-1).getRebateAmount()));
+				}else{
+					str.append(supplierItem.getItemName()+"没有返款比例！");
+					continue;
+				}
+				bookingShopDetail.setRepayTotal(bookingShopDetail.getBuyTotal().multiply(bookingShopDetail.getRepayVal().divide(new BigDecimal("100"))));
+				bShopDetails.add(bookingShopDetail);
+			}
+			//保存
+			bookingShopBiz.saveShopAndDetail(bizCode,userId,userName,bShopDetails,shop);
+			str.append("导入成功！\r\n");
+			
+		 }
+		return str.toString();
 	}
 
 	

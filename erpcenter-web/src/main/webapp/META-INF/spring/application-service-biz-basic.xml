@@ -16,4 +16,5 @@
 	<bean id="msgBiz" class="com.yimayhd.erpcenter.biz.basic.service.impl.MsgBizImpl" />
 	<bean id="regionCardBiz" class="com.yimayhd.erpcenter.biz.basic.service.impl.RegionCardBizImpl" />
 	<bean id="regionBiz" class="com.yimayhd.erpcenter.biz.basic.service.impl.RegionBizImpl" />
+	<bean id="logOperatorBiz" class="com.yimayhd.erpcenter.biz.basic.service.impl.LogOperatorBizImpl" />
 </beans>

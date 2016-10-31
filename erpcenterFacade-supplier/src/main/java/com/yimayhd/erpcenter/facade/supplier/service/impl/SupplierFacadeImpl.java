@@ -1121,12 +1121,6 @@ public class SupplierFacadeImpl implements SupplierFacade {
 		
 		GuideListResult webResult = new GuideListResult();
 		try{
-			if (page == null) {
-				page = 1;
-			}
-			if (pageSize == null) {
-				pageSize = Constants.PAGESIZE;
-			}
 
 			PageBean pageBean = guideBiz.getGuideList(guideDTO.getSupplierGuide(), page, pageSize,
 					bizId);

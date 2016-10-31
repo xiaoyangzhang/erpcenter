@@ -806,7 +806,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		return new BaseStateResult(true, null);
 	}
 
-	@Override // FIXME 此方法重复
+	@Override
 	public BaseStateResult beforeInsertGroup(String ids) {
 
 		BaseStateResult result = new BaseStateResult();
@@ -1389,7 +1389,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			groupOrderService.saveGroupOrder(groupOrderVO, groupRouteVO, insertList);
 			// 更新库存信息
 			ProductGroup group = productGroupService.getGroupInfoById(priceGroupId);
-			boolean updateStock = productGroupPriceService.updateStock(priceId,
+			productGroupPriceService.updateStock(priceId,
 					group.getGroupSetting() == 0 ? groupOrderVO.getGroupOrder().getSupplierId() : null,
 					groupOrderVO.getGroupOrderGuestList().size());
 		} catch (Exception ex) {
@@ -2046,9 +2046,10 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		return result;
 	}
 	
+	//FIXME 这个嵌套的太多，整体放facade中
 	public CreateSKGuideResult createSKGuide(Integer groupId,String imgPath,String userName){
 		
-		Map<String, Object> datas = bookingSupplierService.selectBookingInfo(groupId, 1);
+		//Map<String, Object> datas = bookingSupplierService.selectBookingInfo(groupId, 1);
 		
 		// 查询导游信息
 		List<BookingGuide> guides = bookingGuideService.selectGuidesByGroupId(groupId);
@@ -2072,11 +2073,11 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		/**
 		 * 获取全陪，定制团一个团对应一个订单
 		 */
-		List<GroupOrder> orders = groupOrderService.selectOrderByGroupId(tourGroup.getId());
-		GroupOrder order = orders.get(0);
+//		List<GroupOrder> orders = groupOrderService.selectOrderByGroupId(tourGroup.getId());
+//		GroupOrder order = orders.get(0);
 		
 //		/**
-//		 * logo图片 FIXME 待修复
+//		 * logo图片
 //		 */
 //		String imgPath = settingCommon.getMyBizLogo(request);
 		Map<String, Object> params1 = new HashMap<String, Object>();
@@ -2415,7 +2416,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 	}
 	
 	@Override
-	public CreateShoppingDetailResult createShoppingDetail(Integer groupId, String imgPath, String userName) {
+	public CreateShoppingDetailResult createShoppingDetail(Integer groupId, String userName) {
 
 		TourGroup tg = tourGroupService.selectByPrimaryKey(groupId);
 		List<BookingGuide> guides = bookingGuideService.selectGuidesByGroupId(groupId);
@@ -2437,57 +2438,10 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			gops.add(gop);
 		}
 
-		Map<String, Object> params1 = new HashMap<String, Object>();
-		params1.put("printTime", DateUtils.format(new Date()));
-		params1.put("printName", userName);
-		params1.put("groupCode", tg.getGroupCode());
-		if (imgPath != null) {
-			Map<String, String> picMap = new HashMap<String, String>();
-			picMap.put("width", BizConfigConstant.BIZ_LOGO_WIDTH);
-			picMap.put("height", BizConfigConstant.BIZ_LOGO_HEIGHT);
-			picMap.put("type", "jpg");
-			picMap.put("path", imgPath);
-			params1.put("logo", picMap);
-		} else {
-			params1.put("logo", "");
-		}
-
-		/**
-		 * 第一个表格
-		 */
-		Map<String, Object> map0 = new HashMap<String, Object>();
-		map0.put("groupCode", tg.getGroupCode());
-		map0.put("totalNum", tg.getTotalAdult() + "大" + tg.getTotalChild() + "小");
-		map0.put("guide", guideString);
-		map0.put("productName",
-				"【" + tg.getProductBrandName() + "】" + (tg.getProductName() == null ? "" : tg.getProductName()));
-		/**
-		 * 客人信息
-		 */
-		List<Map<String, String>> guestList = new ArrayList<Map<String, String>>();
-		int i = 1;
-		for (GroupOrderPrintPo po : gops) {
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("n", "" + i++);
-			map.put("rm", po.getReceiveMode());
-			map.put("pn", po.getPersonNum());
-			map.put("p", po.getPlace());
-			map.put("zg", "");
-			map.put("rj", "");
-			map.put("yd", "");
-			map.put("fc", "");
-			map.put("y", "");
-			map.put("c", "");
-			map.put("hly", "");
-			map.put("qt", "");
-			map.put("bz", "");
-			guestList.add(map);
-		}
-
 		CreateShoppingDetailResult result = new CreateShoppingDetailResult();
-		result.setGuestList(guestList);
-		result.setMap0(map0);
-		result.setParams1(params1);
+		result.setGops(gops);
+		result.setGuideString(guideString);
+		result.setTg(tg);
 
 		return result;
 	}
@@ -2527,7 +2481,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 	}
 	
 	@Override
-	public CreateShoppingDetailResult createShoppingDetail2(Integer groupId,String imgPath,String userName) {
+	public CreateShoppingDetailResult createShoppingDetail2(Integer groupId,String userName) {
 		
 		TourGroup tg = tourGroupService.selectByPrimaryKey(groupId);
 		List<BookingGuide> guides = bookingGuideService.selectGuidesByGroupId(groupId);
@@ -2550,54 +2504,11 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			gop.setGuests(guests);
 			gops.add(gop);
 		}
-		Map<String, Object> params1 = new HashMap<String, Object>();
-		params1.put("printTime", DateUtils.format(new Date()));
-		params1.put("printName", userName);
-		params1.put("groupCode", tg.getGroupCode());
-		if (imgPath != null) {
-			Map<String, String> picMap = new HashMap<String, String>();
-			picMap.put("width", BizConfigConstant.BIZ_LOGO_WIDTH);
-			picMap.put("height", BizConfigConstant.BIZ_LOGO_HEIGHT);
-			picMap.put("type", "jpg");
-			picMap.put("path", imgPath);
-			params1.put("logo", picMap);
-		} else {
-			params1.put("logo", "");
-		}
-		/**
-		 * 第一个表格
-		 */
-		Map<String, Object> map0 = new HashMap<String, Object>();
-		map0.put("groupCode", tg.getGroupCode());
-		map0.put("totalNum", tg.getTotalAdult() + "大" + tg.getTotalChild() + "小");
-		map0.put("guide", guideString);
-		map0.put("productName", "【" + tg.getProductBrandName() + "】" + (tg.getProductName() == null ? "" : tg.getProductName()));
-		/**
-		 * 客人信息
-		 */
-		List<Map<String, String>> guestList = new ArrayList<Map<String, String>>();
-		int i = 1;
-		for (GroupOrderPrintPo po : gops) {
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("n", "" + i++);
-			map.put("rm", po.getReceiveMode());
-			map.put("pn", po.getPersonNum());
-			map.put("kr", po.getGuestInfo());
-			map.put("rj", "");
-			map.put("yd", "");
-			map.put("fc", "");
-			map.put("y", "");
-			map.put("c", "");
-			map.put("hly", "");
-			map.put("qt", "");
-			map.put("bz", "");
-			guestList.add(map);
-		}
 
 		CreateShoppingDetailResult result = new CreateShoppingDetailResult();
-		result.setGuestList(guestList);
-		result.setMap0(map0);
-		result.setParams1(params1);
+		result.setGops(gops);
+		result.setGuideString(guideString);
+		result.setTg(tg);
 
 		return result;
 	}

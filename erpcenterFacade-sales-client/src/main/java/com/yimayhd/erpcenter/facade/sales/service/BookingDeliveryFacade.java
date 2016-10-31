@@ -2,8 +2,11 @@
 package com.yimayhd.erpcenter.facade.sales.service;
 
 import java.util.Map;
+import java.util.Set;
 
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.sales.result.WebResult;
@@ -69,5 +72,7 @@ public interface BookingDeliveryFacade {
 	* @return BookingDelivery
 	* @throws
 	 */
-	BookingDeliveryResult getBookingDeliveryInfo(Integer bookingId);
+	BookingDeliveryResult getBookingDeliveryInfo(Integer bookingId,Integer bizId);
+	BookingDeliveryResult getDeliveryPriceInfo(Integer bizId,PageBean pageBean,Set<Integer> set,String carInfo);
+	PageBean  getLocalTravelAngencyGroupList(PageBean pageBean,TourGroupVO tourGroup,Set<Integer> set);
 }
