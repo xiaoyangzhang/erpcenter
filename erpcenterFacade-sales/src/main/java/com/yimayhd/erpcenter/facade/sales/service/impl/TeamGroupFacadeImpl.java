@@ -1,17 +1,36 @@
 package com.yimayhd.erpcenter.facade.sales.service.impl;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
-import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.airticket.AirTicketRequestBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRequirementBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRouteBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.TeamGroupBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
-import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
+import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
@@ -22,19 +41,24 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TeamGroupVO;
-import com.yimayhd.erpcenter.facade.sales.query.*;
-import com.yimayhd.erpcenter.facade.sales.result.*;
+import com.yimayhd.erpcenter.facade.sales.query.CopyTourGroupDTO;
+import com.yimayhd.erpcenter.facade.sales.query.FindTourGroupByConditionDTO;
+import com.yimayhd.erpcenter.facade.sales.query.SaveRequireMentDTO;
+import com.yimayhd.erpcenter.facade.sales.query.SaveTeamGroupInfoDTO;
+import com.yimayhd.erpcenter.facade.sales.query.ToAddTeamGroupInfoDTO;
+import com.yimayhd.erpcenter.facade.sales.query.ToEditTeamGroupInfoDTO;
+import com.yimayhd.erpcenter.facade.sales.query.ToSearchListDTO;
+import com.yimayhd.erpcenter.facade.sales.result.ContactManListResult;
+import com.yimayhd.erpcenter.facade.sales.result.FindTourGroupByConditionResult;
+import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
+import com.yimayhd.erpcenter.facade.sales.result.SaveTeamGroupInfoResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToAddTeamGroupInfoResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToEditTeamGroupInfoResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToGroupListResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToRequirementResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToSearchListResult;
 import com.yimayhd.erpcenter.facade.sales.service.TeamGroupFacade;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.util.WebUtils;
-
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * @ClassName: ${ClassName}

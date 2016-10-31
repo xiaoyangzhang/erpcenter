@@ -12,7 +12,7 @@ import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupPriceBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductStockBiz;
-import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
+import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;

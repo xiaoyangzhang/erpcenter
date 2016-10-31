@@ -19,7 +19,7 @@ import com.alibaba.fastjson.util.TypeUtils;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.common.solr.SolrSearchPageDTO;
-import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
+import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.dal.sales.client.dto.TourProfitQueryDTO;
 import com.yimayhd.erpcenter.dal.sales.client.dto.TourTotalProfitQueryDTO;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;

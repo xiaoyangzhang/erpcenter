@@ -12,9 +12,9 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.dal.basic.po.AirLine;
 import com.yimayhd.erpcenter.dal.basic.service.AirLineDal;
-import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
