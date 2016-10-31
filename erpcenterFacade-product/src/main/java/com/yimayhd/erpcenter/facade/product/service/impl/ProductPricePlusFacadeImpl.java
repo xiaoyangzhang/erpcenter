@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupPriceBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductGroupSupplierBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductStockBiz;
 import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
@@ -41,8 +42,7 @@ import com.yimayhd.erpcenter.facade.service.ProductPricePlusFacade;
 public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 	
 	@Autowired
-	private ProductGroupSupplierDal productGroupSupplierDal;
-	
+	private ProductGroupSupplierBiz productGroupSupplierBiz;
 	@Autowired
 	private ProductStockBiz productStockBiz;
 	
