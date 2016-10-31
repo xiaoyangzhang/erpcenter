@@ -47,5 +47,26 @@
 		<groupId>com.yimayhd.erpcenter</groupId>
 		<artifactId>erpcenter-common</artifactId>
 	</dependency>
+	<dependency>
+    	<groupId>com.yimayhd.erpresource</groupId>
+  		<artifactId>erpresourceBiz-client</artifactId>
+    </dependency>  
+    <dependency>
+    	<groupId>com.yimayhd.erpresource</groupId>
+  		<artifactId>erpresourceDAL-client</artifactId>
+    </dependency>
+    
+    <dependency>
+		<groupId>org.apache.poi</groupId>
+		<artifactId>poi</artifactId>
+		<version>3.10-FINAL</version>
+		<type>jar</type>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.poi</groupId>
+		<artifactId>poi-ooxml</artifactId>
+		<version>3.10-FINAL</version>
+		<type>jar</type>
+	</dependency>
   </dependencies>
 </project>
