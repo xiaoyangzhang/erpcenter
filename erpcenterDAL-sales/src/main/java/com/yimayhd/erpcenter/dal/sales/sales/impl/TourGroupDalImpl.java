@@ -21,6 +21,7 @@ import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.common.solr.SolrSearchPageDTO;
 import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
 import com.yimayhd.erpcenter.dal.sales.client.dto.TourProfitQueryDTO;
+import com.yimayhd.erpcenter.dal.sales.client.dto.TourTotalProfitQueryDTO;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideTimes;
@@ -968,22 +969,26 @@ public class TourGroupDalImpl implements TourGroupDal {
 	@Override
 	public PageBean<TourGroup> selectProfitByTourConListPage(PageBean<TourGroup> pageBean, Integer bizId,
 			Set<Integer> set) {
-		List<TourGroup> tours = tourGroupMapper.selectProfitByTourConListPage(pageBean, bizId, set);
-		for (TourGroup tour : tours) {
-			if (tour != null) {
-				if (tour.getId() != null) {
-					tour.setBudget(tourGroupMapper.selectProfitByModeAndTourId(tour.getId(), 1));
-					tour.setTotal(tourGroupMapper.selectProfitByModeAndTourId(tour.getId(), 0));
-				}
-			}
-		}
+		List<TourGroup> tours = null;
 		
 		//solr
 		if(1 == 0){
 			TourProfitQueryDTO queryDTO = TourGroupConverter.convert2TourProfitQueryDTO(pageBean, bizId, set);
 			SolrSearchPageDTO<TourGroupDTO> searchResult = tourGroupSolrQueryManager.searchTourGroupList(queryDTO);
 			
-			List<TourGroup> tours = 
+			List<TourGroupDTO> toursDTOList = searchResult.getList();
+			tours = TourGroupConverter.convert2TourGroupList(toursDTOList);
+			
+		}else{
+			tours = tourGroupMapper.selectProfitByTourConListPage(pageBean, bizId, set);
+			for (TourGroup tour : tours) {
+				if (tour != null) {
+					if (tour.getId() != null) {
+						tour.setBudget(tourGroupMapper.selectProfitByModeAndTourId(tour.getId(), 1));
+						tour.setTotal(tourGroupMapper.selectProfitByModeAndTourId(tour.getId(), 0));
+					}
+				}
+			}
 		}
 		
 		
@@ -1041,7 +1046,20 @@ public class TourGroupDalImpl implements TourGroupDal {
 
 	@Override
 	public TourGroup selectProfitByTourConAndMode(PageBean<TourGroup> pageBean, Integer bizId, Set<Integer> set) {
-		return tourGroupMapper.selectProfitByTourConAndMode(pageBean, bizId, set);
+		
+		TourGroup tourGroup = null;
+		
+		if(1 == 0){
+			TourTotalProfitQueryDTO queryDTO = TourGroupConverter.convert2TourTotalProfitQueryDTO(pageBean, bizId, set);
+			TourGroupDTO tourGroupDTO = tourGroupSolrQueryManager.searchTotalTourGroup(queryDTO);
+			
+			tourGroup = TourGroupConverter.convert2TourTotalGroup(tourGroupDTO);
+			
+		}else{
+			tourGroup = tourGroupMapper.selectProfitByTourConAndMode(pageBean, bizId, set);
+		}
+		
+		return tourGroup;
 	}
 
 	@Override
