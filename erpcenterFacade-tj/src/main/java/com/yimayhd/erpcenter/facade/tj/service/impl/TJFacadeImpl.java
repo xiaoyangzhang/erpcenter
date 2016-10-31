@@ -13,7 +13,7 @@ import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.tj.TJBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
-import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
+import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
