@@ -209,4 +209,6 @@ public interface ProductFacade {
 	 * @return
 	 */
 	List<ProductGroupSupplierVo> productPricePreview(int bizId, String productIds);
+	PageBean findProductSales(PageBean pageBean,Integer bizId,Integer orgId);
+	ResultSupport updateUser(ProductInfo addUser,ProductInfo delUser,Integer bizId);
 }

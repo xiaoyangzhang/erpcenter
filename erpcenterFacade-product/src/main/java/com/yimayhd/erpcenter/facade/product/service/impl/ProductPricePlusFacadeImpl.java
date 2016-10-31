@@ -2,6 +2,7 @@ package com.yimayhd.erpcenter.facade.product.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -284,5 +285,11 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
 		}
 		return result;
+	}
+
+	@Override
+	public List<Map> loadMinPrice(List<Integer> productIds, Date date) {
+		List<Map> mapList = productGroupPriceBiz.getMinPriceByProductIdSetAndDate(productIds, date);
+		return mapList;
 	}
 }
