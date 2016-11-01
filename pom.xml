@@ -56,8 +56,8 @@
 	    <module>erpcenterFacade-tj</module>
 	    <module>erpcenterFacade-shopping-client</module>
 	    <module>erpcenterFacade-shopping</module>
-    <module>erpcenterFacade-dataAnalysis</module>
-    <module>erpcenterFacade-dataAnalysis-client</module>
+	    <module>erpcenterFacade-dataAnalysis</module>
+	    <module>erpcenterFacade-dataAnalysis-client</module>
   </modules>
 
 	<properties>
@@ -144,6 +144,11 @@
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenterFacade-ticket-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-dataAnalysis-client</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			
