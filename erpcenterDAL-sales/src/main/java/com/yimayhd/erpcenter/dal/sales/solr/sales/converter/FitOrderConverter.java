@@ -306,4 +306,153 @@ public class FitOrderConverter {
 		return solrQuery;
 	}
 
+	public static SolrQuery queryDTO2SolrQueryTotal(GroupOrderPageQueryDTO queryDTO) {
+
+		SolrQuery solrQuery = new SolrQuery("*:*");
+		
+		StringBuffer q_sb = new StringBuffer();
+		String two = "-1";
+		q_sb.append("-goState:" + "\""+two+"\"");
+		solrQuery.addFilterQuery(q_sb.toString());
+		solrQuery.addFilterQuery("goOrderType:0");
+
+		//go.biz_id = #{bizId,jdbcType=INTEGER}
+		if(queryDTO.getGoBizId()!=null){
+			solrQuery.addFilterQuery("goBizId:" + queryDTO.getGoBizId());
+		}
+		//go.sale_operator_id (listType==0)
+		//go.operator_id in    (listType==1)
+		if(queryDTO.getListType()!=null){
+			Set<Integer> set=queryDTO.getListTypeIds();
+			String idsIn="";
+			if(set!=null&&set.size()>0){
+				for(Integer id:set){
+					idsIn=id+",";
+				}
+				idsIn=idsIn.substring(0,idsIn.length()-1);
+				if(idsIn.contains(",")){
+					
+					idsIn=idsIn.replace("," , " OR ");
+				}
+				if(queryDTO.getListType()==0){
+					solrQuery.addFilterQuery("goSaleOperatorId:(" + idsIn + ")");
+				}else{
+					solrQuery.addFilterQuery("goOperatorId:(" + idsIn + ")");
+				}
+				
+			}
+			
+		}
+		//tg.date_start  #{page.parameter.startTime} <tg.date_start< #{page.parameter.endTime} page.parameter.dateType == 1
+		//tg.create_time  #{page.parameter.startTime} <tg.date_start< #{page.parameter.endTime} page.parameter.dateType == 2
+		if(queryDTO.getDateType()!=null){
+			String ss="";
+			if(queryDTO.getDateType()==1){
+				ss="goDepartureDate";
+			}else if(queryDTO.getDateType()==2){
+				ss="goCreateTime"; 
+			}
+			String dateQuery="";
+			if(queryDTO.getStartTime()!=null&&queryDTO.getEndTime()!=null){
+				dateQuery="["+queryDTO.getStartTime()+" TO queryDTO.getEndTime()]";
+			}else if(queryDTO.getStartTime()==null&&queryDTO.getEndTime()!=null){
+				if(queryDTO.getDateType()==1){
+					dateQuery=queryDTO.getEndTime()+"";
+				}else{
+					dateQuery="(* TO +"+queryDTO.getEndTime()+"]";
+				}
+			}else if(queryDTO.getStartTime()!=null&&queryDTO.getEndTime()==null){
+				if(queryDTO.getDateType()==1){
+					dateQuery=queryDTO.getStartTime()+"";
+				}else{
+					dateQuery="(* TO +"+queryDTO.getStartTime()+"]";
+				}
+				}
+			if(!StringUtils.isEmpty(dateQuery)){
+				solrQuery.addFilterQuery(ss+":"+dateQuery);
+			}
+		}
+		
+		if(queryDTO.getGoProductBrandId()!=null){
+			solrQuery.addFilterQuery("goProductBrandId:" + queryDTO.getGoProductBrandId());
+		}
+		if(!StringUtils.isEmpty(queryDTO.getTourProductName())){
+			solrQuery.addFilterQuery("goProductName:*"+queryDTO.getGoProductName()+"* OR goProductBrandName:*"+queryDTO.getGoProductName());
+		}
+		//	and go.supplier_name LIKE CONCAT('%','${page.parameter.supplierName}','%')
+		if(!StringUtils.isEmpty(queryDTO.getGoSupplierName())){
+			solrQuery.addFilterQuery("goSupplierName:*"+queryDTO.getGoSupplierName()+"*");
+		}
+		//go.receive_mode LIKE
+		if(!StringUtils.isEmpty(queryDTO.getGoReceiveMode())){
+			solrQuery.addFilterQuery("goReceiveMode:*"+queryDTO.getGoReceiveMode()+"*");
+		}
+		if(queryDTO.getGoSourcetypeId()!=null){
+			solrQuery.addFilterQuery("goSourcetypeId:" + queryDTO.getGoSourcetypeId());
+		}
+		//and go.province_id page.parameter.provinceId !=-1
+		if(queryDTO.getGoProvinceId()!=null&&queryDTO.getGoProvinceId()!=-1){
+			solrQuery.addFilterQuery("goProvinceId:"+queryDTO.getGoProvinceId());
+		}
+		//go.city_id =#{page.parameter.cityId} page.parameter.cityId
+		if(queryDTO.getGoCityId()!=null&&queryDTO.getGoCityId()!=-1){
+			solrQuery.addFilterQuery("goCityId:"+queryDTO.getGoCityId());
+		}
+		//and tg.group_code LIKE CONCAT('%','${page.parameter.tourGroup.groupCode}','%')
+		if(!StringUtils.isEmpty(queryDTO.getTourGroupCode())){
+			solrQuery.addFilterQuery("tourGroupCode:*"+queryDTO.getTourGroupCode()+"*");
+		}
+		if(queryDTO.getGoState()!=null){
+			if(queryDTO.getGoState()==1){
+				solrQuery.addFilterQuery("-goGroupId:"+" ");
+			}else if(queryDTO.getGoState()==1){
+				solrQuery.addFilterQuery("goGroupId:"+" ");
+			}
+		}
+		//go.order_lock_state
+		if(queryDTO.getGoOrderLockState()!=null){
+			solrQuery.addFilterQuery("goOrderLockState:"+queryDTO.getGoOrderLockState());
+		}
+		//go.total != total_cash  page.parameter.cashState == 0
+		//go.total = total_cash   page.parameter.cashState ==1
+		if(queryDTO.getCashState()!=null){
+			if(queryDTO.getCashState()==0){
+				solrQuery.addFilterQuery("-goTotal:goTotalCash");
+			}else if(queryDTO.getCashState()==1){
+				solrQuery.addFilterQuery("goTotal:goTotalCash");
+			}
+			solrQuery.addFilterQuery("tourGroupState:" + queryDTO.getTourGroupState());
+		}
+		
+		//go.sale_operator_id in    page.parameter.operType==1
+		//go.operator_id in    page.parameter.operType==2
+		//go.creator_id in    page.parameter.operType==3
+		if(queryDTO.getOperType()!=null){
+			String query="";
+			if(!StringUtils.isEmpty(queryDTO.getGoSaleOperatorId())){
+				if(queryDTO.getGoSaleOperatorId().contains(",")){
+					query=queryDTO.getGoSaleOperatorId().replace(",", " OR ");
+				}else{
+					query=queryDTO.getGoSaleOperatorId();
+				}
+				if(queryDTO.getOperType()==1){
+					solrQuery.addFilterQuery("goSaleOperatorId:("+query+")");
+				}else if(queryDTO.getOperType()==2){
+					solrQuery.addFilterQuery("goOperatorId:("+query+")");
+				}else if(queryDTO.getOperType()==3){
+					solrQuery.addFilterQuery("goCreatorId:("+query+")");
+				}
+			}
+			
+		}
+		solrQuery.setParam("stats", true);
+		solrQuery.set("indent", true);
+		solrQuery.add("stats.field","audit");
+		solrQuery.add("stats.field","child");
+		solrQuery.add("stats.field","guide");
+		solrQuery.add("stats.field","total");
+		solrQuery.setRows(0);
+
+		return solrQuery;
+	}
 }
