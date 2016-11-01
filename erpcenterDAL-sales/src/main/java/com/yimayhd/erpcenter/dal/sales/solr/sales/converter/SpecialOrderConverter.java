@@ -164,7 +164,7 @@ public class SpecialOrderConverter {
 	 * @param queryDTO
 	 * @return
 	 */
-	public static SolrQuery queryDTO2SolrQuery(GroupOrderPageQueryDTO queryDTO) {
+	public static SolrQuery queryDTO2SolrQuery(GroupOrderPageQueryDTO queryDTO,int type) {
 
 		SolrQuery solrQuery = new SolrQuery("*:*");
 		
@@ -312,10 +312,20 @@ public class SpecialOrderConverter {
 		if(queryDTO.getTourGroupMode()!=null){
 			solrQuery.addFilterQuery("tourGroupMode:"+queryDTO.getTourGroupMode());
 		}
+		if(type==0){
+			solrQuery.setParam("sort", "goDepartureDate asc");
+			solrQuery.setStart(queryDTO.getStartRow());
+			solrQuery.setRows(queryDTO.getOldPageSize());
+		}else{
+			solrQuery.setParam("stats", true);
+			solrQuery.set("indent", true);
+			solrQuery.add("stats.field","audit");
+			solrQuery.add("stats.field","child");
+			solrQuery.add("stats.field","guide");
+			solrQuery.add("stats.field","total");
+			solrQuery.setRows(0);
+		}
 		
-		solrQuery.setParam("sort", "goDepartureDate asc");
-		solrQuery.setStart(queryDTO.getStartRow());
-		solrQuery.setRows(queryDTO.getOldPageSize());
 
 		return solrQuery;
 	}

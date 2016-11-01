@@ -170,7 +170,7 @@ public class ProfitOrderConverter {
 	 * @param queryDTO
 	 * @return
 	 */
-	public static SolrQuery queryDTO2SolrQuery(GroupOrderPageQueryDTO queryDTO) {
+	public static SolrQuery queryDTO2SolrQuery(GroupOrderPageQueryDTO queryDTO ,int type) {
 
 		SolrQuery solrQuery = new SolrQuery("*:*");
 		
@@ -263,9 +263,21 @@ public class ProfitOrderConverter {
 				solrQuery.addFilterQuery(ss+":"+dateQuery);
 			}
 		}
-		solrQuery.setParam("sort", "goDepartureDate asc");
-		solrQuery.setStart(queryDTO.getStartRow());
-		solrQuery.setRows(queryDTO.getOldPageSize());
+		if(type==0){
+			solrQuery.setParam("sort", "goDepartureDate asc");
+			solrQuery.setStart(queryDTO.getStartRow());
+			solrQuery.setRows(queryDTO.getOldPageSize());
+		}else{
+			solrQuery.setParam("stats", true);
+			solrQuery.set("indent", true);
+			solrQuery.add("stats.field","audit");
+			solrQuery.add("stats.field","child");
+			solrQuery.add("stats.field","guide");
+			solrQuery.add("stats.field","mode0");
+			solrQuery.add("stats.field","mode1");
+			solrQuery.setRows(0);
+		}
+		
 
 		return solrQuery;
 	}

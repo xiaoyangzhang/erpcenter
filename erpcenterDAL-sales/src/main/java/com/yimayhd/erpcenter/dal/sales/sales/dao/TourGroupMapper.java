@@ -283,4 +283,11 @@ public interface TourGroupMapper {
 	 * 根据日期查询团记录 --ou 2016.06.15
 	 */
 	List<TourGroup> selectGroupByDateZone(@Param("startTime")String startTime,@Param("endTime")String endTime,@Param("bizId")Integer bizId);
+	
+	/**
+	 * 分页查询tourgroup
+	 * @param pageBean
+	 * @return
+	 */
+	List<TourGroup> selectTourGroupDumpListPage(PageBean<TourGroup> pageBean);
 }
