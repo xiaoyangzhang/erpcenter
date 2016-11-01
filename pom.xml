@@ -57,7 +57,9 @@
 	    <module>erpcenterFacade-shopping-client</module>
 	    <module>erpcenterFacade-shopping</module>
 	    <!--  <module>erpresourceBiz-client</module>-->
-	</modules>
+    <module>erpcenterFacade-dataAnalysis</module>
+    <module>erpcenterFacade-dataAnalysis-client</module>
+  </modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
