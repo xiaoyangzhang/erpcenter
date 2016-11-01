@@ -1127,4 +1127,13 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 	public GroupOrderPrice getPriceTotalByOrderIds(List<Integer> orderIds,Integer mode){
 		return groupOrderPriceMapper.getPriceTotalByOrderIds(orderIds,mode);
 	}
+	
+	@Override
+    public PageBean<GroupOrder> selectOrderListPage( PageBean<GroupOrder> pageBean) {
+        List<GroupOrder> orders = groupOrderMapper.selectOrderDumpListPage(pageBean);
+        pageBean.setResult(orders);
+        return pageBean;
+    }
 }
+
+

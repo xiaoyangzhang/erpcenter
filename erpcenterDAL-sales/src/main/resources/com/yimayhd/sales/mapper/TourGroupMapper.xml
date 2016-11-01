@@ -4105,4 +4105,14 @@
 		group by tg.id) m
 	</select>
 	
+	<select id="selectTourGroupDumpListPage" resultMap="BaseResultMap"
+		parameterType="com.yihg.mybatis.utility.PageBean">
+		select
+		<include refid="Base_Column_List" /> 
+		from
+		tour_group
+		where
+		group_state != -1
+	</select>
+	
 </mapper>

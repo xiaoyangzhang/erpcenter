@@ -378,5 +378,12 @@ public interface GroupOrderDal {
 	 * @return
 	 */
 	public GroupOrderPrice getPriceTotalByOrderIds(List<Integer> orderIds,Integer mode);
+	
+	/**
+	 * 分页查询订单列表
+	 * @param pageBean
+	 * @return
+	 */
+	public PageBean<GroupOrder> selectOrderListPage( PageBean<GroupOrder> pageBean);
 } 
 

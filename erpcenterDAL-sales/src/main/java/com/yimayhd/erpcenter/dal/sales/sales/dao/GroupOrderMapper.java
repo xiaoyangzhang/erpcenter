@@ -430,4 +430,11 @@ public interface GroupOrderMapper {
 	int selectSumPersonByProductId(@Param("productId") Integer productId,@Param("departureDate") String departureDate);
 	
 	List<GroupOrder> selectOrderOverTime();
+	
+	/**
+	 * dump订单数据使用
+	 * @param pageBean
+	 * @return
+	 */
+	List<GroupOrder> selectOrderDumpListPage(PageBean<GroupOrder> pageBean);
 }
