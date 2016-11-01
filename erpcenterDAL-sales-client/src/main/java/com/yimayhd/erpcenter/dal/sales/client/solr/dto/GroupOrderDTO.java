@@ -62,7 +62,7 @@ public class GroupOrderDTO implements Serializable{
 	   @Field
 	   private String goCreatorName ;//
 	   @Field
-	   private Integer goCreateTime ;//----------
+	   private Long goCreateTime ;//----------
 	   @Field
 	   private Integer goState ;//'订单状态 1正常 -1删除',---------
 	   @Field
@@ -455,13 +455,13 @@ public class GroupOrderDTO implements Serializable{
 	/**
 	 * @return the goCreateTime
 	 */
-	public Integer getGoCreateTime() {
+	public Long getGoCreateTime() {
 		return goCreateTime;
 	}
 	/**
 	 * @param goCreateTime the goCreateTime to set
 	 */
-	public void setGoCreateTime(Integer goCreateTime) {
+	public void setGoCreateTime(Long goCreateTime) {
 		this.goCreateTime = goCreateTime;
 	}
 	/**
