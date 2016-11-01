@@ -43,6 +43,24 @@ public class ToAddSpecialGroupResult extends ResultSupport {
     List<GroupOrder> groupOrderList;
     private TourGroup tourGroup;
 
+    private  List<String> datelist;
+    private  List<Integer> brandlist;
+
+    public List<Integer> getBrandlist() {
+        return brandlist;
+    }
+
+    public void setBrandlist(List<Integer> brandlist) {
+        this.brandlist = brandlist;
+    }
+
+    public List<String> getDatelist() {
+        return datelist;
+    }
+
+    public void setDatelist(List<String> datelist) {
+        this.datelist = datelist;
+    }
 
     public List<GroupOrder> getGroupOrderList() {
         return groupOrderList;

@@ -2,6 +2,7 @@ package com.yimayhd.erpcenter.facade.product.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupPriceBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductGroupSupplierBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductStockBiz;
-import com.yimayhd.erpcenter.dal.basic.utils.DateUtils;
+import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;
@@ -41,8 +43,7 @@ import com.yimayhd.erpcenter.facade.service.ProductPricePlusFacade;
 public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 	
 	@Autowired
-	private ProductGroupSupplierDal productGroupSupplierDal;
-	
+	private ProductGroupSupplierBiz productGroupSupplierBiz;
 	@Autowired
 	private ProductStockBiz productStockBiz;
 	
@@ -82,7 +83,7 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 			return result;
 		};
 		
-		int ret = productGroupSupplierDal.save(saveP);
+		int ret = productGroupSupplierBiz.save(saveP);
 		if(ret != 1){
 			result.setSuccess(false);
 			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
@@ -107,7 +108,7 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 			return result;
 		}
 		
-		int ret = productGroupSupplierDal.deleteByProductSupplierId(productGroupSupplierDTO.getGroupSupplier().getId());
+		int ret = productGroupSupplierBiz.deleteByProductSupplierId(productGroupSupplierDTO.getGroupSupplier().getId());
 		if(ret != 1){
 			result.setSuccess(false);
 			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
@@ -131,7 +132,7 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 		List<Integer> productSupplierIdList = JSON.parseArray(data, Integer.class);		
 		//获取要复制的产品下的组团社
 		try {
-			productGroupSupplierDal.copyProductSuppliersToTarget(productId, productSupplierIdList);
+			productGroupSupplierBiz.copyProductSuppliersToTarget(productId, productSupplierIdList);
 		} catch (Exception e) {
 			result.setSuccess(false);
 			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
@@ -217,7 +218,7 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 		ToSupplierListResult result = new ToSupplierListResult();
 		ProductInfo productInfo = productInfoBiz.findProductInfoById(condition.getProductId());
 		result.setProductName("【" +productInfo.getBrandName()+"】"+productInfo.getNameCity());
-		result.setGroupSuppliers(productGroupSupplierDal.selectSupplierList(conditionDTO.getCondition()));
+		result.setGroupSuppliers(productGroupSupplierBiz.selectSupplierList(conditionDTO.getCondition()));
 		return result;
 	}
 	
@@ -238,7 +239,7 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 		}
 		result.setProductGroups(productGroups);
 		
-		ProductGroupSupplier supplierInfo = productGroupSupplierDal.selectgGroupSupplierById(id);
+		ProductGroupSupplier supplierInfo = productGroupSupplierBiz.selectgGroupSupplierById(id);
 		result.setSupplierName(supplierInfo.getSupplierName());
 		result.setSupplierId(supplierInfo.getSupplierId());
 		result.setGroupSupplierId(id);
@@ -278,11 +279,17 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 		List<ProductInfo> productInfos = JSON.parseArray(data, ProductInfo.class);
 		//获取要复制的产品下的组团社
 		try {
-			productGroupSupplierDal.save(productInfos, productId);
+			productGroupSupplierBiz.save(productInfos, productId);
 		} catch (Exception e) {
 			result.setSuccess(false);
 			result.setErrorCode(ProductErrorCode.SYSTEM_ERROR);
 		}
 		return result;
+	}
+
+	@Override
+	public List<Map> loadMinPrice(List<Integer> productIds, Date date) {
+		List<Map> mapList = productGroupPriceBiz.getMinPriceByProductIdSetAndDate(productIds, date);
+		return mapList;
 	}
 }

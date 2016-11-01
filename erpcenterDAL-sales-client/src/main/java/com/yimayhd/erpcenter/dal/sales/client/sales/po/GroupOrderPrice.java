@@ -2,7 +2,8 @@ package com.yimayhd.erpcenter.dal.sales.client.sales.po;
 
 import java.io.Serializable;
 
-import com.yimayhd.erpcenter.dal.basic.utils.LogFieldAnno;
+import com.yimayhd.erpcenter.common.util.LogFieldAnno;
+
 
 public class GroupOrderPrice implements Serializable {
 	/**
