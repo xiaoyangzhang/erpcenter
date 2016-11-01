@@ -175,4 +175,10 @@ public class SaleCommonFacadeImpl implements SaleCommonFacade {
 		return airTypes;
 	}
 
+	@Override
+	public List<DicInfo> getFeeItemsByTypeCode(Integer bizId) {
+		List<DicInfo> extraTypeList = dicBiz.getListByTypeCode(BasicConstants.GGXX_LYSFXM,bizId);
+		return extraTypeList;
+	}
+
 }

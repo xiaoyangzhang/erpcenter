@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.biz.basic.service.LogOperatorBiz;
-import com.yimayhd.erpcenter.common.po.LogOperator;
+import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
 import com.yimayhd.erpcenter.dal.basic.service.LogOperatorDal;
 
 public class LogOperatorBizImpl implements LogOperatorBiz {

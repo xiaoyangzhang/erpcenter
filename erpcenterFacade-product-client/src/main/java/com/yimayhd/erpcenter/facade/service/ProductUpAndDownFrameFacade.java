@@ -1,9 +1,15 @@
 package com.yimayhd.erpcenter.facade.service;
 
+import java.util.List;
+
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupExtraItem;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupSeller;
 import com.yimayhd.erpcenter.facade.query.DetailDTO;
+import com.yimayhd.erpcenter.facade.query.ProductGroupQueryDTO;
 import com.yimayhd.erpcenter.facade.query.ToSearchListStateDTO;
 import com.yimayhd.erpcenter.facade.query.UpStateDTO;
 import com.yimayhd.erpcenter.facade.result.DetailResult;
+import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.ToSearchListStateResult;
 import com.yimayhd.erpcenter.facade.result.UpStateResult;
 
@@ -38,4 +44,9 @@ public interface ProductUpAndDownFrameFacade {
      * @return
      */
     public DetailResult detail(DetailDTO detailDTO);
+    List<ProductGroupSeller> selectGroupSellerList(Integer bizId,Integer groupId,Integer productId);
+    String selectExpSellersByProductId(Integer bizId,Integer productId);
+    ResultSupport saveSeller(ProductGroupQueryDTO queryDTO);
+    ResultSupport delSeller(Integer productGroupSellerId);
+    List<ProductGroupExtraItem> findByGroupId(Integer groupId);
 }

@@ -16,6 +16,8 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductGroupExtraItemBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductGroupSellerBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRouteBiz;
@@ -25,12 +27,17 @@ import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupExtraItem;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupSeller;
 import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
 import com.yimayhd.erpcenter.facade.query.DetailDTO;
+import com.yimayhd.erpcenter.facade.query.ProductGroupQueryDTO;
 import com.yimayhd.erpcenter.facade.query.ToSearchListStateDTO;
 import com.yimayhd.erpcenter.facade.query.UpStateDTO;
 import com.yimayhd.erpcenter.facade.result.DetailResult;
+import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.ToSearchListStateResult;
 import com.yimayhd.erpcenter.facade.result.UpStateResult;
 import com.yimayhd.erpcenter.facade.service.ProductUpAndDownFrameFacade;
@@ -60,7 +67,10 @@ public class ProductUpAndDownFrameFacadeImpl implements ProductUpAndDownFrameFac
     private ProductRemarkBiz productRemarkBiz;
     @Autowired
     private ProductGroupBiz productGroupBiz;
-
+    @Autowired
+    private ProductGroupSellerBiz productGroupSellerBiz;
+    @Autowired
+    private ProductGroupExtraItemBiz productGroupExtraItemBiz;
     /**
      * 产品列表查询
      *
@@ -180,4 +190,57 @@ public class ProductUpAndDownFrameFacadeImpl implements ProductUpAndDownFrameFac
         }
         return detailResult;
     }
+
+	@Override
+	public List<ProductGroupSeller> selectGroupSellerList(Integer bizId,
+			Integer groupId, Integer productId) {
+		List<ProductGroupSeller> sellerList = productGroupSellerBiz.selectGroupSellerList(bizId, groupId, productId);
+		return sellerList;
+	}
+
+	@Override
+	public String selectExpSellersByProductId(Integer bizId, Integer productId) {
+		String ids = productGroupSellerBiz.selectExpSellersByProductId(bizId, productId);
+		return ids;
+	}
+
+	@Override
+	public ResultSupport saveSeller(ProductGroupQueryDTO queryDTO) {
+		Integer bizId = queryDTO.getBizId();
+		Integer groupId = queryDTO.getGroupId();
+		Integer productId = queryDTO.getProductId();
+		String[] idArr = queryDTO.getIdArr();
+		ResultSupport resultSupport = new ResultSupport();
+		for (String id : idArr) {
+			ProductGroupSeller productGroupSeller = productGroupSellerBiz.selectGroupSeller(bizId,productId,Integer.parseInt(id));
+			if(null==productGroupSeller){
+				PlatformEmployeePo platformEmployeePo = platformEmployeeBiz.findByEmployeeId(Integer.parseInt(id));
+				ProductGroupSeller p =new ProductGroupSeller();
+				p.setBizId(bizId);
+				p.setProductId(productId);
+				p.setGroupId(groupId);
+				p.setOperatorId(Integer.parseInt(id));
+				p.setOperatorName(platformEmployeePo.getName());
+				p.setCreateTime(System.currentTimeMillis());
+				productGroupSellerBiz.insertSelective(p);
+			}
+		}
+		return resultSupport;
+	}
+
+	@Override
+	public ResultSupport delSeller(Integer productGroupSellerId) {
+		ResultSupport resultSupport = new ResultSupport();
+		int delResult = productGroupSellerBiz.delSeller(productGroupSellerId);
+		if (delResult < 1) {
+			resultSupport.setErrorCode(ProductErrorCode.MODIFY_ERROR);
+		}
+		return resultSupport;
+	}
+
+	@Override
+	public List<ProductGroupExtraItem> findByGroupId(Integer groupId) {
+		List<ProductGroupExtraItem> extraItems = productGroupExtraItemBiz.findByGroupId(groupId);
+		return extraItems;
+	}
 }

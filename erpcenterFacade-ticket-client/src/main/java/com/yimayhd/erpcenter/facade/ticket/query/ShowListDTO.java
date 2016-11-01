@@ -1,7 +1,6 @@
 package com.yimayhd.erpcenter.facade.ticket.query;
 
 import com.yimayhd.erpcenter.facade.ticket.BaseListPage;
-
 public class ShowListDTO extends BaseListPage{
 	
 	private static final long serialVersionUID = 6707676794554415017L;

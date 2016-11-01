@@ -181,16 +181,16 @@ public class SaleOrderConverter {
 			String ss="";
 			if(queryDTO.getDateType()==1){
 				ss="tourDateStart";
-			}else if(queryDTO.getDateType()==1){
+			}else if(queryDTO.getDateType()==2){
 				ss="tourCreateTime"; 
 			}
 			String dateQuery="";
 			if(queryDTO.getStartTime()!=null&&queryDTO.getEndTime()!=null){
-				dateQuery="[queryDTO.getStartTime() TO queryDTO.getEndTime()]";
+				dateQuery="["+queryDTO.getStartTime()+" TO "+queryDTO.getEndTime()+"]";
 			}else if(queryDTO.getStartTime()==null&&queryDTO.getEndTime()!=null){
-				dateQuery="(* TO queryDTO.getEndTime()]";
+				dateQuery="(* TO "+queryDTO.getEndTime()+"]";
 			}else if(queryDTO.getStartTime()!=null&&queryDTO.getEndTime()==null){
-				dateQuery="[queryDTO.getStartTime() TO *)";
+				dateQuery="["+queryDTO.getStartTime()+" TO *)";
 				}
 			if(!StringUtils.isEmpty(dateQuery)){
 				solrQuery.addFilterQuery(ss+":"+dateQuery);

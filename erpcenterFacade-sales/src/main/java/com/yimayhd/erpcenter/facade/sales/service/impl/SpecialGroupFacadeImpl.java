@@ -499,6 +499,7 @@ public class SpecialGroupFacadeImpl implements SpecialGroupFacade {
                 List<GroupOrderGuest> guestList = groupOrderGuestBiz
                         .selectByOrderId(Integer.parseInt(id));
             }
+            toAddSpecialGroupResult.setDatelist(datelist);
         } catch (Exception e) {
             logger.error("", e);
         }
@@ -522,6 +523,8 @@ public class SpecialGroupFacadeImpl implements SpecialGroupFacade {
                 statelist.add(groupOrder.getStateFinance());
                 brandlist.add(groupOrder.getProductBrandId());
             }
+            toAddSpecialGroupResult.setDatelist(datelist);
+            toAddSpecialGroupResult.setBrandlist(brandlist);
         } catch (Exception e) {
             logger.error("", e);
         }
