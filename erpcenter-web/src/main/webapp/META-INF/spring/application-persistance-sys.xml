@@ -26,7 +26,7 @@
 	<bean id="sqlSessionFactorySys" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSourceSys"/>
 		<property name="mapperLocations" value="classpath:com/yimayhd/sys/mapper/*.xml"/>
-		<property name="typeAliasesPackage" value="com.yimayhd.erpcenter.sys.dal.po"/>
+		<property name="typeAliasesPackage" value="com.yimayhd.erpcenter.dal.sys.po"/>
 		<property name="configLocation" value="classpath:mybatis-config.xml"/>
 	</bean>
 
