@@ -1,6 +1,9 @@
+
 package com.yimayhd.erpcenter.facade.product.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,22 +12,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductGroupExtraItemBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupPriceBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupSupplierBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductStockBiz;
 import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupExtraItem;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
-import com.yimayhd.erpcenter.dal.product.service.ProductGroupSupplierDal;
+import com.yimayhd.erpcenter.dal.product.vo.PriceCopyVo;
+import com.yimayhd.erpcenter.dal.product.vo.ProductPriceVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductSupplierCondition;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
 import com.yimayhd.erpcenter.facade.query.ProductGroupSupplierDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSupplierConditionDTO;
+import com.yimayhd.erpcenter.facade.result.ProductGroupResult;
 import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.ToAddPriceGroupResult;
 import com.yimayhd.erpcenter.facade.result.ToSupplierListResult;
@@ -55,7 +63,8 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 	
 	@Autowired
     private ProductGroupPriceBiz productGroupPriceBiz;
-	
+	@Autowired
+	private ProductGroupExtraItemBiz productGroupExtraItemBiz;
 	/**
 	 * 保存组团社
 	 * @param data
@@ -271,7 +280,7 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 	 * @param data
 	 * @param productId
 	 * @return
-	 */
+	 */ 
 	public ResultSupport copyProduct(String data,Integer productId){
 		
 		ResultSupport result = new ResultSupport();
@@ -291,5 +300,199 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 	public List<Map> loadMinPrice(List<Integer> productIds, Date date) {
 		List<Map> mapList = productGroupPriceBiz.getMinPriceByProductIdSetAndDate(productIds, date);
 		return mapList;
+	}
+
+	@Override
+	public ProductGroupResult toPriceSetting(Integer productId) {
+		ProductGroupResult result = new ProductGroupResult();
+		List<ProductGroup> selectProductGroups = productGroupBiz.selectProductGroups(productId);
+		//查询价格组，计算是否过期
+		Date nowdate=new Date(); 
+		for (ProductGroup productGroup : selectProductGroups) {
+			List<ProductGroupPrice> list = productGroupPriceBiz.selectProductGroupPrices(productGroup.getId(), null, null);
+			List<String> yflag=new ArrayList<String>();//过期
+			List<String> nflag=new ArrayList<String>();//未过期
+			for (ProductGroupPrice pList : list) {
+				boolean flag = pList.getGroupDateTo().before(nowdate);
+				if(flag){//过期
+					yflag.add("1");
+				}else{//没有过期
+					nflag.add("2");
+				}
+				
+			}
+			if(yflag.isEmpty()){
+				productGroup.setFlag("未过期");
+			}
+			if(nflag.isEmpty()){
+				productGroup.setFlag("已过期");
+			}
+			if(!yflag.isEmpty()&&!nflag.isEmpty()){
+				productGroup.setFlag("部分过期");
+			}
+				
+		}
+		result.setProductGroups(selectProductGroups);
+		ProductInfo productInfo = productInfoBiz.findProductInfoById(productId);
+		result.setProductInfo(productInfo);
+		return result;
+	}
+
+	@Override
+	public ResultSupport save(ProductGroup productGroup) {
+		ResultSupport resultSupport = new ResultSupport();
+		int saveResult = productGroupBiz.save(productGroup);
+		if (saveResult < 1) {
+			resultSupport.setErrorCode(ProductErrorCode.MODIFY_ERROR);
+		}
+		return resultSupport;
+	}
+
+	@Override
+	public String validateName(String name, Integer productId, Integer id) {
+		int validateResult = productGroupBiz.validateName(name,productId,id);
+		if (validateResult > 0) {
+			return "false";
+		}
+		return "true";
+	}
+
+	@Override
+	public ResultSupport copyGroupPrice(PriceCopyVo copyVo) {
+		ResultSupport resultSupport = new ResultSupport();
+		int copyResult = productGroupPriceBiz.copyGroupPrice(copyVo);
+		if (copyResult == 0 ) {
+			resultSupport.setErrorCode(ProductErrorCode.NO_DATA_ARRANGE);
+		}
+		return resultSupport;
+	}
+
+	@Override
+	public List<ProductGroupPrice> selectPriceByGroupId(Integer groupId) {
+		List<ProductGroupPrice> priceList = productGroupPriceBiz.selectPriceByGroupId(groupId);;
+		return priceList;
+	}
+
+	@Override
+	public ResultSupport batchInsertPriceGroup(Integer bizId, String json) {
+		ResultSupport resultSupport = new ResultSupport();
+		productGroupPriceBiz.batchInsertPriceGroup(bizId,json);
+		return resultSupport;
+	}
+
+	@Override
+	public ProductGroupExtraItem save(
+			ProductGroupExtraItem productGroupExtraItem) {
+		ProductGroupExtraItem extraItem = productGroupExtraItemBiz.save(productGroupExtraItem);
+		return extraItem;
+	}
+
+	@Override
+	public ProductGroupExtraItem edit(
+			ProductGroupExtraItem productGroupExtraItem) {
+		
+		ProductGroupExtraItem extraItem = productGroupExtraItemBiz.edit(productGroupExtraItem);
+		return extraItem;
+	}
+
+	@Override
+	public boolean deleteById(Integer id) {
+		boolean result = productGroupExtraItemBiz.deleteById(id);
+		return result;
+	}
+
+	@Override
+	public ProductGroupExtraItem findById(Integer id) {
+		ProductGroupExtraItem extraItem = productGroupExtraItemBiz.findById(id);
+		return extraItem;
+	}
+
+	@Override
+	public ProductGroupResult queryGroupPriceList(PageBean pageBean,
+			Map paramMap) {
+		ProductGroupResult result = new ProductGroupResult();
+		PageBean page = productInfoBiz.findProductInfos(pageBean, paramMap);
+		result.setPageBean(page);
+		Map<Integer, String> priceStateMap = new HashMap<Integer, String>();
+		for(Object product : pageBean.getResult()){
+			ProductInfo info = (ProductInfo) product;
+			Integer productId = info.getId();
+			String state = productInfoBiz.getProductPriceState(productId);
+			priceStateMap.put(info.getId(), state);
+		}
+		result.setMap(priceStateMap);
+		return result;
+	}
+
+	@Override
+	public ProductGroupResult ToAddPrice(Integer groupId, Integer productId) {
+		ProductGroupResult result = new ProductGroupResult();
+		ProductInfo info = productInfoBiz.findProductInfoById(productId);
+		result.setProductInfo(info);
+		//查询客户列表
+		List<ProductGroupSupplier> suppliers = productGroupSupplierBiz.selectProductGroupSuppliers(groupId);
+		result.setGroupSuppliers(suppliers);
+		ProductGroup groupInfo = productGroupBiz.getGroupInfoById(groupId);
+		List<ProductGroup> productGroups = new ArrayList<ProductGroup>();
+		productGroups.add(groupInfo);
+		result.setProductGroups(productGroups);
+		return result;
+	}
+
+	@Override
+	public ProductGroupResult ToEditPrice(Integer groupId, Integer productId,Integer productGroupPriceId) {
+		ProductGroupResult result = new ProductGroupResult();
+		ProductGroupResult toAddPriceResult = ToAddPrice(groupId, productId);
+		result.setGroupSuppliers(toAddPriceResult.getGroupSuppliers());
+		result.setProductGroups(toAddPriceResult.getProductGroups());
+		result.setProductInfo(toAddPriceResult.getProductInfo());
+		ProductPriceVo vo = productGroupPriceBiz.selectByPrimaryKey(productGroupPriceId);
+		result.setPriceVo(vo);
+		return result;
+	}
+
+	@Override
+	public ResultSupport save(ProductPriceVo priceVo) {
+		ResultSupport resultSupport = new ResultSupport();
+		int saveResult = productGroupPriceBiz.save(priceVo);
+		if (saveResult < 1) {
+			resultSupport.setErrorCode(ProductErrorCode.MODIFY_ERROR);
+		}
+		return resultSupport;
+	}
+
+	@Override
+	public List<ProductGroupPrice> selectProductGroupPrices(Integer groupId,
+			String year, String month) {
+		List<ProductGroupPrice> prices = productGroupPriceBiz.selectProductGroupPrices(groupId, year, month);
+		return prices;
+	}
+
+	@Override
+	public ResultSupport delete(Integer id) {
+		ResultSupport resultSupport = new ResultSupport();
+		boolean deleteResult = productGroupPriceBiz.delete(id);
+		if (!deleteResult) {
+			resultSupport.setErrorCode(ProductErrorCode.MODIFY_ERROR);
+		}
+		return resultSupport;
+	}
+
+	@Override
+	public ResultSupport batchDel(String[] idArr) {
+		ResultSupport resultSupport = new ResultSupport();
+		boolean success = true;
+		 for (String id : idArr) {
+	            try {
+	            	productGroupPriceBiz.delete(Integer.valueOf(id));
+	                success &= true;
+	            } catch (Exception e) {
+	                success &= false;
+	            }
+	        }
+		 if (!success) {
+			resultSupport.setErrorCode(ProductErrorCode.MODIFY_ERROR);
+		}
+		return resultSupport;
 	}
 }

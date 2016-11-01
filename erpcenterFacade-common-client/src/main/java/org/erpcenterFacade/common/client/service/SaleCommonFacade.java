@@ -1,4 +1,3 @@
-
 package org.erpcenterFacade.common.client.service;
 
 import java.util.List;
@@ -48,4 +47,5 @@ public interface SaleCommonFacade {
     List<DicInfo> getInsuranceItemsByTypeCode();
     List<DicInfo> getTrainTicketTypesByTypeCode();
     List<DicInfo> getAirTicketTypesByTypeCode();
+    List<DicInfo> getFeeItemsByTypeCode(Integer bizId);
 }

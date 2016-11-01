@@ -4,7 +4,7 @@
 
 <mapper namespace="com.yimayhd.erpcenter.dal.basic.dao.LogOperatorMapper">
     
-    <resultMap type="com.yimayhd.erpcenter.common.po.LogOperator" id="LogOperator" >
+    <resultMap type="com.yimayhd.erpcenter.dal.basic.po.LogOperator" id="LogOperator" >
 		<id property="id" column="id" jdbcType="INTEGER" />
 		<result property="bizId" column="biz_id" jdbcType="INTEGER" />
 		<result property="batchId" column="batch_id" jdbcType="INTEGER" />
@@ -41,12 +41,12 @@
         where id = #{id,jdbcType=BIGINT}
     </delete>
     
-	<insert id="insert" parameterType="com.yimayhd.erpcenter.common.po.LogOperator"  useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.basic.po.LogOperator"  useGeneratedKeys="true" keyProperty="id">
         insert into log_operator(biz_id,batch_id,action,`table_name`,table_id,table_parent_id,log_brief,log_text,edit_user)
         values (#{bizId,jdbcType=INTEGER},#{batchId,jdbcType=INTEGER},#{action,jdbcType=VARCHAR},#{tableName,jdbcType=VARCHAR},#{tableId,jdbcType=INTEGER},#{tableParentId,jdbcType=INTEGER},#{logBrief,jdbcType=VARCHAR},#{logText,jdbcType=VARCHAR},#{editUser,jdbcType=VARCHAR})
     </insert>
     
-	<update id="update" parameterType="com.yimayhd.erpcenter.common.po.LogOperator">
+	<update id="update" parameterType="com.yimayhd.erpcenter.dal.basic.po.LogOperator">
         update log_operator
         <set>
 			<if test="bizId != null" > log_operator.biz_id = #{bizId}, </if>
@@ -76,20 +76,20 @@
     </select>
     
 	
-	<select id="getWhere" parameterType="com.yimayhd.erpcenter.common.po.LogOperator"  resultMap="LogOperator">
+	<select id="getWhere" parameterType="com.yimayhd.erpcenter.dal.basic.po.LogOperator"  resultMap="LogOperator">
         select <include refid="baseColumns"/>
         from log_operator
         <include refid="queryWhere" />
         ORDER BY edit_time desc
     </select>
-    <select id="getWhere_NotLogText" parameterType="com.yimayhd.erpcenter.common.po.LogOperator"  resultMap="LogOperator">
+    <select id="getWhere_NotLogText" parameterType="com.yimayhd.erpcenter.dal.basic.po.LogOperator"  resultMap="LogOperator">
         select biz_id,batch_id,action,table_name,edit_user,edit_time
         from log_operator
         <include refid="queryWhere" />
         group by batch_id 
         ORDER BY edit_time desc
     </select>
-    <select id="getWhere_LogDetail" parameterType="com.yimayhd.erpcenter.common.po.LogOperator"  resultType="java.util.HashMap">
+    <select id="getWhere_LogDetail" parameterType="com.yimayhd.erpcenter.dal.basic.po.LogOperator"  resultType="java.util.HashMap">
         select a.batch_id, a.action, a.table_name,a.table_id,a.table_id,table_parent_id, ifNull(b.`value`,a.table_name) as table_title,a.log_brief, a.log_text
         from log_operator a left join sys_dic b on (a.table_name = b.code and b.type_id=104)
         where a.batch_id in (select batch_id from log_operator <include refid="queryWhere" />)
