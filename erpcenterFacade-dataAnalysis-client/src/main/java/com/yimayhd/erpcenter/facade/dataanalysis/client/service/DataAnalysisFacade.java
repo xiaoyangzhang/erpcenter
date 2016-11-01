@@ -1,14 +1,31 @@
 package com.yimayhd.erpcenter.facade.dataanalysis.client.service;
 
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.AirTicketDetailQueriesDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.DeliveryDetailListDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetEmployeeIdsDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetPaymentDataDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.PaymentStaticPreviewDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.SaleOperatorExcelDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ShopInfoDetailDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ShopSelectListDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToOperatorGroupStaticTableDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToOrdersPreviewDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToSaleOperatorOrderStaticTableDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToSaleOperatorPreviewDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.AirTicketDetailQueriesResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.AllProvinceResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.DeliveryDetailListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetLevelNameResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetOrdersResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetOrgAndUserTreeJsonStrResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetPaymentDataResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.HotelQueriesResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.PaymentStaticPreviewResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.RestaurantQueriesResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.SaleOperatorExcelResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ShopDetailListResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ShopInfoDetailResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ShopSelectListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToOperatorGroupStaticTableResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToOrdersPreviewResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToPaymentPreviewResult;
@@ -47,4 +64,86 @@ public interface DataAnalysisFacade {
 	ToOrdersPreviewResult toOrdersPreview(ToOrdersPreviewDTO toOrdersPreviewDTO);
 
 	ToPaymentPreviewResult toPaymentPreview(ToOrdersPreviewDTO toOrdersPreviewDTO);
+
+	GetOrdersResult getOrders(ToOrdersPreviewDTO toOrdersPreviewDTO);
+
+	GetPaymentDataResult getPaymentData(GetPaymentDataDTO getPaymentDataDTO);
+
+	ShopInfoDetailResult shopInfoDetail(ShopInfoDetailDTO shopInfoDetailDTO);
+
+	ShopDetailListResult shopDetailList(Integer id);
+
+	ShopSelectListResult shopSelectList(ShopSelectListDTO shopSelectListDTO);
+
+	String getEmployeeIds(GetEmployeeIdsDTO getEmployeeIdsDTO);
+
+	PaymentStaticPreviewResult paymentStaticPreview(PaymentStaticPreviewDTO paymentStaticPreviewDTO);
+
+	PaymentStaticPreviewResult paymentStaticExport(PaymentStaticPreviewDTO paymentStaticPreviewDTO);
+
+	RestaurantQueriesResult restaurantQueries(Integer bizId);
+
+	RestaurantQueriesResult restaurantBooking(Integer bizId);
+
+	RestaurantQueriesResult restaurantJSFS(Integer bizId);
+
+	RestaurantQueriesResult restaurantDetailList(Integer bizId);
+
+	HotelQueriesResult hotelQueries(Integer bizId);
+
+	RestaurantQueriesResult hotelBookingQueries(Integer bizId);
+
+	RestaurantQueriesResult hotelJSFS(Integer bizId);
+
+	RestaurantQueriesResult hoteldetailQueries(Integer bizId);
+
+	RestaurantQueriesResult fleetQueries(Integer bizId);
+
+	RestaurantQueriesResult fleetDetailList(Integer bizId);
+
+	RestaurantQueriesResult fleetJSFSList(Integer bizId);
+
+	RestaurantQueriesResult entertainmentDetailQueries(Integer bizId);
+
+	RestaurantQueriesResult sightList(Integer bizId);
+
+	RestaurantQueriesResult sightBookingList(Integer bizId);
+
+	RestaurantQueriesResult sightJSFS(Integer bizId);
+
+	RestaurantQueriesResult sightDetailList(Integer bizId);
+
+	RestaurantQueriesResult airTicketQueries(Integer bizId);
+
+	RestaurantQueriesResult airTicketBookingQueries(Integer bizId);
+
+	RestaurantQueriesResult airTicketJSFS(Integer bizId);
+
+	AirTicketDetailQueriesResult airTicketDetailQueries(AirTicketDetailQueriesDTO airTicketDetailQueriesDTO);
+
+	RestaurantQueriesResult trainTicketQueries(Integer bizId);
+
+	RestaurantQueriesResult trainTicketBookingQueries(Integer bizId);
+
+	RestaurantQueriesResult trainTicketJSFS(Integer bizId);
+
+	AirTicketDetailQueriesResult trainTicketDetailQueries(AirTicketDetailQueriesDTO airTicketDetailQueriesDTO);
+
+	RestaurantQueriesResult insuranceQueries(Integer bizId);
+
+	RestaurantQueriesResult insuranceDetailQueries(Integer bizId);
+
+	RestaurantQueriesResult insuranceBookingQueries(Integer bizId);
+
+	RestaurantQueriesResult insuranceJSFS(Integer bizId);
+
+	RestaurantQueriesResult incomeQueries(Integer bizId);
+
+	RestaurantQueriesResult incomeDetailQueries(Integer bizId);
+
+	RestaurantQueriesResult outcomeQueries(Integer bizId);
+
+	RestaurantQueriesResult outcomeDetailQueries(Integer bizId);
+
+	DeliveryDetailListResult deliveryDetailList(DeliveryDetailListDTO deliveryDetailListDTO);
 }
