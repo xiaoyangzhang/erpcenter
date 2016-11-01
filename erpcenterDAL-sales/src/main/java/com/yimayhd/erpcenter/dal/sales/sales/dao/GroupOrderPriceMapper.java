@@ -35,4 +35,7 @@ public interface GroupOrderPriceMapper {
     List<GroupOrderPrice> getPriceInfoByOrderId(@Param("orderId")Integer orderId);
     
     void auditPriceByIds(@Param("ids")String ids, @Param("stateFinance")Integer stateFinance);
+     
+    GroupOrderPrice getPriceTotalByOrderIds(@Param("orderIds") List<Integer> orderIds,@Param("mode") Integer mode);
+   
 }

@@ -56,7 +56,6 @@
 	    <module>erpcenterFacade-tj</module>
 	    <module>erpcenterFacade-shopping-client</module>
 	    <module>erpcenterFacade-shopping</module>
-	    <module>erpresourceBiz-client</module>
 	</modules>
 
 	<properties>
