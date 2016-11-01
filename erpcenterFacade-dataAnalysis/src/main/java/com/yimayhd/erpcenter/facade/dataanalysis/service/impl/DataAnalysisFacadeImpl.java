@@ -92,8 +92,12 @@ import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.AirTicketDetailQueriesDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.DeliveryDetailListDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetAgeListByProductDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetAirTicketDetailDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetEmployeeIdsDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetPaymentDataDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetUserIdsDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.OpearteGroupListDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.PaymentStaticPreviewDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.SaleOperatorExcelDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ShopInfoDetailDTO;
@@ -104,12 +108,17 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToSaleOperatorOrde
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToSaleOperatorPreviewDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.AirTicketDetailQueriesResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.AllProvinceResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.BookingSupplierDetailListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.DeliveryDetailListResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetAgeListByProductResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetAirTicketDetailResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetLevelNameResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetNumAndOrderResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetOrdersResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetOrgAndUserTreeJsonStrResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetPaymentDataResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.HotelQueriesResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.OpearteGroupListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.PaymentStaticPreviewResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.RestaurantQueriesResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.SaleOperatorExcelResult;
@@ -123,6 +132,7 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorLis
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorOrderStaticTableResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorPreviewResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorTableResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.TranportListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.service.DataAnalysisFacade;
 import com.yimayhd.erpcenter.facade.sales.constants.BizConfigConstant;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
@@ -1517,476 +1527,90 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return result;
 	}
 
-	@RequestMapping(value = "getAirTicketDetail.do")
-	public String getAirTicketDetail(HttpServletRequest request, HttpServletResponse reponse, Integer flag,
-			ModelMap model, String sl, String ssl, String svc, Integer visit) {
+	public GetAirTicketDetailResult getAirTicketDetail(GetAirTicketDetailDTO getAirTicketDetailDTO){
+		
+		PageBean<BookingAirTicket> pageBean = new PageBean<BookingAirTicket>();
+		pageBean.setPage(getAirTicketDetailDTO.getPage());
+		pageBean.setPageSize(getAirTicketDetailDTO.getPageSize());
+		pageBean.setParameter(getAirTicketDetailDTO.getParameter());
 
-		Integer page = 1;
-		Integer pageSize = 15;
-		try {
-			page = Integer.parseInt(request.getParameter("page"));
-			pageSize = Integer.parseInt(request.getParameter("pageSize"));
-		} catch (NumberFormatException e) {
-			// log.error(e);
-		}
-		String supplierType = request.getParameter("supplierType");
-		String dateType = request.getParameter("dateType");
-		String dateFrom = request.getParameter("dateFrom");
-		String dateTo = request.getParameter("dateTo");
-		String groupCode = request.getParameter("groupCode");
-		String supplierName = request.getParameter("supplierName");
-		String paymentState = request.getParameter("paymentState");
-		String productName = request.getParameter("productName");
-		String lineName = request.getParameter("lineName");
-		String receiveMode = request.getParameter("receiveMode");
-		String operatorIds = request.getParameter("operatorIds");
-		String operatorNames = request.getParameter("operatorNames");
-		String groupMode = request.getParameter("groupMode");
-		String cashType = request.getParameter("cashType");
-		HashMap<String, String> parameter = new HashMap<String, String>();
-		if (supplierType != null && !supplierType.equals("")) {
-			parameter.put("supplierType", supplierType);
-		}
-		if (dateType != null && !dateType.equals("")) {
-			parameter.put("dateType", dateType);
-		}
-		if (dateFrom != null && !dateFrom.equals("")) {
-			parameter.put("dateFrom", dateFrom);
-		}
-		if (dateTo != null && !dateTo.equals("")) {
-			parameter.put("dateTo", dateTo);
-		}
-		parameter.put("bizId", WebUtils.getCurBizId(request).toString());
-		if (groupCode != null && !groupCode.equals("")) {
-			parameter.put("groupCode", groupCode);
-		}
-		if (supplierName != null && !supplierName.equals("")) {
-			parameter.put("supplierName", supplierName);
-		}
-		if (paymentState != null && !paymentState.equals("")) {
-			parameter.put("paymentState", paymentState);
-		}
-		if (productName != null && !productName.equals("")) {
-			parameter.put("productName", productName);
-		}
-		if (lineName != null && !lineName.equals("")) {
-			parameter.put("lineName", lineName);
-		}
-		if (receiveMode != null && !receiveMode.equals("")) {
-			parameter.put("receiveMode", receiveMode);
-		}
-		if (operatorIds != null && !operatorIds.equals("")) {
-			parameter.put("operatorIds", operatorIds);
-		}
-		if (groupMode != null && !groupMode.equals("")) {
-			parameter.put("groupMode", groupMode);
-		}
-		if (cashType != null && !cashType.equals("")) {
-			parameter.put("cashType", cashType);
-		}
+		HashMap<String, BigDecimal> sum = bookingSupplierService.sumAirTicketBooking(pageBean);
+		pageBean = bookingSupplierService.selectAirTicketBookingListPage(pageBean);
+		
+		GetAirTicketDetailResult result=new GetAirTicketDetailResult();
+		result.setPageBean(pageBean);
+		result.setSum(sum);
+		
+		return result;
+	}
+
+	public GetAirTicketDetailResult getTrainTicketDetail(GetAirTicketDetailDTO getAirTicketDetailDTO){
 
 		PageBean<BookingAirTicket> pageBean = new PageBean<BookingAirTicket>();
-		pageBean.setPage(page);
-		pageBean.setPageSize(pageSize);
-		pageBean.setParameter(parameter);
+		pageBean.setPage(getAirTicketDetailDTO.getPage());
+		pageBean.setPageSize(getAirTicketDetailDTO.getPageSize());
+		pageBean.setParameter(getAirTicketDetailDTO.getParameter());
 
-		model.addAttribute("sum", bookingSupplierService.sumAirTicketBooking(pageBean));
+		HashMap<String, BigDecimal> sum = bookingSupplierService.sumAirTicketBooking(pageBean);
 		pageBean = bookingSupplierService.selectAirTicketBookingListPage(pageBean);
-		model.addAttribute("pageBean", pageBean);
-
-		// 取得订单明细
-		/*
-		 * HashMap<Integer, String> detailHtml = new HashMap<Integer, String>();
-		 * SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); for
-		 * (BookingAirTicket booking : pageBean.getResult()) {
-		 * List<BookingSupplierDetail> detailList =
-		 * detailService.selectByPrimaryBookId(booking.getId()); StringBuffer
-		 * html = new StringBuffer(); for (BookingSupplierDetail detail :
-		 * detailList) { html.append(sdf.format(detail.getItemDate())).append(
-		 * " &nbsp; ");
-		 * html.append("【").append(detail.getTicketFlight()).append("】").append(
-		 * " &nbsp; ");
-		 * html.append(detail.getItemPrice()).append("*(").append(detail
-		 * .getItemNum()).append("-")
-		 * .append(detail.getItemNumMinus()).append(")<br/>"); }
-		 * detailHtml.put(booking.getId(), html.toString()); }
-		 * model.addAttribute("detailHtmlMap", detailHtml);
-		 */
-
-		// 取得本页合计
-		BigDecimal sumPageTotal = new BigDecimal(0);
-		BigDecimal sumPageTotalCash = new BigDecimal(0);
-		for (BookingAirTicket booking : pageBean.getResult()) {
-			sumPageTotal = sumPageTotal.add(booking.getTotal());
-			sumPageTotalCash = sumPageTotalCash
-					.add(booking.getTotalCash() == null ? new BigDecimal(0) : booking.getTotalCash());
-		}
-		model.addAttribute("sumPageTotal", sumPageTotal);
-		model.addAttribute("sumPageTotalCash", sumPageTotalCash);
-		model.addAttribute("sumPageTotalBalance", sumPageTotal.subtract(sumPageTotalCash));
-
-		return "queries/airTicket/airTicketDetailTable1";
+		
+		GetAirTicketDetailResult result=new GetAirTicketDetailResult();
+		result.setPageBean(pageBean);
+		result.setSum(sum);
+		
+		return result;
 	}
 
-	@RequestMapping(value = "getTrainTicketDetail.do")
-	public String getTrainTicketDetail(HttpServletRequest request, HttpServletResponse reponse, Integer flag,
-			ModelMap model, String sl, String ssl, String svc, Integer visit) {
+	public GetNumAndOrderResult searchSupplierByArea(Map map){
+		
+		List<Map<String, Integer>> supplierProvince = supplierSerivce.searchSupplierByArea(map);
+		
+		GetNumAndOrderResult result=new GetNumAndOrderResult();
+		result.setSupplierProvince(supplierProvince);
 
-		Integer page = 1;
-		Integer pageSize = 15;
-		try {
-			page = Integer.parseInt(request.getParameter("page"));
-			pageSize = Integer.parseInt(request.getParameter("pageSize"));
-		} catch (NumberFormatException e) {
-			// log.error(e);
-		}
-		String supplierType = request.getParameter("supplierType");
-		String dateType = request.getParameter("dateType");
-		String dateFrom = request.getParameter("dateFrom");
-		String dateTo = request.getParameter("dateTo");
-		String groupCode = request.getParameter("groupCode");
-		String supplierName = request.getParameter("supplierName");
-		String paymentState = request.getParameter("paymentState");
-		String productName = request.getParameter("productName");
-		String lineName = request.getParameter("lineName");
-		String receiveMode = request.getParameter("receiveMode");
-		String operatorIds = request.getParameter("operatorIds");
-		String operatorNames = request.getParameter("operatorNames");
-		String groupMode = request.getParameter("groupMode");
-		String cashType = request.getParameter("cashType");
-		HashMap<String, String> parameter = new HashMap<String, String>();
-		if (supplierType != null && !supplierType.equals("")) {
-			parameter.put("supplierType", supplierType);
-		}
-		if (dateType != null && !dateType.equals("")) {
-			parameter.put("dateType", dateType);
-		}
-		if (dateFrom != null && !dateFrom.equals("")) {
-			parameter.put("dateFrom", dateFrom);
-		}
-		if (dateTo != null && !dateTo.equals("")) {
-			parameter.put("dateTo", dateTo);
-		}
-		parameter.put("bizId", WebUtils.getCurBizId(request).toString());
-		if (groupCode != null && !groupCode.equals("")) {
-			parameter.put("groupCode", groupCode);
-		}
-		if (supplierName != null && !supplierName.equals("")) {
-			parameter.put("supplierName", supplierName);
-		}
-		if (paymentState != null && !paymentState.equals("")) {
-			parameter.put("paymentState", paymentState);
-		}
-		if (productName != null && !productName.equals("")) {
-			parameter.put("productName", productName);
-		}
-		if (lineName != null && !lineName.equals("")) {
-			parameter.put("lineName", lineName);
-		}
-		if (receiveMode != null && !receiveMode.equals("")) {
-			parameter.put("receiveMode", receiveMode);
-		}
-		if (operatorIds != null && !operatorIds.equals("")) {
-			parameter.put("operatorIds", operatorIds);
-		}
-		if (groupMode != null && !groupMode.equals("")) {
-			parameter.put("groupMode", groupMode);
-		}
-		if (cashType != null && !cashType.equals("")) {
-			parameter.put("cashType", cashType);
-		}
+		return result;
+	}
+	
+	@Override
+	public GetNumAndOrderResult findSupplierLevelCode(Map map) {
+		
+		List<SupplierInfo> supplierLevel = supplierSerivce.findSupplierLevelCode(map);
+		
+		GetNumAndOrderResult result=new GetNumAndOrderResult();
+		result.setSupplierLevel(supplierLevel);
 
-		PageBean<BookingAirTicket> pageBean = new PageBean<BookingAirTicket>();
-		pageBean.setPage(page);
-		pageBean.setPageSize(pageSize);
-		pageBean.setParameter(parameter);
-
-		model.addAttribute("sum", bookingSupplierService.sumAirTicketBooking(pageBean));
-		pageBean = bookingSupplierService.selectAirTicketBookingListPage(pageBean);
-		model.addAttribute("pageBean", pageBean);
-
-		// 取得订单明细
-		/*
-		 * HashMap<Integer, String> detailHtml = new HashMap<Integer, String>();
-		 * SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); for
-		 * (BookingAirTicket booking : pageBean.getResult()) {
-		 * List<BookingSupplierDetail> detailList =
-		 * detailService.selectByPrimaryBookId(booking.getId()); StringBuffer
-		 * html = new StringBuffer(); for (BookingSupplierDetail detail :
-		 * detailList) { html.append(sdf.format(detail.getItemDate())).append(
-		 * " &nbsp; ");
-		 * html.append("【").append(detail.getTicketFlight()).append("】").append(
-		 * " &nbsp; ");
-		 * html.append(detail.getItemPrice()).append("*(").append(detail
-		 * .getItemNum()).append("-")
-		 * .append(detail.getItemNumMinus()).append(")<br/>"); }
-		 * detailHtml.put(booking.getId(), html.toString()); }
-		 * model.addAttribute("detailHtmlMap", detailHtml);
-		 */
-
-		// 取得本页合计
-		BigDecimal sumPageTotal = new BigDecimal(0);
-		BigDecimal sumPageTotalCash = new BigDecimal(0);
-		for (BookingAirTicket booking : pageBean.getResult()) {
-			sumPageTotal = sumPageTotal.add(booking.getTotal());
-			sumPageTotalCash = sumPageTotalCash
-					.add(booking.getTotalCash() == null ? new BigDecimal(0) : booking.getTotalCash());
-		}
-		model.addAttribute("sumPageTotal", sumPageTotal);
-		model.addAttribute("sumPageTotalCash", sumPageTotalCash);
-		model.addAttribute("sumPageTotalBalance", sumPageTotal.subtract(sumPageTotalCash));
-
-		return "queries/airTicket/airTicketDetailTable1";
+		return result;
 	}
 
-	/*
-	 * @RequestMapping("getTotalNum") public String
-	 * getTotalNum(HttpServletRequest request, HttpServletResponse reponse,
-	 * ModelMap model, String sl, String ssl, String rp, Integer page, Integer
-	 * pageSize, String svc, Integer visit) { PageBean pb = commonQuery(request,
-	 * model, sl, page, pageSize, svc); if (StringUtils.isNotBlank(ssl)) { Map
-	 * pm = (Map) pb.getParameter(); pm.put("parameter", pm);
-	 * model.addAttribute("sum", getCommonService(svc).queryOne(ssl, pm)); }
-	 * return rp; }
-	 */
-	/**
-	 * 酒店统计
-	 * 
-	 * @param request
-	 * @param reponse
-	 * @param model
-	 * @param sl
-	 * @param ssl
-	 * @param rp
-	 * @param page
-	 * @param pageSize
-	 * @param svc
-	 * @param visit
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	@RequestMapping("getHotelStatistics")
-	public String getNumAndOrder(HttpServletRequest request, HttpServletResponse reponse, ModelMap model, String sl,
-			String ssl, String rp, Integer page, Integer pageSize, String svc, Integer visit) {
-		@SuppressWarnings("rawtypes")
-		Map paramters = WebUtils.getQueryParamters(request);
-
-		// 如果选择了【省份】作为查询条件
-		@SuppressWarnings("rawtypes")
-		Map map = new HashMap<String, Object>();
-		map.put("provinceId", paramters.get("provinceId"));
-		map.put("cityId", paramters.get("cityId"));
-		map.put("supplierType", paramters.get("supplierType"));
-		map.put("level", paramters.get("level"));
-		map.put("bizId", paramters.get("bizId"));
-		if (paramters.get("provinceId") != null) {
-			StringBuilder supplierIds = new StringBuilder();
-			List<Map<String, Integer>> supplier_province = supplierSerivce.searchSupplierByArea(map); // map需要包含
-																										// procinceId,
-																										// cityId,
-																										// supplier三个参数
-			if (supplier_province != null && supplier_province.size() > 0) {
-				for (Map<String, Integer> item : supplier_province) {
-					supplierIds.append(item.get("id") + ",");
-				}
-			}
-			if (supplierIds.length() > 0)
-				request.setAttribute("citysSupplierIds",
-						supplierIds.toString().substring(0, supplierIds.toString().length() - 1));
-			else
-				request.setAttribute("citysSupplierIds", "0");
-		}
-		// 如果选择了【商家类别】作为查询条件
-		if (paramters.get("level") != null) {
-			StringBuilder supplierIds = new StringBuilder();
-			List<SupplierInfo> supplier_level = supplierSerivce.findSupplierLevelCode(map);
-			if (supplier_level != null && supplier_level.size() > 0) {
-				Set<Integer> set = new HashSet<Integer>();
-				for (SupplierInfo item : supplier_level) {
-					supplierIds.append(item.getId() + ",");
-				}
-			}
-			if (supplierIds.length() > 0)
-				request.setAttribute("supplierLevel",
-						supplierIds.toString().substring(0, supplierIds.toString().length() - 1));
-			else
-				request.setAttribute("supplierLevel", "0");
-		}
-
-		PageBean pb = commonQuery(request, model, sl, page, pageSize, svc);
-
-		// 总计查询
-		if (StringUtils.isNotBlank(ssl)) {
-			Map<String, Object> pm = (Map<String, Object>) pb.getParameter();
-			pm.put("parameter", pm);
-			model.addAttribute("sum", getCommonService(svc).queryOne(ssl, pm));
-		}
-
-		return rp;
-	}
-
-	/**
-	 * 业务查询/供应商统计、订单统计、订单明细
-	 * 
-	 * @param request
-	 * @param reponse
-	 * @param model
-	 * @param sl
-	 * @param ssl
-	 * @param rp
-	 * @param page
-	 * @param pageSize
-	 * @param svc
-	 * @param visit
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	@RequestMapping("getSupplierStatistics")
-	public String getSupplierOrder(HttpServletRequest request, HttpServletResponse reponse, ModelMap model, String sl,
-			String ssl, String rp, Integer page, Integer pageSize, String svc, Integer visit) {
-		@SuppressWarnings("rawtypes")
-		Map paramters = WebUtils.getQueryParamters(request);
-
-		// 如果选择了【省份】作为查询条件
-		@SuppressWarnings("rawtypes")
-		Map map = new HashMap<String, Object>();
-		map.put("provinceId", paramters.get("provinceId"));
-		map.put("cityId", paramters.get("cityId"));
-		map.put("supplierType", paramters.get("supplierType"));
-		map.put("level", paramters.get("level"));
-		map.put("bizId", paramters.get("bizId"));
-		if (paramters.get("provinceId") != null) {
-			StringBuilder supplierIds = new StringBuilder();
-			List<Map<String, Integer>> supplier_province = supplierSerivce.searchSupplierByArea(map); // map需要包含
-																										// procinceId,
-																										// cityId,
-																										// supplier三个参数
-			if (supplier_province != null && supplier_province.size() > 0) {
-				for (Map<String, Integer> item : supplier_province) {
-					supplierIds.append(item.get("id") + ",");
-				}
-			}
-			if (supplierIds.length() > 0)
-				request.setAttribute("citysSupplierIds",
-						supplierIds.toString().substring(0, supplierIds.toString().length() - 1));
-			else
-				request.setAttribute("citysSupplierIds", "0");
-		}
-		// 如果选择了【商家类别】作为查询条件
-		if (paramters.get("level") != null) {
-			StringBuilder supplierIds = new StringBuilder();
-			List<SupplierInfo> supplier_level = supplierSerivce.findSupplierLevelCode(map);
-			if (supplier_level != null && supplier_level.size() > 0) {
-				Set<Integer> set = new HashSet<Integer>();
-				for (SupplierInfo item : supplier_level) {
-					supplierIds.append(item.getId() + ",");
-				}
-			}
-			if (supplierIds.length() > 0)
-				request.setAttribute("supplierLevel",
-						supplierIds.toString().substring(0, supplierIds.toString().length() - 1));
-			else
-				request.setAttribute("supplierLevel", "0");
-		}
-
-		@SuppressWarnings("rawtypes")
-		PageBean pb = commonQuery(request, model, sl, page, pageSize, svc);
-
-		// 总计查询
-		if (StringUtils.isNotBlank(ssl)) {
-			Map<String, Object> pm = (Map<String, Object>) pb.getParameter();
-			pm.put("parameter", pm);
-			model.addAttribute("sum", getCommonService(svc).queryOne(ssl, pm));
-		}
-
-		return rp;
-	}
-
-	@SuppressWarnings("unchecked")
-	@RequestMapping("getSupplierStatisticsDetail")
-	public String getSupplierDetails(HttpServletRequest request, HttpServletResponse reponse, ModelMap model, String sl,
-			String ssl, String rp, Integer page, Integer pageSize, String svc, Integer visit) {
-		@SuppressWarnings("rawtypes")
-		Map paramters = WebUtils.getQueryParamters(request);
-
-		// 如果选择了【省份】作为查询条件
-		@SuppressWarnings("rawtypes")
-		Map map = new HashMap<String, Object>();
-		map.put("provinceId", paramters.get("provinceId"));
-		map.put("cityId", paramters.get("cityId"));
-		map.put("supplierType", paramters.get("supplierType"));
-		map.put("level", paramters.get("level"));
-		map.put("bizId", paramters.get("bizId"));
-		if (paramters.get("provinceId") != null) {
-			StringBuilder supplierIds = new StringBuilder();
-			List<Map<String, Integer>> supplier_province = supplierSerivce.searchSupplierByArea(map); // map需要包含
-																										// procinceId,
-																										// cityId,
-																										// supplier三个参数
-			if (supplier_province != null && supplier_province.size() > 0) {
-				for (Map<String, Integer> item : supplier_province) {
-					supplierIds.append(item.get("id") + ",");
-				}
-			}
-			if (supplierIds.length() > 0)
-				request.setAttribute("citysSupplierIds",
-						supplierIds.toString().substring(0, supplierIds.toString().length() - 1));
-			else
-				request.setAttribute("citysSupplierIds", "0");
-		}
-		// 如果选择了【商家类别】作为查询条件
-		if (paramters.get("level") != null) {
-			StringBuilder supplierIds = new StringBuilder();
-			List<SupplierInfo> supplier_level = supplierSerivce.findSupplierLevelCode(map);
-			if (supplier_level != null && supplier_level.size() > 0) {
-				Set<Integer> set = new HashSet<Integer>();
-				for (SupplierInfo item : supplier_level) {
-					supplierIds.append(item.getId() + ",");
-				}
-			}
-			if (supplierIds.length() > 0)
-				request.setAttribute("supplierLevel",
-						supplierIds.toString().substring(0, supplierIds.toString().length() - 1));
-			else
-				request.setAttribute("supplierLevel", "0");
-		}
-
-		@SuppressWarnings("rawtypes")
-		PageBean pb = commonQuery(request, model, sl, page, pageSize, svc);
-
-		// 总计查询
-		if (StringUtils.isNotBlank(ssl)) {
-			Map<String, Object> pm = (Map<String, Object>) pb.getParameter();
-			pm.put("parameter", pm);
-			model.addAttribute("sum", getCommonService(svc).queryOne(ssl, pm));
-		}
-
-		return rp;
-	}
-
-	@RequestMapping("ageQueryList.htm")
-	public String ageList(HttpServletRequest request, Model model) {
-		return "queries/byAge/queryList";
-	}
-
-	// 根据产品查询客人年龄段
-	@RequestMapping("getAgeListByProduct")
-	public String getAgeListByProduct(HttpServletRequest request, HttpServletResponse reponse, ModelMap model,
-			String sl, String ssl, String rp, Integer page, Integer pageSize, String svc, Integer visit) {
-		PageBean pb = commonQuery(request, model, sl, page, pageSize, svc);
-		// Integer bizId = WebUtils.getCurBizId(request);
-		// getOrgAndUserTreeJsonStr(model, bizId);
-		List<Map<String, Object>> ageMaps = tourGroupService.selectAgeCount(WebUtils.getQueryParamters(request));
+	public GetAgeListByProductResult getAgeListByProduct(GetAgeListByProductDTO getAgeListByProductDTO){
+		
+		List<Map<String, Object>> ageMaps = tourGroupService.selectAgeCount(getAgeListByProductDTO.getQueryParamters());
+		
 		Map<Object, Object> ageMap = new HashMap<Object, Object>();
 		for (Map<String, Object> map2 : ageMaps) {
 			ageMap.put(map2.get("ageRanges"), map2.get("agecnt"));
 		}
-		model.addAttribute("ageMap", ageMap);
-		// Map parameters = WebUtils.getQueryParamters(request);
-		// parameters.put("set", WebUtils.getDataUserIdSet(request));
-
-		model.addAttribute("personMap", queryService.getPersonCountMap(WebUtils.getQueryParamters(request)));
-		return rp;
+	
+		Map personMap = getAgeListByProductDTO.getQueryParamters();
+		
+		GetAgeListByProductResult result=new GetAgeListByProductResult();
+		result.setAgeMaps(ageMaps);
+		result.setPersonMap(personMap);
+		
+		return result;
+	}
+	
+	@Override
+	public Set<Integer> getUserIdListByOrgIdList(GetUserIdsDTO getUserIdsDTO) {
+		return platformEmployeeService.getUserIdListByOrgIdList(getUserIdsDTO.getBizId(),getUserIdsDTO.getUserIdSet());
+	}
+	
+	@Override
+	public BookingSupplierDetailListResult getBookingSupplierDetailList(Integer id) {
+		List<BookingSupplierDetail> detailList = detailService.selectByPrimaryBookId(id);
+		BookingSupplierDetailListResult result=new BookingSupplierDetailListResult();
+		result.setDetailList(detailList);
+		return result;
 	}
 
 	// 客人年龄段分析：产品+组团社
@@ -2120,60 +1744,40 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return appContext.getBean(svc, CommonService.class);
 	}
 
-	/**
-	 * 接送信息查询列表
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("transportList.htm")
-	public String tranportList(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-		Integer bizId = WebUtils.getCurBizId(request);
+	public TranportListResult tranportList(Integer bizId){
+	
 		// 交通类型
 		List<DicInfo> transportTypeList = dicService.getListByTypeCode(BasicConstants.GYXX_JTFS, bizId);
-		model.addAttribute("transportTypeList", transportTypeList);
-		model.addAttribute("bizId", bizId);
-		return "queries/transport/transportList";
+		
+		TranportListResult result=new TranportListResult();
+		result.setTransportTypeList(transportTypeList);
+		
+		return result;
 	}
 
-	// /////////////////计调安排查询
-
-	@RequestMapping("groupInfoList.htm")
-	@RequiresPermissions(PermissionConstants.JDGL_YDAP)
-	public String groupInfo(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			TourGroupVO tourGroup) {
-		// Integer bizId = WebUtils.getCurBizId(request);
-		// getOrgAndUserTreeJsonStr(model, bizId);
-		return "queries/groupInfo-list";
-
-	}
-
-	@RequestMapping("opearteGroupList.do")
-	@RequiresPermissions(PermissionConstants.JDGL_YDAP)
-	public String opearteGroupList(ModelMap model, HttpServletRequest request, TourGroupVO tourGroup) {
+	public OpearteGroupListResult opearteGroupList(OpearteGroupListDTO opearteGroupListDTO){
+		
+		TourGroupVO tourGroup = opearteGroupListDTO.getTourGroup();
+		
 		PageBean pageBean = new PageBean();
-		model.addAttribute("tourGroup", tourGroup);
-		model.addAttribute("pageNum", tourGroup.getPage());
 		if (tourGroup.getPage() == null) {
 			tourGroup.setPage(1);
 		} else {
 			pageBean.setPage(tourGroup.getPage());
 		}
 		if (tourGroup.getPageSize() == null) {
-			// pageBean.setPageSize(Constants.PAGESIZE);
 			pageBean.setPageSize(Constants.PAGESIZE);
 		} else {
 			pageBean.setPageSize(tourGroup.getPageSize());
 		}
+		
 		if (StringUtils.isBlank(tourGroup.getSaleOperatorIds()) && StringUtils.isNotBlank(tourGroup.getOrgIds())) {
 			Set<Integer> set = new HashSet<Integer>();
 			String[] orgIdArr = tourGroup.getOrgIds().split(",");
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(WebUtils.getCurBizId(request), set);
+			set = platformEmployeeService.getUserIdListByOrgIdList(opearteGroupListDTO.getBizId(), set);
 			String salesOperatorIds = "";
 			for (Integer usrId : set) {
 				salesOperatorIds += usrId + ",";
@@ -2182,12 +1786,15 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 				tourGroup.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
 			}
 		}
-		tourGroup.setBizId(WebUtils.getCurBizId(request));
+		tourGroup.setBizId(opearteGroupListDTO.getBizId());
 		pageBean.setParameter(tourGroup);
-		pageBean = tourGroupService.getGroupOperateList(pageBean, tourGroup, WebUtils.getDataUserIdSet(request));
-		model.addAttribute("pageBean", pageBean);
-
-		return "queries/groupInfo-list-table";
+		pageBean = tourGroupService.getGroupOperateList(pageBean, tourGroup,opearteGroupListDTO.getUserIdSet());
+		
+		OpearteGroupListResult result=new OpearteGroupListResult();
+		result.setPageBean(pageBean);
+		result.setTourGroup(tourGroup);
+		
+		return result;
 	}
 
 	// ////////////////预定安排
