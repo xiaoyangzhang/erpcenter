@@ -1,11 +1,20 @@
+
 package com.yimayhd.erpcenter.facade.service;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupExtraItem;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice;
+import com.yimayhd.erpcenter.dal.product.vo.PriceCopyVo;
+import com.yimayhd.erpcenter.dal.product.vo.ProductPriceVo;
 import com.yimayhd.erpcenter.facade.query.ProductGroupSupplierDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSupplierConditionDTO;
+import com.yimayhd.erpcenter.facade.result.ProductGroupResult;
+import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
 import com.yimayhd.erpcenter.facade.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.result.ToAddPriceGroupResult;
 import com.yimayhd.erpcenter.facade.result.ToSupplierListResult;
@@ -104,4 +113,21 @@ public interface ProductPricePlusFacade {
 	 */
 	public ResultSupport copyProduct(String data,Integer productId);
 	List<Map> loadMinPrice(List<Integer> productIds,Date date);
+	ProductGroupResult toPriceSetting(Integer productId);
+	ResultSupport save(ProductGroup productGroup);
+	String validateName(String name,Integer productId,Integer id);
+	ResultSupport copyGroupPrice(PriceCopyVo copyVo);
+	List<ProductGroupPrice> selectPriceByGroupId(Integer groupId);
+	ResultSupport batchInsertPriceGroup(Integer bizId,String json);
+	ProductGroupExtraItem save(ProductGroupExtraItem productGroupExtraItem);
+	ProductGroupExtraItem edit(ProductGroupExtraItem productGroupExtraItem);
+	ProductGroupExtraItem findById(Integer id);
+	boolean deleteById(Integer id);
+	ProductGroupResult queryGroupPriceList(PageBean pageBean,Map paramMap);
+	ProductGroupResult ToAddPrice(Integer groupId,Integer productId);
+	ProductGroupResult ToEditPrice(Integer groupId,Integer productId,Integer productGroupPriceID);
+	ResultSupport save(ProductPriceVo priceVo);
+	List<ProductGroupPrice> selectProductGroupPrices(Integer groupId,String year,String month);
+	ResultSupport delete(Integer id);
+	ResultSupport batchDel(String[] idArr);
 }

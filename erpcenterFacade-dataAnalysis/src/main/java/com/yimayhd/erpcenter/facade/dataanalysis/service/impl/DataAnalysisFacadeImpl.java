@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,14 +28,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.SheetUtil;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -79,7 +73,6 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.GroupBookingInfo;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.PaymentExportVO;
-import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryGuideShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryShopInfo;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.DeparentmentOrderCondition;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.DepartmentOrderResult;
@@ -89,7 +82,6 @@ import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestShoppingCondi
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestStaticsVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.PaymentCondition;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.OperatorGroupStatic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorOrderStatic;
@@ -98,15 +90,32 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.AirTicketDetailQueriesDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.DeliveryDetailListDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetEmployeeIdsDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetPaymentDataDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.PaymentStaticPreviewDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.SaleOperatorExcelDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ShopInfoDetailDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ShopSelectListDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToOperatorGroupStaticTableDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToOrdersPreviewDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToSaleOperatorOrderStaticTableDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToSaleOperatorPreviewDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.AirTicketDetailQueriesResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.AllProvinceResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.DeliveryDetailListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetLevelNameResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetOrdersResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetOrgAndUserTreeJsonStrResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetPaymentDataResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.HotelQueriesResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.PaymentStaticPreviewResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.RestaurantQueriesResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.SaleOperatorExcelResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ShopDetailListResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ShopInfoDetailResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ShopSelectListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToOperatorGroupStaticTableResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToOrdersPreviewResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToPaymentPreviewResult;
@@ -116,9 +125,6 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorPre
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorTableResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.service.DataAnalysisFacade;
 import com.yimayhd.erpcenter.facade.sales.constants.BizConfigConstant;
-import com.yimayhd.erpcenter.facade.sales.query.BookingShopListDTO;
-import com.yimayhd.erpcenter.facade.sales.result.GuestShopListResult;
-import com.yimayhd.erpcenter.facade.sales.result.GuestShopResult;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.dal.constants.BasicConstants;
 import com.yimayhd.erpresource.dal.constants.Constants;
@@ -191,11 +197,11 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return result;
 	}
 
-	public ToSaleOperatorPreviewResult toSaleOperatorPreview(ToSaleOperatorPreviewDTO toSaleOperatorPreviewDTO){
-		
-		SaleOperatorVo order=toSaleOperatorPreviewDTO.getOrder();
-		Integer bizId=toSaleOperatorPreviewDTO.getBizId();
-		Set<Integer> userIdSet=toSaleOperatorPreviewDTO.getUserIdSet();
+	public ToSaleOperatorPreviewResult toSaleOperatorPreview(ToSaleOperatorPreviewDTO toSaleOperatorPreviewDTO) {
+
+		SaleOperatorVo order = toSaleOperatorPreviewDTO.getOrder();
+		Integer bizId = toSaleOperatorPreviewDTO.getBizId();
+		Set<Integer> userIdSet = toSaleOperatorPreviewDTO.getUserIdSet();
 
 		// 酒店星级
 		List<DicInfo> jdxjList = dicService.getListByTypeCode(BasicConstants.GYXX_JDXJ);
@@ -222,7 +228,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			}
 		}
 		pageBean = queryService.selectSaleOperatorByConListPage(pageBean, bizId, userIdSet);
-		
+
 		List<SaleOperatorVo> orders = pageBean.getResult();
 		for (int i = 0; i < orders.size(); i++) {
 			SaleOperatorVo vo = orders.get(i);
@@ -249,10 +255,10 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		}
 
 		ToSaleOperatorPreviewResult result = new ToSaleOperatorPreviewResult();
-			result.setJdxjList(jdxjList);
-			result.setOrder(order);
-			result.setPageBean(pageBean);
-			
+		result.setJdxjList(jdxjList);
+		result.setOrder(order);
+		result.setPageBean(pageBean);
+
 		return result;
 	}
 
@@ -267,21 +273,20 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		ToSaleOperatorListResult result = new ToSaleOperatorListResult();
 		result.setJdxjList(jdxjList);
 		return result;
-		
+
 	}
 
-	public ToSaleOperatorTableResult toSaleOperatorTable(ToSaleOperatorPreviewDTO toSaleOperatorPreviewDTO){
-		
+	public ToSaleOperatorTableResult toSaleOperatorTable(ToSaleOperatorPreviewDTO toSaleOperatorPreviewDTO) {
+
 		SaleOperatorVo order = toSaleOperatorPreviewDTO.getOrder();
-		Integer bizId=toSaleOperatorPreviewDTO.getBizId();
-		Set<Integer> userIdSet=toSaleOperatorPreviewDTO.getUserIdSet();
-		
-		
+		Integer bizId = toSaleOperatorPreviewDTO.getBizId();
+		Set<Integer> userIdSet = toSaleOperatorPreviewDTO.getUserIdSet();
+
 		PageBean<SaleOperatorVo> pageBean = new PageBean<SaleOperatorVo>();
 		pageBean.setPage(order.getPage());
 		pageBean.setPageSize(order.getPageSize() == null ? Constants.PAGESIZE : order.getPageSize());
 		pageBean.setParameter(order);
-		
+
 		// 如果人员为空并且部门不为空，则取部门下的人id
 		if (StringUtils.isBlank(order.getSaleOperatorIds()) && StringUtils.isNotBlank(order.getOrgIds())) {
 			Set<Integer> set = new HashSet<Integer>();
@@ -298,10 +303,10 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 				order.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
 			}
 		}
-		pageBean = queryService.selectSaleOperatorByConListPage(pageBean,bizId,userIdSet);
-		
-		Map<String, Object> sumPerson = queryService.selectSaleOperatorTotalPerson(pageBean,bizId,userIdSet);
-		
+		pageBean = queryService.selectSaleOperatorByConListPage(pageBean, bizId, userIdSet);
+
+		Map<String, Object> sumPerson = queryService.selectSaleOperatorTotalPerson(pageBean, bizId, userIdSet);
+
 		List<SaleOperatorVo> orders = pageBean.getResult();
 		for (SaleOperatorVo vo : orders) {
 			List<GroupOrderGuest> guests = new ArrayList<GroupOrderGuest>();
@@ -325,11 +330,11 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			}
 			vo.setGuests(guests);
 		}
-		
-		ToSaleOperatorTableResult result=new ToSaleOperatorTableResult();
+
+		ToSaleOperatorTableResult result = new ToSaleOperatorTableResult();
 		result.setPageBean(pageBean);
 		result.setSumPerson(sumPerson);
-		
+
 		return result;
 	}
 
@@ -340,16 +345,16 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return result;
 	}
 
-	//FIXME 代码冗余
-	public SaleOperatorExcelResult saleOperatorExcel(SaleOperatorExcelDTO saleOperatorExcelDTO){
-		
+	// FIXME 代码冗余
+	public SaleOperatorExcelResult saleOperatorExcel(SaleOperatorExcelDTO saleOperatorExcelDTO) {
+
 		SaleOperatorVo order = saleOperatorExcelDTO.getOrder();
-	
+
 		PageBean<SaleOperatorVo> pageBean = new PageBean<SaleOperatorVo>();
 		pageBean.setPage(1);
 		pageBean.setPageSize(10000);
 		pageBean.setParameter(order);
-		
+
 		// 如果人员为空并且部门不为空，则取部门下的人id
 		if (StringUtils.isBlank(order.getSaleOperatorIds()) && StringUtils.isNotBlank(order.getOrgIds())) {
 			Set<Integer> set = new HashSet<Integer>();
@@ -366,24 +371,23 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 				order.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
 			}
 		}
-		pageBean = queryService.selectSaleOperatorByConListPage(pageBean, 
-				saleOperatorExcelDTO.getBizId(),
+		pageBean = queryService.selectSaleOperatorByConListPage(pageBean, saleOperatorExcelDTO.getBizId(),
 				saleOperatorExcelDTO.getUserIdSet());
-		
-		SaleOperatorExcelResult result=new SaleOperatorExcelResult();
+
+		SaleOperatorExcelResult result = new SaleOperatorExcelResult();
 		result.setPageBean(pageBean);
 		return result;
 	}
 
 	public ToSaleOperatorOrderStaticTableResult toSaleOperatorOrderStaticTable(
-			ToSaleOperatorOrderStaticTableDTO toSaleOperatorOrderStaticTableDTO){
-		
-		SaleOperatorOrderStatic soos=toSaleOperatorOrderStaticTableDTO.getSoos();
-		Integer page=toSaleOperatorOrderStaticTableDTO.getPage();
-		Integer pageSize=toSaleOperatorOrderStaticTableDTO.getPageSize();
+			ToSaleOperatorOrderStaticTableDTO toSaleOperatorOrderStaticTableDTO) {
+
+		SaleOperatorOrderStatic soos = toSaleOperatorOrderStaticTableDTO.getSoos();
+		Integer page = toSaleOperatorOrderStaticTableDTO.getPage();
+		Integer pageSize = toSaleOperatorOrderStaticTableDTO.getPageSize();
 		Integer bizId = toSaleOperatorOrderStaticTableDTO.getBizId();
 		Set<Integer> userIdSet = toSaleOperatorOrderStaticTableDTO.getUserIdSet();
-		
+
 		PageBean<SaleOperatorOrderStatic> pageBean = new PageBean<SaleOperatorOrderStatic>();
 
 		pageBean.setPage(page);
@@ -404,24 +408,24 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 				soos.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
 			}
 		}
-		pageBean = groupOrderService.selectSaleOperatorOrderStaticListPage(pageBean, bizId,userIdSet);
-		SaleOperatorOrderStatic sum = groupOrderService.selectSaleOperatorOrderStaticCon(pageBean, bizId,userIdSet);
-		
-		ToSaleOperatorOrderStaticTableResult result=new ToSaleOperatorOrderStaticTableResult();
+		pageBean = groupOrderService.selectSaleOperatorOrderStaticListPage(pageBean, bizId, userIdSet);
+		SaleOperatorOrderStatic sum = groupOrderService.selectSaleOperatorOrderStaticCon(pageBean, bizId, userIdSet);
+
+		ToSaleOperatorOrderStaticTableResult result = new ToSaleOperatorOrderStaticTableResult();
 		result.setPageBean(pageBean);
 		result.setSum(sum);
 		return result;
 	}
 
 	public ToOperatorGroupStaticTableResult toOperatorGroupStaticTable(
-			ToOperatorGroupStaticTableDTO toOperatorGroupStaticTableDTO){
-		
+			ToOperatorGroupStaticTableDTO toOperatorGroupStaticTableDTO) {
+
 		OperatorGroupStatic ogs = toOperatorGroupStaticTableDTO.getOgs();
 		Integer page = toOperatorGroupStaticTableDTO.getPage();
 		Integer pageSize = toOperatorGroupStaticTableDTO.getPageSize();
 		Integer bizId = toOperatorGroupStaticTableDTO.getBizId();
 		Set<Integer> userIdSet = toOperatorGroupStaticTableDTO.getUserIdSet();
-			
+
 		PageBean<OperatorGroupStatic> pageBean = new PageBean<OperatorGroupStatic>();
 
 		pageBean.setPage(page);
@@ -442,32 +446,32 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 				ogs.setOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
 			}
 		}
-		pageBean = tourGroupService.selectOperatorGroupStaticListPage(pageBean, bizId,userIdSet);
-		OperatorGroupStatic sum = tourGroupService.selectOperatorGroupStaticCon(pageBean, bizId,userIdSet);
-		
-		ToOperatorGroupStaticTableResult result=new ToOperatorGroupStaticTableResult();
+		pageBean = tourGroupService.selectOperatorGroupStaticListPage(pageBean, bizId, userIdSet);
+		OperatorGroupStatic sum = tourGroupService.selectOperatorGroupStaticCon(pageBean, bizId, userIdSet);
+
+		ToOperatorGroupStaticTableResult result = new ToOperatorGroupStaticTableResult();
 		result.setPageBean(pageBean);
 		result.setSum(sum);
-		
+
 		return result;
 	}
 
-	public AllProvinceResult getAllProvince(){
-		
+	public AllProvinceResult getAllProvince() {
+
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		
-		AllProvinceResult result=new AllProvinceResult();
+
+		AllProvinceResult result = new AllProvinceResult();
 		result.setAllProvince(allProvince);
-		
+
 		return result;
 	}
 
-	public ToOrdersPreviewResult toOrdersPreview(ToOrdersPreviewDTO toOrdersPreviewDTO){
-		
-		PaymentExportVO vo=toOrdersPreviewDTO.getVo();
+	public ToOrdersPreviewResult toOrdersPreview(ToOrdersPreviewDTO toOrdersPreviewDTO) {
+
+		PaymentExportVO vo = toOrdersPreviewDTO.getVo();
 		Integer bizId = toOrdersPreviewDTO.getBizId();
 		Map parameters = toOrdersPreviewDTO.getParameters();
-		
+
 		PageBean<PaymentExportVO> pageBean = new PageBean<PaymentExportVO>();
 		if (StringUtils.isBlank(vo.getOperatorIds()) && StringUtils.isNotBlank(vo.getOrgIds())) {
 			Set<Integer> set = new HashSet<Integer>();
@@ -485,20 +489,21 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 				parameters.put("saleOperatorIds", salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
 			}
 		}
-		
+
 		pageBean.setParameter(vo);
-		List<GroupOrder> orders = groupOrderService.selectPaymentDetailList(pageBean,bizId,toOrdersPreviewDTO.getUserIdSet());
-		
-		ToOrdersPreviewResult result=new ToOrdersPreviewResult();
+		List<GroupOrder> orders = groupOrderService.selectPaymentDetailList(pageBean, bizId,
+				toOrdersPreviewDTO.getUserIdSet());
+
+		ToOrdersPreviewResult result = new ToOrdersPreviewResult();
 		result.setOrders(orders);
 		result.setParameters(parameters);
-		
+
 		return result;
 	}
 
-	public ToPaymentPreviewResult toPaymentPreview(ToOrdersPreviewDTO toOrdersPreviewDTO){
-		
-		PaymentExportVO vo=toOrdersPreviewDTO.getVo();
+	public ToPaymentPreviewResult toPaymentPreview(ToOrdersPreviewDTO toOrdersPreviewDTO) {
+
+		PaymentExportVO vo = toOrdersPreviewDTO.getVo();
 		Integer bizId = toOrdersPreviewDTO.getBizId();
 		Map parameters = toOrdersPreviewDTO.getParameters();
 		Set<Integer> userIdSet = toOrdersPreviewDTO.getUserIdSet();
@@ -521,16 +526,15 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			}
 		}
 		pageBean.setParameter(vo);
-		List<GroupOrder> orders = groupOrderService.selectPaymentDetailList(pageBean, bizId,userIdSet);
-		
+		List<GroupOrder> orders = groupOrderService.selectPaymentDetailList(pageBean, bizId, userIdSet);
+
 		/**
 		 * 查询当前用户的收款明细
 		 */
 		List<FinancePay> payDetailList = financeService.getFinancePayBySupplierId(vo.getSupplierId(), bizId);
-		
 
 		List<SysBizBankAccount> sysBizBankAccountList = bizBankAccountService.getListByBizId(bizId);
-		
+
 		StringBuilder sb = new StringBuilder();
 		StringBuilder sb1 = new StringBuilder();
 		StringBuilder sb2 = new StringBuilder();
@@ -541,637 +545,73 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		}
 		sb1.append("组团社盖章：" + "\n" + "签字：_________" + "\n" + "日期：_________" + "\n");
 		sb2.append("组团社盖章：" + "\n" + "签字：_________" + "\n" + "日期：_________" + "\n");
-		
+
 		// 本期发生的应收已收
-		GroupOrder orderMiddle = groupOrderService.selectTotalStatic(pageBean, bizId,userIdSet);
+		GroupOrder orderMiddle = groupOrderService.selectTotalStatic(pageBean, bizId, userIdSet);
 		vo.setEndTime(null);
 		pageBean.setParameter(vo);
 		// 期初余额
-		GroupOrder orderPre = groupOrderService.selectTotalStatic(pageBean,bizId,userIdSet);
-		
-		ToPaymentPreviewResult 
+		GroupOrder orderPre = groupOrderService.selectTotalStatic(pageBean, bizId, userIdSet);
+
+		ToPaymentPreviewResult result = new ToPaymentPreviewResult();
+		result.setOrderMiddle(orderMiddle);
+		result.setOrderPre(orderPre);
+		result.setOrders(orders);
+		result.setParameters(parameters);
+		result.setPayDetailList(payDetailList);
+		result.setSb1(sb1.toString());
+		result.setSb2(sb2.toString());
+
+		return result;
 	}
 
-	/**
-	 * excel导出部分
-	 * 
-	 * @param request
-	 * @param response
-	 * @param vo
-	 * @param page
-	 * @param pageSize
-	 * @return
-	 */
-	@RequestMapping(value = "/getOrders.do")
-	@ResponseBody
-	public void getOrders(HttpServletRequest request, HttpServletResponse response, PaymentExportVO vo, Integer page,
-			Integer pageSize) {
-		PageBean<PaymentExportVO> pageBean = new PageBean<PaymentExportVO>();
-		pageBean.setParameter(vo);
-		List<GroupOrder> orders = groupOrderService.selectPaymentDetailList(pageBean, WebUtils.getCurBizId(request),
-				WebUtils.getDataUserIdSet(request));
-		String path = "";
+	public GetOrdersResult getOrders(ToOrdersPreviewDTO toOrdersPreviewDTO) {
 
-		try {
-			String url = request.getSession().getServletContext().getRealPath("/template/excel/paymentDetail.xlsx");
-			FileInputStream input = new FileInputStream(new File(url)); // 读取的文件路径
-			XSSFWorkbook wb = new XSSFWorkbook(new BufferedInputStream(input));
-			XSSFFont createFont = wb.createFont();
-			createFont.setFontName("微软雅黑");
-			createFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);// 粗体显示
-			createFont.setFontHeightInPoints((short) 12);
-
-			XSSFFont tableIndex = wb.createFont();
-			tableIndex.setFontName("宋体");
-			tableIndex.setFontHeightInPoints((short) 11);
-
-			CellStyle cellStyle = wb.createCellStyle();
-			cellStyle.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			cellStyle.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			cellStyle.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			cellStyle.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			cellStyle.setAlignment(CellStyle.ALIGN_CENTER); // 居中
-
-			CellStyle styleFontCenter = wb.createCellStyle();
-			styleFontCenter.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			styleFontCenter.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			styleFontCenter.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			styleFontCenter.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			styleFontCenter.setAlignment(CellStyle.ALIGN_CENTER); // 居中
-			styleFontCenter.setFont(createFont);
-
-			CellStyle styleFontTable = wb.createCellStyle();
-			styleFontTable.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			styleFontTable.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			styleFontTable.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			styleFontTable.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			styleFontTable.setAlignment(CellStyle.ALIGN_CENTER); // 居中
-			styleFontTable.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-			styleFontTable.setFillPattern(CellStyle.SOLID_FOREGROUND);
-
-			CellStyle styleLeft = wb.createCellStyle();
-			styleLeft.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			styleLeft.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			styleLeft.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			styleLeft.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			styleLeft.setAlignment(CellStyle.ALIGN_LEFT); // 居左
-
-			CellStyle styleRight = wb.createCellStyle();
-			styleRight.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			styleRight.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			styleRight.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			styleRight.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			styleRight.setAlignment(CellStyle.ALIGN_RIGHT); // 居右
-			Sheet sheet = wb.getSheetAt(0); // 获取到第一个sheet
-			Row row = null;
-			Cell cc = null;
-			// 遍历集合数据，产生数据行
-			Iterator<GroupOrder> it = orders.iterator();
-			int index = 0;
-			while (it.hasNext()) {
-				GroupOrder order = it.next();
-				row = sheet.createRow(index + 2);
-				cc = row.createCell(0);
-				cc.setCellValue(index + 1);
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(1);
-				cc.setCellValue(order.getGroupCode());
-				cc.setCellStyle(styleLeft);
-				cc = row.createCell(2);
-				cc.setCellValue(order.getDepartureDate());
-				cc.setCellStyle(styleLeft);
-				cc = row.createCell(3);
-				cc.setCellValue("【" + order.getProductBrandName() + "】" + order.getProductName());
-				cc.setCellStyle(styleLeft);
-				cc = row.createCell(4);
-				cc.setCellValue(
-						order.getSupplierName() + "\n" + order.getSupplierCode() + "\n" + order.getContactName());
-				cc.setCellStyle(styleLeft);
-				cc = row.createCell(5);
-				cc.setCellValue(order.getContactName());
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(6);
-				cc.setCellValue(order.getReceiveMode());
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(7);
-				cc.setCellValue((order.getProvinceName() == null ? "" : order.getProvinceName())
-						+ (order.getCityName() == null ? "" : order.getCityName()));
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(8);
-				cc.setCellValue((order.getNumAdult() == null ? 0 : order.getNumAdult()) + "+"
-						+ (order.getNumChild() == null ? 0 : order.getNumChild()) + "+"
-						+ (order.getNumGuide() == null ? 0 : order.getNumGuide()));
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(9);
-				cc.setCellValue(order.getSaleOperatorName());
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(10);
-				cc.setCellValue(order.getOperatorName());
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(11);
-				cc.setCellValue(order.getPrices().replace(",", "\n"));
-				cc.setCellStyle(styleLeft);
-				cc = row.createCell(12);
-				cc.setCellValue(order.getTotal() == null ? 0 : order.getTotal().doubleValue()); // 团款
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(13);
-				cc.setCellValue(order.getTotalCash().doubleValue());// 已收
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(14);
-				cc.setCellValue((order.getTotal() == null ? 0 : order.getTotal().doubleValue())
-						- (order.getTotalCash() == null ? 0 : order.getTotalCash().doubleValue()));// 未收
-				cc.setCellStyle(cellStyle);
-				index++;
-
-			}
-			List<String> list = getTotal(orders);
-			row = sheet.createRow(orders.size() + 2); // 加合计行
-			cc = row.createCell(0);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(1);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(2);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(3);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(4);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(5);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(6);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(7);
-			cc.setCellValue("合计：");
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(8);
-			cc.setCellValue(list.get(0) + "+" + list.get(1) + "+" + list.get(2));
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(9);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(10);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(11);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(12);
-			cc.setCellValue(list.get(3)); // 团款
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(13);
-			cc.setCellValue(list.get(4));// 已收
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(14);
-			cc.setCellValue(list.get(5));// 未收
-			cc.setCellStyle(cellStyle);
-			CellRangeAddress region = new CellRangeAddress(orders.size() + 3, orders.size() + 4, 0, 14);
-			sheet.addMergedRegion(region);
-			row = sheet.createRow(orders.size() + 3);
-			cc = row.createCell(0);
-			cc.setCellValue("打印人：" + WebUtils.getCurUser(request).getName() + " 打印时间："
-					+ DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-			path = request.getSession().getServletContext().getRealPath("/") + "/download/" + System.currentTimeMillis()
-					+ ".xlsx";
-			FileOutputStream out = new FileOutputStream(path);
-			wb.write(out);
-			out.close();
-			wb.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		String fileName = "";
-		try {
-			fileName = new String("应收款详情.xlsx".getBytes("UTF-8"), "iso-8859-1");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		download(path, fileName, request, response);
-	}
-
-	/**
-	 * 应收款统计-对账单导出excel
-	 * 
-	 * @param request
-	 * @param response
-	 * @param vo
-	 * @param page
-	 * @param pageSize
-	 * @return
-	 */
-	@RequestMapping(value = "/getPaymentData.do")
-	@ResponseBody
-	public void getPaymentData(HttpServletRequest request, HttpServletResponse response, PaymentExportVO vo,
-			Integer page, Integer pageSize) {
-		List<SysBizBankAccount> sysBizBankAccountList = bizBankAccountService
-				.getListByBizId(WebUtils.getCurBizId(request));
+		PaymentExportVO vo = toOrdersPreviewDTO.getVo();
+		Integer bizId = toOrdersPreviewDTO.getBizId();
+		Set<Integer> userIdSet = toOrdersPreviewDTO.getUserIdSet();
 
 		PageBean<PaymentExportVO> pageBean = new PageBean<PaymentExportVO>();
 		pageBean.setParameter(vo);
-		List<GroupOrder> orders = groupOrderService.selectPaymentDetailList(pageBean, WebUtils.getCurBizId(request),
-				WebUtils.getDataUserIdSet(request));
-		String path = "";
+		List<GroupOrder> orders = groupOrderService.selectPaymentDetailList(pageBean, bizId, userIdSet);
 
-		try {
-			String url = request.getSession().getServletContext().getRealPath("/template/excel/paymentDetail.xlsx");
-			FileInputStream input = new FileInputStream(new File(url)); // 读取的文件路径
-			XSSFWorkbook wb = new XSSFWorkbook(new BufferedInputStream(input));
-			XSSFFont createFont = wb.createFont();
-			createFont.setFontName("微软雅黑");
-			createFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);// 粗体显示
-			createFont.setFontHeightInPoints((short) 12);
-
-			XSSFFont tableIndex = wb.createFont();
-			tableIndex.setFontName("宋体");
-			tableIndex.setFontHeightInPoints((short) 11);
-
-			CellStyle cellStyle = wb.createCellStyle();
-			cellStyle.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			cellStyle.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			cellStyle.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			cellStyle.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			cellStyle.setAlignment(CellStyle.ALIGN_CENTER); // 居中
-
-			CellStyle styleFontCenter = wb.createCellStyle();
-			styleFontCenter.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			styleFontCenter.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			styleFontCenter.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			styleFontCenter.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			styleFontCenter.setAlignment(CellStyle.ALIGN_CENTER); // 居中
-			styleFontCenter.setFont(createFont);
-
-			CellStyle styleFontTable = wb.createCellStyle();
-			styleFontTable.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			styleFontTable.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			styleFontTable.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			styleFontTable.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			styleFontTable.setAlignment(CellStyle.ALIGN_CENTER); // 居中
-			styleFontTable.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-			styleFontTable.setFillPattern(CellStyle.SOLID_FOREGROUND);
-
-			CellStyle styleLeft = wb.createCellStyle();
-			styleLeft.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			styleLeft.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			styleLeft.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			styleLeft.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			styleLeft.setAlignment(CellStyle.ALIGN_LEFT); // 居左
-
-			CellStyle styleRight = wb.createCellStyle();
-			styleRight.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			styleRight.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			styleRight.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			styleRight.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			styleRight.setAlignment(CellStyle.ALIGN_RIGHT); // 居右
-
-			CellStyle styleTop = wb.createCellStyle();
-			styleTop.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			styleTop.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			styleTop.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			styleTop.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			styleTop.setAlignment(CellStyle.ALIGN_LEFT); // 居右
-			Sheet sheet = wb.getSheetAt(0); // 获取到第一个sheet
-			Row row = null;
-			Cell cc = null;
-			// 遍历集合数据，产生数据行
-			Iterator<GroupOrder> it = orders.iterator();
-			int index = 0;
-			while (it.hasNext()) {
-				GroupOrder order = it.next();
-				row = sheet.createRow(index + 2);
-				cc = row.createCell(0);
-				cc.setCellValue(index + 1);
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(1);
-				cc.setCellValue(order.getGroupCode());
-				cc.setCellStyle(styleLeft);
-				cc = row.createCell(2);
-				cc.setCellValue(order.getDepartureDate());
-				cc.setCellStyle(styleLeft);
-				cc = row.createCell(3);
-				cc.setCellValue("【" + order.getProductBrandName() + "】" + order.getProductName());
-				cc.setCellStyle(styleLeft);
-				cc = row.createCell(4);
-				cc.setCellValue(
-						order.getSupplierName() + "\n" + order.getSupplierCode() + "\n" + order.getContactName());
-				cc.setCellStyle(styleLeft);
-				cc = row.createCell(5);
-				cc.setCellValue(order.getContactName());
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(6);
-				cc.setCellValue(order.getReceiveMode());
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(7);
-				cc.setCellValue((order.getProvinceName() == null ? "" : order.getProvinceName())
-						+ (order.getCityName() == null ? "" : order.getCityName()));
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(8);
-				cc.setCellValue((order.getNumAdult() == null ? 0 : order.getNumAdult()) + "+"
-						+ (order.getNumChild() == null ? 0 : order.getNumChild()) + "+"
-						+ (order.getNumGuide() == null ? 0 : order.getNumGuide()));
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(9);
-				cc.setCellValue(order.getSaleOperatorName());
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(10);
-				cc.setCellValue(order.getOperatorName());
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(11);
-				cc.setCellValue(order.getPrices().replace(",", "\n"));
-				cc.setCellStyle(styleLeft);
-				cc = row.createCell(12);
-				cc.setCellValue(order.getTotal() == null ? 0 : order.getTotal().doubleValue()); // 团款
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(13);
-				cc.setCellValue(order.getTotalCash().doubleValue());// 已收
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(14);
-				cc.setCellValue((order.getTotal() == null ? 0 : order.getTotal().doubleValue())
-						- (order.getTotalCash() == null ? 0 : order.getTotalCash().doubleValue()));// 未收
-				cc.setCellStyle(cellStyle);
-				index++;
-
-			}
-			List<String> list = getTotal(orders);
-			row = sheet.createRow(orders.size() + 2); // 加合计行
-			cc = row.createCell(0);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(1);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(2);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(3);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(4);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(5);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(6);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(7);
-			cc.setCellValue("合计：");
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(8);
-			cc.setCellValue(list.get(0) + "+" + list.get(1) + "+" + list.get(2));
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(9);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(10);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(11);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(12);
-			cc.setCellValue(list.get(3)); // 团款
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(13);
-			cc.setCellValue(list.get(4));// 已收
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(14);
-			cc.setCellValue(list.get(5));// 未收
-			cc.setCellStyle(cellStyle);
-
-			/**
-			 * 增加支付明细
-			 */
-			List<FinancePay> payDetailList = financeService.getFinancePayBySupplierId(vo.getSupplierId(),
-					WebUtils.getCurBizId(request));
-			CellRangeAddress region1 = new CellRangeAddress(orders.size() + 3, orders.size() + 4, 0, 6);
-			sheet.addMergedRegion(region1);
-			row = sheet.createRow(orders.size() + 3);
-			cc = row.createCell(0);
-			cc.setCellValue("收款明细表");
-			cc.setCellStyle(styleFontCenter);
-			row = sheet.createRow(orders.size() + 5);
-			cc = row.createCell(0);
-			cc.setCellValue("序号");
-			cc.setCellStyle(styleFontTable);
-			cc = row.createCell(1);
-			cc.setCellValue("账号");
-			cc.setCellStyle(styleFontTable);
-			cc = row.createCell(2);
-			cc.setCellValue("收款方式");
-			cc.setCellStyle(styleFontTable);
-			cc = row.createCell(3);
-			cc.setCellValue("收款金额");
-			cc.setCellStyle(styleFontTable);
-			cc = row.createCell(4);
-			cc.setCellValue("备注");
-			cc.setCellStyle(styleFontTable);
-			cc = row.createCell(5);
-			cc.setCellValue("收款时间");
-			cc.setCellStyle(styleFontTable);
-			cc = row.createCell(6);
-			cc.setCellValue("录入操作员");
-			cc.setCellStyle(styleFontTable);
-			// 遍历集合数据，产生数据
-			Iterator<FinancePay> it1 = payDetailList.iterator();
-			int index1 = 0;
-			Integer totalCash = 0;
-			int i = 6;
-			while (it1.hasNext()) {
-				FinancePay fp = it1.next();
-				row = sheet.createRow(orders.size() + i);
-				cc = row.createCell(0);
-				cc.setCellValue(index1 + 1);
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(1);
-				cc.setCellValue(fp.getSupplierName());
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(2);
-				cc.setCellValue(fp.getPayType());
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(3);
-				cc.setCellValue(fp.getCash().intValue() + "");
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(4);
-				cc.setCellValue(fp.getRemark());
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(5);
-				cc.setCellValue(DateUtils.format(fp.getPayDate(), "yyyy-MM-dd"));
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(6);
-				cc.setCellValue(fp.getUserName());
-				cc.setCellStyle(cellStyle);
-				// System.out.println(fp.getCash().intValue());
-				totalCash += fp.getCash().intValue();
-				i++;
-			}
-			row = sheet.createRow(orders.size() + payDetailList.size() + 6);
-			cc = row.createCell(0);
-			cc.setCellValue(index1 + 1);
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(1);
-			cc.setCellValue("");
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(2);
-			cc.setCellValue("合计：");
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(3);
-			cc.setCellValue(totalCash + "");
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(4);
-			cc.setCellValue("");
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(5);
-			cc.setCellValue("");
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(6);
-			cc.setCellValue("");
-			cc.setCellStyle(cellStyle);
-
-			/*
-			 * CellRangeAddress region = new CellRangeAddress(orders.size()
-			 * +payDetailList.size()+6 , orders.size() +payDetailList.size()+ 7,
-			 * 0, 6); sheet.addMergedRegion(region); row =
-			 * sheet.createRow(orders.size() +payDetailList.size()+6); cc =
-			 * row.createCell(0); cc.setCellValue("合计："+totalCash) ;
-			 */
-
-			CellRangeAddress region2 = new CellRangeAddress(orders.size() + payDetailList.size() + 8,
-					orders.size() + payDetailList.size() + 9, 0, 1);
-			sheet.addMergedRegion(region2);
-			CellRangeAddress region3 = new CellRangeAddress(orders.size() + payDetailList.size() + 8,
-					orders.size() + payDetailList.size() + 8, 2, 3);
-			sheet.addMergedRegion(region3);
-			CellRangeAddress region4 = new CellRangeAddress(orders.size() + payDetailList.size() + 8,
-					orders.size() + payDetailList.size() + 9, 4, 5);
-			sheet.addMergedRegion(region4);
-
-			row = sheet.createRow(orders.size() + payDetailList.size() + 8);
-			setRowStyle(row, cellStyle);
-			cc = row.createCell(0);
-			styleLeft.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);
-			styleLeft.setAlignment(XSSFCellStyle.ALIGN_CENTER);
-			cc.setCellStyle(styleLeft);
-			cc.setCellValue(new XSSFRichTextString("期初金额"));
-			cc = row.createCell(2);
-			cc.setCellStyle(styleLeft);
-			cc.setCellValue(new XSSFRichTextString("期中发生"));
-			cc = row.createCell(4);
-			cc.setCellStyle(styleLeft);
-			cc.setCellValue(new XSSFRichTextString("期末余额"));
-			row = sheet.createRow(orders.size() + payDetailList.size() + 9);
-			setRowStyle(row, cellStyle);
-			cc = row.createCell(0);
-			cc = row.createCell(2);
-			cc.setCellStyle(styleLeft);
-			cc.setCellValue(new XSSFRichTextString("应收"));
-			cc = row.createCell(3);
-			cc.setCellStyle(styleLeft);
-			cc.setCellValue(new XSSFRichTextString("已收"));
-
-			CellRangeAddress region22 = new CellRangeAddress(orders.size() + payDetailList.size() + 10,
-					orders.size() + payDetailList.size() + 10, 0, 1);
-			sheet.addMergedRegion(region22);
-			// 本期发生的应收已收
-			GroupOrder orderMiddle = groupOrderService.selectTotalStatic(pageBean, WebUtils.getCurBizId(request),
-					WebUtils.getDataUserIdSet(request));
-			vo.setEndTime(null);
-			pageBean.setParameter(vo);
-			// 期初余额
-			GroupOrder orderPre = groupOrderService.selectTotalStatic(pageBean, WebUtils.getCurBizId(request),
-					WebUtils.getDataUserIdSet(request));
-			if (orderPre == null) {
-				orderPre = new GroupOrder();
-				orderPre.setTotal(new BigDecimal(0));
-				orderPre.setTotalCash(new BigDecimal(0));
-			}
-			if (orderMiddle == null) {
-				orderMiddle = new GroupOrder();
-				orderMiddle.setTotal(new BigDecimal(0));
-				orderMiddle.setTotalCash(new BigDecimal(0));
-			}
-			CellRangeAddress region44 = new CellRangeAddress(orders.size() + payDetailList.size() + 10,
-					orders.size() + payDetailList.size() + 10, 4, 5);
-			sheet.addMergedRegion(region44);
-			row = sheet.createRow(orders.size() + payDetailList.size() + 10);
-			setRowStyle(row, cellStyle);
-			cc = row.createCell(0);
-			cc.setCellStyle(styleLeft);
-			cc.setCellValue(new XSSFRichTextString(NumberUtil
-					.formatDouble((orderPre.getTotal().doubleValue() - orderPre.getTotalCash().doubleValue()))));
-			cc = row.createCell(2);
-			cc.setCellStyle(styleLeft);
-			cc.setCellValue(new XSSFRichTextString(NumberUtil.formatDouble(orderMiddle.getTotal())));
-			cc = row.createCell(3);
-			cc.setCellStyle(styleLeft);
-			cc.setCellValue(new XSSFRichTextString(NumberUtil.formatDouble(orderMiddle.getTotalCash())));
-			cc = row.createCell(4);
-			cc.setCellStyle(styleLeft);
-			cc.setCellValue(new XSSFRichTextString(
-					NumberUtil.formatDouble(orderPre.getTotal().doubleValue() - orderPre.getTotalCash().doubleValue()
-							+ orderMiddle.getTotal().doubleValue() - orderMiddle.getTotalCash().doubleValue())));
-
-			CellRangeAddress region5 = new CellRangeAddress(orders.size() + payDetailList.size() + 11,
-					orders.size() + payDetailList.size() + 19, 0, 4);
-			sheet.addMergedRegion(region5);
-			row = sheet.createRow(orders.size() + payDetailList.size() + 11);
-			cc = row.createCell(0);
-			styleTop.setWrapText(true);
-			cc.setCellStyle(styleTop);
-			StringBuilder sb = new StringBuilder();
-			StringBuilder sb1 = new StringBuilder();
-			for (SysBizBankAccount sysBizBankAccount : sysBizBankAccountList) {
-				sb.append("类别:" + (sysBizBankAccount.getAccountType() == 1 ? "个人账户" : "对公账户") + " 银行名称："
-						+ sysBizBankAccount.getBankName() + sysBizBankAccount.getBankAccount() + " 开户全称："
-						+ sysBizBankAccount.getAccountName() + " 公司账号：" + sysBizBankAccount.getAccountNo() + "\r\n");
-				sb1.append("\r\n");
-			}
-			sb.append("\r\n" + "地接社盖章：" + "\r\n" + "签字：_________" + "\r\n" + "日期：_________" + "\r\n");
-			sb1.append("\r\n" + "组团社盖章：" + "\r\n" + "签字：_________" + "\r\n" + "日期：_________" + "\r\n");
-			cc.setCellValue(new XSSFRichTextString(sb.toString()));
-			CellRangeAddress region6 = new CellRangeAddress(orders.size() + payDetailList.size() + 11,
-					orders.size() + payDetailList.size() + 19, 5, 6);
-			sheet.addMergedRegion(region6);
-			row = sheet.getRow(orders.size() + payDetailList.size() + 11);
-			cc = row.createCell(5);
-			styleTop.setWrapText(true);
-			cc.setCellStyle(styleTop);
-			cc.setCellValue(new XSSFRichTextString(sb1.toString()));
-
-			CellRangeAddress region7 = new CellRangeAddress(orders.size() + payDetailList.size() + 20,
-					orders.size() + payDetailList.size() + 21, 0, 6);
-			sheet.addMergedRegion(region7);
-			row = sheet.createRow(orders.size() + payDetailList.size() + 19);
-			cc = row.createCell(0);
-			cc.setCellValue("打印人：" + WebUtils.getCurUser(request).getName() + " 打印时间："
-					+ DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-			path = request.getSession().getServletContext().getRealPath("/") + "/download/" + System.currentTimeMillis()
-					+ ".xlsx";
-			FileOutputStream out = new FileOutputStream(path);
-			wb.write(out);
-			out.close();
-			wb.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		String fileName = "";
-		try {
-			fileName = new String("应收款详情.xlsx".getBytes("UTF-8"), "iso-8859-1");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		download(path, fileName, request, response);
+		GetOrdersResult result = new GetOrdersResult();
+		result.setOrders(orders);
+		return result;
 	}
 
-	public void setRowStyle(Row row, CellStyle cellStyle) {
-		Cell cc = null;
-		cc = row.createCell(0);
-		cc.setCellValue("");
-		cc.setCellStyle(cellStyle);
-		cc = row.createCell(1);
-		cc.setCellValue("");
-		cc.setCellStyle(cellStyle);
-		cc = row.createCell(2);
-		cc.setCellValue("");
-		cc.setCellStyle(cellStyle);
-		cc = row.createCell(3);
-		cc.setCellValue("");
-		cc.setCellStyle(cellStyle);
-		cc = row.createCell(4);
-		cc.setCellValue("");
-		cc.setCellStyle(cellStyle);
-		cc = row.createCell(5);
-		cc.setCellValue("");
-		cc.setCellStyle(cellStyle);
-		cc = row.createCell(6);
-		cc.setCellValue("");
-		cc.setCellStyle(cellStyle);
+	public GetPaymentDataResult getPaymentData(GetPaymentDataDTO getPaymentDataDTO) {
+
+		PaymentExportVO vo = getPaymentDataDTO.getVo();
+		Integer page = getPaymentDataDTO.getPage();
+		Integer pageSize = getPaymentDataDTO.getPageSize();
+		Integer bizId = getPaymentDataDTO.getBizId();
+		Set<Integer> userIdSet = getPaymentDataDTO.getUserIdSet();
+
+		List<SysBizBankAccount> sysBizBankAccountList = bizBankAccountService.getListByBizId(bizId);
+
+		PageBean<PaymentExportVO> pageBean = new PageBean<PaymentExportVO>();
+		pageBean.setParameter(vo);
+		List<GroupOrder> orders = groupOrderService.selectPaymentDetailList(pageBean, bizId, userIdSet);
+
+		List<FinancePay> payDetailList = financeService.getFinancePayBySupplierId(vo.getSupplierId(), bizId);
+
+		// 本期发生的应收已收
+		GroupOrder orderMiddle = groupOrderService.selectTotalStatic(pageBean, bizId, userIdSet);
+		vo.setEndTime(null);
+		pageBean.setParameter(vo);
+
+		// 期初余额
+		GroupOrder orderPre = groupOrderService.selectTotalStatic(pageBean, bizId, userIdSet);
+
+		GetPaymentDataResult result = new GetPaymentDataResult();
+		result.setOrderMiddle(orderMiddle);
+		result.setOrderPre(orderPre);
+		result.setOrders(orders);
+		result.setPayDetailList(payDetailList);
+		result.setSysBizBankAccountList(sysBizBankAccountList);
+
+		return result;
 	}
 
 	private void download(String path, String fileName, HttpServletRequest request, HttpServletResponse response) {
@@ -1232,8 +672,10 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return list;
 	}
 
-	@RequestMapping(value = "/shopInfoDetailList.do")
-	public String shopInfoDetail(HttpServletRequest request, ModelMap model, QueryShopInfo shop) {
+	public ShopInfoDetailResult shopInfoDetail(ShopInfoDetailDTO shopInfoDetailDTO) {
+
+		QueryShopInfo shop = shopInfoDetailDTO.getShop();
+
 		PageBean pageBean = new PageBean();
 		if (shop.getPage() == null) {
 			shop.setPage(1);
@@ -1243,8 +685,8 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		} else {
 			pageBean.setPageSize(shop.getPageSize());
 		}
-		// shop.setBizId(WebUtils.getCurBizId(request));
-		pageBean.setParameter(WebUtils.getQueryParamters(request));
+
+		pageBean.setParameter(shopInfoDetailDTO.getQueryParamters());
 		pageBean.setPage(shop.getPage());
 		pageBean = bookingShopService.getshopInfoDetail(pageBean);
 		if (pageBean.getResult() != null && pageBean.getResult().size() > 0) {
@@ -1259,68 +701,26 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 			}
 		}
-		model.addAttribute("page", pageBean);
-		return "queries/shop/shopInfoDetail-listView";
+
+		ShopInfoDetailResult result = new ShopInfoDetailResult();
+		result.setPageBean(pageBean);
+
+		return result;
 	}
 
-	/**
-	 * @author : xuzejun
-	 * @date : 2015年7月25日 下午2:31:01
-	 * @Description: 跳转购物列表下拉详情
-	 */
-	@RequestMapping(value = "/shopDetailList.htm")
-	public String shopDetailList(ModelMap model, Integer id) {
+	public ShopDetailListResult shopDetailList(Integer id) {
 		List<BookingShopDetail> bookingShopDetail = bookingShopDetailService.getShopDetailListByBookingId(id);
-		model.addAttribute("shopDetail", bookingShopDetail);
-		return "queries/shop/shop-listViewDetail";
+
+		ShopDetailListResult result = new ShopDetailListResult();
+		result.setBookingShopDetail(bookingShopDetail);
+
+		return result;
 	}
 
-	/**
-	 * 客人购物
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value = "/guestShopList.htm")
-	public String toGuestShopList(HttpServletRequest request, ModelMap model) {
-		GuestShopListResult result = bookingShopFacade.toGuestShopList(WebUtils.getCurBizId(request));
-		model.addAttribute("allProvince", result.getAllProvince());
-		model.addAttribute("sourceTypeList", result.getSourceTypeList());
-		// getOrgAndUserTreeJsonStr(model, bizId);
-		return "queries/shop/guestShop-list";
-	}
+	public ShopSelectListResult shopSelectList(ShopSelectListDTO shopSelectListDTO) {
 
-	@RequestMapping(value = "/guestShopList.do")
-	public String guestShopList(ModelMap model, QueryGuideShop shop, HttpServletRequest request, TourGroupVO groupVo) {
-		BookingShopListDTO bookingShopListDTO = new BookingShopListDTO();
-		bookingShopListDTO.setBizId(WebUtils.getCurBizId(request));
-		bookingShopListDTO.setQueryGuideShop(shop);
-		bookingShopListDTO.setOrgIds(groupVo.getOrgIds());
-		bookingShopListDTO.setSaleOperatorIds(groupVo.getSaleOperatorIds());
-		bookingShopListDTO.setDataUserIds(WebUtils.getDataUserIdSet(request));
-		GuestShopResult result = bookingShopFacade.guestShopList(bookingShopListDTO);
+		TourGroupVO group = shopSelectListDTO.getGroup();
 
-		model.addAttribute("shoppingDataState", result.getShoppingDataState());
-		model.addAttribute("page", result.getPageBean());
-		return "queries/shop/guestShop-listView";
-	}
-
-	/**
-	 * 购物查询
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("/shopSelectList.htm")
-	public String toShopSelectList(ModelMap model) {
-
-		return "queries/shop/shopSelect-list";
-	}
-
-	@RequestMapping(value = "/shopSelectList.do")
-	public String shopSelectList(HttpServletRequest request, ModelMap model, TourGroupVO group) {
 		PageBean pageBean = new PageBean();
 		if (group.getPage() == null) {
 			group.setPage(1);
@@ -1331,11 +731,11 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			pageBean.setPageSize(group.getPageSize());
 		}
 		group.setSupplierType(Constants.SHOPPING);
-		group.setBizId(WebUtils.getCurBizId(request));
+		group.setBizId(shopSelectListDTO.getBizId());
 		pageBean.setParameter(group);
 		pageBean.setPage(group.getPage());
 
-		pageBean = tourGroupService.getGroupInfoList(pageBean, group, WebUtils.getDataUserIdSet(request));
+		pageBean = tourGroupService.getGroupInfoList(pageBean, group, shopSelectListDTO.getUserIdSet());
 		fillData(pageBean.getResult());
 		if (pageBean.getResult() != null && pageBean.getResult().size() > 0) {
 			for (BookingGroup bGroup : (List<BookingGroup>) pageBean.getResult()) {
@@ -1344,8 +744,11 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 				bGroup.setGroupOrderList(gOrders);
 			}
 		}
-		model.addAttribute("page", pageBean);
-		return "queries/shop/shopSelect-listView";
+
+		ShopSelectListResult result = new ShopSelectListResult();
+		result.setPageBean(pageBean);
+
+		return result;
 	}
 
 	private void fillData(List<BookingGroup> bookingGroupList) {
@@ -1369,16 +772,18 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		}
 	}
 
-	@RequestMapping(value = "/getEmployeeIds.htm", method = RequestMethod.POST)
-	@ResponseBody
-	public String getEmployeeIds(HttpServletRequest request, String orgIds, Model model) {
+	public String getEmployeeIds(GetEmployeeIdsDTO getEmployeeIdsDTO) {
+
+		String orgIds = getEmployeeIdsDTO.getOrgIds();
+		Integer bizId = getEmployeeIdsDTO.getBizId();
+
 		String employeeIds = "";
 		Set<Integer> set = new HashSet<Integer>();
 		String[] orgIdArr = orgIds.split(",");
 		for (String orgIdStr : orgIdArr) {
 			set.add(Integer.valueOf(orgIdStr));
 		}
-		set = platformEmployeeService.getUserIdListByOrgIdList(WebUtils.getCurBizId(request), set);
+		set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
 		String salesOperatorIds = "";
 		for (Integer usrId : set) {
 			salesOperatorIds += usrId + ",";
@@ -1386,30 +791,18 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		if (!salesOperatorIds.equals("")) {
 			employeeIds = salesOperatorIds.substring(0, salesOperatorIds.length() - 1);
 		}
-		return successJson("employeeIds", employeeIds);
+
+		return employeeIds;
 	}
 
-	/**
-	 * 应收款统计
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("paymentList")
-	public String paymentQueries(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		// Integer bizId = WebUtils.getCurBizId(request);
-		// getOrgAndUserTreeJsonStr(modelMap, bizId);
-		return "queries/paymentList";
-	}
+	public PaymentStaticPreviewResult paymentStaticPreview(PaymentStaticPreviewDTO paymentStaticPreviewDTO) {
 
-	@RequestMapping("paymentStaticPreview.htm")
-	public String paymentStaticPreview(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap,
-			GroupOrder order) {
+		GroupOrder order = paymentStaticPreviewDTO.getOrder();
+
 		PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
 
-		Map<String, Object> pms = WebUtils.getQueryParamters(request);
+		Map<String, Object> pms = paymentStaticPreviewDTO.getPms();
+
 		// 如果人员为空并且部门不为空，则取部门下的人id
 		if (StringUtils.isBlank(order.getOperatorIds()) && StringUtils.isNotBlank(order.getOrgIds())) {
 			Set<Integer> set = new HashSet<Integer>();
@@ -1417,7 +810,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(WebUtils.getCurBizId(request), set);
+			set = platformEmployeeService.getUserIdListByOrgIdList(paymentStaticPreviewDTO.getBizId(), set);
 			String salesOperatorIds = "";
 			for (Integer usrId : set) {
 				salesOperatorIds += usrId + ",";
@@ -1432,772 +825,366 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		pageBean.setPageSize(10000);
 		pageBean.setParameter(pms);
 		// pageBean.setParameter(parameters);
-		List<GroupOrder> orders = groupOrderService.selectPaymentStaticData2(pageBean, WebUtils.getCurBizId(request),
-				WebUtils.getDataUserIdSet(request));
-		modelMap.addAttribute("parameter", pms);
-		modelMap.addAttribute("orders", orders);
-		modelMap.addAttribute("printName", WebUtils.getCurUser(request).getName());
-		modelMap.addAttribute("printTime", DateUtils.format(new Date()));
-		return "queries/paymentStaticPreview";
+		List<GroupOrder> orders = groupOrderService.selectPaymentStaticData2(pageBean,
+				paymentStaticPreviewDTO.getBizId(), paymentStaticPreviewDTO.getUserIdSet());
+
+		PaymentStaticPreviewResult result = new PaymentStaticPreviewResult();
+		result.setOrders(orders);
+		result.setPms(pms);
+
+		return result;
 	}
 
-	/**
-	 * 应收款统计表导出
-	 * 
-	 * @param request
-	 * @param response
-	 * @param groupOrder
-	 */
-	@RequestMapping(value = "/paymentStaticExport.do")
-	@ResponseBody
-	public void paymentStaticExport(HttpServletRequest request, HttpServletResponse response, GroupOrder groupOrder) {
+	public PaymentStaticPreviewResult paymentStaticExport(PaymentStaticPreviewDTO paymentStaticPreviewDTO) {
+
+		GroupOrder groupOrder = paymentStaticPreviewDTO.getOrder();
+
 		PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
 		pageBean.setPage(1);
 		pageBean.setPageSize(10000);
-		Map<String, Object> pms = WebUtils.getQueryParamters(request);
+
+		Map<String, Object> pms = paymentStaticPreviewDTO.getPms();
+
 		// pageBean.setParameter(groupOrder);
 		pageBean.setParameter(pms);
-		List<GroupOrder> orders = groupOrderService.selectPaymentStaticData2(pageBean, WebUtils.getCurBizId(request),
-				WebUtils.getDataUserIdSet(request));
-		String path = "";
+		List<GroupOrder> orders = groupOrderService.selectPaymentStaticData2(pageBean,
+				paymentStaticPreviewDTO.getBizId(), paymentStaticPreviewDTO.getUserIdSet());
 
-		try {
-			String url = request.getSession().getServletContext().getRealPath("/template/excel/paymentStatic.xlsx");
-			FileInputStream input = new FileInputStream(new File(url)); // 读取的文件路径
-			XSSFWorkbook wb = new XSSFWorkbook(new BufferedInputStream(input));
-			XSSFFont createFont = wb.createFont();
-			createFont.setFontName("微软雅黑");
-			createFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);// 粗体显示
-			createFont.setFontHeightInPoints((short) 12);
-
-			XSSFFont tableIndex = wb.createFont();
-			tableIndex.setFontName("宋体");
-			tableIndex.setFontHeightInPoints((short) 11);
-
-			CellStyle cellStyle = wb.createCellStyle();
-			cellStyle.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			cellStyle.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			cellStyle.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			cellStyle.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			cellStyle.setAlignment(CellStyle.ALIGN_CENTER); // 居中
-
-			CellStyle styleFontCenter = wb.createCellStyle();
-			styleFontCenter.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			styleFontCenter.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			styleFontCenter.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			styleFontCenter.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			styleFontCenter.setAlignment(CellStyle.ALIGN_CENTER); // 居中
-			styleFontCenter.setFont(createFont);
-
-			CellStyle styleFontTable = wb.createCellStyle();
-			styleFontTable.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			styleFontTable.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			styleFontTable.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			styleFontTable.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			styleFontTable.setAlignment(CellStyle.ALIGN_CENTER); // 居中
-			styleFontTable.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-			styleFontTable.setFillPattern(CellStyle.SOLID_FOREGROUND);
-
-			CellStyle styleLeft = wb.createCellStyle();
-			styleLeft.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			styleLeft.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			styleLeft.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			styleLeft.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			styleLeft.setAlignment(CellStyle.ALIGN_LEFT); // 居左
-
-			CellStyle styleRight = wb.createCellStyle();
-			styleRight.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			styleRight.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			styleRight.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			styleRight.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			styleRight.setAlignment(CellStyle.ALIGN_RIGHT); // 居右
-
-			CellStyle styleTop = wb.createCellStyle();
-			styleTop.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
-			styleTop.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
-			styleTop.setBorderTop(CellStyle.BORDER_THIN);// 上边框
-			styleTop.setBorderRight(CellStyle.BORDER_THIN);// 右边框
-			styleTop.setAlignment(CellStyle.ALIGN_LEFT); // 居右
-			Sheet sheet = wb.getSheetAt(0); // 获取到第一个sheet
-			Row row = null;
-			Cell cc = null;
-			// 遍历集合数据，产生数据行
-			Iterator<GroupOrder> it = orders.iterator();
-			int index = 0;
-			while (it.hasNext()) {
-				GroupOrder order = it.next();
-				row = sheet.createRow(index + 2);
-				cc = row.createCell(0);
-				cc.setCellValue(index + 1);
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(1);
-				cc.setCellValue(order.getSupplierName());
-				cc.setCellStyle(styleLeft);
-				cc = row.createCell(2);
-				if (order.getPreTotal() != null) {
-					cc.setCellValue(NumberUtil.formatDouble(order.getPreTotal()));
-				}
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(3);
-				cc.setCellValue(order.getOrderCount() + "");
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(4);
-				cc.setCellValue(order.getNumAdult() + "+" + order.getNumChild() + "+" + order.getNumGuide() + "");
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(5);
-				cc.setCellValue(NumberUtil.formatDouble(order.getTotal()));
-				cc.setCellStyle(cellStyle);
-				cc = row.createCell(6);
-				cc.setCellValue(NumberUtil.formatDouble(order.getTotalCash()));
-				cc.setCellStyle(cellStyle);
-
-				cc = row.createCell(7);
-				Double tb = new Double(NumberUtil.formatDouble(order.getTotalBalance()));
-				cc.setCellValue(NumberUtil.formatDouble(tb));
-				cc.setCellStyle(cellStyle);
-
-				cc = row.createCell(8);
-				Double bd = new Double(NumberUtil.formatDouble(order.getTotalBalance()))
-						+ new Double(NumberUtil.formatDouble(order.getPreTotal()));
-				cc.setCellValue(NumberUtil.formatDouble(bd));
-				cc.setCellStyle(cellStyle);
-				index++;
-			}
-			Map<String, String> map = getTotalData(orders);
-			row = sheet.createRow(orders.size() + 2); // 加合计行
-			cc = row.createCell(0);
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(1);
-			cc.setCellValue("合计：");
-			cc.setCellStyle(styleRight);
-			cc = row.createCell(2);
-			cc.setCellValue(map.get("preTotal"));
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(3);
-			cc.setCellValue(map.get("orderCountTotal"));
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(4);
-			cc.setCellValue(map.get("persons"));
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(5);
-			cc.setCellValue(map.get("groupTotal"));
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(6);
-			cc.setCellValue(map.get("groupTotalCash"));
-			cc.setCellStyle(cellStyle);
-
-			cc = row.createCell(7);
-			cc.setCellValue(map.get("groupBlance1"));
-			cc.setCellStyle(cellStyle);
-			cc = row.createCell(8);
-			cc.setCellValue(map.get("groupBlance"));
-			cc.setCellStyle(cellStyle);
-			CellRangeAddress region = new CellRangeAddress(orders.size() + 3, orders.size() + 3, 0, 8);
-			sheet.addMergedRegion(region);
-			row = sheet.createRow(orders.size() + 3);
-			cc = row.createCell(0);
-			cc.setCellValue("打印人：" + WebUtils.getCurUser(request).getName() + " 打印时间："
-					+ DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-			path = request.getSession().getServletContext().getRealPath("/") + "/download/" + System.currentTimeMillis()
-					+ ".xlsx";
-			FileOutputStream out = new FileOutputStream(path);
-			wb.write(out);
-			out.close();
-			wb.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		String fileName = "";
-		try {
-			fileName = new String("应收款详情.xlsx".getBytes("UTF-8"), "iso-8859-1");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		download(path, fileName, request, response);
+		PaymentStaticPreviewResult result = new PaymentStaticPreviewResult();
+		result.setOrders(orders);
+		return result;
 	}
 
-	public Map<String, String> getTotalData(List<GroupOrder> orders) {
-		Double preTotal = new Double(0);
-		Integer orderCountTotal = 0;
-		Integer totalAdult = 0;
-		Integer totalChild = 0;
-		Integer totalGuide = 0;
-		Double groupTotal = new Double(0);
-		Double groupTotalCash = new Double(0);
-		Double groupBlance = new Double(0);
-		Double groupBlance1 = new Double(0);
-		for (GroupOrder order : orders) {
-			preTotal += new Double(NumberUtil.formatDouble(order.getPreTotal()));
-			orderCountTotal += order.getOrderCount();
-			totalAdult += order.getNumAdult();
-			totalChild += order.getNumChild();
-			totalGuide += order.getNumGuide();
-			groupTotal += new Double(NumberUtil.formatDouble(order.getTotal()));
-			groupTotalCash += new Double(NumberUtil.formatDouble(order.getTotalCash()));
-			groupBlance += new Double(NumberUtil.formatDouble(order.getTotalBalance()))
-					+ new Double(NumberUtil.formatDouble(order.getPreTotal()));
-			groupBlance1 += groupBlance - preTotal;
-		}
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("preTotal", NumberUtil.formatDouble(preTotal));
-		map.put("orderCountTotal", orderCountTotal + "");
-		map.put("persons", totalAdult + "大" + totalChild + "小" + totalGuide + "陪");
-		map.put("groupTotal", NumberUtil.formatDouble(groupTotal));
-		map.put("groupTotalCash", NumberUtil.formatDouble(groupTotalCash));
-		map.put("groupBlance", NumberUtil.formatDouble(groupBlance));
-		map.put("groupBlance1", NumberUtil.formatDouble(groupBlance1));
-		return map;
-	}
-
-	/**
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 * @throws UnsupportedEncodingException
-	 */
-	@RequestMapping("paymentDetailList")
-	public String paymentDetailQueries(HttpServletRequest request, ModelMap model, PaymentCondition condition)
-			throws UnsupportedEncodingException {
-		List<RegionInfo> allProvince = regionService.getAllProvince();
-		// Integer bizId = WebUtils.getCurBizId(request);
-		// getOrgAndUserTreeJsonStr(model, bizId);
-		model.addAttribute("allProvince", allProvince);
-		// try {
-		// System.out.println(new
-		// String(condition.getSupplierName().getBytes("ISO-8859-1"),"UTF-8")) ;
-		// condition.setSupplierName(new
-		// String(condition.getSupplierName().getBytes("ISO-8859-1"),"UTF-8"));
-		// } catch (UnsupportedEncodingException e) {
-		// e.printStackTrace();
-		// }
-		model.put("condition", condition);
-		return "queries/paymentDetailList";
-	}
-
-	@RequestMapping("toDebtList.htm")
-	public String toDebtList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		Calendar a = Calendar.getInstance();
-		modelMap.put("yearLimit", a.get(Calendar.YEAR));
-		// Integer bizId = WebUtils.getCurBizId(request);
-		// getOrgAndUserTreeJsonStr(modelMap, bizId);
-		return "queries/debtList";
-	}
-
-	@RequestMapping("restaurantQueryList.htm")
-	public String restaurantList(HttpServletRequest request, Model model) {
-		return "queries/restaurant/queryList";
-	}
-
-	/**
-	 * 订餐统计
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("restaurantList.htm")
-	public String restaurantQueries(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap,
-			SupplierInfo supplierInfo) {
-		modelMap.addAttribute("supplierType", Constants.RESTAURANT);
-		modelMap.addAttribute("supplierInfo", supplierInfo);
-		Integer bizId = WebUtils.getCurBizId(request);
+	public RestaurantQueriesResult restaurantQueries(Integer bizId) {
 
 		// 餐类型
-		List<DicInfo> Type1 = dicService.getListByTypeCode(Constants.RESTAURANT_TYPE_CODE);
-		modelMap.addAttribute("Type1", Type1);
-
+		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.RESTAURANT_TYPE_CODE);
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		modelMap.addAttribute("allProvince", allProvince);
 
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		modelMap.addAttribute("cashType", cashTypes);
 
 		// 获取餐厅类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_RESTAURANT);
-		modelMap.addAttribute("levelList", levelList);
 
-		return "queries/restaurant/restaurantList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+		result.setType1(type1);
+
+		return result;
 	}
 
-	/**
-	 * 跳转到餐厅明细
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("restaurantBooking.htm")
-	public String restaurantBooking(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		condition.setSupplierType(Constants.RESTAURANT);
-		model.addAttribute("condition", condition);
+	public RestaurantQueriesResult restaurantBooking(Integer bizId) {
 
 		// 从字典中查询结算方式
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
 
 		// 获取类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_RESTAURANT);
-		model.addAttribute("levelList", levelList);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		model.addAttribute("allProvince", allProvince);
 
-		return "queries/restaurant/restaurantDetailList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+
+		return result;
 	}
 
-	/**
-	 * 跳转到餐厅结算方式查询
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("restaurantJSFS.htm")
-	public String restaurantJSFS(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		condition.setSupplierType(Constants.RESTAURANT);
-		model.addAttribute("condition", condition);
+	public RestaurantQueriesResult restaurantJSFS(Integer bizId) {
 
 		// 从字典中查询结算方式
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
 
 		// 获取商家类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_RESTAURANT);
-		model.addAttribute("levelList", levelList);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		model.addAttribute("allProvince", allProvince);
 
-		return "queries/restaurant/restaurantJSFSList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+
+		return result;
 	}
 
-	@RequestMapping("restaurantDetailList.htm")
-	public String restaurantDetailList(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-		Integer bizId = WebUtils.getCurBizId(request);
+	public RestaurantQueriesResult restaurantDetailList(Integer bizId) {
+
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_RESTAURANT);
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 		List<RegionInfo> allProvince = regionService.getAllProvince();
 
-		model.addAttribute("supplierType", Constants.RESTAURANT);
-		model.addAttribute("bizId", bizId);
-		model.addAttribute("levelList", levelList);
-		model.addAttribute("cashType", cashTypes);
-		model.addAttribute("allProvince", allProvince);
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
 
-		return "queries/restaurant/restaurantDetailList2";
+		return result;
 	}
 
-	@RequestMapping("hotelQueryList.htm")
-	public String hotelList(HttpServletRequest request, Model model) {
-		return "queries/hotel/queryList";
-	}
-
-	/**
-	 * 订房统计
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("hotelList.htm")
-	public String hotelQueries(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			SupplierInfo supplierInfo) {
-		model.addAttribute("supplierType", Constants.HOTEL);
-		model.addAttribute("supplierInfo", supplierInfo);
-		Integer bizId = WebUtils.getCurBizId(request);
+	public HotelQueriesResult hotelQueries(Integer bizId) {
 
 		// 酒店类型
 		List<DicInfo> hotelType1 = dicService.getListByTypeCode(Constants.HOTEL_TYPE_CODE_1);
-		model.addAttribute("hotelType1", hotelType1);
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		model.addAttribute("allProvince", allProvince);
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
 
 		// 获取酒店类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.GYXX_JDXJ);
-		model.addAttribute("levelList", levelList);
 
-		return "queries/hotel/hotelList";
+		HotelQueriesResult result = new HotelQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+		result.setHotelType1(hotelType1);
+
+		return result;
 	}
 
-	@RequestMapping("hotelBooking.htm")
-	public String HotelBookingQueries(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		condition.setSupplierType(Constants.HOTEL);
-		model.addAttribute("condition", condition);
+	public RestaurantQueriesResult hotelBookingQueries(Integer bizId) {
 
 		// 从字典中查询结算方式
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
 
 		// 获取酒店类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.GYXX_JDXJ);
-		model.addAttribute("levelList", levelList);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		model.addAttribute("allProvince", allProvince);
 
-		return "queries/hotel/hotelDetailList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+
+		return result;
 	}
 
-	@RequestMapping("hotelJSFS.htm")
-	public String hotelJSFS(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		condition.setSupplierType(Constants.HOTEL);
-		model.addAttribute("condition", condition);
+	public RestaurantQueriesResult hotelJSFS(Integer bizId) {
 
 		// 从字典中查询结算方式
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
 
 		// 获取酒店类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.GYXX_JDXJ);
-		model.addAttribute("levelList", levelList);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		model.addAttribute("allProvince", allProvince);
-		return "queries/hotel/hotelJSFSList";
+
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+
+		return result;
 	}
 
-	@RequestMapping("hotelDetailList.htm")
-	public String HoteldetailQueries(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-		Integer bizId = WebUtils.getCurBizId(request);
+	public RestaurantQueriesResult hoteldetailQueries(Integer bizId) {
+
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.GYXX_JDXJ);
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 		List<RegionInfo> allProvince = regionService.getAllProvince();
 
-		model.addAttribute("supplierType", Constants.HOTEL);
-		model.addAttribute("bizId", bizId);
-		model.addAttribute("levelList", levelList);
-		model.addAttribute("cashType", cashTypes);
-		model.addAttribute("allProvince", allProvince);
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
 
-		return "queries/hotel/hotelDetailList2";
+		return result;
 	}
 
-	@RequestMapping("fleetQueryList.htm")
-	public String fleetList(HttpServletRequest request, Model model) {
-		return "queries/fleet/queryList";
-	}
-
-	/**
-	 * 跳转到车队统计
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("fleetList.htm")
-	public String fleetQueries(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap,
-			SupplierInfo supplierInfo) {
-		modelMap.addAttribute("supplierType", Constants.FLEET);
-		modelMap.addAttribute("supplierInfo", supplierInfo);
-		Integer bizId = WebUtils.getCurBizId(request);
+	public RestaurantQueriesResult fleetQueries(Integer bizId) {
 
 		// 费用项目类型
-		List<DicInfo> Type1 = dicService.getListByTypeCode(Constants.FLEET_TYPE_CODE);
-		modelMap.addAttribute("Type1", Type1);
+		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.FLEET_TYPE_CODE);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		modelMap.addAttribute("allProvince", allProvince);
 
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		modelMap.addAttribute("cashType", cashTypes);
 
 		// 获取类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_FLEET);
-		modelMap.addAttribute("levelList", levelList);
 
-		return "queries/fleet/fleetList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+		result.setType1(type1);
+
+		return result;
 	}
 
-	/**
-	 * 跳转到车队明细
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("fleetDetailList.htm")
-	public String fleetDetailList(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		condition.setSupplierType(Constants.FLEET);
-		model.addAttribute("condition", condition);
+	public RestaurantQueriesResult fleetDetailList(Integer bizId) {
 
 		// 从字典中查询结算方式
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
 
 		// 获取类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_FLEET);
-		model.addAttribute("levelList", levelList);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		model.addAttribute("allProvince", allProvince);
 
-		return "queries/fleet/fleetDetailList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+
+		return result;
 	}
 
-	/**
-	 * 跳转到车队结算方式
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("fleetJSFSList.htm")
-	public String fleetJSFSList(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		condition.setSupplierType(Constants.FLEET);
-		model.addAttribute("condition", condition);
+	public RestaurantQueriesResult fleetJSFSList(Integer bizId) {
 
 		// 从字典中查询结算方式
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
 
 		// 获取商家类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_FLEET);
-		model.addAttribute("levelList", levelList);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		model.addAttribute("allProvince", allProvince);
 
-		return "queries/fleet/fleetJSFSList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+
+		return result;
 	}
 
-	/**
-	 * 娱乐统计
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("entertainmentList.htm")
-	public String entertainmentQueries(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-		model.addAttribute("supplierType", Constants.ENTERTAINMENT);
-		model.addAttribute("bizId", WebUtils.getCurBizId(request));
-		return "queries/entertainment/entertainmentList";
-	}
+	public RestaurantQueriesResult entertainmentDetailQueries(Integer bizId) {
 
-	@RequestMapping("entertainmentDetailList.htm")
-	public String entertainmentDetailQueries(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		model.addAttribute("bizId", bizId);
-		condition.setSupplierType(Constants.ENTERTAINMENT);
-		model.put("condition", condition);
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
-		return "queries/entertainment/entertainmentDetailList";
+
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setCashTypes(cashTypes);
+
+		return result;
 	}
 
-	@RequestMapping("sightQueryList.htm")
-	public String sightList(HttpServletRequest request, Model model) {
-		return "queries/sight/queryList";
-	}
-
-	/**
-	 * 门票统计
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("sightList.htm")
-	public String sightList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap,
-			SupplierInfo supplierInfo) {
-		modelMap.addAttribute("supplierType", Constants.SCENICSPOT);
-		modelMap.addAttribute("supplierInfo", supplierInfo);
-		Integer bizId = WebUtils.getCurBizId(request);
-
+	public RestaurantQueriesResult sightList(Integer bizId) {
 		// 类型
-		List<DicInfo> Type1 = dicService.getListByTypeCode(Constants.SCENICSPOT_TYPE_CODE);
-		modelMap.addAttribute("Type1", Type1);
+		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.SCENICSPOT_TYPE_CODE);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		modelMap.addAttribute("allProvince", allProvince);
 
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		modelMap.addAttribute("cashType", cashTypes);
 
 		// 获取餐厅类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_SCENICSPOT);
-		modelMap.addAttribute("levelList", levelList);
 
-		return "queries/sight/sightList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+		result.setType1(type1);
+
+		return result;
 	}
 
-	/**
-	 * 门票明细
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("sightBooking.htm")
-	public String sightBookingList(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		condition.setSupplierType(Constants.SCENICSPOT);
-		model.addAttribute("condition", condition);
+	public RestaurantQueriesResult sightBookingList(Integer bizId) {
 
 		// 从字典中查询结算方式
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
 
 		// 获取类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_SCENICSPOT);
-		model.addAttribute("levelList", levelList);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		model.addAttribute("allProvince", allProvince);
 
-		return "queries/sight/sightDetailList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+
+		return result;
 	}
 
-	/**
-	 * 门票结算方式
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("sightJSFS.htm")
-	public String sightJSFS(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		condition.setSupplierType(Constants.SCENICSPOT);
-		model.addAttribute("condition", condition);
+	public RestaurantQueriesResult sightJSFS(Integer bizId) {
 
 		// 从字典中查询结算方式
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
 
 		// 获取商家类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_SCENICSPOT);
-		model.addAttribute("levelList", levelList);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		model.addAttribute("allProvince", allProvince);
 
-		return "queries/sight/sightJSFSList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+
+		return result;
 	}
 
-	@RequestMapping("sightDetailList.htm")
-	public String sightDetailList(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-		Integer bizId = WebUtils.getCurBizId(request);
+	public RestaurantQueriesResult sightDetailList(Integer bizId) {
+
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_SCENICSPOT);
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 		List<RegionInfo> allProvince = regionService.getAllProvince();
 
-		model.addAttribute("supplierType", Constants.SCENICSPOT);
-		model.addAttribute("bizId", bizId);
-		model.addAttribute("levelList", levelList);
-		model.addAttribute("cashType", cashTypes);
-		model.addAttribute("allProvince", allProvince);
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
 
-		return "queries/sight/sightDetailList2";
+		return result;
 	}
 
-	@RequestMapping("airTicketQueryList.htm")
-	public String airTicketList(HttpServletRequest request, Model model) {
-		return "queries/airTicket/queryList";
-	}
-
-	/**
-	 * 飞机票统计
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("airTicketList.htm")
-	public String airTicketQueries(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap,
-			SupplierInfo supplierInfo) {
-		modelMap.addAttribute("supplierType", Constants.AIRTICKETAGENT);
-		modelMap.addAttribute("supplierInfo", supplierInfo);
-		Integer bizId = WebUtils.getCurBizId(request);
+	public RestaurantQueriesResult airTicketQueries(Integer bizId) {
 
 		// 餐类型
-		List<DicInfo> Type1 = dicService.getListByTypeCode(Constants.AIRTICKET_TYPE_CODE);
-		modelMap.addAttribute("Type1", Type1);
+		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.AIRTICKET_TYPE_CODE);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		modelMap.addAttribute("allProvince", allProvince);
 
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		modelMap.addAttribute("cashType", cashTypes);
 
 		// 获取餐厅类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_AIRTICKETAGENT);
-		modelMap.addAttribute("levelList", levelList);
 
-		return "queries/airTicket/airTicketList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+		result.setType1(type1);
+
+		return result;
 	}
 
-	@RequestMapping("airTicketBooking.htm")
-	public String airTicketBookingQueries(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		// getOrgAndUserTreeJsonStr(model, bizId);
-		condition.setSupplierType(Constants.AIRTICKETAGENT);
-		// model.addAttribute("bizId", bizId);
-		model.put("condition", condition);
+	public RestaurantQueriesResult airTicketBookingQueries(Integer bizId) {
+
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
-		model.addAttribute("cashType", cashTypes);
-		return "queries/airTicket/airTicketDetailList1";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setCashTypes(cashTypes);
+
+		return result;
 	}
 
-	@RequestMapping("airTicketJSFS.htm")
-	public String airTicketJSFS(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		condition.setSupplierType(Constants.AIRTICKETAGENT);
-		model.addAttribute("condition", condition);
+	public RestaurantQueriesResult airTicketJSFS(Integer bizId) {
 
 		// 从字典中查询结算方式
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
 
 		// 获取商家类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_AIRTICKETAGENT);
-		model.addAttribute("levelList", levelList);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		model.addAttribute("allProvince", allProvince);
 
-		return "queries/airTicket/airTicketJSFSList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+
+		return result;
 	}
 
-	@RequestMapping("airTicketDetailList.htm")
-	public String airTicketDetailQueries(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		// getOrgAndUserTreeJsonStr(model, bizId);
-		// model.addAttribute("bizId", bizId);
-		Map parameters = WebUtils.getQueryParamters(request);
+	public AirTicketDetailQueriesResult airTicketDetailQueries(AirTicketDetailQueriesDTO airTicketDetailQueriesDTO) {
+
+		Integer bizId = airTicketDetailQueriesDTO.getBizId();
+		Map parameters = airTicketDetailQueriesDTO.getParameters();
+
 		if (null == parameters.get("startTime") && null == parameters.get("endTime")) {
 			Calendar c = Calendar.getInstance();
 			int year = c.get(Calendar.YEAR);
@@ -2211,6 +1198,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			// condition.setEndTime(df.format(c.getTime()));
 
 		}
+
 		// condition.setSupplierType(Constants.AIRTICKETAGENT);
 		if (StringUtils.isNotBlank((String) parameters.get("orgIds"))) {
 			Set<Integer> set = new HashSet<Integer>();
@@ -2218,7 +1206,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			List<PlatformOrgPo> orgList = orgService.getOrgListByIdSet(WebUtils.getCurBizId(request), set);
+			List<PlatformOrgPo> orgList = orgService.getOrgListByIdSet(bizId, set);
 			StringBuilder sb = new StringBuilder();
 			for (PlatformOrgPo orgPo : orgList) {
 				sb.append(orgPo.getName() + ",");
@@ -2234,7 +1222,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String userIdStr : userIdArr) {
 				set.add(Integer.valueOf(userIdStr));
 			}
-			List<PlatformEmployeePo> empList = platformEmployeeService.getEmpList(WebUtils.getCurBizId(request), set);
+			List<PlatformEmployeePo> empList = platformEmployeeService.getEmpList(bizId, set);
 			StringBuilder sb = new StringBuilder();
 			for (PlatformEmployeePo employeePo : empList) {
 				sb.append(employeePo.getName() + "");
@@ -2243,87 +1231,65 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			parameters.put("saleOperatorName", sb.substring(0, sb.length() - 1));
 		}
 		parameters.put("supplierType", Constants.AIRTICKETAGENT);
-		model.put("condition", parameters);
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
-		model.addAttribute("cashType", cashTypes);
-		return "queries/airTicket/airTicketDetailList";
+		AirTicketDetailQueriesResult result = new AirTicketDetailQueriesResult();
+		result.setCashTypes(cashTypes);
+		result.setParameters(parameters);
+
+		return result;
 	}
 
-	@RequestMapping("trainTicketQueryList.htm")
-	public String trainTicketList(HttpServletRequest request, Model model) {
-		return "queries/trainTicket/queryList";
-	}
-
-	/**
-	 * 火车票统计
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("trainTicketList.htm")
-	public String trainTicketQueries(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap,
-			SupplierInfo supplierInfo) {
-		modelMap.addAttribute("supplierType", Constants.TRAINTICKETAGENT);
-		modelMap.addAttribute("supplierInfo", supplierInfo);
-		Integer bizId = WebUtils.getCurBizId(request);
+	public RestaurantQueriesResult trainTicketQueries(Integer bizId) {
 
 		// 餐类型
-		List<DicInfo> Type1 = dicService.getListByTypeCode(Constants.TRAINTICKET_TYPE_CODE);
-		modelMap.addAttribute("Type1", Type1);
+		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.TRAINTICKET_TYPE_CODE);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		modelMap.addAttribute("allProvince", allProvince);
 
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		modelMap.addAttribute("cashType", cashTypes);
 
-		return "queries/trainTicket/trainTicketList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setType1(type1);
+
+		return result;
 	}
 
-	@RequestMapping("trainTicketBooking.htm")
-	public String trainTicketBookingQueries(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		// getOrgAndUserTreeJsonStr(model, bizId);
-		// model.addAttribute("bizId", bizId);
-		condition.setSupplierType(Constants.TRAINTICKETAGENT);
-		model.put("condition", condition);
+	public RestaurantQueriesResult trainTicketBookingQueries(Integer bizId) {
+
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
-		model.addAttribute("cashType", cashTypes);
-		return "queries/trainTicket/trainTicketDetailList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setCashTypes(cashTypes);
+
+		return result;
 	}
 
-	@RequestMapping("trainTicketJSFS.htm")
-	public String trainTicketJSFS(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		condition.setSupplierType(Constants.TRAINTICKETAGENT);
-		model.addAttribute("condition", condition);
+	public RestaurantQueriesResult trainTicketJSFS(Integer bizId) {
 
 		// 从字典中查询结算方式
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
 
 		// 获取商家类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_TRAINTICKETAGENT);
-		model.addAttribute("levelList", levelList);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		model.addAttribute("allProvince", allProvince);
 
-		return "queries/trainTicket/trainTicketJSFSList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+
+		return result;
 	}
 
-	@RequestMapping("trainTicketDetailList.htm")
-	public String trainTicketDetailQueries(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		// getOrgAndUserTreeJsonStr(model, bizId);
-		// model.addAttribute("bizId", bizId);
-		Map parameters = WebUtils.getQueryParamters(request);
+	public AirTicketDetailQueriesResult trainTicketDetailQueries(AirTicketDetailQueriesDTO airTicketDetailQueriesDTO) {
+
+		Integer bizId = airTicketDetailQueriesDTO.getBizId();
+		Map parameters = airTicketDetailQueriesDTO.getParameters();
+
 		if (null == parameters.get("startTime") && null == parameters.get("endTime")) {
 			Calendar c = Calendar.getInstance();
 			int year = c.get(Calendar.YEAR);
@@ -2344,7 +1310,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			List<PlatformOrgPo> orgList = orgService.getOrgListByIdSet(WebUtils.getCurBizId(request), set);
+			List<PlatformOrgPo> orgList = orgService.getOrgListByIdSet(bizId, set);
 			StringBuilder sb = new StringBuilder();
 			for (PlatformOrgPo orgPo : orgList) {
 				sb.append(orgPo.getName() + ",");
@@ -2360,7 +1326,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String userIdStr : userIdArr) {
 				set.add(Integer.valueOf(userIdStr));
 			}
-			List<PlatformEmployeePo> empList = platformEmployeeService.getEmpList(WebUtils.getCurBizId(request), set);
+			List<PlatformEmployeePo> empList = platformEmployeeService.getEmpList(bizId, set);
 			StringBuilder sb = new StringBuilder();
 			for (PlatformEmployeePo employeePo : empList) {
 				sb.append(employeePo.getName() + "");
@@ -2369,304 +1335,139 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			parameters.put("saleOperatorName", sb.substring(0, sb.length() - 1));
 		}
 		parameters.put("supplierType", Constants.TRAINTICKETAGENT);
-		model.put("condition", parameters);
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
-		model.addAttribute("cashType", cashTypes);
-		return "queries/trainTicket/trainTicketDetailList2";
+		AirTicketDetailQueriesResult result = new AirTicketDetailQueriesResult();
+		result.setCashTypes(cashTypes);
+		result.setParameters(parameters);
+
+		return result;
 	}
 
-	/**
-	 * 高尔夫统计
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("golfList.htm")
-	public String golfQueries(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-		model.addAttribute("supplierType", Constants.GOLF);
-		model.addAttribute("bizId", WebUtils.getCurBizId(request));
-		return "queries/golf/golfList";
-	}
-
-	@RequestMapping("golfDetailList.htm")
-	public String golfDetailQueries(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		model.addAttribute("bizId", WebUtils.getCurBizId(request));
-		condition.setSupplierType(Constants.GOLF);
-		model.put("condition", condition);
-		return "queries/golf/golfDetailList";
-	}
-
-	@RequestMapping("insuranceQueryList.htm")
-	public String insuranceList(HttpServletRequest request, Model model) {
-		return "queries/insurance/queryList";
-	}
-
-	/**
-	 * 保险业务统计
-	 * 
-	 * @param request
-	 * @param response
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping("insuranceList.htm")
-	public String insuranceQueries(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap,
-			SupplierInfo supplierInfo) {
-		modelMap.addAttribute("supplierType", Constants.INSURANCE);
-		modelMap.addAttribute("supplierInfo", supplierInfo);
-		Integer bizId = WebUtils.getCurBizId(request);
+	public RestaurantQueriesResult insuranceQueries(Integer bizId) {
 
 		// 餐类型
-		List<DicInfo> Type1 = dicService.getListByTypeCode(Constants.INSURANCE_TYPE_CODE);
-		modelMap.addAttribute("Type1", Type1);
+		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.INSURANCE_TYPE_CODE);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		modelMap.addAttribute("allProvince", allProvince);
 
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		modelMap.addAttribute("cashType", cashTypes);
 
 		// 获取餐厅类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_INSURANCE);
-		modelMap.addAttribute("levelList", levelList);
-		return "queries/insurance/insuranceList";
+
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+		result.setType1(type1);
+
+		return result;
 	}
 
-	@RequestMapping("insuranceDetailList.htm")
-	public String insuranceDetailQueries(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-		Integer bizId = WebUtils.getCurBizId(request);
+	public RestaurantQueriesResult insuranceDetailQueries(Integer bizId) {
+
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_INSURANCE);
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 		List<RegionInfo> allProvince = regionService.getAllProvince();
 
-		model.addAttribute("supplierType", Constants.INSURANCE);
-		model.addAttribute("bizId", bizId);
-		model.addAttribute("levelList", levelList);
-		model.addAttribute("cashType", cashTypes);
-		model.addAttribute("allProvince", allProvince);
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
 
-		return "queries/insurance/insuranceDetailList2";
+		return result;
 	}
 
-	@RequestMapping("insuranceBooking.htm")
-	public String insuranceBookingQueries(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		condition.setSupplierType(Constants.INSURANCE);
-		model.addAttribute("condition", condition);
+	public RestaurantQueriesResult insuranceBookingQueries(Integer bizId) {
 
 		// 从字典中查询结算方式
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
 
 		// 获取类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_INSURANCE);
-		model.addAttribute("levelList", levelList);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		model.addAttribute("allProvince", allProvince);
 
-		return "queries/insurance/insuranceDetailList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+
+		return result;
 	}
 
-	@RequestMapping("insuranceJSFS.htm")
-	public String insuranceJSFS(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		condition.setSupplierType(Constants.INSURANCE);
-		model.addAttribute("condition", condition);
+	public RestaurantQueriesResult insuranceJSFS(Integer bizId) {
 
 		// 从字典中查询结算方式
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
 
 		// 获取商家类别
 		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_INSURANCE);
-		model.addAttribute("levelList", levelList);
 
 		List<RegionInfo> allProvince = regionService.getAllProvince();
-		model.addAttribute("allProvince", allProvince);
 
-		return "queries/insurance/insuranceJSFSList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setAllProvince(allProvince);
+		result.setCashTypes(cashTypes);
+		result.setLevelList(levelList);
+
+		return result;
 	}
 
-	/**
-	 * 下接社统计
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("angencyList.htm")
-	public String angencyQueries(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		return null;
-	}
-
-	@RequestMapping("incomeQueryList.htm")
-	public String incomeList(HttpServletRequest request, Model model) {
-		return "queries/income/queryList";
-	}
-
-	/**
-	 * 其他收入统计
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("incomeList.htm")
-	public String incomeQueries(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap,
-			SupplierInfo supplierInfo) {
-		modelMap.addAttribute("supplierType", Constants.OTHERINCOME);
-		modelMap.addAttribute("supplierInfo", supplierInfo);
-		Integer bizId = WebUtils.getCurBizId(request);
+	public RestaurantQueriesResult incomeQueries(Integer bizId) {
 
 		// 类型
-		List<DicInfo> Type1 = dicService.getListByTypeCode(Constants.OTHER_TYPE_CODE);
-		modelMap.addAttribute("Type1", Type1);
+		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.OTHER_TYPE_CODE);
 
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.QTSR_JSFS, bizId);
-		modelMap.addAttribute("cashType", cashTypes);
 
-		/*
-		 * List<RegionInfo> allProvince = regionService.getAllProvince();
-		 * modelMap.addAttribute("allProvince", allProvince);
-		 * 
-		 * List<DicInfo> levelList =
-		 * dicService.getListByTypeCode(BasicConstants.
-		 * SUPPLIER_LEVEL_RESTAURANT); modelMap.addAttribute("levelList",
-		 * levelList);
-		 */
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setCashTypes(cashTypes);
+		result.setType1(type1);
 
-		return "queries/income/incomeList";
+		return result;
 	}
 
-	@RequestMapping("incomeDetailList")
-	public String incomeDetailQueries(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		condition.setSupplierType(Constants.OTHERINCOME);
-		model.addAttribute("condition", condition);
+	public RestaurantQueriesResult incomeDetailQueries(Integer bizId){
 
 		// 从字典中查询结算方式
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.QTSR_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
 
-		// 获取类别
-		// List<DicInfo> levelList =
-		// dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_RESTAURANT);
-		// model.addAttribute("levelList", levelList);
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setCashTypes(cashTypes);
 
-		// List<RegionInfo> allProvince = regionService.getAllProvince();
-		// model.addAttribute("allProvince", allProvince);
-
-		return "queries/income/incomeDetailList";
+		return result;
 	}
 
-	@RequestMapping("outcomeQueryList.htm")
-	public String outcomeList(HttpServletRequest request, Model model) {
-		return "queries/outcome/queryList";
-	}
-
-	/**
-	 * 其他支出统计
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("outcomeList.htm")
-	public String outcomeQueries(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap,
-			SupplierInfo supplierInfo) {
-		modelMap.addAttribute("supplierType", Constants.OTHEROUTCOME);
-		modelMap.addAttribute("supplierInfo", supplierInfo);
-		Integer bizId = WebUtils.getCurBizId(request);
+	public RestaurantQueriesResult outcomeQueries(Integer bizId){
 
 		// 类型
-		List<DicInfo> Type1 = dicService.getListByTypeCode(Constants.OTHER_TYPE_CODE);
-		modelMap.addAttribute("Type1", Type1);
-
+		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.OTHER_TYPE_CODE);
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		modelMap.addAttribute("cashType", cashTypes);
 
-		/*
-		 * List<RegionInfo> allProvince = regionService.getAllProvince();
-		 * modelMap.addAttribute("allProvince", allProvince);
-		 * 
-		 * List<DicInfo> levelList =
-		 * dicService.getListByTypeCode(BasicConstants.
-		 * SUPPLIER_LEVEL_RESTAURANT); modelMap.addAttribute("levelList",
-		 * levelList);
-		 */
-		return "queries/outcome/outcomeList";
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setCashTypes(cashTypes);
+		result.setType1(type1);
+
+		return result;
 	}
 
-	@RequestMapping("outcomeDetailList")
-	public String outcomeDetailQueries(HttpServletRequest request, HttpServletResponse response, ModelMap model,
-			PaymentCondition condition) {
-		Integer bizId = WebUtils.getCurBizId(request);
-		condition.setSupplierType(Constants.OTHEROUTCOME);
-		model.addAttribute("condition", condition);
-
+	public RestaurantQueriesResult outcomeDetailQueries(Integer bizId){
 		// 从字典中查询结算方式
 		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		model.addAttribute("cashType", cashTypes);
 
-		// 获取类别
-		// List<DicInfo> levelList =
-		// dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_RESTAURANT);
-		// model.addAttribute("levelList", levelList);
+		RestaurantQueriesResult result = new RestaurantQueriesResult();
+		result.setCashTypes(cashTypes);
 
-		// List<RegionInfo> allProvince = regionService.getAllProvince();
-		// model.addAttribute("allProvince", allProvince);
-
-		return "queries/outcome/outcomeDetailList";
+		return result;
 	}
 
-	@RequestMapping("deliveryQueryList.htm")
-	public String deliveryList(HttpServletRequest request, Model model) {
-		return "queries/deliveryQueryList";
-	}
+	public DeliveryDetailListResult deliveryDetailList(DeliveryDetailListDTO deliveryDetailListDTO){
 
-	/**
-	 * 跳转到下接社统计
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("deliveryList.htm")
-	public String deliveryList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		// Integer bizId = WebUtils.getCurBizId(request);
-		// getOrgAndUserTreeJsonStr(modelMap, bizId);
-		// Integer bizId = WebUtils.getCurBizId(request);
-		// modelMap.addAttribute("bizId", bizId);
-		return "queries/delivery-list";
-	}
-
-	/**
-	 * 跳转到下接社明细
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping("deliveryDetailList.htm")
-	public String deliveryDetailList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) {
-		// Integer bizId = WebUtils.getCurBizId(request);
-		// getOrgAndUserTreeJsonStr(modelMap, bizId);
-		// modelMap.addAttribute("bizId", bizId);
-
-		Map paramters = WebUtils.getQueryParamters(request);
+		Map paramters = deliveryDetailListDTO.getParamters();
+		Integer bizId= deliveryDetailListDTO.getBizId();
+		
 		if (null == paramters.get("start_min") && null == paramters.get("start_max")) {
 			Calendar c = Calendar.getInstance();
 			int year = c.get(Calendar.YEAR);
@@ -2686,7 +1487,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			List<PlatformOrgPo> orgList = orgService.getOrgListByIdSet(WebUtils.getCurBizId(request), set);
+			List<PlatformOrgPo> orgList = orgService.getOrgListByIdSet(bizId, set);
 			StringBuilder sb = new StringBuilder();
 			for (PlatformOrgPo orgPo : orgList) {
 				sb.append(orgPo.getName() + ",");
@@ -2702,17 +1503,18 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String userIdStr : userIdArr) {
 				set.add(Integer.valueOf(userIdStr));
 			}
-			List<PlatformEmployeePo> empList = platformEmployeeService.getEmpList(WebUtils.getCurBizId(request), set);
+			List<PlatformEmployeePo> empList = platformEmployeeService.getEmpList(bizId, set);
 			StringBuilder sb = new StringBuilder();
 			for (PlatformEmployeePo employeePo : empList) {
 				sb.append(employeePo.getName() + "");
 			}
 			// condition.setSaleOperatorName(sb.substring(0, sb.length()-1));
 			paramters.put("saleOperatorName", sb.substring(0, sb.length() - 1));
-
 		}
-		modelMap.addAttribute("parameters", paramters);
-		return "queries/delivery-detail-list";
+		
+		DeliveryDetailListResult result=new DeliveryDetailListResult();
+		result.setParamters(paramters);
+		return result;
 	}
 
 	@RequestMapping(value = "getAirTicketDetail.do")
