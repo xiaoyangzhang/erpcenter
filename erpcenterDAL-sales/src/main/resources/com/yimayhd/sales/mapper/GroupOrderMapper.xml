@@ -112,7 +112,7 @@
 			<result column="ext_res_confirm_name" property="extResConfirmName" jdbcType="VARCHAR"/>
 			<result column="sumPerson" property="sumPerson" jdbcType="INTEGER"/>
 		<association property="tourGroup" column="group_id"
-		             select="com.yihg.sales.dao.TourGroupMapper.selectByPrimaryKey"/>
+		             select="com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper.selectByPrimaryKey"/>
 	</resultMap>
 
 

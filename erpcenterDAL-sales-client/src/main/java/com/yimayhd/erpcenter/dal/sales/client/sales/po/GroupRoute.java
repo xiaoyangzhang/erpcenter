@@ -3,7 +3,8 @@ package com.yimayhd.erpcenter.dal.sales.client.sales.po;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.yimayhd.erpcenter.dal.basic.utils.LogFieldAnno;
+import com.yimayhd.erpcenter.common.util.LogFieldAnno;
+
 
 public class GroupRoute implements Serializable {
 	/**

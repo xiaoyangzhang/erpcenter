@@ -1127,26 +1127,35 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 		return groupOrderMapper.delGroupOrderId(id);
     }
 	
-	 @Override
-		public  Integer selectSumPersonByProductId(Integer productId,String departureDate){
-			Integer sumPerson = groupOrderMapper.selectSumPersonByProductId(productId,departureDate);
-			return sumPerson;
-		}
-	 
-		@Override
-		public List<GroupOrder> selectOrderOverTime() {
-			return groupOrderMapper.selectOrderOverTime();
-		}
-	 
-		@Override
-		public List<FinanceCommission> selectFinanceCommissionByGroupId(Integer groupId) {
-			List<FinanceCommission> orders = financeCommissionMapper.selectByGroupId(groupId) ;
-			return orders;
-		}
-		
-		@Override
-		public List<FinanceCommission> selectFCByGroupId(Integer groupId) {
-			List<FinanceCommission> orders = financeCommissionDeductionMapper.selectByGroupId(groupId) ;
-			return orders;
-		}
+	@Override
+	public Integer selectSumPersonByProductId(Integer productId, String departureDate) {
+		Integer sumPerson = groupOrderMapper.selectSumPersonByProductId(productId, departureDate);
+		return sumPerson;
+	}
+
+	@Override
+	public List<GroupOrder> selectOrderOverTime() {
+		return groupOrderMapper.selectOrderOverTime();
+	}
+
+	@Override
+	public List<FinanceCommission> selectFinanceCommissionByGroupId(Integer groupId) {
+		List<FinanceCommission> orders = financeCommissionMapper.selectByGroupId(groupId);
+		return orders;
+	}
+
+	@Override
+	public List<FinanceCommission> selectFCByGroupId(Integer groupId) {
+		List<FinanceCommission> orders = financeCommissionDeductionMapper.selectByGroupId(groupId);
+		return orders;
+	}
+	
+	/**
+	 * 根据订单列表查询price信息
+	 * @param orderIds
+	 * @return
+	 */
+	public GroupOrderPrice getPriceTotalByOrderIds(List<Integer> orderIds,Integer mode){
+		return groupOrderPriceMapper.getPriceTotalByOrderIds(orderIds,mode);
+	}
 }

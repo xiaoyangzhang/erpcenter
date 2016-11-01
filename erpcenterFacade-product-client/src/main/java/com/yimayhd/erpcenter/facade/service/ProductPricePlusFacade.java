@@ -1,5 +1,9 @@
 package com.yimayhd.erpcenter.facade.service;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import com.yimayhd.erpcenter.facade.query.ProductGroupSupplierDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSupplierConditionDTO;
 import com.yimayhd.erpcenter.facade.result.ResultSupport;
@@ -99,4 +103,5 @@ public interface ProductPricePlusFacade {
 	 * @return
 	 */
 	public ResultSupport copyProduct(String data,Integer productId);
+	List<Map> loadMinPrice(List<Integer> productIds,Date date);
 }

@@ -5,16 +5,23 @@ package com.yimayhd.erpcenter.facade.sales.result.operation;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBill;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBillDetail;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
+import com.yimayhd.erpresource.dal.po.SupplierItem;
 import com.yimayhd.erpresource.dal.vo.SupplierCarVO;
 
 /**
@@ -39,7 +46,86 @@ public class BookingSupplierResult extends ResultSupport implements
 	private List<GroupOrderTransport> groupOrderTransports;
 	private List<SupplierCarVO> carVOList;
 	private PageBean pageBean;
+	private TourGroup tourGroup;
+	private List<FinanceBillDetail> financeBillDetails;
+	private List<BookingSupplier> bookingSuppliers;
+	private List<Map<String, Object>> mapList;
+	private boolean groupAbleEdit;
 	
+	private GroupRouteVO routeVO;
+	private BookingSupplier bookingSupplier;
+	private List<SupplierItem> supplierItems;
+	private String customers;
+	private List<String> strList;
+	private List<GroupRoute> groupRoutes;
+	
+	public List<GroupRoute> getGroupRoutes() {
+		return groupRoutes;
+	}
+	public void setGroupRoutes(List<GroupRoute> groupRoutes) {
+		this.groupRoutes = groupRoutes;
+	}
+	public List<String> getStrList() {
+		return strList;
+	}
+	public void setStrList(List<String> strList) {
+		this.strList = strList;
+	}
+	public String getCustomers() {
+		return customers;
+	}
+	public void setCustomers(String customers) {
+		this.customers = customers;
+	}
+	public List<SupplierItem> getSupplierItems() {
+		return supplierItems;
+	}
+	public void setSupplierItems(List<SupplierItem> supplierItems) {
+		this.supplierItems = supplierItems;
+	}
+	public BookingSupplier getBookingSupplier() {
+		return bookingSupplier;
+	}
+	public void setBookingSupplier(BookingSupplier bookingSupplier) {
+		this.bookingSupplier = bookingSupplier;
+	}
+	public GroupRouteVO getRouteVO() {
+		return routeVO;
+	}
+	public void setRouteVO(GroupRouteVO routeVO) {
+		this.routeVO = routeVO;
+	}
+	public boolean isGroupAbleEdit() {
+		return groupAbleEdit;
+	}
+	public void setGroupAbleEdit(boolean groupAbleEdit) {
+		this.groupAbleEdit = groupAbleEdit;
+	}
+	public List<Map<String, Object>> getMapList() {
+		return mapList;
+	}
+	public void setMapList(List<Map<String, Object>> mapList) {
+		this.mapList = mapList;
+	}
+	public List<BookingSupplier> getBookingSuppliers() {
+		return bookingSuppliers;
+	}
+	public void setBookingSuppliers(List<BookingSupplier> bookingSuppliers) {
+		this.bookingSuppliers = bookingSuppliers;
+	}
+	public TourGroup getTourGroup() {
+		return tourGroup;
+	}
+	public void setTourGroup(TourGroup tourGroup) {
+		this.tourGroup = tourGroup;
+	}
+	
+	public List<FinanceBillDetail> getFinanceBillDetails() {
+		return financeBillDetails;
+	}
+	public void setFinanceBillDetails(List<FinanceBillDetail> financeBillDetails) {
+		this.financeBillDetails = financeBillDetails;
+	}
 	public PageBean getPageBean() {
 		return pageBean;
 	}

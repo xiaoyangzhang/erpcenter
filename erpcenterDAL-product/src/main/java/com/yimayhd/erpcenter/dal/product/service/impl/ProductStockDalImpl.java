@@ -196,7 +196,7 @@ public class ProductStockDalImpl implements ProductStockDal {
 
 	@Override
 	public PageBean<ProductStock> getProductStockDumpList(PageBean<ProductStock> pageBean) {
-		 List<ProductStock> productInfoList = stockMapper.selectProductStockListDumpPage(pageBean);
+		 List<ProductStock> productInfoList = stockMapper.selectProductStockDumpListPage(pageBean);
 		 pageBean.setResult(productInfoList);
 		 
 		 return pageBean;

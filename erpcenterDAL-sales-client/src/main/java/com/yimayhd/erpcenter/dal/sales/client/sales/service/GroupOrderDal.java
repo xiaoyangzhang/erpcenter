@@ -371,5 +371,12 @@ public interface GroupOrderDal {
     List<FinanceCommission> selectFinanceCommissionByGroupId(Integer groupId);
     
     List<FinanceCommission> selectFCByGroupId(Integer groupId);
+    
+    /**
+	 * 根据订单列表查询price信息
+	 * @param orderIds
+	 * @return
+	 */
+	public GroupOrderPrice getPriceTotalByOrderIds(List<Integer> orderIds,Integer mode);
 } 
 

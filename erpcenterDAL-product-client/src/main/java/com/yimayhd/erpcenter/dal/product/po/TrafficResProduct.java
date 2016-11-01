@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.yimayhd.erpcenter.dal.basic.utils.LogFieldAnno;
+import com.yimayhd.erpcenter.common.util.LogFieldAnno;
+
 
 public class TrafficResProduct implements Serializable{
 

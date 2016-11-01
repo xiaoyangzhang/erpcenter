@@ -30,6 +30,10 @@
 			<artifactId>yihg-architect-mybatis</artifactId>
 			<version>${architect-mybatis.version}</version>
 	</dependency>
+	<dependency>
+			<groupId>com.yimayhd.erpcenter</groupId>
+			<artifactId>erpcenter-common</artifactId>
+	</dependency>
   </dependencies>
   <build>
 		<plugins>

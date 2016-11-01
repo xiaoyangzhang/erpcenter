@@ -18,11 +18,11 @@ import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
+import com.yimayhd.erpcenter.common.util.FileConstant;
+import com.yimayhd.erpcenter.common.util.StaConstant;
 import com.yimayhd.erpcenter.dal.basic.dto.TreeDto;
 import com.yimayhd.erpcenter.dal.basic.po.ImgSpace;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
-import com.yimayhd.erpcenter.dal.basic.utils.FileConstant;
-import com.yimayhd.erpcenter.dal.basic.utils.StaConstant;
 
 import org.erpcenterFacade.common.client.errorcode.ProductErrorCode;
 import org.erpcenterFacade.common.client.query.BrandQueryDTO;

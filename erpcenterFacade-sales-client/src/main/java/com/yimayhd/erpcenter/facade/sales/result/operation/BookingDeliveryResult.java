@@ -3,9 +3,15 @@ package com.yimayhd.erpcenter.facade.sales.result.operation;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrintPo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
@@ -28,7 +34,58 @@ public class BookingDeliveryResult extends ResultSupport implements Serializable
 	private List<GroupRoute> groupRoutes;
 	private List<GroupOrder> groupOrders;
 	private BookingDelivery bookingDelivery;
+	private Map<String, Object> map;
+	private PageBean pageBean;
+	private List<GroupOrderGuest> NotGuests;
+	private List<GroupOrderGuest> Guests;
+	private List<GroupOrderPrintPo> orderPrints;
 	
+	public List<GroupOrderPrintPo> getOrderPrints() {
+		return orderPrints;
+	}
+	public void setOrderPrints(List<GroupOrderPrintPo> orderPrints) {
+		this.orderPrints = orderPrints;
+	}
+	public List<GroupOrderGuest> getNotGuests() {
+		return NotGuests;
+	}
+	public void setNotGuests(List<GroupOrderGuest> notGuests) {
+		NotGuests = notGuests;
+	}
+	public List<GroupOrderGuest> getGuests() {
+		return Guests;
+	}
+	public void setGuests(List<GroupOrderGuest> guests) {
+		Guests = guests;
+	}
+	private List<BookingSupplierDetail> supplierDetails;
+	private List<BookingGuide> bookingGuides;
+	
+	
+	public List<BookingSupplierDetail> getSupplierDetails() {
+		return supplierDetails;
+	}
+	public void setSupplierDetails(List<BookingSupplierDetail> supplierDetails) {
+		this.supplierDetails = supplierDetails;
+	}
+	public List<BookingGuide> getBookingGuides() {
+		return bookingGuides;
+	}
+	public void setBookingGuides(List<BookingGuide> bookingGuides) {
+		this.bookingGuides = bookingGuides;
+	}
+	public PageBean getPageBean() {
+		return pageBean;
+	}
+	public void setPageBean(PageBean pageBean) {
+		this.pageBean = pageBean;
+	}
+	public Map<String, Object> getMap() {
+		return map;
+	}
+	public void setMap(Map<String, Object> map) {
+		this.map = map;
+	}
 	public TourGroup getTourGroup() {
 		return tourGroup;
 	}

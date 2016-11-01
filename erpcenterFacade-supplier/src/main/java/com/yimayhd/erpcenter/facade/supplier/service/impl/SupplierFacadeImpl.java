@@ -23,7 +23,7 @@ import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SysBizInfoBiz;
-import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
+import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.facade.supplier.errorcode.SupplierErrorCode;
@@ -1121,12 +1121,6 @@ public class SupplierFacadeImpl implements SupplierFacade {
 		
 		GuideListResult webResult = new GuideListResult();
 		try{
-			if (page == null) {
-				page = 1;
-			}
-			if (pageSize == null) {
-				pageSize = Constants.PAGESIZE;
-			}
 
 			PageBean pageBean = guideBiz.getGuideList(guideDTO.getSupplierGuide(), page, pageSize,
 					bizId);

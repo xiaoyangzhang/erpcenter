@@ -5,7 +5,7 @@ package com.yimayhd.erpcenter.facade.query;
 
 import java.io.Serializable;
 
-import com.yimayhd.erpcenter.dal.basic.utils.LogFieldAnno;
+import com.yimayhd.erpcenter.common.util.LogFieldAnno;
 import com.yimayhd.erpcenter.facade.BaseListPage;
 
 /**

@@ -4,6 +4,7 @@ package com.yimayhd.erpcenter.facade.product.service.impl;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +21,7 @@ import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductGroupSellerBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupSupplierBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
@@ -32,6 +34,7 @@ import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupSeller;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
@@ -93,6 +96,8 @@ public class ProductFacadeImpl implements ProductFacade{
 	
 	@Autowired
 	private PlatformOrgBiz platformOrgBiz;
+	@Autowired
+	private ProductGroupSellerBiz productGroupSellerBiz;
 	@Override
 	public int saveBasicInfo(ProductSaveDTO productSaveDTO) {
 		if(null == productSaveDTO || null == productSaveDTO.getProductInfoVo()){
@@ -694,6 +699,27 @@ public class ProductFacadeImpl implements ProductFacade{
 		}
 		return productPriceList;
 
+	}
+
+	@Override
+	public PageBean findProductSales(PageBean pageBean, Integer bizId,
+			Integer orgId) {
+		PageBean bean=  productInfoBiz.findProductSales(pageBean, bizId,orgId);
+		return bean;
+	}
+
+	@Override
+	public ResultSupport updateUser(ProductInfo addUser, ProductInfo delUser,Integer bizId) {
+		ResultSupport resultSupport = new ResultSupport();
+		for (ProductGroupSeller pgSeller : addUser.getGroupSellers()) {
+			pgSeller.setBizId(bizId);
+			pgSeller.setCreateTime(new Date().getTime());
+			productGroupSellerBiz.insertByBatch(pgSeller);
+		}
+		for (ProductGroupSeller pgSeller : delUser.getGroupSellers()) {
+			productGroupSellerBiz.delSellerBatch(pgSeller.getGroupId(), pgSeller.getProductId(), pgSeller.getOperatorId());
+		}
+		return resultSupport;
 	}
 
 }

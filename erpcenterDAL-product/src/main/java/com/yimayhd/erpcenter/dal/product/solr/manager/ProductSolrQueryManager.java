@@ -8,6 +8,7 @@ import org.apache.solr.client.solrj.response.Group;
 import org.apache.solr.client.solrj.response.GroupCommand;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
 import com.yimayhd.erpcenter.common.solr.BaseSolrQueryManager;
@@ -22,7 +23,10 @@ import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStockConverter;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultVOPlus;
 
 
-public class ProductSolrQueryManager extends BaseSolrQueryManager{
+public class ProductSolrQueryManager {
+	
+	@Autowired
+	private BaseSolrQueryManager solrQueryManager;
 	
 	public SolrSearchPageDTO<ProductStateDTO> searchProductState(ProductStatePageQueryDTO queryDTO){
 		    
@@ -31,7 +35,7 @@ public class ProductSolrQueryManager extends BaseSolrQueryManager{
 
 			 SolrQuery solrQuery = ProductStateConverter.queryDTO2SolrQuery(queryDTO);
 		     
-             QueryResponse response =  this.querySolrDataByFilters(ProductCollectionEnum.PRODUCT_STATE.getCollection(), solrQuery);
+             QueryResponse response =  solrQueryManager.querySolrDataByFilters(ProductCollectionEnum.PRODUCT_STATE.getCollection(), solrQuery);
              List<ProductStateDTO> dtoList = response.getBeans(ProductStateDTO.class);
              
              pageResult.setList(dtoList);
@@ -49,7 +53,7 @@ public class ProductSolrQueryManager extends BaseSolrQueryManager{
 	
 		 SolrQuery solrQuery = ProductStockConverter.queryDTO2SolrQuery(queryDTO);
 	     
-        QueryResponse response =  this.querySolrDataByFilters(ProductCollectionEnum.PRODUCT_STOCK.getCollection(), solrQuery);
+        QueryResponse response =  solrQueryManager.querySolrDataByFilters(ProductCollectionEnum.PRODUCT_STOCK.getCollection(), solrQuery);
         
         List<StockStaticsResultVOPlus> dtoList =new ArrayList<StockStaticsResultVOPlus>();
         
