@@ -1,13 +1,20 @@
+
 package com.yimayhd.erpcenter.facade.service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.alibaba.fastjson.JSONArray;
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
 import com.yimayhd.erpcenter.dal.product.vo.ProductGroupSupplierVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
+import com.yimayhd.erpcenter.dal.product.vo.ProductRouteVo;
+import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.facade.query.ComponentProductListDTO;
 import com.yimayhd.erpcenter.facade.query.ProductListParam;
 import com.yimayhd.erpcenter.facade.query.ProductPriceListDTO;
@@ -211,4 +218,19 @@ public interface ProductFacade {
 	List<ProductGroupSupplierVo> productPricePreview(int bizId, String productIds);
 	PageBean findProductSales(PageBean pageBean,Integer bizId,Integer orgId);
 	ResultSupport updateUser(ProductInfo addUser,ProductInfo delUser,Integer bizId);
+	List<ProductGroupSupplier> selectProductGroupSuppliers(Integer groupId);
+	ResultSupport saveGroupSupplier(List<ProductGroupSupplier> groupSuppliers);
+	ResultSupport delSupplier(ProductGroupSupplier groupSupplier);
+	ProductInfoResult productInfoList(PageBean pageBean,Integer bizId,String operatorIds);
+	ProductRemark findProductRemarkByProductId(Integer productId);
+	ProductInfo selectStockCount(Integer productId, String itemDate);
+	ProductInfo findProductInfoById(Integer productId);
+	PageBean getStockStaticsList(StockStaticCondition condition);
+	ProductInfoResult productAY_GetProductImport(JSONArray jsonArray,Integer bizId,PlatformEmployeePo user);
+	ResultSupport updateProductSysId(Integer productId, Integer productSysId);
+	PageBean productAYList(PageBean pageBean,Map paramMap);
+	ResultSupport updateProductInfo(ProductInfo productInfo);
+	ProductInfoResult viewRoute(Integer productId);
+	boolean saveProductRoute(ProductRouteVo productRouteVo);
+	boolean editProductRoute(ProductRouteVo productRouteVo);
 }
