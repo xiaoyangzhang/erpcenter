@@ -63,7 +63,11 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.util.GenerateCodeUtil;
+import com.yimayhd.erpcenter.dal.sales.solr.sales.converter.FitOrderConverter;
+import com.yimayhd.erpcenter.dal.sales.solr.sales.converter.LockOrderConverter;
+import com.yimayhd.erpcenter.dal.sales.solr.sales.converter.ProfitOrderConverter;
 import com.yimayhd.erpcenter.dal.sales.solr.sales.converter.SaleOrderConverter;
+import com.yimayhd.erpcenter.dal.sales.solr.sales.converter.SpecialOrderConverter;
 import com.yimayhd.erpcenter.dal.sales.solr.sales.manage.SalesSolrQueryManage;
 
 public class GroupOrderDalImpl implements GroupOrderDal {
@@ -252,9 +256,15 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public PageBean selectFitOrderListPage(PageBean pageBean, Integer bizId,
                                            Set<Integer> set, Integer listType) {
-        List<GroupOrder> result = groupOrderMapper.selectFitOrderListPage(
-                pageBean, bizId, set, listType);
-        pageBean.setResult(result);
+        if(1==0){
+        	 List<GroupOrder> result = groupOrderMapper.selectFitOrderListPage(
+                     pageBean, bizId, set, listType);
+             pageBean.setResult(result);
+        }else{
+        	GroupOrderPageQueryDTO queryDTO=FitOrderConverter.toQueryDTO( pageBean, bizId, set, listType);
+        	SolrSearchPageDTO<GroupOrderDTO> solrPageResult=salesSolrQueryManage.searchFitOrder(queryDTO);
+        	return FitOrderConverter.dto2PageBean(solrPageResult,pageBean);
+        }
         return pageBean;
     }
 
@@ -411,8 +421,15 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public PageBean<GroupOrder> selectProfitByConListPage(
             PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set) {
-        List<GroupOrder> orders = groupOrderMapper.selectProfitByConListPage(pageBean, bizId, set);
-        pageBean.setResult(orders);
+       
+        if(1==0){
+        	 List<GroupOrder> orders = groupOrderMapper.selectProfitByConListPage(pageBean, bizId, set);
+             pageBean.setResult(orders);
+        }else{
+        	GroupOrderPageQueryDTO queryDTO=ProfitOrderConverter.toQueryDTO( pageBean, bizId, set);
+        	SolrSearchPageDTO<GroupOrderDTO> solrPageResult=salesSolrQueryManage.searchProfitOrder(queryDTO);
+        	return ProfitOrderConverter.dto2PageBean(solrPageResult,pageBean);
+        }
         return pageBean;
     }
 
@@ -544,8 +561,16 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public PageBean<GroupOrder> selectSpecialOrderListPage(
             PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set) {
-        List<GroupOrder> list = groupOrderMapper.selectSpecialOrderListPage(pageBean, bizId, set);
-        pageBean.setResult(list);
+        
+        
+        if(1==0){
+        	List<GroupOrder> list = groupOrderMapper.selectSpecialOrderListPage(pageBean, bizId, set);
+            pageBean.setResult(list);
+        }else{
+        	GroupOrderPageQueryDTO queryDTO=SpecialOrderConverter.toQueryDTO( pageBean, bizId, set);
+        	SolrSearchPageDTO<GroupOrderDTO> solrPageResult=salesSolrQueryManage.searchSpecialOrder(queryDTO);
+        	return SpecialOrderConverter.dto2PageBean(solrPageResult,pageBean);
+        }
         return pageBean;
     }
 
@@ -558,8 +583,14 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public PageBean<GroupOrder> selectOrderLockByConListPage(
             PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set) {
-        List<GroupOrder> orders = groupOrderMapper.selectOrderLockByConListPage(pageBean, bizId, set);
-        pageBean.setResult(orders);
+        if(1==0){
+        	   List<GroupOrder> orders = groupOrderMapper.selectOrderLockByConListPage(pageBean, bizId, set);
+               pageBean.setResult(orders);
+        }else{
+        	GroupOrderPageQueryDTO queryDTO=LockOrderConverter.toQueryDTO( pageBean, bizId, set);
+        	SolrSearchPageDTO<GroupOrderDTO> solrPageResult=salesSolrQueryManage.searchLockOrder(queryDTO);
+        	return LockOrderConverter.dto2PageBean(solrPageResult,pageBean);
+        }
         return pageBean;
     }
 

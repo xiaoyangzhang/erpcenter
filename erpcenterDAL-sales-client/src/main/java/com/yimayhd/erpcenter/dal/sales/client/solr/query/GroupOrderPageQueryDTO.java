@@ -34,6 +34,14 @@ public class GroupOrderPageQueryDTO extends PageQuery implements Serializable {
 	private String goSupplierName;//!=-1&&!=NULL
 	private String tourProductName;//!=-1&&!=NULL
 	private Set<Integer> listTypeIds;//什么都不判
+	
+	private Integer goProductBrandId;
+	private String goProductBrandName;
+	private String goProductName;
+	
+	private String goOrderBusiness;
+	private Integer goStateFinance;
+	
 	//排序条件ORDER BY tg.date_start ,tg.`create_time`
 	//tg.group_mode > 0
 	//go.state != -1
@@ -353,6 +361,66 @@ public class GroupOrderPageQueryDTO extends PageQuery implements Serializable {
 	 */
 	public void setTourProductName(String tourProductName) {
 		this.tourProductName = tourProductName;
+	}
+	/**
+	 * @return the goProductBrandId
+	 */
+	public Integer getGoProductBrandId() {
+		return goProductBrandId;
+	}
+	/**
+	 * @param goProductBrandId the goProductBrandId to set
+	 */
+	public void setGoProductBrandId(Integer goProductBrandId) {
+		this.goProductBrandId = goProductBrandId;
+	}
+	/**
+	 * @return the goProductBrandName
+	 */
+	public String getGoProductBrandName() {
+		return goProductBrandName;
+	}
+	/**
+	 * @param goProductBrandName the goProductBrandName to set
+	 */
+	public void setGoProductBrandName(String goProductBrandName) {
+		this.goProductBrandName = goProductBrandName;
+	}
+	/**
+	 * @return the goProductName
+	 */
+	public String getGoProductName() {
+		return goProductName;
+	}
+	/**
+	 * @param goProductName the goProductName to set
+	 */
+	public void setGoProductName(String goProductName) {
+		this.goProductName = goProductName;
+	}
+	/**
+	 * @return the goOrderBusiness
+	 */
+	public String getGoOrderBusiness() {
+		return goOrderBusiness;
+	}
+	/**
+	 * @param goOrderBusiness the goOrderBusiness to set
+	 */
+	public void setGoOrderBusiness(String goOrderBusiness) {
+		this.goOrderBusiness = goOrderBusiness;
+	}
+	/**
+	 * @return the goStateFinance
+	 */
+	public Integer getGoStateFinance() {
+		return goStateFinance;
+	}
+	/**
+	 * @param goStateFinance the goStateFinance to set
+	 */
+	public void setGoStateFinance(Integer goStateFinance) {
+		this.goStateFinance = goStateFinance;
 	}
 	
 	

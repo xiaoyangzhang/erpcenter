@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.dal.sales.solr.sales.converter;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,35 +19,49 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.solr.dto.GroupOrderDTO;
 import com.yimayhd.erpcenter.dal.sales.client.solr.query.GroupOrderPageQueryDTO;
 
-public class SaleOrderConverter {
+public class ProfitOrderConverter {
 
-	public static GroupOrderPageQueryDTO toQueryDTO(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer listType) {
+
+
+	public static GroupOrderPageQueryDTO toQueryDTO(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set) {
 		//根据pageBean和parameters组合获得dto参数
-		//tg.group_mode > 0-------
+		// a.state!=-1 and a.biz_id=#{bizId} and a.order_type=0
+		//tg.group_mode > 0-------!!!!!!!!!!!!
 		//go.state != -1-------
 		//go.order_type = 1-------
 	    //go.biz_id = #{bizId,jdbcType=INTEGER}
 		//go.sale_operator_id (listType==0)
 		//go.operator_id in    (listType==1)
-//		tg.date_start  #{page.parameter.startTime} <tg.date_start< #{page.parameter.endTime} page.parameter.dateType == 1
-//		tg.create_time  #{page.parameter.startTime} <tg.date_start< #{page.parameter.endTime} page.parameter.dateType == 2
-//		tg.group_state 
+//		go.departure_date  #{page.parameter.startTime} <go.departure_date< #{page.parameter.endTime} page.parameter.dateType == 1
+//		go.create_time  #{page.parameter.startTime} <go.create_time< #{page.parameter.endTime} page.parameter.dateType == 2
+//		tg.group_state !!!!!!!!!!!!!
+
+//		a.product_brand_id
+
+
+		//and (a.product_brand_name LIKE CONCAT('%','${page.parameter.productName}','%') or a.product_name LIKE CONCAT('%','${page.parameter.productName}','%'))
+//		a.supplier_name LIKE 
+//		go.receive_mode LIKE
+//		go.source_type_id page.parameter.sourceTypeId !=-1
+//		and go.province_id page.parameter.provinceId !=-1
+//		go.city_id =#{page.parameter.cityId} page.parameter.cityId		
+//		and a.group_id is not null  page.parameter.state ==1
+//		and a.group_id is  null  page.parameter.state ==2
+//		and b.group_code like CONCAT('%','${page.parameter.groupCode}','%')
+//		go.order_lock_state
 //		go.total != total_cash  page.parameter.cashState == 0
 //		go.total = total_cash   page.parameter.cashState ==1
-//		go.receive_mode LIKE
-//		go.order_lock_state
-//		and go.province_id page.parameter.provinceId !=-1
-//		go.city_id =#{page.parameter.cityId} page.parameter.cityId
+		//and a.type=#{page.parameter.type}  !=null and page.parameter.type !=-1
 //		go.sale_operator_id in    page.parameter.operType==1
 //		go.operator_id in    page.parameter.operType==2
 //		go.creator_id in    page.parameter.operType==3
-//		go.source_type_id page.parameter.sourceTypeId !=-1
+
 		GroupOrderPageQueryDTO dto=new GroupOrderPageQueryDTO();
 		GroupOrder order=(GroupOrder) pageBean.getParameter();
 		DateFormat fmt =new SimpleDateFormat("yyyy-MM-dd");
 		try {
 		dto.setGoBizId(bizId);
-		dto.setListType(listType);
+		//dto.setListType(listType);
 		dto.setListTypeIds(set);
 		dto.setDateType(order.getDateType());
 		if(!StringUtils.isEmpty(order.getStartTime())){
@@ -65,6 +80,16 @@ public class SaleOrderConverter {
 		dto.setGoCityId(order.getCityId());
 		dto.setOperType(order.getOperType());
 		dto.setGoCreatorId(order.getSaleOperatorIds());
+		
+		dto.setGoProductBrandName(order.getProductBrandName());//散客订单查询新增
+		dto.setGoProductName(order.getProductName());//散客订单查询新增
+		dto.setGoProductBrandId(order.getProductBrandId());//散客订单查询新增
+		dto.setGoState(order.getState());//散客订单查询新增
+		
+		dto.setTourGroupCode(order.getGroupCode());//一地散订单新增
+		dto.setGoOrderBusiness(order.getOrderBusiness());
+		
+		dto.setGoOrderType(order.getOrderType());//锁单管理
 		if(!StringUtils.isEmpty(order.getSourceTypeId())){
 			dto.setGoSourcetypeId(Integer.parseInt(order.getSourceTypeId()));
 		}
@@ -83,6 +108,7 @@ public class SaleOrderConverter {
 	public static PageBean<GroupOrder> dto2PageBean(SolrSearchPageDTO<GroupOrderDTO> solrPageResult,PageBean<GroupOrder> pageBean) {
 			List<GroupOrderDTO> list=solrPageResult.getList();
 			List<GroupOrder> resultList=new ArrayList<GroupOrder>();
+			DateFormat fmt =new SimpleDateFormat("yyyy-MM-dd");
 				for(GroupOrderDTO dto:list){
 					GroupOrder order=new GroupOrder();
 					TourGroup tourGroup=new TourGroup();
@@ -123,6 +149,12 @@ public class SaleOrderConverter {
 					//gl.orderLockState 
 					order.setOrderLockState(dto.getGoOrderLockState());
 					order.setTourGroup(tourGroup);
+					
+					order.setCreateTime(dto.getGoCreateTime());
+					order.setDepartureDate(fmt.format(new Date(dto.getGoDepartureDate())));
+					
+					order.setIncome( new BigDecimal(dto.getPriceMode0()));
+					order.setBudget(new BigDecimal(dto.getPriceMode1()));
 					resultList.add(order);
 				}
 				pageBean.setPageSize(solrPageResult.getPageSize());
@@ -146,78 +178,25 @@ public class SaleOrderConverter {
 		String two = "-1";
 		q_sb.append("-goState:" + "\""+two+"\"");
 		solrQuery.addFilterQuery(q_sb.toString());
-		solrQuery.addFilterQuery("goOrderType:1");
-		solrQuery.addFilterQuery("tourGroupMode:(0 TO *)");
+		//solrQuery.addFilterQuery("goOrderType:0");
 		//go.biz_id = #{bizId,jdbcType=INTEGER}
 		if(queryDTO.getGoBizId()!=null){
 			solrQuery.addFilterQuery("goBizId:" + queryDTO.getGoBizId());
 		}
-		//go.sale_operator_id (listType==0)
-		//go.operator_id in    (listType==1)
-		if(queryDTO.getListType()!=null){
-			Set<Integer> set=queryDTO.getListTypeIds();
-			String idsIn="";
-			if(set!=null&&set.size()>0){
-				for(Integer id:set){
-					idsIn=id+",";
-				}
-				idsIn=idsIn.substring(0,idsIn.length()-1);
-				if(idsIn.contains(",")){
-					
-					idsIn=idsIn.replace("," , " OR ");
-				}
-				if(queryDTO.getListType()==0){
-					solrQuery.addFilterQuery("goSaleOperatorId:(" + idsIn + ")");
-				}else{
-					solrQuery.addFilterQuery("goOperatorId:(" + idsIn + ")");
-				}
+		//go.operator_id in 
+		Set<Integer> set=queryDTO.getListTypeIds();
+		String idsIn="";
+		if(set!=null&&set.size()>0){
+			for(Integer id:set){
+				idsIn=id+",";
+			}
+			idsIn=idsIn.substring(0,idsIn.length()-1);
+			if(idsIn.contains(",")){
 				
+				idsIn=idsIn.replace("," , " OR ");
 			}
+				solrQuery.addFilterQuery("goOperatorId:(" + idsIn + ")");
 			
-		}
-		//tg.date_start  #{page.parameter.startTime} <tg.date_start< #{page.parameter.endTime} page.parameter.dateType == 1
-		//tg.create_time  #{page.parameter.startTime} <tg.date_start< #{page.parameter.endTime} page.parameter.dateType == 2
-		if(queryDTO.getDateType()!=null){
-			String ss="";
-			if(queryDTO.getDateType()==1){
-				ss="tourDateStart";
-			}else if(queryDTO.getDateType()==2){
-				ss="tourCreateTime"; 
-			}
-			String dateQuery="";
-			if(queryDTO.getStartTime()!=null&&queryDTO.getEndTime()!=null){
-				dateQuery="["+queryDTO.getStartTime()+" TO "+queryDTO.getEndTime()+"]";
-			}else if(queryDTO.getStartTime()==null&&queryDTO.getEndTime()!=null){
-				dateQuery="(* TO "+queryDTO.getEndTime()+"]";
-			}else if(queryDTO.getStartTime()!=null&&queryDTO.getEndTime()==null){
-				dateQuery="["+queryDTO.getStartTime()+" TO *)";
-				}
-			if(!StringUtils.isEmpty(dateQuery)){
-				solrQuery.addFilterQuery(ss+":"+dateQuery);
-			}
-		}
-		
-		//tg.group_state 
-		if(queryDTO.getTourGroupState()!=null){
-			solrQuery.addFilterQuery("tourGroupState:" + queryDTO.getTourGroupState());
-		}
-		//go.total != total_cash  page.parameter.cashState == 0
-		//go.total = total_cash   page.parameter.cashState ==1
-		if(queryDTO.getCashState()!=null){
-			if(queryDTO.getCashState()==0){
-				solrQuery.addFilterQuery("-goTotal:goTotalCash");
-			}else if(queryDTO.getCashState()==1){
-				solrQuery.addFilterQuery("goTotal:goTotalCash");
-			}
-			solrQuery.addFilterQuery("tourGroupState:" + queryDTO.getTourGroupState());
-		}
-		//go.receive_mode LIKE
-		if(!StringUtils.isEmpty(queryDTO.getGoReceiveMode())){
-			solrQuery.addFilterQuery("goReceiveMode:*"+queryDTO.getGoReceiveMode()+"*");
-		}
-		//go.order_lock_state
-		if(queryDTO.getGoOrderLockState()!=null){
-			solrQuery.addFilterQuery("goReceiveMode:"+queryDTO.getGoOrderLockState());
 		}
 		//and go.province_id page.parameter.provinceId !=-1
 		if(queryDTO.getGoProvinceId()!=null&&queryDTO.getGoProvinceId()!=-1){
@@ -227,22 +206,19 @@ public class SaleOrderConverter {
 		if(queryDTO.getGoCityId()!=null&&queryDTO.getGoCityId()!=-1){
 			solrQuery.addFilterQuery("goCityId:"+queryDTO.getGoCityId());
 		}
-		//	and tg.group_code LIKE CONCAT('%','${page.parameter.tourGroup.groupCode}','%')
+		//and tg.group_code LIKE CONCAT('%','${page.parameter.tourGroup.groupCode}','%')
 		if(!StringUtils.isEmpty(queryDTO.getTourGroupCode())){
 			solrQuery.addFilterQuery("tourGroupCode:*"+queryDTO.getTourGroupCode()+"*");
 		}
-		//	and go.supplier_name LIKE CONCAT('%','${page.parameter.supplierName}','%')
-		if(!StringUtils.isEmpty(queryDTO.getGoSupplierName())){
-			solrQuery.addFilterQuery("goSupplierName:*"+queryDTO.getGoSupplierName()+"*");
+		//go.receive_mode LIKE
+		if(!StringUtils.isEmpty(queryDTO.getGoReceiveMode())){
+			solrQuery.addFilterQuery("goReceiveMode:*"+queryDTO.getGoReceiveMode()+"*");
 		}
-		//test="page.parameter.tourGroup.productName!=null and page.parameter.tourGroup.productName!=''">
-		//and CONCAT('【',tg.product_brand_name,'】',tg.product_name) LIKE CONCAT('%','${page.parameter.tourGroup.productName}','%')
 		if(!StringUtils.isEmpty(queryDTO.getTourProductName())){
-			solrQuery.addFilterQuery("tourProductName:*"+queryDTO.getTourProductName()+"* OR tourProductBrandName:*"+queryDTO.getTourProductName());
+			solrQuery.addFilterQuery("goProductName:*"+queryDTO.getGoProductName()+"* OR goProductBrandName:*"+queryDTO.getGoProductName()+"*");
 		}
 		//go.sale_operator_id in    page.parameter.operType==1
-		//go.operator_id in    page.parameter.operType==2
-		//go.creator_id in    page.parameter.operType==3
+		//go.operator_id in    page.parameter.operType==0
 		if(queryDTO.getOperType()!=null){
 			String query="";
 			if(!StringUtils.isEmpty(queryDTO.getGoSaleOperatorId())){
@@ -253,23 +229,46 @@ public class SaleOrderConverter {
 				}
 				if(queryDTO.getOperType()==1){
 					solrQuery.addFilterQuery("goSaleOperatorId:("+query+")");
-				}else if(queryDTO.getOperType()==2){
+				}else if(queryDTO.getOperType()==0){
 					solrQuery.addFilterQuery("goOperatorId:("+query+")");
-				}else if(queryDTO.getOperType()==3){
-					solrQuery.addFilterQuery("goCreatorId:("+query+")");
 				}
+			}	
+		}
+		//tg.date_start  #{page.parameter.startTime} <tg.date_start< #{page.parameter.endTime} page.parameter.dateType == 1
+		//tg.create_time  #{page.parameter.startTime} <tg.date_start< #{page.parameter.endTime} page.parameter.dateType == 2
+		if(queryDTO.getDateType()!=null){
+			String ss="";
+			if(queryDTO.getDateType()==1){
+				ss="goDepartureDate";
+			}else if(queryDTO.getDateType()==2){
+				ss="goCreateTime"; 
 			}
-			
+			String dateQuery="";
+			if(queryDTO.getStartTime()!=null&&queryDTO.getEndTime()!=null){
+				dateQuery="["+queryDTO.getStartTime()+" TO queryDTO.getEndTime()]";
+			}else if(queryDTO.getStartTime()==null&&queryDTO.getEndTime()!=null){
+				if(queryDTO.getDateType()==1){
+					dateQuery=queryDTO.getEndTime()+"";
+				}else{
+					dateQuery="(* TO +"+queryDTO.getEndTime()+"]";
+				}
+			}else if(queryDTO.getStartTime()!=null&&queryDTO.getEndTime()==null){
+				if(queryDTO.getDateType()==1){
+					dateQuery=queryDTO.getStartTime()+"";
+				}else{
+					dateQuery="(* TO +"+queryDTO.getStartTime()+"]";
+				}
+				}
+			if(!StringUtils.isEmpty(dateQuery)){
+				solrQuery.addFilterQuery(ss+":"+dateQuery);
+			}
 		}
-		//go.source_type_id page.parameter.sourceTypeId !=-1
-		if(queryDTO.getGoSourcetypeId()!=null&&queryDTO.getGoCityId()!=-1){
-			solrQuery.addFilterQuery("goCityId:"+queryDTO.getGoSourcetypeId());
-		}
-		
-		solrQuery.setParam("sort", "tourDateStart asc");
+		solrQuery.setParam("sort", "goDepartureDate asc");
 		solrQuery.setStart(queryDTO.getStartRow());
 		solrQuery.setRows(queryDTO.getOldPageSize());
 
 		return solrQuery;
 	}
+
+
 }
