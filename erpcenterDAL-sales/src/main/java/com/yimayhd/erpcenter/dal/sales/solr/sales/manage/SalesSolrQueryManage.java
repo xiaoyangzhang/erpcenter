@@ -41,7 +41,7 @@ public class SalesSolrQueryManage  {
 		SolrSearchPageDTO<GroupOrderDTO> pageResult = new SolrSearchPageDTO<GroupOrderDTO>();
 	    SolrQuery solrQuery = FitOrderConverter.queryDTO2SolrQuery(queryDTO);
 	     
-        QueryResponse response =  this.querySolrDataByFilters(SalesCollectionEnum.SALES_GROUPORDER.getCollection(), solrQuery);
+        QueryResponse response =  solrQueryManager.querySolrDataByFilters(SalesCollectionEnum.SALES_GROUPORDER.getCollection(), solrQuery);
         List<GroupOrderDTO> dtoList = response.getBeans(GroupOrderDTO.class);
         
         pageResult.setList(dtoList);
@@ -57,7 +57,7 @@ public class SalesSolrQueryManage  {
 	   SolrSearchPageDTO<GroupOrderDTO> pageResult = new SolrSearchPageDTO<GroupOrderDTO>();
 	   SolrQuery solrQuery = FitOrderConverter.queryDTO2SolrQuery(queryDTO);
 	     
-       QueryResponse response =  this.querySolrDataByFilters(SalesCollectionEnum.SALES_GROUPORDER.getCollection(), solrQuery);
+       QueryResponse response =  solrQueryManager.querySolrDataByFilters(SalesCollectionEnum.SALES_GROUPORDER.getCollection(), solrQuery);
        List<GroupOrderDTO> dtoList = response.getBeans(GroupOrderDTO.class);
        
        pageResult.setList(dtoList);
@@ -72,7 +72,7 @@ public class SalesSolrQueryManage  {
 	  SolrSearchPageDTO<GroupOrderDTO> pageResult = new SolrSearchPageDTO<GroupOrderDTO>();
 	  SolrQuery solrQuery = FitOrderConverter.queryDTO2SolrQuery(queryDTO);
 	     
-      QueryResponse response =  this.querySolrDataByFilters(SalesCollectionEnum.SALES_GROUPORDER.getCollection(), solrQuery);
+      QueryResponse response =  solrQueryManager.querySolrDataByFilters(SalesCollectionEnum.SALES_GROUPORDER.getCollection(), solrQuery);
       List<GroupOrderDTO> dtoList = response.getBeans(GroupOrderDTO.class);
       
       pageResult.setList(dtoList);
@@ -88,7 +88,7 @@ public class SalesSolrQueryManage  {
 		SolrSearchPageDTO<GroupOrderDTO> pageResult = new SolrSearchPageDTO<GroupOrderDTO>();
 		SolrQuery solrQuery = ProfitOrderConverter.queryDTO2SolrQuery(queryDTO);
 		     
-	    QueryResponse response =  this.querySolrDataByFilters(SalesCollectionEnum.SALES_GROUPORDER.getCollection(), solrQuery);
+	    QueryResponse response =  solrQueryManager.querySolrDataByFilters(SalesCollectionEnum.SALES_GROUPORDER.getCollection(), solrQuery);
 	    List<GroupOrderDTO> dtoList = response.getBeans(GroupOrderDTO.class);
 	      
 	    pageResult.setList(dtoList);
