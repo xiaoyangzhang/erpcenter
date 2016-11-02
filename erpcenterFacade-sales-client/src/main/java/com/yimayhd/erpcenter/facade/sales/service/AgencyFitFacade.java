@@ -30,5 +30,5 @@ public interface AgencyFitFacade {
 	List<GroupOrder> toMergeGroup(String[] idArr);
 	ResultSupport insertGroupMany(AgencyOrderQueryDTO queryDTO);
 	PageBean toImpNotGroupList(PageBean pageBean ,Integer bizId,Set<Integer> set);
-	ResultSupport mergeGroup(AgencyOrderQueryDTO queryDTO, MergeGroupOrderVO mergeGroupOrderVO);
+	ResultSupport mergeGroup(AgencyOrderQueryDTO queryDTO, MergeGroupOrderVO mergeGroupOrderVO) throws ParseException;
 }

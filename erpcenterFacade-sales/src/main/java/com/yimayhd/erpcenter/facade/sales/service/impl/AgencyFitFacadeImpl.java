@@ -11,7 +11,6 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.yihg.erp.utils.WebUtils;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
@@ -350,7 +349,7 @@ public class AgencyFitFacadeImpl implements AgencyFitFacade {
 		return bean;
 	}
 	@Override
-	public ResultSupport mergeGroup(AgencyOrderQueryDTO queryDTO, MergeGroupOrderVO mergeGroupOrderVO) {
+	public ResultSupport mergeGroup(AgencyOrderQueryDTO queryDTO, MergeGroupOrderVO mergeGroupOrderVO) throws ParseException {
 		ResultSupport resultSupport = new ResultSupport();
 		List<MergeGroupOrderVO> result = queryDTO.getMergeGroupOrderVOs();
 		List<GroupOrder> orderList = mergeGroupOrderVO.getOrderList();
