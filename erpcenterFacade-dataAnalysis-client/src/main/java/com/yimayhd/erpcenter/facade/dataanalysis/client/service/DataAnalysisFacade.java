@@ -1,6 +1,5 @@
 package com.yimayhd.erpcenter.facade.dataanalysis.client.service;
 
-import java.util.Map;
 import java.util.Set;
 
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.AirTicketDetailQueriesDTO;
@@ -8,6 +7,7 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.query.DeliveryDetailList
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetAgeListByProductDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetAirTicketDetailDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetEmployeeIdsDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetNumAndOrderDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetPaymentDataDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetUserIdsDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.OpearteGroupListDTO;
@@ -164,17 +164,19 @@ public interface DataAnalysisFacade {
 
 	GetAirTicketDetailResult getTrainTicketDetail(GetAirTicketDetailDTO getAirTicketDetailDTO);
 
-	GetNumAndOrderResult searchSupplierByArea(Map map);
-
-	GetNumAndOrderResult findSupplierLevelCode(Map map);
-
 	GetAgeListByProductResult getAgeListByProduct(GetAgeListByProductDTO getAgeListByProductDTO);
-
-	Set<Integer> getUserIdListByOrgIdList(GetUserIdsDTO getUserIdsDTO);
 
 	BookingSupplierDetailListResult getBookingSupplierDetailList(Integer id);
 
 	TranportListResult tranportList(Integer bizId);
 
 	OpearteGroupListResult opearteGroupList(OpearteGroupListDTO opearteGroupListDTO);
+
+	GetNumAndOrderResult getNumAndOrder(GetNumAndOrderDTO getNumAndOrderDTO);
+
+	GetNumAndOrderResult getSupplierOrder(GetNumAndOrderDTO getNumAndOrderDTO);
+
+	GetNumAndOrderResult getSupplierDetails(GetNumAndOrderDTO getNumAndOrderDTO);
+
+	GetNumAndOrderResult getDetail2(GetNumAndOrderDTO getNumAndOrderDTO);
 }
