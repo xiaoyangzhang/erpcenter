@@ -2422,13 +2422,13 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		}
 		if (groupOrder.getDateType() != null && groupOrder.getDateType() == 2) {
 			if (groupOrder.getStartTime() != null) {
-				groupOrder.setStartTime(new SimpleDateFormat("yyyy-MM-dd")
-						.parse(groupOrder.getStartTime()).getTime() + "");
+			//	groupOrder.setStartTime(new SimpleDateFormat("yyyy-MM-dd")
+			//			.parse(groupOrder.getStartTime()).getTime() + "");
 			}
 			if (groupOrder.getEndTime() != null) {
 				Calendar calendar = new GregorianCalendar();
-				calendar.setTime(new SimpleDateFormat("yyyy-MM-dd")
-						.parse(groupOrder.getEndTime()));
+			//	calendar.setTime(new SimpleDateFormat("yyyy-MM-dd")
+			//			.parse(groupOrder.getEndTime()));
 				calendar.add(calendar.DATE, 1);// 把日期往后增加一天.整数往后推,负数往前移动
 				groupOrder.setEndTime(calendar.getTime().getTime() + "");
 			}
@@ -2454,12 +2454,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			}
 		}
 
-		String jsonStr = queryService.getGroupNumStatics(allGroupOrder,dataType);
+		//String jsonStr = queryService.getGroupNumStatics(allGroupOrder,dataType);
 				
 		QueryGroupNumberResult result=new QueryGroupNumberResult();
 		result.setDataType(dataType);
 		result.setGroupOrder(groupOrder);
-		result.setJsonStr(jsonStr);
+	//	result.setJsonStr(jsonStr);
 		
 		return result;
 	}

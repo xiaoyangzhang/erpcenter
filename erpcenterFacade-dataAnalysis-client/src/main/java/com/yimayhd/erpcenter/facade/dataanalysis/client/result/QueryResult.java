@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.facade.dataanalysis.client.result;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.biz.basic.service.CommonBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.InfoBean;
@@ -40,6 +41,15 @@ public class QueryResult extends BaseResult {
     private List<Map<String, Object>> listMap;
     private int planedPersonCount;
     private List<GroupOrder> groupOrders;
+    private Map sum;
+
+    public Map getSum() {
+        return sum;
+    }
+
+    public void setSum(Map sum) {
+        this.sum = sum;
+    }
 
     public String getJson() {
         return json;

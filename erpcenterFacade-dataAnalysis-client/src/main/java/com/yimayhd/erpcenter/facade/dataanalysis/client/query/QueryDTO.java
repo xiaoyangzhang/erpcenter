@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.facade.dataanalysis.client.query;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.DeparentmentOrderCondition;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestCondition;
+import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestShoppingCondition;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
@@ -37,6 +38,16 @@ public class QueryDTO implements Serializable {
     private PageBean pageBean;
     private String citysSupplierIds;
     private String supplierLevel;
+
+    private ProductGuestShoppingCondition productGuestShoppingCondition;
+
+    public ProductGuestShoppingCondition getProductGuestShoppingCondition() {
+        return productGuestShoppingCondition;
+    }
+
+    public void setProductGuestShoppingCondition(ProductGuestShoppingCondition productGuestShoppingCondition) {
+        this.productGuestShoppingCondition = productGuestShoppingCondition;
+    }
 
     private Integer dataType;
 

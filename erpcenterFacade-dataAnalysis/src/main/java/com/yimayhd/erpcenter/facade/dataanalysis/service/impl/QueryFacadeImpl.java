@@ -499,11 +499,66 @@ public class QueryFacadeImpl implements QueryFacade {
     public QueryResult groupProfitExportExcel(QueryDTO queryDTO) {
         QueryResult queryResult = new QueryResult();
         try {
-            queryResult.setUserIdSet(platformEmployeeBiz.getUserIdListByOrgIdList(
-                    queryDTO.getBizId(), queryDTO.getOrgIdSet()));
-            queryResult.setBookingGuides(bookingGuideBiz
-                    .selectGuidesByGroupId(queryDTO.getGroupId()));
-            InfoBean shop = financeBiz.statsShopWithCommInfoBean(queryDTO.getGroupId());
+            PageBean pb = new PageBean();
+            pb.setPage(1);
+            pb.setPageSize(100000);
+            // 如果人员为空并且部门不为空，则取部门下的人id
+            if (StringUtils.isBlank(queryDTO.getGroup().getSaleOperatorIds()) && StringUtils.isNotBlank(queryDTO.getGroup().getOrgIds())) {
+                Set<Integer> set = new HashSet<Integer>();
+                String[] orgIdArr = queryDTO.getGroup().getOrgIds().split(",");
+                for (String orgIdStr : orgIdArr) {
+                    set.add(Integer.valueOf(orgIdStr));
+                }
+                //	set = platformEmployeeService.getUserIdListByOrgIdList(WebUtils.getCurBizId(request), set);
+                set = queryResult.getUserIdSet();
+                String salesOperatorIds = "";
+                for (Integer usrId : set) {
+                    salesOperatorIds += usrId + ",";
+                }
+                if (!salesOperatorIds.equals("")) {
+                    queryDTO.getGroup().setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+                }
+            }
+            Map<String, Object> pms = queryDTO.getParameters();
+            if (null != queryDTO.getGroup().getSaleOperatorIds() && !"".equals(queryDTO.getGroup().getSaleOperatorIds())) {
+                pms.put("operator_id", queryDTO.getGroup().getSaleOperatorIds());
+            }
+            // pms.put("set", WebUtils.getDataUserIdSet(request));
+            pb.setParameter(pms);
+            pb = getCommonService(queryDTO.getSvc()).queryListPage(queryDTO.getSl(), pb);
+            // model.addAttribute("pageBean", pb);
+
+            Map<Integer, String> guideMap = new HashMap<Integer, String>();
+            List<Map> results = pb.getResult();
+            Map item = null;
+            for (int i = 0; i < results.size(); i++) {
+                item = results.get(i);
+                Integer groupId = Integer.parseInt(item.get("id").toString());
+                List<BookingGuide> bookingGuides = bookingGuideBiz.selectGuidesByGroupId(groupId);
+                StringBuffer s = new StringBuffer();
+                for (int j = 0; j < bookingGuides.size(); j++) {
+                    if (j == (bookingGuides.size() - 1)) {
+                        s.append(bookingGuides.get(j).getGuideName());
+                    } else {
+                        s.append(bookingGuides.get(j).getGuideName() + ",");
+                    }
+                }
+                guideMap.put(groupId, s.toString());
+
+                BigDecimal totalIncome = NumberUtil.parseObj2Num(item.get("total_income"));
+                BigDecimal totalCost = NumberUtil.parseObj2Num(item.get("total_cost"));
+
+                // 团收入 = 团收入 - 购物汇总
+                InfoBean shop = financeBiz.statsShopWithCommInfoBean(groupId);
+                totalIncome = totalIncome.subtract(shop.getNum());
+
+                item.put("total_income", totalIncome);
+                item.put("total_profit", totalIncome.subtract(totalCost));
+                item.put("total_cost", totalCost);
+
+            }
+            queryResult.setPageBean(pb);
+            queryResult.setGuideMap(guideMap);
         } catch (Exception e) {
             logger.error("", e);
         }
@@ -581,6 +636,13 @@ public class QueryFacadeImpl implements QueryFacade {
 
             }
             queryResult.setGuideMap(guideMap);
+
+            // 总计查询
+            if (StringUtils.isNotBlank(queryDTO.getSsl())) {
+                Map pm = (Map) pb.getParameter();
+                pm.put("parameter", pm);
+                getCommonService(queryDTO.getSvc()).queryOne(queryDTO.getSsl(), pm);
+            }
         } catch (Exception e) {
             logger.error("", e);
         }
@@ -986,10 +1048,38 @@ public class QueryFacadeImpl implements QueryFacade {
     public QueryResult exportExcel7(QueryDTO queryDTO) {
         QueryResult queryResult = new QueryResult();
         try {
-            List<Map<String, Object>> guestSourceStatics = queryBiz
-                    .guestSourceStatics2(queryDTO.getProductGuestCondition(),
-                            queryDTO.getUserIdSet());
-            queryResult.setListMap(guestSourceStatics);
+
+            if (StringUtils.isBlank(queryDTO.getProductGuestCondition().getOperatorIds()) && StringUtils.isNotBlank(queryDTO.getProductGuestCondition().getOrgIds())) {
+                Set<Integer> set = new HashSet<Integer>();
+                String[] orgIdArr = queryDTO.getProductGuestCondition().getOrgIds().split(",");
+                for (String orgIdStr : orgIdArr) {
+                    set.add(Integer.valueOf(orgIdStr));
+                }
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(queryDTO.getBizId(), set);
+                String salesOperatorIds = "";
+                for (Integer usrId : set) {
+                    salesOperatorIds += usrId + ",";
+                }
+                if (!salesOperatorIds.equals("")) {
+                    queryDTO.getProductGuestCondition().setOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+                }
+            }
+            if (queryDTO.getProductGuestCondition().getStartDate() != null) {
+                queryDTO.getProductGuestCondition().setStartDateNum(queryDTO.getProductGuestCondition().getStartDate().getTime());
+            }
+            if (queryDTO.getProductGuestCondition().getEndDate() != null) {
+                // 添加时间时，结束时间需要加一天
+                queryDTO.getProductGuestCondition().setEndDateNum(DateUtils.addDay(queryDTO.getProductGuestCondition().getEndDate(), 1).getTime());
+            }
+            queryDTO.getProductGuestCondition().setBizId(queryDTO.getBizId());
+            List<Map<String, Object>> guestSourceStatics = queryBiz.guestSourceStatics2(queryDTO.getProductGuestCondition(),
+                    queryDTO.getUserIdSet());
+
+
+          //  List<Map<String, Object>> guestSourceStatics = queryBiz
+           //         .guestSourceStatics2(queryDTO.getProductGuestCondition(),
+           //                 queryDTO.getUserIdSet());
+           queryResult.setListMap(guestSourceStatics);
         } catch (Exception e) {
             logger.error("", e);
         }
@@ -1041,8 +1131,31 @@ public class QueryFacadeImpl implements QueryFacade {
     public QueryResult exportExcel6(QueryDTO queryDTO) {
         QueryResult queryResult = new QueryResult();
         try {
-            List<ProductGuestStaticsVo> productGuestStatics = queryBiz
-                .productGuestStatics2(queryDTO.getProductGuestCondition(),queryDTO.getUserIdSet());
+            if (StringUtils.isBlank(queryDTO.getProductGuestCondition().getOperatorIds()) && StringUtils.isNotBlank(queryDTO.getProductGuestCondition().getOrgIds())) {
+                Set<Integer> set = new HashSet<Integer>();
+                String[] orgIdArr = queryDTO.getProductGuestCondition().getOrgIds().split(",");
+                for (String orgIdStr : orgIdArr) {
+                    set.add(Integer.valueOf(orgIdStr));
+                }
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(queryDTO.getBizId(), set);
+                String salesOperatorIds = "";
+                for (Integer usrId : set) {
+                    salesOperatorIds += usrId + ",";
+                }
+                if (!salesOperatorIds.equals("")) {
+                    queryDTO.getProductGuestCondition().setOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+                }
+            }
+            if (queryDTO.getProductGuestCondition().getStartDate() != null) {
+                queryDTO.getProductGuestCondition().setStartDateNum(queryDTO.getProductGuestCondition().getStartDate().getTime());
+            }
+            if (queryDTO.getProductGuestCondition().getEndDate() != null) {
+                queryDTO.getProductGuestCondition().setEndDateNum(queryDTO.getProductGuestCondition().getEndDate().getTime());
+            }
+            queryDTO.getProductGuestCondition().setBizId(queryDTO.getBizId());
+            List<ProductGuestStaticsVo> productGuestStatics = queryBiz.productGuestStatics2(queryDTO.getProductGuestCondition(),
+                    queryDTO.getUserIdSet());
+
             queryResult.setProductGuestStatics(productGuestStatics);
         } catch (Exception e) {
             logger.error("", e);
@@ -1054,7 +1167,35 @@ public class QueryFacadeImpl implements QueryFacade {
     public QueryResult productGuestSourceShoppingStatics(QueryDTO queryDTO) {
         QueryResult queryResult = new QueryResult();
         try {
-            queryResult.setPageBean(queryBiz.selectProductGuestShopStatics(queryDTO.getPageBean()));
+            if(StringUtils.isBlank(queryDTO.getProductGuestShoppingCondition().getOperatorIds()) && StringUtils.isNotBlank(queryDTO.getProductGuestShoppingCondition().getOrgIds())) {
+                Set<Integer> set = new HashSet<Integer>();
+                String[] orgIdArr = queryDTO.getProductGuestShoppingCondition().getOrgIds().split(",");
+                for (String orgIdStr : orgIdArr) {
+                    set.add(Integer.valueOf(orgIdStr));
+                }
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(queryDTO.getBizId(), set);
+                String operatorIds = "";
+                for (Integer usrId : set) {
+                    operatorIds += usrId + ",";
+                }
+                if (!operatorIds.equals("")) {
+                    queryDTO.getProductGuestShoppingCondition().setOperatorIds(operatorIds.substring(0, operatorIds.length() - 1));
+                }
+            }
+            PageBean pageBean = new PageBean();
+            if (queryDTO.getProductGuestShoppingCondition().getPage() == null) {
+                queryDTO.getProductGuestShoppingCondition().setPage(1);
+            }
+            if (queryDTO.getProductGuestShoppingCondition().getPageSize() == null) {
+                queryDTO.getProductGuestShoppingCondition().setPageSize(Constants.PAGESIZE);
+            }
+            queryDTO.getProductGuestShoppingCondition().setBizId(queryDTO.getBizId());
+            queryDTO.getProductGuestShoppingCondition().setDataRightSet(queryDTO.getUserIdSet());
+            pageBean.setPage(queryDTO.getProductGuestShoppingCondition().getPage());
+            pageBean.setPageSize(queryDTO.getProductGuestShoppingCondition().getPageSize());
+            pageBean.setParameter(queryDTO.getProductGuestShoppingCondition());
+            pageBean = queryBiz.selectProductGuestShopStatics(pageBean);
+            queryResult.setPageBean(pageBean);
         } catch (Exception e) {
             logger.error("", e);
         }
