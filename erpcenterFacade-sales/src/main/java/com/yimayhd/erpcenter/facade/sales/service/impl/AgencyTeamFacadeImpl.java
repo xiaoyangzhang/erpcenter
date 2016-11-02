@@ -24,7 +24,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TeamGroupVO;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
-import com.yimayhd.erpcenter.facade.sales.errorcode.SaleErrorCode;
+import com.yimayhd.erpcenter.facade.sales.errorcode.OperationErrorCode;
 import com.yimayhd.erpcenter.facade.sales.result.AgencyOrderResult;
 import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.sales.result.WebResult;
@@ -91,24 +91,24 @@ public class AgencyTeamFacadeImpl implements AgencyTeamFacade {
 		ResultSupport resultSupport = new ResultSupport();
 		if(financeBiz.hasAuditOrder(groupId)){
 //			return errorJson("该团有已审核的订单,不允许删除！");
-			resultSupport.setErrorCode(SaleErrorCode.UNALLOWED_DELETE_CHECKED_ORDER);
+			resultSupport.setErrorCode(OperationErrorCode.UNALLOWED_DELETE_CHECKED_ORDER);
 			return resultSupport;
 		}
 		
 		if(financeBiz.hasPayOrIncomeRecord(groupId)){
 //			return errorJson("该团有收付款记录,不允许删除！");
-			resultSupport.setErrorCode(SaleErrorCode.UNALLOWED_DELETE_FINANCE_RECORD);
+			resultSupport.setErrorCode(OperationErrorCode.UNALLOWED_DELETE_FINANCE_RECORD);
 			return resultSupport;
 		}
 		if (airTicketRequestBiz.doesOrderhaveRequested(curBizId, orderId)){
 //			return errorJson("删除订单前请先取消机票申请。");
-			resultSupport.setErrorCode(SaleErrorCode.CANCEL_APP);
+			resultSupport.setErrorCode(OperationErrorCode.CANCEL_APP);
 			return resultSupport;
 		}
 		
 		int i = tourGroupBiz.deleteTourGroupById(groupId, orderId);
 		if (i != 1) {
-			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+			resultSupport.setErrorCode(OperationErrorCode.MODIFY_ERROR);
 		}
 		return resultSupport;
 	}

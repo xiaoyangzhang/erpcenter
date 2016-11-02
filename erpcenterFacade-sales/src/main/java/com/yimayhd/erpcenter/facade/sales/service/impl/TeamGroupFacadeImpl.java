@@ -36,7 +36,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TeamGroupVO;
-import com.yimayhd.erpcenter.facade.sales.errorcode.SaleErrorCode;
+import com.yimayhd.erpcenter.facade.sales.errorcode.OperationErrorCode;
 import com.yimayhd.erpcenter.facade.sales.query.CopyTourGroupDTO;
 import com.yimayhd.erpcenter.facade.sales.query.FindTourGroupByConditionDTO;
 import com.yimayhd.erpcenter.facade.sales.query.SaveRequireMentDTO;
@@ -416,7 +416,7 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
 		ResultSupport resultSupport = new ResultSupport();
 		TeamGroupVO saveResult = teamGroupBiz.saveOrUpdateRequirement(vo, curBizId,userName);
 		if (saveResult == null) {
-			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+			resultSupport.setErrorCode(OperationErrorCode.MODIFY_ERROR);
 		}
 		return resultSupport;
 	}

@@ -310,6 +310,16 @@
   				<artifactId>erpcenterFacade-tj-client</artifactId>
 		    	<version>${erpresource.version}</version>
 		    </dependency>
+		    <dependency>
+		    	<groupId>com.yimayhd.erpresource</groupId>
+  				<artifactId>erpcenterFacade-operation</artifactId>
+		    	<version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+		    	<groupId>com.yimayhd.erpresource</groupId>
+  				<artifactId>erpcenterFacade-operation-client</artifactId>
+		    	<version>${project.version}</version>
+		    </dependency>
 
 			<dependency>
 			   <groupId>ledis</groupId>

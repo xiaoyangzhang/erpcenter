@@ -23,7 +23,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupComment;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.FitGroupInfoVO;
-import com.yimayhd.erpcenter.facade.sales.errorcode.SaleErrorCode;
+import com.yimayhd.erpcenter.facade.sales.errorcode.OperationErrorCode;
 import com.yimayhd.erpcenter.facade.sales.query.AgencyOrderQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.result.AgencyOrderResult;
 import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
@@ -73,7 +73,7 @@ public class AgencyFitGroupFacadeImpl implements AgencyFitGroupFacade {
 		ResultSupport resultSupport = new ResultSupport();
 		int updateResult = tourGroupBiz.updateByPrimaryKeySelective(tourGroup);
 		if (updateResult < 1) {
-			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+			resultSupport.setErrorCode(OperationErrorCode.MODIFY_ERROR);
 		}
 		return resultSupport;
 	}
@@ -82,13 +82,13 @@ public class AgencyFitGroupFacadeImpl implements AgencyFitGroupFacade {
 		ResultSupport resultSupport = new ResultSupport();
 		if(financeBiz.hasAuditOrder(groupId)){
 //			return errorJson("该团有已审核的订单,不允许删除！");
-			resultSupport.setErrorCode(SaleErrorCode.UNALLOWED_DELETE_CHECKED_ORDER);
+			resultSupport.setErrorCode(OperationErrorCode.UNALLOWED_DELETE_CHECKED_ORDER);
 			return resultSupport;
 		}
 		
 		if(financeBiz.hasPayOrIncomeRecord(groupId)){
 //			return errorJson("该团有收付款记录,不允许删除！");
-			resultSupport.setErrorCode(SaleErrorCode.UNALLOWED_DELETE_FINANCE_RECORD);
+			resultSupport.setErrorCode(OperationErrorCode.UNALLOWED_DELETE_FINANCE_RECORD);
 			return resultSupport;
 		}
 		tourGroupBiz.delFitTourGroup(groupId);
@@ -173,7 +173,7 @@ public class AgencyFitGroupFacadeImpl implements AgencyFitGroupFacade {
 		ResultSupport resultSupport = new ResultSupport();
 		int updateResult = tourGroupBiz.updateTourGroupComment(bizId, comment);
 		if (updateResult < 1) {
-			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+			resultSupport.setErrorCode(OperationErrorCode.MODIFY_ERROR);
 		}
 		return resultSupport;
 	}

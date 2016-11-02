@@ -41,11 +41,11 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
-import com.yimayhd.erpcenter.facade.sales.errorcode.SaleErrorCode;
-import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
-import com.yimayhd.erpcenter.facade.sales.result.WebResult;
-import com.yimayhd.erpcenter.facade.sales.result.operation.BookingDeliveryResult;
-import com.yimayhd.erpcenter.facade.sales.service.BookingDeliveryFacade;
+import com.yimayhd.erpcenter.facade.operation.errorcode.OperationErrorCode;
+import com.yimayhd.erpcenter.facade.operation.result.BookingDeliveryResult;
+import com.yimayhd.erpcenter.facade.operation.result.ResultSupport;
+import com.yimayhd.erpcenter.facade.operation.result.WebResult;
+import com.yimayhd.erpcenter.facade.operation.service.BookingDeliveryFacade;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.dal.po.SupplierInfo;
 
@@ -138,7 +138,7 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 		BookingDelivery bookingDelivery = JSON.parseObject(bookingStr, BookingDelivery.class);
         if (!tourGroupBiz.checkGroupCanEdit(bookingDelivery.getGroupId())) {
            // return errorJson("该团已审核或封存，不允许修改该信息");
-        	result.setErrorCode(SaleErrorCode.UNABLE_EDIT_ERROR);
+        	result.setErrorCode(OperationErrorCode.UNABLE_EDIT_ERROR);
         	return result;
         }
         if (bookingDelivery.getId() == null) {

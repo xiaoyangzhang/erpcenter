@@ -33,6 +33,7 @@ import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.common.util.NumberUtil;
+import com.yimayhd.erpcenter.dal.sales.client.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
@@ -44,15 +45,14 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingShopDetailDepl
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupPriceAndPersons;
-import com.yimayhd.erpcenter.facade.sales.errorcode.SaleErrorCode;
-import com.yimayhd.erpcenter.facade.sales.query.BookingFinanceShopQueryDTO;
-import com.yimayhd.erpcenter.facade.sales.result.BookingShopResult;
-import com.yimayhd.erpcenter.facade.sales.result.FinanceShopResult;
-import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
-import com.yimayhd.erpcenter.facade.sales.result.operation.BookingFinanceShopFacade;
+import com.yimayhd.erpcenter.facade.operation.errorcode.OperationErrorCode;
+import com.yimayhd.erpcenter.facade.operation.query.BookingFinanceShopQueryDTO;
+import com.yimayhd.erpcenter.facade.operation.result.BookingShopResult;
+import com.yimayhd.erpcenter.facade.operation.result.FinanceShopResult;
+import com.yimayhd.erpcenter.facade.operation.result.ResultSupport;
+import com.yimayhd.erpcenter.facade.operation.service.BookingFinanceShopFacade;
 import com.yimayhd.erpresource.biz.service.ContractBiz;
 import com.yimayhd.erpresource.biz.service.SupplierItemBiz;
-import com.yimayhd.erpresource.dal.constants.Constants;
 import com.yimayhd.erpresource.dal.po.SupplierContractPriceDateInfo;
 import com.yimayhd.erpresource.dal.po.SupplierItem;
 
@@ -261,7 +261,7 @@ public class BookingFinanceShopFacadeImpl implements BookingFinanceShopFacade {
 		}
 		financeBiz.calcTourGroupAmount(groupId);
 		if (delResult < 1) {
-			result.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+			result.setErrorCode(OperationErrorCode.MODIFY_ERROR);
 			
 		}
 		return result;
@@ -272,7 +272,7 @@ public class BookingFinanceShopFacadeImpl implements BookingFinanceShopFacade {
 		ResultSupport resultSupport = new ResultSupport();
 		int insertResult = bookingShopDetailDeployBiz.insertSelective(deployVO);
 		if (insertResult < 1) {
-			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+			resultSupport.setErrorCode(OperationErrorCode.MODIFY_ERROR);
 		}
 		return resultSupport;
 	}
@@ -314,7 +314,7 @@ public class BookingFinanceShopFacadeImpl implements BookingFinanceShopFacade {
 		ResultSupport resultSupport = new ResultSupport();
 		int s = bookingShopDetailDeployBiz.getCountByShopId(bookingId);
 		if(s>0){
-			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+			resultSupport.setErrorCode(OperationErrorCode.MODIFY_ERROR);
 			return resultSupport;
 		}else{
 			BookingShop shop = bookingShopBiz.selectByPrimaryKey(bookingId);

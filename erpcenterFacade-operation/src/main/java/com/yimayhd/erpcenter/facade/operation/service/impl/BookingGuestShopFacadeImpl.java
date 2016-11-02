@@ -16,10 +16,10 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.facade.sales.errorcode.SaleErrorCode;
-import com.yimayhd.erpcenter.facade.sales.result.BookingShopResult;
-import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
-import com.yimayhd.erpcenter.facade.sales.service.BookingGuestShopFacade;
+import com.yimayhd.erpcenter.facade.operation.errorcode.OperationErrorCode;
+import com.yimayhd.erpcenter.facade.operation.result.BookingShopResult;
+import com.yimayhd.erpcenter.facade.operation.result.ResultSupport;
+import com.yimayhd.erpcenter.facade.operation.service.BookingGuestShopFacade;
 
 /**
  * @ClassName: BookingGuestShopFacadeImpl
@@ -42,7 +42,7 @@ public class BookingGuestShopFacadeImpl implements BookingGuestShopFacade {
 		ResultSupport resultSupport = new ResultSupport();
 		int delResult = bookingShopDetailBiz.deleteByPrimaryKey(id);
 		if (delResult < 1) {
-			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+			resultSupport.setErrorCode(OperationErrorCode.MODIFY_ERROR);
 		}
 		return resultSupport;
 	}
@@ -53,7 +53,7 @@ public class BookingGuestShopFacadeImpl implements BookingGuestShopFacade {
 		shopDetail.setType((byte)0);//客人购物录入
 		int saveResult = bookingShopDetailBiz.save(shopDetail);
 		if (saveResult < 1) {
-			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+			resultSupport.setErrorCode(OperationErrorCode.MODIFY_ERROR);
 		}
 		return resultSupport;
 	}
@@ -107,7 +107,7 @@ public class BookingGuestShopFacadeImpl implements BookingGuestShopFacade {
 		ResultSupport resultSupport = new ResultSupport();
 		int delResult = bookingShopBiz.deleteByPrimaryKey(id);
 		if (delResult < 1) {
-			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+			resultSupport.setErrorCode(OperationErrorCode.MODIFY_ERROR);
 		}
 		return resultSupport;
 	}

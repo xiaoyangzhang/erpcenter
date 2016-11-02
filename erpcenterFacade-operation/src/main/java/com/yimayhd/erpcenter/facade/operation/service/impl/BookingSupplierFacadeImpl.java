@@ -47,12 +47,12 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
-import com.yimayhd.erpcenter.facade.sales.errorcode.SaleErrorCode;
-import com.yimayhd.erpcenter.facade.sales.query.BookingDeliveryQueryDTO;
-import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
-import com.yimayhd.erpcenter.facade.sales.result.WebResult;
-import com.yimayhd.erpcenter.facade.sales.result.operation.BookingSupplierResult;
-import com.yimayhd.erpcenter.facade.sales.service.BookingSupplierFacade;
+import com.yimayhd.erpcenter.facade.operation.errorcode.OperationErrorCode;
+import com.yimayhd.erpcenter.facade.operation.query.BookingDeliveryQueryDTO;
+import com.yimayhd.erpcenter.facade.operation.result.BookingSupplierResult;
+import com.yimayhd.erpcenter.facade.operation.result.ResultSupport;
+import com.yimayhd.erpcenter.facade.operation.result.WebResult;
+import com.yimayhd.erpcenter.facade.operation.service.BookingSupplierFacade;
 import com.yimayhd.erpresource.biz.service.ContractBiz;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.biz.service.SupplierItemBiz;
@@ -336,7 +336,7 @@ public class BookingSupplierFacadeImpl implements BookingSupplierFacade {
 			if (bookingSupplier.getGroupId() != null && bookingSupplier.getGroupId() != 0) {
 				if (!tourGroupBiz.checkGroupCanEdit(bookingSupplier.getGroupId())) {
 //					return errorJson("该团已审核或封存，不允许修改该信息");
-					result.setErrorCode(SaleErrorCode.UNABLE_EDIT_ERROR);
+					result.setErrorCode(OperationErrorCode.UNABLE_EDIT_ERROR);
 					return result;
 				}
 			}

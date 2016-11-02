@@ -35,7 +35,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.FitOrderVO;
-import com.yimayhd.erpcenter.facade.sales.errorcode.SaleErrorCode;
+import com.yimayhd.erpcenter.facade.sales.errorcode.OperationErrorCode;
 import com.yimayhd.erpcenter.facade.sales.query.AgencyOrderQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.result.AgencyOrderResult;
 import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
@@ -151,7 +151,7 @@ public class AgencyFitFacadeImpl implements AgencyFitFacade {
 			orderId = fitOrderBiz.saveOrUpdateFitOrderInfo(fitOrderVO,queryDTO.getUserId(),queryDTO.getUserName(),
 					productInfo==null?null:productInfo.getOperatorId(),productInfo==null?"":productInfo.getOperatorName(),queryDTO.getBizId(), queryDTO.getBizCode(), true);
 		} catch (ParseException e) {
-			result.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+			result.setErrorCode(OperationErrorCode.MODIFY_ERROR);
 			return result;
 //			return errorJson("操作失败,请检查后重试！");
 		}
@@ -174,7 +174,7 @@ public class AgencyFitFacadeImpl implements AgencyFitFacade {
 			
 			
 		} catch (Exception e) {
-			result.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+			result.setErrorCode(OperationErrorCode.MODIFY_ERROR);
 			return result;
 //			return errorJson("更新库存失败！");
 		}
@@ -236,7 +236,7 @@ public class AgencyFitFacadeImpl implements AgencyFitFacade {
 	public ResultSupport delGroupOrder(Integer orderId,Integer bizId) {
 		ResultSupport resultSupport = new ResultSupport();
 		if (airTicketRequestBiz.doesOrderhaveRequested(bizId, orderId)) {
-			resultSupport.setErrorCode(SaleErrorCode.CANCEL_APP);
+			resultSupport.setErrorCode(OperationErrorCode.CANCEL_APP);
 			return resultSupport;
 //			return errorJson("删除订单前请先取消机票申请。");
 		}
@@ -260,7 +260,7 @@ public class AgencyFitFacadeImpl implements AgencyFitFacade {
 			}
 			
 		} catch (Exception e) {
-			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+			resultSupport.setErrorCode(OperationErrorCode.MODIFY_ERROR);
 //			return errorJson("更新库存失败！");
 		}
 		return resultSupport;
@@ -291,7 +291,7 @@ public class AgencyFitFacadeImpl implements AgencyFitFacade {
 		TourGroup tourGroup = tourGroupBiz.selectByGroupCode(queryDTO.getCode());
 		if (tourGroup == null) {
 //			return errorJson("未查到该团号对应的散客团信息!");
-			resultSupport.setErrorCode(SaleErrorCode.NOT_FOUND);
+			resultSupport.setErrorCode(OperationErrorCode.NOT_FOUND);
 			return resultSupport;
 		}
 		

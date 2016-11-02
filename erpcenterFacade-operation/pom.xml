@@ -12,7 +12,7 @@
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+  </properties> 
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -36,10 +36,12 @@
 			<groupId>com.yimayhd.erpcenter</groupId>
 			<artifactId>erpcenterBiz-product-client</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>com.yimayhd.erpcenter</groupId>
-			<artifactId>erpcenterFacade-sales-client</artifactId>
-		</dependency>
+			<artifactId>erpcenterFacade-operation-client</artifactId>
+			 <version>0.0.8-SNAPSHOT</version>
+		</dependency> 
 		<dependency>
 			<groupId>com.yimayhd.erpcenter</groupId>
 			<artifactId>erpcenterDAL-sales-client</artifactId>
