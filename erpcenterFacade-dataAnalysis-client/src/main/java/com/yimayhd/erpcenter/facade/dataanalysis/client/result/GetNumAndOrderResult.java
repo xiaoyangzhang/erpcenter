@@ -1,29 +1,46 @@
 package com.yimayhd.erpcenter.facade.dataanalysis.client.result;
 
-import java.util.List;
 import java.util.Map;
 
-import com.yimayhd.erpresource.dal.po.SupplierInfo;
+import com.yihg.mybatis.utility.PageBean;
 
 public class GetNumAndOrderResult extends BaseResult {
-	private static final long serialVersionUID = 3758933455656311638L;
-	private List<Map<String, Integer>> supplierProvince;
+	private static final long serialVersionUID = -6806992765430266609L;
+	private String citysSupplierIds;
+	private String supplierLevel;
 
-	private List<SupplierInfo> supplierLevel;
+	private Map sum;
+	private PageBean pb;
 
-	public List<Map<String, Integer>> getSupplierProvince() {
-		return supplierProvince;
+	public String getCitysSupplierIds() {
+		return citysSupplierIds;
 	}
 
-	public void setSupplierProvince(List<Map<String, Integer>> supplierProvince) {
-		this.supplierProvince = supplierProvince;
+	public void setCitysSupplierIds(String citysSupplierIds) {
+		this.citysSupplierIds = citysSupplierIds;
 	}
 
-	public List<SupplierInfo> getSupplierLevel() {
+	public String getSupplierLevel() {
 		return supplierLevel;
 	}
 
-	public void setSupplierLevel(List<SupplierInfo> supplierLevel) {
+	public void setSupplierLevel(String supplierLevel) {
 		this.supplierLevel = supplierLevel;
+	}
+
+	public Map getSum() {
+		return sum;
+	}
+
+	public void setSum(Map sum) {
+		this.sum = sum;
+	}
+
+	public PageBean getPb() {
+		return pb;
+	}
+
+	public void setPb(PageBean pb) {
+		this.pb = pb;
 	}
 }
