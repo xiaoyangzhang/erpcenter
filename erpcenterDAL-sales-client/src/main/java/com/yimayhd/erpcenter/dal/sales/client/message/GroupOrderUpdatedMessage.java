@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * 
- * 团信息变更消息对象
+ * 团订单信息变更消息对象
  *
  */
 public class GroupOrderUpdatedMessage implements Serializable{

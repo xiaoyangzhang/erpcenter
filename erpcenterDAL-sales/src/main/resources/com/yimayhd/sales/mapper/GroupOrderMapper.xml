@@ -5397,4 +5397,12 @@
 			and now() <![CDATA[> ]]> ext_res_clean_time 
 			and total_cash=0;
   	</select>
+  	
+  	<select id="selectOrderDumpListPage" resultMap="BaseResultMap" 
+    	parameterType="com.yihg.mybatis.utility.PageBean">
+	    select 
+	    <include refid="Base_Column_List"/>
+		from group_order  
+		where state != -1
+	</select>
 </mapper>

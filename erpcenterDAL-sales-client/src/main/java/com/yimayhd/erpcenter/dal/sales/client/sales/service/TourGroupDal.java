@@ -507,4 +507,6 @@ public interface TourGroupDal {
 	void changeGroup(Integer groupId, Integer guideId);
 	
 	List<TourGroup> selecGroupBefAutoMergerGroup(Integer bizId,String startTime,Integer productId);
+	
+	public PageBean<TourGroup> selectTourGroupList(PageBean<TourGroup> pageBean);
 }

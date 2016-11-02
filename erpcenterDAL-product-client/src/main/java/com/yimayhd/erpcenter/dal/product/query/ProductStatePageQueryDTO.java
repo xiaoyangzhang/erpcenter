@@ -7,6 +7,8 @@ import com.yimayhd.erpcenter.common.query.PageQuery;
 
 public class ProductStatePageQueryDTO extends PageQuery implements Serializable{
 
+
+
 	/**
 	 * 
 	 */
@@ -26,7 +28,12 @@ public class ProductStatePageQueryDTO extends PageQuery implements Serializable{
 	private Integer infoOperatorId;//操作计调id
 	private String infoOperatorIds;//操作计调id
 	private String prOrgId;//pr表机构id
-
+	private Integer atObjType;//'1产品2路线'
+	private Integer atType;//'类型:1图片2附件'
+	private String atName;//附件名称
+	private String atPath;//附件路径
+	private Integer infoTravelDays;//行程天数
+	private String tagTagName;//标签name
 	/**
 	 * @return the infoOperatorIds
 	 */
@@ -147,5 +154,78 @@ public class ProductStatePageQueryDTO extends PageQuery implements Serializable{
 	public void setPrOrgId(String prOrgId) {
 		this.prOrgId = prOrgId;
 	}
+	/**
+	 * @return the atObjType
+	 */
+	public Integer getAtObjType() {
+		return atObjType;
+	}
+	/**
+	 * @param atObjType the atObjType to set
+	 */
+	public void setAtObjType(Integer atObjType) {
+		this.atObjType = atObjType;
+	}
+	/**
+	 * @return the atType
+	 */
+	public Integer getAtType() {
+		return atType;
+	}
+	/**
+	 * @param atType the atType to set
+	 */
+	public void setAtType(Integer atType) {
+		this.atType = atType;
+	}
+	/**
+	 * @return the atName
+	 */
+	public String getAtName() {
+		return atName;
+	}
+	/**
+	 * @param atName the atName to set
+	 */
+	public void setAtName(String atName) {
+		this.atName = atName;
+	}
+	/**
+	 * @return the atPath
+	 */
+	public String getAtPath() {
+		return atPath;
+	}
+	/**
+	 * @param atPath the atPath to set
+	 */
+	public void setAtPath(String atPath) {
+		this.atPath = atPath;
+	}
+	/**
+	 * @return the infoTravelDays
+	 */
+	public Integer getInfoTravelDays() {
+		return infoTravelDays;
+	}
+	/**
+	 * @param infoTravelDays the infoTravelDays to set
+	 */
+	public void setInfoTravelDays(Integer infoTravelDays) {
+		this.infoTravelDays = infoTravelDays;
+	}
+	/**
+	 * @return the tagTagName
+	 */
+	public String getTagTagName() {
+		return tagTagName;
+	}
+	/**
+	 * @param tagTagName the tagTagName to set
+	 */
+	public void setTagTagName(String tagTagName) {
+		this.tagTagName = tagTagName;
+	}
+	
 
 }
