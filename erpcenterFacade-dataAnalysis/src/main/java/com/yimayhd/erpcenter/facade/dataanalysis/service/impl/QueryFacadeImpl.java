@@ -15,7 +15,6 @@ import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SysBizBankAccountBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
-import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.common.util.NumberUtil;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
@@ -36,6 +35,8 @@ import com.yimayhd.erpcenter.facade.sales.result.ToChangeGroupResult;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.dal.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import com.yimayhd.erpcenter.common.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -460,10 +461,10 @@ public class QueryFacadeImpl implements QueryFacade {
             Map<Date, Integer> dateMap = new HashMap<Date, Integer>();
             for (int i = 0; i < 7; i++) {
                 dateList.add(DateUtils.format(
-                        org.apache.commons.lang.time.DateUtils.addDays(
+                        DateUtils.addDay(
                                 queryDTO.getCondition().getStartTime(), i), "yyyy-MM-dd"));
                 dateMap.put(
-                        org.apache.commons.lang.time.DateUtils.addDays(
+                       DateUtils.addDay(
                                 queryDTO.getCondition().getStartTime(), i), i);
             }
 
@@ -575,8 +576,8 @@ public class QueryFacadeImpl implements QueryFacade {
             }
             pb.setPageSize(queryDTO.getPageSize());
             // 如果人员为空并且部门不为空，则取部门下的人id
-            if (org.apache.commons.lang.StringUtils.isBlank(queryDTO.getGroup().getSaleOperatorIds())
-                    && org.apache.commons.lang.StringUtils.isNotBlank(queryDTO.getGroup().getOrgIds())) {
+            if (StringUtils.isBlank(queryDTO.getGroup().getSaleOperatorIds())
+                    && StringUtils.isNotBlank(queryDTO.getGroup().getOrgIds())) {
                 Set<Integer> set = new HashSet<Integer>();
                 String[] orgIdArr = queryDTO.getGroup().getOrgIds().split(",");
                 for (String orgIdStr : orgIdArr) {
@@ -649,8 +650,8 @@ public class QueryFacadeImpl implements QueryFacade {
             pb.setPage(1);
             pb.setPageSize(100000);
             // 如果人员为空并且部门不为空，则取部门下的人id
-            if (org.apache.commons.lang.StringUtils.isBlank(queryDTO.getGroup().getSaleOperatorIds())
-                    && org.apache.commons.lang.StringUtils.isNotBlank(queryDTO.getGroup().getOrgIds())) {
+            if (StringUtils.isBlank(queryDTO.getGroup().getSaleOperatorIds())
+                    && StringUtils.isNotBlank(queryDTO.getGroup().getOrgIds())) {
                 Set<Integer> set = new HashSet<Integer>();
                 String[] orgIdArr = queryDTO.getGroup().getOrgIds().split(",");
                 for (String orgIdStr : orgIdArr) {
@@ -732,8 +733,8 @@ public class QueryFacadeImpl implements QueryFacade {
         GuestInfoStatisticsResult guestInfoStatisticsResult = new GuestInfoStatisticsResult();
         try {
             Map parameters = queryDTO.getParameters();
-            if (org.apache.commons.lang.StringUtils.isBlank(queryDTO.getGroupOrder().getSaleOperatorIds())
-                    && org.apache.commons.lang.StringUtils.isNotBlank(queryDTO.getGroupOrder().getOrgIds())) {
+            if (StringUtils.isBlank(queryDTO.getGroupOrder().getSaleOperatorIds())
+                    && StringUtils.isNotBlank(queryDTO.getGroupOrder().getOrgIds())) {
                 Set<Integer> set = new HashSet<Integer>();
                 String[] orgIdArr = queryDTO.getGroupOrder().getOrgIds().split(",");
                 for (String orgIdStr : orgIdArr) {
@@ -791,8 +792,8 @@ public class QueryFacadeImpl implements QueryFacade {
     public QueryResult supplierGuestSourceShop(QueryDTO queryDTO) {
         QueryResult queryResult = new QueryResult();
         try {
-            if (org.apache.commons.lang.StringUtils.isBlank(queryDTO.getGroupOrder().getSaleOperatorIds())
-                    && org.apache.commons.lang.StringUtils.isNotBlank(queryDTO.getGroupOrder().getOrgIds())) {
+            if (StringUtils.isBlank(queryDTO.getGroupOrder().getSaleOperatorIds())
+                    && StringUtils.isNotBlank(queryDTO.getGroupOrder().getOrgIds())) {
                 Set<Integer> set = new HashSet<Integer>();
                 String[] orgIdArr = queryDTO.getGroupOrder().getOrgIds().split(",");
                 for (String orgIdStr : orgIdArr) {
@@ -857,8 +858,8 @@ public class QueryFacadeImpl implements QueryFacade {
             }
             pageBean.setPageSize(queryDTO.getTourGroup().getPageSize());
 
-            if (org.apache.commons.lang.StringUtils.isBlank(queryDTO.getTourGroup().getOperatorIds())
-                    && org.apache.commons.lang.StringUtils.isNotBlank(queryDTO.getTourGroup().getOrgIds())) {
+            if (StringUtils.isBlank(queryDTO.getTourGroup().getOperatorIds())
+                    && StringUtils.isNotBlank(queryDTO.getTourGroup().getOrgIds())) {
                 Set<Integer> set = new HashSet<Integer>();
                 String[] orgIdArr = queryDTO.getTourGroup().getOrgIds().split(",");
                 for (String orgIdStr : orgIdArr) {
@@ -913,8 +914,8 @@ public class QueryFacadeImpl implements QueryFacade {
             }
             pageBean.setPageSize(queryDTO.getGroupOrder().getPageSize());
 
-            if (org.apache.commons.lang.StringUtils.isBlank(queryDTO.getGroupOrder().getSaleOperatorIds())
-                    && org.apache.commons.lang.StringUtils.isNotBlank(queryDTO.getGroupOrder().getOrgIds())) {
+            if (StringUtils.isBlank(queryDTO.getGroupOrder().getSaleOperatorIds())
+                    && StringUtils.isNotBlank(queryDTO.getGroupOrder().getOrgIds())) {
                 Set<Integer> set = new HashSet<Integer>();
                 String[] orgIdArr = queryDTO.getGroupOrder().getOrgIds().split(",");
                 for (String orgIdStr : orgIdArr) {
@@ -933,9 +934,9 @@ public class QueryFacadeImpl implements QueryFacade {
             }
             queryDTO.getGroupOrder().setBizId(queryDTO.getBizId());
             if (queryDTO.getGroupOrder().getDateType() == 1
-                    && org.apache.commons.lang.StringUtils.isNotBlank(queryDTO.getGroupOrder().getEndTime())) {
-                String endTime = org.apache.commons.lang.time.DateFormatUtils
-                        .format(org.apache.commons.lang.time.DateUtils.addDays(
+                    && StringUtils.isNotBlank(queryDTO.getGroupOrder().getEndTime())) {
+                String endTime = DateFormatUtils
+                        .format(DateUtils.addDay(
                                 new SimpleDateFormat("yyyy-MM-dd").parse(queryDTO.getGroupOrder()
                                         .getEndTime()), 1), "yyyy-MM-dd");
                 queryDTO.getGroupOrder().setEndTime(endTime);
@@ -994,8 +995,8 @@ public class QueryFacadeImpl implements QueryFacade {
             }
             pageBean.setPageSize(queryDTO.getGroupOrder().getPageSize());
 
-            if (org.apache.commons.lang.StringUtils.isBlank(queryDTO.getGroupOrder().getSaleOperatorIds())
-                    && org.apache.commons.lang.StringUtils.isNotBlank(queryDTO.getGroupOrder().getOrgIds())) {
+            if (StringUtils.isBlank(queryDTO.getGroupOrder().getSaleOperatorIds())
+                    && StringUtils.isNotBlank(queryDTO.getGroupOrder().getOrgIds())) {
                 Set<Integer> set = new HashSet<Integer>();
                 String[] orgIdArr = queryDTO.getGroupOrder().getOrgIds().split(",");
                 for (String orgIdStr : orgIdArr) {
@@ -1054,8 +1055,8 @@ public class QueryFacadeImpl implements QueryFacade {
     public QueryResult productSourcePreview(QueryDTO queryDTO) {
         QueryResult queryResult = new QueryResult();
         try {
-            if (org.apache.commons.lang.StringUtils.isBlank(queryDTO.getProductGuestCondition().getOperatorIds())
-                    && org.apache.commons.lang.StringUtils.isNotBlank(queryDTO.getProductGuestCondition().getOrgIds())) {
+            if (StringUtils.isBlank(queryDTO.getProductGuestCondition().getOperatorIds())
+                    && StringUtils.isNotBlank(queryDTO.getProductGuestCondition().getOrgIds())) {
                 Set<Integer> set = new HashSet<Integer>();
                 String[] orgIdArr = queryDTO.getProductGuestCondition().getOrgIds().split(",");
                 for (String orgIdStr : orgIdArr) {
@@ -1150,8 +1151,8 @@ public class QueryFacadeImpl implements QueryFacade {
             // request.getAttribute("supplierDetailLevel"));
 
             // 如果人员为空并且部门不为空，则取部门下的人id
-            if (org.apache.commons.lang.StringUtils.isBlank((String) paramters.get("saleOperatorIds"))
-                    && org.apache.commons.lang.StringUtils.isNotBlank((String) paramters.get("orgIds"))) {
+            if (StringUtils.isBlank((String) paramters.get("saleOperatorIds"))
+                    && StringUtils.isNotBlank((String) paramters.get("orgIds"))) {
                 Set<Integer> set = new HashSet<Integer>();
                 String[] orgIdArr = paramters.get("orgIds").toString().split(",");
                 for (String orgIdStr : orgIdArr) {
@@ -1263,7 +1264,7 @@ public class QueryFacadeImpl implements QueryFacade {
      * @return
      */
     private CommonBiz getCommonService(String svc) {
-        if (org.apache.commons.lang.StringUtils.isBlank(svc)) {
+        if (StringUtils.isBlank(svc)) {
             svc = "commonsaleService";
         }
         return appContext.getBean(svc, CommonBiz.class);
