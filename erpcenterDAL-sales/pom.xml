@@ -28,6 +28,14 @@
 	    <artifactId>erpcenter-common</artifactId>
 	</dependency>
 	<dependency>
+		<groupId>com.yimayhd.erpcenter</groupId>
+	    <artifactId>erpcenter-common</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>com.yimayhd.erpresource</groupId>
+	    <artifactId>erpresourceDAL-client</artifactId>
+	</dependency>
+	<dependency>
 		<groupId>log4j</groupId>
 		<artifactId>log4j</artifactId>
 	</dependency>
