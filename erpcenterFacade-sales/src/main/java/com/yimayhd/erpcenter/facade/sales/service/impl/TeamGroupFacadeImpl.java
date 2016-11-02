@@ -2,15 +2,10 @@ package com.yimayhd.erpcenter.facade.sales.service.impl;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +36,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TeamGroupVO;
+import com.yimayhd.erpcenter.facade.sales.errorcode.SaleErrorCode;
 import com.yimayhd.erpcenter.facade.sales.query.CopyTourGroupDTO;
 import com.yimayhd.erpcenter.facade.sales.query.FindTourGroupByConditionDTO;
 import com.yimayhd.erpcenter.facade.sales.query.SaveRequireMentDTO;
@@ -102,83 +98,22 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
 
 
     @Override
-    public FindTourGroupByConditionResult findTourGroupByConditionLoadModel(FindTourGroupByConditionDTO findTourGroupByConditionDTO) {
-        FindTourGroupByConditionResult findTourGroupByConditionResult = new FindTourGroupByConditionResult();
+    public FindTourGroupByConditionResult findTourGroupByConditionLoadModel(FindTourGroupByConditionDTO findTourGroupByConditionDTO,PageBean pageBean) {
+        FindTourGroupByConditionResult result = new FindTourGroupByConditionResult();
         try {
-            PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
-            pageBean.setPageSize(findTourGroupByConditionDTO.getGroupOrder().getPageSize() == null ? Constants.PAGESIZE
-                    : findTourGroupByConditionDTO.getGroupOrder().getPageSize());
-            pageBean.setPage(findTourGroupByConditionDTO.getGroupOrder().getPage());
-
-            // 如果人员为空并且部门不为空，则取部门下的人id
-            if (StringUtils.isBlank(findTourGroupByConditionDTO.getGroupOrder().getSaleOperatorIds())
-                    && StringUtils.isNotBlank(findTourGroupByConditionDTO.getGroupOrder().getOrgIds())) {
-                Set<Integer> set = new HashSet<Integer>();
-                String[] orgIdArr = findTourGroupByConditionDTO.getGroupOrder().getOrgIds().split(",");
-                for (String orgIdStr : orgIdArr) {
-                    set.add(Integer.valueOf(orgIdStr));
-                }
-                set = platformEmployeeBiz.getUserIdListByOrgIdList(
-                        findTourGroupByConditionDTO.getCurBizId(), set);
-                String salesOperatorIds = "";
-                for (Integer usrId : set) {
-                    salesOperatorIds += usrId + ",";
-                }
-                if (!salesOperatorIds.equals("")) {
-                    findTourGroupByConditionDTO.getGroupOrder().setSaleOperatorIds(salesOperatorIds.substring(0,
-                            salesOperatorIds.length() - 1));
-                }
-            }
-            if (findTourGroupByConditionDTO.getGroupOrder().getDateType() != null && findTourGroupByConditionDTO.getGroupOrder().getDateType() == 2) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                if (findTourGroupByConditionDTO.getGroupOrder().getStartTime() != null
-                        && findTourGroupByConditionDTO.getGroupOrder().getStartTime() != "") {
-                    findTourGroupByConditionDTO.getGroupOrder().setStartTime(sdf.parse(findTourGroupByConditionDTO.getGroupOrder().getStartTime())
-                            .getTime() + "");
-                }
-                if (findTourGroupByConditionDTO.getGroupOrder().getEndTime() != null
-                        && findTourGroupByConditionDTO.getGroupOrder().getEndTime() != "") {
-                    Calendar calendar = new GregorianCalendar();
-                    calendar.setTime(sdf.parse(findTourGroupByConditionDTO.getGroupOrder().getEndTime()));
-                    calendar.add(calendar.DATE, 1);// 把日期往后增加一天.整数往后推,负数往前移动
-                    findTourGroupByConditionDTO.getGroupOrder().setEndTime(calendar.getTime().getTime() + "");
-                }
-            }
-            pageBean.setParameter(findTourGroupByConditionDTO.getGroupOrder());
+            
             pageBean = groupOrderBiz.selectByConListPage(pageBean,
                     findTourGroupByConditionDTO.getCurBizId(),
-                    findTourGroupByConditionDTO.getDataUserIdSet(), 0);
-            Integer pageTotalAudit = 0;
-            Integer pageTotalChild = 0;
-            Integer pageTotalGuide = 0;
-            List<GroupOrder> result = pageBean.getResult();
-            if (result != null && result.size() > 0) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                for (GroupOrder groupOrder2 : result) {
-                    if (groupOrder2.getCreateTime() != null) {
-                        Long createTime = groupOrder2.getTourGroup()
-                                .getCreateTime();
-                        String dateStr = sdf.format(createTime);
-                        groupOrder2.getTourGroup().setCreateTimeStr(dateStr);
-                    }
-                    if (groupOrder2.getTourGroup().getUpdateTime() != null) {
-                        Long updateTime = groupOrder2.getTourGroup()
-                                .getUpdateTime();
-                        String dateStr = sdf.format(updateTime);
-                        groupOrder2.getTourGroup().setUpdateTimeStr(dateStr);
-                    } else {
-                        groupOrder2.getTourGroup().setUpdateTimeStr("无");
-                        groupOrder2.getTourGroup().setUpdateName("无");
-                    }
-                    pageTotalAudit += groupOrder2.getNumAdult();
-                    pageTotalChild += groupOrder2.getNumChild();
-                    pageTotalGuide += groupOrder2.getNumGuide();
-                }
-            }
+                    findTourGroupByConditionDTO.getDataUserIdSet(), findTourGroupByConditionDTO.getOperatorType());
+            result.setPageBean(pageBean);
+            GroupOrder order = groupOrderBiz.selectTotalByCon(findTourGroupByConditionDTO.getGroupOrder(),
+            		findTourGroupByConditionDTO.getCurBizId(),
+                    findTourGroupByConditionDTO.getDataUserIdSet(), findTourGroupByConditionDTO.getOperatorType());
+            result.setGroupOrder(order);
         } catch (Exception e) {
             logger.error("获取团队列表数据失败", e);
         }
-        return findTourGroupByConditionResult;
+        return result;
     }
 
     @Override
@@ -474,6 +409,17 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
         }
         return toGroupListResult;
     }
+
+	@Override
+	public ResultSupport saveOrUpdateRequirement(TeamGroupVO vo,
+			Integer curBizId, String userName) {
+		ResultSupport resultSupport = new ResultSupport();
+		TeamGroupVO saveResult = teamGroupBiz.saveOrUpdateRequirement(vo, curBizId,userName);
+		if (saveResult == null) {
+			resultSupport.setErrorCode(SaleErrorCode.MODIFY_ERROR);
+		}
+		return resultSupport;
+	}
 
 
 }

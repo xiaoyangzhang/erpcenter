@@ -16,8 +16,17 @@ public class FindTourGroupByConditionDTO implements Serializable {
     private GroupOrder groupOrder;
     private int CurBizId;
     private Set<Integer> dataUserIdSet;
+    private Integer operatorType;
+    
+    public Integer getOperatorType() {
+		return operatorType;
+	}
 
-    public Set<Integer> getDataUserIdSet() {
+	public void setOperatorType(Integer operatorType) {
+		this.operatorType = operatorType;
+	}
+
+	public Set<Integer> getDataUserIdSet() {
         return dataUserIdSet;
     }
 

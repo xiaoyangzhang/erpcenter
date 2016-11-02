@@ -25,6 +25,10 @@ public class SaleErrorCode implements Serializable {
     public static final SaleErrorCode MODIFY_ERROR = new SaleErrorCode("1005","操作失败");
     public static final SaleErrorCode GUIDE_EXISTED = new SaleErrorCode("1006","该团已安排此导游，不允许重复安排");
     public static final SaleErrorCode CHECKED = new SaleErrorCode("1007","已审核");
+    public static final SaleErrorCode CANCEL_APP = new SaleErrorCode("1008","删除订单前请先取消机票申请。");
+    public static final SaleErrorCode NOT_FOUND = new SaleErrorCode("1009","未查到该团号对应的散客团信息!");
+    public static final SaleErrorCode UNALLOWED_DELETE_CHECKED_ORDER = new SaleErrorCode("1010","该团有已审核的订单,不允许删除！");
+    public static final SaleErrorCode UNALLOWED_DELETE_FINANCE_RECORD = new SaleErrorCode("1011","该团有收付款记录,不允许删除！");
 
 	 public SaleErrorCode() {
 		super();
