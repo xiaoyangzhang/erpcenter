@@ -56,72 +56,21 @@ import java.util.*;
 public class QueryFacadeImpl implements QueryFacade {
     private static final Logger logger = LoggerFactory.getLogger("QueryFacadeImpl");
     @Autowired
-    private BookingSupplierDetailBiz detailService;
-
-    @Autowired
-    private BookingSupplierBiz bookingSupplierService;
-
-    @Autowired
-    private DicBiz dicService;
-
-    @Autowired
-    private TourGroupBiz tourGroupService;
-
-    @Autowired
-    private GroupOrderBiz groupOrderService;
-
-    @Autowired
-    private PlatformEmployeeBiz platformEmployeeService;
-
-    @Autowired
-    private RegionBiz regionService;
-
-    @Autowired
-    private SupplierBiz supplierSerivce;
-
-    @Autowired
-    private BookingShopBiz bookingShopService;
-
-    @Autowired
-    private BookingShopDetailBiz bookingShopDetailService;
-
-    @Autowired
-    private SysBizBankAccountBiz bizBankAccountService;
-
-    @Autowired
-    private BookingGuideBiz bGuideService;
-
-    @Autowired
-    private QueryBiz queryService;
-
-    @Autowired
-    private PlatformOrgBiz orgService;
-
-    @Autowired
-    private BookingShopDetailDeployBiz detailDeployService;
-
-    @Autowired
     private FinanceBiz financeBiz;
-
     @Autowired
-    private ProductGroupPriceBiz groupPriceService;
+    private ProductGroupPriceBiz productGroupPriceBiz;
     @Autowired
     private BookingShopBiz bookingShopBiz;
-
-    @Autowired
-    private BookingGuideBiz bookingGuideService;
     @Autowired
     private QueryBiz queryBiz;
     @Autowired
     private PlatformEmployeeBiz platformEmployeeBiz;
     @Autowired
     private BookingGuideBiz bookingGuideBiz;
-
     @Autowired
     private ApplicationContext appContext;
     @Autowired
     private TourGroupBiz tourGroupBiz;
-
     @Autowired
     private GroupOrderBiz groupOrderBiz;
     @Autowired
@@ -129,11 +78,7 @@ public class QueryFacadeImpl implements QueryFacade {
     @Autowired
     private RegionBiz regionBiz;
     @Autowired
-    private ProductGroupPriceBiz productGroupPriceBiz;
-
-
-
-
+    private PlatformOrgBiz platformOrgBiz;
 
     @Override
     public QueryResult productTrendTableList(QueryDTO queryDTO) {
@@ -147,7 +92,7 @@ public class QueryFacadeImpl implements QueryFacade {
                 for (String orgIdStr : orgIdArr) {
                     set.add(Integer.valueOf(orgIdStr));
                 }
-                set = platformEmployeeService.getUserIdListByOrgIdList(
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(
                         queryDTO.getBizId(), set);
                 String salesOperatorIds = "";
                 for (Integer usrId : set) {
@@ -189,7 +134,7 @@ public class QueryFacadeImpl implements QueryFacade {
             pageBean.setPage(1);
             pageBean.setPageSize(1000000);
 
-            List<GroupOrder> pbInnerLayer = groupOrderService
+            List<GroupOrder> pbInnerLayer = groupOrderBiz
                     .selectProductTrendListPageInnerLayer(pageBean, parameters);
             // List<GroupOrder> goListInnerLayer = pbInnerLayer.getResult();
             for (GroupOrder go : pbInnerLayer) {
@@ -212,7 +157,7 @@ public class QueryFacadeImpl implements QueryFacade {
             pageBeanOutLayer.setParameter(queryDTO.getGroupOrder().getGroupMode());
             pageBeanOutLayer.setPage(queryDTO.getPage());
 
-            PageBean<GroupOrder> pbOutLayer = groupOrderService
+            PageBean<GroupOrder> pbOutLayer = groupOrderBiz
                     .selectProductTrendListPageOutLayer(pageBeanOutLayer,
                             parameters);
             List<GroupOrder> goListOutLayer = pbOutLayer.getResult();
@@ -335,7 +280,7 @@ public class QueryFacadeImpl implements QueryFacade {
         QueryResult queryResult = new QueryResult();
         try {
             // 获取产品品牌信息
-            List<DicInfo> brandList = dicService.getListByTypeCode(
+            List<DicInfo> brandList = dicBiz.getListByTypeCode(
                     BasicConstants.CPXL_PP, queryDTO.getBizId());
             queryResult.setDicInfoList(brandList);
         } catch (Exception e) {
@@ -356,7 +301,7 @@ public class QueryFacadeImpl implements QueryFacade {
                 for (String orgIdStr : orgIdArr) {
                     set.add(Integer.valueOf(orgIdStr));
                 }
-                set = platformEmployeeService.getUserIdListByOrgIdList(
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(
                         queryDTO.getBizId(), set);
                 String OperatorIds = "";
                 for (Integer usrId : set) {
@@ -390,10 +335,10 @@ public class QueryFacadeImpl implements QueryFacade {
                     sets.add(TypeUtils.castToInt(orgIdStr));
                 }
                 // 获取商户二级部门的集合
-                secLevelOrgList = orgService.getOrgListByIdSet(bizId, sets);
+                secLevelOrgList = platformOrgBiz.getOrgListByIdSet(bizId, sets);
             } else {
                 // 获取商户二级部门的集合
-                secLevelOrgList = orgService.getSecLevelOrgList(bizId);
+                secLevelOrgList = platformOrgBiz.getSecLevelOrgList(bizId);
             }
             if (StringUtils.isBlank(queryDTO.getCondition().getOperatorIds())
                     && StringUtils.isNotBlank(queryDTO.getCondition().getOrgIds())) {
@@ -402,7 +347,7 @@ public class QueryFacadeImpl implements QueryFacade {
                 for (String orgIdStr : orgIdArr) {
                     set.add(Integer.valueOf(orgIdStr));
                 }
-                set = platformEmployeeService.getUserIdListByOrgIdList(
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(
                         bizId, set);
                 String OperatorIds = "";
                 for (Integer usrId : set) {
@@ -419,7 +364,7 @@ public class QueryFacadeImpl implements QueryFacade {
                 orgIdList.add(org.getOrgId());
             }
             // 获取当前商户三级部门的集合
-            List<PlatformOrgPo> subLevelOrgList = orgService.getSubLevelOrgList(
+            List<PlatformOrgPo> subLevelOrgList = platformOrgBiz.getSubLevelOrgList(
                     bizId, orgIdList);
             queryResult.setSubLevelOrgList(subLevelOrgList);
             Map<Integer, List<PlatformOrgPo>> orgDepMap = new HashMap<Integer, List<PlatformOrgPo>>();
@@ -448,7 +393,7 @@ public class QueryFacadeImpl implements QueryFacade {
                 queryDTO.getCondition().setStartTimeNum(queryDTO.getCondition().getStartTime().getTime());
                 queryDTO.getCondition().setEndTimeNum(queryDTO.getCondition().getEndTime().getTime());
             }
-            List<DepartmentOrderResult> orderList = groupOrderService
+            List<DepartmentOrderResult> orderList = groupOrderBiz
                     .getDepartmentOrderStatistics(queryDTO.getCondition(),
                             queryDTO.getUserIdSet());
             // 存储部门和其对应的订单信息
@@ -465,7 +410,7 @@ public class QueryFacadeImpl implements QueryFacade {
                                 queryDTO.getCondition().getStartTime(), i), "yyyy-MM-dd"));
                 dateMap.put(
                        DateUtils.addDay(
-                                queryDTO.getCondition().getStartTime(), i), i);
+                               queryDTO.getCondition().getStartTime(), i), i);
             }
 
             Map<Integer, DepartmentOrderVO> deptOrderVoMap = new HashMap<Integer, DepartmentOrderVO>();
@@ -556,7 +501,7 @@ public class QueryFacadeImpl implements QueryFacade {
         try {
             queryResult.setUserIdSet(platformEmployeeBiz.getUserIdListByOrgIdList(
                     queryDTO.getBizId(), queryDTO.getOrgIdSet()));
-            queryResult.setBookingGuides(bookingGuideService
+            queryResult.setBookingGuides(bookingGuideBiz
                     .selectGuidesByGroupId(queryDTO.getGroupId()));
             InfoBean shop = financeBiz.statsShopWithCommInfoBean(queryDTO.getGroupId());
         } catch (Exception e) {
@@ -583,7 +528,7 @@ public class QueryFacadeImpl implements QueryFacade {
                 for (String orgIdStr : orgIdArr) {
                     set.add(Integer.valueOf(orgIdStr));
                 }
-                set = platformEmployeeService.getUserIdListByOrgIdList(
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(
                         queryDTO.getBizId(), set);
                 String salesOperatorIds = "";
                 for (Integer usrId : set) {
@@ -610,7 +555,7 @@ public class QueryFacadeImpl implements QueryFacade {
             for (int i = 0; i < results.size(); i++) {
                 item = results.get(i);
                 Integer groupId = Integer.parseInt(item.get("id").toString());
-                List<BookingGuide> bookingGuides = bookingGuideService
+                List<BookingGuide> bookingGuides = bookingGuideBiz
                         .selectGuidesByGroupId(groupId);
                 StringBuffer s = new StringBuffer();
                 for (int j = 0; j < bookingGuides.size(); j++) {
@@ -657,7 +602,7 @@ public class QueryFacadeImpl implements QueryFacade {
                 for (String orgIdStr : orgIdArr) {
                     set.add(Integer.valueOf(orgIdStr));
                 }
-                set = platformEmployeeService.getUserIdListByOrgIdList(
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(
                         queryDTO.getBizId(), set);
                 String salesOperatorIds = "";
                 for (Integer usrId : set) {
@@ -684,7 +629,7 @@ public class QueryFacadeImpl implements QueryFacade {
             for (int i = 0; i < results.size(); i++) {
                 item = results.get(i);
                 Integer groupId = Integer.parseInt(item.get("id").toString());
-                List<BookingGuide> bookingGuides = bookingGuideService
+                List<BookingGuide> bookingGuides = bookingGuideBiz
                         .selectGuidesByGroupId(groupId);
                 StringBuffer s = new StringBuffer();
                 for (int j = 0; j < bookingGuides.size(); j++) {
@@ -740,7 +685,7 @@ public class QueryFacadeImpl implements QueryFacade {
                 for (String orgIdStr : orgIdArr) {
                     set.add(Integer.valueOf(orgIdStr));
                 }
-                set = platformEmployeeService.getUserIdListByOrgIdList(
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(
                         queryDTO.getBizId(), set);
                 String salesOperatorIds = "";
                 for (Integer usrId : set) {
@@ -774,13 +719,13 @@ public class QueryFacadeImpl implements QueryFacade {
 
             // parameters.put("set", WebUtils.getDataUserIdSet(request));
             // parameters.put("bizId", WebUtils.getCurBizId(request));
-            String jsonSexStr = queryService.getGuestSexInfo(parameters);
+            String jsonSexStr = queryBiz.getGuestSexInfo(parameters);
             guestInfoStatisticsResult.setJsonSexStr(jsonSexStr);
-            String jsonAgeStr = queryService.getGuestAgeInfo(parameters);
+            String jsonAgeStr = queryBiz.getGuestAgeInfo(parameters);
             guestInfoStatisticsResult.setJsonAgeStr(jsonAgeStr);
-            String jsonAirStr = queryService.getGuestAirTimeInfo(parameters);
+            String jsonAirStr = queryBiz.getGuestAirTimeInfo(parameters);
             guestInfoStatisticsResult.setJsonAirStr(jsonAirStr);
-            String jsonSourceStr = queryService.getGuestSouceInfo(parameters);
+            String jsonSourceStr = queryBiz.getGuestSouceInfo(parameters);
             guestInfoStatisticsResult.setJsonSourceStr(jsonSourceStr);
         } catch (Exception e) {
             logger.error("", e);
@@ -799,7 +744,7 @@ public class QueryFacadeImpl implements QueryFacade {
                 for (String orgIdStr : orgIdArr) {
                     set.add(Integer.valueOf(orgIdStr));
                 }
-                set = platformEmployeeService.getUserIdListByOrgIdList(
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(
                         queryDTO.getBizId(), set);
                 String OperatorIds = "";
                 for (Integer usrId : set) {
@@ -822,7 +767,7 @@ public class QueryFacadeImpl implements QueryFacade {
             pageBean.setPageSize(queryDTO.getGroupOrder().getPageSize());
             pageBean.setParameter(queryDTO.getGroupOrder());
 
-            queryResult.setPageBean(queryService.selectSupplierGuestShopStatics(pageBean,
+            queryResult.setPageBean(queryBiz.selectSupplierGuestShopStatics(pageBean,
                     queryDTO.getUserIdSet()));
         } catch (Exception e) {
             logger.error("", e);
@@ -834,7 +779,7 @@ public class QueryFacadeImpl implements QueryFacade {
     public QueryResult supplierGuestSourceShopList() {
         QueryResult queryResult = new QueryResult();
         try {
-            List<RegionInfo> allProvince = regionService.getAllProvince();
+            List<RegionInfo> allProvince = regionBiz.getAllProvince();
             queryResult.setRegionInfoList(allProvince);
         } catch (Exception e) {
             logger.error("", e);
@@ -865,7 +810,7 @@ public class QueryFacadeImpl implements QueryFacade {
                 for (String orgIdStr : orgIdArr) {
                     set.add(Integer.valueOf(orgIdStr));
                 }
-                set = platformEmployeeService.getUserIdListByOrgIdList(
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(
                         queryDTO.getBizId(), set);
                 String OperatorIds = "";
                 for (Integer usrId : set) {
@@ -877,18 +822,18 @@ public class QueryFacadeImpl implements QueryFacade {
                 }
             }
             pageBean.setParameter(queryDTO.getTourGroup());
-            pageBean = tourGroupService.selectTourGroupToQueryListPage(pageBean,
+            pageBean = tourGroupBiz.selectTourGroupToQueryListPage(pageBean,
                     queryDTO.getBizId(),
                     queryDTO.getUserIdSet());
             List<TourGroup> result = pageBean.getResult();
             if (result != null && result.size() > 0) {
                 for (TourGroup tg : result) {
-                    List<BookingGuide> guideList = bookingGuideService
+                    List<BookingGuide> guideList = bookingGuideBiz
                             .selectGuidesByGroupId(tg.getId());
                     tg.setGuideList(guideList);
                 }
             }
-            TourGroup tg = tourGroupService.selectTourGroupToQueryCon(queryDTO.getTourGroup(),
+            TourGroup tg = tourGroupBiz.selectTourGroupToQueryCon(queryDTO.getTourGroup(),
                     queryDTO.getBizId(),
                     queryDTO.getUserIdSet());
             queryResult.setPageBean(pageBean);
@@ -921,7 +866,7 @@ public class QueryFacadeImpl implements QueryFacade {
                 for (String orgIdStr : orgIdArr) {
                     set.add(Integer.valueOf(orgIdStr));
                 }
-                set = platformEmployeeService.getUserIdListByOrgIdList(
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(
                         queryDTO.getBizId(), set);
                 String salesOperatorIds = "";
                 for (Integer usrId : set) {
@@ -942,10 +887,10 @@ public class QueryFacadeImpl implements QueryFacade {
                 queryDTO.getGroupOrder().setEndTime(endTime);
             }
             pageBean.setParameter(queryDTO.getGroupOrder());
-            Map<String, Object> sum = groupOrderService
+            Map<String, Object> sum = groupOrderBiz
                     .getDeservedCashGroupByOrderIdTotal(pageBean,
                             queryDTO.getUserIdSet());
-            pageBean = groupOrderService.getDeservedCashGroupByOrderId(pageBean,
+            pageBean = groupOrderBiz.getDeservedCashGroupByOrderId(pageBean,
                     queryDTO.getUserIdSet());
 		/*
 		 * List<GroupOrder> result = pageBean.getResult(); Map parameters=new
@@ -1002,7 +947,7 @@ public class QueryFacadeImpl implements QueryFacade {
                 for (String orgIdStr : orgIdArr) {
                     set.add(Integer.valueOf(orgIdStr));
                 }
-                set = platformEmployeeService.getUserIdListByOrgIdList(
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(
                         queryDTO.getBizId(), set);
                 String salesOperatorIds = "";
                 for (Integer usrId : set) {
@@ -1014,7 +959,7 @@ public class QueryFacadeImpl implements QueryFacade {
                 }
             }
             pageBean.setParameter(queryDTO.getGroupOrder());
-            pageBean = groupOrderService.selectOrderByParameterListPage(pageBean,
+            pageBean = groupOrderBiz.selectOrderByParameterListPage(pageBean,
                     queryDTO.getBizId(),
                     queryDTO.getUserIdSet());
             List<GroupOrder> result = pageBean.getResult();
@@ -1024,7 +969,7 @@ public class QueryFacadeImpl implements QueryFacade {
                     Integer supplierId = result.get(i).getSupplierId();
                     parameters.put("supplierId", supplierId);
                     // parameters.put("set", WebUtils.getDataUserIdSet(request));
-                    List<GroupOrder> orders = groupOrderService
+                    List<GroupOrder> orders = groupOrderBiz
                             .selectOrderByParameter2(parameters);
                     result.get(i).setOrderList(orders);
                     result.get(i).setRowSpan(orders.size());
@@ -1096,7 +1041,7 @@ public class QueryFacadeImpl implements QueryFacade {
     public QueryResult exportExcel6(QueryDTO queryDTO) {
         QueryResult queryResult = new QueryResult();
         try {
-            List<ProductGuestStaticsVo> productGuestStatics = queryService
+            List<ProductGuestStaticsVo> productGuestStatics = queryBiz
                 .productGuestStatics2(queryDTO.getProductGuestCondition(),queryDTO.getUserIdSet());
             queryResult.setProductGuestStatics(productGuestStatics);
         } catch (Exception e) {
@@ -1120,7 +1065,7 @@ public class QueryFacadeImpl implements QueryFacade {
     public QueryResult productGuestSourceShoppingList() {
         QueryResult queryResult = new QueryResult();
         try {
-            List<RegionInfo> allProvince = regionService.getAllProvince();
+            List<RegionInfo> allProvince = regionBiz.getAllProvince();
             queryResult.setRegionInfoList(allProvince);
         } catch (Exception e) {
             logger.error("", e);
@@ -1158,7 +1103,7 @@ public class QueryFacadeImpl implements QueryFacade {
                 for (String orgIdStr : orgIdArr) {
                     set.add(Integer.valueOf(orgIdStr));
                 }
-                set = platformEmployeeService.getUserIdListByOrgIdList(
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(
                         queryDTO.getBizId(), set);
                 String salesOperatorIds = "";
                 for (Integer usrId : set) {
@@ -1227,7 +1172,7 @@ public class QueryFacadeImpl implements QueryFacade {
                 queryDTO.getProductGuestCondition().setEndDateNum(DateUtils.addDay(
                         queryDTO.getProductGuestCondition().getEndDate(), 1).getTime());
             }
-            String jsonStr = queryService.guestSourceStatics(queryDTO.getProductGuestCondition(),
+            String jsonStr = queryBiz.guestSourceStatics(queryDTO.getProductGuestCondition(),
                     queryDTO.getUserIdSet());
             queryResult.setJson(jsonStr);
         } catch (Exception e) {
