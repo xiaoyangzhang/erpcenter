@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.alibaba.fastjson.util.TypeUtils;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.CommonBiz;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
@@ -47,6 +49,7 @@ import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SysBizBankAccountBiz;
+import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay;
@@ -55,8 +58,10 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopSelect;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.GroupBookingInfo;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.PaymentExportVO;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryShopInfo;
+import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestCondition;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.OperatorGroupStatic;
@@ -73,8 +78,10 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetAirTicketDetail
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetEmployeeIdsDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetNumAndOrderDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetPaymentDataDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GroupOrderDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.OpearteGroupListDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.PaymentStaticPreviewDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ProductGuestConditionDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.SaleOperatorExcelDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ShopInfoDetailDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ShopSelectListDTO;
@@ -85,6 +92,7 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToSaleOperatorPrev
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.AirTicketDetailQueriesResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.AllProvinceResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.BookingSupplierDetailListResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.DataAnalysisWebResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.DeliveryDetailListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetAgeListByProductResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetAirTicketDetailResult;
@@ -1954,4 +1962,736 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		
 		return result;
 	}
+	
+	
+	@Override
+	public DataAnalysisWebResult<Map<String, Object>> groupBookingList(
+			ShopSelectListDTO shopSelectListDTO) {
+
+		DataAnalysisWebResult<Map<String, Object>> webReuslt = new DataAnalysisWebResult<Map<String, Object>>();
+		
+		try{
+			Map<String, Object> rMap = new HashMap<String, Object>();
+			TourGroupVO tourGroup = shopSelectListDTO.getGroup();
+			PageBean pageBean = new PageBean();
+			if (tourGroup.getPage() == null) {
+				tourGroup.setPage(1);
+			} else {
+				pageBean.setPage(tourGroup.getPage());
+			}
+			if (tourGroup.getPageSize() == null) {
+				pageBean.setPageSize(Constants.PAGESIZE);
+			} else {
+				pageBean.setPageSize(tourGroup.getPageSize());
+			}
+
+			if (tourGroup != null
+					&& StringUtils.isNotEmpty(tourGroup.getReceiveMode())) {
+				if (tourGroup.getGroupMode() != null
+						&& tourGroup.getGroupMode().intValue() == 0) {
+					// 如果为散客，输入接站牌查询为空
+					pageBean.setResult(null);
+					rMap.put("pageBean", pageBean);
+					webReuslt.setSuccess(true);
+					webReuslt.setValue(rMap);
+					return webReuslt;
+				}
+			}
+
+			Integer bizId =shopSelectListDTO.getBizId();
+			if (StringUtils.isBlank(tourGroup.getSaleOperatorIds())
+					&& StringUtils.isNotBlank(tourGroup.getOrgIds())) {
+				Set<Integer> set = new HashSet<Integer>();
+				String[] orgIdArr = tourGroup.getOrgIds().split(",");
+				for (String orgIdStr : orgIdArr) {
+					set.add(Integer.valueOf(orgIdStr));
+				}
+				set = platformEmployeeService.getUserIdListByOrgIdList(
+						bizId, set);
+				String salesOperatorIds = "";
+				for (Integer usrId : set) {
+					salesOperatorIds += usrId + ",";
+				}
+				if (!salesOperatorIds.equals("")) {
+					tourGroup.setSaleOperatorIds(salesOperatorIds.substring(0,
+							salesOperatorIds.length() - 1));
+				}
+			}
+			
+			tourGroup.setBizId(bizId);
+			pageBean.setParameter(tourGroup);
+
+			List<Map<String, Object>> mapList = groupOrderService
+					.selectGroupIdsByReceiveMode(tourGroup);
+			if (mapList != null && mapList.size() > 0) {
+				Set<Integer> groupIdSet = new HashSet<Integer>();
+				for (Map<String, Object> map : mapList) {
+					groupIdSet.add(TypeUtils.castToInt(map.get("group_id")));
+				}
+				if (groupIdSet.size() == 0) {
+					groupIdSet.add(-1);
+				}
+				tourGroup.setGroupIdSet(groupIdSet);
+			}
+
+			Set<Integer> set = shopSelectListDTO.getUserIdSet();
+//			Set<Integer> set = WebUtils.getDataUserIdSet(request);
+			pageBean = queryService
+					.selectGroupBookingListPage(pageBean, bizId, set);
+			List result = pageBean.getResult();
+			if (result != null && result.size() > 0) {
+
+				GroupBookingInfo bookingInfo = null;
+				StringBuilder groupIds = new StringBuilder();
+				for (int i = 0; i < result.size(); i++) {
+					if (i > 0) {
+						groupIds.append(",");
+					}
+					bookingInfo = (GroupBookingInfo) result.get(i);
+					groupIds.append(bookingInfo.getGroupId());
+				}
+
+				String groupIdStr = groupIds.toString();
+
+				List<Map<String, Object>> sightList = queryService
+						.selectBookingSupplierCountForGroups(groupIdStr,
+								Constants.SCENICSPOT, tourGroup.getSupplierName());
+				List<Map<String, Object>> hotelList = queryService
+						.selectBookingSupplierCountForGroups(groupIdStr,
+								Constants.HOTEL, tourGroup.getSupplierName());
+				List<Map<String, Object>> eatList = queryService
+						.selectBookingSupplierCountForGroups(groupIdStr,
+								Constants.RESTAURANT, tourGroup.getSupplierName());
+				List<Map<String, Object>> carList = queryService
+						.selectBookingSupplierCountForGroups(groupIdStr,
+								Constants.FLEET, tourGroup.getSupplierName());
+				List<Map<String, Object>> airList = queryService
+						.selectBookingSupplierCountForGroups(groupIdStr,
+								Constants.AIRTICKETAGENT,
+								tourGroup.getSupplierName());
+				List<Map<String, Object>> trainList = queryService
+						.selectBookingSupplierCountForGroups(groupIdStr,
+								Constants.TRAINTICKETAGENT,
+								tourGroup.getSupplierName());
+				List<Map<String, Object>> insuranceList = queryService
+						.selectBookingSupplierCountForGroups(groupIdStr,
+								Constants.INSURANCE, tourGroup.getSupplierName());
+				List<Map<String, Object>> shopList = queryService
+						.selectBookingShopCountForGroups(groupIdStr,
+								tourGroup.getSupplierName());
+				List<Map<String, Object>> inList = queryService
+						.selectBookingSupplierCountForGroups(groupIdStr,
+								Constants.OTHERINCOME, tourGroup.getSupplierName());
+				List<Map<String, Object>> outList = queryService
+						.selectBookingSupplierCountForGroups(groupIdStr,
+								Constants.OTHEROUTCOME, tourGroup.getSupplierName());
+
+				List<Map<String, Object>> guideList = queryService
+						.selectBookingGuideForGroups(groupIdStr,
+								tourGroup.getSupplierName());
+				List<Map<String, Object>> deliveryList = queryService
+						.selectBookingDeliveryForGroups(groupIdStr,
+								tourGroup.getSupplierName());
+
+				for (int i = 0; i < result.size(); i++) {
+					bookingInfo = (GroupBookingInfo) result.get(i);
+					Integer groupId = bookingInfo.getGroupId();
+					bookingInfo.setSightCnt(getCountByGroupId(sightList, groupId));
+					bookingInfo.setHotelCnt(getCountByGroupId(hotelList, groupId));
+					bookingInfo.setEatCnt(getCountByGroupId(eatList, groupId));
+					bookingInfo.setCarCnt(getCountByGroupId(carList, groupId));
+					bookingInfo.setAirCnt(getCountByGroupId(airList, groupId));
+					bookingInfo.setTrainCnt(getCountByGroupId(trainList, groupId));
+					bookingInfo.setInsuranceCnt(getCountByGroupId(insuranceList,
+							groupId));
+					bookingInfo.setShopCnt(getCountByGroupId(shopList, groupId));
+					bookingInfo.setInCnt(getCountByGroupId(inList, groupId));
+					bookingInfo.setOutCnt(getCountByGroupId(outList, groupId));
+					bookingInfo
+							.setGuideNames(getNamesByGroupId(guideList, groupId));
+					bookingInfo.setDeliveryNames(getNamesByGroupId(deliveryList,
+							groupId));
+				}
+			}
+
+			rMap.put("pageBean", pageBean);
+			rMap.put("sum", queryService.getPersonCount(pageBean, bizId, set));
+			webReuslt.setSuccess(true);
+			webReuslt.setValue(rMap);
+		}catch (Exception e) {
+			webReuslt.setSuccess(false);
+			webReuslt.setError(e.getMessage());
+		}
+		
+		return webReuslt;
+	}
+
+	private Integer getCountByGroupId(List<Map<String, Object>> list,
+			Integer groupId) {
+		if (list == null || list.size() == 0 || groupId == null) {
+			return 0;
+		}
+
+		Map<String, Object> map = null;
+		for (int i = 0; i < list.size(); i++) {
+			map = list.get(i);
+			Integer mapGroupId = (Integer) map.get("group_id");
+			if (mapGroupId == null) {
+				continue;
+			}
+			if (groupId.intValue() == mapGroupId.intValue()) {
+				return Integer.parseInt(map.get("count").toString());
+			}
+		}
+		return 0;
+	}
+
+	private String getNamesByGroupId(List<Map<String, Object>> list,
+			Integer groupId) {
+		if (list == null || list.size() == 0 || groupId == null) {
+			return null;
+		}
+
+		Map<String, Object> map = null;
+		for (int i = 0; i < list.size(); i++) {
+			map = list.get(i);
+			Integer mapGroupId = (Integer) map.get("group_id");
+			if (mapGroupId == null) {
+				continue;
+			}
+			if (groupId.intValue() == mapGroupId.intValue()) {
+				return map.get("bookSupplierName").toString();
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public DataAnalysisWebResult<PageBean> groupInfoList(ShopSelectListDTO shopSelectListDTO) {
+		DataAnalysisWebResult<PageBean> webResult = new DataAnalysisWebResult<PageBean>();
+		try{
+			TourGroupVO tourGroup = shopSelectListDTO.getGroup();
+			PageBean pageBean = new PageBean();
+			if (tourGroup.getPage() == null) {
+				tourGroup.setPage(1);
+			} else {
+				pageBean.setPage(tourGroup.getPage());
+			}
+			if (tourGroup.getPageSize() == null) {
+				pageBean.setPageSize(Constants.PAGESIZE);
+			} else {
+				pageBean.setPageSize(tourGroup.getPageSize());
+			}
+			if (StringUtils.isBlank(tourGroup.getSaleOperatorIds())
+					&& StringUtils.isNotBlank(tourGroup.getOrgIds())) {
+				Set<Integer> set = new HashSet<Integer>();
+				String[] orgIdArr = tourGroup.getOrgIds().split(",");
+				for (String orgIdStr : orgIdArr) {
+					set.add(Integer.valueOf(orgIdStr));
+				}
+				set = platformEmployeeService.getUserIdListByOrgIdList(
+						shopSelectListDTO.getBizId(), set);
+				String salesOperatorIds = "";
+				for (Integer usrId : set) {
+					salesOperatorIds += usrId + ",";
+				}
+				if (!salesOperatorIds.equals("")) {
+					tourGroup.setSaleOperatorIds(salesOperatorIds.substring(0,
+							salesOperatorIds.length() - 1));
+				}
+			}
+			pageBean.setParameter(tourGroup);
+			tourGroup.setBizId(shopSelectListDTO.getBizId());
+			pageBean = tourGroupService.getGroupInfoList(pageBean, tourGroup,
+					shopSelectListDTO.getUserIdSet());
+			webResult.setSuccess(true);
+			webResult.setValue(pageBean);
+		}catch (Exception e) {
+			webResult.setSuccess(false);
+			webResult.setError(e.getMessage());
+		}
+		
+
+		return webResult;
+
+	}
+
+	/**
+	 * 子公司未收债务查询页面
+	 * 
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@Override
+	public DataAnalysisWebResult<Map<String, Object>> toSubsidiaryDebt() {
+		
+		DataAnalysisWebResult<Map<String, Object>> webResult = new DataAnalysisWebResult<Map<String, Object>>();
+		try{
+			Map<String, Object> rMap = new HashMap<String, Object>();
+			/**
+			 * 昆明乐景旅行社有限公司 1-3- 昆明乐美旅行社有限公司 1-47- 昆明悦享旅行社有限公司 1-5- 昆明优派旅行社有限公司 1-4-
+			 * 昆明乐途旅行社有限公司 1-6-
+			 */
+			String lj = platformEmployeeService.findByOrgPath("1-3-");
+			String lm = platformEmployeeService.findByOrgPath("1-47-");
+			String yx = platformEmployeeService.findByOrgPath("1-5-");
+			String yp = platformEmployeeService.findByOrgPath("1-4-");
+			String llt = platformEmployeeService.findByOrgPath("1-6-");
+			if ("".equals(lj)) {
+				lj = "11111";
+			}
+			if ("".equals(lm)) {
+				lm = "11111";
+			}
+			if ("".equals(yx)) {
+				yx = "11111";
+			}
+			if ("".equals(yp)) {
+				yp = "11111";
+			}
+			if ("".equals(llt)) {
+				llt = "11111";
+			}
+
+			rMap.put("llt", llt);
+			rMap.put("yp", yp);
+			rMap.put("yx", yx);
+			rMap.put("lm", lm);
+			rMap.put("lj", lj);
+			
+			webResult.setValue(rMap);
+			webResult.setSuccess(true);
+			
+		}catch (Exception e) {
+			webResult.setSuccess(false);
+			webResult.setError(e.getMessage());
+		}
+		return webResult;
+		
+	}
+
+	@Override
+	public  DataAnalysisWebResult<Map<String, Object>> toSubsidiaryDebt(String sl, String ssl,
+			String rp, Integer page, Integer pageSize, String svc,
+			ShopSelectListDTO shopSelectListDTO,Map<String, Object> pms) {
+
+		
+		DataAnalysisWebResult<Map<String, Object>> webResult = new DataAnalysisWebResult<Map<String, Object>>();
+		try{
+			Map<String, Object> rMap = new HashMap<String, Object>();
+			PageBean pb = new PageBean();
+			pb.setPage(page);
+			if (pageSize == null) {
+				pageSize = Constants.PAGESIZE;
+			}
+			pb.setPageSize(pageSize);
+			// 如果人员为空并且部门不为空，则取部门下的人id
+			TourGroupVO group =  shopSelectListDTO.getGroup();
+			if (StringUtils.isBlank(group.getSaleOperatorIds())
+					&& StringUtils.isNotBlank(group.getOrgIds())) {
+				Set<Integer> set = new HashSet<Integer>();
+				String[] orgIdArr = group.getOrgIds().split(",");
+				for (String orgIdStr : orgIdArr) {
+					set.add(Integer.valueOf(orgIdStr));
+				}
+				set = platformEmployeeService.getUserIdListByOrgIdList(
+						shopSelectListDTO.getBizId(), set);
+				String salesOperatorIds = "";
+				for (Integer usrId : set) {
+					salesOperatorIds += usrId + ",";
+				}
+				if (!salesOperatorIds.equals("")) {
+					group.setSaleOperatorIds(salesOperatorIds.substring(0,
+							salesOperatorIds.length() - 1));
+				}
+			}
+			if (null != group.getSaleOperatorIds()
+					&& !"".equals(group.getSaleOperatorIds())) {
+				pms.put("operatorIds", group.getSaleOperatorIds());
+			}
+			// pms.put("set", WebUtils.getDataUserIdSet(request));
+			pb.setParameter(pms);
+			pb = getCommonService(svc).queryListPage(sl, pb);
+			rMap.put("pageBean", pb);
+			if (StringUtils.isNotBlank(ssl)) {
+				Map pm = (Map) pb.getParameter();
+				pm.put("parameter", pm);
+//				model.addAttribute("sum", getCommonService(svc).queryOne(ssl, pm));
+				rMap.put("sum", getCommonService(svc).queryOne(ssl, pm));
+			}
+			
+			webResult.setValue(rMap);
+			webResult.setSuccess(true);
+			
+		}catch (Exception e) {
+			webResult.setSuccess(false);
+			webResult.setError(e.getMessage());
+		}
+		return webResult;
+	}
+
+
+	/* 购物统计-产品 */
+	@Override
+	public DataAnalysisWebResult<List<DicInfo>> toProductList(String typecode,Integer bizId) {
+
+		
+		DataAnalysisWebResult<List<DicInfo>> webResult = new DataAnalysisWebResult<List<DicInfo>>();
+		try{
+			// 产品品牌下拉列表数据
+			List<DicInfo> pp = dicService.getListByTypeCode(typecode,bizId);
+			webResult.setValue(pp);
+			webResult.setSuccess(true);
+			
+		}catch (Exception e) {
+			webResult.setSuccess(false);
+			webResult.setError(e.getMessage());
+		}
+		return webResult;
+		
+	}
+
+
+
+	@Override
+	public DataAnalysisWebResult<String> productGuestStatics(ProductGuestConditionDTO productGuestConditionDTO) {
+		
+		DataAnalysisWebResult<String> webResult = new DataAnalysisWebResult<String>();
+		try{
+			ProductGuestCondition condition = productGuestConditionDTO.getProductGuestCondition();
+			if (StringUtils.isBlank(condition.getOperatorIds())
+					&& StringUtils.isNotBlank(condition.getOrgIds())) {
+				Set<Integer> set = new HashSet<Integer>();
+				String[] orgIdArr = condition.getOrgIds().split(",");
+				for (String orgIdStr : orgIdArr) {
+					set.add(Integer.valueOf(orgIdStr));
+				}
+				set = platformEmployeeService.getUserIdListByOrgIdList(
+						productGuestConditionDTO.getBizId(), set);
+				String salesOperatorIds = "";
+				for (Integer usrId : set) {
+					salesOperatorIds += usrId + ",";
+				}
+				if (!salesOperatorIds.equals("")) {
+					condition.setOperatorIds(salesOperatorIds.substring(0,
+							salesOperatorIds.length() - 1));
+				}
+			}
+			condition.setBizId(productGuestConditionDTO.getBizId());
+			String jsonStr = queryProductGuestStatics(condition,productGuestConditionDTO.getUserIdSet());
+			webResult.setValue(jsonStr);
+			webResult.setSuccess(true);
+			
+		}catch (Exception e) {
+			webResult.setSuccess(false);
+			webResult.setError(e.getMessage());
+		}
+		return webResult;
+		
+		
+	}
+
+	private String queryProductGuestStatics(ProductGuestCondition condition, Set<Integer> userIdSet) {
+
+		if (condition.getDateType() != null && condition.getDateType() == 1) {
+			if (!"".equals(condition.getStartDate())) {
+				condition.setStartDateNum(condition.getStartDate().getTime());
+			}
+			if (!"".equals(condition.getEndDate())) {
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(condition.getEndDate());
+				calendar.add(Calendar.DAY_OF_MONTH, +1);// 让日期加1
+				condition.setEndDateNum(calendar.getTime().getTime());
+			}
+		}
+
+		String jsonStr = queryService.productGuestStatics(condition,
+				userIdSet);
+		return jsonStr;
+	}
+
+	@Override
+	public DataAnalysisWebResult<Map<String, Object>> queryGroupNumber(GroupOrderDTO groupOrderDTO, Integer type, Integer dataType){
+
+		DataAnalysisWebResult<Map<String, Object>> webResult = new DataAnalysisWebResult<Map<String, Object>>();
+		try{
+			GroupOrder groupOrder = groupOrderDTO.getGroupOrder();
+			Map<String, Object> rMap = new HashMap<String, Object>();
+			// 如果人员为空并且部门不为空，则取部门下的人id
+			if (StringUtils.isBlank(groupOrder.getSaleOperatorIds())
+					&& StringUtils.isNotBlank(groupOrder.getOrgIds())) {
+				Set<Integer> set = new HashSet<Integer>();
+				String[] orgIdArr = groupOrder.getOrgIds().split(",");
+				for (String orgIdStr : orgIdArr) {
+					set.add(Integer.valueOf(orgIdStr));
+				}
+				set = platformEmployeeService.getUserIdListByOrgIdList(
+						groupOrderDTO.getBizId(), set);
+				String salesOperatorIds = "";
+				for (Integer usrId : set) {
+					salesOperatorIds += usrId + ",";
+				}
+				if (!salesOperatorIds.equals("")) {
+					groupOrder.setSaleOperatorIds(salesOperatorIds.substring(0,
+							salesOperatorIds.length() - 1));
+				}
+			}
+			if (type == 0) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(new Date());
+				cal.set(Calendar.DAY_OF_MONTH, 1);
+				groupOrder.setStartTime(new SimpleDateFormat("yyyy-MM-dd")
+						.format(cal.getTime()));
+				cal.roll(Calendar.DAY_OF_MONTH, -1);
+				groupOrder.setEndTime(new SimpleDateFormat("yyyy-MM-dd").format(cal
+						.getTime()));
+				groupOrder.setShowNum(10);
+				dataType = 0;
+				groupOrder.setDateType(1);
+			}
+			if (groupOrder.getDateType() != null && groupOrder.getDateType() == 2) {
+				if (groupOrder.getStartTime() != null) {
+					groupOrder.setStartTime(new SimpleDateFormat("yyyy-MM-dd")
+							.parse(groupOrder.getStartTime()).getTime() + "");
+				}
+				if (groupOrder.getEndTime() != null) {
+					Calendar calendar = new GregorianCalendar();
+					calendar.setTime(new SimpleDateFormat("yyyy-MM-dd")
+							.parse(groupOrder.getEndTime()));
+					calendar.add(calendar.DATE, 1);// 把日期往后增加一天.整数往后推,负数往前移动
+					groupOrder.setEndTime(calendar.getTime().getTime() + "");
+				}
+
+			}
+			List<GroupOrder> allGroupOrder = groupOrderService
+					.selectGroupNumForQuery(groupOrder,
+							groupOrderDTO.getBizId(),
+							groupOrderDTO.getUserIdSet());
+
+			if (groupOrder.getDateType() != null && groupOrder.getDateType() == 2) {
+				if (groupOrder.getStartTime() != null) {
+					groupOrder.setStartTime((new SimpleDateFormat("yyyy-MM-dd")
+							.format(new Date(
+									Long.valueOf(groupOrder.getStartTime())))));
+				}
+				if (groupOrder.getEndTime() != null) {
+					Calendar calendar = new GregorianCalendar();
+					calendar.setTimeInMillis(Long.valueOf(groupOrder.getEndTime()));
+					calendar.add(calendar.DATE, -1);// 把日期往后增加一天.整数往后推,负数往前移动
+					groupOrder.setEndTime((new SimpleDateFormat("yyyy-MM-dd")
+							.format(calendar.getTime())));
+				}
+			}
+
+			String jsonStr = "";
+			//TODO 
+//			String jsonStr = queryService.getGroupNumStatics(allGroupOrder,
+//					dataType);
+			rMap.put("groupOrder", groupOrder);
+			rMap.put("dataType", dataType);
+			rMap.put("jsonStr", jsonStr);
+			webResult.setValue(rMap);
+			webResult.setSuccess(true);
+			
+		}catch (Exception e) {
+			webResult.setSuccess(false);
+			webResult.setError(e.getMessage());
+		}
+		return webResult;
+		
+		
+	}
+
+	@Override
+	public DataAnalysisWebResult<Map<String, Object>> expGroupNumber(GroupOrderDTO groupOrderDTO){
+		
+		DataAnalysisWebResult<Map<String, Object>> webResult = new DataAnalysisWebResult<Map<String, Object>>();
+		try{
+			GroupOrder groupOrder = groupOrderDTO.getGroupOrder();
+			Map<String, Object> rMap = new HashMap<String, Object>();
+			if (StringUtils.isBlank(groupOrder.getSaleOperatorIds())
+					&& StringUtils.isNotBlank(groupOrder.getOrgIds())) {
+				Set<Integer> set = new HashSet<Integer>();
+				String[] orgIdArr = groupOrder.getOrgIds().split(",");
+				for (String orgIdStr : orgIdArr) {
+					set.add(Integer.valueOf(orgIdStr));
+				}
+				set = platformEmployeeService.getUserIdListByOrgIdList(
+						groupOrderDTO.getBizId(), set);
+				String salesOperatorIds = "";
+				for (Integer usrId : set) {
+					salesOperatorIds += usrId + ",";
+				}
+				if (!salesOperatorIds.equals("")) {
+					groupOrder.setSaleOperatorIds(salesOperatorIds.substring(0,
+							salesOperatorIds.length() - 1));
+				}
+			}
+			groupOrder.setShowNum(null);
+			if (groupOrder.getDateType() != null && groupOrder.getDateType() == 2) {
+				if (groupOrder.getStartTime() != null) {
+					groupOrder.setStartTime(new SimpleDateFormat("yyyy-MM-dd")
+							.parse(groupOrder.getStartTime()).getTime() + "");
+				}
+				if (groupOrder.getEndTime() != null) {
+					Calendar calendar = new GregorianCalendar();
+					calendar.setTime(new SimpleDateFormat("yyyy-MM-dd")
+							.parse(groupOrder.getEndTime()));
+					calendar.add(calendar.DATE, 1);// 把日期往后增加一天.整数往后推,负数往前移动
+					groupOrder.setEndTime(calendar.getTime().getTime() + "");
+				}
+
+			}
+			List<GroupOrder> allGroupOrder = groupOrderService
+					.selectGroupNumForQuery(groupOrder,
+							groupOrderDTO.getBizId(),
+							groupOrderDTO.getUserIdSet());
+			rMap.put("allGroupOrder", allGroupOrder);
+			webResult.setValue(rMap);
+			webResult.setSuccess(true);
+			
+		}catch (Exception e) {
+			webResult.setSuccess(false);
+			webResult.setError(e.getMessage());
+		}
+		return webResult;
+		
+		
+	}
+
+
+	@Override
+	public DataAnalysisWebResult<String> guestSourceStatics(ProductGuestConditionDTO productGuestConditionDTO) {
+		
+		DataAnalysisWebResult<String> webResult = new DataAnalysisWebResult<String>();
+		try{
+			ProductGuestCondition condition = productGuestConditionDTO.getProductGuestCondition();
+			if (StringUtils.isBlank(condition.getOperatorIds())
+					&& StringUtils.isNotBlank(condition.getOrgIds())) {
+				Set<Integer> set = new HashSet<Integer>();
+				String[] orgIdArr = condition.getOrgIds().split(",");
+				for (String orgIdStr : orgIdArr) {
+					set.add(Integer.valueOf(orgIdStr));
+				}
+				set = platformEmployeeService.getUserIdListByOrgIdList(
+						productGuestConditionDTO.getBizId(), set);
+				String salesOperatorIds = "";
+				for (Integer usrId : set) {
+					salesOperatorIds += usrId + ",";
+				}
+				if (!salesOperatorIds.equals("")) {
+					condition.setOperatorIds(salesOperatorIds.substring(0,
+							salesOperatorIds.length() - 1));
+				}
+			}
+			condition.setBizId(productGuestConditionDTO.getBizId());
+			String jsonStr =queryGuestSourceStatics(condition,productGuestConditionDTO.getUserIdSet());
+			webResult.setValue(jsonStr);
+			webResult.setSuccess(true);
+			
+		}catch (Exception e) {
+			webResult.setSuccess(false);
+			webResult.setError(e.getMessage());
+		}
+		return webResult;
+		
+		
+	}
+
+	private String queryGuestSourceStatics(ProductGuestCondition condition, Set<Integer> userIdSet) {
+		if (condition.getStartDate() != null) {
+			condition.setStartDateNum(condition.getStartDate().getTime());
+		}
+		if (condition.getEndDate() != null) {
+			// 添加时间时，结束时间需要加一天
+			condition.setEndDateNum(DateUtils.addDay(
+					condition.getEndDate(), 1).getTime());
+		}
+		String jsonStr = queryService.guestSourceStatics(condition,
+				userIdSet);
+		return jsonStr;
+	}
+
+
+	/**
+	 * 购物项目统计
+	 * 
+	 * @param request
+	 * @param model
+	 * @param guide
+	 * @param pageSize
+	 * @param page
+	 * @return
+	 */
+	@Override
+	public DataAnalysisWebResult<PageBean> toBookingShopList(PageBean pageBean,Integer bizId) {
+		
+		DataAnalysisWebResult<PageBean> webResult = new DataAnalysisWebResult<PageBean>();
+		try{
+			pageBean = bookingShopService.selectShopListPage(pageBean,bizId);
+			webResult.setValue(pageBean);
+			webResult.setSuccess(true);
+			
+		}catch (Exception e) {
+			webResult.setSuccess(false);
+			webResult.setError(e.getMessage());
+		}
+		return webResult;
+	}
+
+
+
+	
+
+	/**
+	 * 点击团号时，根据团id加载订单id
+	 * 
+	 * @param request
+	 * @param response
+	 * @param groupId
+	 * @return
+	 */
+	@Override
+	public DataAnalysisWebResult<Map<String, Object>> loadOrderId(Integer groupId) {
+		
+		
+		DataAnalysisWebResult<Map<String, Object>> webResult = new DataAnalysisWebResult<Map<String, Object>>();
+		try{
+			List<GroupOrder> groupOrders = groupOrderService
+					.selectOrderByGroupId(groupId);
+			Map<String, Object> map = new HashMap<String, Object>();
+			if (groupOrders != null && groupOrders.size() > 0) {
+				map.put("orderId", groupOrders.get(0).getId());
+			}
+			webResult.setValue(map);
+			webResult.setSuccess(true);
+			
+		}catch (Exception e) {
+			webResult.setSuccess(false);
+			webResult.setError(e.getMessage());
+		}
+		return webResult;
+	}
+
+
+
+	@Override
+	public DataAnalysisWebResult<Integer> productProfitList(Map paramters) {
+		
+		
+		DataAnalysisWebResult<Integer> webResult = new DataAnalysisWebResult<Integer>();
+		try{
+			webResult.setValue(groupPriceService.selectProductByProduct(paramters));
+			webResult.setSuccess(true);
+			
+		}catch (Exception e) {
+			webResult.setSuccess(false);
+			webResult.setError(e.getMessage());
+		}
+		return webResult;
+
+	}
+	
 }
