@@ -2,32 +2,29 @@ package com.yimayhd.erpcenter.facade.dataanalysis.client.query;
 
 import java.util.Map;
 
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
-
-public class GetNumAndOrderDTO extends BaseDTO {
-	private static final long serialVersionUID = -4493374055257335873L;
-
-	private Map paramters;
-	
+public class HotelDetailPreviewDTO extends BaseDTO {
+	private static final long serialVersionUID = 8270583130669190000L;
 	private String sl;
 	private String ssl;
 	private Integer page;
 	private Integer pageSize;
 	private String svc;
 	
-	private TourGroupVO group;
+	private Map paramters;
+
+	public String getSl() {
+		return sl;
+	}
 
 	public Map getParamters() {
 		return paramters;
 	}
 
+
 	public void setParamters(Map paramters) {
 		this.paramters = paramters;
 	}
 
-	public String getSl() {
-		return sl;
-	}
 
 	public void setSl(String sl) {
 		this.sl = sl;
@@ -63,13 +60,5 @@ public class GetNumAndOrderDTO extends BaseDTO {
 
 	public void setSvc(String svc) {
 		this.svc = svc;
-	}
-
-	public TourGroupVO getGroup() {
-		return group;
-	}
-
-	public void setGroup(TourGroupVO group) {
-		this.group = group;
 	}
 }

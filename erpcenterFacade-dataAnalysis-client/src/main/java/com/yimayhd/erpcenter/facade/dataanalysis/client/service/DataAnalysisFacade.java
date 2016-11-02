@@ -1,10 +1,7 @@
 package com.yimayhd.erpcenter.facade.dataanalysis.client.service;
 
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
 
-import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.AirTicketDetailQueriesDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.DeliveryDetailListDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetAgeListByProductDTO;
@@ -12,13 +9,15 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetAirTicketDetail
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetEmployeeIdsDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetNumAndOrderDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetPaymentDataDTO;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GroupOrderDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.HotelDetailPreviewDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.OpearteGroupListDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.PaymentStaticPreviewDTO;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ProductGuestConditionDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ProductGuestStaticsDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.QueryGroupNumberDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.SaleOperatorExcelDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ShopInfoDetailDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ShopSelectListDTO;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToBookingShopListDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToOperatorGroupStaticTableDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToOrdersPreviewDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToSaleOperatorOrderStaticTableDTO;
@@ -26,8 +25,8 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToSaleOperatorPrev
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.AirTicketDetailQueriesResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.AllProvinceResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.BookingSupplierDetailListResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.DataAnalysisWebResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.DeliveryDetailListResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ExpGroupNumberResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetAgeListByProductResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetAirTicketDetailResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetLevelNameResult;
@@ -35,21 +34,29 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetNumAndOrderRes
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetOrdersResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetOrgAndUserTreeJsonStrResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetPaymentDataResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GroupBookingListResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GroupInfoListResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.HotelDetailPreviewResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.HotelQueriesResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.OpearteGroupListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.PaymentStaticPreviewResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ProductGuestStaticsResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.QueryGroupNumberResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.RestaurantQueriesResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.SaleOperatorExcelResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ShopDetailListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ShopInfoDetailResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ShopSelectListResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToBookingShopListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToOperatorGroupStaticTableResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToOrdersPreviewResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToPaymentPreviewResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToProductListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorOrderStaticTableResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorPreviewResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorTableResult;
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSubsidiaryDebtResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.TranportListResult;
 
 /**
@@ -184,156 +191,26 @@ public interface DataAnalysisFacade {
 	GetNumAndOrderResult getSupplierDetails(GetNumAndOrderDTO getNumAndOrderDTO);
 
 	GetNumAndOrderResult getDetail2(GetNumAndOrderDTO getNumAndOrderDTO);
-	
-	
-	
-	
 
-	
+	GroupBookingListResult groupBookingList(ShopSelectListDTO shopSelectListDTO);
 
-	public DataAnalysisWebResult<Map<String, Object>> groupBookingList(
-			ShopSelectListDTO shopSelectListDTO);
+	GroupInfoListResult groupInfoList(ShopSelectListDTO shopSelectListDTO);
 
+	ToSubsidiaryDebtResult toSubsidiaryDebt();
 
-	public DataAnalysisWebResult<PageBean> groupInfoList(ShopSelectListDTO shopSelectListDTO);
+	GetNumAndOrderResult toSubsidiaryDebt(GetNumAndOrderDTO getNumAndOrderDTO);
 
-	/**
-	 * 子公司未收债务查询页面
-	 * 
-	 * @param request
-	 * @param response
-	 * @param model
-	 * @return
-	 */
-	public DataAnalysisWebResult<Map<String, Object>> toSubsidiaryDebt();
+	ToProductListResult toProductList(Integer curBizId);
 
-	public DataAnalysisWebResult<Map<String, Object>> toSubsidiaryDebt(String sl, String ssl,
-			String rp, Integer page, Integer pageSize, String svc,
-			ShopSelectListDTO shopSelectListDTO,Map<String, Object> pms);
+	ProductGuestStaticsResult productGuestStatics(ProductGuestStaticsDTO productGuestStaticsDTO);
 
-	
+	QueryGroupNumberResult queryGroupNumber(QueryGroupNumberDTO queryGroupNumberDTO);
 
-	/* 购物统计-产品 */
-	public DataAnalysisWebResult<List<DicInfo>> toProductList(String typecode,Integer bizId);
+	ExpGroupNumberResult expGroupNumber(QueryGroupNumberDTO queryGroupNumberDTO) throws ParseException;
 
+	ProductGuestStaticsResult guestSourceStatics(ProductGuestStaticsDTO productGuestStaticsDTO);
 
+	ToBookingShopListResult toBookingShopList(ToBookingShopListDTO toBookingShopListDTO);
 
-
-
-
-
-	public DataAnalysisWebResult<String> productGuestStatics(ProductGuestConditionDTO productGuestConditionDTO);
-
-	
-
-	public DataAnalysisWebResult<Map<String, Object>> queryGroupNumber(GroupOrderDTO groupOrderDTO, Integer type, Integer dataType);
-
-	public DataAnalysisWebResult<Map<String, Object>> expGroupNumber(GroupOrderDTO groupOrderDTO);
-
-
-	public DataAnalysisWebResult<String> guestSourceStatics(ProductGuestConditionDTO productGuestConditionDTO);
-
-
-
-	/**
-	 * 购物项目统计
-	 * 
-	 * @param request
-	 * @param model
-	 * @param guide
-	 * @param pageSize
-	 * @param page
-	 * @return
-	 */
-	public DataAnalysisWebResult<PageBean> toBookingShopList(PageBean pageBean,Integer bizId);
-
-
-
-
-
-
-
-
-
-	
-
-	/**
-	 * 点击团号时，根据团id加载订单id
-	 * 
-	 * @param request
-	 * @param response
-	 * @param groupId
-	 * @return
-	 */
-	public DataAnalysisWebResult<Map<String, Object>> loadOrderId(Integer groupId);
-
-	/**
-	 * 客户产品人数统计
-	 * 
-	 * @param request
-	 * @param response
-	 * @param modelMap
-	 * @return
-	 */
-//	@RequestMapping("productWithCustomerList.htm")
-//	public String productWithCustomerQueries(HttpServletRequest request,
-//			HttpServletResponse response, ModelMap modelMap) {
-//		// Integer bizId = WebUtils.getCurBizId(request);
-//		// getOrgAndUserTreeJsonStr(modelMap, bizId);
-//		modelMap.addAttribute("bizId", WebUtils.getCurBizId(request));
-//		return "queries/productWithCustomer/productWithCustomerList";
-//	}
-
-//	@RequestMapping("productWithCustomerList.do")
-//	public String productWithCustomerList(HttpServletRequest request,
-//			HttpServletResponse reponse, ModelMap model, String sl, String ssl,
-//			String rp, Integer page, Integer pageSize, String svc) {
-//		PageBean pb = commonQuery(request, model, sl, page, pageSize, svc);
-//		/*
-//		 * List result = pb.getResult(); Map paramters =
-//		 * WebUtils.getQueryParamters(request); if (result != null &&
-//		 * result.size() > 0) { for (int i = 0; i < result.size(); i++) { Map
-//		 * map = (Map) result.get(i); String productBrandName = (String)
-//		 * map.get("productBrandName"); String productName = (String)
-//		 * map.get("productName"); paramters.put("productBrandName",
-//		 * productBrandName); paramters.put("productName", productName); int
-//		 * buyTotal = detailDeployService .selectBuyTotalByProduct(paramters);
-//		 * map.put("buyTotal", buyTotal); } }
-//		 */
-//		return rp;
-//
-//	}
-
-
-	public DataAnalysisWebResult<Integer> productProfitList(Map paramters);
-
-	/**
-	 * 其他收入、其他支出预览页面
-	 * 
-	 * @param request
-	 * @param reponse
-	 * @param model
-	 * @param sl
-	 * @param ssl
-	 * @param rp
-	 * @param page
-	 * @param pageSize
-	 * @param svc
-	 * @return
-	 */
-//	@RequestMapping(value = "otherDetailPreview.htm")
-//	public String otherDetailPreview(HttpServletRequest request,
-//			HttpServletResponse reponse, ModelMap model, String sl, String ssl,
-//			String rp, Integer page, Integer pageSize, String svc) {
-//		PageBean pb = commonQuery(request, model, sl, page, 10000, svc);
-//		String imgPath = bizSettingCommon.getMyBizLogo(request);
-//		model.addAttribute("imgPath", imgPath);
-//
-//		model.addAttribute("printName", WebUtils.getCurUser(request).getName());
-//		model.addAttribute("supplierType", WebUtils.getQueryParamters(request)
-//				.get("supplierType"));
-//		return "/queries/otherDetailPreview";
-//	}
-
-
+	HotelDetailPreviewResult hotelDetailPreview(HotelDetailPreviewDTO hotelDetailPreviewDTO);
 }
