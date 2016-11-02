@@ -111,4 +111,10 @@ public class GroupOrderFacadeImpl_aiyou implements GroupOrderFacade_aiyou {
         result.setValues(aiyouOrderList);
         return result;
     }
+
+	@Override
+	public Integer saveAiYouDataToGroupOrder(List<GroupOrder> groupOrderList) {
+        Integer groupOrderId = groupOrderBiz.saveAiYouDataToGroupOrder(groupOrderList);
+		return groupOrderId;
+	}
 }
