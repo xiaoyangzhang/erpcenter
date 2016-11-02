@@ -10,6 +10,7 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.vo.ProductGroupVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.FitOrderVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
 import com.yimayhd.erpcenter.facade.sales.query.AgencyOrderQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.result.AgencyOrderResult;
 import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
@@ -29,4 +30,5 @@ public interface AgencyFitFacade {
 	List<GroupOrder> toMergeGroup(String[] idArr);
 	ResultSupport insertGroupMany(AgencyOrderQueryDTO queryDTO);
 	PageBean toImpNotGroupList(PageBean pageBean ,Integer bizId,Set<Integer> set);
+	ResultSupport mergeGroup(AgencyOrderQueryDTO queryDTO, MergeGroupOrderVO mergeGroupOrderVO);
 }

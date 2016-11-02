@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.yihg.erp.utils.WebUtils;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
@@ -24,6 +25,7 @@ import com.yimayhd.erpcenter.biz.sales.client.service.sales.FitOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRequirementBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRouteBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
@@ -33,8 +35,10 @@ import com.yimayhd.erpcenter.dal.product.vo.ProductGroupSupplierVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductGroupVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.FitOrderVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
 import com.yimayhd.erpcenter.facade.sales.errorcode.OperationErrorCode;
 import com.yimayhd.erpcenter.facade.sales.query.AgencyOrderQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.result.AgencyOrderResult;
@@ -70,6 +74,10 @@ public class AgencyFitFacadeImpl implements AgencyFitFacade {
 	private GroupRequirementBiz groupRequirementBiz;
 	@Autowired
 	private GroupOrderGuestBiz groupOrderGuestBiz;
+	@Autowired
+	private GroupRouteBiz groupRouteBiz;
+	@Autowired
+	private FitOrderBiz fitOrderBiz2;
 	@Override
 	public List<ProductGroupVo> selectGroupsByProdctIdAndSupplierId(
 			Integer productId, Integer supplierId, Date date) {
@@ -340,6 +348,42 @@ public class AgencyFitFacadeImpl implements AgencyFitFacade {
 			Set<Integer> set) {
 		PageBean bean = groupOrderBiz.selectNotGroupListPage(pageBean,bizId,set);
 		return bean;
+	}
+	@Override
+	public ResultSupport mergeGroup(AgencyOrderQueryDTO queryDTO, MergeGroupOrderVO mergeGroupOrderVO) {
+		ResultSupport resultSupport = new ResultSupport();
+		List<MergeGroupOrderVO> result = queryDTO.getMergeGroupOrderVOs();
+		List<GroupOrder> orderList = mergeGroupOrderVO.getOrderList();
+		for (MergeGroupOrderVO mgo : result) {
+			List<GroupOrder> oList = mergeGroupOrderVO.getOrderList();
+			Integer orderId = null;
+			Integer dayNum = null;
+			// 设置订单
+			for (GroupOrder go2 : orderList) {
+				List<GroupRoute> rouList = groupRouteBiz.selectByOrderId(go2.getId());
+				if (rouList != null && rouList.size() > 0) {
+
+					if (orderId == null) {
+						orderId = go2.getId();
+					}
+					if (dayNum == null) {
+						dayNum = rouList.size();
+					}
+					if (rouList.size() > dayNum) {
+						dayNum = rouList.size();
+						orderId = go2.getId();
+					}
+				}
+			}
+			
+			GroupOrder key = groupOrderBiz.selectByPrimaryKey(orderId);
+			ProductInfo productInfo = productInfoBiz.findProductInfoById(key.getProductId());
+			mgo.setProductCode(productInfo.getCode());
+		}
+
+		fitOrderBiz.mergetGroup(result, queryDTO.getBizId(),queryDTO.getUserId(),queryDTO.getUserName(),queryDTO.getBizCode(),true);
+
+		return resultSupport;
 	}
 
 }

@@ -2,11 +2,13 @@ package com.yimayhd.erpcenter.facade.sales.query;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
 
 public class AgencyOrderQueryDTO implements Serializable {
 
@@ -30,7 +32,16 @@ public class AgencyOrderQueryDTO implements Serializable {
 	private String[] idArr;
 	private String code;
 	private TourGroup tourGroup;
+	private List<MergeGroupOrderVO> mergeGroupOrderVOs;
 	
+	public List<MergeGroupOrderVO> getMergeGroupOrderVOs() {
+		return mergeGroupOrderVOs;
+	}
+
+	public void setMergeGroupOrderVOs(List<MergeGroupOrderVO> mergeGroupOrderVOs) {
+		this.mergeGroupOrderVOs = mergeGroupOrderVOs;
+	}
+
 	public TourGroup getTourGroup() {
 		return tourGroup;
 	}
