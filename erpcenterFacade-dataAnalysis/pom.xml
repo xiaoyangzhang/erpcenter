@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.yimayhd.erpcenter</groupId>
 		<artifactId>erpcenter</artifactId>
-		<version>0.0.8-SNAPSHOT</version>
+		<version>0.0.9-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>erpcenterFacade-dataAnalysis</artifactId>
@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>com.yimayhd.erpcenter</groupId>
 			<artifactId>erpcenterFacade-dataAnalysis-client</artifactId>
-			<version>0.0.8-SNAPSHOT</version>
+			<version>0.0.9-SNAPSHOT</version>
 		</dependency>
     	<dependency>
 			<groupId>com.yimayhd.erpcenter</groupId>
@@ -55,7 +55,7 @@
 		<!-- <dependency>
 			<groupId>com.yimayhd.erpresource</groupId>
 			<artifactId>erpresourceDAL-client</artifactId>
-			<version>0.0.8-SNAPSHOT</version>
+			<version>0.0.9-SNAPSHOT</version>
 		</dependency> -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>

@@ -42,5 +42,12 @@
  <bean id="bookingGuideFinanceFacade" class="com.yimayhd.erpcenter.facade.operation.service.impl.BookingGuideFinanceFacadeImpl" />
  <bean id="bookingShopFacade" class="com.yimayhd.erpcenter.facade.operation.service.impl.BookingShopFacadeImpl" />
  <bean id="bookingSupplierFacade" class="com.yimayhd.erpcenter.facade.operation.service.impl.BookingSupplierFacadeImpl" />
+ <bean id="requestFacade" class="com.yimayhd.erpcenter.facade.ticket.service.impl.RequestFacadeImpl" />
+ <bean id="resourceFacade" class="com.yimayhd.erpcenter.facade.ticket.service.impl.ResourceFacadeImpl" />
+ <bean id="resTrafficOrderFacade" class="com.yimayhd.erpcenter.facade.tj.service.impl.ResTrafficOrderFacadeImpl" />
+ <bean id="resTrafficFacade" class="com.yimayhd.erpcenter.facade.tj.service.impl.ResTrafficFacadeImpl" />
+ <bean id="taobaoFacade" class="com.yimayhd.erpcenter.facade.tj.service.impl.TaobaoFacadeImpl" />
+ <bean id="tJFacade" class="com.yimayhd.erpcenter.facade.tj.service.impl.TJFacadeImpl" />
+ <bean id="tjGroupFacade" class="com.yimayhd.erpcenter.facade.tj.service.impl.TjGroupFacadeImpl" />
 	
 </beans>
