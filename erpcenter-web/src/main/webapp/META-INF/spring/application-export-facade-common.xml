@@ -57,7 +57,7 @@
               <property name="timeout" value="${export.dubbo.timeout}"/>
               <property name="retries" value="${dubbo.retries}"/>
   </bean>
- <bean id="componentFacade.javaExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
+ <bean id="componentFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
               <property name="interface" value="org.erpcenterFacade.common.client.service.ComponentFacade"/>
               <property name="ref" ref="componentFacade"/>
               <property name="application" ref="dubboApplicationConfig"/>
