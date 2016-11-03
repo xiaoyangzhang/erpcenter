@@ -22,10 +22,10 @@ import org.yimayhd.erpcenter.facade.finance.result.VerifyDetailResult;
 import org.yimayhd.erpcenter.facade.finance.service.VerifyFacade;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.biz.basic.service.CommonBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceVerifyBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryPriceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierDetailBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.CommonSaleBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderPriceBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceVerify;
@@ -63,11 +63,11 @@ public class VerifyFacadeImpl implements VerifyFacade{
 	 * @param svc
 	 * @return
 	 */
-	private CommonBiz getCommonService(String svc) {
+	private CommonSaleBiz getCommonService(String svc) {
 		if (StringUtils.isBlank(svc)) {
-			svc = "commonsaleService";
+			svc = "commonSaleBiz";
 		}
-		return appContext.getBean(svc, CommonBiz.class);
+		return appContext.getBean(svc, CommonSaleBiz.class);
 	}
 
 	@Override

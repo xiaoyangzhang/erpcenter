@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.biz.basic.service;
+package com.yimayhd.erpcenter.biz.sales.client.service.sales;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +11,7 @@ import com.yihg.mybatis.utility.PageBean;
  * @author Jing.Zhuo
  * @create 2015年7月27日 上午9:27:43
  */
-public interface CommonBiz {
+public interface CommonSaleBiz {
 	
 	/**
 	 * 分页列表查询
