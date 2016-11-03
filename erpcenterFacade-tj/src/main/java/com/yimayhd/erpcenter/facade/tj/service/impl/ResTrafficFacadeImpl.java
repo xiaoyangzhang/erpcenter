@@ -655,7 +655,6 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		Integer resId = trafficProBindingDTO.getResId();
 		Integer productId = trafficProBindingDTO.getProductId();
 		PlatformEmployeePo curUser = trafficProBindingDTO.getCurUser();
-		int bizId = trafficProBindingDTO.getBizId();
 		int userId = trafficProBindingDTO.getUserId();
 		TrafficResProduct tProductBean = trafficResProductBiz.selectByResProductId(productId);
 		TrafficRes trafficRes =trafficResBiz.findTrafficResById(resId);
