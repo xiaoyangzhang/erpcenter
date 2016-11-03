@@ -27,11 +27,11 @@ import org.yimayhd.erpcenter.facade.finance.service.FinanceGuideFacade;
 
 import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.biz.basic.service.CommonBiz;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceGuideBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingGuideBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierDetailBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.CommonSaleBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SysBizBankAccountBiz;
@@ -53,7 +53,7 @@ public class FinanceGuideFacadeImpl implements FinanceGuideFacade{
 	private PlatformEmployeeBiz platformEmployeeBiz;
 	
 	@Autowired
-	private CommonBiz commonBiz;
+	private CommonSaleBiz commonSaleBiz;
 	
 	@Autowired
 	private ApplicationContext appContext;
@@ -87,11 +87,11 @@ public class FinanceGuideFacadeImpl implements FinanceGuideFacade{
 	 * @param svc
 	 * @return
 	 */
-	private CommonBiz getCommonService(String svc) {
+	private CommonSaleBiz getCommonService(String svc) {
 		if (StringUtils.isBlank(svc)) {
-			svc = "commonsaleService";
+			svc = "commonSaleBiz";
 		}
-		return appContext.getBean(svc, CommonBiz.class);
+		return appContext.getBean(svc, CommonSaleBiz.class);
 	}
 	
 	@Override

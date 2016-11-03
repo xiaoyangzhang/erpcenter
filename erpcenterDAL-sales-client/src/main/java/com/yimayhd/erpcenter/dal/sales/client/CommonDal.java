@@ -1,13 +1,19 @@
-package org.erpcenterFacade.common.client.service;
+package com.yimayhd.erpcenter.dal.sales.client;
 
 import java.util.List;
 import java.util.Map;
 
 import com.yihg.mybatis.utility.PageBean;
 
-public interface CommonFacade {
 
-
+/**
+ * 通用查询
+ * 
+ * @author Jing.Zhuo
+ * @create 2015年7月27日 上午9:27:43
+ */
+public interface CommonDal {
+	
 	/**
 	 * 分页列表查询
 	 * 
@@ -40,4 +46,5 @@ public interface CommonFacade {
 	 * @return
 	 */
 	Map queryOne(String sqlId, Map param);
+
 }

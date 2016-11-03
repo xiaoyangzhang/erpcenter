@@ -1,4 +1,4 @@
-package com.yimayhd.erpcenter.dal.basic.service.impl;
+package com.yimayhd.erpcenter.dal.sales;
 
 import java.util.List;
 import java.util.Map;
@@ -7,7 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.dal.basic.service.CommonDal;
+import com.yimayhd.erpcenter.dal.sales.client.CommonDal;
 
 public class CommonDalImpl implements CommonDal {
 	
