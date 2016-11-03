@@ -38,9 +38,9 @@ public interface QueryFacade {
     public QueryResult commonQuery(QueryDTO queryDTO);
     public QueryResult productProfitList(QueryDTO queryDTO);
     public QueryResult loadOrderId(QueryDTO queryDTO);
-    public QueryResult toBookingShopList(QueryDTO queryDTO);
-    public QueryResult queryGuestSourceStatics(QueryDTO queryDTO);
-    public QueryResult queryGroupNumber(QueryDTO queryDTO);
+  //  public QueryResult toBookingShopList(QueryDTO queryDTO);
+   // public QueryResult queryGuestSourceStatics(QueryDTO queryDTO);
+   // public QueryResult queryGroupNumber(QueryDTO queryDTO);
 
 
 }

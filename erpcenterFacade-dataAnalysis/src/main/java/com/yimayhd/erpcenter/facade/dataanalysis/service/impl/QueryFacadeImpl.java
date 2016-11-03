@@ -1288,7 +1288,7 @@ public class QueryFacadeImpl implements QueryFacade {
         return queryResult;
     }
 
-    @Override
+   /* @Override
     public QueryResult toBookingShopList(QueryDTO queryDTO) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -1300,7 +1300,7 @@ public class QueryFacadeImpl implements QueryFacade {
         return queryResult;
     }
 
-    @Override
+  @Override
     public QueryResult queryGuestSourceStatics(QueryDTO queryDTO) {
         QueryResult queryResult = new QueryResult();
         try {
@@ -1339,7 +1339,7 @@ public class QueryFacadeImpl implements QueryFacade {
             logger.error("", e);
         }
         return queryResult;
-    }
+    }**/
 
     /**
      * 获取查询服务
