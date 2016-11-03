@@ -37,6 +37,7 @@
 	<bean id="queryBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.query.QueryBizImpl" />
 	
 	<!-- sales -->
+	<bean id="commonSaleBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.CommonSaleBizImpl" />
 	<bean id="fitGroupBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.FitGroupBizImpl" />
 	<bean id="fitOrderBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.FitOrderBizImpl" />
 	<bean id="groupFeedbackBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.GroupFeedbackBizImpl" />

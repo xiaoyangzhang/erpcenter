@@ -37,6 +37,7 @@
 	<bean id="queryDal" class="com.yimayhd.erpcenter.dal.sales.query.impl.QueryDalImpl" />
 	
 	<!-- sales -->
+	<bean id="commonDal" class="com.yimayhd.erpcenter.dal.sales.CommonDalImpl" />
 	<bean id="fitGroupDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.FitGroupDalImpl" />
 	<bean id="fitOrderDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.FitOrderDalImpl" />
 	<bean id="groupFeedbackDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.GroupFeedbackDalImpl" />
