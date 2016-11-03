@@ -7,7 +7,6 @@ import org.erpcenterFacade.common.client.service.CommonFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.CommonSaleBiz;
 
 public class CommonFacadeImpl implements CommonFacade {
 
