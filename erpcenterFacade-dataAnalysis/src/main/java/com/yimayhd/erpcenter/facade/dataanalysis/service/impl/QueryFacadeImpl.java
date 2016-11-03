@@ -1,20 +1,40 @@
 package com.yimayhd.erpcenter.facade.dataanalysis.service.impl;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+
 import com.alibaba.fastjson.util.TypeUtils;
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.biz.basic.service.CommonBiz;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupPriceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.operation.*;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingGuideBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.query.QueryBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.CommonSaleBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
-import com.yimayhd.erpcenter.biz.sys.service.SysBizBankAccountBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
+import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.common.util.NumberUtil;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
@@ -31,21 +51,7 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.query.QueryDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GuestInfoStatisticsResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.QueryResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.service.QueryFacade;
-import com.yimayhd.erpcenter.facade.sales.result.ToChangeGroupResult;
-import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.dal.constants.Constants;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import com.yimayhd.erpcenter.common.util.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.util.WebUtils;
-
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * @ClassName: ${ClassName}
@@ -1415,11 +1421,11 @@ public class QueryFacadeImpl implements QueryFacade {
      * @param svc
      * @return
      */
-    private CommonBiz getCommonService(String svc) {
+    private CommonSaleBiz getCommonService(String svc) {
         if (StringUtils.isBlank(svc)) {
             svc = "commonsaleService";
         }
-        return appContext.getBean(svc, CommonBiz.class);
+        return appContext.getBean(svc, CommonSaleBiz.class);
     }
 
     private Integer zeroIfNull(Integer cnt) {

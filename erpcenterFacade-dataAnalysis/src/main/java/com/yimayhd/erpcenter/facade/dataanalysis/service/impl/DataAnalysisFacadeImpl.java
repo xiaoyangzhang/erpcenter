@@ -28,12 +28,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.util.TypeUtils;
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.biz.basic.service.CommonBiz;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupPriceBiz;
@@ -45,6 +43,7 @@ import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopDetai
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierDetailBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.query.QueryBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.CommonSaleBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
@@ -79,11 +78,9 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetAirTicketDetail
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetEmployeeIdsDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetNumAndOrderDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetPaymentDataDTO;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GroupOrderDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.HotelDetailPreviewDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.OpearteGroupListDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.PaymentStaticPreviewDTO;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ProductGuestConditionDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ProductGuestStaticsDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.QueryGroupNumberDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.SaleOperatorExcelDTO;
@@ -97,7 +94,6 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToSaleOperatorPrev
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.AirTicketDetailQueriesResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.AllProvinceResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.BookingSupplierDetailListResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.DataAnalysisWebResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.DeliveryDetailListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ExpGroupNumberResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetAgeListByProductResult;
@@ -1917,11 +1913,11 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	 * @param svc
 	 * @return
 	 */
-	private CommonBiz getCommonService(String svc) {
+	private CommonSaleBiz getCommonService(String svc) {
 		if (StringUtils.isBlank(svc)) {
 			svc = "commonsaleBiz";
 		}
-		return appContext.getBean(svc, CommonBiz.class);
+		return appContext.getBean(svc, CommonSaleBiz.class);
 	}
 	
 	public TranportListResult tranportList(Integer bizId){

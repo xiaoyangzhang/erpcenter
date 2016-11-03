@@ -1,7 +1,10 @@
 package com.yimayhd.erpcenter.facade.dataanalysis.client.result;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.biz.basic.service.CommonBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.InfoBean;
@@ -11,10 +14,6 @@ import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestStaticsVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @ClassName: ${ClassName}
