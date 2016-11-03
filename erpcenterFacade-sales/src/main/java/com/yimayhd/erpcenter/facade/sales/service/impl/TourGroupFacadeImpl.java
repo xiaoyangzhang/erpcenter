@@ -1713,7 +1713,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
      * 省内交通
      *
      * @param groupOrderTransports
-     * @param flag
+     * @param
      *            0表示接信息 1表示送信息
      * @return
      */
@@ -1936,6 +1936,20 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             }
             //model.addAttribute("page", pageBean);
             bookingProfitTableResult.setPageBean(pageBean);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return bookingProfitTableResult;
+    }
+
+    @Override
+    public BookingProfitTableResult toProfitQueryList(Integer bizId) {
+        BookingProfitTableResult bookingProfitTableResult = new BookingProfitTableResult();
+        try {
+            List<RegionInfo> allProvince = regionBiz.getAllProvince();
+            bookingProfitTableResult.setRegionInfoList(allProvince);
+            bookingProfitTableResult.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(bizId));
+            bookingProfitTableResult.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(bizId));
         } catch (Exception e) {
             logger.error("", e);
         }

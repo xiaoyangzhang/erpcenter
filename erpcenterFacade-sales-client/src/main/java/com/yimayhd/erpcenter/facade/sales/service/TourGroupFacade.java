@@ -54,6 +54,8 @@ public interface TourGroupFacade {
     public BookingProfitTableResult getSupplierInfo(Integer supplierId);
     public BookingProfitTableResult getBankInfo(Integer curBizId);
     public BookingProfitTableResult bookingProfitTable(TourGroup tourGroup ,Integer curBizId, Set<Integer>orgIdSet);
+    public BookingProfitTableResult toProfitQueryList(Integer bizId);
+
 
 
 
