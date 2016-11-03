@@ -1,11 +1,8 @@
 package com.yimayhd.erpcenter.facade.dataanalysis.client.service;
 
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.QueryDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GuestInfoStatisticsResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.QueryResult;
-import com.yimayhd.erpcenter.facade.sales.result.GuestResult;
 
 /**
  * @ClassName: ${ClassName}
