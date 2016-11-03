@@ -5,11 +5,9 @@ import java.util.Map;
 
 import com.yihg.mybatis.utility.PageBean;
 
-/**
- * 通用查询
- */
 public interface CommonFacade {
-	
+
+
 	/**
 	 * 分页列表查询
 	 * 
@@ -42,5 +40,4 @@ public interface CommonFacade {
 	 * @return
 	 */
 	Map queryOne(String sqlId, Map param);
-
 }
