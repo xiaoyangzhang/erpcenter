@@ -5,6 +5,15 @@
        http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
 	>
 
+	<bean id="commonSupplierBiz" class="com.alibaba.dubbo.config.spring.ReferenceBean">
+		<property name="interface" value="com.yimayhd.erpresource.biz.service.CommonSupplierBiz" />
+		<property name="application" ref="dubboApplicationConfig" />
+		<property name="registry" ref="dubboRegistryConfig" />
+		<property name="timeout" value="${consumer.dubbo.timeout}" />
+		<property name="check" value="${consumer.dubbo.check}" />
+		<property name="version" value="${consumer.supplier.dubbo.version}" />
+		<property name="retries" value="${dubbo.retries}" />
+	</bean>
 	<bean id="bizSupplierRelationBiz" class="com.alibaba.dubbo.config.spring.ReferenceBean">
 		<property name="interface" value="com.yimayhd.erpresource.biz.service.BizSupplierRelationBiz" />
 		<property name="application" ref="dubboApplicationConfig" />
