@@ -6,4 +6,11 @@
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 	<context:annotation-config />
 	<bean id="productCommonFacade" class="com.yimayhd.erpcenter.facade.common.service.impl.ProductCommonFacadeImpl"></bean>
+	<bean id="saleCommonFacade" class="com.yimayhd.erpcenter.facade.common.service.impl.SaleCommonFacadeImpl"></bean>
+	<bean id="commonFacade" class="com.yimayhd.erpcenter.facade.common.service.impl.CommonFacadeImpl"></bean>
+	<bean id="componentFacade" class="com.yimayhd.erpcenter.facade.common.service.impl.ComponentFacadeImpl"></bean>
+	<bean id="dicFacade" class="com.yimayhd.erpcenter.facade.basic.service.impl.DicFacadeImpl"></bean>
+	<bean id="imgFacade" class="com.yimayhd.erpcenter.facade.basic.service.impl.ImgFacadeImpl"></bean>
+	<bean id="logFacade" class="com.yimayhd.erpcenter.facade.basic.service.impl.LogFacadeImpl"></bean>
+	<bean id="regionFacade" class="com.yimayhd.erpcenter.facade.basic.service.impl.RegionFacadeImpl"></bean>
 </beans>
