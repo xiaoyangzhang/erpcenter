@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
 import com.yimayhd.erpcenter.biz.basic.service.LogOperatorBiz;
-import com.yimayhd.erpcenter.common.po.LogOperator;
+import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
 import com.yimayhd.erpcenter.facade.basic.result.SingleListResult;
 import com.yimayhd.erpcenter.facade.basic.service.LogFacade;
 

@@ -56,8 +56,9 @@
 	    <module>erpcenterFacade-tj</module>
 	    <module>erpcenterFacade-shopping-client</module>
 	    <module>erpcenterFacade-shopping</module>
-	    <!--  <module>erpresourceBiz-client</module>-->
-	</modules>
+	    <module>erpcenterFacade-dataAnalysis</module>
+	    <module>erpcenterFacade-dataAnalysis-client</module>
+  </modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -143,6 +144,11 @@
 			<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenterFacade-ticket-client</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-dataAnalysis-client</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			
@@ -303,6 +309,16 @@
 		    	<groupId>com.yimayhd.erpresource</groupId>
   				<artifactId>erpcenterFacade-tj-client</artifactId>
 		    	<version>${erpresource.version}</version>
+		    </dependency>
+		    <dependency>
+		    	<groupId>com.yimayhd.erpresource</groupId>
+  				<artifactId>erpcenterFacade-operation</artifactId>
+		    	<version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+		    	<groupId>com.yimayhd.erpresource</groupId>
+  				<artifactId>erpcenterFacade-operation-client</artifactId>
+		    	<version>${project.version}</version>
 		    </dependency>
 
 			<dependency>

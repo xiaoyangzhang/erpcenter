@@ -13,6 +13,7 @@ public class ProductErrorCode  implements Serializable {
     public static final ProductErrorCode QUERY_ERROR = new ProductErrorCode("1003","查询失败");
     public static final ProductErrorCode PRODUCT_NO_ROUTE_ERROR = new ProductErrorCode("1004","产品内无行程内容");
     public static final ProductErrorCode MODIFY_ERROR = new ProductErrorCode("1005","操作失败");
+    public static final ProductErrorCode NO_DATA_ARRANGE = new ProductErrorCode("1006","日期范围内的数据为空");
 
 
     private String errorCode;

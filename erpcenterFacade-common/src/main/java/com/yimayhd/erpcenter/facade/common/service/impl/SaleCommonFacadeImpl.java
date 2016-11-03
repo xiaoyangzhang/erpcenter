@@ -175,4 +175,57 @@ public class SaleCommonFacadeImpl implements SaleCommonFacade {
 		return airTypes;
 	}
 
+	@Override
+	public List<DicInfo> getFeeItemsByTypeCode(Integer bizId) {
+		List<DicInfo> extraTypeList = dicBiz.getListByTypeCode(BasicConstants.GGXX_LYSFXM,bizId);
+		return extraTypeList;
+	}
+
+	@Override
+	public List<DicInfo> getCertificateTypesByTypeCode() {
+		List<DicInfo> zjlxList = dicBiz.getListByTypeCode(BasicConstants.GYXX_ZJLX);
+		return zjlxList;
+	}
+
+	@Override
+	public List<DicInfo> getGuestSourcesByTypeCode(Integer bizId) {
+		List<DicInfo> guestSourceList = dicBiz.getListByTypeCode(BasicConstants.GYXX_GUESTSOURCE,bizId);
+		return guestSourceList;
+	}
+
+	@Override
+	public DicInfo getAdultFeeItems(Integer bizId) {
+		DicInfo dicInfoCR = dicBiz.getDicInfoByTypeCodeAndDicCode(
+				bizId, BasicConstants.GYXX_LYSFXM,
+				BasicConstants.CR);
+		return dicInfoCR;
+	}
+
+	@Override
+	public DicInfo getEatFeeItems(Integer bizId) {
+		DicInfo dicInfoET = dicBiz.getDicInfoByTypeCodeAndDicCode(
+				bizId, BasicConstants.GYXX_LYSFXM,
+				BasicConstants.ERT);
+		return dicInfoET;
+	}
+
+	@Override
+	public List<DicInfo> getGuestSourceTypes(Integer bizId) {
+		List<DicInfo> sourceTypeList = dicBiz.getListByTypeCode(BasicConstants.GYXX_AGENCY_SOURCE_TYPE,bizId);
+		return sourceTypeList;
+	}
+
+	@Override
+	public List<DicInfo> getFeeItems2(Integer bizId) {
+		List<DicInfo> lysfxmList = dicBiz.getListByTypeCode(BasicConstants.GYXX_LYSFXM, bizId);
+		return lysfxmList;
+	}
+
+	@Override
+	public List<DicInfo> getTeamTypesByTypeCode(Integer bizId) {
+		List<DicInfo> typeList = dicBiz				
+				.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE,bizId);	
+		return typeList;
+	}
+
 }

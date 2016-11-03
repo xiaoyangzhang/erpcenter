@@ -23,7 +23,6 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.common.exception.ClientException;
 import com.yimayhd.erpcenter.common.util.NumberUtil;
-import com.yimayhd.erpcenter.dal.sales.client.constants.SupplierConstant;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceCommission;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePayDetail;
@@ -50,6 +49,7 @@ import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingShopMapper;
 import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
+import com.yimayhd.erpresource.dal.constants.SupplierConstant;
 
 /**
  * 财务管理

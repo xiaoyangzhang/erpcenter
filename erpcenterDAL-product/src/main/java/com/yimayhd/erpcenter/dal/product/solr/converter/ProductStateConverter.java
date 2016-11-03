@@ -15,6 +15,7 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.common.solr.SolrSearchPageDTO;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductSales;
 import com.yimayhd.erpcenter.dal.product.query.ProductStatePageQueryDTO;
 import com.yimayhd.erpcenter.dal.product.utils.ParamCheckUtil;
 
@@ -81,6 +82,24 @@ public class ProductStateConverter {
 		
 		return dto;
 	}
+	public static ProductStatePageQueryDTO toQueryDTOSales(PageBean<ProductSales> pageBean, Integer bizId, Integer orgId) {
+		//根据pageBean和parameters组合获得dto参数
+		ProductStatePageQueryDTO dto=new ProductStatePageQueryDTO();
+		ProductSales sale=(ProductSales) pageBean.getParameter();
+		//info.state = 2 AND info.travel_days<![CDATA[>]]>0 AND info.biz_id=#{bizId,jdbcType=INTEGER} 
+		//info.`name_city` LIKe
+		//info.`brand_id` = ${page.parameter.brandId}
+		dto.setInfoNameCity(sale.getNameCity());
+		dto.setInfoBrandId(sale.getBrandId());
+		dto.setPrOrgId(orgId.toString());
+		dto.setInfoBizId(bizId);
+		//dto.setTagTagName(sale.getTravelDays());tagname原来的sales里面还没有新需求需要增加
+		
+		dto.setPageNo(pageBean.getPage());
+		dto.setPageSize(pageBean.getPageSize());
+		
+		return dto;
+	}
 
 	/**
 	 * 
@@ -102,6 +121,33 @@ public class ProductStateConverter {
 					info.setCreatorName(dto.getInfoCreatorName());
 					info.setNameBrief(dto.getInfoNameBrief());
 					resultList.add(info);
+				}
+				
+				pageBean.setPageSize(solrPageResult.getPageSize());
+				pageBean.setTotalCount(solrPageResult.getTotalCount());
+				pageBean.setPage(solrPageResult.getPageNo());
+				pageBean.setResult(resultList);
+				
+				return pageBean;
+		
+	}
+	
+	public static PageBean<ProductSales> dto2PageBeanSales(SolrSearchPageDTO<ProductStateDTO> solrPageResult) {
+		PageBean<ProductSales> pageBean=new PageBean<ProductSales>();
+			List<ProductStateDTO> list=solrPageResult.getList();
+			List<ProductSales> resultList=new ArrayList<ProductSales>();
+
+				for(ProductStateDTO dto:list){
+					ProductSales sale=new ProductSales();
+					sale.setBrandId(dto.getInfoId());
+					sale.setBrandName(dto.getInfoBrandName());
+					sale.setName(dto.getAtName());
+					sale.setPath(dto.getAtPath());
+					sale.setNameCity(dto.getInfoNameCity());
+					sale.setTravelDays(dto.getInfoTravelDays().toString());
+					sale.setOperatorName(dto.getInfoOperatorName());
+					sale.setGuestNote(dto.getReGuestNote());
+					resultList.add(sale);
 				}
 				
 				pageBean.setPageSize(solrPageResult.getPageSize());
@@ -158,6 +204,41 @@ public class ProductStateConverter {
 //			}else{}
 //			solrQuery.addFilterQuery(infoOperatorIdsQuery);
 //		}
+		
+		solrQuery.setStart(queryDTO.getStartRow());
+		solrQuery.setRows(queryDTO.getOldPageSize());
+
+		return solrQuery;
+	}
+	
+	public static SolrQuery queryDTO2SolrQuerySales(ProductStatePageQueryDTO queryDTO) {
+		//TYPE = 1 AND obj_type = 1
+		//info.state = 2 AND info.travel_days<![CDATA[>]]>0 AND info.biz_id=#{bizId,jdbcType=INTEGER} 
+		//info.`name_city` LIKe
+		//info.`brand_id` = ${page.parameter.brandId}
+		SolrQuery solrQuery = new SolrQuery("*:*");
+
+		solrQuery.addFilterQuery("atType:1");
+		solrQuery.addFilterQuery("atObjType:1");
+		solrQuery.addFilterQuery("infoState:2");
+		solrQuery.addFilterQuery("infoTravelDays:(0 TO *)");
+		if(!StringUtils.isEmpty(queryDTO.getPrOrgId())){
+			String orgIdQuery = "prOrgId:" + queryDTO.getPrOrgId();
+			solrQuery.addFilterQuery(orgIdQuery);
+		}
+		if(queryDTO.getInfoBizId() != null){
+			String bizQuery = "infoBizId:" + queryDTO.getInfoBizId();
+			solrQuery.addFilterQuery(bizQuery);
+		}
+		if(queryDTO.getInfoNameCity() != null){
+			String cityQuery = "infoNameCity:*" + queryDTO.getInfoNameCity() + "*";
+			solrQuery.addFilterQuery(cityQuery);
+		}
+		if(queryDTO.getInfoBrandId() != null){
+			String brandQuery = "infoBrandId:" + queryDTO.getInfoBrandId();
+			solrQuery.addFilterQuery(brandQuery);
+		}
+		solrQuery.setParam("sort", "infoCreateTime asc");
 		
 		solrQuery.setStart(queryDTO.getStartRow());
 		solrQuery.setRows(queryDTO.getOldPageSize());

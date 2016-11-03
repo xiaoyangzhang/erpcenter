@@ -1,9 +1,11 @@
+
 package com.yimayhd.erpcenter.facade.product.service.impl;
 
 
 
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -15,11 +17,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.util.WebUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductGroupSellerBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductGroupSupplierBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
@@ -32,6 +38,7 @@ import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupSeller;
 import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
@@ -43,6 +50,8 @@ import com.yimayhd.erpcenter.dal.product.vo.ProductGroupSupplierVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductRouteVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductTagVo;
+import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.facade.errorcode.ProductErrorCode;
 import com.yimayhd.erpcenter.facade.query.ComponentProductListDTO;
@@ -89,10 +98,12 @@ public class ProductFacadeImpl implements ProductFacade{
 	private PlatformEmployeeBiz platformEmployeeBiz;
 	
 	@Autowired
-	private ProductGroupSupplierBiz groupSupplierBiz;
+	private ProductGroupSupplierBiz productGroupSupplierBiz;
 	
 	@Autowired
 	private PlatformOrgBiz platformOrgBiz;
+	@Autowired
+	private ProductGroupSellerBiz productGroupSellerBiz;
 	@Override
 	public int saveBasicInfo(ProductSaveDTO productSaveDTO) {
 		if(null == productSaveDTO || null == productSaveDTO.getProductInfoVo()){
@@ -660,7 +671,7 @@ public class ProductFacadeImpl implements ProductFacade{
 		for (String id : productIdArr) {
 			ProductGroupSupplierVo supplierVo = new ProductGroupSupplierVo();
 			ProductInfo product = productInfoBiz.findProductByIdAndBizId(Integer.parseInt(id), bizId);
-			List<ProductGroupSupplier> productPriceInfoList = groupSupplierBiz.getProductPriceInfoList(Integer.parseInt(id));
+			List<ProductGroupSupplier> productPriceInfoList = productGroupSupplierBiz.getProductPriceInfoList(Integer.parseInt(id));
 			if (productPriceInfoList != null && productPriceInfoList.size() > 0) {
 				int rowSpan = 0;
 				for (ProductGroupSupplier supplier : productPriceInfoList) {
@@ -694,6 +705,266 @@ public class ProductFacadeImpl implements ProductFacade{
 		}
 		return productPriceList;
 
+	}
+
+	@Override
+	public PageBean findProductSales(PageBean pageBean, Integer bizId,
+			Integer orgId) {
+		PageBean bean=  productInfoBiz.findProductSales(pageBean, bizId,orgId);
+		return bean;
+	}
+
+	@Override
+	public ResultSupport updateUser(ProductInfo addUser, ProductInfo delUser,Integer bizId) {
+		ResultSupport resultSupport = new ResultSupport();
+		for (ProductGroupSeller pgSeller : addUser.getGroupSellers()) {
+			pgSeller.setBizId(bizId);
+			pgSeller.setCreateTime(new Date().getTime());
+			productGroupSellerBiz.insertByBatch(pgSeller);
+		}
+		for (ProductGroupSeller pgSeller : delUser.getGroupSellers()) {
+			productGroupSellerBiz.delSellerBatch(pgSeller.getGroupId(), pgSeller.getProductId(), pgSeller.getOperatorId());
+		}
+		return resultSupport;
+	}
+
+	@Override
+	public List<ProductGroupSupplier> selectProductGroupSuppliers(
+			Integer groupId) {
+		List<ProductGroupSupplier> groupSuppliers = productGroupSupplierBiz.selectProductGroupSuppliers(groupId);
+		return groupSuppliers;
+	}
+
+	@Override
+	public ResultSupport saveGroupSupplier(
+			List<ProductGroupSupplier> groupSuppliers) {
+		ResultSupport resultSupport = new ResultSupport();
+		List<ProductGroupSupplier> selectP = productGroupSupplierBiz.selectProductGroupSuppliers(groupSuppliers.get(0).getGroupId());
+		for (int i = 0; i < selectP.size(); i++) {
+			for (int j = 0; j < groupSuppliers.size(); j++) {
+				if(groupSuppliers.get(j).getSupplierId().equals(selectP.get(i).getSupplierId())){
+					groupSuppliers.remove(j);
+				}
+			}
+		}
+		
+		int saveResult = productGroupSupplierBiz.save(groupSuppliers) ;
+		if (saveResult < 1) {
+			resultSupport.setErrorCode(ProductErrorCode.MODIFY_ERROR);
+		}
+		return resultSupport;
+	}
+
+	@Override
+	public ResultSupport delSupplier(ProductGroupSupplier groupSupplier) {
+		ResultSupport resultSupport = new ResultSupport();
+		int updateResult = productGroupSupplierBiz.update(groupSupplier) ;
+		if (updateResult < 1) {
+			resultSupport.setErrorCode(ProductErrorCode.MODIFY_ERROR);
+		}
+		return resultSupport;
+	}
+
+	@Override
+	public ProductInfoResult productInfoList(PageBean pageBean, Integer bizId,
+			String operatorIds) {
+		ProductInfoResult result = new ProductInfoResult();
+		PageBean page = productInfoBiz.findProductAndPriceGroup(pageBean);
+		result.setPageBean(page);
+		// 用户
+		if (operatorIds != null && operatorIds.length() > 0) {
+			List<ProductGroupSeller> groupSellers = productGroupSellerBiz.selectGroupSellers(bizId,
+					operatorIds);
+			result.setGroupSellers(groupSellers);
+		}
+		return result;
+	}
+
+	@Override
+	public ProductRemark findProductRemarkByProductId(Integer productId) {
+		ProductRemark productRemark = productRemarkBiz
+				.findProductRemarkByProductId(productId);
+		return productRemark;
+	}
+
+	@Override
+	public ProductInfo selectStockCount(Integer productId, String itemDate) {
+		ProductInfo info = productInfoBiz.selectStockCount(productId, itemDate);
+		return info;
+	}
+
+	@Override
+	public ProductInfo findProductInfoById(Integer productId) {
+		ProductInfo productInfo = productInfoBiz.findProductInfoById(productId);
+		return productInfo;
+	}
+
+	@Override
+	public PageBean getStockStaticsList(StockStaticCondition condition) {
+		PageBean bean = productInfoBiz.getStockStaticsList(condition);
+		return bean;
+	}
+
+	@Override
+	public ProductInfoResult productAY_GetProductImport(JSONArray jsonArray,Integer userId,PlatformEmployeePo user) {
+		ProductInfoResult result = new ProductInfoResult();
+		ProductInfo info =null;
+   		ProductRemark remark=null;
+   		ProductRoute route=null;
+		for(int i = 0;i < jsonArray.size();i++){
+       		JSONObject lineObj = jsonArray.getJSONObject(i);
+       		ProductInfo product=productInfoBiz.selectProductInfoByPsId(lineObj.getInteger("pid"));
+       		if(product!=null&&product.getId()>0){	
+       			product.setCode(lineObj.getString("pcode"));
+       			product.setNameCity(lineObj.getString("pname"));
+       			product.setTravelDays(lineObj.getInteger("pday"));
+       			product.setState((byte) 2);
+       			product.setProductSysId(lineObj.getInteger("pid"));
+       			product.setBizId(user.getBizId());
+       			product.setCreatorName(user.getName());
+       			product.setCreatorId(userId);
+       			product.setCreateTime(new Date().getTime());
+           		productInfoBiz.updateProductInfo(product);
+           		// product_remark表
+           		ProductRemark proRe= productRemarkBiz.findProductRemarkByProductId(product.getId());
+           		if(proRe!=null&&proRe.getId()>0){
+           			proRe.setGuestNote(lineObj.getString("r_detail"));
+           			proRe.setProductFeature(lineObj.getString("pkind"));
+           			proRe.setItemInclude(lineObj.getString("r_include"));
+           			proRe.setChildPlan(lineObj.getString("r_child"));
+           			proRe.setShoppingPlan(lineObj.getString("r_shopping"));
+           			proRe.setItemCharge(lineObj.getString("r_selfpay"));
+           			proRe.setItemFree(lineObj.getString("r_donate"));
+           			proRe.setAttention(lineObj.getString("r_rule"));
+               		proRe.setItemOther(lineObj.getString("r_hotel"));
+               		proRe.setItemExclude(lineObj.getString("r_include_not"));
+               		proRe.setEatNote(lineObj.getString("r_food"));
+               		proRe.setCarNote(lineObj.getString("r_car"));
+               		proRe.setGuideNote(lineObj.getString("r_guide"));
+               		proRe.setInsuranceNote(lineObj.getString("r_insure"));
+               		proRe.setAppointRule(lineObj.getString("r_booking_rule"));
+               		proRe.setRemarkInfo(lineObj.getString("r_other"));
+               		productRemarkBiz.saveProductRemark(proRe);
+           		}else{
+           			remark=new ProductRemark();
+               		remark.setGuestNote(lineObj.getString("r_detail"));
+               		remark.setProductFeature(lineObj.getString("pkind"));
+               		remark.setItemInclude(lineObj.getString("r_include"));
+               		remark.setChildPlan(lineObj.getString("r_child"));
+               		remark.setShoppingPlan(lineObj.getString("r_shopping"));
+               		remark.setItemCharge(lineObj.getString("r_selfpay"));
+               		remark.setItemFree(lineObj.getString("r_donate"));
+               		remark.setAttention(lineObj.getString("r_rule"));
+               		remark.setItemOther(lineObj.getString("r_hotel"));
+               		remark.setItemExclude(lineObj.getString("r_include_not"));
+               		remark.setEatNote(lineObj.getString("r_food"));
+               		remark.setCarNote(lineObj.getString("r_car"));
+               		remark.setGuideNote(lineObj.getString("r_guide"));
+               		remark.setInsuranceNote(lineObj.getString("r_insure"));
+               		remark.setAppointRule(lineObj.getString("r_booking_rule"));
+               		remark.setRemarkInfo(lineObj.getString("r_other"));
+             		remark.setProductId(product.getId());
+               		productRemarkBiz.saveProductRemark(remark);
+           		}
+       		}else{
+       		info=new ProductInfo();
+       		info.setCode(lineObj.getString("pcode"));
+       		info.setNameCity(lineObj.getString("pname"));
+       		info.setTravelDays(lineObj.getInteger("pday"));
+       		info.setState((byte) 2);
+       		info.setProductSysId(lineObj.getInteger("pid"));
+       		info.setBizId(user.getBizId());
+       		info.setCreatorName(user.getName());
+       		info.setCreatorId(userId);
+       		info.setCreateTime(new Date().getTime());
+     		remark=new ProductRemark();
+       		remark.setGuestNote(lineObj.getString("r_detail"));
+       		remark.setProductFeature(lineObj.getString("pkind"));
+       		remark.setItemInclude(lineObj.getString("r_include"));
+       		remark.setChildPlan(lineObj.getString("r_child"));
+       		remark.setShoppingPlan(lineObj.getString("r_shopping"));
+       		remark.setItemCharge(lineObj.getString("r_selfpay"));
+       		remark.setItemFree(lineObj.getString("r_donate"));
+       		remark.setAttention(lineObj.getString("r_rule"));
+       		remark.setItemOther(lineObj.getString("r_hotel"));
+       		remark.setItemExclude(lineObj.getString("r_include_not"));
+       		remark.setEatNote(lineObj.getString("r_food"));
+       		remark.setCarNote(lineObj.getString("r_car"));
+       		remark.setGuideNote(lineObj.getString("r_guide"));
+       		remark.setInsuranceNote(lineObj.getString("r_insure"));
+       		remark.setAppointRule(lineObj.getString("r_booking_rule"));
+       		remark.setRemarkInfo(lineObj.getString("r_other"));
+       		int id=productInfoBiz.insertSelective(info);
+       		// product_remark表
+       		remark.setProductId(id);
+       		productRemarkBiz.saveProductRemark(remark);
+       		for(int a=0;a<info.getTravelDays();a++){
+           		route =new ProductRoute();
+           		route.setProductId(id);
+           		route.setDayNum(a+1);
+           		route.setBreakfast("");
+           		route.setLunch("");
+           		route.setSupper("");
+           		route.setHotelId(0);
+           		route.setHotelName("");
+           		route.setRouteDesp("");
+           		route.setRouteTip("");
+           		route.setRouteShort("");
+       			productRouteBiz.saveProductRoute1(route);
+       		}   	
+   			}
+       		}
+		return null;
+	}
+
+	@Override
+	public ResultSupport updateProductSysId(Integer productId,
+			Integer productSysId) {
+		ResultSupport resultSupport = new ResultSupport();
+		productInfoBiz.updateProductSysId(productId, productSysId);
+		return resultSupport;
+	}
+
+	@Override
+	public PageBean productAYList(PageBean pageBean, Map paramMap) {
+		PageBean bean = productInfoBiz.selectProductListPage(pageBean, paramMap);
+		return bean;
+	}
+
+	@Override
+	public ResultSupport updateProductInfo(ProductInfo productInfo) {
+		ResultSupport resultSupport = new ResultSupport();
+		int updateResult = productInfoBiz.updateProductInfo(productInfo);
+		if (updateResult < 1) {
+			resultSupport.setErrorCode(ProductErrorCode.MODIFY_ERROR);
+		}
+		return resultSupport;
+	}
+
+	@Override
+	public ProductInfoResult viewRoute(Integer productId) {
+		ProductInfoResult result = new ProductInfoResult();
+		List<ProductRoute> list = productRouteBiz.findProductRouteByProductId(Integer.valueOf(productId));
+		result.setProductRoutes(list);
+        if(!CollectionUtils.isEmpty(list)){
+            ProductRemark productRemark = productRemarkBiz.findProductRemarkByProductId(Integer.valueOf(productId));
+            result.setProductRemark(productRemark);
+        }
+	        
+		return result;
+	}
+
+	@Override
+	public boolean saveProductRoute(ProductRouteVo productRouteVo) {
+		boolean result = productRouteBiz.saveProductRoute(productRouteVo);
+		return result;
+	}
+
+	@Override
+	public boolean editProductRoute(ProductRouteVo productRouteVo) {
+
+		boolean result = productRouteBiz.editProductRoute(productRouteVo);
+		return result;
 	}
 
 }

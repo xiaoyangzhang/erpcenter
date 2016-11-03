@@ -6,6 +6,7 @@ import org.apache.solr.client.solrj.beans.Field;
 
 public class ProductStateDTO implements Serializable{
 
+
 	
 	private static final long serialVersionUID = -7825603703944657447L;
 	@Field
@@ -48,8 +49,20 @@ public class ProductStateDTO implements Serializable{
 	private Integer infoOperatorId;//操作计调id
 	@Field
 	private String infoOperatorName;//操作计调name
-
+	@Field
+	private String tagTagName;//标签name
+	@Field
 	private String prOrgId;//pr表机构id
+	@Field
+	private Integer atObjType;//'1产品2路线'
+	@Field
+	private Integer atType;//'类型:1图片2附件'
+	@Field
+	private String atName;//附件名称
+	@Field
+	private String atPath;//附件路径
+	@Field
+	private String reGuestNote;//remark收客注意事项
 	/**
 	 * @return the infoId
 	 */
@@ -311,8 +324,81 @@ public class ProductStateDTO implements Serializable{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	/**
+	 * @return the tagTagName
+	 */
+	public String getTagTagName() {
+		return tagTagName;
+	}
+	/**
+	 * @param tagTagName the tagTagName to set
+	 */
+	public void setTagTagName(String tagTagName) {
+		this.tagTagName = tagTagName;
+	}
+	/**
+	 * @return the atObjType
+	 */
+	public Integer getAtObjType() {
+		return atObjType;
+	}
+	/**
+	 * @param atObjType the atObjType to set
+	 */
+	public void setAtObjType(Integer atObjType) {
+		this.atObjType = atObjType;
+	}
+	/**
+	 * @return the atType
+	 */
+	public Integer getAtType() {
+		return atType;
+	}
+	/**
+	 * @param atType the atType to set
+	 */
+	public void setAtType(Integer atType) {
+		this.atType = atType;
+	}
+	/**
+	 * @return the atName
+	 */
+	public String getAtName() {
+		return atName;
+	}
+	/**
+	 * @param atName the atName to set
+	 */
+	public void setAtName(String atName) {
+		this.atName = atName;
+	}
+	/**
+	 * @return the atPath
+	 */
+	public String getAtPath() {
+		return atPath;
+	}
+	/**
+	 * @param atPath the atPath to set
+	 */
+	public void setAtPath(String atPath) {
+		this.atPath = atPath;
+	}
+	/**
+	 * @return the reGuestNote
+	 */
+	public String getReGuestNote() {
+		return reGuestNote;
+	}
+	/**
+	 * @param reGuestNote the reGuestNote to set
+	 */
+	public void setReGuestNote(String reGuestNote) {
+		this.reGuestNote = reGuestNote;
+	}
 
 	
 	
 	
+
 }

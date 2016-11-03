@@ -19,7 +19,7 @@
 	<import resource="../META-INF/spring/application-export-facade-basic.xml" />
 	<import resource="../META-INF/spring/application-export-facade-common.xml" />
 	<import resource="../META-INF/spring/application-export-dal-product.xml" />
-	
+	<import resource="../META-INF/spring/application-export-dal-sales.xml" />
 	
 	<import resource="../META-INF/spring/application-mq.xml" />
 	<import resource="../META-INF/spring/application-redis.xml" />

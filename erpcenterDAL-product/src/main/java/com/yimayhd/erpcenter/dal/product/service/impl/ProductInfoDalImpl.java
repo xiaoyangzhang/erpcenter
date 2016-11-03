@@ -157,8 +157,15 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	@Override
 	public PageBean<ProductSales> findProductSalesPlus(
 			PageBean<ProductSales> pageBean, Integer bizId, Integer orgId) {
-		List<ProductSales> list = infoMapper.selectProductSalesPlusListPage(pageBean, bizId,orgId);
-		pageBean.setResult(list);
+		
+		if(1==0){
+			List<ProductSales> list = infoMapper.selectProductSalesPlusListPage(pageBean, bizId,orgId);
+			pageBean.setResult(list);
+		}else{
+			ProductStatePageQueryDTO queryDTO = ProductStateConverter.toQueryDTOSales(pageBean, bizId, orgId);
+			SolrSearchPageDTO<ProductStateDTO> solrPageResult  = productSolrQueryManager.searchProductState(queryDTO);
+			return ProductStateConverter.dto2PageBeanSales(solrPageResult);
+		}
 		return pageBean;
 	}
 	

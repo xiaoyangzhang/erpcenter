@@ -22,7 +22,7 @@ import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.AiYouBean;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.facade.sales.errorcode.SaleErrorCode;
+import com.yimayhd.erpcenter.facade.sales.errorcode.OperationErrorCode;
 import com.yimayhd.erpcenter.facade.sales.result.ListResultSupport;
 import com.yimayhd.erpcenter.facade.sales.service.GroupOrderFacade;
 import com.yimayhd.erpcenter.facade.sales.service.GroupOrderFacade_aiyou;
@@ -73,7 +73,7 @@ public class GroupOrderFacadeImpl_aiyou implements GroupOrderFacade_aiyou {
                 orderString = EntityUtils.toString(httpEntity);
             } catch (IOException e) {
                 LOGGER.error("", e);
-                result.setErrorCode(SaleErrorCode.QUERY_ERROR);
+                result.setErrorCode(OperationErrorCode.QUERY_ERROR);
                 return result;
             } finally {
                 closeableHttpResponse.close();
@@ -105,10 +105,16 @@ public class GroupOrderFacadeImpl_aiyou implements GroupOrderFacade_aiyou {
             httpPost.abort();
         } catch (Exception ex) {
             LOGGER.error("",ex);
-            result.setErrorCode(SaleErrorCode.QUERY_ERROR);
+            result.setErrorCode(OperationErrorCode.QUERY_ERROR);
             return result;
         }
         result.setValues(aiyouOrderList);
         return result;
     }
+
+	@Override
+	public Integer saveAiYouDataToGroupOrder(List<GroupOrder> groupOrderList) {
+        Integer groupOrderId = groupOrderBiz.saveAiYouDataToGroupOrder(groupOrderList);
+		return groupOrderId;
+	}
 }

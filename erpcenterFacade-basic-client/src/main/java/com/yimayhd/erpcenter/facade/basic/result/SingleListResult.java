@@ -4,7 +4,8 @@ package com.yimayhd.erpcenter.facade.basic.result;
 import java.io.Serializable;
 import java.util.List;
 
-import com.yimayhd.erpcenter.common.po.LogOperator;
+import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
+
 
 
 /**

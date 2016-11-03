@@ -14,10 +14,7 @@ public class OrderPriceUpdatedMessage implements Serializable {
 	 */
 	private Integer orderId;
 
-	/**
-	 * 订单价格id
-	 */
-	private Integer priceId;
+	
 
 	public Integer getOrderId() {
 		return orderId;
@@ -25,14 +22,6 @@ public class OrderPriceUpdatedMessage implements Serializable {
 
 	public void setOrderId(Integer orderId) {
 		this.orderId = orderId;
-	}
-
-	public Integer getPriceId() {
-		return priceId;
-	}
-
-	public void setPriceId(Integer priceId) {
-		this.priceId = priceId;
 	}
 
 }

@@ -1604,4 +1604,11 @@ public class TourGroupDalImpl implements TourGroupDal {
 		List<TourGroup> list= tourGroupMapper.selecGroupBefAutoMergerGroup(bizId,startTime,productId);
 		return list;
 	}
+	
+	@Override
+	public PageBean<TourGroup> selectTourGroupList(PageBean<TourGroup> pageBean) {
+		List<TourGroup> tourGroups = tourGroupMapper.selectTourGroupDumpListPage(pageBean);
+		pageBean.setResult(tourGroups);
+		return pageBean;
+	}
 }

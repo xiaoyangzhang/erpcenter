@@ -1,6 +1,6 @@
 package com.yimayhd.erpcenter.facade.basic.service;
 
-import com.yimayhd.erpcenter.common.po.LogOperator;
+import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
 import com.yimayhd.erpcenter.facade.basic.result.SingleListResult;
 
 /**

@@ -269,7 +269,21 @@
 		<!-- GROUP BY order_id -->
 	
 	</select>
-	
+
+
+   <select id="getPriceTotalByOrderIds" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+	SELECT  
+	sum(total_price) total_price
+	from `group_order_price` 
+		where 
+		 order_id in 
+         <foreach item="item" index="index" collection="orderIds" open="("
+                 separator="," close=")">
+          #{item}
+          </foreach>
+     and mode = #{mode}
+	</select>
+	 
 	<update id="auditPriceByIds" parameterType="java.util.HashMap">
 		UPDATE group_order_price 
 		SET state_finance = #{stateFinance,jdbcType=INTEGER} 

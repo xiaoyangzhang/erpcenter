@@ -1,7 +1,6 @@
 package com.yimayhd.erpcenter.facade.ticket.query;
 
 import com.yimayhd.erpcenter.facade.ticket.BaseListPage;
-
 public class ShowListDTO extends BaseListPage{
 	
 	private static final long serialVersionUID = 6707676794554415017L;
@@ -17,6 +16,42 @@ public class ShowListDTO extends BaseListPage{
 	private String endIssueDateTo;
 	private String type;
 	private boolean isArrange;
+	private Integer bizId;
+	private String receiveMode;
+	private String issueStatus;
+	private String depCity;
+	private String dataUser;
+	
+	public String getDataUser() {
+		return dataUser;
+	}
+	public void setDataUser(String dataUser) {
+		this.dataUser = dataUser;
+	}
+	public String getReceiveMode() {
+		return receiveMode;
+	}
+	public void setReceiveMode(String receiveMode) {
+		this.receiveMode = receiveMode;
+	}
+	public String getIssueStatus() {
+		return issueStatus;
+	}
+	public void setIssueStatus(String issueStatus) {
+		this.issueStatus = issueStatus;
+	}
+	public String getDepCity() {
+		return depCity;
+	}
+	public void setDepCity(String depCity) {
+		this.depCity = depCity;
+	}
+	public Integer getBizId() {
+		return bizId;
+	}
+	public void setBizId(Integer bizId) {
+		this.bizId = bizId;
+	}
 	public String getDateFrom() {
 		return dateFrom;
 	}

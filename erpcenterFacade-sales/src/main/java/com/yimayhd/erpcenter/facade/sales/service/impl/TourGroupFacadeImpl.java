@@ -1,6 +1,20 @@
 package com.yimayhd.erpcenter.facade.sales.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
@@ -11,7 +25,13 @@ import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingGuideBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierDetailBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderPriceBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderTransportBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRequirementBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRouteBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SysBizBankAccountBiz;
@@ -26,12 +46,56 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.*;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupGuide;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupOrderTransport;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupRoute;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupRouteAttachment;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupRouteSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantSupplierImg;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantSupplierImgType;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.AutocompleteInfo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrintPo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteAttachment;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.AssistantGroupVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.AssistantSupplierVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupPriceVo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.OtherInfoVO;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount;
 import com.yimayhd.erpcenter.facade.sales.query.ChangeGroupDTO;
-import com.yimayhd.erpcenter.facade.sales.result.*;
+import com.yimayhd.erpcenter.facade.sales.query.ProfitQueryByTourDTO;
+import com.yimayhd.erpcenter.facade.sales.query.ToSKConfirmPreviewDTO;
+import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToOrderLockTableDTO;
+import com.yimayhd.erpcenter.facade.sales.result.BookingProfitTableResult;
+import com.yimayhd.erpcenter.facade.sales.result.GetPushInfoResult;
+import com.yimayhd.erpcenter.facade.sales.result.ProfitQueryByTourResult;
+import com.yimayhd.erpcenter.facade.sales.result.PushWapResult;
+import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
+import com.yimayhd.erpcenter.facade.sales.result.ToAddTourGroupOrderResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToChangeGroupResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToGroupListResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToOtherInfoResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToPreviewResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToProfitQueryTableResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToSKChargePreviewResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToSKConfirmPreviewResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToSaleChargeResult;
+import com.yimayhd.erpcenter.facade.sales.result.TogroupRequirementResult;
+import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToOrderLockListResult;
 import com.yimayhd.erpcenter.facade.sales.service.TourGroupFacade;
 import com.yimayhd.erpcenter.facade.sales.utils.DateUtils;
 import com.yimayhd.erpcenter.facade.sales.utils.GroupCodeUtil;
@@ -40,16 +104,11 @@ import com.yimayhd.erpresource.biz.service.SupplierDriverBiz;
 import com.yimayhd.erpresource.biz.service.SupplierGuideBiz;
 import com.yimayhd.erpresource.biz.service.SupplierImgBiz;
 import com.yimayhd.erpresource.dal.constants.BasicConstants;
-import com.yimayhd.erpresource.dal.po.*;
-import org.apache.commons.lang3.StringUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.yimayhd.erpresource.dal.po.SupplierDriver;
+import com.yimayhd.erpresource.dal.po.SupplierGuide;
+import com.yimayhd.erpresource.dal.po.SupplierImg;
+import com.yimayhd.erpresource.dal.po.SupplierImgType;
+import com.yimayhd.erpresource.dal.po.SupplierInfo;
 
 /**
  * @ClassName: ${ClassName}
@@ -1713,7 +1772,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
      * 省内交通
      *
      * @param groupOrderTransports
-     * @param flag
+     * @param
      *            0表示接信息 1表示送信息
      * @return
      */
@@ -1942,5 +2001,239 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
         return bookingProfitTableResult;
     }
 
+    @Override
+    public BookingProfitTableResult toProfitQueryList(Integer bizId) {
+        BookingProfitTableResult bookingProfitTableResult = new BookingProfitTableResult();
+        try {
+            List<RegionInfo> allProvince = regionBiz.getAllProvince();
+            bookingProfitTableResult.setRegionInfoList(allProvince);
+            bookingProfitTableResult.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(bizId));
+            bookingProfitTableResult.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(bizId));
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return bookingProfitTableResult;
+    }
 
+    public ToOrderLockListResult toOrderLockList(Integer bizId){
+    	ToOrderLockListResult result=new ToOrderLockListResult();
+
+    	result.setAllProvince(regionBiz.getAllProvince());
+		result.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(bizId));
+		result.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(bizId));
+		
+		return result;
+    }
+    
+	public ToProfitQueryTableResult toProfitQueryTable(ToOrderLockTableDTO orderLockTableDTO){
+		Integer bizId = orderLockTableDTO.getBizId();
+		Set<Integer> userIdSet = orderLockTableDTO.getUserIdSet();
+		GroupOrder order = orderLockTableDTO.getOrder();
+
+		// FIXME 下面的这些代码可以重用
+		PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
+		pageBean.setPage(order.getPage());
+		pageBean.setPageSize(order.getPageSize() == null ? Constants.PAGESIZE : order.getPageSize());
+		pageBean.setParameter(order);
+
+		// 如果人员为空并且部门不为空，则取部门下的人id
+		if (StringUtils.isBlank(order.getSaleOperatorIds()) && StringUtils.isNotBlank(order.getOrgIds())) {
+			Set<Integer> set = new HashSet<Integer>();
+			String[] orgIdArr = order.getOrgIds().split(",");
+			for (String orgIdStr : orgIdArr) {
+				set.add(Integer.valueOf(orgIdStr));
+			}
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
+			String salesOperatorIds = "";
+			for (Integer usrId : set) {
+				salesOperatorIds += usrId + ",";
+			}
+			if (!salesOperatorIds.equals("")) {
+				order.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+			}
+		}
+		pageBean = groupOrderBiz.selectProfitByConListPage(pageBean, bizId, userIdSet);
+		GroupOrder staticInfo = groupOrderBiz.selectProfitByCon(pageBean, bizId, userIdSet);
+		GroupOrder groupOrder = groupOrderBiz.selectProfitByConAndMode(pageBean, bizId, userIdSet);
+
+		ToProfitQueryTableResult result = new ToProfitQueryTableResult();
+		result.setGroupOrder(groupOrder);
+		result.setPageBean(pageBean);
+		result.setStaticInfo(staticInfo);
+
+		return result;
+	}
+	
+	public ProfitQueryByTourResult toProfitQueryTableByTour(ProfitQueryByTourDTO profitQueryByTourDTO){
+		Integer bizId = profitQueryByTourDTO.getBizId();
+		TourGroup tour = profitQueryByTourDTO.getTour();
+		Set<Integer> userIdSet = profitQueryByTourDTO.getUserIdSet();
+		Integer page = profitQueryByTourDTO.getPage();
+		Integer pageSize = profitQueryByTourDTO.getPageSize();
+		
+		PageBean<TourGroup> pageBean = new PageBean<TourGroup>();
+		pageBean.setPage(page);
+		if (pageSize == null) {
+			pageSize = Constants.PAGESIZE;
+		}
+		pageBean.setPageSize(pageSize);
+		pageBean.setParameter(tour);
+		// 如果人员为空并且部门不为空，则取部门下的人id
+		if (StringUtils.isBlank(tour.getSaleOperatorIds())&& StringUtils.isNotBlank(tour.getOrgIds())) {
+			Set<Integer> set = new HashSet<Integer>();
+			String[] orgIdArr = tour.getOrgIds().split(",");
+			for (String orgIdStr : orgIdArr) {
+				set.add(Integer.valueOf(orgIdStr));
+			}
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
+			String salesOperatorIds = "";
+			for (Integer usrId : set) {
+				salesOperatorIds += usrId + ",";
+			}
+			if (!salesOperatorIds.equals("")) {
+				tour.setSaleOperatorIds(salesOperatorIds.substring(0,salesOperatorIds.length() - 1));
+			}
+		}
+		pageBean = tourGroupBiz.selectProfitByTourConListPage(pageBean,bizId,userIdSet);
+		
+		// 统计成人、小孩、全陪
+		PageBean<TourGroup> pb = tourGroupBiz.selectProfitByTourCon(pageBean,bizId,userIdSet);
+
+		// 总成本、总收入
+		TourGroup group = tourGroupBiz.selectProfitByTourConAndMode(pageBean,bizId,userIdSet);
+		if (group == null) {
+			group = new TourGroup();
+			group.setIncome(new BigDecimal(0));
+			group.setTotalBudget(new BigDecimal(0));
+		}
+		
+		ProfitQueryByTourResult result=new ProfitQueryByTourResult();
+		result.setPageBean(pageBean);
+		result.setPb(pb);
+		result.setGroup(group);
+		
+		return result;
+	}
+	
+	public ToSKConfirmPreviewResult toSKConfirmPreview(ToSKConfirmPreviewDTO toSKConfirmPreviewDTO){
+		Integer groupId=toSKConfirmPreviewDTO.getGroupId();
+		Integer curUserId=toSKConfirmPreviewDTO.getCurUserId();
+		Integer supplierId=toSKConfirmPreviewDTO.getSupplierId();
+		Integer curBizId=toSKConfirmPreviewDTO.getCurBizId();
+		
+		
+		//FIXME 这个在web中做了单独的封装
+		String imgPath = null;
+		
+		TourGroup tour = tourGroupBiz.selectByPrimaryKey(groupId);
+		PlatformEmployeePo po = platformEmployeeBiz.findByEmployeeId(curUserId);
+		po.setOrgName(platformOrgBiz.findByOrgId(po.getOrgId()).getName());
+		List<GroupOrder> suppliers = groupOrderBiz.selectSupplierByGroupId(groupId);
+		SupplierInfo supplierInfo = null;
+		List<SupplierInfo> supplierList = new ArrayList<SupplierInfo>();
+
+		for (GroupOrder order : suppliers) {
+			supplierInfo = supplierBiz.selectBySupplierId(order.getSupplierId());
+			supplierList.add(supplierInfo);
+		}
+		
+		// 行程
+		GroupOrder supplier = null;
+		if (null == supplierId && supplierList.size() > 0) {
+			supplierId = supplierList.get(0).getId();
+		}
+		GroupRouteVO vo = groupRouteBiz.findGroupRouteByGroupIdAndSupplierId(groupId, supplierId);
+
+		List<GroupRouteDayVO> groupRouteDayVOs = vo.getGroupRouteDayVOList();
+
+		List<GroupPriceVo> vos = groupOrderBiz.selectSupplierByGroupIdAndSupplierId(groupId, supplierId);
+
+		List<GroupOrder> orders = groupOrderBiz.selectOrderByGroupIdAndBizIdAndSupplierId(groupId, supplierId,curBizId);
+		for (GroupOrder groupOrder : orders) {
+			if (groupOrder.getSupplierId() == supplierId) {
+				supplier = groupOrder;
+			}
+		}
+		GroupOrderPrintPo gopp = null;
+		List<GroupOrderPrintPo> gopps = new ArrayList<GroupOrderPrintPo>();
+		for (GroupOrder order : orders) {
+			List<GroupOrderGuest> guests = groupOrderGuestBiz.selectByOrderId(order.getId());
+			gopp = new GroupOrderPrintPo();
+			// 客人接送信息
+			gopp.setSupplierName(order.getSupplierName());
+			gopp.setSaleOperatorName(order.getSaleOperatorName());
+			gopp.setRemark(order.getRemarkInternal());
+			gopp.setPlace((order.getProvinceName() == null ? "" : order.getProvinceName()) + (order.getCityName() == null ? "" : order.getCityName()));
+			gopp.setPersonNum(order.getNumAdult()+"+"+order.getNumChild());
+			// 根据散客订单统计客人信息
+			if (guests.size() > 0) {
+				gopp.setCertificateNums(getGuestInfoNoPhone(guests));
+				for (GroupOrderGuest guest : guests) {
+					if (guest.getIsLeader() == 1) {
+						gopp.setGuesStatic(guest.getName() + "\n"+ guest.getMobile());
+						break;
+					}
+				}
+				/*
+				if (gopp.getGuestInfo() == null || gopp.getGuestInfo() == "") {
+					// 如果客人中没有领队，默认取一条数据显示
+					gopp.setGuesStatic(guests.get(0).getName() + "\n"
+							+ guests.get(0).getMobile());
+				}*/
+			}
+			
+			gopp.setReceiveMode(order.getReceiveMode());
+			// 根据散客订单统计酒店信息
+			List<GroupRequirement> grogShopList = groupRequirementBiz.selectByOrderAndType(order.getId(), 3);
+			if (grogShopList.size() > 0) {
+				if (grogShopList.get(0).getHotelLevel() != null) {
+					//FIXME 这里dicService实现的有问题
+					//gopp.setHotelLevel(dicService.getById(grogShopList.get(0).getHotelLevel()).getValue()+ "\n");
+				}
+				gopp.setHotelNum(getHotelNum(grogShopList));
+			}
+			// 省外交通
+			// 根据散客订单统计接机信息
+			List<GroupOrderTransport> groupOrderTransports = groupOrderTransportBiz.selectByOrderId(order.getId());
+			gopp.setAirPickup("接机：" + getAirInfo(groupOrderTransports, 0));
+			
+			// 根据散客订单统计送机信息
+			gopp.setAirOff("送机：" + getAirInfo(groupOrderTransports, 1));
+
+			// 省内交通
+			gopp.setTrans("省内：" + getSourceType(groupOrderTransports));
+			gopps.add(gopp);
+		}
+		List<BookingGuide> guides = bookingGuideBiz.selectGuidesByGroupId(groupId);
+		
+		ToSKConfirmPreviewResult result=new ToSKConfirmPreviewResult();
+		
+		result.setGopps(gopps);
+		result.setGroupRouteDayVOs(groupRouteDayVOs);
+		result.setGuide(getGuides(guides));
+		result.setGuides(guides);
+		result.setImgPath(imgPath);
+		result.setPo(po);
+		result.setSupplier(supplier);
+		result.setSupplierList(supplierList);
+		result.setTour(tour);
+		result.setVos(vos);
+		
+		return result;
+	}
+	
+	/**
+	 * 组织所有导游信息
+	 * 
+	 * @param guides
+	 * @return
+	 */
+	public String getGuides(List<BookingGuide> guides) {
+		StringBuilder sb = new StringBuilder();
+		for (BookingGuide guide : guides) {
+			sb.append(guide.getGuideName() + " " + guide.getGuideMobile()
+					+ "\n");
+		}
+		return sb.toString();
+	}
 }
