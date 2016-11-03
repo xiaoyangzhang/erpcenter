@@ -239,47 +239,7 @@
         <property name="timeout" value="${export.dubbo.timeout}"/>
         <property name="retries" value="${dubbo.retries}"/>
     </bean>
-    <bean id="billStatisticsFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
-        <property name="interface" value="org.yimayhd.erpcenter.facade.finance.service.BillStatisticsFacade"/>
-        <property name="ref" ref="billStatisticsFacade"/>
-        <property name="application" ref="dubboApplicationConfig"/>
-        <property name="registry" ref="dubboRegistryConfig"/>
-        <property name="protocol" ref="dubboProtocolConfig"/>
-        <property name="version" value="${export.dubbo.version}"/>
-        <property name="timeout" value="${export.dubbo.timeout}"/>
-        <property name="retries" value="${dubbo.retries}"/>
-    </bean>
-    <bean id="financeFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
-        <property name="interface" value="org.yimayhd.erpcenter.facade.finance.service.FinanceFacade"/>
-        <property name="ref" ref="financeFacade"/>
-        <property name="application" ref="dubboApplicationConfig"/>
-        <property name="registry" ref="dubboRegistryConfig"/>
-        <property name="protocol" ref="dubboProtocolConfig"/>
-        <property name="version" value="${export.dubbo.version}"/>
-        <property name="timeout" value="${export.dubbo.timeout}"/>
-        <property name="retries" value="${dubbo.retries}"/>
-    </bean>
-    <bean id="financeGuideFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
-        <property name="interface" value="org.yimayhd.erpcenter.facade.finance.service.FinanceGuideFacade"/>
-        <property name="ref" ref="financeGuideFacade"/>
-        <property name="application" ref="dubboApplicationConfig"/>
-        <property name="registry" ref="dubboRegistryConfig"/>
-        <property name="protocol" ref="dubboProtocolConfig"/>
-        <property name="version" value="${export.dubbo.version}"/>
-        <property name="timeout" value="${export.dubbo.timeout}"/>
-        <property name="retries" value="${dubbo.retries}"/>
-    </bean>
-    <bean id="verifyFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
-        <property name="interface" value="org.yimayhd.erpcenter.facade.finance.service.VerifyFacade"/>
-        <property name="ref" ref="verifyFacade"/>
-        <property name="application" ref="dubboApplicationConfig"/>
-        <property name="registry" ref="dubboRegistryConfig"/>
-        <property name="protocol" ref="dubboProtocolConfig"/>
-        <property name="version" value="${export.dubbo.version}"/>
-        <property name="timeout" value="${export.dubbo.timeout}"/>
-        <property name="retries" value="${dubbo.retries}"/>
-    </bean>
-    <bean id="bookingComponentFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
+      <bean id="bookingComponentFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
         <property name="interface" value="com.yimayhd.erpcenter.facade.operation.service.BookingComponentFacade"/>
         <property name="ref" ref="bookingComponentFacade"/>
         <property name="application" ref="dubboApplicationConfig"/>
@@ -352,26 +312,6 @@
     <bean id="bookingSupplierFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
         <property name="interface" value="com.yimayhd.erpcenter.facade.operation.service.BookingSupplierFacade"/>
         <property name="ref" ref="bookingShopFacade"/>
-        <property name="application" ref="dubboApplicationConfig"/>
-        <property name="registry" ref="dubboRegistryConfig"/>
-        <property name="protocol" ref="dubboProtocolConfig"/>
-        <property name="version" value="${export.dubbo.version}"/>
-        <property name="timeout" value="${export.dubbo.timeout}"/>
-        <property name="retries" value="${dubbo.retries}"/>
-    </bean>
-    <bean id="requestFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
-        <property name="interface" value="com.yimayhd.erpcenter.facade.ticket.service.RequestFacade"/>
-        <property name="ref" ref="requestFacade"/>
-        <property name="application" ref="dubboApplicationConfig"/>
-        <property name="registry" ref="dubboRegistryConfig"/>
-        <property name="protocol" ref="dubboProtocolConfig"/>
-        <property name="version" value="${export.dubbo.version}"/>
-        <property name="timeout" value="${export.dubbo.timeout}"/>
-        <property name="retries" value="${dubbo.retries}"/>
-    </bean>
-    <bean id="resourceFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
-        <property name="interface" value="com.yimayhd.erpcenter.facade.ticket.service.ResourceFacade"/>
-        <property name="ref" ref="resourceFacade"/>
         <property name="application" ref="dubboApplicationConfig"/>
         <property name="registry" ref="dubboRegistryConfig"/>
         <property name="protocol" ref="dubboProtocolConfig"/>
