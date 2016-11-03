@@ -24,7 +24,7 @@
     	  <version>0.0.8-SNAPSHOT</version>
     </dependency>
     
-    <dependency>
+    	<dependency>
 			<groupId>com.yihg</groupId>
 			<artifactId>yihg-architect-mybatis</artifactId>
 		</dependency>
@@ -32,6 +32,10 @@
 		<dependency>
 	    	<groupId>com.yimayhd.erpcenter</groupId>
 	    	<artifactId>erpcenterDAL-sales-client</artifactId>
+	    </dependency>
+		<dependency>
+	    	<groupId>com.yimayhd.erpcenter</groupId>
+	    	<artifactId>erpcenterFacade-common-client</artifactId>
 	    </dependency>
   
     <dependency>
