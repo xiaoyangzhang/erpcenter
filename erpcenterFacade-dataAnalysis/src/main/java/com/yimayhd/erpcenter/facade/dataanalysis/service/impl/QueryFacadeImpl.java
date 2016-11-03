@@ -1288,6 +1288,72 @@ public class QueryFacadeImpl implements QueryFacade {
         return queryResult;
     }
 
+    @Override
+    public QueryResult productGuestDetailPreview(QueryDTO queryDTO) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            if (StringUtils.isBlank(queryDTO.getProductGuestCondition().getOperatorIds()) && StringUtils.isNotBlank(queryDTO.getProductGuestCondition().getOrgIds())) {
+                Set<Integer> set = new HashSet<Integer>();
+                String[] orgIdArr = queryDTO.getProductGuestCondition().getOrgIds().split(",");
+                for (String orgIdStr : orgIdArr) {
+                    set.add(Integer.valueOf(orgIdStr));
+                }
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(queryDTO.getBizId(), set);
+                String salesOperatorIds = "";
+                for (Integer usrId : set) {
+                    salesOperatorIds += usrId + ",";
+                }
+                if (!salesOperatorIds.equals("")) {
+                    queryDTO.getProductGuestCondition().setOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+                }
+            }
+            // if (condition.getStartDate() != null) {
+            // condition.setStartDateNum(condition.getStartDate().getTime());
+            // }
+            // if (condition.getEndDate() != null) {
+            // condition.setEndDateNum(condition.getEndDate().getTime());
+            // }
+            if (queryDTO.getProductGuestCondition().getDateType() != null && queryDTO.getProductGuestCondition().getDateType() == 1) {
+                if (!"".equals(queryDTO.getProductGuestCondition().getStartDate())) {
+                    queryDTO.getProductGuestCondition().setStartDateNum(queryDTO.getProductGuestCondition().getStartDate().getTime());
+                }
+                if (!"".equals(queryDTO.getProductGuestCondition().getEndDate())) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(queryDTO.getProductGuestCondition().getEndDate());
+                    calendar.add(Calendar.DAY_OF_MONTH, +1);// 让日期加1
+                    queryDTO.getProductGuestCondition().setEndDateNum(calendar.getTime().getTime());
+                }
+            }
+
+          //  String imgPath = bizSettingCommon.getMyBizLogo(request);
+          //  model.addAttribute("imgPath", imgPath);
+            queryDTO.getProductGuestCondition().setBizId(queryDTO.getBizId());
+            List<ProductGuestStaticsVo> productGuestStatics = queryBiz.productGuestStatics2(queryDTO.getProductGuestCondition(),
+                    queryDTO.getUserIdSet());
+            queryResult.setProductGuestStatics(productGuestStatics);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return queryResult;
+    }
+
+    @Override
+    public QueryResult getAccountDetail(QueryDTO queryDTO) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            QueryResult queryResult_1 = commonQuery(queryDTO);
+            PageBean pb = queryResult_1.getPageBean();
+            if (StringUtils.isNotBlank(queryDTO.getSsl())) {
+                Map pm = (Map) pb.getParameter();
+                pm.put("parameter", pm);
+                queryResult.setSum(getCommonService(queryDTO.getSvc()).queryOne(queryDTO.getSsl(), pm));
+            }
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return queryResult;
+    }
+
    /* @Override
     public QueryResult toBookingShopList(QueryDTO queryDTO) {
         QueryResult queryResult = new QueryResult();
