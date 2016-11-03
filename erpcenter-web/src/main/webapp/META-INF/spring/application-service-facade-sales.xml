@@ -12,5 +12,21 @@
  <bean id="agencyTeamFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.AgencyTeamFacadeImpl" />
  <bean id="aiYouFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.AiYouFacadeImpl" />
  <bean id="b2BFacadeImpl" class="com.yimayhd.erpcenter.facade.sales.service.impl.B2BFacadeImpl" />
+ <bean id="budgetItemFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.BudgetItemFacadeImpl" />
+ <bean id="costItemFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.CostItemFacadeImpl" />
+ <bean id="fitGroupFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.FitGroupFacadeImpl" />
+ <bean id="fitOrderFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.FitOrderFacadeImpl" />
+ <bean id="groupOrderAiYouFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.GroupOrderFacadeImpl_aiyou" />
+ <bean id="groupOrderFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.groupOrderFacadeImpl" />
+ <bean id="groupRequirementFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.GroupRequirementFacadeImpl" />
+ <bean id="groupRouteFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.GroupRouteFacadeImpl" />
+ <bean id="guestFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.GuestFacadeImpl" />
+ <bean id="initGroupFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.InitGroupFacadeImpl" />
+ <bean id="qualityFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.QualityFacadeImpl" />
+ <bean id="routeFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.RouteFacadeImpl" />
+ <bean id="seatInCoachFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.SeatInCoachFacadeImpl" />
+ <bean id="specialGroupFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.SpecialGroupFacadeImpl" />
+ <bean id="teamGroupFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.TeamGroupFacadeImpl" />
+ <bean id="tourGroupFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.TourGroupFacadeImpl" />
 	
 </beans>

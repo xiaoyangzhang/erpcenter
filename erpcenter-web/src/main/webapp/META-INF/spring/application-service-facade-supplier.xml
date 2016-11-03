@@ -6,6 +6,8 @@
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 	<context:annotation-config />
 	
+	<bean id="commonSupplierFacade" class="com.yimayhd.erpcenter.facade.supplier.service.impl.CommonSupplierFacadeImpl" />
+	
 	<bean id="consultFacade" class="com.yimayhd.erpcenter.facade.supplier.service.impl.ConsultFacadeImpl" />
 	
 	<bean id="contractFacade" class="com.yimayhd.erpcenter.facade.supplier.service.impl.ContractFacadeImpl" />
