@@ -17,7 +17,7 @@
  <bean id="fitGroupFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.FitGroupFacadeImpl" />
  <bean id="fitOrderFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.FitOrderFacadeImpl" />
  <bean id="groupOrderAiYouFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.GroupOrderFacadeImpl_aiyou" />
- <bean id="groupOrderFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.groupOrderFacadeImpl" />
+ <bean id="groupOrderFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.GroupOrderFacadeImpl" />
  <bean id="groupRequirementFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.GroupRequirementFacadeImpl" />
  <bean id="groupRouteFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.GroupRouteFacadeImpl" />
  <bean id="guestFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.GuestFacadeImpl" />
