@@ -1,13 +1,30 @@
 package com.yimayhd.erpcenter.facade.sales.service;
 
+import java.util.Set;
+
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.OtherInfoVO;
 import com.yimayhd.erpcenter.facade.sales.query.ChangeGroupDTO;
-import com.yimayhd.erpcenter.facade.sales.result.*;
-import org.springframework.ui.Model;
-
-import java.util.Set;
+import com.yimayhd.erpcenter.facade.sales.query.ProfitQueryByTourDTO;
+import com.yimayhd.erpcenter.facade.sales.query.ToSKConfirmPreviewDTO;
+import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToOrderLockTableDTO;
+import com.yimayhd.erpcenter.facade.sales.result.BookingProfitTableResult;
+import com.yimayhd.erpcenter.facade.sales.result.GetPushInfoResult;
+import com.yimayhd.erpcenter.facade.sales.result.ProfitQueryByTourResult;
+import com.yimayhd.erpcenter.facade.sales.result.PushWapResult;
+import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
+import com.yimayhd.erpcenter.facade.sales.result.ToAddTourGroupOrderResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToChangeGroupResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToGroupListResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToOtherInfoResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToPreviewResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToProfitQueryTableResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToSKChargePreviewResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToSKConfirmPreviewResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToSaleChargeResult;
+import com.yimayhd.erpcenter.facade.sales.result.TogroupRequirementResult;
+import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToOrderLockListResult;
 
 /**
  * @ClassName: ${ClassName}
@@ -55,6 +72,11 @@ public interface TourGroupFacade {
     public BookingProfitTableResult getBankInfo(Integer curBizId);
     public BookingProfitTableResult bookingProfitTable(TourGroup tourGroup ,Integer curBizId, Set<Integer>orgIdSet);
     public BookingProfitTableResult toProfitQueryList(Integer bizId);
+    
+	public ToOrderLockListResult toOrderLockList(Integer bizId);
+	public ToProfitQueryTableResult toProfitQueryTable(ToOrderLockTableDTO orderLockTableDTO);
+	public ProfitQueryByTourResult toProfitQueryTableByTour(ProfitQueryByTourDTO profitQueryByTourDTO);
+	public ToSKConfirmPreviewResult toSKConfirmPreview(ToSKConfirmPreviewDTO toSKConfirmPreviewDTO);
 
 
 
