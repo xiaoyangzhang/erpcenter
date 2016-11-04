@@ -321,7 +321,7 @@
     </bean>
     <bean id="resTrafficFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
         <property name="interface" value="com.yimayhd.erpcenter.facade.tj.client.service.ResTrafficFacade"/>
-        <property name="ref" ref="resourceFacade"/>
+        <property name="ref" ref="resTrafficFacade"/>
         <property name="application" ref="dubboApplicationConfig"/>
         <property name="registry" ref="dubboRegistryConfig"/>
         <property name="protocol" ref="dubboProtocolConfig"/>
@@ -331,7 +331,7 @@
     </bean>
     <bean id="resTrafficOrderFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
         <property name="interface" value="com.yimayhd.erpcenter.facade.tj.client.service.ResTrafficOrderFacade"/>
-        <property name="ref" ref="resourceFacade"/>
+        <property name="ref" ref="resTrafficOrderFacade"/>
         <property name="application" ref="dubboApplicationConfig"/>
         <property name="registry" ref="dubboRegistryConfig"/>
         <property name="protocol" ref="dubboProtocolConfig"/>
