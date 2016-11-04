@@ -104,7 +104,7 @@ public class ResourceFacadeImpl implements ResourceFacade{
 		}
 		if (dto.getDepDateFrom() != ""){
 			parameter.put("dateType", dto.getDateType()); 
-			parameter.put("depDateFrom", dto.getDepDateTo());
+			parameter.put("depDateFrom", dto.getDepDateFrom());
 		}
 		if (dto.getDepDateTo() != ""){
 			parameter.put("dateType", dto.getDateType()); 
