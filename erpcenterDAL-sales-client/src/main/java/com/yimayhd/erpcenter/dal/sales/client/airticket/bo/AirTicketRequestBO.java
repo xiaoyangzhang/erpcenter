@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.dal.sales.client.airticket.bo;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,7 +20,10 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 
-public class AirTicketRequestBO {
+public class AirTicketRequestBO implements Serializable{
+	
+	private static final long serialVersionUID = 3856193163365026803L;
+	
 	private static final Logger log = LoggerFactory.getLogger(AirTicketRequestBO.class);
 	private AirTicketRequest po;
 	public GroupOrder go;

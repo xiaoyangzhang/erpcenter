@@ -3,6 +3,8 @@ package com.yimayhd.erpcenter.facade.sales.result;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 
+import java.util.List;
+
 /**
  * @ClassName: ${ClassName}
  * @Description: TODO(这里用一句话描述这个类的作用)
@@ -15,7 +17,16 @@ public class FindTourGroupByConditionResult extends ResultSupport  {
     private int pageTotalGuide;
     private GroupOrder order;
     private GroupOrder groupOrder;
-    PageBean<GroupOrder> pageBean;
+    private PageBean<GroupOrder> pageBean;
+    private List<GroupOrder> groupOrderList;
+
+    public List<GroupOrder> getGroupOrderList() {
+        return groupOrderList;
+    }
+
+    public void setGroupOrderList(List<GroupOrder> groupOrderList) {
+        this.groupOrderList = groupOrderList;
+    }
 
     public PageBean<GroupOrder> getPageBean() {
         return pageBean;

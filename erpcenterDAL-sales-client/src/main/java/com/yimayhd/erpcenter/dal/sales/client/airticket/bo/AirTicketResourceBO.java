@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.dal.sales.client.airticket.bo;
 
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,8 +14,13 @@ import org.apache.commons.lang3.StringUtils;
 import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketLeg;
 import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketResource;
 
-public class AirTicketResourceBO {
+public class AirTicketResourceBO implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5469201963274216101L;
+	
 	private AirTicketResource po; 
 	private List<AirTicketLeg> legList;
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
