@@ -403,7 +403,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     public PageBean<GroupOrder> selectByConListPage(
             PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer listType) {
         
-        if(1==0){
+        if(1==1){
         	List<GroupOrder> result = groupOrderMapper.selectByConListPage(
                     pageBean, bizId, set, listType);
             pageBean.setResult(result);
@@ -452,7 +452,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     public GroupOrder selectTotalByCon(GroupOrder groupOrder,
                                        Integer bizId, Set<Integer> set, Integer listType) {
     	
-    	if(1==0){
+    	if(1==1){
     		return groupOrderMapper.selectTotalByCon(groupOrder, bizId, set, listType);
     	}else{
     		PageBean<GroupOrder> pageBean=new PageBean<GroupOrder>();
