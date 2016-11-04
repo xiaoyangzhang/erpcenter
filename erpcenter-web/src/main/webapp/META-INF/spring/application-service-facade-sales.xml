@@ -11,7 +11,7 @@
  <bean id="agencyFitGroupFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.AgencyFitGroupFacadeImpl" />
  <bean id="agencyTeamFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.AgencyTeamFacadeImpl" />
  <bean id="aiYouFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.AiYouFacadeImpl" />
- <bean id="b2BFacadeImpl" class="com.yimayhd.erpcenter.facade.sales.service.impl.B2BFacadeImpl" />
+ <bean id="b2BFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.B2BFacadeImpl" />
  <bean id="budgetItemFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.BudgetItemFacadeImpl" />
  <bean id="costItemFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.CostItemFacadeImpl" />
  <bean id="fitGroupFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.FitGroupFacadeImpl" />

@@ -13,22 +13,22 @@ public class CommonDalImpl implements CommonDal {
 	
 	
 	@Autowired
-	private SqlSessionTemplate ss;
+	private SqlSessionTemplate sqlSessionSales;
 
 	@Override
 	public PageBean queryListPage(String sqlId, PageBean pageBean) {
 		
-		pageBean.setResult(ss.selectList(sqlId, pageBean));
+		pageBean.setResult(sqlSessionSales.selectList(sqlId, pageBean));
 		return pageBean;
 	}
 
 	@Override
 	public List queryList(String sqlId, Map param) {
-		return ss.selectList(sqlId, param);
+		return sqlSessionSales.selectList(sqlId, param);
 	}
 	
 	@Override
 	public Map queryOne(String sqlId, Map param) {
-		return ss.selectOne(sqlId, param);
+		return sqlSessionSales.selectOne(sqlId, param);
 	}
 }

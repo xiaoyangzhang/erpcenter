@@ -311,7 +311,7 @@
     </bean>
     <bean id="bookingSupplierFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
         <property name="interface" value="com.yimayhd.erpcenter.facade.operation.service.BookingSupplierFacade"/>
-        <property name="ref" ref="bookingShopFacade"/>
+        <property name="ref" ref="bookingSupplierFacade"/>
         <property name="application" ref="dubboApplicationConfig"/>
         <property name="registry" ref="dubboRegistryConfig"/>
         <property name="protocol" ref="dubboProtocolConfig"/>
