@@ -884,7 +884,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                 for (GroupOrderPrice groupOrderPrice : priceList) {
                     groupOrderPrice.setCreateTime(System.currentTimeMillis());
                     groupOrderPrice.setRowState(0);
-                    groupOrderPrice.setItemName(dicBiz.getById(String.valueOf(groupOrderPrice.getItemId())).getValue());
+                    groupOrderPrice.setItemName(dicBiz.getById(groupOrderPrice.getItemId()).getValue());
                     groupOrderPrice.setCreatorId(CurUserId);
                     groupOrderPrice.setCreatorName(curUserName);
                     groupOrderPriceBiz.insertSelective(groupOrderPrice);
@@ -904,7 +904,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                 for (GroupOrderPrice groupOrderPrice : costList) {
                     groupOrderPrice.setCreateTime(System.currentTimeMillis());
                     groupOrderPrice.setRowState(0);
-                    groupOrderPrice.setItemName(dicBiz.getById(String.valueOf(groupOrderPrice.getItemId())).getValue());
+                    groupOrderPrice.setItemName(dicBiz.getById(groupOrderPrice.getItemId()).getValue());
                     groupOrderPrice.setCreatorId(CurUserId);
                     groupOrderPrice.setCreatorName(curUserName);
                     groupOrderPriceBiz.insertSelective(groupOrderPrice);
@@ -1579,7 +1579,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                     .selectByOrderAndType(groupOrder.getId(), 3);
             if (grogShopList.size() > 0) {
                 if (grogShopList.get(0).getHotelLevel() != null && grogShopList.get(0).getHotelLevel() !="" ) {
-                    DicInfo info = dicBiz.getById(grogShopList.get(0).getHotelLevel());
+                    DicInfo info = dicBiz.getById(Integer.parseInt(grogShopList.get(0).getHotelLevel()));
                     if(info!=null){
                         gopp.setHotelLevel(info.getValue()+ "\n");
                     }
@@ -1732,7 +1732,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                 if (grogShopList.size() > 0) {
                     if (grogShopList.get(0).getHotelLevel() != null) {
                         gopp.setHotelLevel(dicBiz.getById(
-                                grogShopList.get(0).getHotelLevel()).getValue()
+                                Integer.parseInt(grogShopList.get(0).getHotelLevel())).getValue()
                                 + "\n");
                     }
                     gopp.setHotelNum(getHotelNum(grogShopList));

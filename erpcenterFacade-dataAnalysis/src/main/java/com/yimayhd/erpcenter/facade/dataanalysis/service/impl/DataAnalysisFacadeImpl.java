@@ -1,17 +1,8 @@
 package com.yimayhd.erpcenter.facade.dataanalysis.service.impl;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -22,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +43,6 @@ import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingAirTicket;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopSelect;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
@@ -63,7 +52,6 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.vo.PaymentExportVO;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryShopInfo;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestCondition;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.OperatorGroupStatic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorOrderStatic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorVo;
@@ -74,7 +62,6 @@ import com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.AirTicketDetailQueriesDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.DeliveryDetailListDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetAgeListByProductDTO;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetAirTicketDetailDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetEmployeeIdsDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetNumAndOrderDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetPaymentDataDTO;
@@ -92,16 +79,13 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToOrdersPreviewDTO
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToSaleOperatorOrderStaticTableDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToSaleOperatorPreviewDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.AirTicketDetailQueriesResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.AllProvinceResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.BookingSupplierDetailListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.DeliveryDetailListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ExpGroupNumberResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetAgeListByProductResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetAirTicketDetailResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetLevelNameResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetNumAndOrderResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetOrdersResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetOrgAndUserTreeJsonStrResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetPaymentDataResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GroupBookingListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GroupInfoListResult;
@@ -121,7 +105,6 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToOperatorGroupSt
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToOrdersPreviewResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToPaymentPreviewResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToProductListResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorOrderStaticTableResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorPreviewResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorTableResult;
@@ -136,128 +119,70 @@ import com.yimayhd.erpresource.dal.po.SupplierInfo;
 public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 	@Autowired
-	private BookingSupplierDetailBiz detailService;
+	private BookingSupplierDetailBiz bookingSupplierDetailBiz;
 
 	@Autowired
-	private BookingSupplierBiz bookingSupplierService;
+	private BookingSupplierBiz bookingSupplierBiz;
 
 	@Autowired
-	private DicBiz dicService;
+	private DicBiz dicBiz;
 
 	@Autowired
-	private TourGroupBiz tourGroupService;
+	private TourGroupBiz tourGroupBiz;
 
 	@Autowired
-	private GroupOrderBiz groupOrderService;
+	private GroupOrderBiz groupOrderBiz;
 
 	@Autowired
-	private PlatformEmployeeBiz platformEmployeeService;
+	private PlatformEmployeeBiz platformEmployeeBiz;
 
 	@Autowired
-	private RegionBiz regionService;
+	private RegionBiz regionBiz;
 
 	@Autowired
-	private SupplierBiz supplierSerivce;
+	private SupplierBiz supplierBiz;
 
 	@Autowired
-	private BookingShopBiz bookingShopService;
+	private BookingShopBiz bookingShopBiz;
 
 	@Autowired
-	private BookingShopDetailBiz bookingShopDetailService;
+	private BookingShopDetailBiz bookingShopDetailBiz;
 
 	@Autowired
-	private SysBizBankAccountBiz bizBankAccountService;
+	private SysBizBankAccountBiz sysBizBankAccountBiz;
+
+	
+	@Autowired
+	private QueryBiz queryBiz;
 
 	@Autowired
-	private BookingGuideBiz bGuideService;
+	private PlatformOrgBiz platformOrgBiz;
 
 	@Autowired
-	private QueryBiz queryService;
+	private BookingShopDetailDeployBiz bookingShopDetailDeployBiz;
 
 	@Autowired
-	private PlatformOrgBiz orgService;
+	private FinanceBiz financeBiz;
 
 	@Autowired
-	private BookingShopDetailDeployBiz detailDeployService;
+	private ProductGroupPriceBiz productGroupPriceBiz;
 
 	@Autowired
-	private FinanceBiz financeService;
-
-	@Autowired
-	private ProductGroupPriceBiz groupPriceService;
-
-	@Autowired
-	private BookingGuideBiz bookingGuideService;
+	private BookingGuideBiz bookingGuideBiz;
 	
 	@Autowired
 	private ApplicationContext appContext;
+	
 
-	public GetOrgAndUserTreeJsonStrResult getOrgAndUserTreeJsonStr(Integer bizId) {
-
-		GetOrgAndUserTreeJsonStrResult result = new GetOrgAndUserTreeJsonStrResult();
-
-		result.setOrgJsonStr(orgService.getComponentOrgTreeJsonStr(bizId));
-		result.setOrgUserJsonStr(platformEmployeeService.getComponentOrgUserTreeJsonStr(bizId));
-
-		return result;
-	}
-
-	public ToSaleOperatorPreviewResult toSaleOperatorPreview(ToSaleOperatorPreviewDTO toSaleOperatorPreviewDTO) {
+	public ToSaleOperatorPreviewResult toSaleOperatorPreview(PageBean pageBean,ToSaleOperatorPreviewDTO toSaleOperatorPreviewDTO) {
 
 		SaleOperatorVo order = toSaleOperatorPreviewDTO.getOrder();
 		Integer bizId = toSaleOperatorPreviewDTO.getBizId();
 		Set<Integer> userIdSet = toSaleOperatorPreviewDTO.getUserIdSet();
 
 		// 酒店星级
-		List<DicInfo> jdxjList = dicService.getListByTypeCode(BasicConstants.GYXX_JDXJ);
-		// model.addAttribute("jdxjList", jdxjList);
-
-		PageBean<SaleOperatorVo> pageBean = new PageBean<SaleOperatorVo>();
-		pageBean.setPage(1);
-		pageBean.setPageSize(10000);
-		pageBean.setParameter(order);
-		// 如果人员为空并且部门不为空，则取部门下的人id
-		if (StringUtils.isBlank(order.getSaleOperatorIds()) && StringUtils.isNotBlank(order.getOrgIds())) {
-			Set<Integer> set = new HashSet<Integer>();
-			String[] orgIdArr = order.getOrgIds().split(",");
-			for (String orgIdStr : orgIdArr) {
-				set.add(Integer.valueOf(orgIdStr));
-			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
-			String salesOperatorIds = "";
-			for (Integer usrId : set) {
-				salesOperatorIds += usrId + ",";
-			}
-			if (!salesOperatorIds.equals("")) {
-				order.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
-			}
-		}
-		pageBean = queryService.selectSaleOperatorByConListPage(pageBean, bizId, userIdSet);
-
-		List<SaleOperatorVo> orders = pageBean.getResult();
-		for (int i = 0; i < orders.size(); i++) {
-			SaleOperatorVo vo = orders.get(i);
-			List<GroupOrderGuest> guests = new ArrayList<GroupOrderGuest>();
-			if (vo.getGuestNames() != null) {
-				GroupOrderGuest guest = null;
-				String[] guestsString = vo.getGuestNames().split(",");
-				for (String s : guestsString) {
-					String[] ss = s.split("@");
-					if (ss.length == 2) {
-						guest = new GroupOrderGuest();
-						guest.setName(ss[0]);
-						guest.setCertificateNum(ss[1]);
-					} else if (ss.length == 3) {
-						guest = new GroupOrderGuest();
-						guest.setName(ss[0]);
-						guest.setCertificateNum(ss[1]);
-						guest.setMobile(ss[2]);
-					}
-					guests.add(guest);
-				}
-			}
-			vo.setGuests(guests);
-		}
+		List<DicInfo> jdxjList = dicBiz.getListByTypeCode(BasicConstants.GYXX_JDXJ);
+		pageBean = queryBiz.selectSaleOperatorByConListPage(pageBean, bizId, userIdSet);
 
 		ToSaleOperatorPreviewResult result = new ToSaleOperatorPreviewResult();
 		result.setJdxjList(jdxjList);
@@ -267,75 +192,20 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return result;
 	}
 
-	public ToSaleOperatorListResult toSaleOperatorList() {
+	
 
-		// 没有用，查它干嘛？
-		// List<RegionInfo> allProvince = regionService.getAllProvince();
-
-		// 酒店星级
-		List<DicInfo> jdxjList = dicService.getListByTypeCode(BasicConstants.GYXX_JDXJ);
-
-		ToSaleOperatorListResult result = new ToSaleOperatorListResult();
-		result.setJdxjList(jdxjList);
-		return result;
-
-	}
-
-	public ToSaleOperatorTableResult toSaleOperatorTable(ToSaleOperatorPreviewDTO toSaleOperatorPreviewDTO) {
+	public ToSaleOperatorTableResult toSaleOperatorTable(PageBean pageBean,ToSaleOperatorPreviewDTO toSaleOperatorPreviewDTO) {
 
 		SaleOperatorVo order = toSaleOperatorPreviewDTO.getOrder();
 		Integer bizId = toSaleOperatorPreviewDTO.getBizId();
 		Set<Integer> userIdSet = toSaleOperatorPreviewDTO.getUserIdSet();
 
-		PageBean<SaleOperatorVo> pageBean = new PageBean<SaleOperatorVo>();
-		pageBean.setPage(order.getPage());
-		pageBean.setPageSize(order.getPageSize() == null ? Constants.PAGESIZE : order.getPageSize());
-		pageBean.setParameter(order);
+		
+		pageBean = queryBiz.selectSaleOperatorByConListPage(pageBean, bizId, userIdSet);
 
-		// 如果人员为空并且部门不为空，则取部门下的人id
-		if (StringUtils.isBlank(order.getSaleOperatorIds()) && StringUtils.isNotBlank(order.getOrgIds())) {
-			Set<Integer> set = new HashSet<Integer>();
-			String[] orgIdArr = order.getOrgIds().split(",");
-			for (String orgIdStr : orgIdArr) {
-				set.add(Integer.valueOf(orgIdStr));
-			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
-			String salesOperatorIds = "";
-			for (Integer usrId : set) {
-				salesOperatorIds += usrId + ",";
-			}
-			if (!salesOperatorIds.equals("")) {
-				order.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
-			}
-		}
-		pageBean = queryService.selectSaleOperatorByConListPage(pageBean, bizId, userIdSet);
+		Map<String, Object> sumPerson = queryBiz.selectSaleOperatorTotalPerson(pageBean, bizId, userIdSet);
 
-		Map<String, Object> sumPerson = queryService.selectSaleOperatorTotalPerson(pageBean, bizId, userIdSet);
-
-		List<SaleOperatorVo> orders = pageBean.getResult();
-		for (SaleOperatorVo vo : orders) {
-			List<GroupOrderGuest> guests = new ArrayList<GroupOrderGuest>();
-			if (vo.getGuestNames() != null) {
-				String[] guestsString = vo.getGuestNames().split(",");
-				for (String s : guestsString) {
-					GroupOrderGuest guest = null;
-					String[] ss = s.split("@");
-					if (ss.length == 2) {
-						guest = new GroupOrderGuest();
-						guest.setName(ss[0]);
-						guest.setCertificateNum(ss[1]);
-					} else if (ss.length == 3) {
-						guest = new GroupOrderGuest();
-						guest.setName(ss[0]);
-						guest.setCertificateNum(ss[1]);
-						guest.setMobile(ss[2]);
-					}
-					guests.add(guest);
-				}
-			}
-			vo.setGuests(guests);
-		}
-
+		
 		ToSaleOperatorTableResult result = new ToSaleOperatorTableResult();
 		result.setPageBean(pageBean);
 		result.setSumPerson(sumPerson);
@@ -343,40 +213,15 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return result;
 	}
 
-	public GetLevelNameResult getLevelName(String code) {
-		GetLevelNameResult result = new GetLevelNameResult();
-		List<DicInfo> jdxjList = dicService.getListByTypeCode(BasicConstants.GYXX_JDXJ);
-		result.setJdxjList(jdxjList);
-		return result;
-	}
+	
 
 	// FIXME 代码冗余
-	public SaleOperatorExcelResult saleOperatorExcel(SaleOperatorExcelDTO saleOperatorExcelDTO) {
+	public SaleOperatorExcelResult saleOperatorExcel(PageBean pageBean,SaleOperatorExcelDTO saleOperatorExcelDTO) {
 
 		SaleOperatorVo order = saleOperatorExcelDTO.getOrder();
 
-		PageBean<SaleOperatorVo> pageBean = new PageBean<SaleOperatorVo>();
-		pageBean.setPage(1);
-		pageBean.setPageSize(10000);
-		pageBean.setParameter(order);
-
-		// 如果人员为空并且部门不为空，则取部门下的人id
-		if (StringUtils.isBlank(order.getSaleOperatorIds()) && StringUtils.isNotBlank(order.getOrgIds())) {
-			Set<Integer> set = new HashSet<Integer>();
-			String[] orgIdArr = order.getOrgIds().split(",");
-			for (String orgIdStr : orgIdArr) {
-				set.add(Integer.valueOf(orgIdStr));
-			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(saleOperatorExcelDTO.getBizId(), set);
-			String salesOperatorIds = "";
-			for (Integer usrId : set) {
-				salesOperatorIds += usrId + ",";
-			}
-			if (!salesOperatorIds.equals("")) {
-				order.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
-			}
-		}
-		pageBean = queryService.selectSaleOperatorByConListPage(pageBean, saleOperatorExcelDTO.getBizId(),
+		
+		pageBean = queryBiz.selectSaleOperatorByConListPage(pageBean, saleOperatorExcelDTO.getBizId(),
 				saleOperatorExcelDTO.getUserIdSet());
 
 		SaleOperatorExcelResult result = new SaleOperatorExcelResult();
@@ -384,7 +229,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return result;
 	}
 
-	public ToSaleOperatorOrderStaticTableResult toSaleOperatorOrderStaticTable(
+	public ToSaleOperatorOrderStaticTableResult toSaleOperatorOrderStaticTable(PageBean pageBean,
 			ToSaleOperatorOrderStaticTableDTO toSaleOperatorOrderStaticTableDTO) {
 
 		SaleOperatorOrderStatic soos = toSaleOperatorOrderStaticTableDTO.getSoos();
@@ -393,28 +238,9 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		Integer bizId = toSaleOperatorOrderStaticTableDTO.getBizId();
 		Set<Integer> userIdSet = toSaleOperatorOrderStaticTableDTO.getUserIdSet();
 
-		PageBean<SaleOperatorOrderStatic> pageBean = new PageBean<SaleOperatorOrderStatic>();
-
-		pageBean.setPage(page);
-		pageBean.setPageSize(pageSize == null ? 15 : pageSize);
-		pageBean.setParameter(soos);
-		if (StringUtils.isBlank(soos.getSaleOperatorIds()) && StringUtils.isNotBlank(soos.getOrgIds())) {
-			Set<Integer> set = new HashSet<Integer>();
-			String[] orgIdArr = soos.getOrgIds().split(",");
-			for (String orgIdStr : orgIdArr) {
-				set.add(Integer.valueOf(orgIdStr));
-			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
-			String salesOperatorIds = "";
-			for (Integer usrId : set) {
-				salesOperatorIds += usrId + ",";
-			}
-			if (!salesOperatorIds.equals("")) {
-				soos.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
-			}
-		}
-		pageBean = groupOrderService.selectSaleOperatorOrderStaticListPage(pageBean, bizId, userIdSet);
-		SaleOperatorOrderStatic sum = groupOrderService.selectSaleOperatorOrderStaticCon(pageBean, bizId, userIdSet);
+		
+		pageBean = groupOrderBiz.selectSaleOperatorOrderStaticListPage(pageBean, bizId, userIdSet);
+		SaleOperatorOrderStatic sum = groupOrderBiz.selectSaleOperatorOrderStaticCon(pageBean, bizId, userIdSet);
 
 		ToSaleOperatorOrderStaticTableResult result = new ToSaleOperatorOrderStaticTableResult();
 		result.setPageBean(pageBean);
@@ -422,7 +248,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return result;
 	}
 
-	public ToOperatorGroupStaticTableResult toOperatorGroupStaticTable(
+	public ToOperatorGroupStaticTableResult toOperatorGroupStaticTable(PageBean pageBean,
 			ToOperatorGroupStaticTableDTO toOperatorGroupStaticTableDTO) {
 
 		OperatorGroupStatic ogs = toOperatorGroupStaticTableDTO.getOgs();
@@ -431,28 +257,9 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		Integer bizId = toOperatorGroupStaticTableDTO.getBizId();
 		Set<Integer> userIdSet = toOperatorGroupStaticTableDTO.getUserIdSet();
 
-		PageBean<OperatorGroupStatic> pageBean = new PageBean<OperatorGroupStatic>();
-
-		pageBean.setPage(page);
-		pageBean.setPageSize(pageSize == null ? 15 : pageSize);
-		pageBean.setParameter(ogs);
-		if (StringUtils.isBlank(ogs.getOperatorIds()) && StringUtils.isNotBlank(ogs.getOrgIds())) {
-			Set<Integer> set = new HashSet<Integer>();
-			String[] orgIdArr = ogs.getOrgIds().split(",");
-			for (String orgIdStr : orgIdArr) {
-				set.add(Integer.valueOf(orgIdStr));
-			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
-			String salesOperatorIds = "";
-			for (Integer usrId : set) {
-				salesOperatorIds += usrId + ",";
-			}
-			if (!salesOperatorIds.equals("")) {
-				ogs.setOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
-			}
-		}
-		pageBean = tourGroupService.selectOperatorGroupStaticListPage(pageBean, bizId, userIdSet);
-		OperatorGroupStatic sum = tourGroupService.selectOperatorGroupStaticCon(pageBean, bizId, userIdSet);
+		
+		pageBean = tourGroupBiz.selectOperatorGroupStaticListPage(pageBean, bizId, userIdSet);
+		OperatorGroupStatic sum = tourGroupBiz.selectOperatorGroupStaticCon(pageBean, bizId, userIdSet);
 
 		ToOperatorGroupStaticTableResult result = new ToOperatorGroupStaticTableResult();
 		result.setPageBean(pageBean);
@@ -461,42 +268,15 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return result;
 	}
 
-	public AllProvinceResult getAllProvince() {
-
-		List<RegionInfo> allProvince = regionService.getAllProvince();
-
-		AllProvinceResult result = new AllProvinceResult();
-		result.setAllProvince(allProvince);
-
-		return result;
-	}
-
-	public ToOrdersPreviewResult toOrdersPreview(ToOrdersPreviewDTO toOrdersPreviewDTO) {
+	
+	public ToOrdersPreviewResult toOrdersPreview(PageBean pageBean,ToOrdersPreviewDTO toOrdersPreviewDTO) {
 
 		PaymentExportVO vo = toOrdersPreviewDTO.getVo();
 		Integer bizId = toOrdersPreviewDTO.getBizId();
 		Map parameters = toOrdersPreviewDTO.getParameters();
 
-		PageBean<PaymentExportVO> pageBean = new PageBean<PaymentExportVO>();
-		if (StringUtils.isBlank(vo.getOperatorIds()) && StringUtils.isNotBlank(vo.getOrgIds())) {
-			Set<Integer> set = new HashSet<Integer>();
-			String[] orgIdArr = vo.getOrgIds().split(",");
-			for (String orgIdStr : orgIdArr) {
-				set.add(Integer.valueOf(orgIdStr));
-			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
-			String salesOperatorIds = "";
-			for (Integer usrId : set) {
-				salesOperatorIds += usrId + ",";
-			}
-			if (!salesOperatorIds.equals("")) {
-				vo.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
-				parameters.put("saleOperatorIds", salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
-			}
-		}
-
-		pageBean.setParameter(vo);
-		List<GroupOrder> orders = groupOrderService.selectPaymentDetailList(pageBean, bizId,
+		
+		List<GroupOrder> orders = groupOrderBiz.selectPaymentDetailList(pageBean, bizId,
 				toOrdersPreviewDTO.getUserIdSet());
 
 		ToOrdersPreviewResult result = new ToOrdersPreviewResult();
@@ -506,86 +286,54 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return result;
 	}
 
-	public ToPaymentPreviewResult toPaymentPreview(ToOrdersPreviewDTO toOrdersPreviewDTO) {
+	public ToPaymentPreviewResult toPaymentPreview(PageBean pageBean,ToOrdersPreviewDTO toOrdersPreviewDTO) {
 
 		PaymentExportVO vo = toOrdersPreviewDTO.getVo();
 		Integer bizId = toOrdersPreviewDTO.getBizId();
 		Map parameters = toOrdersPreviewDTO.getParameters();
 		Set<Integer> userIdSet = toOrdersPreviewDTO.getUserIdSet();
 
-		PageBean<PaymentExportVO> pageBean = new PageBean<PaymentExportVO>();
-		if (StringUtils.isBlank(vo.getOperatorIds()) && StringUtils.isNotBlank(vo.getOrgIds())) {
-			Set<Integer> set = new HashSet<Integer>();
-			String[] orgIdArr = vo.getOrgIds().split(",");
-			for (String orgIdStr : orgIdArr) {
-				set.add(Integer.valueOf(orgIdStr));
-			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
-			String salesOperatorIds = "";
-			for (Integer usrId : set) {
-				salesOperatorIds += usrId + ",";
-			}
-			if (!salesOperatorIds.equals("")) {
-				vo.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
-				parameters.put("saleOperatorIds", salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
-			}
-		}
-		pageBean.setParameter(vo);
-		List<GroupOrder> orders = groupOrderService.selectPaymentDetailList(pageBean, bizId, userIdSet);
+		
+		List<GroupOrder> orders = groupOrderBiz.selectPaymentDetailList(pageBean, bizId, userIdSet);
 
 		/**
 		 * 查询当前用户的收款明细
 		 */
-		List<FinancePay> payDetailList = financeService.getFinancePayBySupplierId(vo.getSupplierId(), bizId);
+		List<FinancePay> payDetailList = financeBiz.getFinancePayBySupplierId(vo.getSupplierId(), bizId);
 
-		List<SysBizBankAccount> sysBizBankAccountList = bizBankAccountService.getListByBizId(bizId);
-
-		StringBuilder sb = new StringBuilder();
-		StringBuilder sb1 = new StringBuilder();
-		StringBuilder sb2 = new StringBuilder();
-		for (SysBizBankAccount sysBizBankAccount : sysBizBankAccountList) {
-			sb.append("类别:" + (sysBizBankAccount.getAccountType() == 1 ? "个人账户" : "对公账户") + " 银行名称："
-					+ sysBizBankAccount.getBankName() + sysBizBankAccount.getBankAccount() + " 开户全称："
-					+ sysBizBankAccount.getAccountName() + " 公司账号：" + sysBizBankAccount.getAccountNo() + "\n");
-		}
-		sb1.append("组团社盖章：" + "\n" + "签字：_________" + "\n" + "日期：_________" + "\n");
-		sb2.append("组团社盖章：" + "\n" + "签字：_________" + "\n" + "日期：_________" + "\n");
-
+		List<SysBizBankAccount> sysBizBankAccountList = sysBizBankAccountBiz.getListByBizId(bizId);
+		
+		
 		// 本期发生的应收已收
-		GroupOrder orderMiddle = groupOrderService.selectTotalStatic(pageBean, bizId, userIdSet);
-		vo.setEndTime(null);
-		pageBean.setParameter(vo);
+		GroupOrder orderMiddle = groupOrderBiz.selectTotalStatic(pageBean, bizId, userIdSet);
 		// 期初余额
-		GroupOrder orderPre = groupOrderService.selectTotalStatic(pageBean, bizId, userIdSet);
+		GroupOrder orderPre = groupOrderBiz.selectTotalStatic(pageBean, bizId, userIdSet);
 
 		ToPaymentPreviewResult result = new ToPaymentPreviewResult();
+		result.setBankAccounts(sysBizBankAccountList);
 		result.setOrderMiddle(orderMiddle);
 		result.setOrderPre(orderPre);
 		result.setOrders(orders);
 		result.setParameters(parameters);
 		result.setPayDetailList(payDetailList);
-		result.setSb1(sb1.toString());
-		result.setSb2(sb2.toString());
 
 		return result;
 	}
 
-	public GetOrdersResult getOrders(ToOrdersPreviewDTO toOrdersPreviewDTO) {
+	public GetOrdersResult getOrders(PageBean pageBean,ToOrdersPreviewDTO toOrdersPreviewDTO) {
 
 		PaymentExportVO vo = toOrdersPreviewDTO.getVo();
 		Integer bizId = toOrdersPreviewDTO.getBizId();
 		Set<Integer> userIdSet = toOrdersPreviewDTO.getUserIdSet();
 
-		PageBean<PaymentExportVO> pageBean = new PageBean<PaymentExportVO>();
-		pageBean.setParameter(vo);
-		List<GroupOrder> orders = groupOrderService.selectPaymentDetailList(pageBean, bizId, userIdSet);
+		List<GroupOrder> orders = groupOrderBiz.selectPaymentDetailList(pageBean, bizId, userIdSet);
 
 		GetOrdersResult result = new GetOrdersResult();
 		result.setOrders(orders);
 		return result;
 	}
 
-	public GetPaymentDataResult getPaymentData(GetPaymentDataDTO getPaymentDataDTO) {
+	public GetPaymentDataResult getPaymentData(PageBean pageBean,GetPaymentDataDTO getPaymentDataDTO) {
 
 		PaymentExportVO vo = getPaymentDataDTO.getVo();
 		Integer page = getPaymentDataDTO.getPage();
@@ -593,21 +341,19 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		Integer bizId = getPaymentDataDTO.getBizId();
 		Set<Integer> userIdSet = getPaymentDataDTO.getUserIdSet();
 
-		List<SysBizBankAccount> sysBizBankAccountList = bizBankAccountService.getListByBizId(bizId);
+		List<SysBizBankAccount> sysBizBankAccountList = sysBizBankAccountBiz.getListByBizId(bizId);
 
-		PageBean<PaymentExportVO> pageBean = new PageBean<PaymentExportVO>();
-		pageBean.setParameter(vo);
-		List<GroupOrder> orders = groupOrderService.selectPaymentDetailList(pageBean, bizId, userIdSet);
+		List<GroupOrder> orders = groupOrderBiz.selectPaymentDetailList(pageBean, bizId, userIdSet);
 
-		List<FinancePay> payDetailList = financeService.getFinancePayBySupplierId(vo.getSupplierId(), bizId);
+		List<FinancePay> payDetailList = financeBiz.getFinancePayBySupplierId(vo.getSupplierId(), bizId);
 
 		// 本期发生的应收已收
-		GroupOrder orderMiddle = groupOrderService.selectTotalStatic(pageBean, bizId, userIdSet);
+		GroupOrder orderMiddle = groupOrderBiz.selectTotalStatic(pageBean, bizId, userIdSet);
 		vo.setEndTime(null);
 		pageBean.setParameter(vo);
 
 		// 期初余额
-		GroupOrder orderPre = groupOrderService.selectTotalStatic(pageBean, bizId, userIdSet);
+		GroupOrder orderPre = groupOrderBiz.selectTotalStatic(pageBean, bizId, userIdSet);
 
 		GetPaymentDataResult result = new GetPaymentDataResult();
 		result.setOrderMiddle(orderMiddle);
@@ -619,85 +365,20 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return result;
 	}
 
-	private void download(String path, String fileName, HttpServletRequest request, HttpServletResponse response) {
-		try {
-			// path是指欲下载的文件的路径。
-			File file = new File(path);
-			// 以流的形式下载文件。
-			InputStream fis = new BufferedInputStream(new FileInputStream(path));
-			byte[] buffer = new byte[fis.available()];
-			fis.read(buffer);
-			fis.close();
-			// 清空response
-			response.reset();
+	
 
-			/*
-			 * //解决IE浏览器下下载文件名乱码问题 if
-			 * (request.getHeader("USER-AGENT").indexOf("msie") > -1){ fileName
-			 * = new URLEncoder().encode(fileName) ; }
-			 */
-			// 设置response的Header
-			response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
-			response.addHeader("Content-Length", "" + file.length());
-			OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
-			response.setContentType("application/vnd.ms-excel;charset=gb2312");
-			toClient.write(buffer);
-			toClient.flush();
-			toClient.close();
-			file.delete();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
+	
 
-	private List<String> getTotal(List<GroupOrder> orders) {
-		DecimalFormat format = new DecimalFormat("#.##");
-		List<String> list = new ArrayList<String>();
-		double numAdult = 0;
-		double numChild = 0;
-		double numGuide = 0;
-		double total = 0;
-		double totalCash = 0;
-		double notCash = 0;
-		for (GroupOrder order : orders) {
-			numAdult += order.getNumAdult() == null ? 0 : order.getNumAdult();
-			numChild += order.getNumChild() == null ? 0 : order.getNumChild();
-			numGuide += order.getNumGuide() == null ? 0 : order.getNumGuide();
-			total += (order.getTotal() == null ? 0 : order.getTotal().doubleValue());
-			totalCash += (order.getTotalCash() == null ? 0 : order.getTotalCash().doubleValue());
-			notCash += (order.getTotal() == null ? 0 : order.getTotal().doubleValue())
-					- (order.getTotalCash() == null ? 0 : order.getTotalCash().doubleValue());
-		}
-		list.add(format.format(numAdult));
-		list.add(format.format(numChild));
-		list.add(format.format(numGuide));
-		list.add(format.format(total));
-		list.add(format.format(totalCash));
-		list.add(format.format(notCash));
-		return list;
-	}
-
-	public ShopInfoDetailResult shopInfoDetail(ShopInfoDetailDTO shopInfoDetailDTO) {
+	public ShopInfoDetailResult shopInfoDetail(PageBean pageBean,ShopInfoDetailDTO shopInfoDetailDTO) {
 
 		QueryShopInfo shop = shopInfoDetailDTO.getShop();
 
-		PageBean pageBean = new PageBean();
-		if (shop.getPage() == null) {
-			shop.setPage(1);
-		}
-		if (shop.getPageSize() == null) {
-			pageBean.setPageSize(Constants.PAGESIZE);
-		} else {
-			pageBean.setPageSize(shop.getPageSize());
-		}
-
-		pageBean.setParameter(shopInfoDetailDTO.getQueryParamters());
-		pageBean.setPage(shop.getPage());
-		pageBean = bookingShopService.getshopInfoDetail(pageBean);
+		
+		pageBean = bookingShopBiz.getshopInfoDetail(pageBean);
 		if (pageBean.getResult() != null && pageBean.getResult().size() > 0) {
 			for (QueryShopInfo qsi : (List<QueryShopInfo>) pageBean.getResult()) {
 
-				List<GroupOrder> gOrders = groupOrderService.selectOrderByGroupId(qsi.getGroupId());
+				List<GroupOrder> gOrders = groupOrderBiz.selectOrderByGroupId(qsi.getGroupId());
 				qsi.setGroupOrders(gOrders);
 				// List<BookingSupplierPO> supplierPOs =
 				// bookingSupplierService.getBookingSupplierByGroupIdAndSupplierType(bGroup.getGroupId(),
@@ -714,7 +395,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	}
 
 	public ShopDetailListResult shopDetailList(Integer id) {
-		List<BookingShopDetail> bookingShopDetail = bookingShopDetailService.getShopDetailListByBookingId(id);
+		List<BookingShopDetail> bookingShopDetail = bookingShopDetailBiz.getShopDetailListByBookingId(id);
 
 		ShopDetailListResult result = new ShopDetailListResult();
 		result.setBookingShopDetail(bookingShopDetail);
@@ -722,30 +403,18 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return result;
 	}
 
-	public ShopSelectListResult shopSelectList(ShopSelectListDTO shopSelectListDTO) {
+	public ShopSelectListResult shopSelectList(PageBean pageBean,ShopSelectListDTO shopSelectListDTO) {
 
 		TourGroupVO group = shopSelectListDTO.getGroup();
 
-		PageBean pageBean = new PageBean();
-		if (group.getPage() == null) {
-			group.setPage(1);
-		}
-		if (group.getPageSize() == null) {
-			pageBean.setPageSize(Constants.PAGESIZE);
-		} else {
-			pageBean.setPageSize(group.getPageSize());
-		}
-		group.setSupplierType(Constants.SHOPPING);
-		group.setBizId(shopSelectListDTO.getBizId());
-		pageBean.setParameter(group);
-		pageBean.setPage(group.getPage());
+		
 
-		pageBean = tourGroupService.getGroupInfoList(pageBean, group, shopSelectListDTO.getUserIdSet());
+		pageBean = tourGroupBiz.getGroupInfoList(pageBean, group, shopSelectListDTO.getUserIdSet());
 		fillData(pageBean.getResult());
 		if (pageBean.getResult() != null && pageBean.getResult().size() > 0) {
 			for (BookingGroup bGroup : (List<BookingGroup>) pageBean.getResult()) {
 
-				List<GroupOrder> gOrders = groupOrderService.selectOrderByGroupId(bGroup.getGroupId());
+				List<GroupOrder> gOrders = groupOrderBiz.selectOrderByGroupId(bGroup.getGroupId());
 				bGroup.setGroupOrderList(gOrders);
 			}
 		}
@@ -764,13 +433,13 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 				}
 				// 填充定制团的组团社名称
 				if (group.getSupplierId() != null) {
-					SupplierInfo supplierInfo = supplierSerivce.selectBySupplierId(group.getSupplierId());
+					SupplierInfo supplierInfo = supplierBiz.selectBySupplierId(group.getSupplierId());
 					if (supplierInfo != null) {
 						group.setSupplierName(supplierInfo.getNameFull());
 					}
 				}
 				// 购物查询
-				BookingShopSelect b = bookingShopService.getShopSelect(group.getGroupId());
+				BookingShopSelect b = bookingShopBiz.getShopSelect(group.getGroupId());
 				group.setBookingShopSelect(b);
 
 			}
@@ -788,7 +457,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		for (String orgIdStr : orgIdArr) {
 			set.add(Integer.valueOf(orgIdStr));
 		}
-		set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
+		set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
 		String salesOperatorIds = "";
 		for (Integer usrId : set) {
 			salesOperatorIds += usrId + ",";
@@ -800,59 +469,26 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return employeeIds;
 	}
 
-	public PaymentStaticPreviewResult paymentStaticPreview(PaymentStaticPreviewDTO paymentStaticPreviewDTO) {
+	public PaymentStaticPreviewResult paymentStaticPreview(PageBean pageBean,PaymentStaticPreviewDTO paymentStaticPreviewDTO) {
 
 		GroupOrder order = paymentStaticPreviewDTO.getOrder();
 
-		PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
-
-		Map<String, Object> pms = paymentStaticPreviewDTO.getPms();
-
-		// 如果人员为空并且部门不为空，则取部门下的人id
-		if (StringUtils.isBlank(order.getOperatorIds()) && StringUtils.isNotBlank(order.getOrgIds())) {
-			Set<Integer> set = new HashSet<Integer>();
-			String[] orgIdArr = order.getOrgIds().split(",");
-			for (String orgIdStr : orgIdArr) {
-				set.add(Integer.valueOf(orgIdStr));
-			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(paymentStaticPreviewDTO.getBizId(), set);
-			String salesOperatorIds = "";
-			for (Integer usrId : set) {
-				salesOperatorIds += usrId + ",";
-			}
-			if (!salesOperatorIds.equals("")) {
-				order.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
-				pms.put("saleOperatorIds", salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
-			}
-		}
-
-		pageBean.setPage(1);
-		pageBean.setPageSize(10000);
-		pageBean.setParameter(pms);
-		// pageBean.setParameter(parameters);
-		List<GroupOrder> orders = groupOrderService.selectPaymentStaticData2(pageBean,
+		
+		List<GroupOrder> orders = groupOrderBiz.selectPaymentStaticData2(pageBean,
 				paymentStaticPreviewDTO.getBizId(), paymentStaticPreviewDTO.getUserIdSet());
 
 		PaymentStaticPreviewResult result = new PaymentStaticPreviewResult();
 		result.setOrders(orders);
-		result.setPms(pms);
 
 		return result;
 	}
 
-	public PaymentStaticPreviewResult paymentStaticExport(PaymentStaticPreviewDTO paymentStaticPreviewDTO) {
+	public PaymentStaticPreviewResult paymentStaticExport(PageBean pageBean,PaymentStaticPreviewDTO paymentStaticPreviewDTO) {
 
 		GroupOrder groupOrder = paymentStaticPreviewDTO.getOrder();
 
-		PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
-		pageBean.setPage(1);
-		pageBean.setPageSize(10000);
-
-		Map<String, Object> pms = paymentStaticPreviewDTO.getPms();
-
-		// pageBean.setParameter(groupOrder);
-		pageBean.setParameter(pms);
-		List<GroupOrder> orders = groupOrderService.selectPaymentStaticData2(pageBean,
+		
+		List<GroupOrder> orders = groupOrderBiz.selectPaymentStaticData2(pageBean,
 				paymentStaticPreviewDTO.getBizId(), paymentStaticPreviewDTO.getUserIdSet());
 
 		PaymentStaticPreviewResult result = new PaymentStaticPreviewResult();
@@ -863,13 +499,13 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult restaurantQueries(Integer bizId) {
 
 		// 餐类型
-		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.RESTAURANT_TYPE_CODE);
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<DicInfo> type1 = dicBiz.getListByTypeCode(Constants.RESTAURANT_TYPE_CODE);
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取餐厅类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_RESTAURANT);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_RESTAURANT);
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -883,12 +519,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult restaurantBooking(Integer bizId) {
 
 		// 从字典中查询结算方式
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_RESTAURANT);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_RESTAURANT);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -901,12 +537,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult restaurantJSFS(Integer bizId) {
 
 		// 从字典中查询结算方式
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取商家类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_RESTAURANT);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_RESTAURANT);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -918,9 +554,9 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 	public RestaurantQueriesResult restaurantDetailList(Integer bizId) {
 
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_RESTAURANT);
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_RESTAURANT);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -933,12 +569,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public HotelQueriesResult hotelQueries(Integer bizId) {
 
 		// 酒店类型
-		List<DicInfo> hotelType1 = dicService.getListByTypeCode(Constants.HOTEL_TYPE_CODE_1);
-		List<RegionInfo> allProvince = regionService.getAllProvince();
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> hotelType1 = dicBiz.getListByTypeCode(Constants.HOTEL_TYPE_CODE_1);
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取酒店类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.GYXX_JDXJ);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.GYXX_JDXJ);
 
 		HotelQueriesResult result = new HotelQueriesResult();
 		result.setAllProvince(allProvince);
@@ -952,12 +588,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult hotelBookingQueries(Integer bizId) {
 
 		// 从字典中查询结算方式
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取酒店类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.GYXX_JDXJ);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.GYXX_JDXJ);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -970,12 +606,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult hotelJSFS(Integer bizId) {
 
 		// 从字典中查询结算方式
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取酒店类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.GYXX_JDXJ);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.GYXX_JDXJ);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -987,9 +623,9 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 	public RestaurantQueriesResult hoteldetailQueries(Integer bizId) {
 
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.GYXX_JDXJ);
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.GYXX_JDXJ);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1002,14 +638,14 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult fleetQueries(Integer bizId) {
 
 		// 费用项目类型
-		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.FLEET_TYPE_CODE);
+		List<DicInfo> type1 = dicBiz.getListByTypeCode(Constants.FLEET_TYPE_CODE);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_FLEET);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_FLEET);
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1023,12 +659,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult fleetDetailList(Integer bizId) {
 
 		// 从字典中查询结算方式
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_FLEET);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_FLEET);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1041,12 +677,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult fleetJSFSList(Integer bizId) {
 
 		// 从字典中查询结算方式
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取商家类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_FLEET);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_FLEET);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1058,7 +694,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 	public RestaurantQueriesResult entertainmentDetailQueries(Integer bizId) {
 
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setCashTypes(cashTypes);
@@ -1068,14 +704,14 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 	public RestaurantQueriesResult sightList(Integer bizId) {
 		// 类型
-		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.SCENICSPOT_TYPE_CODE);
+		List<DicInfo> type1 = dicBiz.getListByTypeCode(Constants.SCENICSPOT_TYPE_CODE);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取餐厅类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_SCENICSPOT);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_SCENICSPOT);
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1089,12 +725,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult sightBookingList(Integer bizId) {
 
 		// 从字典中查询结算方式
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_SCENICSPOT);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_SCENICSPOT);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1107,12 +743,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult sightJSFS(Integer bizId) {
 
 		// 从字典中查询结算方式
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取商家类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_SCENICSPOT);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_SCENICSPOT);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1124,9 +760,9 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 	public RestaurantQueriesResult sightDetailList(Integer bizId) {
 
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_SCENICSPOT);
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_SCENICSPOT);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1139,14 +775,14 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult airTicketQueries(Integer bizId) {
 
 		// 餐类型
-		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.AIRTICKET_TYPE_CODE);
+		List<DicInfo> type1 = dicBiz.getListByTypeCode(Constants.AIRTICKET_TYPE_CODE);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取餐厅类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_AIRTICKETAGENT);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_AIRTICKETAGENT);
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1159,7 +795,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 	public RestaurantQueriesResult airTicketBookingQueries(Integer bizId) {
 
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setCashTypes(cashTypes);
@@ -1170,12 +806,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult airTicketJSFS(Integer bizId) {
 
 		// 从字典中查询结算方式
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取商家类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_AIRTICKETAGENT);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_AIRTICKETAGENT);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1190,19 +826,6 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		Integer bizId = airTicketDetailQueriesDTO.getBizId();
 		Map parameters = airTicketDetailQueriesDTO.getParameters();
 
-		if (null == parameters.get("startTime") && null == parameters.get("endTime")) {
-			Calendar c = Calendar.getInstance();
-			int year = c.get(Calendar.YEAR);
-			int month = c.get(Calendar.MONTH);
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-			c.set(year, month, 1, 0, 0, 0);
-			// condition.setStartTime(df.format(c.getTime()));
-			parameters.put("startTime", df.format(c.getTime()));
-			// c.set(year, month, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-			parameters.put("endTime", df.format(c.getTime()));
-			// condition.setEndTime(df.format(c.getTime()));
-
-		}
 
 		// condition.setSupplierType(Constants.AIRTICKETAGENT);
 		if (StringUtils.isNotBlank((String) parameters.get("orgIds"))) {
@@ -1211,7 +834,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			List<PlatformOrgPo> orgList = orgService.getOrgListByIdSet(bizId, set);
+			List<PlatformOrgPo> orgList = platformOrgBiz.getOrgListByIdSet(bizId, set);
 			StringBuilder sb = new StringBuilder();
 			for (PlatformOrgPo orgPo : orgList) {
 				sb.append(orgPo.getName() + ",");
@@ -1227,7 +850,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String userIdStr : userIdArr) {
 				set.add(Integer.valueOf(userIdStr));
 			}
-			List<PlatformEmployeePo> empList = platformEmployeeService.getEmpList(bizId, set);
+			List<PlatformEmployeePo> empList = platformEmployeeBiz.getEmpList(bizId, set);
 			StringBuilder sb = new StringBuilder();
 			for (PlatformEmployeePo employeePo : empList) {
 				sb.append(employeePo.getName() + "");
@@ -1235,8 +858,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			// condition.setSaleOperatorName(sb.substring(0, sb.length()-1));
 			parameters.put("saleOperatorName", sb.substring(0, sb.length() - 1));
 		}
-		parameters.put("supplierType", Constants.AIRTICKETAGENT);
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		AirTicketDetailQueriesResult result = new AirTicketDetailQueriesResult();
 		result.setCashTypes(cashTypes);
@@ -1248,11 +870,11 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult trainTicketQueries(Integer bizId) {
 
 		// 餐类型
-		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.TRAINTICKET_TYPE_CODE);
+		List<DicInfo> type1 = dicBiz.getListByTypeCode(Constants.TRAINTICKET_TYPE_CODE);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1264,7 +886,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 	public RestaurantQueriesResult trainTicketBookingQueries(Integer bizId) {
 
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setCashTypes(cashTypes);
@@ -1275,12 +897,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult trainTicketJSFS(Integer bizId) {
 
 		// 从字典中查询结算方式
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取商家类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_TRAINTICKETAGENT);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_TRAINTICKETAGENT);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1295,32 +917,18 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		Integer bizId = airTicketDetailQueriesDTO.getBizId();
 		Map parameters = airTicketDetailQueriesDTO.getParameters();
 
-		if (null == parameters.get("startTime") && null == parameters.get("endTime")) {
-			Calendar c = Calendar.getInstance();
-			int year = c.get(Calendar.YEAR);
-			int month = c.get(Calendar.MONTH);
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-			c.set(year, month, 1, 0, 0, 0);
-			// condition.setStartTime(df.format(c.getTime()));
-			parameters.put("startTime", df.format(c.getTime()));
-			// c.set(year, month, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-			parameters.put("endTime", df.format(c.getTime()));
-			// condition.setEndTime(df.format(c.getTime()));
-
-		}
-		// condition.setSupplierType(Constants.AIRTICKETAGENT);
+		
 		if (StringUtils.isNotBlank((String) parameters.get("orgIds"))) {
 			Set<Integer> set = new HashSet<Integer>();
 			String[] orgIdArr = ((String) parameters.get("orgIds")).split(",");
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			List<PlatformOrgPo> orgList = orgService.getOrgListByIdSet(bizId, set);
+			List<PlatformOrgPo> orgList = platformOrgBiz.getOrgListByIdSet(bizId, set);
 			StringBuilder sb = new StringBuilder();
 			for (PlatformOrgPo orgPo : orgList) {
 				sb.append(orgPo.getName() + ",");
 			}
-			// condition.setOrgNames(sb.substring(0, sb.length()-1));
 			parameters.put("orgNames", sb.substring(0, sb.length() - 1));
 
 		}
@@ -1331,16 +939,14 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String userIdStr : userIdArr) {
 				set.add(Integer.valueOf(userIdStr));
 			}
-			List<PlatformEmployeePo> empList = platformEmployeeService.getEmpList(bizId, set);
+			List<PlatformEmployeePo> empList = platformEmployeeBiz.getEmpList(bizId, set);
 			StringBuilder sb = new StringBuilder();
 			for (PlatformEmployeePo employeePo : empList) {
 				sb.append(employeePo.getName() + "");
 			}
-			// condition.setSaleOperatorName(sb.substring(0, sb.length()-1));
 			parameters.put("saleOperatorName", sb.substring(0, sb.length() - 1));
 		}
-		parameters.put("supplierType", Constants.TRAINTICKETAGENT);
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		AirTicketDetailQueriesResult result = new AirTicketDetailQueriesResult();
 		result.setCashTypes(cashTypes);
@@ -1352,14 +958,14 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult insuranceQueries(Integer bizId) {
 
 		// 餐类型
-		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.INSURANCE_TYPE_CODE);
+		List<DicInfo> type1 = dicBiz.getListByTypeCode(Constants.INSURANCE_TYPE_CODE);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取餐厅类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_INSURANCE);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_INSURANCE);
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1372,9 +978,9 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 	public RestaurantQueriesResult insuranceDetailQueries(Integer bizId) {
 
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_INSURANCE);
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_INSURANCE);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1387,12 +993,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult insuranceBookingQueries(Integer bizId) {
 
 		// 从字典中查询结算方式
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_INSURANCE);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_INSURANCE);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1405,12 +1011,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult insuranceJSFS(Integer bizId) {
 
 		// 从字典中查询结算方式
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		// 获取商家类别
-		List<DicInfo> levelList = dicService.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_INSURANCE);
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_INSURANCE);
 
-		List<RegionInfo> allProvince = regionService.getAllProvince();
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
@@ -1423,9 +1029,9 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult incomeQueries(Integer bizId) {
 
 		// 类型
-		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.OTHER_TYPE_CODE);
+		List<DicInfo> type1 = dicBiz.getListByTypeCode(Constants.OTHER_TYPE_CODE);
 
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.QTSR_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.QTSR_JSFS, bizId);
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setCashTypes(cashTypes);
@@ -1437,7 +1043,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult incomeDetailQueries(Integer bizId){
 
 		// 从字典中查询结算方式
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.QTSR_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.QTSR_JSFS, bizId);
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setCashTypes(cashTypes);
@@ -1448,8 +1054,8 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult outcomeQueries(Integer bizId){
 
 		// 类型
-		List<DicInfo> type1 = dicService.getListByTypeCode(Constants.OTHER_TYPE_CODE);
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> type1 = dicBiz.getListByTypeCode(Constants.OTHER_TYPE_CODE);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setCashTypes(cashTypes);
@@ -1460,7 +1066,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 	public RestaurantQueriesResult outcomeDetailQueries(Integer bizId){
 		// 从字典中查询结算方式
-		List<DicInfo> cashTypes = dicService.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setCashTypes(cashTypes);
@@ -1473,26 +1079,14 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		Map paramters = deliveryDetailListDTO.getParamters();
 		Integer bizId= deliveryDetailListDTO.getBizId();
 		
-		if (null == paramters.get("start_min") && null == paramters.get("start_max")) {
-			Calendar c = Calendar.getInstance();
-			int year = c.get(Calendar.YEAR);
-			int month = c.get(Calendar.MONTH);
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-			c.set(year, month, 1, 0, 0, 0);
-			// condition.setStartTime(c.getTime()+"");
-			paramters.put("start_min", df.format(c.getTime()));
-			c.set(year, month, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-			paramters.put("start_max", df.format(c.getTime()));
-			// condition.setEndTime(c.getTime()+"");
-
-		}
+		
 		if (StringUtils.isNotBlank((String) paramters.get("orgIds"))) {
 			Set<Integer> set = new HashSet<Integer>();
 			String[] orgIdArr = ((String) paramters.get("orgIds")).split(",");
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			List<PlatformOrgPo> orgList = orgService.getOrgListByIdSet(bizId, set);
+			List<PlatformOrgPo> orgList = platformOrgBiz.getOrgListByIdSet(bizId, set);
 			StringBuilder sb = new StringBuilder();
 			for (PlatformOrgPo orgPo : orgList) {
 				sb.append(orgPo.getName() + ",");
@@ -1508,7 +1102,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String userIdStr : userIdArr) {
 				set.add(Integer.valueOf(userIdStr));
 			}
-			List<PlatformEmployeePo> empList = platformEmployeeService.getEmpList(bizId, set);
+			List<PlatformEmployeePo> empList = platformEmployeeBiz.getEmpList(bizId, set);
 			StringBuilder sb = new StringBuilder();
 			for (PlatformEmployeePo employeePo : empList) {
 				sb.append(employeePo.getName() + "");
@@ -1522,15 +1116,11 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return result;
 	}
 
-	public GetAirTicketDetailResult getAirTicketDetail(GetAirTicketDetailDTO getAirTicketDetailDTO){
+	public GetAirTicketDetailResult getAirTicketDetail(PageBean pageBean){
 		
-		PageBean<BookingAirTicket> pageBean = new PageBean<BookingAirTicket>();
-		pageBean.setPage(getAirTicketDetailDTO.getPage());
-		pageBean.setPageSize(getAirTicketDetailDTO.getPageSize());
-		pageBean.setParameter(getAirTicketDetailDTO.getParameter());
-
-		HashMap<String, BigDecimal> sum = bookingSupplierService.sumAirTicketBooking(pageBean);
-		pageBean = bookingSupplierService.selectAirTicketBookingListPage(pageBean);
+		
+		HashMap<String, BigDecimal> sum = bookingSupplierBiz.sumAirTicketBooking(pageBean);
+		pageBean = bookingSupplierBiz.selectAirTicketBookingListPage(pageBean);
 		
 		GetAirTicketDetailResult result=new GetAirTicketDetailResult();
 		result.setPageBean(pageBean);
@@ -1539,15 +1129,10 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		return result;
 	}
 
-	public GetAirTicketDetailResult getTrainTicketDetail(GetAirTicketDetailDTO getAirTicketDetailDTO){
+	public GetAirTicketDetailResult getTrainTicketDetail(PageBean pageBean){
 
-		PageBean<BookingAirTicket> pageBean = new PageBean<BookingAirTicket>();
-		pageBean.setPage(getAirTicketDetailDTO.getPage());
-		pageBean.setPageSize(getAirTicketDetailDTO.getPageSize());
-		pageBean.setParameter(getAirTicketDetailDTO.getParameter());
-
-		HashMap<String, BigDecimal> sum = bookingSupplierService.sumAirTicketBooking(pageBean);
-		pageBean = bookingSupplierService.selectAirTicketBookingListPage(pageBean);
+			HashMap<String, BigDecimal> sum = bookingSupplierBiz.sumAirTicketBooking(pageBean);
+		pageBean = bookingSupplierBiz.selectAirTicketBookingListPage(pageBean);
 		
 		GetAirTicketDetailResult result=new GetAirTicketDetailResult();
 		result.setPageBean(pageBean);
@@ -1558,7 +1143,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 	public GetAgeListByProductResult getAgeListByProduct(GetAgeListByProductDTO getAgeListByProductDTO){
 		
-		List<Map<String, Object>> ageMaps = tourGroupService.selectAgeCount(getAgeListByProductDTO.getQueryParamters());
+		List<Map<String, Object>> ageMaps = tourGroupBiz.selectAgeCount(getAgeListByProductDTO.getQueryParamters());
 		
 		Map<Object, Object> ageMap = new HashMap<Object, Object>();
 		for (Map<String, Object> map2 : ageMaps) {
@@ -1576,7 +1161,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	
 	@Override
 	public BookingSupplierDetailListResult getBookingSupplierDetailList(Integer id) {
-		List<BookingSupplierDetail> detailList = detailService.selectByPrimaryBookId(id);
+		List<BookingSupplierDetail> detailList = bookingSupplierDetailBiz.selectByPrimaryBookId(id);
 		BookingSupplierDetailListResult result=new BookingSupplierDetailListResult();
 		result.setDetailList(detailList);
 		return result;
@@ -1607,7 +1192,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			StringBuilder supplierIds = new StringBuilder();
 			
 			// map需要包含 procinceId, cityId,upplier三个参数
-			List<Map<String, Integer>> supplier_province = supplierSerivce.searchSupplierByArea(map);
+			List<Map<String, Integer>> supplier_province = supplierBiz.searchSupplierByArea(map);
 			
 			if (supplier_province != null && supplier_province.size() > 0) {
 				for (Map<String, Integer> item : supplier_province) {
@@ -1628,7 +1213,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		if (paramters.get("level") != null) {
 			StringBuilder supplierIds = new StringBuilder();
 			
-			List<SupplierInfo> supplier_level = supplierSerivce.findSupplierLevelCode(map);
+			List<SupplierInfo> supplier_level = supplierBiz.findSupplierLevelCode(map);
 			
 			if (supplier_level != null && supplier_level.size() > 0) {
 				Set<Integer> set = new HashSet<Integer>();
@@ -1653,7 +1238,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			Map<String, Object> pm = (Map<String, Object>) pb.getParameter();
 			pm.put("parameter", pm);
 			//model.addAttribute("sum", getCommonService(svc).queryOne(ssl, pm));
-			result.setSum(getCommonService(svc).queryOne(ssl, pm));
+			result.setSum(getCommonBiz(svc).queryOne(ssl, pm));
 		}
 		
 		return result;
@@ -1680,7 +1265,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		map.put("bizId", paramters.get("bizId"));
 		if (paramters.get("provinceId") != null) {
 			StringBuilder supplierIds = new StringBuilder();
-			List<Map<String, Integer>> supplier_province = supplierSerivce
+			List<Map<String, Integer>> supplier_province = supplierBiz
 					.searchSupplierByArea(map);
 			if (supplier_province != null && supplier_province.size() > 0) {
 				for (Map<String, Integer> item : supplier_province) {
@@ -1699,7 +1284,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		// 如果选择了【商家类别】作为查询条件
 		if (paramters.get("level") != null) {
 			StringBuilder supplierIds = new StringBuilder();
-			List<SupplierInfo> supplier_level = supplierSerivce
+			List<SupplierInfo> supplier_level = supplierBiz
 					.findSupplierLevelCode(map);
 			if (supplier_level != null && supplier_level.size() > 0) {
 				Set<Integer> set = new HashSet<Integer>();
@@ -1724,7 +1309,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			Map<String, Object> pm = (Map<String, Object>) pb.getParameter();
 			pm.put("parameter", pm);
 			//model.addAttribute("sum", getCommonService(svc).queryOne(ssl, pm));
-			result.setSum(getCommonService(svc).queryOne(ssl, pm));
+			result.setSum(getCommonBiz(svc).queryOne(ssl, pm));
 		}
 
 		return result;
@@ -1751,7 +1336,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		map.put("bizId", paramters.get("bizId"));
 		if (paramters.get("provinceId") != null) {
 			StringBuilder supplierIds = new StringBuilder();
-			List<Map<String, Integer>> supplier_province = supplierSerivce
+			List<Map<String, Integer>> supplier_province = supplierBiz
 				.searchSupplierByArea(map); // map需要包含 procinceId, cityId,
 												// supplier三个参数
 			
@@ -1772,7 +1357,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		// 如果选择了【商家类别】作为查询条件
 		if (paramters.get("level") != null) {
 			StringBuilder supplierIds = new StringBuilder();
-			List<SupplierInfo> supplier_level = supplierSerivce
+			List<SupplierInfo> supplier_level = supplierBiz
 					.findSupplierLevelCode(map);
 			if (supplier_level != null && supplier_level.size() > 0) {
 				Set<Integer> set = new HashSet<Integer>();
@@ -1798,7 +1383,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			Map<String, Object> pm = (Map<String, Object>) pb.getParameter();
 			pm.put("parameter", pm);
 			//model.addAttribute("sum", getCommonService(svc).queryOne(ssl, pm));
-			result.setSum(getCommonService(svc).queryOne(ssl, pm));
+			result.setSum(getCommonBiz(svc).queryOne(ssl, pm));
 		}
 		
 		return result;
@@ -1848,7 +1433,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
 			 
 			String salesOperatorIds = "";
 			for (Integer usrId : set) {
@@ -1859,7 +1444,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			}
 		}
 		pb.setParameter(paramters);
-		pb = getCommonService(svc).queryListPage(sl, pb);
+		pb = getCommonBiz(svc).queryListPage(sl, pb);
 		//model.addAttribute("pageBean", pb);
 		result.setPb(pb);
 		return pb;
@@ -1884,7 +1469,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (int i = 0; i < result.size(); i++) {
 				Map map = (Map) result.get(i);
 				
-				List<BookingSupplierDetail> detailList = detailService.selectByPrimaryBookId((Integer)map.get("id"));
+				List<BookingSupplierDetail> detailList = bookingSupplierDetailBiz.selectByPrimaryBookId((Integer)map.get("id"));
 				map.put("detailList", detailList);
 				Long createTime = (Long) map.get("createTime");
 				if (createTime != null) {
@@ -1898,32 +1483,18 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			Map pm = (Map) pb.getParameter();
 			pm.put("parameter", pm);
 			//model.addAttribute("sum", getCommonService(svc).queryOne(ssl, pm));
-			returnResult.setSum( getCommonService(svc).queryOne(ssl, pm));
+			returnResult.setSum( getCommonBiz(svc).queryOne(ssl, pm));
 		}
 		
 		return returnResult;
 	}
 
-	//FIXME 这里应该是个问题
-	/**
-	 * 获取查询服务
-	 * 
-	 * @author Jing.Zhuo
-	 * @create 2015年8月18日 上午9:34:25
-	 * @param svc
-	 * @return
-	 */
-	private CommonSaleBiz getCommonService(String svc) {
-		if (StringUtils.isBlank(svc)) {
-			svc = "commonSaleBiz";
-		}
-		return appContext.getBean(svc, CommonSaleBiz.class);
-	}
+	
 	
 	public TranportListResult tranportList(Integer bizId){
 	
 		// 交通类型
-		List<DicInfo> transportTypeList = dicService.getListByTypeCode(BasicConstants.GYXX_JTFS, bizId);
+		List<DicInfo> transportTypeList = dicBiz.getListByTypeCode(BasicConstants.GYXX_JTFS, bizId);
 		
 		TranportListResult result=new TranportListResult();
 		result.setTransportTypeList(transportTypeList);
@@ -1953,7 +1524,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(opearteGroupListDTO.getBizId(), set);
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(opearteGroupListDTO.getBizId(), set);
 			String salesOperatorIds = "";
 			for (Integer usrId : set) {
 				salesOperatorIds += usrId + ",";
@@ -1964,7 +1535,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		}
 		tourGroup.setBizId(opearteGroupListDTO.getBizId());
 		pageBean.setParameter(tourGroup);
-		pageBean = tourGroupService.getGroupOperateList(pageBean, tourGroup,opearteGroupListDTO.getUserIdSet());
+		pageBean = tourGroupBiz.getGroupOperateList(pageBean, tourGroup,opearteGroupListDTO.getUserIdSet());
 		
 		OpearteGroupListResult result=new OpearteGroupListResult();
 		result.setPageBean(pageBean);
@@ -2018,7 +1589,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
 			String salesOperatorIds = "";
 			for (Integer usrId : set) {
 				salesOperatorIds += usrId + ",";
@@ -2032,7 +1603,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		tourGroup.setBizId(bizId);
 		pageBean.setParameter(tourGroup);
 
-		List<Map<String, Object>> mapList = groupOrderService
+		List<Map<String, Object>> mapList = groupOrderBiz
 				.selectGroupIdsByReceiveMode(tourGroup);
 		if (mapList != null && mapList.size() > 0) {
 			Set<Integer> groupIdSet = new HashSet<Integer>();
@@ -2048,7 +1619,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		//Set<Integer> set = WebUtils.getDataUserIdSet(request);
 		Set<Integer> set=shopSelectListDTO.getUserIdSet();
 		
-		pageBean = queryService
+		pageBean = queryBiz
 				.selectGroupBookingListPage(pageBean, bizId, set);
 		List result = pageBean.getResult();
 		if (result != null && result.size() > 0) {
@@ -2065,43 +1636,43 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 			String groupIdStr = groupIds.toString();
 
-			List<Map<String, Object>> sightList = queryService
+			List<Map<String, Object>> sightList = queryBiz
 					.selectBookingSupplierCountForGroups(groupIdStr,
 							Constants.SCENICSPOT, tourGroup.getSupplierName());
-			List<Map<String, Object>> hotelList = queryService
+			List<Map<String, Object>> hotelList = queryBiz
 					.selectBookingSupplierCountForGroups(groupIdStr,
 							Constants.HOTEL, tourGroup.getSupplierName());
-			List<Map<String, Object>> eatList = queryService
+			List<Map<String, Object>> eatList = queryBiz
 					.selectBookingSupplierCountForGroups(groupIdStr,
 							Constants.RESTAURANT, tourGroup.getSupplierName());
-			List<Map<String, Object>> carList = queryService
+			List<Map<String, Object>> carList = queryBiz
 					.selectBookingSupplierCountForGroups(groupIdStr,
 							Constants.FLEET, tourGroup.getSupplierName());
-			List<Map<String, Object>> airList = queryService
+			List<Map<String, Object>> airList = queryBiz
 					.selectBookingSupplierCountForGroups(groupIdStr,
 							Constants.AIRTICKETAGENT,
 							tourGroup.getSupplierName());
-			List<Map<String, Object>> trainList = queryService
+			List<Map<String, Object>> trainList = queryBiz
 					.selectBookingSupplierCountForGroups(groupIdStr,
 							Constants.TRAINTICKETAGENT,
 							tourGroup.getSupplierName());
-			List<Map<String, Object>> insuranceList = queryService
+			List<Map<String, Object>> insuranceList = queryBiz
 					.selectBookingSupplierCountForGroups(groupIdStr,
 							Constants.INSURANCE, tourGroup.getSupplierName());
-			List<Map<String, Object>> shopList = queryService
+			List<Map<String, Object>> shopList = queryBiz
 					.selectBookingShopCountForGroups(groupIdStr,
 							tourGroup.getSupplierName());
-			List<Map<String, Object>> inList = queryService
+			List<Map<String, Object>> inList = queryBiz
 					.selectBookingSupplierCountForGroups(groupIdStr,
 							Constants.OTHERINCOME, tourGroup.getSupplierName());
-			List<Map<String, Object>> outList = queryService
+			List<Map<String, Object>> outList = queryBiz
 					.selectBookingSupplierCountForGroups(groupIdStr,
 							Constants.OTHEROUTCOME, tourGroup.getSupplierName());
 
-			List<Map<String, Object>> guideList = queryService
+			List<Map<String, Object>> guideList = queryBiz
 					.selectBookingGuideForGroups(groupIdStr,
 							tourGroup.getSupplierName());
-			List<Map<String, Object>> deliveryList = queryService
+			List<Map<String, Object>> deliveryList = queryBiz
 					.selectBookingDeliveryForGroups(groupIdStr,
 							tourGroup.getSupplierName());
 
@@ -2128,7 +1699,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		//model.addAttribute("pageBean", pageBean);
 		//model.addAttribute("sum",queryService.getPersonCount(pageBean, bizId, set));
 		returnResult.setPageBean(pageBean);
-		returnResult.setSum(queryService.getPersonCount(pageBean, bizId, set));
+		returnResult.setSum(queryBiz.getPersonCount(pageBean, bizId, set));
 		
 		return returnResult;
 	}
@@ -2202,7 +1773,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
 			String salesOperatorIds = "";
 			for (Integer usrId : set) {
 				salesOperatorIds += usrId + ",";
@@ -2214,7 +1785,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		}
 		pageBean.setParameter(tourGroup);
 		tourGroup.setBizId(bizId);
-		pageBean = tourGroupService.getGroupInfoList(pageBean, tourGroup,shopSelectListDTO.getUserIdSet());
+		pageBean = tourGroupBiz.getGroupInfoList(pageBean, tourGroup,shopSelectListDTO.getUserIdSet());
 		//model.addAttribute("pageBean", pageBean);
 		returnResult.setPageBean(pageBean);
 		
@@ -2224,11 +1795,11 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	
 	public ToSubsidiaryDebtResult toSubsidiaryDebt(){
 		
-		String lj = platformEmployeeService.findByOrgPath("1-3-");
-		String lm = platformEmployeeService.findByOrgPath("1-47-");
-		String yx = platformEmployeeService.findByOrgPath("1-5-");
-		String yp = platformEmployeeService.findByOrgPath("1-4-");
-		String llt = platformEmployeeService.findByOrgPath("1-6-");
+		String lj = platformEmployeeBiz.findByOrgPath("1-3-");
+		String lm = platformEmployeeBiz.findByOrgPath("1-47-");
+		String yx = platformEmployeeBiz.findByOrgPath("1-5-");
+		String yp = platformEmployeeBiz.findByOrgPath("1-4-");
+		String llt = platformEmployeeBiz.findByOrgPath("1-6-");
 		
 		ToSubsidiaryDebtResult result=new ToSubsidiaryDebtResult();
 		result.setLj(lj);
@@ -2266,7 +1837,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
 			String salesOperatorIds = "";
 			for (Integer usrId : set) {
 				salesOperatorIds += usrId + ",";
@@ -2283,14 +1854,14 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		}
 		// pms.put("set", WebUtils.getDataUserIdSet(request));
 		pb.setParameter(pms);
-		pb = getCommonService(svc).queryListPage(sl, pb);
+		pb = getCommonBiz(svc).queryListPage(sl, pb);
 		//model.addAttribute("pageBean", pb);
 		result.setPb(pb);
 		if (StringUtils.isNotBlank(ssl)) {
 			Map pm = (Map) pb.getParameter();
 			pm.put("parameter", pm);
 			//model.addAttribute("sum", getCommonService(svc).queryOne(ssl, pm));
-			result.setSum(getCommonService(svc).queryOne(ssl, pm));
+			result.setSum(getCommonBiz(svc).queryOne(ssl, pm));
 		}
 		
 		return result;
@@ -2299,7 +1870,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public ToProductListResult toProductList(Integer curBizId){
 
 		// 产品品牌下拉列表数据
-		List<DicInfo> pp = dicService.getListByTypeCode(BasicConstants.CPXL_PP,curBizId);
+		List<DicInfo> pp = dicBiz.getListByTypeCode(BasicConstants.CPXL_PP,curBizId);
 		
 		ToProductListResult result=new ToProductListResult();
 		result.setPp(pp);
@@ -2321,7 +1892,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
 			String salesOperatorIds = "";
 			for (Integer usrId : set) {
 				salesOperatorIds += usrId + ",";
@@ -2371,7 +1942,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		 * totalCnt+=vo.getGuestCnt(); } } model.addAttribute("total",
 		 * totalCnt); model.addAttribute("list", list);
 		 */
-		String jsonStr = queryService.productGuestStatics(condition,userIdSet);
+		String jsonStr = queryBiz.productGuestStatics(condition,userIdSet);
 		
 		//model.addAttribute("jsonStr", jsonStr);
 		return jsonStr;
@@ -2393,7 +1964,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
 			String salesOperatorIds = "";
 			for (Integer usrId : set) {
 				salesOperatorIds += usrId + ",";
@@ -2430,7 +2001,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			}
 
 		}
-		List<GroupOrder> allGroupOrder = groupOrderService
+		List<GroupOrder> allGroupOrder = groupOrderBiz
 				.selectGroupNumForQuery(groupOrder,
 						bizId,
 						userIdSet);
@@ -2473,7 +2044,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
 			String salesOperatorIds = "";
 			for (Integer usrId : set) {
 				salesOperatorIds += usrId + ",";
@@ -2498,7 +2069,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			}
 
 		}
-		List<GroupOrder> allGroupOrder = groupOrderService
+		List<GroupOrder> allGroupOrder = groupOrderBiz
 				.selectGroupNumForQuery(groupOrder,bizId,userIdSet);
 		
 		
@@ -2522,7 +2093,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
 			String salesOperatorIds = "";
 			for (Integer usrId : set) {
 				salesOperatorIds += usrId + ",";
@@ -2549,7 +2120,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			// 添加时间时，结束时间需要加一天
 			condition.setEndDateNum(DateUtils.addDay(condition.getEndDate(), 1).getTime());
 		}
-		return queryService.guestSourceStatics(condition,userIdSet);
+		return queryBiz.guestSourceStatics(condition,userIdSet);
 	}
 
 	public ToBookingShopListResult toBookingShopList(ToBookingShopListDTO toBookingShopListDTO){
@@ -2569,7 +2140,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			pageBean.setPageSize(pageSize);
 		}
 		pageBean.setParameter(toBookingShopListDTO.getQueryParamters());
-		pageBean = bookingShopService.selectShopListPage(pageBean,
+		pageBean = bookingShopBiz.selectShopListPage(pageBean,
 				toBookingShopListDTO.getBizId());
 		
 		ToBookingShopListResult result=new ToBookingShopListResult();
@@ -2592,5 +2163,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		HotelDetailPreviewResult result=new HotelDetailPreviewResult();
 		result.setPb(pb);
 		return result;
+	}
+	
+	private CommonSaleBiz getCommonBiz(String svc) {
+		if (StringUtils.isBlank(svc)) {
+			svc = "commonSaleBiz";
+		}
+		return appContext.getBean(svc, CommonSaleBiz.class);
 	}
 }

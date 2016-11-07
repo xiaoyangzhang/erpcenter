@@ -582,7 +582,7 @@ public class SupplierFacadeImpl implements SupplierFacade {
 			SupplierBankaccount supplierBankaccount = supplierBankaccountDTO.getSupplierBankaccount();
 			supplierBankaccount.setCreateTime(System.currentTimeMillis());
 
-			DicInfo di = dicBiz.getById(supplierBankaccount.getBankId() + "");
+			DicInfo di = dicBiz.getById(supplierBankaccount.getBankId());
 			supplierBankaccount.setBankName(di.getValue());
 
 			supplierBiz.saveBankaccount(supplierBankaccount);
@@ -619,8 +619,7 @@ public class SupplierFacadeImpl implements SupplierFacade {
 		WebResult<Boolean> webResult = new WebResult<Boolean>();
 		try{
 			SupplierBankaccount supplierBankaccount = supplierBankaccountDTO.getSupplierBankaccount();
-			DicInfo dicInfo = dicBiz.getById(supplierBankaccount.getBankId()
-					+ "");
+			DicInfo dicInfo = dicBiz.getById(supplierBankaccount.getBankId());
 			supplierBankaccount.setBankName(dicInfo.getValue());
 			supplierBiz.updateBankaccount(supplierBankaccount);
 			webResult.setValue(true);
@@ -1326,8 +1325,7 @@ public class SupplierFacadeImpl implements SupplierFacade {
 			SupplierGuide guide = guideDTO.getSupplierGuide();
 			if (guide.getId() != null) {
 				if (guide.getNationality() != -1) {
-					DicInfo dicInfo = dicBiz.getById(guide.getNationality()
-							+ "");
+					DicInfo dicInfo = dicBiz.getById(guide.getNationality());
 					guide.setNationalityName(dicInfo.getValue());
 				}
 				guideBiz.updateGuideInfo(guide);

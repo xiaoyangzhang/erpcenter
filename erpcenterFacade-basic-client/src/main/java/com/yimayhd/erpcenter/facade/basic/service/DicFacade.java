@@ -18,19 +18,19 @@ public interface DicFacade {
 	
 	DicTypeInfo getDicTypeById(Integer pid);
 	
-	DicInfo getDicById(String id);
+	DicInfo getDicById(Integer id);
 	
 	ResultSupport dicTypeUpdate(DicTypeInfo info);
 	
 	ResultSupport dicTypeAdd(DicTypeInfo info);
 	
-	ResultSupport dicTypeDelete(String id);
+	ResultSupport dicTypeDelete(Integer id);
 	
 	ResultSupport dicUpdate(DicInfo dicInfo);
 	
 	ResultSupport dicAdd(DicInfo dicInfo);
 	
-	ResultSupport dicDel(String id);
+	ResultSupport dicDel(Integer id);
 	
 	String getDicTypeJson();
 	

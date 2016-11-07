@@ -228,4 +228,10 @@ public class SaleCommonFacadeImpl implements SaleCommonFacade {
 		return typeList;
 	}
 
+	@Override
+	public List<DicInfo> getGuestSourceTypesByTypeCode(Integer bizId) {
+		List<DicInfo> sourceTypeList = dicBiz.getListByTypeCode(Constants.GUEST_SOURCE_TYPE, bizId);
+		return sourceTypeList;
+	}
+
 }

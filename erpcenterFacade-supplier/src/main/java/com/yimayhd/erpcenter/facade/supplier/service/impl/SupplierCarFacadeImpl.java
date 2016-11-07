@@ -131,7 +131,7 @@ public class SupplierCarFacadeImpl implements SupplierCarFacade {
 		WebResult<Integer> webResult = new WebResult<Integer>();
 		try{
 			SupplierCarVO supplierCarVO = supplierCarVODTO.getSupplierCarVO();
-			supplierCarVO.getSupplierCar().setTypeName(dicBiz.getById(supplierCarVO.getSupplierCar().getTypeId()+"").getValue());
+			supplierCarVO.getSupplierCar().setTypeName(dicBiz.getById(supplierCarVO.getSupplierCar().getTypeId()).getValue());
 			int id = supplierCarBiz.insertSupplierCar(supplierCarVO,
 					bizId);
 			webResult.setValue(id);
@@ -166,7 +166,7 @@ public class SupplierCarFacadeImpl implements SupplierCarFacade {
 		WebResult<Boolean> webResult = new WebResult<Boolean>();
 		try{
 			SupplierCarVO supplierCarVO = supplierCarVODTO.getSupplierCarVO();
-			supplierCarVO.getSupplierCar().setTypeName(dicBiz.getById(supplierCarVO.getSupplierCar().getTypeId()+"").getValue());
+			supplierCarVO.getSupplierCar().setTypeName(dicBiz.getById(supplierCarVO.getSupplierCar().getTypeId()).getValue());
 			supplierCarBiz.updateSupplierCar(supplierCarVO);
 			webResult.setValue(true);
 		}catch (Exception e) {

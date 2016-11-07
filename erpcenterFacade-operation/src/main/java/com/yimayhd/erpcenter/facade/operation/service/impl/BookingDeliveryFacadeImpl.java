@@ -235,8 +235,8 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
                 // 根据散客订单统计酒店信息
                 List<GroupRequirement> grogShopList = groupRequirementBiz.selectByOrderAndType(order.getId(), 3);
                 if (grogShopList.size() > 0) {
-                    if (grogShopList.get(0).getHotelLevel() != null) {
-                        gopp.setHotelLevel(dicBiz.getById(grogShopList.get(0).getHotelLevel()).getValue()
+                    if (StringUtils.isNotBlank(grogShopList.get(0).getHotelLevel())) {
+                        gopp.setHotelLevel(dicBiz.getById(Integer.parseInt(grogShopList.get(0).getHotelLevel())).getValue()
                                 + "\n");
                     }
                 }
@@ -285,8 +285,8 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 	@Override
 	public PageBean getLocalTravelAngencyGroupList(PageBean pageBean,
 			TourGroupVO tourGroup, Set<Integer> set) {
-		PageBean bean = tourGroupBiz.getLocalTravelAngencyGroupList(pageBean, tourGroup, set);
-		return bean;
+		pageBean = tourGroupBiz.getLocalTravelAngencyGroupList(pageBean, tourGroup, set);
+		return pageBean;
 	}
 
 }

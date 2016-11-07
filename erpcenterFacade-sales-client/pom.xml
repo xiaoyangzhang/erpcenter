@@ -25,6 +25,10 @@
     </dependency>
     <dependency>
     	<groupId>com.yimayhd.erpcenter</groupId>
+  		<artifactId>erpcenterFacade-common-client</artifactId>
+    </dependency>
+    <dependency>
+    	<groupId>com.yimayhd.erpcenter</groupId>
   		<artifactId>erpcenterBiz-sys-client</artifactId>
     </dependency>
     <dependency>

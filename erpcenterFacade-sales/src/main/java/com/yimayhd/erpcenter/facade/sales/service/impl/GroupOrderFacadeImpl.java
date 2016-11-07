@@ -540,7 +540,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		TourGroup tourGroup = editOrderGroupInfoDTO.getTourGroup();
 
 		if (tourGroup.getPrudctBrandId() != null) {
-			DicInfo dicInfo = dicService.getById(tourGroup.getPrudctBrandId() + "");
+			DicInfo dicInfo = dicService.getById(tourGroup.getPrudctBrandId());
 			tourGroup.setProductBrandName(dicInfo.getValue());
 		}
 		if (tourGroup.getGroupCode() != null) {
@@ -1850,7 +1850,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 
 		groupOrderPrice.setCreateTime(System.currentTimeMillis());
 		groupOrderPrice.setRowState(0);
-		groupOrderPrice.setItemName(dicService.getById(groupOrderPrice.getItemId() + "").getValue());
+		groupOrderPrice.setItemName(dicService.getById(groupOrderPrice.getItemId()).getValue());
 		groupOrderPrice.setCreatorId(userId);
 		groupOrderPrice.setCreatorName(userName);
 		groupOrderPriceService.insertSelective(groupOrderPrice);
@@ -1868,7 +1868,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		for (GroupOrderPrice groupOrderPrice : groupOrderPriceList) {
 			groupOrderPrice.setCreateTime(System.currentTimeMillis());
 			groupOrderPrice.setRowState(0);
-			groupOrderPrice.setItemName(dicService.getById(groupOrderPrice.getItemId() + "").getValue());
+			groupOrderPrice.setItemName(dicService.getById(groupOrderPrice.getItemId()).getValue());
 			groupOrderPrice.setCreatorId(userId);
 			groupOrderPrice.setCreatorName(userName);
 			groupOrderPriceService.insertSelective(groupOrderPrice);
@@ -1882,7 +1882,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		GroupOrderPrice groupOrderPrice=addGroupOrderPriceDTO.getGroupOrderPrice();
 		
 		if (groupOrderPrice.getItemId() != null) {
-			groupOrderPrice.setItemName(dicService.getById(groupOrderPrice.getItemId() + "").getValue());
+			groupOrderPrice.setItemName(dicService.getById(groupOrderPrice.getItemId()).getValue());
 		}
 		groupOrderPriceService.updateByPrimaryKeySelective(groupOrderPrice);
 
@@ -2019,7 +2019,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			StringBuilder sb = new StringBuilder();
 			for (GroupRequirement gsl : grogShopList) {
 				if (gsl.getHotelLevel() != null) {
-					sb.append(dicService.getById(gsl.getHotelLevel()).getValue() + "\n");
+					sb.append(dicService.getById(Integer.parseInt(gsl.getHotelLevel())).getValue() + "\n");
 				}
 			}
 			gopp.setHotelLevel(sb.toString());
@@ -2184,7 +2184,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			StringBuilder sb = new StringBuilder();
 			for (GroupRequirement gsl : grogShopList) {
 				if (gsl.getHotelLevel() != null) {
-					sb.append(dicService.getById(gsl.getHotelLevel()).getValue() + "\n");
+					sb.append(dicService.getById(Integer.parseInt(gsl.getHotelLevel())).getValue() + "\n");
 				}
 			}
 			gopp.setHotelLevel(sb.toString());
@@ -2682,7 +2682,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			StringBuilder sb = new StringBuilder();
 			for (GroupRequirement gsl : grogShopList) {
 				if (gsl.getHotelLevel() != null) {
-					sb.append(dicService.getById(gsl.getHotelLevel())
+					sb.append(dicService.getById(Integer.parseInt(gsl.getHotelLevel()))
 							.getValue() + "\n");
 				}
 			}
@@ -2799,7 +2799,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			StringBuilder sb = new StringBuilder();
 			for (GroupRequirement gsl : grogShopList) {
 				if (gsl.getHotelLevel() != null) {
-					sb.append(dicService.getById(gsl.getHotelLevel())
+					sb.append(dicService.getById(Integer.parseInt(gsl.getHotelLevel()))
 							.getValue() + "\n");
 				}
 			}
@@ -3032,7 +3032,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			StringBuilder sb = new StringBuilder();
 			for (GroupRequirement gsl : grogShopList) {
 				if (gsl.getHotelLevel() != null) {
-					sb.append(dicService.getById(gsl.getHotelLevel()).getValue()+ "\n");
+					sb.append(dicService.getById(Integer.parseInt(gsl.getHotelLevel())).getValue()+ "\n");
 				}
 			}
 			gopp.setHotelLevel(sb.toString());
@@ -3137,7 +3137,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			StringBuilder sb = new StringBuilder();
 			for (GroupRequirement gsl : grogShopList) {
 				if (gsl.getHotelLevel() != null) {
-					sb.append(dicService.getById(gsl.getHotelLevel())
+					sb.append(dicService.getById(Integer.parseInt(gsl.getHotelLevel()))
 							.getValue() + "\n");
 				}
 			}
@@ -3282,7 +3282,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			String tr = "";
 			GroupRequirement gr = grogShopList.get(0);
 			if (gr.getHotelLevel() != null) {
-				ll = dicService.getById(gr.getHotelLevel()).getValue() + "\n";
+				ll = dicService.getById(Integer.parseInt(gr.getHotelLevel())).getValue() + "\n";
 			}
 			if (gr.getCountSingleRoom() != null && gr.getCountSingleRoom() != 0) {
 				sr = gr.getCountSingleRoom() + "单间" + " ";

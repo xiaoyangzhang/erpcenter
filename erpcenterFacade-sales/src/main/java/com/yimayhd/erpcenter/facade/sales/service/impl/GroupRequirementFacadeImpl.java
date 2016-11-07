@@ -42,7 +42,7 @@ public class GroupRequirementFacadeImpl implements GroupRequirementFacade{
 		List<GroupRequirement> restaurantList = groupRequirementService.selectByGroupIdAndType(groupId, Constants.RESTAURANT);
 		if(hotelList!=null && hotelList.size()>0){
 			for (GroupRequirement hotel : hotelList) {
-				hotel.setHotelLevelName(dicService.getById(hotel.getHotelLevel()+"").getValue());
+				hotel.setHotelLevelName(dicService.getById(Integer.parseInt(hotel.getHotelLevel())).getValue());
 			}
 		}
 		

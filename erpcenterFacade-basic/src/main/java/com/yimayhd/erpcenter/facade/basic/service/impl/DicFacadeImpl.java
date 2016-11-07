@@ -52,7 +52,7 @@ public class DicFacadeImpl implements DicFacade {
 	}
 
 	@Override
-	public DicInfo getDicById(String id) {
+	public DicInfo getDicById(Integer id) {
 		DicInfo info = dicBiz.getById(id);
 		return info;
 	}
@@ -84,7 +84,7 @@ public class DicFacadeImpl implements DicFacade {
 	}
 
 	@Override
-	public ResultSupport dicTypeDelete(String id) {
+	public ResultSupport dicTypeDelete(Integer id) {
 		ResultSupport result = new ResultSupport();
 		try{
 			dicTypeBiz.delete(id);
@@ -120,7 +120,7 @@ public class DicFacadeImpl implements DicFacade {
 	}
 
 	@Override
-	public ResultSupport dicDel(String id) {
+	public ResultSupport dicDel(Integer id) {
 		ResultSupport result = new ResultSupport();
 		try{
 			dicBiz.delDic(id);

@@ -26,7 +26,7 @@
               <property name="retries" value="${dubbo.retries}"/>
   </bean>
   
-  <bean id="commonFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
+   <bean id="commonFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
               <property name="interface" value="org.erpcenterFacade.common.client.service.CommonFacade"/>
               <property name="ref" ref="commonFacade"/>
               <property name="application" ref="dubboApplicationConfig"/>
