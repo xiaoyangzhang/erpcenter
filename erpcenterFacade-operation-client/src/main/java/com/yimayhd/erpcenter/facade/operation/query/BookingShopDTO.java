@@ -10,36 +10,36 @@ public class BookingShopDTO implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private int bizId;
+	private Integer bizId;
 	
-	private int groupId;
+	private Integer groupId;
 	
-	private int shopId;
+	private Integer shopId;
 	
-	private int guideId;
+	private Integer guideId;
 	
-	public int getBizId() {
+	public Integer getBizId() {
 		return bizId;
 	}
-	public void setBizId(int bizId) {
+	public void setBizId(Integer bizId) {
 		this.bizId = bizId;
 	}
-	public int getGroupId() {
+	public Integer getGroupId() {
 		return groupId;
 	}
-	public void setGroupId(int groupId) {
+	public void setGroupId(Integer groupId) {
 		this.groupId = groupId;
 	}
-	public int getShopId() {
+	public Integer getShopId() {
 		return shopId;
 	}
-	public void setShopId(int shopId) {
+	public void setShopId(Integer shopId) {
 		this.shopId = shopId;
 	}
-	public int getGuideId() {
+	public Integer getGuideId() {
 		return guideId;
 	}
-	public void setGuideId(int guideId) {
+	public void setGuideId(Integer guideId) {
 		this.guideId = guideId;
 	}
 	

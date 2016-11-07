@@ -101,13 +101,6 @@ public interface BookingShopFacade {
 	 */
 	LoadShopInfoResult loadShopInfo(BookingShopDTO bookingShopDTO);
 	
-	/**
-	 * 客人购物统计列表
-	 * @param bizId
-	 * @return
-	 * @author wangjun
-	 */
-	GuestShopListResult toGuestShopList(int bizId);
 	
 	/**
 	 * 客人购物统计列表do
@@ -115,7 +108,7 @@ public interface BookingShopFacade {
 	 * @return
 	 * @author wangjun
 	 */
-	GuestShopResult guestShopList(BookingShopListDTO bookingShopListDTO);
+	GuestShopResult guestShopList(PageBean pageBean ,BookingShopListDTO bookingShopListDTO);
 	
 	/**
 	 * 购物录入列表

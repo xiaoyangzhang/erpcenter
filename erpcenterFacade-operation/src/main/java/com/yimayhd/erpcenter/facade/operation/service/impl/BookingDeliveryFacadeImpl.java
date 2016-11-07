@@ -285,8 +285,8 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 	@Override
 	public PageBean getLocalTravelAngencyGroupList(PageBean pageBean,
 			TourGroupVO tourGroup, Set<Integer> set) {
-		PageBean bean = tourGroupBiz.getLocalTravelAngencyGroupList(pageBean, tourGroup, set);
-		return bean;
+		pageBean = tourGroupBiz.getLocalTravelAngencyGroupList(pageBean, tourGroup, set);
+		return pageBean;
 	}
 
 }

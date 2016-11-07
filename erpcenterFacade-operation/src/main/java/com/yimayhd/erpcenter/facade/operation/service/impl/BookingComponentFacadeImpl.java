@@ -113,7 +113,7 @@ public class BookingComponentFacadeImpl implements BookingComponentFacade {
 		}
 		GroupRouteVO routeVo = groupRouteBiz.findGroupRouteByGroupId(groupId);
 		result.setGroupRoute(routeVo);
-		return null;
+		return result;
 	}
 
 	@Override

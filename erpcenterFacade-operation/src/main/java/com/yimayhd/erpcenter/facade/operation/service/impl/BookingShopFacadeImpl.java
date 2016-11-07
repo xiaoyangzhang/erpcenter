@@ -235,9 +235,9 @@ public class BookingShopFacadeImpl implements BookingShopFacade{
 	@Override
 	public LoadShopInfoResult loadShopInfo(BookingShopDTO bookingShopDTO) {
 		LoadShopInfoResult result = new LoadShopInfoResult();
-		int groupId = bookingShopDTO.getGroupId();
-		int shopId = bookingShopDTO.getShopId();
-		if(shopId > 0){
+		Integer groupId = bookingShopDTO.getGroupId();
+		Integer shopId = bookingShopDTO.getShopId();
+		if(shopId != null && shopId > 0){
 			BookingShop shop = bookingShopBiz.selectByPrimaryKey(shopId);
 			result.setBookingShop(shop);
 			int count = bookingShopDetailDeployBiz.getCountByShopId(shopId);
@@ -255,55 +255,14 @@ public class BookingShopFacadeImpl implements BookingShopFacade{
 		return result;
 	}
 
-	@Override
-	public GuestShopListResult toGuestShopList(int bizId) {
-		GuestShopListResult result = new GuestShopListResult();
-		List<RegionInfo> allProvince = regionBiz.getAllProvince();
-		result.setAllProvince(allProvince);
-		List<DicInfo> sourceTypeList = dicBiz.getListByTypeCode(
-				Constants.GUEST_SOURCE_TYPE, bizId);
-		result.setSourceTypeList(sourceTypeList);
-		return result;
-	}
+	
 
 	@Override
-	public GuestShopResult guestShopList(BookingShopListDTO bookingShopListDTO) {
+	public GuestShopResult guestShopList(PageBean pageBean ,BookingShopListDTO bookingShopListDTO) {
 		GuestShopResult result = new GuestShopResult();
 		QueryGuideShop shop = bookingShopListDTO.getQueryGuideShop();
-		int bizId = bookingShopListDTO.getBizId();
-		String orgIds = bookingShopListDTO.getOrgIds();
-		String saleOperatorIds = bookingShopListDTO.getSaleOperatorIds();
 		Set<Integer> dataUserIds = bookingShopListDTO.getDataUserIds();
-		PageBean pageBean = new PageBean();
-		if (shop.getPage() == null) {
-			shop.setPage(1);
-		}
-		if (shop.getPageSize() == null) {
-			pageBean.setPageSize(Constants.PAGESIZE);
-		} else {
-			pageBean.setPageSize(shop.getPageSize());
-		}
-		shop.setBizId(bizId);
-		if (StringUtils.isBlank(saleOperatorIds)
-				&& StringUtils.isNotBlank(orgIds)) {
-			Set<Integer> set = new HashSet<Integer>();
-			String[] orgIdArr = orgIds.split(",");
-			for (String orgIdStr : orgIdArr) {
-				set.add(Integer.valueOf(orgIdStr));
-			}
-			set = platformEmployeeBiz.getUserIdListByOrgIdList(
-					bizId, set);
-			String salesOperatorIds = "";
-			for (Integer usrId : set) {
-				salesOperatorIds += usrId + ",";
-			}
-			if (!salesOperatorIds.equals("")) {
-				shop.setSaleOperatorIds(salesOperatorIds.substring(0,
-						salesOperatorIds.length() - 1));
-			}
-		}
-		pageBean.setParameter(shop);
-		pageBean.setPage(shop.getPage());
+		
 		pageBean = bookingShopBiz.getGuideShop(pageBean,dataUserIds);
 		result.setPageBean(pageBean);
 		result.setShoppingDataState(shop.getShoppingDataState());

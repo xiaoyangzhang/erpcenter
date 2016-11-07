@@ -2,6 +2,7 @@ package com.yimayhd.erpcenter.facade.dataanalysis.client.service;
 
 import java.text.ParseException;
 
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.AirTicketDetailQueriesDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.DeliveryDetailListDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.GetAgeListByProductDTO;
@@ -66,45 +67,41 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.result.TranportListResul
  */
 public interface DataAnalysisFacade {
 
-	GetOrgAndUserTreeJsonStrResult getOrgAndUserTreeJsonStr(Integer bizId);
 
-	ToSaleOperatorPreviewResult toSaleOperatorPreview(ToSaleOperatorPreviewDTO toSaleOperatorPreviewDTO);
+	ToSaleOperatorPreviewResult toSaleOperatorPreview(PageBean pageBean,ToSaleOperatorPreviewDTO toSaleOperatorPreviewDTO);
 
-	ToSaleOperatorListResult toSaleOperatorList();
 
-	ToSaleOperatorTableResult toSaleOperatorTable(ToSaleOperatorPreviewDTO toSaleOperatorPreviewDTO);
+	ToSaleOperatorTableResult toSaleOperatorTable(PageBean pageBean,ToSaleOperatorPreviewDTO toSaleOperatorPreviewDTO);
 
-	GetLevelNameResult getLevelName(String code);
 
-	SaleOperatorExcelResult saleOperatorExcel(SaleOperatorExcelDTO saleOperatorExcelDTO);
+	SaleOperatorExcelResult saleOperatorExcel(PageBean pageBean,SaleOperatorExcelDTO saleOperatorExcelDTO);
 
-	ToSaleOperatorOrderStaticTableResult toSaleOperatorOrderStaticTable(
+	ToSaleOperatorOrderStaticTableResult toSaleOperatorOrderStaticTable(PageBean pageBean,
 			ToSaleOperatorOrderStaticTableDTO toSaleOperatorOrderStaticTableDTO);
 
-	ToOperatorGroupStaticTableResult toOperatorGroupStaticTable(
+	ToOperatorGroupStaticTableResult toOperatorGroupStaticTable(PageBean pageBean,
 			ToOperatorGroupStaticTableDTO toOperatorGroupStaticTableDTO);
 
-	AllProvinceResult getAllProvince();
 
-	ToOrdersPreviewResult toOrdersPreview(ToOrdersPreviewDTO toOrdersPreviewDTO);
+	ToOrdersPreviewResult toOrdersPreview(PageBean pageBean,ToOrdersPreviewDTO toOrdersPreviewDTO);
 
-	ToPaymentPreviewResult toPaymentPreview(ToOrdersPreviewDTO toOrdersPreviewDTO);
+	ToPaymentPreviewResult toPaymentPreview(PageBean pageBean,ToOrdersPreviewDTO toOrdersPreviewDTO);
 
-	GetOrdersResult getOrders(ToOrdersPreviewDTO toOrdersPreviewDTO);
+	GetOrdersResult getOrders(PageBean pageBean,ToOrdersPreviewDTO toOrdersPreviewDTO);
 
-	GetPaymentDataResult getPaymentData(GetPaymentDataDTO getPaymentDataDTO);
+	GetPaymentDataResult getPaymentData(PageBean pageBean,GetPaymentDataDTO getPaymentDataDTO);
 
-	ShopInfoDetailResult shopInfoDetail(ShopInfoDetailDTO shopInfoDetailDTO);
+	ShopInfoDetailResult shopInfoDetail(PageBean pageBean,ShopInfoDetailDTO shopInfoDetailDTO);
 
 	ShopDetailListResult shopDetailList(Integer id);
 
-	ShopSelectListResult shopSelectList(ShopSelectListDTO shopSelectListDTO);
+	ShopSelectListResult shopSelectList(PageBean pageBean,ShopSelectListDTO shopSelectListDTO);
 
 	String getEmployeeIds(GetEmployeeIdsDTO getEmployeeIdsDTO);
 
-	PaymentStaticPreviewResult paymentStaticPreview(PaymentStaticPreviewDTO paymentStaticPreviewDTO);
+	PaymentStaticPreviewResult paymentStaticPreview(PageBean pageBean,PaymentStaticPreviewDTO paymentStaticPreviewDTO);
 
-	PaymentStaticPreviewResult paymentStaticExport(PaymentStaticPreviewDTO paymentStaticPreviewDTO);
+	PaymentStaticPreviewResult paymentStaticExport(PageBean pageBean,PaymentStaticPreviewDTO paymentStaticPreviewDTO);
 
 	RestaurantQueriesResult restaurantQueries(Integer bizId);
 
@@ -172,9 +169,9 @@ public interface DataAnalysisFacade {
 
 	DeliveryDetailListResult deliveryDetailList(DeliveryDetailListDTO deliveryDetailListDTO);
 
-	GetAirTicketDetailResult getAirTicketDetail(GetAirTicketDetailDTO getAirTicketDetailDTO);
+	GetAirTicketDetailResult getAirTicketDetail(PageBean pageBean);
 
-	GetAirTicketDetailResult getTrainTicketDetail(GetAirTicketDetailDTO getAirTicketDetailDTO);
+	GetAirTicketDetailResult getTrainTicketDetail(PageBean pageBean);
 
 	GetAgeListByProductResult getAgeListByProduct(GetAgeListByProductDTO getAgeListByProductDTO);
 

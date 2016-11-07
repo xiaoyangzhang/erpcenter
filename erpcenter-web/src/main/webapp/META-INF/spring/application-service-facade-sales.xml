@@ -41,5 +41,5 @@
  <bean id="taobaoFacade" class="com.yimayhd.erpcenter.facade.tj.service.impl.TaobaoFacadeImpl" />
  <bean id="tJFacade" class="com.yimayhd.erpcenter.facade.tj.service.impl.TJFacadeImpl" />
  <bean id="tjGroupFacade" class="com.yimayhd.erpcenter.facade.tj.service.impl.TjGroupFacadeImpl" />
-	
-</beans>
+<!-- 	<bean id="commonSaleFacade" class="com.yimayhd.erpcenter.facade.sales.service.impl.CommonFacadeImpl"></bean>
+ --></beans>

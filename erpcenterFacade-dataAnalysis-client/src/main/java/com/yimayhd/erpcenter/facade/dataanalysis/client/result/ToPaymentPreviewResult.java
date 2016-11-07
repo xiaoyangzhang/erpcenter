@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount;
 
 public class ToPaymentPreviewResult extends BaseResult {
 	private static final long serialVersionUID = -8139244338093221977L;
@@ -16,7 +17,16 @@ public class ToPaymentPreviewResult extends BaseResult {
 
 	private String sb1;
 	private String sb2;
+	private List<SysBizBankAccount> bankAccounts;
 	
+	public List<SysBizBankAccount> getBankAccounts() {
+		return bankAccounts;
+	}
+
+	public void setBankAccounts(List<SysBizBankAccount> bankAccounts) {
+		this.bankAccounts = bankAccounts;
+	}
+
 	private List<FinancePay> payDetailList;
 
 	public List<GroupOrder> getOrders() {
