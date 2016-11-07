@@ -42,31 +42,31 @@ import com.yimayhd.erpcenter.facade.sales.service.FitGroupFacade;
 public class FitGroupFacadeImpl implements FitGroupFacade{
 	
 	@Autowired
-	private DicBiz dicService;
+	private DicBiz dicBiz;
 	
 	@Autowired
-	private FitGroupBiz fitGroupService;
+	private FitGroupBiz fitGroupBiz;
 	
 	@Autowired
-	private TourGroupBiz tourGroupService;
+	private TourGroupBiz tourGroupBiz;
 	
 	@Autowired
-	private GroupOrderBiz groupOrderService;
+	private GroupOrderBiz groupOrderBiz;
 	
 	@Autowired
-	private PlatformEmployeeBiz platformEmployeeService;
+	private PlatformEmployeeBiz platformEmployeeBiz;
 	
 	@Autowired
-	private FinanceBiz financeService;
+	private FinanceBiz financeBiz;
 	
 	@Autowired
-	private BookingGuideBiz bookingGuideService;
+	private BookingGuideBiz bookingGuideBiz;
 	
 	@Autowired
-	private BookingSupplierBiz bookingSupplierService ;
+	private BookingSupplierBiz bookingSupplierBiz ;
 	
 	@Autowired
-	private PlatformOrgBiz orgService;
+	private PlatformOrgBiz platformOrgBiz;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -102,7 +102,7 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			set = platformEmployeeService.getUserIdListByOrgIdList(bizId, set);
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
 			String operatorIds = "";
 			for (Integer usrId : set) {
 				operatorIds += usrId + ",";
@@ -112,7 +112,7 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 			}
 		}
 		pageBean.setParameter(tourGroup);
-		pageBean = tourGroupService.selectSKGroupListPage(pageBean,bizId,userIdSet);
+		pageBean = tourGroupBiz.selectSKGroupListPage(pageBean,bizId,userIdSet);
 		
 		List<TourGroup> result = pageBean.getResult();
 		if (result != null && result.size() > 0) {
@@ -131,19 +131,19 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 					t.setUpdateTimeStr("无");
 					t.setUpdateName("无");
 				}
-				List<BookingGuide> guideList = bookingGuideService.selectGuidesByGroupId(t.getId());
+				List<BookingGuide> guideList = bookingGuideBiz.selectGuidesByGroupId(t.getId());
 				t.setGuideList(guideList);
 			}
 		}
 		
-		TourGroup group = tourGroupService.selectTotalSKGroup(tourGroup,bizId,userIdSet);
+		TourGroup group = tourGroupBiz.selectTotalSKGroup(tourGroup,bizId,userIdSet);
 		
 		FitTotalSKGroupQueryResult totalSKGroupQueryResult=new FitTotalSKGroupQueryResult();
 		totalSKGroupQueryResult.setGroup(group);
 		totalSKGroupQueryResult.setTourGroup(tourGroup);
 		totalSKGroupQueryResult.setPageBean(pageBean);
-		totalSKGroupQueryResult.setOrgJsonStr(orgService.getComponentOrgTreeJsonStr(bizId));
-		totalSKGroupQueryResult.setOrgUserJsonStr(platformEmployeeService.getComponentOrgUserTreeJsonStr(bizId));
+		totalSKGroupQueryResult.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(bizId));
+		totalSKGroupQueryResult.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(bizId));
 		
 		return totalSKGroupQueryResult;
 	}
@@ -153,8 +153,8 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 		
 		FitGroupInfoQueryResult result=new FitGroupInfoQueryResult();
 		
-		result.setFitGroupInfoVO(fitGroupService.selectFitGroupInfoById(fitGroupInfoQueryDTO.getGroupId()));
-		result.setPp(dicService.getListByTypeCode(fitGroupInfoQueryDTO.getTypeCode(),fitGroupInfoQueryDTO.getCurBizId()));
+		result.setFitGroupInfoVO(fitGroupBiz.selectFitGroupInfoById(fitGroupInfoQueryDTO.getGroupId()));
+		result.setPp(dicBiz.getListByTypeCode(fitGroupInfoQueryDTO.getTypeCode(),fitGroupInfoQueryDTO.getCurBizId()));
 		
 		return result;
 	}
@@ -163,15 +163,15 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 	public void delFitOrderBatch(String ids) {
 		String[] split = ids.split(",");
 		for (int i = 0; i < split.length; i++) {
-			tourGroupService.delFitOrder(Integer.parseInt(split[i]));
-			bookingSupplierService.upateGroupIdAfterDelOrderFromGroup(Integer.parseInt(split[i]));
+			tourGroupBiz.delFitOrder(Integer.parseInt(split[i]));
+			bookingSupplierBiz.upateGroupIdAfterDelOrderFromGroup(Integer.parseInt(split[i]));
 		}
 	}
 	
 	@Override
 	public void delFitOrder(Integer id) {
-		tourGroupService.delFitOrder(id);
-		bookingSupplierService.upateGroupIdAfterDelOrderFromGroup(id);
+		tourGroupBiz.delFitOrder(id);
+		bookingSupplierBiz.upateGroupIdAfterDelOrderFromGroup(id);
 	}
 	
 	@Override
@@ -179,15 +179,15 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 		
 		FitGroupInfoVO fitGroupInfoVO = fitGroupInfoUpdateDTO.getFitGroupInfoVO();
 		TourGroup tourGroup = fitGroupInfoVO.getTourGroup();
-		TourGroup group=tourGroupService.selectByPrimaryKey(tourGroup.getId());
-		fitGroupService.updateFitGroupInfo(fitGroupInfoVO,fitGroupInfoUpdateDTO.getUserId(),fitGroupInfoUpdateDTO.getUserName());
+		TourGroup group=tourGroupBiz.selectByPrimaryKey(tourGroup.getId());
+		fitGroupBiz.updateFitGroupInfo(fitGroupInfoVO,fitGroupInfoUpdateDTO.getUserId(),fitGroupInfoUpdateDTO.getUserName());
 		if(!group.getOperatorId().equals(tourGroup.getOperatorId())){
-			List<GroupOrder> orderList = groupOrderService.selectOrderByGroupIdAndBizId(group.getId(), group.getBizId());
+			List<GroupOrder> orderList = groupOrderBiz.selectOrderByGroupIdAndBizId(group.getId(), group.getBizId());
 			if(orderList!=null){
 				for (GroupOrder groupOrder : orderList) {
 					groupOrder.setOperatorId(tourGroup.getOperatorId());
 					groupOrder.setOperatorName(tourGroup.getOperatorName());
-					groupOrderService.updateGroupOrder(groupOrder);
+					groupOrderBiz.updateGroupOrder(groupOrder);
 				}
 			}
 		}
@@ -199,15 +199,15 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 		BaseStateResult result=new BaseStateResult();
 		result.setSuccess(false);
 		
-		if(financeService.hasAuditOrder(groupId)){
+		if(financeBiz.hasAuditOrder(groupId)){
 			result.setError("该团有已审核的订单,不允许删除！");
-		}else if(financeService.hasPayOrIncomeRecord(groupId)){
+		}else if(financeBiz.hasPayOrIncomeRecord(groupId)){
 			result.setError("该团有收付款记录,不允许删除！");
-		}else if(financeService.hasHotelOrder(groupId)){
+		}else if(financeBiz.hasHotelOrder(groupId)){
 			result.setError("该团有酒、车队订单,不允许删除！");
 		}
 		
-		tourGroupService.delFitTourGroup(groupId);
+		tourGroupBiz.delFitTourGroup(groupId);
 		
 		result.setSuccess(true);
 		
@@ -222,19 +222,19 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 		
 		TourGroup tourGroup = fitUpdateTourGroupDTO.getTourGroup();
 		if (tourGroup.getGroupState() == 2) {
-			List<FinanceCommission> fc1 = groupOrderService.selectFinanceCommissionByGroupId(tourGroup.getId());
+			List<FinanceCommission> fc1 = groupOrderBiz.selectFinanceCommissionByGroupId(tourGroup.getId());
 			if (fc1 != null && fc1.size() > 0) {
 				result.setError("该团已有购物及佣金被审核！");
 				return result;
 			}
-			List<FinanceCommission> fc2 = groupOrderService.selectFCByGroupId(tourGroup.getId());
+			List<FinanceCommission> fc2 = groupOrderBiz.selectFCByGroupId(tourGroup.getId());
 			if (fc2 != null && fc2.size() > 0) {
 				result.setError("该团已有购物及佣金被审核！");
 				return result;
 			}
 		}
 		
-		tourGroupService.updateByPrimaryKeySelective(tourGroup);
+		tourGroupBiz.updateByPrimaryKeySelective(tourGroup);
 		
 		result.setSuccess(true);
 		
@@ -244,7 +244,7 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 	@Override
 	public void addOrderToTourGroup(Integer groupId, String ids) {
 		
-		List<GroupOrder> glist = groupOrderService.selectOrderByGroupId(groupId);
+		List<GroupOrder> glist = groupOrderBiz.selectOrderByGroupId(groupId);
 		
 		List<String> datelist = new ArrayList<String>();
 		List<Integer> productlist = new ArrayList<Integer>();
@@ -256,13 +256,13 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 		
 		String[] split = ids.split(",");
 		for (String id : split) {
-			datelist.add(groupOrderService.findById(Integer.parseInt(id)).getDepartureDate());
-			productlist.add(groupOrderService.findById(Integer.parseInt(id)).getProductId());
-			statelist.add(groupOrderService.findById(Integer.parseInt(id)).getStateFinance());
+			datelist.add(groupOrderBiz.findById(Integer.parseInt(id)).getDepartureDate());
+			productlist.add(groupOrderBiz.findById(Integer.parseInt(id)).getProductId());
+			statelist.add(groupOrderBiz.findById(Integer.parseInt(id)).getStateFinance());
 		}
 		
 		for (String str : split) {
-			tourGroupService.addFitOrder(groupId, Integer.parseInt(str));
+			tourGroupBiz.addFitOrder(groupId, Integer.parseInt(str));
 		}
 	}
 	
@@ -288,9 +288,9 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 		pageBean.setPageSize(groupOrder.getPageSize() == null ? Constants.PAGESIZE : groupOrder.getPageSize());
 		pageBean.setPage(groupOrder.getPage() == null ? 1 : groupOrder.getPage());
 		pageBean.setParameter(groupOrder);
-		pageBean = groupOrderService.selectNotGroupListPage(pageBean, curBizId,userIdSet);
+		pageBean = groupOrderBiz.selectNotGroupListPage(pageBean, curBizId,userIdSet);
 		//List<GroupOrder> result = pageBean.getResult();
-		List<DicInfo> pp = dicService.getListByTypeCode(BasicConstants.CPXL_PP, curBizId);
+		List<DicInfo> pp = dicBiz.getListByTypeCode(BasicConstants.CPXL_PP, curBizId);
 
 		ToSecImpNotGroupListResult result=new ToSecImpNotGroupListResult();
 		result.setGroupOrder(groupOrder);
