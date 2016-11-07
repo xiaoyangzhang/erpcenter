@@ -590,7 +590,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public PageBean<GroupOrder> selectSpecialOrderListPage(
             PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set) {
-        if(1==0){
+        if(1==1){
         	List<GroupOrder> list = groupOrderMapper.selectSpecialOrderListPage(pageBean, bizId, set);
             pageBean.setResult(list);
         }else{
@@ -603,7 +603,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 
     @Override
     public GroupOrder selectTotalSpecialOrder(GroupOrder groupOrder, Integer bizId, Set<Integer> set) {
-        if(1==0){
+        if(1==1){
         	return groupOrderMapper.selectTotalSpecialOrder(groupOrder, bizId, set);
         }else{
         	PageBean<GroupOrder> pageBean=new PageBean<GroupOrder>();
@@ -617,7 +617,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public PageBean<GroupOrder> selectOrderLockByConListPage(
             PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set) {
-        if(1==0){
+        if(1==1){
         	   List<GroupOrder> orders = groupOrderMapper.selectOrderLockByConListPage(pageBean, bizId, set);
                pageBean.setResult(orders);
         }else{
@@ -660,7 +660,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public String selectOrderLockByCon(
             PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set) {
-        if(1==0){
+        if(1==1){
         	return groupOrderMapper.selectOrderLockByCon(pageBean, bizId, set);
         }else{
         	GroupOrderPageQueryDTO queryDTO=LockOrderConverter.toQueryDTO( pageBean, bizId, set);
