@@ -523,7 +523,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		pageBean.setParameter(condition);
 		pageBean.setPage(condition.getPage());
 		List<StockStaticsResultVOPlus> list =new ArrayList<StockStaticsResultVOPlus>(); 
-		if(1== 0){
+		if(1== 1){
 			list=infoMapper.getProductStockListPage(pageBean);
 			
 			if(list!=null && list.size()>0){

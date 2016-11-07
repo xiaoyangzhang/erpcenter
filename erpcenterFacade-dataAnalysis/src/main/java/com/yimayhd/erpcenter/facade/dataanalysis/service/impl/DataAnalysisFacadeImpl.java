@@ -1915,7 +1915,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	 */
 	private CommonSaleBiz getCommonService(String svc) {
 		if (StringUtils.isBlank(svc)) {
-			svc = "commonsaleBiz";
+			svc = "commonSaleBiz";
 		}
 		return appContext.getBean(svc, CommonSaleBiz.class);
 	}
