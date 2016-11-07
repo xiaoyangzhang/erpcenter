@@ -8,13 +8,13 @@ import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 public interface DicBiz {
 	List<DicInfo> getListByTypeId(String type);
 
-	DicInfo getById(String id);
+	DicInfo getById(Integer id);
 
 	void update(DicInfo dicInfo);
 
 	void add(DicInfo dicInfo);
 
-	void delDic(String dicId);
+	void delDic(Integer dicId);
 	
 	List<DicInfo> getListByTypeCode(String typeCode);
 	

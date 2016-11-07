@@ -9,8 +9,8 @@ import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 public interface DicMapper{
 	void insert(DicInfo info);
 	void update(DicInfo info);
-	void delete(String id);
-	DicInfo getById(String id);
+	void delete(Integer id);
+	DicInfo getById(Integer id);
 	int getCount(DicInfo info);
 	List<DicInfo> getAll();
 	List<DicInfo> getWhere(DicInfo info);

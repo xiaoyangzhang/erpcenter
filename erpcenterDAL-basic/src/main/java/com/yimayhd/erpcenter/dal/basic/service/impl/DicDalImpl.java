@@ -21,7 +21,7 @@ public class DicDalImpl implements DicDal {
 	private DicTypeMapper dicTypeMapper;
 
 	@Override
-	public DicInfo getById(String id) {
+	public DicInfo getById(Integer id) {
 		return dicMapper.getById(id);
 	}
 
@@ -36,7 +36,7 @@ public class DicDalImpl implements DicDal {
 	}
 
 	@Override
-	public void delDic(String dicId) {
+	public void delDic(Integer dicId) {
 		dicMapper.delete(dicId);		
 	}
 

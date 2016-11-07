@@ -18,7 +18,7 @@ public class DicBizImpl implements DicBiz {
 	}
 
 	@Override
-	public DicInfo getById(String id) {
+	public DicInfo getById(Integer id) {
 		return dicDal.getById(id);
 	}
 
@@ -35,7 +35,7 @@ public class DicBizImpl implements DicBiz {
 	}
 
 	@Override
-	public void delDic(String dicId) {
+	public void delDic(Integer dicId) {
 		dicDal.delDic(dicId);
 		
 	}
