@@ -256,7 +256,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public PageBean selectFitOrderListPage(PageBean pageBean, Integer bizId,
                                            Set<Integer> set, Integer listType) {
-        if(1==0){
+        if(1==1){
         	 List<GroupOrder> result = groupOrderMapper.selectFitOrderListPage(
                      pageBean, bizId, set, listType);
              pageBean.setResult(result);
@@ -272,7 +272,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     public GroupOrder selectFitOrderTotalCount(GroupOrder groupOrder, Integer bizId,
                                                Set<Integer> set, Integer listType) {
        
-        if(1==0){
+        if(1==1){
         	 return groupOrderMapper.selectFitOrderTotalCount(groupOrder, bizId, set, listType);
         }else{
         	PageBean<GroupOrder> pageBean=new PageBean<GroupOrder>();
@@ -472,7 +472,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     @Override
     public GroupOrder selectProfitByCon(
             PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set) {
-    	if(1==0){
+    	if(1==1){
     		return groupOrderMapper.selectProfitByCon(pageBean, bizId, set);
     	}else{
     		GroupOrderPageQueryDTO queryDTO=ProfitOrderConverter.toQueryDTO(pageBean, bizId, set);
