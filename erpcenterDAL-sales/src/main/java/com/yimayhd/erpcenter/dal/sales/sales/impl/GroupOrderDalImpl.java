@@ -430,7 +430,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     public PageBean<GroupOrder> selectProfitByConListPage(
             PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set) {
        
-        if(1==0){
+        if(1==1){
         	 List<GroupOrder> orders = groupOrderMapper.selectProfitByConListPage(pageBean, bizId, set);
              pageBean.setResult(orders);
         }else{
@@ -485,7 +485,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     public GroupOrder selectProfitByConAndMode(PageBean<GroupOrder> pageBean,
                                                Integer bizId, Set<Integer> set) {
        //同selectProfitByCon，在一次solr查询中已经把总人数和总金额都查出来了
-        if(1==0){
+        if(1==1){
         	 return groupOrderMapper.selectProfitByConAndMode(pageBean, bizId, set);
     	}else{
     		GroupOrderPageQueryDTO queryDTO=ProfitOrderConverter.toQueryDTO(pageBean, bizId, set);
