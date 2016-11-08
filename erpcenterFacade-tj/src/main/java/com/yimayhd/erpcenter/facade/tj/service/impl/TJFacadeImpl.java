@@ -104,12 +104,12 @@ public class TJFacadeImpl implements TJFacade{
 		List<SupplierContractPriceDateInfo> priceList = contractBiz.getMultiOperatePriceByParams(bizId, BasicConstants.TJ_PROJECT_SHOP_BOOKING_SUPPLIER_TYPE,null, null,null, null,null, null);
 		result.setPriceList(priceList);
 		if(null!=map){
-			result.setAllTotalPerson((String)map.get("all_total_person"));
-			result.setAllTotalFace((String)map.get("all_total_face"));
+			result.setAllTotalPerson(map.get("all_total_person")+"");
+			result.setAllTotalFace(map.get("all_total_face")+"");
 		}
 		if(null!=mapDetail){
-			result.setAllBuyTotal((String)mapDetail.get("all_buy_total"));
-			result.setAllRepayTotal((String)mapDetail.get("all_repay_total"));
+			result.setAllBuyTotal(mapDetail.get("all_buy_total")+"");
+			result.setAllRepayTotal(mapDetail.get("all_repay_total")+"");
 		}
 		return result;
 	}
@@ -414,12 +414,12 @@ public class TJFacadeImpl implements TJFacade{
 		Map<String,Object> map = tjBiz.selectCount(pageBean,bizId);
 		Map<String,Object> mapDetail = tjBiz.selectDetailCount(pageBean,bizId);
 		if(null!=map){
-			result.setAllTotalPerson((String)map.get("all_total_person"));
-			result.setAllTotalFace((String)map.get("all_total_face"));
+			result.setAllTotalPerson(map.get("all_total_person")+"");
+			result.setAllTotalFace(map.get("all_total_face")+"");
 		}
 		if(null!=mapDetail){
-			result.setAllBuyTotal((String)mapDetail.get("all_buy_total"));
-			result.setAllRepayTotal((String)mapDetail.get("all_repay_total"));
+			result.setAllBuyTotal(mapDetail.get("all_buy_total")+"");
+			result.setAllRepayTotal(mapDetail.get("all_repay_total")+"");
 		}
 //		String imgPath = bizSettingCommon.getMyBizLogo(request);
 //		model.addAttribute("imgPath", imgPath);

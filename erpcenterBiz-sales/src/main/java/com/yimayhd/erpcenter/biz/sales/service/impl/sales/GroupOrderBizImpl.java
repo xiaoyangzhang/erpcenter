@@ -395,8 +395,8 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
     }
 
     @Override
-    public List<Map<String, Object>> getGroupInfoByGroupId(Integer groupId,
-                                                           Integer bizId) {
+    public List<Map<String, Object>> getGroupInfoByGroupId(Integer bizId,
+                                                           Integer groupId) {
         return groupOrderDal.getGroupInfoByGroupId(bizId, groupId);
     }
 
