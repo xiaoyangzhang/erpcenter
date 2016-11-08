@@ -1105,7 +1105,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             // 根据散客订单统计接机信息
             List<GroupOrderTransport> groupOrderTransports = groupOrderTransportBiz
                     .selectByOrderId(groupOrder.getId());
-
+            toPreviewResult.setEmployee(employee);
             toPreviewResult.setGroupOrder(groupOrder);
             toPreviewResult.setGuests(guests);
             toPreviewResult.setPriceList(prices);
