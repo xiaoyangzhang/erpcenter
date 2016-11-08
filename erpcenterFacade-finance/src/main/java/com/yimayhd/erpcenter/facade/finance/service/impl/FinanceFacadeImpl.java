@@ -798,9 +798,9 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		DiatributeBillResult result = new DiatributeBillResult();
 		if (null != financeBillDetailList && financeBillDetailList.size() > 0) {
 			Map financeBillDetail = (Map) financeBillDetailList.get(0);
-			result.setGuideName((String)financeBillDetail.get("guide_name"));
-			result.setApplicant((String)financeBillDetail.get("applicant"));
-			result.setAppliTime((String)financeBillDetail.get("appli_time"));
+			result.setGuideName(financeBillDetail.get("guide_name")+"");
+			result.setApplicant(financeBillDetail.get("applicant")+"");
+			result.setAppliTime(financeBillDetail.get("appli_time")+"");
 			result.setFinanceBillDetailList(financeBillDetailList);
 			
 		}
@@ -821,10 +821,10 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		VerifyBillResult result = new VerifyBillResult();
 		if (null != financeBillDetailList && financeBillDetailList.size() > 0) {
 			Map financeBillDetail = (Map) financeBillDetailList.get(0);
-			result.setGuideName((String)financeBillDetail.get("guide_name"));
-			result.setApplicant((String)financeBillDetail.get("applicant"));
-			result.setAppliTime((String)financeBillDetail.get("appli_time"));
-			result.setApprTime((String)financeBillDetail.get("appr_time"));
+			result.setGuideName(financeBillDetail.get("guide_name")+"");
+			result.setApplicant(financeBillDetail.get("applicant")+"");
+			result.setAppliTime(financeBillDetail.get("appli_time")+"");
+			result.setApprTime(financeBillDetail.get("appr_time")+"");
 			result.setFinanceBillDetailList(financeBillDetailList);
 		}
 		result.setNowDate(new Date());
@@ -843,11 +843,11 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		CheckBillResult result = new CheckBillResult();
 		if (null != financeBillDetailList && financeBillDetailList.size() > 0) {
 			Map financeBillDetail = (Map) financeBillDetailList.get(0);
-			result.setGuideName((String)financeBillDetail.get("guide_name"));
-			result.setApplicant((String)financeBillDetail.get("applicant"));
-			result.setAppliTime((String)financeBillDetail.get("appli_time"));
-			result.setApprTime((String)financeBillDetail.get("appr_time"));
-			result.setVeriTime((String)financeBillDetail.get("veri_time"));
+			result.setGuideName(financeBillDetail.get("guide_name")+"");
+			result.setApplicant(financeBillDetail.get("applicant")+"");
+			result.setAppliTime(financeBillDetail.get("appli_time")+"");
+			result.setApprTime(financeBillDetail.get("appr_time")+"");
+			result.setVeriTime(financeBillDetail.get("veri_time")+"");
 			result.setAppliState(checkBillDTO.getAppliState());
 			result.setFinanceBillDetailList(financeBillDetailList);
 		}
@@ -866,11 +866,11 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		CheckBillResult result = new CheckBillResult();
 		if (null != financeBillDetailList && financeBillDetailList.size() > 0) {
 			Map financeBillDetail = (Map) financeBillDetailList.get(0);
-			result.setGuideName((String)financeBillDetail.get("guide_name"));
-			result.setApplicant((String)financeBillDetail.get("applicant"));
-			result.setAppliTime((String)financeBillDetail.get("appli_time"));
-			result.setApprTime((String)financeBillDetail.get("appr_time"));
-			result.setVeriTime((String)financeBillDetail.get("veri_time"));
+			result.setGuideName(financeBillDetail.get("guide_name")+"");
+			result.setApplicant(financeBillDetail.get("applicant")+"");
+			result.setAppliTime(financeBillDetail.get("appli_time")+"");
+			result.setApprTime(financeBillDetail.get("appr_time")+"");
+			result.setVeriTime(financeBillDetail.get("veri_time")+"");
 			result.setAppliState(checkBillDTO.getAppliState());
 			result.setFinanceBillDetailList(financeBillDetailList);
 		}

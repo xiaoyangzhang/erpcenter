@@ -500,8 +500,8 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     }
 
     @Override
-    public List<Map<String, Object>> getGroupInfoByGroupId(Integer groupId,
-                                                           Integer bizId) {
+    public List<Map<String, Object>> getGroupInfoByGroupId(Integer bizId,
+                                                           Integer groupId) {
         return groupOrderMapper.getGroupInfoByGroupId(bizId, groupId);
     }
 
