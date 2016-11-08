@@ -3,6 +3,8 @@ package com.yimayhd.erpcenter.facade.finance.service.impl;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +16,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.CollectionUtils;
 import org.yimayhd.erpcenter.facade.finance.errorcode.FinanceErrorCode;
 import org.yimayhd.erpcenter.facade.finance.query.AduditStatisticsListDTO;
 import org.yimayhd.erpcenter.facade.finance.query.AuditCommDTO;
@@ -78,6 +81,7 @@ import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderPriceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SysBizBankAccountBiz;
+import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.common.util.NumberUtil;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide;
@@ -800,7 +804,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			Map financeBillDetail = (Map) financeBillDetailList.get(0);
 			result.setGuideName(financeBillDetail.get("guide_name")+"");
 			result.setApplicant(financeBillDetail.get("applicant")+"");
-			result.setAppliTime(financeBillDetail.get("appli_time")+"");
+			result.setAppliTime(DateUtils.parse2Date(financeBillDetail.get("appli_time")+""));
 			result.setFinanceBillDetailList(financeBillDetailList);
 			
 		}
@@ -823,8 +827,8 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			Map financeBillDetail = (Map) financeBillDetailList.get(0);
 			result.setGuideName(financeBillDetail.get("guide_name")+"");
 			result.setApplicant(financeBillDetail.get("applicant")+"");
-			result.setAppliTime(financeBillDetail.get("appli_time")+"");
-			result.setApprTime(financeBillDetail.get("appr_time")+"");
+			result.setAppliTime(DateUtils.parse2Date(financeBillDetail.get("appli_time")+""));
+			result.setApprTime(DateUtils.parse2Date(financeBillDetail.get("appr_time")+""));
 			result.setFinanceBillDetailList(financeBillDetailList);
 		}
 		result.setNowDate(new Date());
@@ -841,13 +845,13 @@ public class FinanceFacadeImpl implements FinanceFacade{
 				checkBillDTO.getId(), checkBillDTO.getGuideId());
 		
 		CheckBillResult result = new CheckBillResult();
-		if (null != financeBillDetailList && financeBillDetailList.size() > 0) {
+		if (!CollectionUtils.isEmpty(financeBillDetailList)) {
 			Map financeBillDetail = (Map) financeBillDetailList.get(0);
+			result.setAppliTime(DateUtils.parse2Date(financeBillDetail.get("appli_time")+""));
+			result.setApprTime(DateUtils.parse2Date(financeBillDetail.get("appr_time")+""));
+			result.setVeriTime(DateUtils.parse2Date(financeBillDetail.get("veri_time")+""));
 			result.setGuideName(financeBillDetail.get("guide_name")+"");
 			result.setApplicant(financeBillDetail.get("applicant")+"");
-			result.setAppliTime(financeBillDetail.get("appli_time")+"");
-			result.setApprTime(financeBillDetail.get("appr_time")+"");
-			result.setVeriTime(financeBillDetail.get("veri_time")+"");
 			result.setAppliState(checkBillDTO.getAppliState());
 			result.setFinanceBillDetailList(financeBillDetailList);
 		}
@@ -868,9 +872,9 @@ public class FinanceFacadeImpl implements FinanceFacade{
 			Map financeBillDetail = (Map) financeBillDetailList.get(0);
 			result.setGuideName(financeBillDetail.get("guide_name")+"");
 			result.setApplicant(financeBillDetail.get("applicant")+"");
-			result.setAppliTime(financeBillDetail.get("appli_time")+"");
-			result.setApprTime(financeBillDetail.get("appr_time")+"");
-			result.setVeriTime(financeBillDetail.get("veri_time")+"");
+			result.setAppliTime(DateUtils.parse2Date(financeBillDetail.get("appli_time")+""));
+			result.setApprTime(DateUtils.parse2Date(financeBillDetail.get("appr_time")+""));
+			result.setVeriTime(DateUtils.parse2Date(financeBillDetail.get("veri_time")+""));
 			result.setAppliState(checkBillDTO.getAppliState());
 			result.setFinanceBillDetailList(financeBillDetailList);
 		}

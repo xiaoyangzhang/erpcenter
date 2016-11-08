@@ -717,17 +717,17 @@ public class TjGroupFacadeImpl implements TjGroupFacade{
 		result.setPageBean(pageBean);
 		Map<String,Object> map = tjBiz.selectLineProfitCount(pageBean);
 		if(null!=map){
-			result.setAllIncomeOrder(map.get("all_income_order")+"");
-			result.setAllIncomeOther(map.get("all_income_other")+"");
-			result.setAllShopRepay(map.get("all_shop_repay")+"");
-			result.setAllTotalCost(map.get("all_total_cost")+"");
-			result.setAllShopCommission(map.get("all_shop_commission")+"");
-			result.setAllTotalProfit(map.get("all_total_profit")+"");
-			result.setAllShopSales(map.get("all_shop_sales")+"");
-			result.setAllSumPerson(map.get("all_sum_person")+"");
-			result.setAllTotalAdult(map.get("total_adult")+"");
-			result.setAllTotalChild(map.get("total_child")+"");
-			result.setAllTotalGuide(map.get("total_guide")+"");
+			result.setAllIncomeOrder((BigDecimal)map.get("all_income_order"));
+			result.setAllIncomeOther((BigDecimal)map.get("all_income_other"));
+			result.setAllShopRepay((BigDecimal)map.get("all_shop_repay"));
+			result.setAllTotalCost((BigDecimal)map.get("all_total_cost"));
+			result.setAllShopCommission((BigDecimal)map.get("all_shop_commission"));
+			result.setAllTotalProfit((BigDecimal)map.get("all_total_profit"));
+			result.setAllShopSales((BigDecimal)map.get("all_shop_sales"));
+			result.setAllSumPerson((BigDecimal)map.get("all_sum_person"));
+			result.setAllTotalAdult((BigDecimal)map.get("total_adult"));
+			result.setAllTotalChild((BigDecimal)map.get("total_child"));
+			result.setAllTotalGuide((BigDecimal)map.get("total_guide"));
 		}
 		return result;
 	}
@@ -790,17 +790,17 @@ public class TjGroupFacadeImpl implements TjGroupFacade{
 		result.setPageBean(pageBean);
 		Map<String,Object> map = tjBiz.selectLineProfitCount(pageBean);
 		if(null!=map){
-			result.setAllIncomeOrder(map.get("all_income_order")+"");
-			result.setAllIncomeOther(map.get("all_income_other")+"");
-			result.setAllShopRepay(map.get("all_shop_repay")+"");
-			result.setAllTotalCost(map.get("all_total_cost")+"");
-			result.setAllShopCommission(map.get("all_shop_commission")+"");
-			result.setAllTotalProfit(map.get("all_total_profit")+"");
-			result.setAllShopSales(map.get("all_shop_sales")+"");
-			result.setAllSumPerson(map.get("all_sum_person")+"");
-			result.setAllTotalAdult(map.get("total_adult")+"");
-			result.setAllTotalChild(map.get("total_child")+"");
-			result.setAllTotalGuide(map.get("total_guide")+"");
+			result.setAllIncomeOrder((BigDecimal)map.get("all_income_order"));
+			result.setAllIncomeOther((BigDecimal)map.get("all_income_other"));
+			result.setAllShopRepay((BigDecimal)map.get("all_shop_repay"));
+			result.setAllTotalCost((BigDecimal)map.get("all_total_cost"));
+			result.setAllShopCommission((BigDecimal)map.get("all_shop_commission"));
+			result.setAllTotalProfit((BigDecimal)map.get("all_total_profit"));
+			result.setAllShopSales((BigDecimal)map.get("all_shop_sales"));
+			result.setAllSumPerson((BigDecimal)map.get("all_sum_person"));
+			result.setAllTotalAdult((BigDecimal)map.get("total_adult"));
+			result.setAllTotalChild((BigDecimal)map.get("total_child"));
+			result.setAllTotalGuide((BigDecimal)map.get("total_guide"));
 		}
 		return result;
 	}

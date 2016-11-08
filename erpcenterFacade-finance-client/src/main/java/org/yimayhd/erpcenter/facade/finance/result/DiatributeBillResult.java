@@ -20,7 +20,7 @@ public class DiatributeBillResult extends ResultSupport{
 
 	private String guideName;
 	private String applicant;
-	private String appliTime;
+	private Date appliTime;
 	private List<FinanceBillDetail> financeBillDetailList;
 	private Date nowDate;
 	private List<DicInfo> billTypeList;
@@ -37,10 +37,11 @@ public class DiatributeBillResult extends ResultSupport{
 	public void setApplicant(String applicant) {
 		this.applicant = applicant;
 	}
-	public String getAppliTime() {
+	
+	public Date getAppliTime() {
 		return appliTime;
 	}
-	public void setAppliTime(String appliTime) {
+	public void setAppliTime(Date appliTime) {
 		this.appliTime = appliTime;
 	}
 	public List<FinanceBillDetail> getFinanceBillDetailList() {
