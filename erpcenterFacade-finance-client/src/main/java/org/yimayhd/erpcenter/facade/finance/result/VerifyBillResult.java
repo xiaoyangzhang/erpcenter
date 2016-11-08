@@ -20,18 +20,13 @@ public class VerifyBillResult extends ResultSupport{
 
 	private String guideName;
 	private String applicant;
-	private String appliTime;
-	private String apprTime;
+	private Date appliTime;
+	private Date apprTime;
 	private List<FinanceBillDetail> financeBillDetailList;
 	private Date nowDate;
 	private List<DicInfo> billTypeList;
 	
-	public String getApprTime() {
-		return apprTime;
-	}
-	public void setApprTime(String apprTime) {
-		this.apprTime = apprTime;
-	}
+	
 	public String getGuideName() {
 		return guideName;
 	}
@@ -44,11 +39,18 @@ public class VerifyBillResult extends ResultSupport{
 	public void setApplicant(String applicant) {
 		this.applicant = applicant;
 	}
-	public String getAppliTime() {
+	
+	public Date getAppliTime() {
 		return appliTime;
 	}
-	public void setAppliTime(String appliTime) {
+	public void setAppliTime(Date appliTime) {
 		this.appliTime = appliTime;
+	}
+	public Date getApprTime() {
+		return apprTime;
+	}
+	public void setApprTime(Date apprTime) {
+		this.apprTime = apprTime;
 	}
 	public List<FinanceBillDetail> getFinanceBillDetailList() {
 		return financeBillDetailList;
