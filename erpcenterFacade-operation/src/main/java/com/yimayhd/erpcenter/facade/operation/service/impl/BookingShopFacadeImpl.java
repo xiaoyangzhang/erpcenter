@@ -140,7 +140,7 @@ public class BookingShopFacadeImpl implements BookingShopFacade{
 	public List<Map<String, Object>> toEditShop(BookingShopDTO bookingShopDTO) {
 		int groupId = bookingShopDTO.getGroupId();
 		int bizId = bookingShopDTO.getBizId();
-		List<Map<String, Object>> bookingGroups = groupOrderBiz.getGroupInfoByGroupId(groupId, bizId);
+		List<Map<String, Object>> bookingGroups = groupOrderBiz.getGroupInfoByGroupId( bizId,groupId);
 		if(bookingGroups!=null && bookingGroups.size()>0){
 			for(Map<String, Object> map : bookingGroups){				
 				Integer orderId =TypeUtils.castToInt(map.get("orderId"));

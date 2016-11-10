@@ -53,6 +53,12 @@ public class Constants {
     public static final Integer SUPPLIERCOMMENT = 14; // 商家评论
     public static final Integer INSURANCE = 15; // 保险
     public static final Integer LOCALTRAVEL = 16; // 地接社
+    /**
+     * 打印单价格中添加一行默认数据 -- 其他=3000*订单人数*次数
+     */
+    public static final String PRICETYPE = "其他" ; //价格类型
+    public static final Double PRICE = new Double(3000) ; //价格
+    public static final Double TIMES = new Double(1) ; //次数
 
 	public static final String RESTAURANT_TYPE_CODE = "GYS_CT_TC";
     public static final String SHOPPING_TYPE_CODE = "GYS_GW_XM";

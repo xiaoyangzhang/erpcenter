@@ -289,19 +289,18 @@ public class BookingSupplierFacadeImpl implements BookingSupplierFacade {
 	@Override
 	public PageBean getFleetGroupList(PageBean page, TourGroupVO tourGroup,
 			Set<Integer> set) {
-		PageBean pageBean = tourGroupBiz.getFleetGroupList(page, tourGroup, set);
-		return pageBean;
+		page = tourGroupBiz.getFleetGroupList(page, tourGroup, set);
+		return page;
 	}
 	@Override
 	public PageBean querySupplierList(PageBean page, TourGroupVO vo,
 			Set<Integer> set,Integer supplierType) {
-		PageBean pageBean = null;
 		if (supplierType.equals(Constants.FLEET)) {
-			pageBean = getFleetGroupList(page, vo, set);
+			page = getFleetGroupList(page, vo, set);
 		} else {
-			pageBean = tourGroupBiz.getGroupInfoList(page, vo, set);
+			page = tourGroupBiz.getGroupInfoList(page, vo, set);
 		}
-		List<BookingGroup> bookingGroupList = pageBean.getResult();
+		List<BookingGroup> bookingGroupList = page.getResult();
 			if (bookingGroupList != null && bookingGroupList.size() > 0) {
 				for (BookingGroup group : bookingGroupList) {
 					if (group.getProductBrandName() != null) {
@@ -327,7 +326,7 @@ public class BookingSupplierFacadeImpl implements BookingSupplierFacade {
 					
 				}
 			}
-		return pageBean;
+		return page;
 	}
 	@Override
 	public WebResult<Map<String, Object>> saveBooking(BookingSupplier bookingSupplier, FinanceGuide financeGuide,String bizCode,PlatformEmployeePo curUser) {

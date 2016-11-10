@@ -21,9 +21,9 @@ public class CheckBillResult extends ResultSupport{
 
 	private String guideName;
 	private String applicant;
-	private String appliTime;
-	private String apprTime;
-	private String veriTime;
+	private Date appliTime;
+	private Date apprTime;
+	private Date veriTime;
 	private String appliState;
 	private List<FinanceBillDetail> financeBillDetailList;
 	private Date nowDate;
@@ -37,12 +37,7 @@ public class CheckBillResult extends ResultSupport{
 	public void setTourGroup(TourGroup tourGroup) {
 		this.tourGroup = tourGroup;
 	}
-	public String getApprTime() {
-		return apprTime;
-	}
-	public void setApprTime(String apprTime) {
-		this.apprTime = apprTime;
-	}
+	
 	public String getGuideName() {
 		return guideName;
 	}
@@ -55,12 +50,7 @@ public class CheckBillResult extends ResultSupport{
 	public void setApplicant(String applicant) {
 		this.applicant = applicant;
 	}
-	public String getAppliTime() {
-		return appliTime;
-	}
-	public void setAppliTime(String appliTime) {
-		this.appliTime = appliTime;
-	}
+	
 	public List<FinanceBillDetail> getFinanceBillDetailList() {
 		return financeBillDetailList;
 	}
@@ -80,10 +70,23 @@ public class CheckBillResult extends ResultSupport{
 	public void setBillTypeList(List<DicInfo> billTypeList) {
 		this.billTypeList = billTypeList;
 	}
-	public String getVeriTime() {
+	
+	public Date getAppliTime() {
+		return appliTime;
+	}
+	public void setAppliTime(Date appliTime) {
+		this.appliTime = appliTime;
+	}
+	public Date getApprTime() {
+		return apprTime;
+	}
+	public void setApprTime(Date apprTime) {
+		this.apprTime = apprTime;
+	}
+	public Date getVeriTime() {
 		return veriTime;
 	}
-	public void setVeriTime(String veriTime) {
+	public void setVeriTime(Date veriTime) {
 		this.veriTime = veriTime;
 	}
 	public String getAppliState() {

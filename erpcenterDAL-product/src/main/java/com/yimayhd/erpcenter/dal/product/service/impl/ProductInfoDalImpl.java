@@ -114,7 +114,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	@Override
 	public PageBean<ProductInfo> findProductInfos(
 			PageBean<ProductInfo> pageBean, Map parameters) {
-		if(1==0){
+		if(1==1){
 			List<ProductInfo> list = infoMapper.selectProductInfoListPage(pageBean, parameters);
 			pageBean.setResult(list);
 		}else{
@@ -158,7 +158,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	public PageBean<ProductSales> findProductSalesPlus(
 			PageBean<ProductSales> pageBean, Integer bizId, Integer orgId) {
 		
-		if(1==0){
+		if(1==1){
 			List<ProductSales> list = infoMapper.selectProductSalesPlusListPage(pageBean, bizId,orgId);
 			pageBean.setResult(list);
 		}else{

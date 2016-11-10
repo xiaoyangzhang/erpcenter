@@ -49,11 +49,11 @@ public interface TourGroupFacade {
     public ToGroupListResult findTourGroupByCondition(	String yesOrNo, GroupOrder groupOrder,Integer curBizId );
 
 
-    public ToPreviewResult createSalesConfirm(Integer orderId,Integer agency,Integer curBizId);
-    public ToPreviewResult createSalesChargeNoRoute(Integer orderId,Integer curBizId);
-    public ToPreviewResult createSalesConfirmNoRoute(Integer orderId,Integer curBizId);
-    public ToPreviewResult createSalesCharge(Integer orderId,Integer curBizId);
-    public ToPreviewResult createGuestNames(Integer orderId,Integer curBizId);
+    public ToPreviewResult createSalesConfirm(Integer orderId,Integer agency,Integer curBizId,Integer orgId);
+    public ToPreviewResult createSalesChargeNoRoute(Integer orderId,Integer curBizId,Integer orgId);
+    public ToPreviewResult createSalesConfirmNoRoute(Integer orderId,Integer curBizId,Integer orgId);
+    public ToPreviewResult createSalesCharge(Integer orderId,Integer curBizId,Integer orgId);
+    public ToPreviewResult createGuestNames(Integer orderId,Integer curBizId,Integer orgId);
     public ToPreviewResult saleTravelContract(Integer orderId,Integer curBizId);
     public ToPreviewResult saleInsurance(Integer orderId,Integer curBizId);
     public ToPreviewResult toProfitQueryTableZT( GroupOrder order,Set<Integer> set, String supplierType,Integer curBizId);
@@ -65,9 +65,9 @@ public interface TourGroupFacade {
     public ToPreviewResult getContactName(String keyword, Integer supplierId,Integer curBizId);
     public ToPreviewResult validatorSupplier(String supplierName, Integer supplierId);
     public ToPreviewResult getSelSupplier( Integer groupId,Integer priceId, String prefixText, String supplierType);
-    public ToPreviewResult toPreview(Integer orderId, Integer num,Integer agency,Integer curBizId);
-    public ToSaleChargeResult toSaleCharge(Integer orderId, Integer num,Integer curUserId ,Integer curBizId);
-    public ToSKChargePreviewResult toSKChargePreview(Integer groupId,Integer curUserId ,Integer curBizId,Integer supplierId);
+    public ToPreviewResult toPreview(Integer orderId, Integer num,Integer agency,Integer curBizId,Integer rogId);
+    public ToSaleChargeResult toSaleCharge(Integer orderId, Integer num,Integer curUserId ,Integer curBizId,Integer orgId);
+    public ToSKChargePreviewResult toSKChargePreview(Integer groupId,Integer curUserId ,Integer curBizId,Integer supplierId,Integer orgId);
     public BookingProfitTableResult getSupplierInfo(Integer supplierId);
     public BookingProfitTableResult getBankInfo(Integer curBizId);
     public BookingProfitTableResult bookingProfitTable(TourGroup tourGroup ,Integer curBizId, Set<Integer>orgIdSet);
