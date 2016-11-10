@@ -226,4 +226,10 @@ public class AirTicketRequestDalImpl implements AirTicketRequestDal{
 	public List<Integer> findIssuedGuestIdList(Integer biz_id, Integer orderId){
 		return orderMapper.findIssuedGuestIdList(biz_id, orderId);
 	}
+
+	@Override
+	public List<AirTicketRequest> findRequestsByGroupOrderId(Integer bizId, String strOrderIds) {
+		
+		return requestMapper.findRequestsByGroupOrderId(bizId, strOrderIds);
+	}
 }

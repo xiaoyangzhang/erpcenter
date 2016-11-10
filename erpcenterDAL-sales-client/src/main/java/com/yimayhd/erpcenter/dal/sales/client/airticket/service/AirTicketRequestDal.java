@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketRequest;
 
@@ -84,4 +86,12 @@ public interface AirTicketRequestDal {
 	
 	/** list<guestId> */
 	List<Integer> findIssuedGuestIdList(Integer biz_id, Integer orderId);
+	/**
+	 * 根据团单id查询机票资源信息
+	 * @param bizId
+	 * @param strOrderIds
+	 * @return
+	 */
+    List<AirTicketRequest> findRequestsByGroupOrderId(Integer bizId,String strOrderIds);
+	
 }
