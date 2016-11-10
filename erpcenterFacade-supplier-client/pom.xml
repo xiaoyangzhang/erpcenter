@@ -21,7 +21,6 @@
     <dependency>
     	<groupId>com.yimayhd.erpresource</groupId>
     	<artifactId>erpresourceDAL-client</artifactId>
-    	  <version>0.0.9-SNAPSHOT</version>
     </dependency>
     
     	<dependency>

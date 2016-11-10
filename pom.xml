@@ -264,6 +264,38 @@
 				<artifactId>erpcenterFacade-product</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-sales</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-finance</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-tj</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-operation</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-ticket</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterFacade-dataAnalysis</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
 			<dependency>
 		    	<groupId>com.yimayhd.erpcenter</groupId>
 		    	<artifactId>erpcenterDAL-basic-client</artifactId>
@@ -301,22 +333,22 @@
 		    	<version>${erpresource.version}</version>
 		    </dependency>
 		    <dependency>
-		    	<groupId>com.yimayhd.erpresource</groupId>
+		    	<groupId>com.yimayhd.erpcenter</groupId>
   				<artifactId>erpcenterFacade-tj</artifactId>
-		    	<version>${erpresource.version}</version>
+		    	<version>${project.version}</version>
 		    </dependency>
 		    <dependency>
-		    	<groupId>com.yimayhd.erpresource</groupId>
+		    	<groupId>com.yimayhd.erpcenter</groupId>
   				<artifactId>erpcenterFacade-tj-client</artifactId>
-		    	<version>${erpresource.version}</version>
+		    	<version>${project.version}</version>
 		    </dependency>
 		    <dependency>
-		    	<groupId>com.yimayhd.erpresource</groupId>
+		    	<groupId>com.yimayhd.erpcenter</groupId>
   				<artifactId>erpcenterFacade-operation</artifactId>
 		    	<version>${project.version}</version>
 		    </dependency>
 		    <dependency>
-		    	<groupId>com.yimayhd.erpresource</groupId>
+		    	<groupId>com.yimayhd.erpcenter</groupId>
   				<artifactId>erpcenterFacade-operation-client</artifactId>
 		    	<version>${project.version}</version>
 		    </dependency>
