@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.client.tj.po.ShopItems;
 import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupProfit;
 import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupQueryId;
 import com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupShop;
@@ -88,5 +89,7 @@ public interface TJMapper {
 	List<Map<String, Object>> selectLineProfitsPageAbc(@Param("page") PageBean pageBean);
 	
 	List<Map<String, Object>> selectLineProfitListPage(@Param("page") PageBean pageBean);
+
+	List<ShopItems> selectShopItemsListPage(PageBean<ShopItems> pageBean);
 
 }
