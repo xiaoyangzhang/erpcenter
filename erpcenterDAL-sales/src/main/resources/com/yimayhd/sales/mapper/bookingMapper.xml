@@ -701,5 +701,18 @@ where 1=1 <if test="parameter.gender != null">and gender =#{parameter.gender} </
 		GROUP BY go.`supplier_id`,go.`product_brand_name`
 		order by tg.date_start
 	</select>
-	
+	<!-- fullDumpSQL -->
+	 <select id="selectBookingOrders" parameterType="com.yihg.mybatis.utility.PageBean" resultType="com.yimayhd.erpcenter.dal.sales.client.query.vo.BookingOrderDTO">
+		SELECT bs.id bsId, bs.supplier_id bsSupplierId,bs.supplier_name bsSupplierName
+		   ,ifnull(total,0)  bsTotal,ifnull(total_cash,0)  bsTotalCash 
+		   ,ifnull(bsd.item_num,0) bsdItemNum, ifnull(bsd.item_num_minus,0) bsdItemNumMinus
+			tg.id tgId,tg.group_mode groupMode,tg.group_state groupState,
+			bsd.item_date itemDate,bsd.type1_id bsdType1Id,bs.cash_type bsCashType,bs.supplier_type bsSupplierType,tg.biz_id bizId,
+			tg.operator_id tgOperatorId,tg.product_brand_name productBrandName,tg.product_name productName,
+			date_start dateStart ,date_end dateEnd,bs.user_id bsUserId
+			
+		FROM booking_supplier bs
+		JOIN  booking_supplier_detail bsd ON bs.`id`=bsd.`booking_id` 
+		JOIN tour_group tg ON bs.`group_id`=tg.`id`
+		</select>
 </mapper>
