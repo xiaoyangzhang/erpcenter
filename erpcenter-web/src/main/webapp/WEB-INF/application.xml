@@ -23,9 +23,9 @@
 	<import resource="../META-INF/spring/application-export-facade-ticket.xml" />
 	<import resource="../META-INF/spring/application-export-facade-sales.xml" />
 	
-	<!-- <import resource="../META-INF/spring/application-export-dal-product.xml" />
+	<import resource="../META-INF/spring/application-export-dal-product.xml" />
 	<import resource="../META-INF/spring/application-export-dal-sales.xml" />
-	 -->
+	 
 	<import resource="../META-INF/spring/application-mq.xml" />
 	<import resource="../META-INF/spring/application-redis.xml" />
 	

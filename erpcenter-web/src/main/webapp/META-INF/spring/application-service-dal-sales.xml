@@ -19,6 +19,7 @@
 	<bean id="financeDal" class="com.yimayhd.erpcenter.dal.sales.finance.impl.FinanceDalImpl" />
 	<bean id="financeGuideDal" class="com.yimayhd.erpcenter.dal.sales.finance.impl.FinanceGuideDalImpl" />
 	<bean id="financeVerifyDal" class="com.yimayhd.erpcenter.dal.sales.finance.impl.FinanceVerifyDalImpl" />
+	<bean id="financeSolrDumpDal" class="com.yimayhd.erpcenter.dal.sales.finance.impl.FinanceSolrDumpDalImpl" />
 	
 	<!-- operation -->
 	<bean id="bookingDeliveryDal" class="com.yimayhd.erpcenter.dal.sales.operation.impl.BookingDeliveryDalImpl" />

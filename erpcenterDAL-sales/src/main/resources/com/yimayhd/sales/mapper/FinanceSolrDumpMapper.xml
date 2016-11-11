@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceSolrDumpMapper">
+	
+	<resultMap id="SubjectSummary" type="com.yimayhd.erpcenter.dal.sales.client.finance.po.solr.SubjectSummary" >
+	    <result column="tgGroupId" property="tgGroupId" jdbcType="INTEGER" />
+	    <result column="tgGroupState" property="tgGroupState" jdbcType="INTEGER" />
+	    <result column="tgDateStart" property="tgDateStart" jdbcType="INTEGER" />
+	    <result column="tgOperatorId" property="tgOperatorId" jdbcType="INTEGER" />
+	    <result column="bizId" property="bizId" jdbcType="INTEGER" />
+	    <result column="bdId" property="bdId" jdbcType="INTEGER" />
+	    <result column="bsId" property="bsId" jdbcType="INTEGER" />
+	    <result column="bsSupplierId" property="bsSupplierId" jdbcType="INTEGER" />
+	    <result column="bsSupplierName" property="bsSupplierName" jdbcType="VARCHAR" />
+	    <result column="bsBookingDate" property="bsBookingDate" jdbcType="INTEGER" />
+	    <result column="bsSupplierType" property="bsSupplierType" jdbcType="INTEGER" />
+	    <result column="bsTotal" property="bsTotal" jdbcType="DOUBLE" />
+	    <result column="bsTotalCash" property="bsTotalCash" jdbcType="DOUBLE" />
+	    <result column="bsCashType" property="bsCashType" jdbcType="INTEGER" />
+	    <result column="fgId" property="fgId" jdbcType="INTEGER" />
+	    <result column="fgTotal" property="fgTotal" jdbcType="DOUBLE" />
+	</resultMap>
+	
+	<select id="selectSubjectSummary1DumpListPage" resultMap="SubjectSummary" parameterType="com.yihg.mybatis.utility.PageBean">
+	  	SELECT 
+			tg.id tgGroupId,
+			tg.group_state tgGroupState,
+			tg.date_start tgDateStart,
+			tg.operator_id tgOperatorId,
+			tg.biz_id bizId,
+			bs.id bsId,
+			bs.supplier_id bsSupplierId,
+			bs.supplier_name bsSupplierName,
+			bs.booking_date bsBookingDate,
+			bs.supplier_type bsSupplierType,
+			bs.total bsTotal,
+			bs.total_cash bsTotalCash,
+			bs.cash_type bsCashType,
+			fg.id fgId,
+			fg.total fgTotal
+		FROM booking_supplier bs
+		LEFT JOIN tour_group tg ON bs.group_id = tg.id
+		LEFT JOIN finance_guide fg ON bs.id = fg.booking_id_link
+	</select>
+
+	<select id="selectSubjectSummary2DumpListPage" resultMap="SubjectSummary" parameterType="com.yihg.mybatis.utility.PageBean">
+	  	SELECT 
+			tg.id tgGroupId,
+			tg.group_state tgGroupState,
+			tg.date_start tgDateStart,
+			tg.operator_id tgOperatorId,
+			tg.biz_id bizId,
+			bd.id bdId,
+			bd.supplier_id bsSupplierId,
+			bd.supplier_name bsSupplierName,
+			bd.booking_date bsBookingDate,
+			16 AS bsSupplierType, 
+			bd.total bsTotal,
+			bd.total_cash bsTotalCash
+		FROM booking_delivery bd 
+		LEFT JOIN tour_group tg ON bd.group_id = tg.id
+	</select>
+
+	
+</mapper>
