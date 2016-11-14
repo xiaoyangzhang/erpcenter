@@ -704,18 +704,19 @@ where 1=1 <if test="parameter.gender != null">and gender =#{parameter.gender} </
 	<!-- fullDumpSQL -->
 	 <select id="selectBookingOrders" parameterType="com.yihg.mybatis.utility.PageBean" resultType="com.yimayhd.erpcenter.dal.sales.client.query.vo.BookingOrderDTO">
 		SELECT bs.id bsId, bs.supplier_id bsSupplierId,bs.supplier_name bsSupplierName
-		   ,ifnull(total,0)  bsTotal,ifnull(total_cash,0)  bsTotalCash 
-		   ,ifnull(bsd.item_num,0) bsdItemNum, ifnull(bsd.item_num_minus,0) bsdItemNumMinus
-			tg.id tgId,tg.group_mode groupMode,tg.group_state groupState,
-			bsd.item_date itemDate,bsd.type1_id bsdType1Id,bs.cash_type bsCashType,bs.supplier_type bsSupplierType,tg.biz_id bizId,
+		   ,ifnull(bs.total,0)  bsTotal,ifnull(bs.total_cash,0)  bsTotalCash 
+		   ,ifnull(bsd.item_num,0) bsdItemNum, ifnull(bsd.item_num_minus,0) bsdItemNumMinus,
+			tg.id tgId,tg.group_mode groupMode,tg.group_state groupState,bsd.item_date itemDate,bsd.type1_id bsdType1Id,
+			bs.cash_type bsCashType,bs.supplier_type bsSupplierType,tg.biz_id bizId,
 			tg.operator_id tgOperatorId,tg.product_brand_name productBrandName,tg.product_name productName,
 			date_start dateStart ,date_end dateEnd,bs.user_id bsUserId,bsd.item_total bsdItemTotal,bsd.item_brief bsdItemBrief,
 			bsd.item_date_to bsdItemDateTo,bsd.driver_tel bsdDriverTel,bsd.ticket_arrival bsdTicketArrival,bsd.ticket_departure bsdTicketDeparture,
 			bs.remark bsRemark,tg.total_guide tgTotalGuide,tg.total_child tgTotalChild,tg.total_adult tgTotalAdult,
 			bsd.item_price bsdItemPrice,bs.create_time bsCreateTime,tg.group_code_sort tgGroupCodeSort,bs.booking_date bsBookingDate,
-			bsd.type2_name bsdType2Name,bsd.driver_name bsdDriverName,bsd.car_lisence bsdCarLisence,bsd ticket_flight bsdTicketFlight,
-			bsd.type1_name bsdType1Name,tg.operator_name tgOperatorName,tg.group_code tgGroupCode,bg.id bgId,bg.group_id bgGroupId,
-			bg.guide_name bgGuideName,bg.guideMobile bgGuideMobile
+			bsd.type2_name bsdType2Name,bsd.driver_name bsdDriverName,
+			bsd.car_lisence bsdCarLisence,bsd.ticket_flight bsdTicketFlight,bsd.type1_name bsdType1Name,tg.operator_name tgOperatorName,
+			tg.group_code tgGroupCode,bg.id bgId,bg.group_id bgGroupId,
+			bg.guide_name bgGuideName,bg.guide_mobile bgGuideMobile
 			
 		FROM booking_supplier bs
 		JOIN  booking_supplier_detail bsd ON bs.`id`=bsd.`booking_id` 
