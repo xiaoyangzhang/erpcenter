@@ -32,6 +32,184 @@ public class BookingOrderDTO implements Serializable {
 	private String bsCashType;
 	private Integer bizId;
 	private Integer groupState;
+	private String tgGroupCode;
+	private String tgOperatorName;
+	private String bsdType1Name;
+	private String bsdTicketFlight;
+	private String bsdCarLisence;
+	private String bsdDriverName;
+	private String bsdType2Name;
+	private Date bsBookingDate;
+	private Date bsdItemDateTo;
+	private Integer bgId;
+	private String bgGuideMobile;
+	private String bgGuideName;
+	private Integer bgGroupId;
+	
+	public Integer getBgId() {
+		return bgId;
+	}
+	public void setBgId(Integer bgId) {
+		this.bgId = bgId;
+	}
+	public String getBgGuideMobile() {
+		return bgGuideMobile;
+	}
+	public void setBgGuideMobile(String bgGuideMobile) {
+		this.bgGuideMobile = bgGuideMobile;
+	}
+	public String getBgGuideName() {
+		return bgGuideName;
+	}
+	public void setBgGuideName(String bgGuideName) {
+		this.bgGuideName = bgGuideName;
+	}
+	public Integer getBgGroupId() {
+		return bgGroupId;
+	}
+	public void setBgGroupId(Integer bgGroupId) {
+		this.bgGroupId = bgGroupId;
+	}
+	public Date getBsdItemDateTo() {
+		return bsdItemDateTo;
+	}
+	public void setBsdItemDateTo(Date bsdItemDateTo) {
+		this.bsdItemDateTo = bsdItemDateTo;
+	}
+	private String bsdItemBrief;
+	
+	private Integer tgGroupCodeSort;
+	private Long bsCreateTime;
+	private Integer tgTotalAdult;
+	private Integer tgTotalChild;
+	private Integer tgTotalGuide;
+	private BigDecimal bsdItemTotal;
+	private BigDecimal bsdItemPrice;
+	private String bsRemark;
+	private String bsdTicketDeparture;
+	private String bsdTicketArrival;
+	private String bsdDriverTel;
+	
+	public String getTgGroupCode() {
+		return tgGroupCode;
+	}
+	public void setTgGroupCode(String tgGroupCode) {
+		this.tgGroupCode = tgGroupCode;
+	}
+	public String getTgOperatorName() {
+		return tgOperatorName;
+	}
+	public void setTgOperatorName(String tgOperatorName) {
+		this.tgOperatorName = tgOperatorName;
+	}
+	public String getBsdType1Name() {
+		return bsdType1Name;
+	}
+	public void setBsdType1Name(String bsdType1Name) {
+		this.bsdType1Name = bsdType1Name;
+	}
+	public String getBsdTicketFlight() {
+		return bsdTicketFlight;
+	}
+	public void setBsdTicketFlight(String bsdTicketFlight) {
+		this.bsdTicketFlight = bsdTicketFlight;
+	}
+	public String getBsdCarLisence() {
+		return bsdCarLisence;
+	}
+	public void setBsdCarLisence(String bsdCarLisence) {
+		this.bsdCarLisence = bsdCarLisence;
+	}
+	public String getBsdDriverName() {
+		return bsdDriverName;
+	}
+	public void setBsdDriverName(String bsdDriverName) {
+		this.bsdDriverName = bsdDriverName;
+	}
+	public String getBsdType2Name() {
+		return bsdType2Name;
+	}
+	public void setBsdType2Name(String bsdType2Name) {
+		this.bsdType2Name = bsdType2Name;
+	}
+	public Date getBsBookingDate() {
+		return bsBookingDate;
+	}
+	public void setBsBookingDate(Date bsBookingDate) {
+		this.bsBookingDate = bsBookingDate;
+	}
+	public String getBsdItemBrief() {
+		return bsdItemBrief;
+	}
+	public void setBsdItemBrief(String bsdItemBrief) {
+		this.bsdItemBrief = bsdItemBrief;
+	}
+	public Integer getTgGroupCodeSort() {
+		return tgGroupCodeSort;
+	}
+	public void setTgGroupCodeSort(Integer tgGroupCodeSort) {
+		this.tgGroupCodeSort = tgGroupCodeSort;
+	}
+	public Long getBsCreateTime() {
+		return bsCreateTime;
+	}
+	public void setBsCreateTime(Long bsCreateTime) {
+		this.bsCreateTime = bsCreateTime;
+	}
+	public Integer getTgTotalAdult() {
+		return tgTotalAdult;
+	}
+	public void setTgTotalAdult(Integer tgTotalAdult) {
+		this.tgTotalAdult = tgTotalAdult;
+	}
+	public Integer getTgTotalChild() {
+		return tgTotalChild;
+	}
+	public void setTgTotalChild(Integer tgTotalChild) {
+		this.tgTotalChild = tgTotalChild;
+	}
+	public Integer getTgTotalGuide() {
+		return tgTotalGuide;
+	}
+	public void setTgTotalGuide(Integer tgTotalGuide) {
+		this.tgTotalGuide = tgTotalGuide;
+	}
+	public BigDecimal getBsdItemTotal() {
+		return bsdItemTotal;
+	}
+	public void setBsdItemTotal(BigDecimal bsdItemTotal) {
+		this.bsdItemTotal = bsdItemTotal;
+	}
+	public BigDecimal getBsdItemPrice() {
+		return bsdItemPrice;
+	}
+	public void setBsdItemPrice(BigDecimal bsdItemPrice) {
+		this.bsdItemPrice = bsdItemPrice;
+	}
+	public String getBsRemark() {
+		return bsRemark;
+	}
+	public void setBsRemark(String bsRemark) {
+		this.bsRemark = bsRemark;
+	}
+	public String getBsdTicketDeparture() {
+		return bsdTicketDeparture;
+	}
+	public void setBsdTicketDeparture(String bsdTicketDeparture) {
+		this.bsdTicketDeparture = bsdTicketDeparture;
+	}
+	public String getBsdTicketArrival() {
+		return bsdTicketArrival;
+	}
+	public void setBsdTicketArrival(String bsdTicketArrival) {
+		this.bsdTicketArrival = bsdTicketArrival;
+	}
+	public String getBsdDriverTel() {
+		return bsdDriverTel;
+	}
+	public void setBsdDriverTel(String bsdDriverTel) {
+		this.bsdDriverTel = bsdDriverTel;
+	}
 	public Integer getTgId() {
 		return tgId;
 	}
