@@ -4,15 +4,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.ibatis.annotations.Param;
+
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDet;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopSelect;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.ShopGroupOrderOthersPO;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryGuideShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryShopInfo;
-import org.apache.ibatis.annotations.Param;
-
-import com.yihg.mybatis.utility.PageBean;
 
 
 public interface BookingShopMapper {
@@ -68,4 +69,11 @@ public interface BookingShopMapper {
 	 * @return
 	 */
 	List<BookingShop> selectByGroupId(BookingShop bs);
+	/**
+	 * 根据订单id查询剩下的solr所需信息
+	 * @param id 订单id
+	 * @return
+	 */
+	ShopGroupOrderOthersPO selectShopGroupOrderOthersByOrderId(Integer id);
+	
 }

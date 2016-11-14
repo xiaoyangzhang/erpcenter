@@ -13,6 +13,7 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDet;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopSelect;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.ShopGroupOrderOthersPO;
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingShopDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingShopDetailDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryGuideShop;
@@ -285,6 +286,12 @@ public class BookingShopDalImpl implements BookingShopDal{
 	@Override
 	public Integer existBookingShop(Integer supplierId) {
 		return shopMapper.existBookingShop(supplierId);
+	}
+
+	@Override
+	public ShopGroupOrderOthersPO selectShopGroupOrderOthersByOrderId(Integer id) {
+		
+		return shopMapper.selectShopGroupOrderOthersByOrderId(id);
 	}
 
 

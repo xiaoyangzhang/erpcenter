@@ -98,6 +98,36 @@
    	 	<result column="biz_id" property="bizId" jdbcType="INTEGER" />
    	 </resultMap>
    	 
+   	 <resultMap id="ShopItemsResultMap" type="com.yimayhd.erpcenter.dal.sales.client.tj.po.ShopItems" >
+  	 	<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="bsdId" property="bsdId" jdbcType="INTEGER" />
+		<result column="bsdGoodsId" property="bsdGoodsId" jdbcType="INTEGER" />
+		<result column="bsdGoodsName" property="bsdGoodsName" jdbcType="VARCHAR" />
+		<result column="bsdRepayValStr" property="bsdRepayValStr" jdbcType="VARCHAR" />
+		<result column="bsdBuyTotal" property="bsdBuyTotal" jdbcType="INTEGER" />
+		<result column="bsdRepayTotal" property="bsdRepayTotal" jdbcType="INTEGER" />
+		
+		<result column="bsId" property="bsId" jdbcType="INTEGER" />
+		<result column="bsSupplierId" property="bsSupplierId" jdbcType="INTEGER" />
+		<result column="bsPersonNum" property="bsPersonNum" jdbcType="INTEGER" />
+		<result column="bsTotalFace" property="bsTotalFace" jdbcType="INTEGER" />
+		<result column="bsShopDate" property="bsShopDate" jdbcType="INTEGER" />
+		
+		<result column="goId" property="goId" jdbcType="INTEGER" />
+		<result column="goSaleOperatorId" property="goSaleOperatorId" jdbcType="INTEGER" />
+		
+		<result column="tgId" property="tgId" jdbcType="INTEGER" />
+		<result column="tgBizId" property="tgBizId" jdbcType="INTEGER" />
+		<result column="tgOperatorId" property="tgOperatorId" jdbcType="INTEGER" />
+		<result column="tgPrudctBrandId" property="tgPrudctBrandId" jdbcType="INTEGER" />
+		<result column="tgDateStart" property="tgDateStart" jdbcType="INTEGER" />
+		<result column="tgProductName" property="tgProductName" jdbcType="VARCHAR" />
+		<result column="tgProductBrandName" property="tgProductBrandName" jdbcType="VARCHAR" />
+		<result column="tgGroupMode" property="tgGroupMode" jdbcType="INTEGER" />
+		<result column="tgGroupState" property="tgGroupState" jdbcType="INTEGER" />
+  	</resultMap>
+   	 
+   	 
    	 <delete id="clearTjShopProject">
   			DELETE FROM tj_shop_project
   	 </delete>
@@ -2129,4 +2159,18 @@ sum(totalBuy) all_shop_sales,
   	<delete id="deleteByBookingId">
    		delete from tj_shop_project where booking_id = #{bookingId,jdbcType=INTEGER} 
    	</delete>
+   	
+   	<!-- 全量dump购物项目统计 -->
+   	<select id="selectShopItemsListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="ShopItemsResultMap">
+		SELECT t.id AS bsdId,t.`goods_id` AS bsdGoodsId,t.`goods_name` AS bsdGoodsName,t.`repay_val` AS bsdRepayValStr,t.`buy_total` AS bsdBuyTotal,t.`repay_total` AS bsdRepayTotal,
+				s.id AS bsId,s.`supplier_id` AS bsSupplierId,s.`supplier_name` AS bsSupplierName,s.`person_num` AS bsPersonNum,s.`total_face` AS bsTotalFace,s.`shop_date` AS bsShopDate,
+				o.id AS goId,o.`sale_operator_id` AS goSaleOperatorId,
+				g.id AS tgId,g.`biz_id` AS tgBizId,g.`operator_id` AS tgOperatorId,g.`prudct_brand_id` AS tgPrudctBrandId,g.`date_start` AS tgDateStart,g.`product_name` AS tgProductName,
+				g.`product_brand_name` AS tgProductBrandName,g.`group_mode` AS tgGroupMode,g.`group_state` AS tgGroupState
+				FROM `booking_shop_detail` t 
+				LEFT JOIN booking_shop s ON t.`booking_id`=s.`id`
+				LEFT JOIN tour_group g ON s.`group_id`=g.`id`
+				LEFT JOIN group_order o ON g.id=o.group_id 			
+			 GROUP BY t.id	
+	</select>
 </mapper>

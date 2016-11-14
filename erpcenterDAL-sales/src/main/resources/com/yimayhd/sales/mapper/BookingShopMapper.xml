@@ -829,5 +829,46 @@
 	    from booking_shop
 	    where group_id = #{groupId,jdbcType=INTEGER} and guide_id = #{guideId}
   	</select>
+  	
+  	<resultMap id="shopGroupOrderOthersResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.ShopGroupOrderOthersPO">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="shopId" property="shopId" jdbcType="VARCHAR" />
+		<result column="shopGuideID" property="shopGuideID" jdbcType="VARCHAR" />
+		<result column="shopShopDate" property="shopShopDate" jdbcType="VARCHAR" />
+		<result column="shopName" property="shopName" jdbcType="VARCHAR" />
+		<result column="bgGuideName" property="bgGuideName" jdbcType="VARCHAR" />
+		<result column="bgUserName" property="bgUserName" jdbcType="VARCHAR" />
+		<result column="bdBuyTotal" property="bdBuyTotal" jdbcType="VARCHAR" />
+		<result column="bdTotalFee" property="bdTotalFee" jdbcType="DECIMAL" />
+		<result column="bdShopFee" property="bdShopFee" jdbcType="VARCHAR" />
+	</resultMap>
+	<!-- 客户购物统计solr所需 -->
+  	<select id="selectShopGroupOrderOthers"  parameterType="java.lang.Integer" resultMap="shopGroupOrderOthersResultMap" >
+  	
+  		select  g.id,
+				GROUP_CONCAT(shop.id) shopId,
+				GROUP_CONCAT(shop.guide_id) shopGuideID,
+				GROUP_CONCAT(shop.shop_date) shopShopDate,
+				GROUP_CONCAT(shop.supplier_name) shopName,
+
+				GROUP_CONCAT(IFNULL(b.guide_name,'no')) bgGuideName,
+				GROUP_CONCAT(IFNULL(b.user_name,'no')) bgUserName,
+
+				GROUP_CONCAT(IFNULL(bd.buy_total,'no')) bdBuyTotal,
+				SUM(IFNULL(bd.buy_total,0)) bdTotalFee,
+				GROUP_CONCAT(IFNULL(bd.buy_total,0)) bdShopFee
+
+ 		 from group_order g 
+				INNER JOIN booking_shop shop ON g.group_id = shop.group_id
+				LEFT JOIN booking_guide b ON shop.`guide_id`=b.`guide_id` AND b.`group_id`=shop.`group_id`
+				LEFT JOIN booking_shop_detail_deploy bd ON g.`id`=bd.`order_id` AND bd.`booking_id`=shop.`id`
+			WHERE 
+				g.id= #{id,jdbcType=INTEGER} 
+              
+               GROUP BY g.id
+              ORDER BY g.id
+
+  	
+  	</select>
 	
 </mapper>

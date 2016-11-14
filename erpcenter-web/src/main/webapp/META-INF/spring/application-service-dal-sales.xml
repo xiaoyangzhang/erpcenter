@@ -52,6 +52,8 @@
 	<bean id="teamGroupDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.TeamGroupDalImpl" />
 	<bean id="tourGroupDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.TourGroupDalImpl" />
 	
+	<bean id="shopSolrDumpDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.ShopSolrDumpDalImpl" />
+	
 	<!-- taobao -->
 	<bean id="taobaoOrderDal" class="com.yimayhd.erpcenter.dal.sales.taobao.impl.TaobaoOrderDalImpl" />
 	
