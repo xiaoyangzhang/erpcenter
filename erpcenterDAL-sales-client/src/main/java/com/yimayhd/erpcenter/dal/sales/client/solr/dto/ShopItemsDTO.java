@@ -1,8 +1,8 @@
-package com.yimayhd.erpcenter.dal.sales.client.tj.po;
+package com.yimayhd.erpcenter.dal.sales.client.solr.dto;
 
 import java.io.Serializable;
 
-public class ShopItems implements Serializable{
+public class ShopItemsDTO implements Serializable{
 
 	/**
 	 * 
@@ -13,7 +13,6 @@ public class ShopItems implements Serializable{
 	private long bsdId;
 	private long bsdGoodsId;
 	private String bsdGoodsName;
-	private String bsdGoodsNameStr;
 	private String bsdRepayValStr;
 	private long bsdBuyTotal;
 	private long bsdRepayTotal;
@@ -22,9 +21,7 @@ public class ShopItems implements Serializable{
 	private long bsSupplierId;
 	private String bsSupplierName;
 	private long bsPersonNum;
-	private long bsPersonNumSum;
 	private long bsTotalFace;
-	private long bsTotalFaceSum;
 	private long bsShopDate;
 	
 	private long goId;
@@ -183,23 +180,7 @@ public class ShopItems implements Serializable{
 	public void setTgGroupState(int tgGroupState) {
 		this.tgGroupState = tgGroupState;
 	}
-	public String getBsdGoodsNameStr() {
-		return bsdGoodsNameStr;
-	}
-	public void setBsdGoodsNameStr(String bsdGoodsNameStr) {
-		this.bsdGoodsNameStr = bsdGoodsNameStr;
-	}
-	public long getBsPersonNumSum() {
-		return bsPersonNumSum;
-	}
-	public void setBsPersonNumSum(long bsPersonNumSum) {
-		this.bsPersonNumSum = bsPersonNumSum;
-	}
-	public long getBsTotalFaceSum() {
-		return bsTotalFaceSum;
-	}
-	public void setBsTotalFaceSum(long bsTotalFaceSum) {
-		this.bsTotalFaceSum = bsTotalFaceSum;
-	}
+	
+	
 	
 }

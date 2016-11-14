@@ -21,5 +21,12 @@ public class ShopSolrDumpDalImpl implements ShopSolrDumpDal{
 		pageBean.setResult(result);
 		return pageBean;
 	}
+
+	@Override
+	public PageBean<ShopItems> selectShopListPage(PageBean<ShopItems> pageBean) {
+		List<ShopItems> result = tjMapper.selectShopListPage(pageBean);
+		pageBean.setResult(result);
+		return pageBean;
+	}
 	
 }

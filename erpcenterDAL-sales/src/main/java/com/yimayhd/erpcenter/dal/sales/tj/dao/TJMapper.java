@@ -92,4 +92,6 @@ public interface TJMapper {
 
 	List<ShopItems> selectShopItemsListPage(PageBean<ShopItems> pageBean);
 
+	List<ShopItems> selectShopListPage(PageBean<ShopItems> pageBean);
+
 }

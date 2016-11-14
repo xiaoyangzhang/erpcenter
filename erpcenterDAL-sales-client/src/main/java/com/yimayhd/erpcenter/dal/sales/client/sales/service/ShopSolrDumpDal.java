@@ -20,4 +20,11 @@ public interface ShopSolrDumpDal{
 	 * @author wangjun
 	 */
 	PageBean<ShopItems> selectShopItemsListPage(PageBean<ShopItems> pageBean);
+	/**
+	 * 购物项目统计购物店全量dump查询
+	 * @param pageBean
+	 * @return
+	 * @author wangjun
+	 */
+	PageBean<ShopItems> selectShopListPage(PageBean<ShopItems> pageBean);
 }

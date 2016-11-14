@@ -12,7 +12,10 @@ public enum SalesCollectionEnum {
 
     SALES_GROUPORDER("订单查询", 1, "saleOrder"),
     SALES_TOURGROUP("团查询", 2, "saleTour"),
-    SALES_SALELIST("产品销售列表", 3, "productManager");
+    SALES_SALELIST("产品销售列表", 3, "productManager"),
+    SHOP_ITEMS("购物项目统计",4,"shopItemStatistics"),
+    SHOP_COL("购物项目统计-购物店",5,"shopStatistics");
+    
     
     private String name;
     private int id;
