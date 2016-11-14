@@ -109,7 +109,9 @@
 		
 		<result column="bsId" property="bsId" jdbcType="INTEGER" />
 		<result column="bsSupplierId" property="bsSupplierId" jdbcType="INTEGER" />
+		<result column="bsPersonNumSum" property="bsPersonNumSum" jdbcType="INTEGER" />
 		<result column="bsPersonNum" property="bsPersonNum" jdbcType="INTEGER" />
+		<result column="bsTotalFaceSum" property="bsTotalFaceSum" jdbcType="INTEGER" />
 		<result column="bsTotalFace" property="bsTotalFace" jdbcType="INTEGER" />
 		<result column="bsShopDate" property="bsShopDate" jdbcType="INTEGER" />
 		
@@ -2172,5 +2174,22 @@ sum(totalBuy) all_shop_sales,
 				LEFT JOIN tour_group g ON s.`group_id`=g.`id`
 				LEFT JOIN group_order o ON g.id=o.group_id 			
 			 GROUP BY t.id	
+	</select>
+	<!-- 全量dump购物项目-购物店统计 -->
+   	<select id="selectShopListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="ShopItemsResultMap">
+		SELECT GROUP_CONCAT(DISTINCT tt.bsdGoodsName) AS bsdGoodsNameStr,tt.bsId,tt.bsSupplierId,tt.bsSupplierName,SUM(tt.bsPersonNum) bsPersonNumSum ,SUM(tt.bsTotalFace) bsTotalFaceSum,
+			tt.bsShopDate,tt.goId,tt.goSaleOperatorId,tt.tgId,tt.tgBizId,tt.tgOperatorId,tt.tgPrudctBrandId,tt.tgDateStart,tt.tgProductName,tt.tgProductBrandName,tt.tgGroupMode,tt.tgGroupState
+		FROM 
+		(SELECT t.`goods_id` AS bsdGoodsId,t.`goods_name` AS bsdGoodsName,t.`repay_val` AS bsdRepayValStr,t.`buy_total` AS bsdBuyTotal,t.`repay_total` AS bsdRepayTotal,
+			s.id AS bsId,s.`supplier_id` AS bsSupplierId,s.`supplier_name` AS bsSupplierName,s.`person_num` AS bsPersonNum,s.`total_face` AS bsTotalFace,s.`shop_date` AS bsShopDate,
+			o.id AS goId,o.`sale_operator_id` AS goSaleOperatorId,
+			g.id AS tgId,g.`biz_id` AS tgBizId,g.`operator_id` AS tgOperatorId,g.`prudct_brand_id` AS tgPrudctBrandId,g.`date_start` AS tgDateStart,g.`product_name` AS tgProductName,
+			g.`product_brand_name` AS tgProductBrandName,g.`group_mode` AS tgGroupMode,g.`group_state` AS tgGroupState
+						FROM `booking_shop_detail` t 
+						LEFT JOIN booking_shop s ON t.`booking_id`=s.`id`
+						LEFT JOIN tour_group g ON s.`group_id`=g.`id`
+						 LEFT JOIN group_order o ON g.id=o.group_id 			
+					 GROUP BY s.id	) tt
+		GROUP BY tt.bsSupplierId
 	</select>
 </mapper>
