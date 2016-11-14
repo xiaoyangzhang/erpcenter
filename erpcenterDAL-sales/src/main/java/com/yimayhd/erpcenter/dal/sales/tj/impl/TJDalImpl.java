@@ -142,10 +142,26 @@ public class TJDalImpl implements TJDal {
 	}
 
 	@Override
+	public PageBean selectTJGroupListPageDump(PageBean pageBean) {
+		List<Map<String, Object>> list = tjMapper.selectTJGroupListPageDump(pageBean);
+		pageBean.setResult(list);
+		return pageBean;
+	}
+
+
+	@Override
 	public List<Map<String, Object>> selectTJShopOfGroup(Map<String, Object> params) {
 		List<Map<String, Object>> list = tjMapper.selectTJShopOfGroup(params);
 		return list;
 	}
+
+
+	@Override
+	public List<Map<String, Object>> selectTJShopOfGroupDump(Map<String, Object> params) {
+		List<Map<String, Object>> list = tjMapper.selectTJShopOfGroupDump(params);
+		return list;
+	}
+
 
 	@Override
 	public Map<String,Object> selectTJGroupShopTotal(PageBean pageBean) {

@@ -45,12 +45,15 @@ public interface TJMapper {
 	
 	List<Map<String,Object>> selectTJGroupListPage(@Param("page") PageBean pageBean);
 
+	List<Map<String,Object>> selectTJGroupListPageDump(@Param("page") PageBean pageBean);
+
 	List<TJShopProject> selectTjShopProjest(@Param("bizId")Integer bizId, @Param("dateType")String dateType,
 			@Param("startMin")String startMin, @Param("startMax")String startMax, 
 			@Param("shopStore")String shopStore, @Param("shopItem")String shopItem);
 
 
 	List<Map<String,Object>> selectTJShopOfGroup(@Param("parameter") Map<String, Object> params);
+	List<Map<String,Object>> selectTJShopOfGroupDump(@Param("parameter") Map<String, Object> params);
 
 	void insertTJGroupShop(TJGroupShop groupShop);
 	

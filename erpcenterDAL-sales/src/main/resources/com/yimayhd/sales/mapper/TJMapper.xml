@@ -1361,7 +1361,108 @@
 		<if test="page.parameter.shopSupplierName != null">and s.supplier_name like CONCAT('%','${page.parameter.shopSupplierName}','%')</if>
 		GROUP BY t1.id) t2
 	</select>
-	
+
+	<select id="selectTJGroupListPageDump" resultType="java.util.HashMap">
+		SELECT
+		t2.group_id,
+		t2.group_mode,
+		t2.`group_code`,
+		t2.date_start,
+		t2.date_end,
+		t2.total_adult,
+		t2.total_child,
+		t2.total_guide,
+		t2.product_name,
+		t2.product_brand_name,
+		t2.sale_operator_id,
+		t2.source_type_id,
+		t2.source_type_name,
+		t2.total_repay,
+		t2.province_name,
+		t2.yj total_comm,
+		(t2.total_repay - t2.yj) shop_profit,
+		t2.operator_id,
+		t2.operator_name
+		FROM
+		(
+		SELECT
+		t1.id group_id,
+		t1.group_mode,
+		t1.`group_code`,
+		t1.date_start,
+		t1.date_end,
+		t1.total_adult,
+		t1.total_child,
+		t1.total_guide,
+		t1.product_name,
+		t1.product_brand_name,
+		t1.sale_operator_id,
+		t1.source_type_id,
+		t1.source_type_name,
+		t1.province_name,
+		SUM(s.total_repay) total_repay,
+		t1.yj,
+		t1.operator_id,
+		t1.operator_name
+		FROM
+		(
+		SELECT
+		t0.id,
+		t0.date_start,
+		t0.date_end,
+		total_adult,
+		total_child,
+		total_guide,
+		t0.product_name,
+		t0.product_brand_name,
+		t0.sale_operator_id,
+		t0.source_type_id,
+		t0.source_type_name,
+		t0.province_name,
+		SUM(IFNULL(c.total, 0)) yj,
+		t0.group_mode,
+		t0.`group_code`,
+		t0.operator_id,
+		t0.operator_name
+		FROM
+		(
+		SELECT
+		g.id,
+		g.date_start,
+		g.date_end,
+		IFNULL(g.total_adult, 0) total_adult,
+		IFNULL(g.total_child, 0) total_child,
+		IFNULL(g.total_guide, 0) total_guide,
+		g.product_name,
+		g.product_brand_name,
+		o.`sale_operator_id`,
+		o.source_type_id,
+		o.province_name,
+		o.source_type_name,
+		g.group_mode,
+		g.`group_code`,
+		g.operator_id,
+		g.operator_name
+		FROM
+		tour_group g
+		LEFT JOIN group_order o ON g.id = o.group_id
+		GROUP BY
+		g.id
+		) t0
+		LEFT JOIN finance_commission c ON t0.id = c.group_id
+		GROUP BY
+		t0.id
+		) t1
+		LEFT JOIN booking_shop s ON t1.id = s.`group_id`
+		LEFT JOIN booking_guide e ON t1.id = e.group_id
+		AND e.guide_id = s.guide_id
+		GROUP BY
+		t1.id
+		) t2
+		<if test="limit!=null">
+		limit #{limit}
+	     </if>
+	</select>
 	<!-- 归档查询 -->
 	<select id="selectTJGroupListPage2" resultType="java.util.HashMap">
 		SELECT group_id, group_mode, group_code, date_start, date_end, operator_id, operator_name, 
@@ -1435,6 +1536,60 @@
 		) tt
 
 		 GROUP BY tt.supplier_id,tt.guide_id
+	</select>
+
+
+	<select id="selectTJShopOfGroupDump" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+		SELECT
+		tt.supplier_id shop_supplier_id,
+		tt.supplier_name shop_supplier_name,
+		SUM(tt.person_num) person_num,
+		tt.shop_date,
+		tt.guide_name,
+		tt.user_name guide_manage_name,
+		SUM(tt.total_face) total_fact,
+		SUM(tt.total_repay) total_repay
+		FROM
+		(
+		SELECT
+		g.`biz_id`,
+		g.id AS group_id,
+		o.`sale_operator_id`,
+		g.group_mode,
+		s.id AS booking_id,
+		g.`group_code`,
+		g.`group_state`,
+		g.`operator_id`,
+		g.`operator_name`,
+		g.`date_start`,
+		g.date_end,
+		s.person_buy_avg,
+		s.`supplier_id`,
+		s.`supplier_name`,
+		s.`guide_id`,
+		e.guide_name,
+		e.`user_name`,
+		s.`shop_date`,
+		s.`person_num`,
+		s.`total_face`,
+		s.total_repay,
+		g.product_name,
+		g.product_brand_name
+		FROM
+		booking_shop s
+		LEFT JOIN tour_group g ON s.`group_id` = g.`id`
+		LEFT JOIN group_order o ON g.id = o.group_id
+		LEFT JOIN booking_guide e ON g.id = e.group_id
+		AND e.guide_id = s.guide_id
+		WHERE
+		g.id = #{parameter.groupId} AND  g.group_state IN (1,3,4)
+
+		GROUP BY
+		s.id
+		) tt
+		GROUP BY
+		tt.supplier_id,
+		tt.guide_id
 	</select>
 	
 	<!-- 归档查询 -->

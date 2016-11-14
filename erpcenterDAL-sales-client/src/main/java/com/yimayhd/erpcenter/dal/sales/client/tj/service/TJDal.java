@@ -48,6 +48,8 @@ public interface TJDal {
 
 	List<Map<String, Object>> selectTJShopOfGroup(Map<String, Object> params);
 
+	List<Map<String, Object>> selectTJShopOfGroupDump(Map<String, Object> params);
+
 	void insertTJGroupShop(TJGroupShop groupShop);
 
 	void clearTJGroupShop();
@@ -82,4 +84,6 @@ public interface TJDal {
 	PageBean selectLineProfitsPageAbc(PageBean pageBean);
 	
 	PageBean selectLineProfitListPage(PageBean pageBean);
+
+	public PageBean selectTJGroupListPageDump(PageBean pageBean);
 }
