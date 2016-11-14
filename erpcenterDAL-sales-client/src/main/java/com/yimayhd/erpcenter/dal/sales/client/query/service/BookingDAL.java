@@ -4,5 +4,5 @@ import com.yihg.mybatis.utility.PageBean;
 
 
 public interface BookingDal {
-	PageBean selectBookingOrders(PageBean pageBean);
+	public PageBean selectBookingOrders(PageBean pageBean);
 }

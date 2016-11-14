@@ -119,7 +119,7 @@ import com.yimayhd.erpresource.dal.po.SupplierInfo;
 public class TourGroupFacadeImpl implements TourGroupFacade {
     private static final Logger logger = LoggerFactory.getLogger("TourGroupFacadeImpl");
     @Autowired
-    private PlatformEmployeeBiz platformEmployeeBiz;
+    private PlatformEmployeeBiz platformEmployeeBiz;  
     @Autowired
     private GroupOrderBiz groupOrderBiz;
     @Autowired
@@ -1047,7 +1047,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                     .selectByOrderId(orderId);
             List<GroupOrderPrice> prices = groupOrderPriceBiz
                     .selectByOrder(orderId);
-            if(agency!=1){
+            if(agency!=1){ 
                 GroupOrderPrice gop = new GroupOrderPrice();
                 gop.setItemName(Constants.PRICETYPE);
                 gop.setUnitPrice(Constants.PRICE);
