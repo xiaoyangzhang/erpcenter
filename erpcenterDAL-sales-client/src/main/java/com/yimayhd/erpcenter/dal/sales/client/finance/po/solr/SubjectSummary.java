@@ -13,7 +13,7 @@ public class SubjectSummary implements Serializable {
 	
 	private int tgGroupId;
 	private int tgGroupState;
-	private long tgDataStart;
+	private String tgDateStart;
 	private int tgOperatorId;
 	private int bizId;
 	//booking_delivery.id
@@ -22,13 +22,13 @@ public class SubjectSummary implements Serializable {
 	private int bsId;
 	private int bsSupplierId;
 	private String bsSupplierName;
-	private long bsBookingDate;
+	private String bsBookingDate;
 	private int bsSupplierType;
-	private BigDecimal bsTotal;
-	private BigDecimal bsTotalCash;
+	private double bsTotal;
+	private double bsTotalCash;
 	private String bsCashType;
 	private int fgId;
-	private BigDecimal fgTotal;
+	private double fgTotal;
 	public int getTgGroupId() {
 		return tgGroupId;
 	}
@@ -41,11 +41,11 @@ public class SubjectSummary implements Serializable {
 	public void setTgGroupState(int tgGroupState) {
 		this.tgGroupState = tgGroupState;
 	}
-	public long getTgDataStart() {
-		return tgDataStart;
+	public String getTgDateStart() {
+		return tgDateStart;
 	}
-	public void setTgDataStart(long tgDataStart) {
-		this.tgDataStart = tgDataStart;
+	public void setTgDateStart(String tgDateStart) {
+		this.tgDateStart = tgDateStart;
 	}
 	public int getTgOperatorId() {
 		return tgOperatorId;
@@ -83,10 +83,10 @@ public class SubjectSummary implements Serializable {
 	public void setBsSupplierName(String bsSupplierName) {
 		this.bsSupplierName = bsSupplierName;
 	}
-	public long getBsBookingDate() {
+	public String getBsBookingDate() {
 		return bsBookingDate;
 	}
-	public void setBsBookingDate(long bsBookingDate) {
+	public void setBsBookingDate(String bsBookingDate) {
 		this.bsBookingDate = bsBookingDate;
 	}
 	public int getBsSupplierType() {
@@ -95,16 +95,16 @@ public class SubjectSummary implements Serializable {
 	public void setBsSupplierType(int bsSupplierType) {
 		this.bsSupplierType = bsSupplierType;
 	}
-	public BigDecimal getBsTotal() {
+	public double getBsTotal() {
 		return bsTotal;
 	}
-	public void setBsTotal(BigDecimal bsTotal) {
+	public void setBsTotal(double bsTotal) {
 		this.bsTotal = bsTotal;
 	}
-	public BigDecimal getBsTotalCash() {
+	public double getBsTotalCash() {
 		return bsTotalCash;
 	}
-	public void setBsTotalCash(BigDecimal bsTotalCash) {
+	public void setBsTotalCash(double bsTotalCash) {
 		this.bsTotalCash = bsTotalCash;
 	}
 	public String getBsCashType() {
@@ -119,10 +119,10 @@ public class SubjectSummary implements Serializable {
 	public void setFgId(int fgId) {
 		this.fgId = fgId;
 	}
-	public BigDecimal getFgTotal() {
+	public double getFgTotal() {
 		return fgTotal;
 	}
-	public void setFgTotal(BigDecimal fgTotal) {
+	public void setFgTotal(double fgTotal) {
 		this.fgTotal = fgTotal;
 	}
 	

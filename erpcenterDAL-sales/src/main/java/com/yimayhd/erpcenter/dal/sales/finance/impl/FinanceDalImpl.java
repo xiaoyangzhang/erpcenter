@@ -40,6 +40,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderPriceDal;
+import com.yimayhd.erpcenter.dal.sales.client.solr.query.SubjectSummaryPageQueryDTO;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceCommissionMapper;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.FinancePayDetailMapper;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.FinancePayMapper;
@@ -49,6 +50,7 @@ import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingShopMapper;
 import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
+import com.yimayhd.erpcenter.dal.sales.solr.sales.converter.FinanceConverter;
 import com.yimayhd.erpresource.dal.constants.SupplierConstant;
 
 /**
@@ -1102,8 +1104,58 @@ public class FinanceDalImpl implements FinanceDal {
 
 	@Override
 	public PageBean getsubjectSummaryListPage(PageBean pageBean) {
-		List<Map<String,Object>> result = supplierMapper.getsubjectSummaryListPage(pageBean);
-		pageBean.setResult(result);
+		
+		if(1==0){
+			List<Map<String,Object>> result = supplierMapper.getsubjectSummaryListPage(pageBean);
+			if(result == null){
+				return pageBean;
+			}
+			pageBean.setResult(result);
+			
+			for (Map<String, Object> map : result) {
+				Map<String,Object> qdyj = supplierMapper.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_QDYJ);
+				map.put("qd_total_cash", qdyj==null?0:qdyj.get("total_cash"));
+				map.put("qd_total", qdyj==null?0:qdyj.get("total"));
+				
+				Map<String,Object> dyxf = supplierMapper.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_DYXF);
+				map.put("dy_total_cash", dyxf==null?0:dyxf.get("total_cash"));
+				map.put("dy_total", dyxf==null?0:dyxf.get("total"));
+				
+				Map<String,Object> gsxf = supplierMapper.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_GSXF);
+				map.put("gs_total_cash", gsxf==null?0:gsxf.get("total_cash"));
+				map.put("gs_total", gsxf==null?0:gsxf.get("total"));
+				
+				Map<String,Object> qt = supplierMapper.getsubjectSummaryQT(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_GSXF,Constants.SUMJECT_SUMMARY_QDYJ,Constants.SUMJECT_SUMMARY_DYXF);
+				map.put("qt_total_cash", qt==null?0:qt.get("total_cash"));
+				map.put("qt_total", qt==null?0:qt.get("total"));
+				
+				//Map<String,Object> dybz=financeService.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()),null);
+
+				
+				BigDecimal dy_total=new BigDecimal(map.get("dy_total").toString());
+				/**
+				 * 导游报账只针对导游现付才有效
+				 * 比如：订单金额车费8300，结算方式是：导游现付，导游报账5000，那么：结果就是：导游现付=5000，签单月结=3300
+				 */
+				BigDecimal qd_total=new BigDecimal(map.get("qd_total").toString());
+				if(null != dyxf){
+					BigDecimal dybz_total=new BigDecimal(dyxf.get("dybz_total").toString());
+					qd_total = dy_total.subtract(dybz_total).add(qd_total);
+					map.put("dy_total",dybz_total);
+				}
+				map.put("qd_total",qd_total);
+			}
+		}else{
+			SubjectSummaryPageQueryDTO dto = FinanceConverter.toSubjectSummaryQueryDTO(pageBean);
+			
+			
+//			ProductStatePageQueryDTO queryDTO = ProductStateConverter.toQueryDTO(pageBean, parameters);
+//			SolrSearchPageDTO<ProductStateDTO> solrPageResult  = productSolrQueryManager.searchProductState(queryDTO);
+//			return ProductStateConverter.dto2PageBean(solrPageResult);
+		}
+		
+		
+		
 		return pageBean;
 	}
 	

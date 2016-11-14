@@ -1691,40 +1691,42 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		pm.put("set", queryDTO.getSet());
 		pageBean.setParameter(pm);
 		pageBean = financeBiz.getsubjectSummaryListPage(pageBean);
-		List<Map<String,Object>> lists = (List<Map<String,Object>>)pageBean.getResult();
-		for (Map<String, Object> map : lists) {
-			Map<String,Object> qdyj=financeBiz.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_QDYJ);
-			map.put("qd_total_cash", qdyj==null?0:qdyj.get("total_cash"));
-			map.put("qd_total", qdyj==null?0:qdyj.get("total"));
-			
-			Map<String,Object> dyxf=financeBiz.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_DYXF);
-			map.put("dy_total_cash", dyxf==null?0:dyxf.get("total_cash"));
-			map.put("dy_total", dyxf==null?0:dyxf.get("total"));
-			
-			Map<String,Object> gsxf=financeBiz.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_GSXF);
-			map.put("gs_total_cash", gsxf==null?0:gsxf.get("total_cash"));
-			map.put("gs_total", gsxf==null?0:gsxf.get("total"));
-			
-			Map<String,Object> qt=financeBiz.getsubjectSummaryQT(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_GSXF,Constants.SUMJECT_SUMMARY_QDYJ,Constants.SUMJECT_SUMMARY_DYXF);
-			map.put("qt_total_cash", qt==null?0:qt.get("total_cash"));
-			map.put("qt_total", qt==null?0:qt.get("total"));
-			
-			//Map<String,Object> dybz=financeService.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()),null);
-
-			
-			BigDecimal dy_total=new BigDecimal(map.get("dy_total").toString());
-			/**
-			 * 导游报账只针对导游现付才有效
-			 * 比如：订单金额车费8300，结算方式是：导游现付，导游报账5000，那么：结果就是：导游现付=5000，签单月结=3300
-			 */
-			BigDecimal qd_total=new BigDecimal(map.get("qd_total").toString());
-			if(null != dyxf){
-				BigDecimal dybz_total=new BigDecimal(dyxf.get("dybz_total").toString());
-				qd_total = dy_total.subtract(dybz_total).add(qd_total);
-				map.put("dy_total",dybz_total);
-			}
-			map.put("qd_total",qd_total);
-		}
+		
+		//将一下内容放到了dal中，已方便做开关，支持solr检索
+//		List<Map<String,Object>> lists = (List<Map<String,Object>>)pageBean.getResult();
+//		for (Map<String, Object> map : lists) {
+//			Map<String,Object> qdyj=financeBiz.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_QDYJ);
+//			map.put("qd_total_cash", qdyj==null?0:qdyj.get("total_cash"));
+//			map.put("qd_total", qdyj==null?0:qdyj.get("total"));
+//			
+//			Map<String,Object> dyxf=financeBiz.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_DYXF);
+//			map.put("dy_total_cash", dyxf==null?0:dyxf.get("total_cash"));
+//			map.put("dy_total", dyxf==null?0:dyxf.get("total"));
+//			
+//			Map<String,Object> gsxf=financeBiz.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_GSXF);
+//			map.put("gs_total_cash", gsxf==null?0:gsxf.get("total_cash"));
+//			map.put("gs_total", gsxf==null?0:gsxf.get("total"));
+//			
+//			Map<String,Object> qt=financeBiz.getsubjectSummaryQT(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_GSXF,Constants.SUMJECT_SUMMARY_QDYJ,Constants.SUMJECT_SUMMARY_DYXF);
+//			map.put("qt_total_cash", qt==null?0:qt.get("total_cash"));
+//			map.put("qt_total", qt==null?0:qt.get("total"));
+//			
+//			//Map<String,Object> dybz=financeService.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()),null);
+//
+//			
+//			BigDecimal dy_total=new BigDecimal(map.get("dy_total").toString());
+//			/**
+//			 * 导游报账只针对导游现付才有效
+//			 * 比如：订单金额车费8300，结算方式是：导游现付，导游报账5000，那么：结果就是：导游现付=5000，签单月结=3300
+//			 */
+//			BigDecimal qd_total=new BigDecimal(map.get("qd_total").toString());
+//			if(null != dyxf){
+//				BigDecimal dybz_total=new BigDecimal(dyxf.get("dybz_total").toString());
+//				qd_total = dy_total.subtract(dybz_total).add(qd_total);
+//				map.put("dy_total",dybz_total);
+//			}
+//			map.put("qd_total",qd_total);
+//		}
 
 		List<DicInfo> dicInfoList = dicBiz.getListByTypeCode(BasicConstants.YJ_XMLX, queryDTO.getBizId());
 		
