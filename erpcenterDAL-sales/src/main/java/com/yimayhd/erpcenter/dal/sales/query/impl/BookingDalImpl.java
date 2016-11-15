@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.dal.sales.client.query.service.BookingDal;
+import com.yimayhd.erpcenter.dal.sales.client.query.service.BookingDAL;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.BookingOrderDTO;
 import com.yimayhd.erpcenter.dal.sales.query.dao.BookingMapper;
 
-public class BookingDalImpl implements BookingDal {
+public class BookingDalImpl implements BookingDAL {
 
 	@Autowired
 	private BookingMapper bookingMapper;
