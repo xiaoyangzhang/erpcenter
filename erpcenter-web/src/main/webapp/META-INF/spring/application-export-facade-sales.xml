@@ -74,7 +74,7 @@
         <property name="retries" value="${dubbo.retries}"/>
     </bean>
 
-    <!-- <bean id="tourGroupFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
+    <bean id="tourGroupFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
         <property name="interface" value="com.yimayhd.erpcenter.facade.sales.service.TourGroupFacade"/>
         <property name="ref" ref="tourGroupFacade"/>
         <property name="application" ref="dubboApplicationConfig"/>
@@ -83,7 +83,7 @@
         <property name="version" value="${export.dubbo.version}"/>
         <property name="timeout" value="${export.dubbo.timeout}"/>
         <property name="retries" value="${dubbo.retries}"/>
-    </bean> -->
+    </bean>
     
     <bean id="agencyFitFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
         <property name="interface" value="com.yimayhd.erpcenter.facade.sales.service.AgencyFitFacade"/>
