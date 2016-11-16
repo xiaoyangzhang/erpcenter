@@ -115,7 +115,7 @@ public class GroupRouteFacadeImpl implements GroupRouteFacade{
 
 						for (ProductAttachment productAttachment : productAttachmentsList) {
 							GroupRouteAttachment groupRouteAttachment = new GroupRouteAttachment();
-							BeanUtils.copyProperties(groupRouteAttachment, productAttachment);
+							BeanUtils.copyProperties(productAttachment,groupRouteAttachment);
 							//System.out.println(groupRouteAttachment.getPath() + ";" + groupRouteAttachment.getName());
 							groupRouteAttachment.setId(null);
 							groupRouteAttachmentList.add(groupRouteAttachment);
@@ -127,7 +127,7 @@ public class GroupRouteFacadeImpl implements GroupRouteFacade{
 					if (!CollectionUtils.isEmpty(productRouteTrafficList)) {
 						for (ProductRouteTraffic productRouteTraffic : productRouteTrafficList) {
 							GroupRouteTraffic groupRouteTraffic = new GroupRouteTraffic();
-							BeanUtils.copyProperties(groupRouteTraffic, productRouteTraffic);
+							BeanUtils.copyProperties( productRouteTraffic,groupRouteTraffic);
 							groupRouteTraffic.setId(null);
 							groupRouteTrafficList.add(groupRouteTraffic);
 
@@ -140,7 +140,7 @@ public class GroupRouteFacadeImpl implements GroupRouteFacade{
 					if (!CollectionUtils.isEmpty(productOptionsSupplierList)) {
 						for (ProductRouteSupplier productRouteSupplier : productOptionsSupplierList) {
 							GroupRouteSupplier groupRouteOptionsSupplier = new GroupRouteSupplier();
-							BeanUtils.copyProperties(groupRouteOptionsSupplier, productRouteSupplier);
+							BeanUtils.copyProperties( productRouteSupplier,groupRouteOptionsSupplier);
 							groupRouteOptionsSupplier.setId(null);
 							groupRouteOptionsSupplierList.add(groupRouteOptionsSupplier);
 						}
