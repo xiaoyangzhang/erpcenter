@@ -56,6 +56,9 @@ public class SysLoginFacadImpl implements SysLoginFacade{
 	public PlatformEmployeeResult getEmployeeByBizIdAndLoginName(Integer bizId, String loginName) {
 		PlatformEmployeeResult result = new PlatformEmployeeResult();
 		PlatformEmployeePo po = platformEmployeeBiz.getEmployeeByBizIdAndLoginName(bizId, loginName);//根据商家id和登陆名称获取用户信息
+		if (po == null) {
+			return null;
+		}
 		BeanUtils.copyProperties(po, result);//将对应的属性值拷贝到result中
 		return result;
 	}
