@@ -105,7 +105,7 @@ public class GroupRoute implements Serializable {
 	}
 
 	public void setBreakfast(String breakfast) {
-		this.breakfast = breakfast == null ? null : breakfast.trim();
+		this.breakfast = ( breakfast == null ? null : breakfast.trim());
 	}
 
 
@@ -114,7 +114,7 @@ public class GroupRoute implements Serializable {
 	}
 
 	public void setLunch(String lunch) {
-		this.lunch = lunch == null ? null : lunch.trim();
+		this.lunch = (lunch == null ? null : lunch.trim());
 	}
 
 	public String getSupper() {
@@ -122,7 +122,7 @@ public class GroupRoute implements Serializable {
 	}
 
 	public void setSupper(String supper) {
-		this.supper = supper == null ? null : supper.trim();
+		this.supper = ( supper == null ? null : supper.trim());
 	}
 
 	public Integer getHotelId() {
@@ -146,7 +146,7 @@ public class GroupRoute implements Serializable {
 	}
 
 	public void setRouteDesp(String routeDesp) {
-		this.routeDesp = routeDesp == null ? null : routeDesp.trim();
+		this.routeDesp = ( routeDesp == null ? null : routeDesp.trim());
 	}
 
 	public String getRouteTip() {
@@ -154,7 +154,7 @@ public class GroupRoute implements Serializable {
 	}
 
 	public void setRouteTip(String routeTip) {
-		this.routeTip = routeTip == null ? null : routeTip.trim();
+		this.routeTip = ( routeTip == null ? null : routeTip.trim());
 	}
 
 	public Long getCreateTime() {

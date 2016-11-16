@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
@@ -99,17 +100,18 @@ public class GroupRouteFacadeImpl implements GroupRouteFacade{
 		List<GroupRouteDayVO> groupRouteDayVOList = new ArrayList<GroupRouteDayVO>();
 		List<ProductRouteDayVo> productRoteDayVoList = productRouteVo.getProductRoteDayVoList();
 
-		if (productRoteDayVoList != null && productRoteDayVoList.size() > 0) {
+		if (!CollectionUtils.isEmpty(productRoteDayVoList)) {
 			for (ProductRouteDayVo productRouteDayVo : productRoteDayVoList) {
 				ProductRoute productRoute = productRouteDayVo.getProductRoute();
 				GroupRoute groupRoute = new GroupRoute();
 				GroupRouteDayVO groupRouteDayVO = new GroupRouteDayVO();
+				groupRoute.setId(null);
 				try {
-					BeanUtils.copyProperties(groupRoute, productRoute);
-					groupRoute.setId(null);
+					BeanUtils.copyProperties(productRoute,groupRoute);
+					
 					List<ProductAttachment> productAttachmentsList = productRouteDayVo.getProductAttachments();
 					List<GroupRouteAttachment> groupRouteAttachmentList = new ArrayList<GroupRouteAttachment>();
-					if (productAttachmentsList != null && productAttachmentsList.size() > 0) {
+					if (!CollectionUtils.isEmpty(productAttachmentsList)) {
 
 						for (ProductAttachment productAttachment : productAttachmentsList) {
 							GroupRouteAttachment groupRouteAttachment = new GroupRouteAttachment();
@@ -122,7 +124,7 @@ public class GroupRouteFacadeImpl implements GroupRouteFacade{
 
 					List<ProductRouteTraffic> productRouteTrafficList = productRouteDayVo.getProductRouteTrafficList();
 					List<GroupRouteTraffic> groupRouteTrafficList = new ArrayList<GroupRouteTraffic>();
-					if (productRouteTrafficList != null && productRouteTrafficList.size() > 0) {
+					if (!CollectionUtils.isEmpty(productRouteTrafficList)) {
 						for (ProductRouteTraffic productRouteTraffic : productRouteTrafficList) {
 							GroupRouteTraffic groupRouteTraffic = new GroupRouteTraffic();
 							BeanUtils.copyProperties(groupRouteTraffic, productRouteTraffic);
@@ -135,7 +137,7 @@ public class GroupRouteFacadeImpl implements GroupRouteFacade{
 					List<GroupRouteSupplier> groupRouteOptionsSupplierList = new ArrayList<GroupRouteSupplier>();
 					List<ProductRouteSupplier> productOptionsSupplierList = productRouteDayVo
 							.getProductOptionsSupplierList();
-					if (productOptionsSupplierList != null && productOptionsSupplierList.size() > 0) {
+					if (!CollectionUtils.isEmpty(productOptionsSupplierList)) {
 						for (ProductRouteSupplier productRouteSupplier : productOptionsSupplierList) {
 							GroupRouteSupplier groupRouteOptionsSupplier = new GroupRouteSupplier();
 							BeanUtils.copyProperties(groupRouteOptionsSupplier, productRouteSupplier);
