@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketLeg;
 import com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketResource;
 
@@ -46,11 +47,14 @@ public class AirTicketResourceBO implements Serializable{
     }
     
     public String getStartDate(){
-    	return sdf.format(this.po.getStartDate());
+    	System.out.println("----------------------------------------------------"+sdf.format(this.po.getStartDate()));
+    	return DateUtils.format(po.getStartDate(), "yyyy-MM-dd");
+//    	return sdf.format(this.po.getStartDate());
     }
     public String getEndDate(){
     	if (this.po.getEndDate()==null){return "";}
-    	return sdf.format(this.po.getEndDate());
+//    	return sdf.format(this.po.getEndDate());
+    	return DateUtils.format(po.getEndDate(), "yyyy-MM-dd");
     }
 
     public Integer getLegSize(){
@@ -124,7 +128,8 @@ public class AirTicketResourceBO implements Serializable{
         return this.po.getComment();
     }
     public String getEndIssueTime(){
-    	return sdfTime.format(this.po.getEndIssueTime());
+//    	return sdfTime.format(this.po.getEndIssueTime());
+    	return DateUtils.format(po.getEndIssueTime(), "yyyy-MM-dd HH:mm");
     }
 
 	public void setLegList(List<AirTicketLeg> legList) {
