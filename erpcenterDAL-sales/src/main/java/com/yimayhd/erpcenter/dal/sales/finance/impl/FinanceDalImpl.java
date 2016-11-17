@@ -99,6 +99,9 @@ public class FinanceDalImpl implements FinanceDal {
 		pm.put("groupId", groupId);
 		pm.put("bizId", bizId);
 		Map group = sqlSessionSales.selectOne("fin.selectGroupList", pm);
+		if(group == null){
+			group = new HashMap();
+		}
 		view.put("group", group);
 		List<BookingGuide> bookingGuides = bookingGuideMapper.selectByGroupId(groupId);
 		view.put("bookingGuides", bookingGuides);
