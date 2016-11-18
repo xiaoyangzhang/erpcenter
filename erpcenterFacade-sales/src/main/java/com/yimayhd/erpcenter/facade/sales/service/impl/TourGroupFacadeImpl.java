@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
@@ -1630,10 +1631,8 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
            //         .findByEmployeeId(groupOrder.getSaleOperatorId()).getPlatformEmployeePo();
             PlatformEmployeePo employee =  platformEmployeeBiz.findByEmployeeId(groupOrder.getSaleOperatorId());
 
-            List<GroupOrderGuest> guests = groupOrderGuestBiz
-                    .selectByOrderId(orderId);
-            List<GroupOrderPrice> priceList = groupOrderPriceBiz
-                    .selectByOrder(orderId);
+            List<GroupOrderGuest> guests = groupOrderGuestBiz.selectByOrderId(orderId);
+            List<GroupOrderPrice> priceList = groupOrderPriceBiz.selectByOrder(orderId);
             GroupOrderPrice gop = new GroupOrderPrice();
             gop.setItemName(Constants.PRICETYPE);
             gop.setUnitPrice(Constants.PRICE);
@@ -1642,15 +1641,10 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             gop.setTotalPrice(gop.getUnitPrice()*gop.getNumPerson());
             priceList.add(gop) ;
             List<GroupRoute> routeList = groupRouteBiz.selectByOrderId(orderId);
-            List<SysBizBankAccount> accountList = sysBizBankAccountBiz
-                    .getListByBizId(curBizId);
-            if (null != priceList && priceList.size() > 0) {
-              //  model.addAttribute("otherPrice", priceList
-                //        .get(priceList.size() - 1).getTotalPrice());
-                toSaleChargeResult.setOtherPrice(String.valueOf(priceList
-                        .get(priceList.size() - 1).getTotalPrice()));
+            List<SysBizBankAccount> accountList = sysBizBankAccountBiz.getListByBizId(curBizId);
+            if (!CollectionUtils.isEmpty(priceList)) {
+                toSaleChargeResult.setOtherPrice(String.valueOf(priceList.get(priceList.size() - 1).getTotalPrice()));
             } else {
-               // model.addAttribute("otherPrice", 0);
                 toSaleChargeResult.setOtherPrice("0");
             }
 

@@ -423,7 +423,7 @@
    </select>
   <select id="getBookingSupplierPOByGroupIdAndType" resultMap="BookingSupplierPO">
 		SELECT 
-		<include refid="Column_List" />,(SELECT GROUP_CONCAT(DISTINCT CONCAT_WS('-' ,guide_name,guide_mobile))  FROM `booking_guide` WHERE group_id=1341   ) guideInfo
+		<include refid="Column_List" />,(SELECT GROUP_CONCAT(DISTINCT CONCAT_WS('-' ,guide_name,guide_mobile))  FROM `booking_guide` WHERE group_id=#{groupId}   ) guideInfo
 		FROM booking_supplier bs left join booking_supplier_detail det on bs.id=det.booking_id  WHERE  group_id=#{groupId} AND supplier_type= #{supplierType} 
 		 
 		  </select>
