@@ -905,7 +905,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	public ResultSupport saveVerifyBill(SaveVerifyBillDTO saveVerifyBillDTO) {
 		ResultSupport result = new ResultSupport();
 		try{
-			financeBillBiz.saveDistributeBill(saveVerifyBillDTO.getBillList());
+			financeBillBiz.saveVerifyBill(saveVerifyBillDTO.getBillList());
 			financeBillBiz.updateFinanceOrder(saveVerifyBillDTO.getLoginName(), saveVerifyBillDTO.getGroupId(), 
 					saveVerifyBillDTO.getGuideId(), new Date(), saveVerifyBillDTO.getType());
 		}catch(Exception ex){
