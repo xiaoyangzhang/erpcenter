@@ -32,6 +32,7 @@ import com.yimayhd.erpcenter.facade.ticket.query.ShowListResourceDTO;
 import com.yimayhd.erpcenter.facade.ticket.result.EditResourceResult;
 import com.yimayhd.erpcenter.facade.ticket.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.ticket.result.ShowListResourceResult;
+import com.yimayhd.erpcenter.facade.ticket.result.WebResult;
 import com.yimayhd.erpcenter.facade.ticket.service.ResourceFacade;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.dal.constants.Constants;
@@ -269,14 +270,19 @@ public class ResourceFacadeImpl implements ResourceFacade{
 
 
 	@Override
-	public AirLine findAirLine(String date, String airCode, String depCity, String arrCity) {
+	public WebResult<AirLine> findAirLine(String date, String airCode, String depCity, String arrCity) {
 		AirLine line = new AirLine();
+		WebResult<AirLine> result = new WebResult<AirLine>();
 		try {
 			line = airLineBiz.findAirLine(date, airCode, depCity, arrCity);
-		} catch (IOException e) {
-			e.printStackTrace();
+			result.setValue(line);
+			return result;
+		} catch (Exception e) {
+			result.setSuccess(false);
+			result.setResultMsg(e.getMessage());
+//			e.printStackTrace();
 		}
-		return line;
+		return result;
 	}
 
 
