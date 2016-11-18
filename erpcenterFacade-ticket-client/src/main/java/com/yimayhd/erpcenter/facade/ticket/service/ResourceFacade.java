@@ -12,6 +12,7 @@ import com.yimayhd.erpcenter.facade.ticket.query.ShowListResourceDTO;
 import com.yimayhd.erpcenter.facade.ticket.result.EditResourceResult;
 import com.yimayhd.erpcenter.facade.ticket.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.ticket.result.ShowListResourceResult;
+import com.yimayhd.erpcenter.facade.ticket.result.WebResult;
 
 public interface ResourceFacade {
 	
@@ -38,7 +39,7 @@ public interface ResourceFacade {
 	
 	List<String> getFuzzyDepCityList(String depCity);
 	
-	AirLine findAirLine(String date, String airCode, String depCity, String arrCity);
+	WebResult<AirLine> findAirLine(String date, String airCode, String depCity, String arrCity);
 	
 	ResultSupport deleteLineTemplate(Integer bizId, String lineName);
 }
