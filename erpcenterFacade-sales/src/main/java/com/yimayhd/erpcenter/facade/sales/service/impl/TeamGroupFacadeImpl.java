@@ -196,6 +196,7 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
             List<GroupOrder> groupList = pageBean.getResult();
             findTourGroupByConditionResult.setGroupOrderList(groupList);
             findTourGroupByConditionResult.setPageBean(pageBean);
+            findTourGroupByConditionResult.setGroupOrder(order);
 
         } catch (Exception e) {
             logger.error("获取团队列表数据失败", e);
