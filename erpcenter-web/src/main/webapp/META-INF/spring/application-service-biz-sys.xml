@@ -19,13 +19,14 @@
 	<bean id="sysBizInfoBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.SysBizInfoBizImpl" />
 	<bean id="settleApplyBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.SettleApplyBizImpl" />
 	
-	<bean id="configBean" class="com.yimayhd.erpcenter.biz.sys.util.SysConfig">
+	 <bean id="configBean" class="com.yimayhd.erpcenter.biz.sys.util.SysConfig">
 		<property name="imgServerUrl" value="http://img.yimayholiday.com/v1/tfs/"></property>
         <property name="imgCutServerUrl" value="http://img.yimayholiday.com/v1/tfs/"></property>
 		<property name="imgWithWaterUrl" value="http://img.yimayholiday.com/v1/tfs/"></property>
         <property name="images340Url" value="http://img.yimayholiday.com/v1/tfs/"></property>
         <property name="images200Url" value="http://img.yimayholiday.com/v1/tfs/"></property>
         <property name="tfsGwUrl" value="http://file.yimayholiday.com/filegw/file/upload"></property>
-	</bean>   
+	</bean>  
+
 	
 </beans>
