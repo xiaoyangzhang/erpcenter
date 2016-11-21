@@ -1278,7 +1278,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 				result.setCitysSupplierIds(supplierIds.toString().substring(0, supplierIds.toString().length() - 1));
 			}else{
 				//request.setAttribute("citysSupplierIds", "0");
-				result.setSupplierLevel("0");
+				result.setCitysSupplierIds("0");
 			}
 		}
 		// 如果选择了【商家类别】作为查询条件
