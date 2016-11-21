@@ -1062,7 +1062,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                     .getSupplierId());
 
            // String imgPath = bizSettingCommon.getMyBizLogo(request);
-            String imgPath = platformOrgBiz.getLogoByOrgIdURL(curBizId, orgId);
+//            String imgPath = platformOrgBiz.getLogoByOrgIdURL(curBizId, orgId);
 
            // PlatformEmployeePo employee = sysPlatformEmployeeFacade
                    // .findByEmployeeId(groupOrder.getSaleOperatorId()).getPlatformEmployeePo();
@@ -1112,7 +1112,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             toPreviewResult.setPriceList(prices);
             toPreviewResult.setRouteList(routes);
             toPreviewResult.setSupplier(supplier);
-            toPreviewResult.setImgPath(imgPath);
+//            toPreviewResult.setImgPath(imgPath);
             toPreviewResult.setCompany(company);
             toPreviewResult.setGuestGuideString(guestGuideString);
             toPreviewResult.setGuideString(guideString);
