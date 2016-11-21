@@ -1580,7 +1580,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             List<GroupRequirement> grogShopList = groupRequirementBiz
                     .selectByOrderAndType(groupOrder.getId(), 3);
             if (grogShopList.size() > 0) {
-                if (grogShopList.get(0).getHotelLevel() != null && grogShopList.get(0).getHotelLevel() !="" ) {
+                if (null != grogShopList.get(0) && grogShopList.get(0).getHotelLevel() != null && !StringUtils.isBlank(grogShopList.get(0).getHotelLevel()) ) {
                     DicInfo info = dicBiz.getById(Integer.parseInt(grogShopList.get(0).getHotelLevel()));
                     if(info!=null){
                         gopp.setHotelLevel(info.getValue()+ "\n");

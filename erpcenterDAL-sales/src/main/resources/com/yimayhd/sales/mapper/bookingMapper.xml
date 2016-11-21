@@ -150,6 +150,7 @@
 				WHERE tg.biz_id=#{parameter.bizId} AND group_state in (1,3,4) 
 				<include refid="selectBookingSupplier_Where_Date_Pre"/>
 				<include refid="selectBookingSupplier_Where"/>
+				GROUP BY bs.`supplier_id`
 			) pre on pre.supplier_id = bs.supplier_id
 	WHERE tg.biz_id=#{parameter.bizId} AND group_state in (1,3,4) 
 	<include refid="selectBookingSupplier_Where_Date"/>
