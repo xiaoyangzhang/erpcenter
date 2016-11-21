@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
-import com.yimayhd.erpcenter.biz.sys.util.SysConfig;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.dal.sys.po.SysDataRight;
 import com.yimayhd.erpcenter.dal.sys.service.PlatformOrgDal;
@@ -22,8 +21,8 @@ public class PlatformOrgBizImpl implements PlatformOrgBiz{
 
 	@Autowired
 	private PlatformOrgDal platformOrgDal;
-	@Autowired
-	private SysConfig config;
+//	@Autowired
+//	private SysConfig config;
 	
 	@Override
 	public List<PlatformOrgPo> findByPid(Integer pid,Integer sysId) {
@@ -81,7 +80,7 @@ public class PlatformOrgBizImpl implements PlatformOrgBiz{
 	public String getLogoByOrgId(Integer bizId, Integer orgId) {
 		String logo = platformOrgDal.getLogoByOrgId(bizId,orgId); 
 		if(logo!=null&&!logo.equals("")){
-			return config.getImgServerUrl()+logo;
+			return logo;
 		}
 		return null;
 	}
