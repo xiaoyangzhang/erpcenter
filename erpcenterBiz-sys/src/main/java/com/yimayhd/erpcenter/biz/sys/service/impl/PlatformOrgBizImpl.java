@@ -81,6 +81,15 @@ public class PlatformOrgBizImpl implements PlatformOrgBiz{
 	public String getLogoByOrgId(Integer bizId, Integer orgId) {
 		String logo = platformOrgDal.getLogoByOrgId(bizId,orgId); 
 		if(logo!=null&&!logo.equals("")){
+			return logo;
+		}
+		return null;
+	}
+	
+	@Override
+	public String getLogoByOrgIdURL(Integer bizId, Integer orgId) {
+		String logo = platformOrgDal.getLogoByOrgId(bizId,orgId); 
+		if(logo!=null&&!logo.equals("")){
 			return config.getImgServerUrl()+logo;
 		}
 		return null;
