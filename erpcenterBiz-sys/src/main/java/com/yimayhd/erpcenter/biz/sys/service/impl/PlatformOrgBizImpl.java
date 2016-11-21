@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 
-
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +76,16 @@ public class PlatformOrgBizImpl implements PlatformOrgBiz{
 	
 	@Override
 	public String getLogoByOrgId(Integer bizId, Integer orgId) {
+		String logo = platformOrgDal.getLogoByOrgId(bizId,orgId); 
+		if(logo!=null&&!logo.equals("")){
+
+			return logo;
+		}
+		return null;
+	}
+	
+	@Override
+	public String getLogoByOrgIdURL(Integer bizId, Integer orgId) {
 		String logo = platformOrgDal.getLogoByOrgId(bizId,orgId); 
 		if(logo!=null&&!logo.equals("")){
 			return config.getImgServerUrl()+logo;
