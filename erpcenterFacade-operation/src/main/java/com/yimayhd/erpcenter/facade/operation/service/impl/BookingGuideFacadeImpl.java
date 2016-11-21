@@ -245,6 +245,7 @@ public class BookingGuideFacadeImpl implements BookingGuideFacade {
 		//result.setBookingSuppliers(list);
 		BookingGuide guide= bookingGuideBiz.selectByPrimaryKey(financeGuide.getBookingId());
 		result.setBookingGuide(guide);
+		result.setBookingSuppliers(list);
 		return result;
 	}
 

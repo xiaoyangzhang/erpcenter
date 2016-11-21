@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
@@ -1061,7 +1062,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                     .getSupplierId());
 
            // String imgPath = bizSettingCommon.getMyBizLogo(request);
-            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
+//            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
 
            // PlatformEmployeePo employee = sysPlatformEmployeeFacade
                    // .findByEmployeeId(groupOrder.getSaleOperatorId()).getPlatformEmployeePo();
@@ -1111,7 +1112,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             toPreviewResult.setPriceList(prices);
             toPreviewResult.setRouteList(routes);
             toPreviewResult.setSupplier(supplier);
-            toPreviewResult.setImgPath(imgPath);
+//            toPreviewResult.setImgPath(imgPath);
             toPreviewResult.setCompany(company);
             toPreviewResult.setGuestGuideString(guestGuideString);
             toPreviewResult.setGuideString(guideString);
@@ -1147,7 +1148,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                     .getSupplierId());
 
            // String imgPath = bizSettingCommon.getMyBizLogo(request);
-            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
+//            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
             List<SysBizBankAccount> sysBizBankAccountList = sysBizBankAccountBiz
                     .getListByBizId(curBizId);
             toPreviewResult.setGroupOrder(groupOrder);
@@ -1156,7 +1157,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             toPreviewResult.setGroupOrderPrice(gop);
             toPreviewResult.setRouteList(routes);
             toPreviewResult.setSupplier(supplier);
-            toPreviewResult.setImgPath(imgPath);
+//            toPreviewResult.setImgPath(imgPath);
             toPreviewResult.setSysBizBankAccountList(sysBizBankAccountList);
         } catch (Exception e) {
             logger.error("", e);
@@ -1186,7 +1187,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
          //   PlatformEmployeePo employee = sysPlatformEmployeeFacade
             //        .findByEmployeeId(groupOrder.getSaleOperatorId()).getPlatformEmployeePo();
             PlatformEmployeePo employee =  platformEmployeeBiz.findByEmployeeId(groupOrder.getSaleOperatorId());
-            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
+//            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
             String company = platformOrgBiz.findByOrgId(employee.getOrgId()).getName();
 
 
@@ -1232,7 +1233,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
 
             toPreviewResult.setGrogShopList(grogShopList);
             toPreviewResult.setGroupOrderTransports(groupOrderTransports);
-            toPreviewResult.setImgPath(imgPath);
+//            toPreviewResult.setImgPath(imgPath);
         } catch (Exception e) {
             logger.error("", e);
         }
@@ -1255,7 +1256,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             prices.add(gop) ;
             List<GroupRoute> routes = groupRouteBiz.selectByOrderId(orderId);
             SupplierInfo supplier = supplierBiz.selectBySupplierId(groupOrder .getSupplierId());
-            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
+//            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
             List<SysBizBankAccount> sysBizBankAccountList = sysBizBankAccountBiz
                     .getListByBizId(curBizId);
             toPreviewResult.setGroupOrder(groupOrder);
@@ -1263,7 +1264,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             toPreviewResult.setPriceList(prices);
             toPreviewResult.setRouteList(routes);
             toPreviewResult.setSupplier(supplier);
-            toPreviewResult.setImgPath(imgPath);
+//            toPreviewResult.setImgPath(imgPath);
             toPreviewResult.setSysBizBankAccountList(sysBizBankAccountList);
 
         } catch (Exception e) {
@@ -1278,10 +1279,10 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
         try {
             GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
             List<GroupOrderGuest> guests = groupOrderGuestBiz.selectByOrderId(orderId);
-            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
+//            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
             toPreviewResult.setGroupOrder(groupOrder);
             toPreviewResult.setGuests(guests);
-            toPreviewResult.setImgPath(imgPath);
+//            toPreviewResult.setImgPath(imgPath);
         } catch (Exception e) {
             logger.error("", e);
         }
@@ -1491,7 +1492,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                 agency = 0 ;
             }
           //  String imgPath = bizSettingCommon.getMyBizLogo(request);
-            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
+//            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
             GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
             SupplierInfo supplier = supplierBiz.selectBySupplierId(groupOrder
                     .getSupplierId());
@@ -1600,7 +1601,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
 
             toPreviewResult.setGuideString(guideString);
             toPreviewResult.setGuestGuideString(guestGuideString);
-            toPreviewResult.setImgPath(imgPath);
+//            toPreviewResult.setImgPath(imgPath);
             toPreviewResult.setGroupOrder(groupOrder);
             toPreviewResult.setSupplier(supplier);
             toPreviewResult.setCompany(company);
@@ -1622,7 +1623,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
         ToSaleChargeResult toSaleChargeResult = new ToSaleChargeResult();
         try {
           //  String imgPath = bizSettingCommon.getMyBizLogo(request);
-            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
+//            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
             GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
             SupplierInfo supplier = supplierBiz.selectBySupplierId(groupOrder.getSupplierId());
 
@@ -1630,10 +1631,8 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
            //         .findByEmployeeId(groupOrder.getSaleOperatorId()).getPlatformEmployeePo();
             PlatformEmployeePo employee =  platformEmployeeBiz.findByEmployeeId(groupOrder.getSaleOperatorId());
 
-            List<GroupOrderGuest> guests = groupOrderGuestBiz
-                    .selectByOrderId(orderId);
-            List<GroupOrderPrice> priceList = groupOrderPriceBiz
-                    .selectByOrder(orderId);
+            List<GroupOrderGuest> guests = groupOrderGuestBiz.selectByOrderId(orderId);
+            List<GroupOrderPrice> priceList = groupOrderPriceBiz.selectByOrder(orderId);
             GroupOrderPrice gop = new GroupOrderPrice();
             gop.setItemName(Constants.PRICETYPE);
             gop.setUnitPrice(Constants.PRICE);
@@ -1642,21 +1641,16 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             gop.setTotalPrice(gop.getUnitPrice()*gop.getNumPerson());
             priceList.add(gop) ;
             List<GroupRoute> routeList = groupRouteBiz.selectByOrderId(orderId);
-            List<SysBizBankAccount> accountList = sysBizBankAccountBiz
-                    .getListByBizId(curBizId);
-            if (null != priceList && priceList.size() > 0) {
-              //  model.addAttribute("otherPrice", priceList
-                //        .get(priceList.size() - 1).getTotalPrice());
-                toSaleChargeResult.setOtherPrice(String.valueOf(priceList
-                        .get(priceList.size() - 1).getTotalPrice()));
+            List<SysBizBankAccount> accountList = sysBizBankAccountBiz.getListByBizId(curBizId);
+            if (!CollectionUtils.isEmpty(priceList)) {
+                toSaleChargeResult.setOtherPrice(String.valueOf(priceList.get(priceList.size() - 1).getTotalPrice()));
             } else {
-               // model.addAttribute("otherPrice", 0);
                 toSaleChargeResult.setOtherPrice("0");
             }
 
             toSaleChargeResult.setGroupOrder(groupOrder);
             toSaleChargeResult.setGuests(guests);
-            toSaleChargeResult.setImgPath(imgPath);
+//            toSaleChargeResult.setImgPath(imgPath);
             toSaleChargeResult.setSupplier(supplier);
             toSaleChargeResult.setCompany(platformOrgBiz.findByOrgId(employee.getOrgId()).getName());
             toSaleChargeResult.setEmployee(employee);
@@ -1674,7 +1668,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
         ToSKChargePreviewResult toSKChargePreviewResult = new ToSKChargePreviewResult();
         try {
            // String imgPath = bizSettingCommon.getMyBizLogo(request);
-            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
+//            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
             TourGroup tour = tourGroupBiz.selectByPrimaryKey(groupId);
          //   PlatformEmployeePo po = sysPlatformEmployeeFacade
             //        .findByEmployeeId(WebUtils.getCurUserId(request)).getPlatformEmployeePo();
@@ -1761,7 +1755,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             toSKChargePreviewResult.setVos(vos);
             toSKChargePreviewResult.setSupplierList(supplierList);
             toSKChargePreviewResult.setPo(po);
-            toSKChargePreviewResult.setImgPath(imgPath);
+//            toSKChargePreviewResult.setImgPath(imgPath);
             toSKChargePreviewResult.setTour(tour);
 
         } catch (Exception e) {
@@ -2126,7 +2120,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
 		
 		
 		//FIXME 这个在web中做了单独的封装
-		String imgPath = null;
+//		String imgPath = null;
 		
 		TourGroup tour = tourGroupBiz.selectByPrimaryKey(groupId);
 		PlatformEmployeePo po = platformEmployeeBiz.findByEmployeeId(curUserId);
@@ -2215,7 +2209,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
 		result.setGroupRouteDayVOs(groupRouteDayVOs);
 		result.setGuide(getGuides(guides));
 		result.setGuides(guides);
-		result.setImgPath(imgPath);
+//		result.setImgPath(imgPath);
 		result.setPo(po);
 		result.setSupplier(supplier);
 		result.setSupplierList(supplierList);
