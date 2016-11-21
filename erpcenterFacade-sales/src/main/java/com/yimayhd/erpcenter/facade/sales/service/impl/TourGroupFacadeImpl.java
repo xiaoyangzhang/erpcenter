@@ -1062,7 +1062,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                     .getSupplierId());
 
            // String imgPath = bizSettingCommon.getMyBizLogo(request);
-            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
+            String imgPath = platformOrgBiz.getLogoByOrgIdURL(curBizId, orgId);
 
            // PlatformEmployeePo employee = sysPlatformEmployeeFacade
                    // .findByEmployeeId(groupOrder.getSaleOperatorId()).getPlatformEmployeePo();

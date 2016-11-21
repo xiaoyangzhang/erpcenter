@@ -26,7 +26,7 @@
         <property name="images340Url" value="http://img.yimayholiday.com/v1/tfs/"></property>
         <property name="images200Url" value="http://img.yimayholiday.com/v1/tfs/"></property>
         <property name="tfsGwUrl" value="http://file.yimayholiday.com/filegw/file/upload"></property>
-	</bean>  
+	</bean>
 
 	
 </beans>

@@ -166,6 +166,7 @@ public class BookingGuideFacadeImpl implements BookingGuideFacade {
 		}else {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("id", guide.getGroupId());
+			result.setValue(map);
 		}
 		return result;
 	}
