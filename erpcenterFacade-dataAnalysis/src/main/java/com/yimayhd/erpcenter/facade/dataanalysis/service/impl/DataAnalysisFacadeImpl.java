@@ -916,42 +916,61 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 		Integer bizId = airTicketDetailQueriesDTO.getBizId();
 		Map parameters = airTicketDetailQueriesDTO.getParameters();
+		if (null == parameters.get("startTime")
+				&& null == parameters.get("endTime")) {
+			Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			c.set(year, month, 1, 0, 0, 0);
+			// condition.setStartTime(df.format(c.getTime()));
+			parameters.put("startTime", df.format(c.getTime()));
+			// c.set(year, month, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			parameters.put("endTime", df.format(c.getTime()));
+			// condition.setEndTime(df.format(c.getTime()));
 
-		
+		}
+		// condition.setSupplierType(Constants.AIRTICKETAGENT);
 		if (StringUtils.isNotBlank((String) parameters.get("orgIds"))) {
 			Set<Integer> set = new HashSet<Integer>();
 			String[] orgIdArr = ((String) parameters.get("orgIds")).split(",");
 			for (String orgIdStr : orgIdArr) {
 				set.add(Integer.valueOf(orgIdStr));
 			}
-			List<PlatformOrgPo> orgList = platformOrgBiz.getOrgListByIdSet(bizId, set);
+			List<PlatformOrgPo> orgList = platformOrgBiz.getOrgListByIdSet(
+					bizId, set);
 			StringBuilder sb = new StringBuilder();
 			for (PlatformOrgPo orgPo : orgList) {
 				sb.append(orgPo.getName() + ",");
 			}
+			// condition.setOrgNames(sb.substring(0, sb.length()-1));
 			parameters.put("orgNames", sb.substring(0, sb.length() - 1));
 
 		}
 		// 如果计调不为null，查询计调名字
 		if (StringUtils.isNotBlank((String) parameters.get("saleOperatorIds"))) {
 			Set<Integer> set = new HashSet<Integer>();
-			String[] userIdArr = ((String) parameters.get("saleOperatorIds")).split(",");
+			String[] userIdArr = ((String) parameters.get("saleOperatorIds"))
+					.split(",");
 			for (String userIdStr : userIdArr) {
 				set.add(Integer.valueOf(userIdStr));
 			}
-			List<PlatformEmployeePo> empList = platformEmployeeBiz.getEmpList(bizId, set);
+			List<PlatformEmployeePo> empList = platformEmployeeBiz
+					.getEmpList(bizId, set);
 			StringBuilder sb = new StringBuilder();
 			for (PlatformEmployeePo employeePo : empList) {
 				sb.append(employeePo.getName() + "");
 			}
-			parameters.put("saleOperatorName", sb.substring(0, sb.length() - 1));
+			// condition.setSaleOperatorName(sb.substring(0, sb.length()-1));
+			parameters
+					.put("saleOperatorName", sb.substring(0, sb.length() - 1));
 		}
-		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
-
+		parameters.put("supplierType", Constants.TRAINTICKETAGENT);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(
+				BasicConstants.GYXX_JSFS, bizId);
 		AirTicketDetailQueriesResult result = new AirTicketDetailQueriesResult();
 		result.setCashTypes(cashTypes);
 		result.setParameters(parameters);
-
 		return result;
 	}
 
