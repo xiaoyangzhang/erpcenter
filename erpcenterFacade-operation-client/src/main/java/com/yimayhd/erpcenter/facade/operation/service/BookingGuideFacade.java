@@ -62,7 +62,7 @@ public interface BookingGuideFacade {
 	
 	List<GroupOrderPrintPo> getPrintPoList(Integer groupId);
 	BookingGuideResult financeSupplierGuideView(FinanceGuide financeGuide,Integer bizId);
-	BookingGuideResult paymentDetail(Integer groupId,Integer bookingId);
+	BookingGuideResult paymentDetail(Integer groupId,Integer bookingId,Integer bizId);
 	BookingGuideResult printDetail(Integer groupId,Integer bookingId,Integer bizId);
 	BookingGuideResult guideFinance(Integer groupId,Integer bookingGuideId);
 	

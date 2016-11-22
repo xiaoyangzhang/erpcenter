@@ -11,6 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.biz.sys.service.SysBizBankAccountBiz;
+import com.yimayhd.erpcenter.common.contants.BasicConstants;
+import com.yimayhd.erpcenter.common.util.DateUtils;
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
+import com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount;
+import com.yimayhd.erpresource.dal.constants.SupplierConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yihg.mybatis.utility.PageBean;
@@ -89,6 +95,11 @@ public class BookingGuideFacadeImpl implements BookingGuideFacade {
 	private GroupRouteBiz groupRouteBiz;
 	@Autowired
 	private DicBiz dicBiz;
+
+	@Autowired
+	private SysBizBankAccountBiz sysBizBankAccountBiz;
+
+
 	@Override
 	public PageBean getGuideGroupList(PageBean pageBean, TourGroupVO group,
 			Set<Integer> set) {
@@ -592,13 +603,11 @@ public class BookingGuideFacadeImpl implements BookingGuideFacade {
 	}
 
 	@Override
-	public BookingGuideResult paymentDetail(Integer groupId, Integer bookingId) {
+	public BookingGuideResult paymentDetail(Integer groupId, Integer bookingId,Integer bizId) {
 		BookingGuideResult result = new BookingGuideResult();
 		TourGroup group = tourGroupBiz.selectByPrimaryKey(groupId);//团信息
-		result.setTourGroup(group);
 		BookingGuidesVO guidesVo = bookingGuideBiz.selectBookingGuideVoByGroupIdAndId(bookingId);
-		result.setGuidesVO(guidesVo);
-		
+
 		HashMap<Object, Object> map =new HashMap<Object, Object>();
 		FinanceGuide financeGuide =new FinanceGuide();
 		financeGuide.setBookingId(bookingId);
@@ -607,22 +616,87 @@ public class BookingGuideFacadeImpl implements BookingGuideFacade {
 		for (BookingSupplier bookingSupplier : bookingSuppliers) {
 			financeGuide.setSupplierType(bookingSupplier.getSupplierType());
 			List<BookingSupplier> bookingSupplierList = financeGuideBiz.getFinanceSupplier(financeGuide);
-			getSupplierDetails(bookingSupplierList);
+			getSupplierDetail(bookingSupplierList);
 			map.put(bookingSupplier.getSupplierType(), bookingSupplierList);
 		}
-		
+
 		PageBean commPageBean = new PageBean();
 		Map<String,Object> commMap  = new HashMap<String, Object>();
 		commMap.put("groupId", groupId);
 		commMap.put("guideId", guidesVo.getGuide().getGuideId());
 		commPageBean.setParameter(commMap);
-		
-		
+
+		//model.addAttribute("groupId", groupId);
+		//model.addAttribute("guideId", guidesVo.getGuide().getGuideId());
+		result.setGuidesVO(guidesVo);
+
 		List<FinanceCommission> guideComms = financeGuideBiz.getCommisions(commPageBean);
-		result.setFinanceCommissions(guideComms);
+	//	model.addAttribute("guideComms", guideComms);
+		result.setGuideComms(guideComms);
+
 		List<FinanceCommission> guideCommDeductions = financeGuideBiz.getCommisionDeductions(commPageBean);
+	//	model.addAttribute("guideCommDeductions", guideCommDeductions);
 		result.setGuideCommDeductions(guideCommDeductions);
+
+		//model.addAttribute("guideName", guidesVo.getGuide().getGuideName());
+		//model.addAttribute("group", group);
+		//model.addAttribute("map", map);
+		//model.addAttribute("supplierTypeMap", SupplierConstant.supplierTypeMap);
+		result.setTourGroup(group);
+		result.setMap(map);
+
+
+		List<DicInfo> dicInfoList = dicBiz.getListByTypeCode(BasicConstants.YJ_XMLX, bizId);
+		result.setDicInfoList(dicInfoList);
+
+		List<DicInfo> bankList = dicBiz
+				.getListByTypeCode(BasicConstants.SUPPLIER_BANK);
+		result.setBankList(bankList);
+
+		List<DicInfo> payTypeList = dicBiz.getListByTypeCode(BasicConstants.CW_ZFFS);
+
+		result.setPayTypeList(payTypeList);
+		List<SysBizBankAccount> bizAccountList = sysBizBankAccountBiz.getListByBizId(bizId);
+		result.setBizAccountList(bizAccountList);
 		return result;
+	}
+
+
+	private void getSupplierDetail(List<BookingSupplier> list) {
+
+		for (BookingSupplier bookingSupplier : list) {
+			List<BookingSupplierDetail> supplierDetails = bookingSupplierDetailBiz.selectByPrimaryBookId(bookingSupplier.getId());
+			//for (BookingSupplierDetail bookingSupplierDetail : supplierDetails) {
+			List<String> str = new ArrayList<String>();
+			for (int i = 0; i < supplierDetails.size(); i++) {
+
+				if(bookingSupplier.getId().equals(supplierDetails.get(i).getBookingId())){
+					if(bookingSupplier.getSupplierType().equals(Constants.SCENICSPOT)){//景点
+						//门票：日期 + 项目 + 单价*（数量-免去）
+						str.add(DateUtils.format(supplierDetails.get(i).getItemDate())+" "+supplierDetails.get(i).getType1Name()+" "+supplierDetails.get(i).getItemPrice()+"*"+"("+supplierDetails.get(i).getItemNum()+"-"+supplierDetails.get(i).getItemNumMinus()+")");/*+(bookingSupplierDetail.getItemNum()-bookingSupplierDetail.getItemNumMinus());*/
+					}else if (bookingSupplier.getSupplierType().equals(Constants.HOTEL)) {//用房
+						//入住日期 + 类别（房型）  单价*(数量-名去)
+						str.add(DateUtils.format(supplierDetails.get(i).getItemDate())+" "+supplierDetails.get(i).getType1Name()+"("+(null==supplierDetails.get(i).getType2Name()?"":supplierDetails.get(i).getType2Name())+")"+" "+supplierDetails.get(i).getItemPrice()+"*"+"("+supplierDetails.get(i).getItemNum()+"-"+supplierDetails.get(i).getItemNumMinus()+")"+" "+supplierDetails.get(i).getItemBrief());
+					}else if (bookingSupplier.getSupplierType().equals(Constants.RESTAURANT)) {//用餐
+						//用餐日期 + 餐厅（类别）  单价*(数量-名去)
+						str.add(DateUtils.format(supplierDetails.get(i).getItemDate())+" "+supplierDetails.get(i).getType1Name()+"("+(null==supplierDetails.get(i).getType2Name()?"":supplierDetails.get(i).getType2Name())+")"+" "+supplierDetails.get(i).getItemPrice()+"*"+"("+supplierDetails.get(i).getItemNum()+"-"+supplierDetails.get(i).getItemNumMinus()+")");
+					}else if (bookingSupplier.getSupplierType().equals(Constants.FLEET)) {//用车
+						//车型（座位数）+车牌号 司机 + 联系方式
+						str.add(supplierDetails.get(i).getType1Name()+"("+supplierDetails.get(i).getType2Name()+")"+" "+supplierDetails.get(i).getCarLisence()+" "+supplierDetails.get(i).getDriverName()+" "+supplierDetails.get(i).getDriverTel());
+					}else if (bookingSupplier.getSupplierType().equals(Constants.OTHERINCOME)) {//其他收入
+						//项目  价格*数量  备注
+						str.add(supplierDetails.get(i).getType1Name()+" "+supplierDetails.get(i).getItemPrice()+"*"+supplierDetails.get(i).getItemNum()+" "+bookingSupplier.getRemark());
+					}else if (bookingSupplier.getSupplierType().equals(Constants.OTHEROUTCOME)) {//其他支出
+						//项目  价格*数量  备注
+						str.add(supplierDetails.get(i).getType1Name()+" "+supplierDetails.get(i).getItemPrice()+"*"+supplierDetails.get(i).getItemNum()+" "+bookingSupplier.getRemark());
+					}
+
+				}
+				bookingSupplier.setSupplierDetail(str);
+			}
+
+
+		}
 	}
 
 	@Override
