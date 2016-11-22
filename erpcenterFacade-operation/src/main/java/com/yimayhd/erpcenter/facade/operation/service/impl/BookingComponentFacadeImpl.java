@@ -207,16 +207,16 @@ public class BookingComponentFacadeImpl implements BookingComponentFacade {
         pageBean.setPage(supplierContract.getPage());
         pageBean.setParameter(supplierContract);
         if(bizSupplierRelation != null){
-            pageBean = contractBiz.findContracts(queryDTO.getPageBean(), bizSupplierRelation.getId());
+            pageBean = contractBiz.findContracts(pageBean, bizSupplierRelation.getId());
         }
-		return null;
+		return pageBean;
 	}
 
 	
 	@Override
 	public List<SupplierContractPrice> getContractPriceListByContractId(
 			Integer contractId) {
-		if (contractId <= 0) {
+		if (contractId ==null||contractId <= 0) {
 			LOGGER.error("params:contractId={}",contractId);
 			return new ArrayList<SupplierContractPrice>();
 		}
