@@ -123,11 +123,12 @@ public class VerifyFacadeImpl implements VerifyFacade{
 		result.setVerify(verify);
 		
 		List<FinanceVerifyDetail> financeVerifyDetailSum = financeVerifyBiz.selectVerifyDetailSum(bizId, verifyId,verify.getSupplierType());
+		result.setFinanceVerifyDetailSum(financeVerifyDetailSum);
 		if(financeVerifyDetailSum != null && financeVerifyDetailSum.size()>0){
 			Map map= (Map) financeVerifyDetailSum.get(0);
 			if(map != null){
-				result.setTotalPrice((String)map.get("total_price"));
-				result.setTotalCash((String)map.get("total_cash"));
+				result.setTotalPrice((BigDecimal)map.get("total_price"));
+				result.setTotalCash((BigDecimal)map.get("total_cash"));
 				
 				BigDecimal total_price = (BigDecimal)map.get("total_price");
 				BigDecimal total_cash = (BigDecimal)map.get("total_cash");
@@ -137,8 +138,8 @@ public class VerifyFacadeImpl implements VerifyFacade{
 				if(null==total_cash){
 					total_cash=new BigDecimal(0);
 				}
-				result.setTotalNot(total_price.subtract(total_cash)+"");
-				result.setTotalAdjust((String)map.get("total_adjust"));
+				result.setTotalNot(total_price.subtract(total_cash));
+				result.setTotalAdjust((BigDecimal)map.get("total_adjust"));
 			}
 		}
 		return result;
