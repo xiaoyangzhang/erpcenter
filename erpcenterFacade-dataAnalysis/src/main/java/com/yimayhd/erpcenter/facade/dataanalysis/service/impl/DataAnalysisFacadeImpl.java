@@ -1029,7 +1029,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult incomeQueries(Integer bizId) {
 
 		// 类型
-		List<DicInfo> type1 = dicBiz.getListByTypeCode(Constants.OTHER_TYPE_CODE);
+		List<DicInfo> type1 = dicBiz.getListByTypeCode(Constants.YWCX_QTSR_XM);
 
 		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.QTSR_JSFS, bizId);
 
@@ -1054,7 +1054,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public RestaurantQueriesResult outcomeQueries(Integer bizId){
 
 		// 类型
-		List<DicInfo> type1 = dicBiz.getListByTypeCode(Constants.OTHER_TYPE_CODE);
+		List<DicInfo> type1 = dicBiz.getListByTypeCode(Constants.YWCX_QTSR_XM);
 		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();

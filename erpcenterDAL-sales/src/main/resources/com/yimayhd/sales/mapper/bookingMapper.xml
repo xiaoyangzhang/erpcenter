@@ -213,7 +213,7 @@
 		<include refid="selectBookingSupplier_Where"/>
 	</select>
 	
-	<!-- 供应商订单明细（房、餐、保险、机票、门票、火车票明细查询） -->
+	<!-- 供应商订单明细（房、餐、保险、机票、门票、火车票明细查询）-->
 	<select id="bookingSupplierDetailListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
 		SELECT tg.id groupId,tg.group_mode groupMode, tg.`group_code` groupCode, tg.`total_adult` totalAdult,tg.`total_child` totalChild,tg.total_guide totalGuide
 			,tg.product_brand_name productBrandName,tg.product_name productName, tg.`operator_name` operatorName
@@ -238,7 +238,7 @@
 		WHERE tg.biz_id=#{parameter.bizId} and tg.group_state in (1,3,4) 
 		<include refid="selectBookingSupplier_Where_Date"/>
 		<include refid="selectBookingSupplier_Where"/>	
-		ORDER BY tg.date_start,tg.group_code_sort,tg.id,bs.supplier_id
+		ORDER BY tg.date_start,tg.group_code_sort,tg.id,bs.supplier_id 
 	</select>
 	
 	<!-- 供应商订单明细（房、餐、保险、机票、门票、火车票明细查询）总合计 -->

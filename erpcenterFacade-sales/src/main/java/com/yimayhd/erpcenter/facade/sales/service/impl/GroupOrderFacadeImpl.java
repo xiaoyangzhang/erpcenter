@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -2018,7 +2019,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			List<GroupRequirement> grogShopList = groupRequirementService.selectByOrderAndType(order.getId(), 3);
 			StringBuilder sb = new StringBuilder();
 			for (GroupRequirement gsl : grogShopList) {
-				if (gsl.getHotelLevel() != null) {
+				if (!StringUtils.isBlank(gsl.getHotelLevel()) && NumberUtils.isNumber(gsl.getHotelLevel())) {
 					sb.append(dicService.getById(Integer.parseInt(gsl.getHotelLevel())).getValue() + "\n");
 				}
 			}
@@ -2183,7 +2184,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			List<GroupRequirement> grogShopList = groupRequirementService.selectByOrderAndType(order1.getId(), 3);
 			StringBuilder sb = new StringBuilder();
 			for (GroupRequirement gsl : grogShopList) {
-				if (gsl.getHotelLevel() != null) {
+				if (!StringUtils.isBlank(gsl.getHotelLevel()) && NumberUtils.isNumber(gsl.getHotelLevel())) {
 					sb.append(dicService.getById(Integer.parseInt(gsl.getHotelLevel())).getValue() + "\n");
 				}
 			}
@@ -2681,7 +2682,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 					.selectByOrderAndType(order.getId(), 3);
 			StringBuilder sb = new StringBuilder();
 			for (GroupRequirement gsl : grogShopList) {
-				if (gsl.getHotelLevel() != null) {
+				if (!StringUtils.isBlank(gsl.getHotelLevel()) && NumberUtils.isNumber(gsl.getHotelLevel())) {
 					sb.append(dicService.getById(Integer.parseInt(gsl.getHotelLevel()))
 							.getValue() + "\n");
 				}
@@ -2798,7 +2799,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 					.selectByOrderAndType(order1.getId(), 3);
 			StringBuilder sb = new StringBuilder();
 			for (GroupRequirement gsl : grogShopList) {
-				if (gsl.getHotelLevel() != null) {
+				if (!StringUtils.isBlank(gsl.getHotelLevel()) && NumberUtils.isNumber(gsl.getHotelLevel())) {
 					sb.append(dicService.getById(Integer.parseInt(gsl.getHotelLevel()))
 							.getValue() + "\n");
 				}
@@ -3031,7 +3032,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			List<GroupRequirement> grogShopList = groupRequirementService.selectByOrderAndType(order.getId(), 3);
 			StringBuilder sb = new StringBuilder();
 			for (GroupRequirement gsl : grogShopList) {
-				if (gsl.getHotelLevel() != null) {
+				if (!StringUtils.isBlank(gsl.getHotelLevel()) && NumberUtils.isNumber(gsl.getHotelLevel())) {
 					sb.append(dicService.getById(Integer.parseInt(gsl.getHotelLevel())).getValue()+ "\n");
 				}
 			}
@@ -3136,7 +3137,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 					.selectByOrderAndType(order.getId(), 3);
 			StringBuilder sb = new StringBuilder();
 			for (GroupRequirement gsl : grogShopList) {
-				if (gsl.getHotelLevel() != null) {
+				if (!StringUtils.isBlank(gsl.getHotelLevel()) && NumberUtils.isNumber(gsl.getHotelLevel())) {
 					sb.append(dicService.getById(Integer.parseInt(gsl.getHotelLevel()))
 							.getValue() + "\n");
 				}
