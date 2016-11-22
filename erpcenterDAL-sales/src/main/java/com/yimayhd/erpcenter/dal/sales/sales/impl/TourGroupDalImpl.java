@@ -1040,8 +1040,9 @@ public class TourGroupDalImpl implements TourGroupDal {
 	@Override
 	public PageBean<TourGroup> selectProfitByTourCon(PageBean<TourGroup> pageBean, Integer bizId, Set<Integer> set) {
 		List<TourGroup> tours = tourGroupMapper.selectProfitByTourCon(pageBean, bizId, set);
-		pageBean.setResult(tours);
-		return pageBean;
+		PageBean<TourGroup> page = new PageBean<TourGroup>();
+		page.setResult(tours);
+		return page;
 	}
 
 	@Override
