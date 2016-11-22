@@ -1108,7 +1108,7 @@ public class FinanceDalImpl implements FinanceDal {
 	@Override
 	public PageBean getsubjectSummaryListPage(PageBean pageBean) {
 		
-		if(1==0){
+		if(true){
 			List<Map<String,Object>> result = supplierMapper.getsubjectSummaryListPage(pageBean);
 			if(result == null){
 				return pageBean;

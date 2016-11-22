@@ -58,6 +58,7 @@ public interface PlatformOrgBiz {
 	 * @return
 	 */
 	public String getLogoByOrgId(Integer bizId, Integer orgId);
+//	public String getLogoByOrgIdURL(Integer bizId, Integer orgId);
 	public String getCompanyCodeByOrgId(Integer bizId, Integer orgId);
 	
 	public String getComponentOrgTreeJsonStr(Integer bizId);
