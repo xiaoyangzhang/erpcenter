@@ -875,11 +875,14 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 
 		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		// 获取商家类别
+		List<DicInfo> levelList = dicBiz.getListByTypeCode(BasicConstants.SUPPLIER_LEVEL_TRAINTICKETAGENT);
 
 		RestaurantQueriesResult result = new RestaurantQueriesResult();
 		result.setAllProvince(allProvince);
 		result.setCashTypes(cashTypes);
 		result.setType1(type1);
+		result.setLevelList(levelList);
 
 		return result;
 	}
