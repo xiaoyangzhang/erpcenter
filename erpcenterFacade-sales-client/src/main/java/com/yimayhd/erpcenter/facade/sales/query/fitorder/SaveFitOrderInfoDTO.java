@@ -10,6 +10,15 @@ public class SaveFitOrderInfoDTO implements Serializable{
 	private Integer curUserId;
 	private Integer curBizId;
 	private String curUserName;
+	private String bizCode;
+
+	public String getBizCode() {
+		return bizCode;
+	}
+
+	public void setBizCode(String bizCode) {
+		this.bizCode = bizCode;
+	}
 
 	public FitOrderVO getFitOrderVO() {
 		return fitOrderVO;
