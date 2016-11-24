@@ -2043,12 +2043,12 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			}
 		}
 
-		//String jsonStr = queryService.getGroupNumStatics(allGroupOrder,dataType);
+		String jsonStr = queryBiz.getGroupNumStatics(allGroupOrder,dataType);
 				
 		QueryGroupNumberResult result=new QueryGroupNumberResult();
 		result.setDataType(dataType);
 		result.setGroupOrder(groupOrder);
-	//	result.setJsonStr(jsonStr);
+		result.setJsonStr(jsonStr);
 		
 		return result;
 	}

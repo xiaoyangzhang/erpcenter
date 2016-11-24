@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ctc.wstx.util.StringUtil;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.LogOperatorBiz;
@@ -383,7 +386,7 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		groupOrder.setContactFax(curUser.getFax());
 		SpecialGroupOrderVO  vo = new SpecialGroupOrderVO();
 		String defaultSupplierId = "", defaultSupplierName = "";
-		if (!"".equals(orgSupplierMapping)){
+		if (!StringUtils.isBlank(orgSupplierMapping)){
 			JSONArray jary = JSON.parseArray(orgSupplierMapping);
 			for(int i = 0 ; i < jary.size() ; i++){
 				JSONObject Obj = jary.getJSONObject(i);
@@ -394,7 +397,9 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 				}
 			}
 		}
-		groupOrder.setSupplierId(Integer.parseInt(defaultSupplierId));
+		if(NumberUtils.isNumber(defaultSupplierId)){
+			groupOrder.setSupplierId(Integer.parseInt(defaultSupplierId));
+		}
 		groupOrder.setSupplierName(defaultSupplierName);
 		vo.setGroupOrder(groupOrder);
 		result.setVo(vo);
