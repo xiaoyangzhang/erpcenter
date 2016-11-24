@@ -304,8 +304,8 @@ public class FitOrderFacadeImpl implements FitOrderFacade{
 							productInfo.getOperatorId(),
 							productInfo.getOperatorName(), 
 							saveFitOrderInfoDTO.getCurBizId(), 
-							//settingCommon.getMyBizCode(request),//FIXME 待修复
-							"",
+							//settingCommon.getMyBizCode(request),
+							saveFitOrderInfoDTO.getFitOrderVO().getGroupOrder().getOrderNo(),
 							mergeGroup);
 		} catch (ParseException e) {
 			result.setError("操作失败,请检查后重试！");

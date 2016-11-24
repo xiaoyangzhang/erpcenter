@@ -608,6 +608,7 @@ public class QueryFacadeImpl implements QueryFacade {
             // pms.put("set", WebUtils.getDataUserIdSet(request));
             pb.setParameter(pms);
             pb = getCommonService(queryDTO.getSvc()).queryListPage(queryDTO.getSl(), pb);
+          //  model.addAttribute("pageBean", pb);
             queryResult.setPageBean(pb);
 
             Map<Integer, String> guideMap = new HashMap<Integer, String>();
@@ -641,13 +642,14 @@ public class QueryFacadeImpl implements QueryFacade {
                 item.put("total_profit", totalIncome.subtract(totalCost));
 
             }
+           // model.addAttribute("guideMap", guideMap);
             queryResult.setGuideMap(guideMap);
-
             // 总计查询
             if (StringUtils.isNotBlank(queryDTO.getSsl())) {
                 Map pm = (Map) pb.getParameter();
                 pm.put("parameter", pm);
-                getCommonService(queryDTO.getSvc()).queryOne(queryDTO.getSsl(), pm);
+               // model.addAttribute("sum", getCommonService(svc).queryOne(ssl, pm));
+                queryResult.setSum(getCommonService(queryDTO.getSvc()).queryOne(queryDTO.getSsl(), pm));
             }
         } catch (Exception e) {
             logger.error("", e);
@@ -1423,7 +1425,7 @@ public class QueryFacadeImpl implements QueryFacade {
      */
     private CommonSaleBiz getCommonService(String svc) {
         if (StringUtils.isBlank(svc)) {
-            svc = "commonsaleService";
+            svc = "commonSaleBiz";
         }
         return appContext.getBean(svc, CommonSaleBiz.class);
     }
