@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.biz.sales.service.impl.sales;
 import java.text.ParseException;
 import java.util.List;
 
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.SpecialGroupOrderBiz;
@@ -59,5 +60,10 @@ public class SpecialGroupOrderBizImpl implements SpecialGroupOrderBiz {
 			Integer userId, String userName, Integer bizId)
 			throws ParseException {
 		return specialGroupOrderDal.saveGuestListInfo(sgovo, userId, userName, bizId);
+	}
+
+	@Override
+	public Integer savePrice(List<GroupOrderPrice> groupOrderPrices, Integer orderId, Integer userId, String userName, Integer bizId) throws ParseException  {
+		return specialGroupOrderDal.savePrice(groupOrderPrices, orderId, userId, userName, bizId);
 	}
 }

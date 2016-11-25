@@ -560,6 +560,7 @@ public class FitOrderDalImpl implements FitOrderDal {
 
 	@Override
 	public FitOrderVO selectFitOrderVOById(Integer orderId) {
+		// TODO Auto-generated method stub
 		FitOrderVO vo = new FitOrderVO();
 		GroupOrder groupOrder = groupOrderMapper.selectByPrimaryKey(orderId);
 		TourGroup tg = tourGroupMapper.selectByPrimaryKey(groupOrder.getGroupId());
@@ -605,6 +606,7 @@ public class FitOrderDalImpl implements FitOrderDal {
 	public void mergetGroup(List<MergeGroupOrderVO> list, Integer bizId,
 			Integer operid, String operName, String supplierCode,boolean isAgency)
 			throws ParseException {
+		// TODO Auto-generated method stub
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		for (MergeGroupOrderVO mergeGroupOrderVO : list) {
 			GroupRouteVO groupRouteVO = new GroupRouteVO();
@@ -615,6 +617,7 @@ public class FitOrderDalImpl implements FitOrderDal {
 			groupRouteVO.setOrderList(orderList);
 
 			for (GroupOrder groupOrder : orderList) {
+				orderId = groupOrder.getId();
 				List<GroupRoute> rouList = groupRouteMapper
 						.selectByOrderId(groupOrder.getId());
 				if (rouList != null && rouList.size() > 0) {
@@ -631,6 +634,8 @@ public class FitOrderDalImpl implements FitOrderDal {
 					}
 				}
 			}
+			if (orderId == null) orderId = 0;
+			if (dayNum == null) dayNum = 0;
 			GroupOrder go = groupOrderMapper.selectByPrimaryKey(orderId);
 
 			List<GroupRouteDayVO> groupRouteDayVOList = new ArrayList<GroupRouteDayVO>();
@@ -674,10 +679,10 @@ public class FitOrderDalImpl implements FitOrderDal {
 			tourGroup.setOperatorId(operid);
 			tourGroup.setOperatorName(operName);
 			tourGroup.setOrderNum(orderList.size());
-			tourGroup.setProductId(go.getProductId());
+			tourGroup.setProductId(go.getProductId()==null?0:go.getProductId());
 			tourGroup.setProductName(go.getProductName());
-			tourGroup.setPrudctBrandId(go.getProductBrandId());
-			tourGroup.setProductBrandName(go.getProductBrandName());
+			tourGroup.setPrudctBrandId(go.getProductBrandId()==null?0:go.getProductBrandId());
+			tourGroup.setProductBrandName(go.getProductBrandName()==null?"":go.getProductBrandName());
 			tourGroup.setDateStart(sdf.parse(go.getDepartureDate()));
 			Date startTime = tourGroup.getDateStart();
 			Calendar cal = Calendar.getInstance();
@@ -805,6 +810,7 @@ public class FitOrderDalImpl implements FitOrderDal {
 
 	@Override
 	public List<GroupOrder> selectReserveOrderList() {
+		// TODO Auto-generated method stub
 		return groupOrderMapper.selectReserveOrderList();
 	}
 	
@@ -898,6 +904,7 @@ public class FitOrderDalImpl implements FitOrderDal {
 			}
 
 		}
+
 		if (tList != null && tList.size() > 0) {
 			for (GroupOrderGuest groupOrderGuest : tList) {
 				groupOrderGuestMapper.deleteByPrimaryKey(groupOrderGuest

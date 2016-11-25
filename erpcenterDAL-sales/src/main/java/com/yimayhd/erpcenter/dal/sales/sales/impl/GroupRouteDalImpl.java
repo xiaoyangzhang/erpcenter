@@ -435,8 +435,8 @@ public class GroupRouteDalImpl implements GroupRouteDal {
 	}
 	
 	@Override
-	public GroupRoute selectDayNumAndMaxday(Integer orderId){
-		return groupRouteMapper.selectDayNumAndMaxday(orderId);
+	public GroupRoute selectDayNumAndMaxday(Integer orderId, Integer groupId){
+		return groupRouteMapper.selectDayNumAndMaxday(orderId, groupId);
 	}
 
 	

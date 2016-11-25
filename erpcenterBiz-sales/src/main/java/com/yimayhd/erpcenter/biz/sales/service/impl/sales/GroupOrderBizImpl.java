@@ -215,7 +215,12 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
 
     }
 
-   // @Transactional
+    @Override
+    public boolean updateGroupOrderByB2b_export_state(GroupOrder groupOrder) {
+        return false;
+    }
+
+    // @Transactional
     @Override
     public void mergeGroup(List<MergeGroupOrderVO> list, Integer bizId,
                            Integer operid, String operName, String supplierCode)
@@ -296,6 +301,11 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
 //        }
 
 
+    }
+
+    @Override
+    public String makeCodeByMode(Integer bizId, String bizCode, String dateTime, int sort) {
+        return null;
     }
 
     // 获得当天0点时间
@@ -466,6 +476,31 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
     }
 
     @Override
+    public void changeOrderLockState(Integer orderId) {
+
+    }
+
+    @Override
+    public void changeorderLockStateByOp(Integer orderId) {
+
+    }
+
+    @Override
+    public void goBackOrderLockStateByOp(Integer orderId) {
+
+    }
+
+    @Override
+    public void updateLockStateToFinance(Integer orderId) {
+
+    }
+
+    @Override
+    public void goBackToOP(Integer orderId) {
+
+    }
+
+    @Override
     public List<GroupPriceVo> selectSupplierByGroupIdAndSupplierId(
             Integer groupId, Integer supplierId) {
     	return groupOrderDal.selectSupplierByGroupIdAndSupplierId(groupId, supplierId);
@@ -508,8 +543,28 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
     }
 
     @Override
+    public PageBean<GroupOrder> selectTaobaoOrderListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer userRightType) {
+        return null;
+    }
+
+    @Override
+    public PageBean<GroupOrder> selectTaobaoOrderGuestNameListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer userRightType) {
+        return null;
+    }
+
+    @Override
     public GroupOrder selectTotalSpecialOrder(GroupOrder groupOrder, Integer bizId, Set<Integer> set) {
         return groupOrderDal.selectTotalSpecialOrder(groupOrder, bizId, set);
+    }
+
+    @Override
+    public GroupOrder selectTotalTaobaoOrder(GroupOrder groupOrder, Integer bizId, Set<Integer> set) {
+        return null;
+    }
+
+    @Override
+    public GroupOrder selectTotalTaobaoGuestNameOrder(GroupOrder groupOrder, Integer bizId, Set<Integer> set) {
+        return null;
     }
 
 
@@ -716,9 +771,6 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
      * 期初数据-supplier增删改
      *
      * @param bizId
-     * @param salesVO
-     * @param userId
-     * @param userName
      */
 //    public void initHotel(Integer bizId, SalesVO salesVO, Integer userId, String userName, Integer type) {
 //        // 团信息
@@ -906,8 +958,6 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
      * 根据接站牌获取团id列表
      * 预定安排，查询条件
      *
-     * @param bizId
-     * @param receiveMode
      * @return
      */
     @Override
@@ -1064,15 +1114,25 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
 		return groupOrderDal.loadUpdateExtResState(record);
 	}
 
+    @Override
+    public Integer updateExtVisa(GroupOrder record) {
+        return null;
+    }
 
-	@Override
+    @Override
+    public List<GroupOrder> selectByOrderIdExtVisaListPage(String mobile) {
+        return null;
+    }
+
+
+    @Override
     public Integer delGroupOrderId(Integer id) {
 		return groupOrderDal.delGroupOrderId(id);
     }
 	
 	 @Override
-		public  Integer selectSumPersonByProductId(Integer productId,String departureDate){
-			Integer sumPerson = groupOrderDal.selectSumPersonByProductId(productId,departureDate);
+		public  Integer selectSumPersonByProductId(Integer resId,Integer productId,String departureDate){
+			Integer sumPerson = groupOrderDal.selectSumPersonByProductId(resId,productId,departureDate);
 			return sumPerson;
 		}
 	 
@@ -1094,4 +1154,59 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
 //			List<FinanceCommission> orders = financeCommissionDeductionMapper.selectByGroupId(groupId) ;
 //			return orders;
 		}
+
+    @Override
+    public PageBean<GroupOrder> findByTime(String orderStr, PageBean<GroupOrder> pageBean, Integer bizId, Integer userId, String userName) {
+        return groupOrderDal.findByTime(orderStr, pageBean, bizId, userId, userName);
+    }
+
+    @Override
+    public Integer importGroupOrder(String[] orderIds, Integer saleOperatorId, String saleOperatorName, Integer operatorId, String operatorName, Integer supplierId, String supplierName, Integer orderType) {
+        return groupOrderDal.importGroupOrder(orderIds, saleOperatorId, saleOperatorName, operatorId, operatorName, supplierId, supplierName, orderType);
+    }
+
+    @Override
+    public List<GroupOrder> selectBySaleOperatorId(Integer bizId, DeparentmentOrderCondition condition, Set<Integer> set) {
+        return groupOrderDal.selectBySaleOperatorId(bizId,condition,set);
+    }
+
+    @Override
+    public PageBean selectGroupOrderGuestListPage(PageBean pageBean, Integer bizId, Set<Integer> set, Integer userRightType) {
+        return groupOrderDal.selectGroupOrderGuestListPage(pageBean, bizId, set, userRightType);
+    }
+
+    @Override
+    public PageBean<GroupOrder> selectMonthlyReportStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId) {
+        return groupOrderDal.selectMonthlyReportStatisticsListPage(pageBean, bizId);
+    }
+
+    @Override
+    public List<GroupOrder> selectMonthlyReportStatistics(PageBean<GroupOrder> pageBean, Integer bizId) {
+        return groupOrderDal.selectMonthlyReportStatistics(pageBean, bizId);
+    }
+
+    @Override
+    public PageBean<GroupOrder> selectOperatorOrderListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer userRightType) {
+        return groupOrderDal.selectOperatorOrderListPage(pageBean, bizId, set, userRightType);
+    }
+
+    @Override
+    public PageBean<GroupOrder> selectOperatorGuestNameListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer userRightType) {
+        return groupOrderDal.selectOperatorGuestNameListPage(pageBean,bizId,set,userRightType);
+    }
+
+    @Override
+    public PageBean<GroupOrder> selectProfitEverifyListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer userRightType) {
+        return groupOrderDal.selectProfitEverifyListPage(pageBean, bizId, set, userRightType);
+    }
+
+    @Override
+    public GroupOrder selectProfitEverifyByCon(GroupOrder groupOrder, Integer bizId, Set<Integer> set, Integer userRightType) {
+        return groupOrderDal.selectProfitEverifyByCon(groupOrder,bizId,set,userRightType);
+    }
+
+    @Override
+    public Map<String, Object> selectProfitEverifyByTotal(PageBean pageBean, Integer bizId, Set<Integer> set, Integer userRightType) {
+        return groupOrderDal.selectProfitEverifyByTotal(pageBean, bizId, set,userRightType);
+    }
 }
