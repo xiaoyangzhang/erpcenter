@@ -14,7 +14,9 @@ public interface ProductRouteBiz {
 //    List<ProductRoute> findByProductId(Integer productId);
 
     boolean saveProductRoute(ProductRouteVo productRouteVo);
-
+    
+    boolean copyProductRoute(ProductRouteVo productRouteVo);
+    
     boolean editProductRoute(ProductRouteVo productRouteVo);
 
     ProductRouteVo findByProductId(Integer productId);

@@ -2,15 +2,34 @@ package com.yimayhd.erpcenter.dal.product.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog;
 import com.yimayhd.erpcenter.dal.product.query.StockQueryDTO;
 
 
 public interface ProductStockDal {
 	List<ProductStock> getStocksByProductIdAndDateSpan(Integer productId,Date startDate,Date endDate);
-
+	
+	int insertTaobaoStockDateSelective(TaobaoStockDate taobaoStockDate);
+    
+    int updateTaobaoStockDateSelective(TaobaoStockDate taobaoStockDate);
+    
+    int insertTaobaoStockLogSelective(TaobaoStockLog taobaoStockLog);
+    
+    int updateTaobaoStockLogSelective(TaobaoStockLog taobaoStockLog);
+    
+    int  updateByLog(Integer stockDateId);
+    
+    List<TaobaoStockDate> selectTaobaoStocksByProductIdAndDate(Integer stockId, Date startDate, Date endDate);
+    
+    List<TaobaoStockLog>selectTaobaoStockLogByStockId(Integer stockId);
+    
+    List<TaobaoStockLog>selectByStockDateIdAndCreateTime(Integer stockDateId,String startMax,String startMin);
+	
 	void saveStock(Integer productId,List<ProductStock> stockList,Date startDate,Date endDate);
 	
 	ProductStock getStockByProductIdAndDate(Integer productId,Date date);
@@ -63,4 +82,8 @@ public interface ProductStockDal {
 	 * @return
 	 */
 	public PageBean<ProductStock> getProductStockDumpList(PageBean<ProductStock> pageBean);
+	
+    void updateProductStockByTaobao(List<Map<String, String>> mapList);
+	
+	TaobaoStockDate selectStockDataById(Integer id);
 }

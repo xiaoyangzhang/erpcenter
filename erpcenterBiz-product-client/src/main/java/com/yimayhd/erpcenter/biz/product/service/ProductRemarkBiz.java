@@ -9,6 +9,8 @@ import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
 public interface ProductRemarkBiz {
 
     boolean saveProductRemark(ProductRemark productRemark);
-
+    
+    boolean copyProductRemark(ProductRemark productRemark);
+    
     ProductRemark findProductRemarkByProductId(Integer productId);
 }
