@@ -20,6 +20,11 @@ public class ProductRemarkBizImpl implements ProductRemarkBiz{
     public boolean saveProductRemark(ProductRemark productRemark) {
     	return productRemarkDal.saveProductRemark(productRemark);
     }
+    
+    @Override
+    public boolean copyProductRemark(ProductRemark productRemark) {
+       return productRemarkDal.copyProductRemark(productRemark);
+    }
 
     @Override
     public ProductRemark findProductRemarkByProductId(Integer productId) {

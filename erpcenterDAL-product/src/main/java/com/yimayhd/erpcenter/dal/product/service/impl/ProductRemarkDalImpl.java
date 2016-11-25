@@ -36,6 +36,17 @@ public class ProductRemarkDalImpl implements ProductRemarkDal{
         }
         return success;
     }
+    
+    @Override
+    public boolean copyProductRemark(ProductRemark productRemark){
+    	boolean success;
+        
+		productRemark.setCreateTime(System.currentTimeMillis());
+		productRemarkMapper.insert(productRemark);
+		success = true;
+		
+		return success;
+    }
 
     @Override
     public ProductRemark findProductRemarkByProductId(Integer productId) {
