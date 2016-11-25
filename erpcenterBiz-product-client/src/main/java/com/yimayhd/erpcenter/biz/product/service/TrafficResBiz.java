@@ -38,5 +38,13 @@ public interface TrafficResBiz {
 	 
 	 int updateTrafficResState(Integer id,Integer state);
 	 
-	  List<TrafficRes> selectDetailsStocklog(Integer id,String adjustTime); 
+	  List<TrafficRes> selectDetailsStocklog(Integer id,String adjustTime);
+
+	int updateTrafficResStockLogByOrderId(TrafficResStocklog record);
+
+	int updateStockLog_AdjustState(TrafficResStocklog record);
+
+	TrafficRes selectTrafficResAndLineInfoById(Integer id);
+
+	TrafficRes selectTrafficResAndLineInfoById1(Integer id);
 }

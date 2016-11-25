@@ -50,6 +50,27 @@ public class TrafficResBizImpl implements TrafficResBiz{
 	public List<TrafficRes> selectDetailsStocklog(Integer id,String adjustTime){
 		return trafficResDal.selectDetailsStocklog(id, adjustTime);
 	}
+
+	@Override
+	public int updateTrafficResStockLogByOrderId(TrafficResStocklog record) {
+		return trafficResDal.updateTrafficResStockLogByOrderId(record);
+	}
+
+	@Override
+	public int updateStockLog_AdjustState(TrafficResStocklog record) {
+		return trafficResDal.updateStockLog_AdjustState(record);
+	}
+
+	@Override
+	public TrafficRes selectTrafficResAndLineInfoById(Integer id) {
+		return trafficResDal.selectTrafficResAndLineInfoById(id);
+	}
+
+	@Override
+	public TrafficRes selectTrafficResAndLineInfoById1(Integer id) {
+		return trafficResDal.selectTrafficResAndLineInfoById1(id);
+	}
+
 	@Override
 	public int copyRes(Integer resId,String date) {
 		return trafficResDal.copyRes(resId, date);
