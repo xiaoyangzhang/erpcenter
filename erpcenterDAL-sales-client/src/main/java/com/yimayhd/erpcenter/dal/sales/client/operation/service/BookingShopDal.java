@@ -10,6 +10,7 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDet;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopSelect;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.ShopGroupOrderOthersPO;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryGuideShop;
 
 
 public interface BookingShopDal {
@@ -61,12 +62,14 @@ public interface BookingShopDal {
 
 	Integer existBookingShop(Integer supplierId);
 	
-	/**
-	 * 根据订单id查询剩下的solr所需信息
-	 * @author liyong
-	 * @param id 订单id
-	 * @return
-	 */
-	ShopGroupOrderOthersPO selectShopGroupOrderOthersByOrderId(Integer id);
+//	/**
+//	 * 根据订单id查询剩下的solr所需信息
+//	 * @author liyong
+//	 * @param id 订单id
+//	 * @return
+//	 */
+//	ShopGroupOrderOthersPO selectShopGroupOrderOthersByOrderId(Integer id);
+	
+	QueryGuideShop getGuideShopListPageTotal(PageBean pageBean, Set<Integer> set);
 
 }
