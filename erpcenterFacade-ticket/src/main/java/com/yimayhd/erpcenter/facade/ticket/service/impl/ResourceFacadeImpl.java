@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yihg.mybatis.utility.PageBean;
@@ -103,19 +104,22 @@ public class ResourceFacadeImpl implements ResourceFacade{
 		if (dto.getResourceNumber() != ""){
 			parameter.put("resourceNumber", dto.getResourceNumber());
 		}
-		if (dto.getDepDateFrom() != ""){
+		if (StringUtils.isNotEmpty(dto.getDepDateFrom())){
 			parameter.put("dateType", dto.getDateType()); 
 			parameter.put("depDateFrom", dto.getDepDateFrom());
 		}
-		if (dto.getDepDateTo() != ""){
+		if (StringUtils.isNotEmpty(dto.getDepDateTo())){
 			parameter.put("dateType", dto.getDateType()); 
 			parameter.put("depDateTo", dto.getDepDateTo());
 		}
-		if (dto.getDepCity() != ""){
+		if (StringUtils.isNotEmpty(dto.getDepCity())){
 			parameter.put("depCity", dto.getDepCity());
 		}
-		if (dto.getLineName() != ""){
+		if (StringUtils.isNotEmpty(dto.getLineName())){
 			parameter.put("lineName", dto.getLineName());
+		}
+		if(StringUtils.isNotEmpty(dto.getAirCode())){
+			parameter.put("airCode", dto.getAirCode());
 		}
 		if (dto.getType() !=""){
 			parameter.put("type", dto.getType());

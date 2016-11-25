@@ -3,8 +3,6 @@ package com.yimayhd.erpcenter.facade.finance.service.impl;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +27,7 @@ import org.yimayhd.erpcenter.facade.finance.query.FinAuditDTO;
 import org.yimayhd.erpcenter.facade.finance.query.IncomeJoinTableListDTO;
 import org.yimayhd.erpcenter.facade.finance.query.IncomeOrPayDTO;
 import org.yimayhd.erpcenter.facade.finance.query.PayDTO;
+import org.yimayhd.erpcenter.facade.finance.query.PushWapListTableDTO;
 import org.yimayhd.erpcenter.facade.finance.query.QuerySettleCommissionDTO;
 import org.yimayhd.erpcenter.facade.finance.query.QuerySettleListDTO;
 import org.yimayhd.erpcenter.facade.finance.query.QueryShopCommissionStatsDTO;
@@ -45,6 +44,7 @@ import org.yimayhd.erpcenter.facade.finance.query.VerifyBillDTO;
 import org.yimayhd.erpcenter.facade.finance.result.CheckBillResult;
 import org.yimayhd.erpcenter.facade.finance.result.DiatributeBillResult;
 import org.yimayhd.erpcenter.facade.finance.result.IncomeOrPaytResult;
+import org.yimayhd.erpcenter.facade.finance.result.QueryPushWapListTableResult;
 import org.yimayhd.erpcenter.facade.finance.result.QuerySettleCommissionResult;
 import org.yimayhd.erpcenter.facade.finance.result.QuerySettleListResult;
 import org.yimayhd.erpcenter.facade.finance.result.QueryShopCommissionStatsResult;
@@ -1919,5 +1919,81 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	public SupplierInfo getSupplierById(Integer supplierId) {
 		SupplierInfo info = supplierBiz.selectBySupplierId(supplierId);
 		return info;
+	}
+
+	@Override
+	public QueryPushWapListTableResult pushWapListTable(PushWapListTableDTO queryDTO) {
+		PageBean pageBean = new PageBean();
+		pageBean.setPage(queryDTO.getPage());
+		pageBean.setPageSize(queryDTO.getPageSize());
+		
+		//如果人员为空并且部门不为空，则取部门下的人id
+		if(StringUtils.isBlank(queryDTO.getSaleOperatorIds()) && StringUtils.isNotBlank(queryDTO.getOrgIds())){
+			Set<Integer> set = new HashSet<Integer>();
+			String[] orgIdArr = queryDTO.getOrgIds().split(",");
+			for(String orgIdStr : orgIdArr){
+				set.add(Integer.valueOf(orgIdStr));
+			}
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(queryDTO.getBizId(), set);
+			String salesOperatorIds="";
+			for(Integer usrId : set){
+				salesOperatorIds+=usrId+",";
+			}
+			if(!salesOperatorIds.equals("")){
+				queryDTO.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length()-1));
+			}
+		}
+		Map<String,Object> pms  = queryDTO.getParameters();
+		if(null!=queryDTO.getSaleOperatorIds() && !"".equals(queryDTO.getSaleOperatorIds())){
+			pms.put("operator_id", queryDTO.getSaleOperatorIds());
+		}
+		pms.put("set", queryDTO.getSet());
+		pageBean.setParameter(pms);
+		pageBean = getCommonService(queryDTO.getSvc()).queryListPage(queryDTO.getSl(), pageBean);
+		
+		Map<Integer, String> guideMap = new HashMap<Integer, String>();
+		List<Map> results = pageBean.getResult();
+		Map item = null;
+		for (int i = 0; i < results.size(); i++) {
+			item = results.get(i);
+			Integer groupId = Integer.parseInt(item.get("id").toString());
+			List<BookingGuide> bookingGuides = bookingGuideBiz.selectGuidesByGroupId(groupId);
+			StringBuffer s = new StringBuffer();
+			for (int j = 0; j < bookingGuides.size(); j++) {
+				if (j == (bookingGuides.size() - 1)) {
+					s.append(bookingGuides.get(j).getGuideName());
+				} else {
+					s.append(bookingGuides.get(j).getGuideName() + ",");
+				}
+				item.put("userName", bookingGuides.get(j).getUserName());
+			}
+			guideMap.put(groupId, s.toString());
+			
+			BigDecimal totalIncome = NumberUtil.parseObj2Num(item.get("total_income"));
+			BigDecimal totalCost = NumberUtil.parseObj2Num(item.get("total_cost"));
+			
+			//团收入 = 团收入 - 购物汇总
+			InfoBean shop = financeBiz.statsShopWithCommInfoBean(groupId);
+			totalIncome = totalIncome.subtract(shop.getNum());
+			
+			item.put("total_income", totalIncome);
+			item.put("total_profit", totalIncome.subtract(totalCost));
+
+		}
+		
+		Map sumMap = null;
+		// 总计查询
+		if (StringUtils.isNotBlank(queryDTO.getSsl())) {
+			Map pm = (Map) pageBean.getParameter();
+			pm.put("parameter", pm);
+			sumMap = getCommonService(queryDTO.getSvc()).queryOne(queryDTO.getSsl(), pm);
+		}
+		
+		QueryPushWapListTableResult result = new QueryPushWapListTableResult();
+		result.setPageBean(pageBean);
+		result.setGuideMap(guideMap);
+		result.setSum(sumMap);
+		
+		return result;
 	}
 }
