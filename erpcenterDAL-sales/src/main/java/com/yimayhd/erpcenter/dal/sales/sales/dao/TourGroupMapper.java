@@ -1,10 +1,10 @@
 package com.yimayhd.erpcenter.dal.sales.sales.dao;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.vo.BookingGroup;
-import com.yihg.quality.vo.QualityTourGroupVo;
-import com.yihg.sales.po.TourGroup;
-import com.yihg.sales.vo.OperatorGroupStatic;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
+import com.yimayhd.erpcenter.dal.sales.client.quality.vo.QualityTourGroupVo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.OperatorGroupStatic;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -140,7 +140,6 @@ public interface TourGroupMapper {
 	 * 统计所有团总成本、总收入（带查询条件）
 	 * @param pageBean
 	 * @param bizId
-	 * @param mode
 	 * @return
 	 */
 	TourGroup selectProfitByTourConAndMode(@Param("page") PageBean<TourGroup> pageBean, @Param("bizId") Integer bizId, @Param("set") Set<Integer> set);
@@ -152,7 +151,6 @@ public interface TourGroupMapper {
 	
 	/**
 	 * 统计当前团总收入和总成本
-	 * @param bizId
 	 * @param mode
 	 * @return
 	 */
@@ -194,7 +192,7 @@ public interface TourGroupMapper {
 	/**
 	 * 可查询可下拉审核人列表
 	 * @param bizId
-	 * @param decode
+	 * @param name
 	 * @return
 	 */
 	List<Map<String, String>> getAuditUserList(@Param("bizId") Integer bizId, @Param("name") String name);
