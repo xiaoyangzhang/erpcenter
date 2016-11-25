@@ -1,7 +1,9 @@
 package com.yimayhd.erpcenter.dal.sales.taobao.dao;
 
-import com.yihg.taobao.po.PlatTaobaoTradeOrder;
+
 import org.apache.ibatis.annotations.Param;
+
+import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTradeOrder;
 
 import java.util.List;
 

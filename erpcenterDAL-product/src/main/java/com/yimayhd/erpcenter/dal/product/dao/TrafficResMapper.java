@@ -77,7 +77,6 @@ public interface TrafficResMapper {
    /**
   	 * 出票专用
   	 * @param id
-  	 * @param date
   	 * @return
   	 */
    TrafficRes selectTrafficResAndLineInfoById1(Integer id);

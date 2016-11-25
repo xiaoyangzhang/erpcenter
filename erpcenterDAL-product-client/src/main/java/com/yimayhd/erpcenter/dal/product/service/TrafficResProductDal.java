@@ -1,11 +1,8 @@
 package com.yimayhd.erpcenter.dal.product.service;
 
-import java.util.List;
-import java.util.Set;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
+
+import java.util.List;
 
 
 public interface TrafficResProductDal {
@@ -20,10 +17,14 @@ public interface TrafficResProductDal {
 	
 	int delTrafficResProduct(Integer id);
 	
-	int loadByResProductId(String id,String suggest_price_id,String adjust_uprodown_num,String price);
+	int loadByResProductId(String id, String suggest_price_id, String adjust_uprodown_num, String price);
 	
 	TrafficResProduct selectByResProductId(Integer id);
 	
-	Integer selectResProductNameCount(Integer productCode,Integer  resId);
+	Integer selectResProductNameCount(Integer productCode, Integer resId);
+
+	TrafficResProduct selectNumSoldCount(Integer resId);
+
+	int updateResProductNumStock(Integer id, Integer numStock);
 
 }

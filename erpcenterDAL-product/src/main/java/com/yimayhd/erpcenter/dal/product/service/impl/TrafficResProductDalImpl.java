@@ -1,17 +1,15 @@
 package com.yimayhd.erpcenter.dal.product.service.impl;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.yimayhd.erpcenter.dal.product.dao.TrafficResProductMapper;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
 import com.yimayhd.erpcenter.dal.product.service.TrafficResProductDal;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class TrafficResProductDalImpl implements TrafficResProductDal{
 	
@@ -229,6 +227,17 @@ public class TrafficResProductDalImpl implements TrafficResProductDal{
 	@Override
 	public Integer selectResProductNameCount(Integer productCode,Integer  resId) {
 		return trafficResProductMapper.selectResProductNameCount(productCode,resId);
+	}
+
+
+	@Override
+	public TrafficResProduct selectNumSoldCount(Integer resId) {
+		return trafficResProductMapper.selectNumSoldCount(resId);
+	}
+
+	@Override
+	public int updateResProductNumStock(Integer id, Integer numStock) {
+		return trafficResProductMapper.updateResProductNumStock(id, numStock);
 	}
 
 }

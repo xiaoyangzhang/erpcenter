@@ -1,22 +1,5 @@
 package com.yimayhd.erpcenter.dal.sales.finance.impl;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yihg.mybatis.utility.PageBean;
@@ -28,16 +11,12 @@ import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePayDetail;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.InfoBean;
 import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceDal;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingShopDetailDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDetailDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderPriceDal;
 import com.yimayhd.erpcenter.dal.sales.client.solr.query.SubjectSummaryPageQueryDTO;
@@ -49,9 +28,19 @@ import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingGuideMapper;
 import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingShopMapper;
 import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 import com.yimayhd.erpcenter.dal.sales.solr.sales.converter.FinanceConverter;
 import com.yimayhd.erpresource.dal.constants.SupplierConstant;
+import org.apache.commons.lang3.StringUtils;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 财务管理
@@ -88,6 +77,8 @@ public class FinanceDalImpl implements FinanceDal {
 	private BookingGuideMapper bookingGuideMapper;
 	@Autowired
 	private GroupOrderPriceDal groupOrderPriceDal;
+	@Autowired
+	private GroupOrderPriceMapper groupOrderPriceMapper;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -263,7 +254,6 @@ public class FinanceDalImpl implements FinanceDal {
 	 * @create 2015年7月30日 下午6:08:46
 	 * @param bs
 	 * @param map
-	 * @param dicls
 	 * @return
 	 */
 	private InfoBean getInfoBean(BookingSupplier bs, Map<Integer, InfoBean> map) {
@@ -290,7 +280,7 @@ public class FinanceDalImpl implements FinanceDal {
 	@Transactional
 	@Override
 	public void calcTourGroupAmount(Integer groupId) {
-
+		TourGroup tourGroup= groupMapper.selectByPrimaryKey(groupId);
 		List<GroupOrder> ordls = orderMapper.selectOrderByGroupId(groupId);
 		List<BookingShop> shopls = shopMapper.getShopListByGroupId(groupId);
 		List<BookingSupplier> supls = supplierMapper.getSupplierListByGroupId(groupId);
@@ -409,6 +399,36 @@ public class FinanceDalImpl implements FinanceDal {
 		tg.setTotalCost(pay);
 		tg.setTotalCostCash(payed);
 		groupMapper.updateByPrimaryKeySelective(tg);
+
+		//检查团成本是否合并到group_order_price的预算成本中
+		if(tourGroup != null &&tourGroup.getBizId().equals(5) && tourGroup.getGroupMode()>0){
+			if (ordls != null && ordls.size()>0){
+				Integer orderId = ordls.get(0).getId();
+				GroupOrderPrice groupOrderPrices=groupOrderPriceMapper.selectByOrderAndTypeAndRowState(orderId, 1,100);
+				if(groupOrderPrices ==null){
+					GroupOrderPrice gop=new GroupOrderPrice();
+					gop.setOrderId(orderId);
+					gop.setMode(1);
+					gop.setRowState(100);
+					gop.setPriceLockState(0);
+					gop.setItemName("其他");
+					gop.setItemId(153);
+					gop.setCreateTime(new Date().getTime());
+					gop.setCreatorId(0);
+					gop.setCreatorName("SYS");
+					gop.setUnitPrice(pay.doubleValue());
+					gop.setNumTimes(new Double(1));
+					gop.setNumPerson(new Double(1));
+					gop.setTotalPrice(pay.doubleValue());
+					groupOrderPriceDal.insertSelective(gop) ;
+				}else{
+					groupOrderPrices.setTotalPrice(pay.doubleValue());
+					groupOrderPrices.setUnitPrice(pay.doubleValue());
+					groupOrderPriceMapper.updateByPrimaryKeySelective(groupOrderPrices);
+				}
+			}
+		}
+
 	}
 	
 
@@ -888,8 +908,8 @@ public class FinanceDalImpl implements FinanceDal {
 			}
 		}
 		
-		Collections.sort(logs,new Comparator<TourGroup>(){  
-            public int compare(TourGroup arg0, TourGroup arg1) {  
+		Collections.sort(logs,new Comparator<TourGroup>(){
+            public int compare(TourGroup arg0, TourGroup arg1) {
                 return arg0.getOperateLogTime().compareTo(arg1.getOperateLogTime());  
             }  
         });  
@@ -1116,19 +1136,19 @@ public class FinanceDalImpl implements FinanceDal {
 			pageBean.setResult(result);
 			
 			for (Map<String, Object> map : result) {
-				Map<String,Object> qdyj = supplierMapper.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_QDYJ);
+				Map<String,Object> qdyj = supplierMapper.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()), Constants.SUMJECT_SUMMARY_QDYJ);
 				map.put("qd_total_cash", qdyj==null?0:qdyj.get("total_cash"));
 				map.put("qd_total", qdyj==null?0:qdyj.get("total"));
 				
-				Map<String,Object> dyxf = supplierMapper.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_DYXF);
+				Map<String,Object> dyxf = supplierMapper.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()), Constants.SUMJECT_SUMMARY_DYXF);
 				map.put("dy_total_cash", dyxf==null?0:dyxf.get("total_cash"));
 				map.put("dy_total", dyxf==null?0:dyxf.get("total"));
 				
-				Map<String,Object> gsxf = supplierMapper.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_GSXF);
+				Map<String,Object> gsxf = supplierMapper.getsubjectSummaryQDYJ(pageBean,Integer.parseInt(map.get("supplier_id").toString()), Constants.SUMJECT_SUMMARY_GSXF);
 				map.put("gs_total_cash", gsxf==null?0:gsxf.get("total_cash"));
 				map.put("gs_total", gsxf==null?0:gsxf.get("total"));
 				
-				Map<String,Object> qt = supplierMapper.getsubjectSummaryQT(pageBean,Integer.parseInt(map.get("supplier_id").toString()),Constants.SUMJECT_SUMMARY_GSXF,Constants.SUMJECT_SUMMARY_QDYJ,Constants.SUMJECT_SUMMARY_DYXF);
+				Map<String,Object> qt = supplierMapper.getsubjectSummaryQT(pageBean,Integer.parseInt(map.get("supplier_id").toString()), Constants.SUMJECT_SUMMARY_GSXF, Constants.SUMJECT_SUMMARY_QDYJ, Constants.SUMJECT_SUMMARY_DYXF);
 				map.put("qt_total_cash", qt==null?0:qt.get("total_cash"));
 				map.put("qt_total", qt==null?0:qt.get("total"));
 				
