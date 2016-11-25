@@ -18,6 +18,8 @@ public class TrafficResDTO implements Serializable{
 	private int bizId;
 	private int userId;
 	private String orgSupplierMapping;
+	private int supplierId;
+	private String supplierName;
 	
 	private Integer operType;
 	private int orderId;
@@ -70,6 +72,18 @@ public class TrafficResDTO implements Serializable{
 	}
 	public void setOrderId(int orderId) {
 		this.orderId = orderId;
+	}
+	public int getSupplierId() {
+		return supplierId;
+	}
+	public void setSupplierId(int supplierId) {
+		this.supplierId = supplierId;
+	}
+	public String getSupplierName() {
+		return supplierName;
+	}
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
 	}
 	
 }
