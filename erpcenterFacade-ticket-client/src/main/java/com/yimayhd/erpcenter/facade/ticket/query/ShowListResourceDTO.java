@@ -17,6 +17,7 @@ public class ShowListResourceDTO extends BaseListPage{
 	private String lineName;
 	private String type;
 	private Integer bizId;
+	private String airCode;
 	
 	public String getAjax() {
 		return ajax;
@@ -89,6 +90,12 @@ public class ShowListResourceDTO extends BaseListPage{
 	}
 	public void setBizId(Integer bizId) {
 		this.bizId = bizId;
+	}
+	public String getAirCode() {
+		return airCode;
+	}
+	public void setAirCode(String airCode) {
+		this.airCode = airCode;
 	}
 	
 }

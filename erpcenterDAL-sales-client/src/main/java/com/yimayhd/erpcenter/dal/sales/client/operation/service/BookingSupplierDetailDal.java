@@ -53,4 +53,7 @@ public interface BookingSupplierDetailDal {
 	     * @return
 	     */
 	List<BookingSupplierDetail> selectBookingSupplierDetailByGroupId(Integer groupId);
+
+
+	List<BookingSupplierDetail> selectTicketByResId(String resIds,Integer bizId);
 }

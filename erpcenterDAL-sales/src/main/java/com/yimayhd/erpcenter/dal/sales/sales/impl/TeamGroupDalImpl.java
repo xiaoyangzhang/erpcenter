@@ -2,6 +2,7 @@ package com.yimayhd.erpcenter.dal.sales.sales.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -79,36 +80,37 @@ public class TeamGroupDalImpl implements TeamGroupDal {
 
 		List<GroupOrder> orderListByGroupId = groupOrderMapper
 				.selectOrderByGroupId(groupId);
-		GroupOrder GroupOrder = orderListByGroupId.get(0);
-		teamGroupVO.setGroupOrder(orderListByGroupId.get(0));
+		if (orderListByGroupId.size() > 0) {
+			GroupOrder GroupOrder = orderListByGroupId.get(0);
+			teamGroupVO.setGroupOrder(orderListByGroupId.get(0));
 
-		// 接送信息
-		List<GroupOrderTransport> transList = groupOrderTransportMapper
-				.selectByOrderId(GroupOrder.getId());
-		teamGroupVO.setGroupOrderTransportList(transList);
+			// 接送信息
+			List<GroupOrderTransport> transList = groupOrderTransportMapper
+					.selectByOrderId(GroupOrder.getId());
+			teamGroupVO.setGroupOrderTransportList(transList);
 
-		// 成本
-		List<GroupOrderPrice> outList = groupOrderPriceMapper
-				.selectByOrderAndType(GroupOrder.getId(), 1);
-		teamGroupVO.setGroupOrderCostList(outList);
-		// 收入
-		List<GroupOrderPrice> inList = groupOrderPriceMapper
-				.selectByOrderAndType(GroupOrder.getId(), 0);
-		teamGroupVO.setGroupOrderPriceList(inList);
-		// 客人
-		List<GroupOrderGuest> guestList = groupOrderGuestMapper
-				.selectByOrderId(GroupOrder.getId());
-		List<Integer> guestIdList = airTicketRequestDal
-				.findIssuedGuestIdList(GroupOrder.getBizId(),
-						GroupOrder.getId());
-		teamGroupVO.setGroupOrderGuestList(guestList);
-		if (guestList != null && guestList.size() > 0) {
-			for (GroupOrderGuest groupOrderGuest : guestList) {
-				groupOrderGuest.setEditType(!guestIdList
-						.contains(groupOrderGuest.getId()));
+			// 成本
+			List<GroupOrderPrice> outList = groupOrderPriceMapper
+					.selectByOrderAndType(GroupOrder.getId(), 1);
+			teamGroupVO.setGroupOrderCostList(outList);
+			// 收入
+			List<GroupOrderPrice> inList = groupOrderPriceMapper
+					.selectByOrderAndType(GroupOrder.getId(), 0);
+			teamGroupVO.setGroupOrderPriceList(inList);
+			// 客人
+			List<GroupOrderGuest> guestList = groupOrderGuestMapper
+					.selectByOrderId(GroupOrder.getId());
+			List<Integer> guestIdList = airTicketRequestDal
+					.findIssuedGuestIdList(GroupOrder.getBizId(),
+							GroupOrder.getId());
+			teamGroupVO.setGroupOrderGuestList(guestList);
+			if (guestList != null && guestList.size() > 0) {
+				for (GroupOrderGuest groupOrderGuest : guestList) {
+					groupOrderGuest.setEditType(!guestIdList
+							.contains(groupOrderGuest.getId()));
+				}
 			}
 		}
-
 		return teamGroupVO;
 	}
 

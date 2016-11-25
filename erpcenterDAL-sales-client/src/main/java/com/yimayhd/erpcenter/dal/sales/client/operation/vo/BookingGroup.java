@@ -1,13 +1,24 @@
 package com.yimayhd.erpcenter.dal.sales.client.operation.vo;
 
+<<<<<<< HEAD
 import com.yihg.operation.po.*;
 import com.yihg.sales.po.GroupOrder;
 import com.yihg.sales.po.TourGroup;
+=======
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.*;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+>>>>>>> 01a57b64d8591c6d77a9b2fcf0c7411b538e5979
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+<<<<<<< HEAD
+=======
+import java.util.Map;
+
+
+>>>>>>> 01a57b64d8591c6d77a9b2fcf0c7411b538e5979
 
 public class BookingGroup implements Serializable {
 
@@ -60,7 +71,11 @@ public class BookingGroup implements Serializable {
 	private List<BookingDelivery> bookingDeliveries;
 	//private Map<String, Integer> personCountMap;
 	private BookingShopSelect bookingShopSelect;
+<<<<<<< HEAD
 	private TourGroup TourGroup;
+=======
+	TourGroup TourGroup;
+>>>>>>> 01a57b64d8591c6d77a9b2fcf0c7411b538e5979
 	
 	private Integer guideId;
 	private String guideName;

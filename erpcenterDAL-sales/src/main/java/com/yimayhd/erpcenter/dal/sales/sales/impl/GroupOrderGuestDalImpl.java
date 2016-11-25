@@ -118,5 +118,13 @@ public class GroupOrderGuestDalImpl implements GroupOrderGuestDal {
 		return groupOrderGuestMapper.getGuestByGroupIdAndIsLeader(groupId, isLeader);
 	}
 	
-
+	@Override
+	public List<GroupOrderGuest> selectGuestTicketInfo(Integer resId) {
+		List<GroupOrderGuest> list= groupOrderGuestMapper.selectGuestTicketInfo(resId);
+		 return list;
+	}
+	@Override
+	public List<GroupOrderGuest> getEmployeeByMobile(String mobile) {
+		return groupOrderGuestMapper.getEmployeeByMobile(mobile);
+	}
 }
