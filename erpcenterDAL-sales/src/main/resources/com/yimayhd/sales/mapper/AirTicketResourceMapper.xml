@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketResourceMapper" >
-  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketResource" >
+<mapper namespace="com.yihg.airticket.dao.AirTicketResourceMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.airticket.po.AirTicketResource" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="biz_id" property="bizId" jdbcType="INTEGER" />
     <result column="resource_number" property="resourceNumber" jdbcType="VARCHAR" />
@@ -42,7 +42,7 @@
     update_time, comment, contact, contact_tel, contact_mobile, contact_fax, contact_id, seat_type, line_name, type, end_issue_time
   </sql>
   <!-- 单条插入   -->
-  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketResource" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.yihg.airticket.po.AirTicketResource" useGeneratedKeys="true" keyProperty="id">
     insert into air_ticket_resource
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="bizId != null" >biz_id,</if>
@@ -114,7 +114,7 @@
    </update>
   
   <!-- 单条记录更新  -->
-  <update id="update" parameterType="com.yimayhd.erpcenter.dal.sales.client.airticket.po.AirTicketResource" >
+  <update id="update" parameterType="com.yihg.airticket.po.AirTicketResource" >
     update air_ticket_resource
     <set>
       <if test="resourceNumber != null" >
@@ -211,6 +211,9 @@
     <if test="parameter.lineName != null and parameter.lineName != ''">
     	and line_name like concat('%',#{parameter.lineName},'%')
     </if>
+    <if test="parameter.airCode != null and parameter.airCode != ''">
+     	and id in (select resource_id from air_ticket_leg where air_code like concat('%',#{parameter.airCode},'%') )
+    </if>
     <if test="parameter.type != null and parameter.type != ''">
     	and type=#{parameter.type}
     </if>
@@ -252,6 +255,9 @@
     </if>
     <if test="parameter.lineName != null and parameter.lineName != ''">
     	and line_name like concat('%',#{parameter.lineName},'%')
+    </if>
+    <if test="parameter.airCode != null and parameter.airCode != ''">
+     	and id in (select resource_id from air_ticket_leg where air_code like concat('%',#{parameter.airCode},'%') )
     </if>
     <if test="parameter.type != null and parameter.type != ''">
     	and type=#{parameter.type}

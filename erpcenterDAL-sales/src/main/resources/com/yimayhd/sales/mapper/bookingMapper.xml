@@ -150,7 +150,6 @@
 				WHERE tg.biz_id=#{parameter.bizId} AND group_state in (1,3,4) 
 				<include refid="selectBookingSupplier_Where_Date_Pre"/>
 				<include refid="selectBookingSupplier_Where"/>
-				GROUP BY bs.`supplier_id`
 			) pre on pre.supplier_id = bs.supplier_id
 	WHERE tg.biz_id=#{parameter.bizId} AND group_state in (1,3,4) 
 	<include refid="selectBookingSupplier_Where_Date"/>
@@ -213,12 +212,13 @@
 		<include refid="selectBookingSupplier_Where"/>
 	</select>
 	
-	<!-- 供应商订单明细（房、餐、保险、机票、门票、火车票明细查询）-->
+	<!-- 供应商订单明细（房、餐、保险、机票、门票、火车票明细查询） -->
 	<select id="bookingSupplierDetailListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
 		SELECT tg.id groupId,tg.group_mode groupMode, tg.`group_code` groupCode, tg.`total_adult` totalAdult,tg.`total_child` totalChild,tg.total_guide totalGuide
 			,tg.product_brand_name productBrandName,tg.product_name productName, tg.`operator_name` operatorName
 			,bs.supplier_type supplierType, bs.supplier_id supplierId,bs.`supplier_name` supplierName, bs.`cash_type` cashType,bs.total, ifnull(bs.total_cash,0) as totalCash
-			,det.`item_date` itemDate, det.item_date_to itemDateTo, det.`item_num` itemNum, ifnull(det.`item_num_minus`,0) itemNumMinus, det.`item_price` itemPrice, det.`item_total` itemTotal
+			,det.`item_date` itemDate, det.item_date_to itemDateTo, det.`item_num` itemNum, ifnull(det.`item_num_minus`,0) itemNumMinus, det.`item_price` itemPrice, det.sale_item_price as saleItemPrice 
+			,det.`item_total` itemTotal,det.sale_item_price *(det.`item_num`-ifnull(det.`item_num_minus`,0)) as totalSale
 			,det.`type1_name` type1Name, det.`type2_name` type2Name,det.`item_brief` itemBrief
 			,det.driver_name driverName, det.driver_tel driverTel,  det.car_lisence carLisence
 			,det.`ticket_departure` ticketDeparture, det.`ticket_arrival` ticketArrival, det.`ticket_flight` ticketFlight
@@ -237,14 +237,19 @@
 		LEFT JOIN (SELECT g.`group_id`,GROUP_CONCAT(CONCAT_WS('-',g.guide_name,g.guide_mobile)) guideInfo FROM booking_guide g GROUP BY g.`group_id`) bg ON tg.`id`=bg.group_id
 		WHERE tg.biz_id=#{parameter.bizId} and tg.group_state in (1,3,4) 
 		<include refid="selectBookingSupplier_Where_Date"/>
-		<include refid="selectBookingSupplier_Where"/>	
-		ORDER BY tg.date_start,tg.group_code_sort,tg.id,bs.supplier_id 
+		<include refid="selectBookingSupplier_Where"/>
+		<if test="parameter.limitSupplerIds !=null and parameter.limitSupplerIds !=''">
+			and bs.supplier_id in (${parameter.limitSupplerIds})
+		</if>
+		ORDER BY tg.date_start,tg.group_code_sort,tg.id,bs.supplier_id
 	</select>
 	
 	<!-- 供应商订单明细（房、餐、保险、机票、门票、火车票明细查询）总合计 -->
 	<select id="bookingSupplierDetailTotal" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
 		SELECT ifnull(SUM(item_num),0) totalNum, ifnull(SUM(item_num_minus),0) totalNumMinus, ifnull(SUM(item_total),0) totalCount
-			,ifnull(SUM(total),0) total, ifnull(SUM(total_cash),0) totalCash 
+		,ifnull(SUM(det.sale_item_price*(item_num-item_num_minus)),0) totalSale
+		,ifnull(SUM(det.sale_item_price*(item_num-item_num_minus) - det.item_total ),0) totalProfit
+		,ifnull(SUM(total),0) total, ifnull(SUM(total_cash),0) totalCash 
 		FROM booking_supplier_detail det
 		JOIN booking_supplier bs ON (bs.`id`=det.booking_id
 					<if test="parameter.selectDate!=null and parameter.selectDate==1">
@@ -259,6 +264,9 @@
 		WHERE tg.biz_id=#{parameter.bizId} and tg.group_state in (1,3,4) 
 		<include refid="selectBookingSupplier_Where_Date"/>
 		<include refid="selectBookingSupplier_Where"/>	
+		<if test="parameter.limitSupplerIds !=null and parameter.limitSupplerIds !=''">
+			and bs.supplier_id in (${parameter.limitSupplerIds})
+		</if>
 	</select>
 	
 	
@@ -672,11 +680,17 @@ where 1=1 <if test="parameter.gender != null">and gender =#{parameter.gender} </
 		order by tg.date_start
 	</select>
 	<select id="selectProductShopListPage" resultType="java.util.HashMap">
-	SELECT go.`supplier_name` supplierName,go.supplier_id,go.`product_brand_name` productBrandName,
-	ifnull(SUM(go.`num_adult`),0) totalAdult,ifnull(SUM(buyTotal),0) buyTotal 
-	FROM  `tour_group` tg JOIN  `group_order` go ON tg.`id`=go.`group_id` 
+	SELECT 
+	go.`supplier_name` supplierName,
+	go.supplier_id,
+	go.`product_brand_name` productBrandName,
+	ifnull(SUM(go.`num_adult`),0) totalAdult,
+	ifnull(SUM(buyTotal),0) buyTotal 
+	FROM  `tour_group` tg JOIN  `group_order` go ON tg.`id`=go.`group_id`  and go.state = 1
 	LEFT JOIN (SELECT SUM(ifnull(`buy_total`,0)) buyTotal,order_id FROM `booking_shop_detail_deploy` GROUP BY order_id) dep ON go.`id`=dep.`order_id` 
-	where 1=1 <if test="parameter.bizId != null"> and  tg.biz_id=#{parameter.bizId}</if>
+	where 1=1 and  go.state = 1
+	
+  <if test="parameter.bizId != null"> and  tg.biz_id=#{parameter.bizId}</if>
   <if test="parameter.set!=null">
 			AND tg.operator_id in
 			<foreach item="item" index="index" collection="parameter.set" open="("
@@ -702,26 +716,6 @@ where 1=1 <if test="parameter.gender != null">and gender =#{parameter.gender} </
 		GROUP BY go.`supplier_id`,go.`product_brand_name`
 		order by tg.date_start
 	</select>
-	<!-- fullDumpSQL -->
-	 <select id="selectBookingOrders" parameterType="com.yihg.mybatis.utility.PageBean" resultType="com.yimayhd.erpcenter.dal.sales.client.query.vo.BookingOrderDTO">
-		SELECT bs.id bsId, bs.supplier_id bsSupplierId,bs.supplier_name bsSupplierName
-		   ,ifnull(bs.total,0)  bsTotal,ifnull(bs.total_cash,0)  bsTotalCash 
-		   ,ifnull(bsd.item_num,0) bsdItemNum, ifnull(bsd.item_num_minus,0) bsdItemNumMinus,
-			tg.id tgId,tg.group_mode groupMode,tg.group_state groupState,bsd.item_date itemDate,bsd.type1_id bsdType1Id,
-			bs.cash_type bsCashType,bs.supplier_type bsSupplierType,tg.biz_id bizId,
-			tg.operator_id tgOperatorId,tg.product_brand_name productBrandName,tg.product_name productName,
-			date_start dateStart ,date_end dateEnd,bs.user_id bsUserId,bsd.item_total bsdItemTotal,bsd.item_brief bsdItemBrief,
-			bsd.item_date_to bsdItemDateTo,bsd.driver_tel bsdDriverTel,bsd.ticket_arrival bsdTicketArrival,bsd.ticket_departure bsdTicketDeparture,
-			bs.remark bsRemark,tg.total_guide tgTotalGuide,tg.total_child tgTotalChild,tg.total_adult tgTotalAdult,
-			bsd.item_price bsdItemPrice,bs.create_time bsCreateTime,tg.group_code_sort tgGroupCodeSort,bs.booking_date bsBookingDate,
-			bsd.type2_name bsdType2Name,bsd.driver_name bsdDriverName,
-			bsd.car_lisence bsdCarLisence,bsd.ticket_flight bsdTicketFlight,bsd.type1_name bsdType1Name,tg.operator_name tgOperatorName,
-			tg.group_code tgGroupCode,bg.id bgId,bg.group_id bgGroupId,
-			bg.guide_name bgGuideName,bg.guide_mobile bgGuideMobile
-			
-		FROM booking_supplier bs
-		JOIN  booking_supplier_detail bsd ON bs.`id`=bsd.`booking_id` 
-		JOIN tour_group tg ON bs.`group_id`=tg.`id`
-		left join booking_guide bg on tg.id = bg.group_id
-		</select>
+	
+	
 </mapper>

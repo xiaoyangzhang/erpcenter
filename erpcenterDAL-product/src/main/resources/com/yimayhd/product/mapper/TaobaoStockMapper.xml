@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yihg.product.dao.TaobaoStockMapper">
+  <resultMap id="BaseResultMap" type="com.yihg.product.po.TaobaoStock">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="stock_name" jdbcType="VARCHAR" property="stockName" />
+    <result column="clear_day_reset" jdbcType="INTEGER" property="clearDayReset" />
+    <result column="brief" jdbcType="VARCHAR" property="brief" />
+    <result column="sumProductId" jdbcType="INTEGER" property="sumProductId" />
+    
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, stock_name, clear_day_reset, brief
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from taobao_stock
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from taobao_stock
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yihg.product.po.TaobaoStock">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into taobao_stock (stock_name, clear_day_reset, brief
+      )
+    values (#{stockName,jdbcType=VARCHAR}, #{clearDayReset,jdbcType=INTEGER}, #{brief,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yihg.product.po.TaobaoStock">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into taobao_stock
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stockName != null">
+        stock_name,
+      </if>
+      <if test="clearDayReset != null">
+        clear_day_reset,
+      </if>
+      <if test="brief != null">
+        brief,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="stockName != null">
+        #{stockName,jdbcType=VARCHAR},
+      </if>
+      <if test="clearDayReset != null">
+        #{clearDayReset,jdbcType=INTEGER},
+      </if>
+      <if test="brief != null">
+        #{brief,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.TaobaoStock">
+    update taobao_stock
+    <set>
+      <if test="stockName != null">
+        stock_name = #{stockName,jdbcType=VARCHAR},
+      </if>
+      <if test="clearDayReset != null">
+        clear_day_reset = #{clearDayReset,jdbcType=INTEGER},
+      </if>
+      <if test="brief != null">
+        brief = #{brief,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.TaobaoStock">
+    update taobao_stock
+    set stock_name = #{stockName,jdbcType=VARCHAR},
+      clear_day_reset = #{clearDayReset,jdbcType=INTEGER},
+      brief = #{brief,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByStockListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BaseResultMap">
+    select ts.id, ts.stock_name, ts.clear_day_reset, ts.brief,count(ps.stock_id) as sumProductId 
+    from taobao_stock ts LEFT JOIN taobao_stock_product ps on (ts.id=ps.stock_id)
+    where 1=1 
+	<if test="page.parameter.stockName != null and page.parameter.stockName!=''">
+		and ts.stock_name LIKE CONCAT('%',#{page.parameter.stockName},'%' )
+	</if>
+	GROUP BY ts.id
+  </select>
+</mapper>
