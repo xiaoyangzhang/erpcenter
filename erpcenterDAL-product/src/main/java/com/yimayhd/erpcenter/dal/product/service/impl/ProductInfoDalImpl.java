@@ -761,9 +761,11 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		                      }
 		                }
 		            }
+					return true;
 				} catch (Exception e) {
 					status.setRollbackOnly();
 					LOGGER.error("error:{}",e);
+					return false;
 				}
 			}
 		});
