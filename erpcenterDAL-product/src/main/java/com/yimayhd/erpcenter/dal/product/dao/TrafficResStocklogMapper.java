@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.dal.product.dao;
 
-import com.yihg.product.po.TrafficResStocklog;
+
+import com.yimayhd.erpcenter.dal.product.po.TrafficResStocklog;
 
 import java.util.List;
 

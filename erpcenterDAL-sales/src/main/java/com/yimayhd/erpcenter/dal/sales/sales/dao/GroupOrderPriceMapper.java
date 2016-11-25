@@ -1,6 +1,6 @@
 package com.yimayhd.erpcenter.dal.sales.sales.dao;
 
-import com.yihg.sales.po.GroupOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

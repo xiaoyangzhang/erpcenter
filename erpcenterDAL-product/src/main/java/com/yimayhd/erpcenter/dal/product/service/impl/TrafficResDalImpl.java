@@ -162,12 +162,13 @@ public class TrafficResDalImpl implements TrafficResDal{
 	public int copyRes(Integer resId,String date) {
 		// TrafficRes
 		TrafficRes trafficRes=trafficResMapper.selectTrafficResById(resId,date);
+		String resDate = trafficRes.getDateStart();
 		trafficRes.setDateStart(date);
 		trafficRes.setDateLatest(trafficRes.getNewDateLatest());
 		trafficResMapper.insertSelective(trafficRes);
 		int newResId=trafficRes.getId();
 		//TrafficResLine
-		List<TrafficResLine> list1= trafficResLineMapper.selectTrafficResLineByResId(resId);
+		List<TrafficResLine> list1= trafficResLineMapper.selectTrafficResLineByResId(resDate, date, resId);
 		if (list1 != null && list1.size() > 0) {
 			for (TrafficResLine item : list1) {
 				item.setResId(newResId);
@@ -190,6 +191,7 @@ public class TrafficResDalImpl implements TrafficResDal{
 				trafficResStocklogMapper.insertSelective(item);
 			}
 		}
+		updateStockOrStockDisable(newResId);
 		return newResId;
 	}
 	
@@ -198,12 +200,23 @@ public class TrafficResDalImpl implements TrafficResDal{
 		trafficResStocklogMapper.insertSelective(record);
 		return record.getId();
 	}
-	
-	
+
+	@Override
+	public int updateTrafficResStockLogByOrderId(TrafficResStocklog record) {
+		trafficResStocklogMapper.updateByOrderId(record);
+		return 1;
+	}
+
 	@Override
 	public int updateStockOrStockDisable(Integer id) {
 		trafficResMapper.updateStockOrStockDisable(id);
 		return id;
+	}
+
+	@Override
+	public int updateStockLog_AdjustState(TrafficResStocklog record) {
+		trafficResStocklogMapper.updateByAdjustState(record);
+		return 1;
 	}
 	
 	@Override
@@ -236,4 +249,17 @@ public class TrafficResDalImpl implements TrafficResDal{
 		trafficResMapper.updateTrafficResState(id,state);
 		return id;
 	}
+
+	@Override
+	public TrafficRes selectTrafficResAndLineInfoById(Integer id) {
+		TrafficRes trafficRes=trafficResMapper.selectTrafficResAndLineInfoById(id);
+		return trafficRes;
+	}
+
+	@Override
+	public TrafficRes selectTrafficResAndLineInfoById1(Integer id) {
+		TrafficRes trafficRes=trafficResMapper.selectTrafficResAndLineInfoById1(id);
+		return trafficRes;
+	}
+
 }

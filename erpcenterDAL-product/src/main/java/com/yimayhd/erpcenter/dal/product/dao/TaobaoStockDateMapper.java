@@ -1,6 +1,6 @@
 package com.yimayhd.erpcenter.dal.product.dao;
 
-import com.yihg.product.po.TaobaoStockDate;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
