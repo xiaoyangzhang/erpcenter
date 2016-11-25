@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.AutocompleteInfo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
@@ -162,6 +164,8 @@ public interface TourGroupDal {
 	
 	void delFitTourGroup(Integer groupId);
 	
+	void updateWapType(Integer groupId);
+
 	List<GroupOrder> selectOrderAndGuestInfoByGroupId(Integer groupId);
 	
 	/**
@@ -205,6 +209,8 @@ public interface TourGroupDal {
 	 * @return
 	 */
 	PageBean<TourGroup> selectProfitByTourConListPage(PageBean<TourGroup> pageBean,Integer bizId,Set<Integer> set);
+
+	PageBean<TourGroup> selectSaleProfitByTourListPage(PageBean<TourGroup> pageBean,Integer bizId,Set<Integer> set);
 	/**
 	 * 统计所有团成人小孩全陪
 	 * @param pageBean
@@ -212,6 +218,9 @@ public interface TourGroupDal {
 	 * @return
 	 */
 	PageBean<TourGroup> selectProfitByTourCon(PageBean<TourGroup> pageBean,Integer bizId,Set<Integer> set);
+
+	PageBean<TourGroup> selectSaleProfitByTourCon(PageBean<TourGroup> pageBean,Integer bizId,Set<Integer> set);
+
 	/**
 	 * 统计所有团总收入总成本
 	 * @param pageBean
@@ -220,6 +229,10 @@ public interface TourGroupDal {
 	 * @return
 	 */
 	TourGroup selectProfitByTourConAndMode(PageBean<TourGroup> pageBean,Integer bizId,Set<Integer> set);
+
+	TourGroup selectSaleProfitByTourConAndMode(PageBean<TourGroup> pageBean,Integer bizId,Set<Integer> set);
+
+	TourGroup selectSumCostProfit(TourGroup tourGroup,Integer bizId,Set<Integer> set);
 
 	/*
 	 * 计调 - 首页
@@ -503,9 +516,11 @@ public interface TourGroupDal {
 	 */
 	List<TourGroup> selectGroupByDateZone(String startTime,String endTime,Integer bizId);
 
+	TourGroup findByGroupCode(String code);
+
 	void changeGroup(Integer groupId, Integer guideId);
 	
 	List<TourGroup> selecGroupBefAutoMergerGroup(Integer bizId,String startTime,Integer productId);
 	
-	public PageBean<TourGroup> selectTourGroupList(PageBean<TourGroup> pageBean);
+	PageBean getPushDeliveryList(PageBean pageBean,Integer bizId);
 }

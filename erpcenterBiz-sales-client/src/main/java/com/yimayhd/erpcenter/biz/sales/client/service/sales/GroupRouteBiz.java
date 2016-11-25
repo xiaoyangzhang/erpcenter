@@ -21,7 +21,7 @@ public interface GroupRouteBiz {
      * @param orderId
      * @return
      */
-	GroupRoute selectDayNumAndMaxday(Integer orderId);
+	GroupRoute selectDayNumAndMaxday(Integer orderId, Integer groupId);
 
 	List<GroupRouteSupplier> selectGroupRouteSupplierByRouteId(
 			Integer groupRouteId);

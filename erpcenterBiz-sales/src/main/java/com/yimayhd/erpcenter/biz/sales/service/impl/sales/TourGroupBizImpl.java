@@ -35,6 +35,11 @@ public class TourGroupBizImpl implements TourGroupBiz {
 	}
 
 	@Override
+	public void updateWapType(Integer groupId) {
+		tourGroupDal.updateWapType(groupId);
+	}
+
+	@Override
 	public int deleteByPrimaryKey(Integer id) {
 		return tourGroupDal.deleteByPrimaryKey(id);
 	}
@@ -218,6 +223,11 @@ public class TourGroupBizImpl implements TourGroupBiz {
 	}
 
 	@Override
+	public PageBean<TourGroup> selectSaleProfitByTourListPage(PageBean<TourGroup> pageBean, Integer bizId, Set<Integer> set) {
+		return tourGroupDal.selectSaleProfitByTourListPage(pageBean, bizId, set);
+	}
+
+	@Override
 	public List<TourGroup> selectTourGroupBycreateTime(Long createTime, Integer bizId) {
 		return tourGroupDal.selectTourGroupBycreateTime(createTime, bizId);
 	}
@@ -264,8 +274,23 @@ public class TourGroupBizImpl implements TourGroupBiz {
 	}
 
 	@Override
+	public PageBean<TourGroup> selectSaleProfitByTourCon(PageBean<TourGroup> pageBean, Integer bizId, Set<Integer> set) {
+		return tourGroupDal.selectSaleProfitByTourCon( pageBean, bizId, set);
+	}
+
+	@Override
 	public TourGroup selectProfitByTourConAndMode(PageBean<TourGroup> pageBean, Integer bizId, Set<Integer> set) {
 		return tourGroupDal.selectProfitByTourConAndMode(pageBean, bizId, set);
+	}
+
+	@Override
+	public TourGroup selectSaleProfitByTourConAndMode(PageBean<TourGroup> pageBean, Integer bizId, Set<Integer> set) {
+		return tourGroupDal.selectSaleProfitByTourConAndMode( pageBean, bizId, set);
+	}
+
+	@Override
+	public TourGroup selectSumCostProfit(TourGroup tourGroup, Integer bizId, Set<Integer> set) {
+		return tourGroupDal.selectSumCostProfit( tourGroup, bizId, set);
 	}
 
 	@Override
@@ -276,7 +301,7 @@ public class TourGroupBizImpl implements TourGroupBiz {
 	@Override
 	public List<AutocompleteInfo> getSupplierNameList(String supplierType) {
 
-		return null;
+		return tourGroupDal.getSupplierNameList( supplierType);
 	}
 
 	@Override
@@ -481,12 +506,22 @@ public class TourGroupBizImpl implements TourGroupBiz {
 	}
 
 	@Override
+	public TourGroup findByGroupCode(String code) {
+		return tourGroupDal.findByGroupCode(code);
+	}
+
+	@Override
 	public void changeGroup(Integer groupId, Integer guideId) {
-		
+		tourGroupDal.changeGroup(groupId,guideId);
 	}
 	
 	@Override
 	public List<TourGroup> selecGroupBefAutoMergerGroup(Integer bizId,String startTime,Integer productId) {
 		return tourGroupDal.selecGroupBefAutoMergerGroup(bizId,startTime,productId);
+	}
+
+	@Override
+	public PageBean getPushDeliveryList(PageBean pageBean, Integer bizId) {
+		return tourGroupDal.getPushDeliveryList(pageBean, bizId);
 	}
 }
