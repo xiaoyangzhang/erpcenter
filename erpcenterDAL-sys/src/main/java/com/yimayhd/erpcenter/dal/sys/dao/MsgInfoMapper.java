@@ -1,7 +1,8 @@
 package com.yimayhd.erpcenter.dal.sys.dao;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.sys.po.MsgInfo;
+import com.yimayhd.erpcenter.dal.sys.po.MsgInfo;
+
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

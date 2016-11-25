@@ -14,8 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.util.TypeUtils;
@@ -29,8 +29,6 @@ import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.dal.sys.po.SysDataRight;
 import com.yimayhd.erpcenter.dal.sys.service.PlatformEmployeeDal;
 import com.yimayhd.erpcenter.dal.sys.utils.MD5Util;
-import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionTemplate;
 
 public class PlatformEmployeeDalImpl implements PlatformEmployeeDal {
 
@@ -311,14 +309,21 @@ public class PlatformEmployeeDalImpl implements PlatformEmployeeDal {
                 //默认打开第一级节点
                 map.put("open", "true");
 
-                //如果有下级单位的话，则不可选择
-                if (hasSubOrg(org.getOrgId().intValue(), orgList)) {
-                    map.put("nocheck", "true");
-                } else {//如果没下级单位的话
-                    if (dataRightMap.containsKey(-org.getOrgId().intValue())) {
-                        map.put("checked", "true");
-                    }
-                }
+                //如果有下级单位的话，则不可选择 
+				/*  ouZongYing 注释
+				if(hasSubOrg(org.getOrgId().intValue(),orgList)){
+					map.put("nocheck", "true");
+				}else{//如果没下级单位的话
+					if(dataRightMap.containsKey(-org.getOrgId().intValue())){
+						map.put("checked", "true");
+					}					
+				}
+				*/
+				// 以下由 ouZongYing修改， 改为所有组织机构节点都可以选
+				if(dataRightMap.containsKey(-org.getOrgId().intValue())){
+					map.put("checked", "true");
+				}
+                
                 map.put("id", "o_" + org.getOrgId());
                 map.put("pId", "o_" + org.getParentId());
                 map.put("name", org.getName());
@@ -527,8 +532,8 @@ public class PlatformEmployeeDalImpl implements PlatformEmployeeDal {
         }
         List<SysDataRight> dataRightList = new ArrayList<SysDataRight>();
         SysDataRight dataRight = new SysDataRight();
-        dataRight.setUserId(employeeId);
         SysDataRight model = null;
+        dataRight.setUserId(employeeId);
         for (Map map : list) {
             model = new SysDataRight();
             model.setUserId(employeeId);
@@ -715,5 +720,13 @@ public class PlatformEmployeeDalImpl implements PlatformEmployeeDal {
 
         return empList;
     }
-
+    
+	/**
+	 * 查询部门员工信息
+	 */
+	@Override
+	public List<PlatformEmployeePo> getOrgIdListByEmployee(Integer bizId, Set<Integer> set) {
+		List<PlatformEmployeePo> empBeanList = platformEmployeeMapper.getOrgIdListByEmployee(bizId, set);
+		return empBeanList;
+	}
 }
