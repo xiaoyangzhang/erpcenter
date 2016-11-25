@@ -58,6 +58,8 @@ public class TourGroupVO implements Serializable {
 	protected String sidx;  //点击表格标题字段，排序字段， 如：userName
 	protected String sord;  //排序方式： desc、asc
 	
+	private Integer pushStatus;
+	
 	public Integer getRows() {
 		return rows;
 	}
@@ -323,5 +325,11 @@ public class TourGroupVO implements Serializable {
 	public void setReceiveMode(String receiveMode) {
 		this.receiveMode = receiveMode;
 	}
+    public Integer getPushStatus() {
+        return pushStatus;
+    }
+    public void setPushStatus(Integer pushStatus) {
+        this.pushStatus = pushStatus;
+    }
 	
 }

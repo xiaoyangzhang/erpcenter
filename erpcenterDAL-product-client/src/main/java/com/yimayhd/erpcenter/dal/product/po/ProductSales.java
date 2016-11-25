@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.dal.product.po;
 
 import java.io.Serializable;
+import java.util.Set;
 
 public class ProductSales implements Serializable{
     /**
@@ -13,6 +14,15 @@ public class ProductSales implements Serializable{
 	private String eprice;
 	private String name;
 	private String groupDate;
+	
+	private Set<String> strSet;
+	
+	public Set<String> getStrSet() {
+		return strSet;
+	}
+	public void setStrSet(Set<String> strSet) {
+		this.strSet = strSet;
+	}
 	/**
 	 * 已弃用
 	 */

@@ -13,13 +13,16 @@ public class QueryGuideShop implements Serializable {
 	private String supplierName;
 	private String receiveMode;
 	private Integer adultNum;
+	private Integer adultNumTotal;
 	private Integer childNum;
+	private Integer childNumTotal;
 	private String productBrandName;
 	private String productName;
 	private String source;
 	private String sourceType;
 	private String userName;
 	private BigDecimal totalFee;
+	private BigDecimal allTotalFee;
 	private String shopName;
 	private String shopFee;
 	private String guideName;
@@ -241,5 +244,27 @@ public class QueryGuideShop implements Serializable {
 	public void setShoppingDataState(Integer shoppingDataState) {
 		this.shoppingDataState = shoppingDataState;
 	}
+	public Integer getAdultNumTotal() {
+		return adultNumTotal;
+	}
+	public void setAdultNumTotal(Integer adultNumTotal) {
+		this.adultNumTotal = adultNumTotal;
+	}
+	public Integer getChildNumTotal() {
+		return childNumTotal;
+	}
+	public void setChildNumTotal(Integer childNumTotal) {
+		this.childNumTotal = childNumTotal;
+	}
+	public BigDecimal getAllTotalFee() {
+		return allTotalFee;
+	}
+	public void setAllTotalFee(BigDecimal allTotalFee) {
+		this.allTotalFee = allTotalFee;
+	}
+	
+	
+	
+	
 	
 }

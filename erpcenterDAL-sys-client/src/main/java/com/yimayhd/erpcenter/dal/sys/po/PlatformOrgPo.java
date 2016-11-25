@@ -1,7 +1,6 @@
 package com.yimayhd.erpcenter.dal.sys.po;
 
 import java.io.Serializable;
-import java.util.List;
 
 
 public class PlatformOrgPo implements Serializable{
@@ -19,6 +18,7 @@ public class PlatformOrgPo implements Serializable{
 	private boolean delStatus;//0-逻辑删除 1-未删除
 	private String createTime;//创建时间
 	private String updateTime;//更新时间
+	private Integer mappingSupplierId;
 	private String type;//树
 	private String logo;
 	//private List<dep>
@@ -122,5 +122,11 @@ public class PlatformOrgPo implements Serializable{
 	}
 	public void setBizId(Integer bizId) {
 		this.bizId = bizId;
+	}
+	public Integer getMappingSupplierId() {
+		return mappingSupplierId;
+	}
+	public void setMappingSupplierId(Integer mappingSupplierId) {
+		this.mappingSupplierId = mappingSupplierId;
 	}
 }

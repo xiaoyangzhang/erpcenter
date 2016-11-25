@@ -68,7 +68,7 @@
 		</collection> -->
 	</resultMap>
 
-	<resultMap id="BookingGroup" type="com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup">
+	<resultMap id="BookingGroup" type="com.yimayhd.erpcenter.dal.sales.client.query.vo.BookingGroup">
 		<result column="groupId" property="groupId" jdbcType="INTEGER" />
 		<result column="groupCode" property="groupCode" jdbcType="VARCHAR" />
 		<result column="dateStart" property="dateStart" jdbcType="DATE" />

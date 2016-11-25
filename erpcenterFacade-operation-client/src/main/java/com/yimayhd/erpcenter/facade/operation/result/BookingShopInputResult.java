@@ -3,7 +3,6 @@ package com.yimayhd.erpcenter.facade.operation.result;
 import java.io.Serializable;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
 
 public class BookingShopInputResult implements Serializable{
 

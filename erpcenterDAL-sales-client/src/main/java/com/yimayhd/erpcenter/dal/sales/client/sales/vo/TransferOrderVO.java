@@ -1,56 +1,48 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.vo;
 
+import com.yihg.sales.po.*;
+
 import java.io.Serializable;
 import java.util.List;
 
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TransferOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TransferOrderFamily;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TransferOrderGuest;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TransferOrderPrice;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TransferOrderRoute;
-
 public class TransferOrderVO implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6755311214985764701L;
-	private TransferOrder order;
-	private List<TransferOrderFamily>  familyList;
-	private List<TransferOrderGuest> guestList;
-	private List<TransferOrderPrice> priceList;
-	private List<TransferOrderRoute> pouteList;
-	public TransferOrder getOrder() {
-		return order;
+	
+	private TransferOrder transferOrder;
+	private List<TransferOrderFamily>  familys;
+	private List<TransferOrderGuest> guests;
+	private List<TransferOrderPrice> prices;
+	private List<TransferOrderRoute> routes;
+	public TransferOrder getTransferOrder() {
+		return transferOrder;
 	}
-	public void setOrder(TransferOrder order) {
-		this.order = order;
+	public void setTransferOrder(TransferOrder transferOrder) {
+		this.transferOrder = transferOrder;
 	}
-	public List<TransferOrderFamily> getFamilyList() {
-		return familyList;
+	public List<TransferOrderFamily> getFamilys() {
+		return familys;
 	}
-	public void setFamilyList(List<TransferOrderFamily> familyList) {
-		this.familyList = familyList;
+	public void setFamilys(List<TransferOrderFamily> familys) {
+		this.familys = familys;
 	}
-	public List<TransferOrderGuest> getGuestList() {
-		return guestList;
+	public List<TransferOrderGuest> getGuests() {
+		return guests;
 	}
-	public void setGuestList(List<TransferOrderGuest> guestList) {
-		this.guestList = guestList;
+	public void setGuests(List<TransferOrderGuest> guests) {
+		this.guests = guests;
 	}
-	public List<TransferOrderPrice> getPriceList() {
-		return priceList;
+	public List<TransferOrderPrice> getPrices() {
+		return prices;
 	}
-	public void setPriceList(List<TransferOrderPrice> priceList) {
-		this.priceList = priceList;
+	public void setPrices(List<TransferOrderPrice> prices) {
+		this.prices = prices;
 	}
-	public List<TransferOrderRoute> getPouteList() {
-		return pouteList;
+	public List<TransferOrderRoute> getRoutes() {
+		return routes;
 	}
-	public void setPouteList(List<TransferOrderRoute> pouteList) {
-		this.pouteList = pouteList;
+	public void setRoutes(List<TransferOrderRoute> routes) {
+		this.routes = routes;
 	}
 	
-	
-
 }

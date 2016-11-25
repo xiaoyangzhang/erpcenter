@@ -4,10 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class GroupBookingInfo implements Serializable {
-	/**
-	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么)
-	*/
-	private static final long serialVersionUID = 5864988127960197212L;
 	private Integer groupId;
 	private Integer orderId;
 	private String receiveMode;
@@ -20,6 +16,7 @@ public class GroupBookingInfo implements Serializable {
 	private Integer totalAdult;
 	private Integer totalChild;
 	private Integer totalGuide;
+	private Integer totalBaby;
 	private String operatorName;
 	private String groupStatus;
 	private Integer groupState;
@@ -27,6 +24,7 @@ public class GroupBookingInfo implements Serializable {
 	private Integer eatCnt;
 	private Integer sightCnt;
 	private Integer carCnt;
+	private Integer deliveryCnt;
 	private Integer inCnt;
 	private Integer outCnt;
 	private Integer airCnt;
@@ -37,6 +35,19 @@ public class GroupBookingInfo implements Serializable {
 	private String[] guideNameArr;
 	private String deliveryNames;
 	private String[] deliveryNameArr;
+	
+	public Integer getTotalBaby() {
+		return totalBaby;
+	}
+	public void setTotalBaby(Integer totalBaby) {
+		this.totalBaby = totalBaby;
+	}
+	public Integer getDeliveryCnt() {
+		return deliveryCnt;
+	}
+	public void setDeliveryCnt(Integer deliveryCnt) {
+		this.deliveryCnt = deliveryCnt;
+	}
 	public Integer getGroupId() {
 		return groupId;
 	}

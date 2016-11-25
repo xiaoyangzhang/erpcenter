@@ -36,6 +36,8 @@ public class PlatTaobaoTradeOrder implements Serializable{
 
     private String payment;
 
+    private String divideOrderFee;
+    
     private String discountFee;
 
     private String adjustFee;
@@ -58,7 +60,17 @@ public class PlatTaobaoTradeOrder implements Serializable{
     
     private Integer tradeId;
 
-    /**
+    
+    
+    public String getDivideOrderFee() {
+		return divideOrderFee;
+	}
+
+	public void setDivideOrderFee(String divideOrderFee) {
+		this.divideOrderFee = divideOrderFee;
+	}
+
+	/**
 	 * @return the tradeId
 	 */
 	public Integer getTradeId() {

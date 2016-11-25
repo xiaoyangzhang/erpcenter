@@ -1,12 +1,10 @@
 package com.yimayhd.erpcenter.dal.product.dao;
 
-
-import java.util.List;
-
+import com.yihg.mybatis.utility.PageBean;
+import com.yihg.product.po.TrafficRes;
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.dal.product.po.TrafficRes;
+import java.util.List;
 
 public interface TrafficResMapper {
     /**
@@ -65,12 +63,23 @@ public interface TrafficResMapper {
 	 * @param date
 	 * @return
 	 */
-    TrafficRes selectTrafficResById(@Param("id")Integer id,@Param("date")String date);
+    TrafficRes selectTrafficResById(@Param("id") Integer id, @Param("date") String date);
     
-    int updateStockOrStockDisable(@Param("id")Integer id);
+    int updateStockOrStockDisable(@Param("id") Integer id);
     
-   int updateTrafficResState(@Param("id")Integer id,@Param("state")Integer state);
+   int updateTrafficResState(@Param("id") Integer id, @Param("state") Integer state);
    
-   List<TrafficRes>selectDetailsStocklog(@Param("resId") Integer resId,@Param("adjustTime")String adjustTime);
+   List<TrafficRes>selectDetailsStocklog(@Param("resId") Integer resId, @Param("adjustTime") String adjustTime);
+   
+   TrafficRes selectTrafficResAndLineInfoById(Integer id);
+   
+   int updateTrafficResNumStockAndDisable(@Param("numStock") Integer numStock, @Param("numDisable") Integer numDisable, @Param("id") Integer id);
+   /**
+  	 * 出票专用
+  	 * @param id
+  	 * @param date
+  	 * @return
+  	 */
+   TrafficRes selectTrafficResAndLineInfoById1(Integer id);
 }
 

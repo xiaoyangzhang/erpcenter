@@ -1,11 +1,10 @@
 package com.yimayhd.erpcenter.dal.product.po;
 
+import com.yihg.basic.util.LogFieldAnno;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
-import com.yimayhd.erpcenter.common.util.LogFieldAnno;
-
 
 public class TrafficResProduct implements Serializable{
 
@@ -176,8 +175,35 @@ public class TrafficResProduct implements Serializable{
 	private BigDecimal babyProxy;
 	private Integer operatorId; 
 	private String operatorName; 
+	private String productAttach;
+	private String dateLatest;
+	private Integer confirm;
+	private Integer unconfirm;
 	
-	
+	public Integer getConfirm() {
+		return confirm;
+	}
+
+	public void setConfirm(Integer confirm) {
+		this.confirm = confirm;
+	}
+
+	public Integer getUnconfirm() {
+		return unconfirm;
+	}
+
+	public void setUnconfirm(Integer unconfirm) {
+		this.unconfirm = unconfirm;
+	}
+
+	public String getDateLatest() {
+		return dateLatest;
+	}
+
+	public void setDateLatest(String dateLatest) {
+		this.dateLatest = dateLatest;
+	}
+
 	public String getOperatorName() {
 		return operatorName;
 	}
@@ -744,6 +770,14 @@ public class TrafficResProduct implements Serializable{
 
 	public void setBabyCostPrice(BigDecimal babyCostPrice) {
 		this.babyCostPrice = babyCostPrice;
+	}
+
+	public String getProductAttach() {
+		return productAttach;
+	}
+
+	public void setProductAttach(String productAttach) {
+		this.productAttach = productAttach;
 	}
 
 	

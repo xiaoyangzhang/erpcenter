@@ -17,7 +17,7 @@ public class Constants {
     
     public static final String PRODUCT_TAG = "PRODUCT_LINE";
 
-    public static final Integer PAGESIZE = 15;// 每页个数,用于PageBean
+    public static final Integer PAGESIZE = 10;// 每页个数,用于PageBean
     public static final Integer TRAVELAGENCY = 1; // 旅行社
     public static final Integer RESTAURANT = 2; // 餐厅
     public static final Integer HOTEL = 3; // 酒店
@@ -43,7 +43,7 @@ public class Constants {
      *STOCK调整库存、STOCK_DISABLE调整机动位、ORDER_RESERVE预留订单、ORDER_SOLD全款下单、ORDER_CANCEL取消订单、ORDER_CLEAN系统清位
      */
     public static enum TRAFFICRES_STOCK_ACTION {
-    	STOCK, STOCK_DISABLE,  ORDER_RESERVE, ORDER_SOLD, ORDER_CANCEL, ORDER_CLEAN
+    	STOCK, STOCK_DISABLE,  ORDER_SOLD
     }
 
 }

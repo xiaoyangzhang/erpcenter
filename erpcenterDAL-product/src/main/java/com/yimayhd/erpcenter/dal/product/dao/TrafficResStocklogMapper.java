@@ -1,8 +1,8 @@
 package com.yimayhd.erpcenter.dal.product.dao;
 
-import java.util.List;
+import com.yihg.product.po.TrafficResStocklog;
 
-import com.yimayhd.erpcenter.dal.product.po.TrafficResStocklog;
+import java.util.List;
 
 public interface TrafficResStocklogMapper {
     /**
@@ -44,7 +44,9 @@ public interface TrafficResStocklogMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(TrafficResStocklog record);
+    int updateByOrderId(TrafficResStocklog record);
     
+    int updateByAdjustState(TrafficResStocklog record);
     /**
    	 * 复制功能查询TrafficResStocklog
    	 * @param resId

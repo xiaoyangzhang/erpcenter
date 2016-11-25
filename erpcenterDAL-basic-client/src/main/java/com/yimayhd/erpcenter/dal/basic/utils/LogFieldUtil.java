@@ -1,5 +1,12 @@
 package com.yimayhd.erpcenter.dal.basic.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.yihg.basic.contants.BasicConstants.LOG_ACTION;
+import com.yihg.basic.po.LogFieldAnnoInfo;
+import com.yihg.basic.po.LogOperator;
+
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -8,14 +15,6 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.yimayhd.erpcenter.common.contants.BasicConstants.LOG_ACTION;
-import com.yimayhd.erpcenter.common.util.NumberUtil;
-import com.yimayhd.erpcenter.dal.basic.po.LogFieldAnnoInfo;
-import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
 
 /**
  * 
@@ -322,7 +321,7 @@ public class LogFieldUtil {
 			if (fieldType == BigDecimal.class)
 				ret = ((BigDecimal)val1).compareTo(((BigDecimal)val2)) == 0;
 			else {
-				ret = val1.equals(val1);
+				ret = val1.equals(val2);
 			}
 		}
 	

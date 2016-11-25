@@ -30,7 +30,6 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierPO;
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingGuideDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDal;
-import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.AutocompleteInfo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
