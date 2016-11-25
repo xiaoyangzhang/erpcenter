@@ -703,7 +703,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	@Override
 	public PageBean<ProductInfo> getProductInfoDumpList(
 			PageBean<ProductInfo> pageBean) {
-		 List<ProductInfo> productInfoList = infoMapper.selectProductDumpListPage(pageBean);
+		 List<ProductInfo> productInfoList = null;//infoMapper.selectProductDumpListPage(pageBean);
 		 pageBean.setResult(productInfoList);
 		 return pageBean;
 	}
