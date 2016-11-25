@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.dal.product.dao;
 
-import com.yihg.product.po.TaobaoStockProduct;
+
+import com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct;
 
 import java.util.List;
 

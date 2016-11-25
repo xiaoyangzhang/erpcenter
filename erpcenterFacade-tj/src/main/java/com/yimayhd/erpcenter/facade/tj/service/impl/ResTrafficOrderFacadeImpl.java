@@ -33,7 +33,6 @@ import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.common.contants.BasicConstants.LOG_ACTION;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
-import com.yimayhd.erpcenter.dal.basic.utils.LogFieldUtil;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
 import com.yimayhd.erpcenter.dal.product.constans.Constants.TRAFFICRES_STOCK_ACTION;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResStocklog;

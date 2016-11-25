@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.product.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -59,11 +60,6 @@ import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStockConverter;
 import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
 import com.yimayhd.erpcenter.dal.product.topic.ProductTopic;
 import com.yimayhd.erpcenter.dal.product.utils.HttpUtil;
-import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
-import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
-import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultItemVo;
-import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultVOPlus;
-import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultVo;
 
 public class ProductInfoDalImpl implements ProductInfoDal{
 

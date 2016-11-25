@@ -1,7 +1,7 @@
 package com.yimayhd.erpcenter.dal.product.dao;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.product.po.TaobaoStock;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoStock;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
