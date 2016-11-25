@@ -227,5 +227,10 @@ public class BookingSupplierBizImpl implements BookingSupplierBiz{
 		bookingSupplierDal.fix_SupplierName_All(supplierId,supplierName);
 	}
 
+	@Override
+	public List<BookingSupplier> selectTicketInfo(Integer resId) {
+		return bookingSupplierDal.selectTicketInfo(resId);
+	}
+
 
 }

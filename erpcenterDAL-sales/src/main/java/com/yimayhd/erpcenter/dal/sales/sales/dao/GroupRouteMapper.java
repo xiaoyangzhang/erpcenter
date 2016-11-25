@@ -1,9 +1,10 @@
 package com.yimayhd.erpcenter.dal.sales.sales.dao;
 
-import com.yihg.sales.po.GroupRoute;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
 
 public interface GroupRouteMapper {
 	int deleteByPrimaryKey(Integer id);

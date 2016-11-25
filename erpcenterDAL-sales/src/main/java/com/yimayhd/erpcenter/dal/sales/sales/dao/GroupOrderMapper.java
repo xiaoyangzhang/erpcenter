@@ -1,16 +1,17 @@
 package com.yimayhd.erpcenter.dal.sales.sales.dao;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.vo.PaymentExportVO;
-import com.yihg.query.vo.DeparentmentOrderCondition;
-import com.yihg.query.vo.DepartmentOrderResult;
-import com.yihg.query.vo.ProductGuestCondition;
-import com.yihg.query.vo.ProductGuestStaticsVo;
-import com.yihg.sales.po.GroupOrder;
-import com.yihg.sales.vo.SaleOperatorOrderStatic;
-import com.yihg.sales.vo.SaleOperatorVo;
-import com.yihg.sales.vo.SalePrice;
-import com.yihg.sales.vo.TourGroupVO;
+
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.PaymentExportVO;
+import com.yimayhd.erpcenter.dal.sales.client.query.vo.DeparentmentOrderCondition;
+import com.yimayhd.erpcenter.dal.sales.client.query.vo.DepartmentOrderResult;
+import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestCondition;
+import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestStaticsVo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorOrderStatic;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorVo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalePrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;

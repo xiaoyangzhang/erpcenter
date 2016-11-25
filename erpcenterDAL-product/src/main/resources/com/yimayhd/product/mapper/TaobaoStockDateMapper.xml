@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yihg.product.dao.TaobaoStockDateMapper">
-  <resultMap id="BaseResultMap" type="com.yihg.product.po.TaobaoStockDate">
+<mapper namespace="com.yimayhd.product.mapper.TaobaoStockDateMapper">
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="stock_id" jdbcType="INTEGER" property="stockId" />
     <result column="stock_date" jdbcType="DATE" property="stockDate" />
@@ -24,7 +24,7 @@
     	where stock_id = #{stockId,jdbcType=INTEGER}
     <![CDATA[ AND stock_date>=#{startDate} AND stock_date<#{endDate}]]> AND state=1
     </select>
-      <update id="updateByLog" parameterType="com.yihg.product.po.TaobaoStockDate">
+      <update id="updateByLog" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate">
 		      update taobao_stock_date as sd 
 			left join (select stock_date_id
 									,sum(case when order_id=0 and taobao_order_id=0 then num else 0 end) as stock
@@ -40,7 +40,7 @@
     delete from taobao_stock_date
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.product.po.TaobaoStockDate">
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -49,7 +49,7 @@
     values (#{stockId,jdbcType=INTEGER}, #{stockDate,jdbcType=DATE}, #{stockCount,jdbcType=INTEGER}, 
       #{saleCount,jdbcType=INTEGER}, #{state,jdbcType=TINYINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.product.po.TaobaoStockDate">
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -89,7 +89,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.TaobaoStockDate">
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate">
     update taobao_stock_date
     <set>
       <if test="stockId != null">
@@ -110,7 +110,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.TaobaoStockDate">
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate">
     update taobao_stock_date
     set stock_id = #{stockId,jdbcType=INTEGER},
       stock_date = #{stockDate,jdbcType=DATE},

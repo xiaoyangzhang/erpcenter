@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yihg.sys.dao.PlatAuthMapper">
-  <resultMap id="BaseResultMap" type="com.yihg.sys.po.PlatAuth">
+<mapper namespace="com.yimayhd.sys.mapper.PlatAuthMapper">
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.PlatAuth">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="biz_id" jdbcType="INTEGER" property="bizId" />
     <result column="plat_name" jdbcType="VARCHAR" property="platName" />
@@ -24,7 +24,7 @@
     delete from plat_auth
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.sys.po.PlatAuth">
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatAuth">
     insert into plat_auth (id, biz_id, plat_name, 
       app_key, app_secret, org_id, 
       supplier_id, plat_status)
@@ -32,7 +32,7 @@
       #{appKey,jdbcType=VARCHAR}, #{appSecret,jdbcType=VARCHAR}, #{orgId,jdbcType=INTEGER}, 
       #{supplierId,jdbcType=INTEGER}, #{platStatus,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.sys.po.PlatAuth">
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatAuth">
     insert into plat_auth
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -87,7 +87,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.sys.po.PlatAuth">
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatAuth">
     update plat_auth
     <set>
       <if test="bizId != null">
@@ -114,7 +114,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.sys.po.PlatAuth">
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatAuth">
     update plat_auth
     set biz_id = #{bizId,jdbcType=INTEGER},
       plat_name = #{platName,jdbcType=VARCHAR},

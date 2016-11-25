@@ -1,11 +1,11 @@
 package com.yimayhd.erpcenter.dal.sales.operation.dao;
 
-import com.yihg.finance.po.FinanceGuide;
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.po.BookingAirTicket;
-import com.yihg.operation.po.BookingSupplier;
-import com.yihg.operation.po.BookingSupplierPO;
-import com.yihg.operation.vo.BookingSupplierAndDetailVO;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingAirTicket;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierPO;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingSupplierAndDetailVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;

@@ -97,4 +97,6 @@ public interface BookingSupplierBiz {
 
 	void fix_SupplierName_All(Integer supplierId, String supplierName);
 
+	public List<BookingSupplier> selectTicketInfo(Integer resId);
+
 }

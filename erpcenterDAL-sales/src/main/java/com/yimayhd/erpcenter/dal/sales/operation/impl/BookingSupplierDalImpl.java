@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.yimayhd.erpcenter.common.exception.ClientException;
+import com.yimayhd.erpcenter.dal.sales.airticket.dao.AirTicketRequestMapper;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide;
 import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceDal;
 import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinanceGuideDal;
@@ -51,6 +52,10 @@ public class BookingSupplierDalImpl implements BookingSupplierDal{
 	private BookingGuideMapper bookingGuideMapper;
 	@Autowired
 	private FinanceGuideDal financeGuideDal;
+
+	@Autowired
+	private AirTicketRequestMapper airTicketRequestMapper;
+
 	
 	@Override
 	@Transactional
@@ -108,7 +113,8 @@ public class BookingSupplierDalImpl implements BookingSupplierDal{
 		
 		if(canDelete){
 			if(isOperator){
-				if (Constants.AIRTICKETAGENT.equals(bookingSupplier.getSupplierType()) && bookingSupplier.getOrderId()!=null){
+				Integer num= airTicketRequestMapper.selectRequestIdByBKId(bookingSupplier.getId());
+				if (Constants.AIRTICKETAGENT.equals(bookingSupplier.getSupplierType()) && bookingSupplier.getOrderId()!=null && num>0){
 					throw new ClientException("该机票订单由机票管理出票操作生成，不能删除！");
 				} 
 				if (Constants.TRAINTICKETAGENT.equals(bookingSupplier.getSupplierType()) && bookingSupplier.getOrderId()!=null){
@@ -203,6 +209,20 @@ public class BookingSupplierDalImpl implements BookingSupplierDal{
 		
 		return datas;
 	}
+
+	@Override
+	public Map<String, Object> AYSelectBookingInfo(Integer groupId) {
+		List<BookingSupplier> bookingList = bookingSupplierMapper.getBookingSupplierByGroupId(groupId);
+		if(bookingList!=null && bookingList.size()>0){
+			for (BookingSupplier booking : bookingList) {
+				booking.setDetailList(bookingSupplierDetailMapper.selectByPrimaryBookId(booking.getId()));
+			}
+		}
+		Map<String, Object> datas = new HashMap<String, Object>();
+		datas.put("bookingList", bookingList);
+		return datas;
+	}
+
 	@Override
 	public Map<String, Object> selectBookingInfoPO(Integer groupId, Integer supplierType) {
 		List<GroupRequirement> groupRequirements = null;
@@ -458,5 +478,9 @@ public class BookingSupplierDalImpl implements BookingSupplierDal{
 		 bookingSupplierMapper.fix_SupplierName_bookingDelivery(supplierId, supplierName);
 	}
 
-
+	@Override
+	public List<BookingSupplier> selectTicketInfo(Integer resId){
+		List<BookingSupplier> list = bookingSupplierMapper.selectTicketInfo(resId);
+		return list;
+	}
 }

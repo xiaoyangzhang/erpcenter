@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yihg.sys.dao.MsgInfoDetailMapper">
-	<resultMap id="BaseResultMap" type="com.yihg.sys.po.MsgInfoDetail">
+<mapper namespace="com.yimayhd.sys.mapper.MsgInfoDetailMapper">
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.MsgInfoDetail">
 		<id column="id" jdbcType="INTEGER" property="id" />
 		<result column="msg_info_id" jdbcType="INTEGER" property="msgInfoId" />
 		<result column="user_id" jdbcType="INTEGER" property="userId" />
@@ -24,13 +24,13 @@
 		delete from msg_info_detail
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
-	<insert id="insert" parameterType="com.yihg.sys.po.MsgInfoDetail">
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.MsgInfoDetail">
 		insert into msg_info_detail (id, msg_info_id, user_id,
 		user_name, status)
 		values (#{id,jdbcType=INTEGER}, #{msgInfoId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
 		#{userName,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER})
 	</insert>
-	<insert id="insertSelective" parameterType="com.yihg.sys.po.MsgInfoDetail">
+	<insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.MsgInfoDetail">
 		insert into msg_info_detail
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -67,7 +67,7 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.sys.po.MsgInfoDetail">
+	<update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.MsgInfoDetail">
 		update msg_info_detail
 		<set>
 			<if test="msgInfoId != null">
@@ -85,7 +85,7 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yihg.sys.po.MsgInfoDetail">
+	<update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sys.po.MsgInfoDetail">
 		update msg_info_detail
 		set msg_info_id = #{msgInfoId,jdbcType=INTEGER},
 		user_id = #{userId,jdbcType=INTEGER},

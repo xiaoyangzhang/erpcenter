@@ -21,6 +21,7 @@ public class ShowListDTO extends BaseListPage{
 	private String issueStatus;
 	private String depCity;
 	private String dataUser;
+	private String saleName;
 	
 	public String getDataUser() {
 		return dataUser;
@@ -118,5 +119,12 @@ public class ShowListDTO extends BaseListPage{
 	public void setArrange(boolean isArrange) {
 		this.isArrange = isArrange;
 	}
+	public String getSaleName() {
+		return saleName;
+	}
+	public void setSaleName(String saleName) {
+		this.saleName = saleName;
+	}
+	
 	
 }

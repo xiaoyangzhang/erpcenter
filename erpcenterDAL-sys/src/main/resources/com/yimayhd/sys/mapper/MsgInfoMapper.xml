@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yihg.sys.dao.MsgInfoMapper">
-	<resultMap id="BaseResultMap" type="com.yihg.sys.po.MsgInfo">
+<mapper namespace="com.yimayhd.sys.mapper.MsgInfoMapper">
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.MsgInfo">
 		<id column="id" jdbcType="INTEGER" property="id" />
 		<result column="biz_id" jdbcType="INTEGER" property="bizId" />
 		<result column="msg_type" jdbcType="INTEGER" property="msgType" />
@@ -34,7 +34,7 @@
 		where id =
 		#{id,jdbcType=INTEGER}
 	</delete>
-	<insert id="insert" parameterType="com.yihg.sys.po.MsgInfo">
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.MsgInfo">
 		insert into msg_info (id, biz_id, msg_type,
 		msg_title,
 		operator_id, operator_name,
@@ -47,7 +47,7 @@
 		#{bookingId,jdbcType=INTEGER},
 		#{msgText,jdbcType=VARCHAR})
 	</insert>
-	<insert id="insertSelective" parameterType="com.yihg.sys.po.MsgInfo" useGeneratedKeys="true"
+	<insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.MsgInfo" useGeneratedKeys="true"
 		keyProperty="id">
 		insert into msg_info
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -121,7 +121,7 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.sys.po.MsgInfo">
+	<update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.MsgInfo">
 		update msg_info
 		<set>
 			<if test="bizId != null">
@@ -157,7 +157,7 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yihg.sys.po.MsgInfo">
+	<update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sys.po.MsgInfo">
 		update msg_info
 		set biz_id =
 		#{bizId,jdbcType=INTEGER},

@@ -1,12 +1,12 @@
 package com.yimayhd.erpcenter.dal.sales.operation.dao;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.operation.po.BookingShop;
-import com.yihg.operation.po.BookingShopDet;
-import com.yihg.operation.po.BookingShopDetail;
-import com.yihg.operation.po.BookingShopSelect;
-import com.yihg.operation.vo.QueryGuideShop;
-import com.yihg.operation.vo.QueryShopInfo;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDet;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopSelect;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryGuideShop;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryShopInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -64,7 +64,6 @@ public interface BookingShopMapper {
 	
 	/**
 	 * 根据导游安排中的groupID查询领单申请信息
-	 * @param groupId
 	 * @return
 	 */
 	

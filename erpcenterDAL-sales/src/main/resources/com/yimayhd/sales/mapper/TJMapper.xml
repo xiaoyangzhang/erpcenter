@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.tj.dao.TJMapper" >
-	 <resultMap id="ShopProjectResultMap" type="com.yihg.tj.po.TJShopProject" >
+<mapper namespace="com.yimayhd.sales.mapper.TJMapper" >
+	 <resultMap id="ShopProjectResultMap" type="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJShopProject" >
 	    <id column="id" property="id" jdbcType="INTEGER" />
 	    <result column="biz_id" property="bizId" jdbcType="INTEGER" />
 	    <result column="group_id" property="groupId" jdbcType="INTEGER" />
@@ -35,7 +35,7 @@
 	       <result column="sale_operator_id" property="saleOperatorId" jdbcType="INTEGER" />
 	  </resultMap>
   		
-  	 <resultMap id="GroupProfitResultMap" type="com.yihg.tj.po.TJGroupProfit" >
+  	 <resultMap id="GroupProfitResultMap" type="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupProfit" >
   	 	<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="biz_id" property="bizId" jdbcType="INTEGER" />
 		<result column="group_id" property="groupId" jdbcType="INTEGER" />
@@ -93,7 +93,7 @@
 		<result column="person_avgCost" property="personAvgCost" jdbcType="DECIMAL" />
   	 </resultMap>
   
-   	 <resultMap id="GroupQueryResultMap" type="com.yihg.tj.po.TJGroupQueryId">
+   	 <resultMap id="GroupQueryResultMap" type="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupQueryId">
    	 	<id column="id" property="groupId" jdbcType="INTEGER" />
    	 	<result column="biz_id" property="bizId" jdbcType="INTEGER" />
    	 </resultMap>
@@ -120,7 +120,7 @@
 	</select>
 	
 	
-	 <insert id="insertTjShopProjest" parameterType="com.yihg.tj.po.TJShopProject" >
+	 <insert id="insertTjShopProjest" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJShopProject" >
 	   	INSERT INTO tj_shop_project
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="bizId != null">
@@ -907,7 +907,7 @@
 		where  1=1
 		<include refid="selectGroupProfitListPage_Where"/>
    	</select>
-	 <insert id="insertGroupProfit" parameterType="com.yihg.tj.po.TJGroupProfit">
+	 <insert id="insertGroupProfit" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupProfit">
 	 INSERT INTO `tj_group_profit` (
 	 	biz_id, group_id, group_mode,
 	 	group_code, group_state, 
@@ -971,7 +971,7 @@
 	</select>
 	
 	
-	 <insert id="insetTJRecord" parameterType="com.yihg.tj.po.TJRecord" >
+	 <insert id="insetTJRecord" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJRecord" >
 	   	INSERT INTO tj_record
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="bizId != null">
@@ -1013,7 +1013,7 @@
 	  </insert>
 	
 	
-	<resultMap id="GroupShopResultMap" type="com.yihg.tj.po.TJGroupShop" >
+	<resultMap id="GroupShopResultMap" type="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupShop" >
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="biz_id" property="bizId" jdbcType="INTEGER" />
 		<result column="group_id" property="groupId" jdbcType="INTEGER" />
@@ -1051,7 +1051,7 @@
 	</resultMap>
 	
 	
-	<insert id="insertTJGroupShop" parameterType="com.yihg.tj.po.TJGroupShop" >
+	<insert id="insertTJGroupShop" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupShop" >
 	   	INSERT INTO tj_group_shop
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="bizId != null">
@@ -1860,7 +1860,7 @@ sum(totalBuy) all_shop_sales,
 		SELECT t.* from tj_shop_project t where t.group_id= #{groupId} AND t.`booking_id`=#{supplierId} AND t.`detail_id`=#{detailId}
 	</select>
 	
-	<update id="updateTjShopProject" parameterType="com.yihg.tj.po.TJShopProject">
+	<update id="updateTjShopProject" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJShopProject">
 		update tj_shop_project 
 		<set>
 			<if test="bizId != null">
@@ -1951,7 +1951,7 @@ sum(totalBuy) all_shop_sales,
 			where id = #{id,jdbcType=INTEGER}
 	</update>
 	
-	<update id="updateTjShopProjectByBookingId" parameterType="com.yihg.tj.po.TJShopProject">
+	<update id="updateTjShopProjectByBookingId" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJShopProject">
 		update tj_shop_project 
 		<set>
 			<if test="bizId != null">
@@ -2034,7 +2034,7 @@ sum(totalBuy) all_shop_sales,
 	</update>
 	
 	
-		<update id="updateTjShopProjectByDetailId" parameterType="com.yihg.tj.po.TJShopProject">
+		<update id="updateTjShopProjectByDetailId" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJShopProject">
 		update tj_shop_project 
 		<set>
 			<if test="bizId != null">
