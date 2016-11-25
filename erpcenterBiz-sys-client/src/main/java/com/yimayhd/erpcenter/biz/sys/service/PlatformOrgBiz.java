@@ -3,7 +3,6 @@ package com.yimayhd.erpcenter.biz.sys.service;
 import java.util.List;
 import java.util.Set;
 
-import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.dal.sys.po.SysDataRight;
 
@@ -94,5 +93,15 @@ public interface PlatformOrgBiz {
 	 * @return
 	 */
 	List<PlatformOrgPo> getSubLevelOrgList(Integer bizId,List<Integer> parentIdList);
+	
+	public String getMappingSupplierIdByOrgId(Integer orgId);
+	
+	public List<PlatformOrgPo> selectOrgListByIdSet(Integer bizId,Set<Integer> sets);
+	
+	public List<PlatformOrgPo> selectSubDeptNumOrgList(Integer bizId,
+			List<Integer> parentIdList);
+	
+    public PlatformOrgPo getCompanyByEmployeeId2(Integer bizId,
+            Integer employeeId) ;
 
 }
