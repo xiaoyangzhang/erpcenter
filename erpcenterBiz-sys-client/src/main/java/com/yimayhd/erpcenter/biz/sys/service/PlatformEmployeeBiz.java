@@ -1,6 +1,5 @@
 package com.yimayhd.erpcenter.biz.sys.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -141,5 +140,10 @@ public interface PlatformEmployeeBiz {
 	 * @return
 	 */
 	public List<PlatformEmployeePo> getEmpList(Integer bizId,Set<Integer> set);
+	
+	/**
+	 * 查询部门员工信息
+	 */
+	public List<PlatformEmployeePo> getOrgIdListByEmployee(Integer bizId, Set<Integer> set);
 	
 }

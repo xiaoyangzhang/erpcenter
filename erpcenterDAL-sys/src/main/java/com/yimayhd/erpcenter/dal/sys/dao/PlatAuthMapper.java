@@ -1,7 +1,8 @@
 package com.yimayhd.erpcenter.dal.sys.dao;
 
-import com.yihg.sys.po.PlatAuth;
 import org.apache.ibatis.annotations.Param;
+
+import com.yimayhd.erpcenter.dal.sys.po.PlatAuth;
 
 import java.util.List;
 

@@ -5,6 +5,7 @@ import com.yimayhd.erpcenter.dal.product.po.PriceView;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRight;
 import com.yimayhd.erpcenter.dal.product.po.ProductSales;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoProduct;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
 
@@ -26,7 +27,9 @@ public interface ProductInfoDal {
 	 * @return
 	 */
 	int insertSelective(ProductInfo record);
-
+	
+	PageBean<TaobaoProduct>selectTaobaoProduct(PageBean pageBean, Integer bizId);
+	
 	/**
 	 * 插入product
 	 * @param productInfoVo
@@ -164,4 +167,10 @@ public interface ProductInfoDal {
 	 * @return
 	 */
 	public PageBean<ProductInfo> getProductInfoDumpList(PageBean<ProductInfo> pageBean);
+	
+	void syncTaoBaoProducts(String authClient);
+	
+	ProductInfo findByNumIid(String numIid);
+	
+	ProductInfo selectByProSourceType(Integer bizId, Integer productId);
 }
