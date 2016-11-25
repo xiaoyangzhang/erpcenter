@@ -1,18 +1,19 @@
 package com.yimayhd.erpcenter.biz.product.service;
 
-import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.dal.product.po.PriceView;
-import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
-import com.yimayhd.erpcenter.dal.product.po.ProductRight;
-import com.yimayhd.erpcenter.dal.product.po.ProductSales;
-import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
-import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
-
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.product.po.PriceView;
+import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductRight;
+import com.yimayhd.erpcenter.dal.product.po.ProductSales;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoProduct;
+import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
+import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
 
 /**
  * @author : xuzejun
@@ -26,7 +27,9 @@ public interface ProductInfoBiz {
 	 * @return
 	 */
 	int insertSelective(ProductInfo record);
-
+	
+	PageBean<TaobaoProduct>selectTaobaoProduct(PageBean pageBean, Integer bizId);
+	
 	/**
 	 * 插入product
 	 * @param productInfoVo
@@ -156,4 +159,10 @@ public interface ProductInfoBiz {
 	void updateProductSysId(Integer productId, Integer productSysId);
 	
 	ProductInfo selectProductInfoByPsId(Integer productSysId);
+	
+    void syncTaoBaoProducts(String authClient);
+    
+    ProductInfo findByNumIid(String numIid);
+	
+	ProductInfo selectByProSourceType(Integer bizId, Integer productId);
 }
