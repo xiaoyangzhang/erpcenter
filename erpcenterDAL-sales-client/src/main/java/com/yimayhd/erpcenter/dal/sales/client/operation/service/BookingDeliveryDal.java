@@ -5,6 +5,7 @@ import java.util.List;
 import com.yimayhd.erpcenter.common.exception.ClientException;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingDeliveryStatics;
+
 import org.apache.ibatis.annotations.Param;
 
 
@@ -52,4 +53,6 @@ public interface BookingDeliveryDal {
 	 * @return
 	 */
 	List<BookingDelivery> selectInitDeliveryList(Integer groupId);
+	
+    void updatePushStatus(Integer bookingId); 
 }
