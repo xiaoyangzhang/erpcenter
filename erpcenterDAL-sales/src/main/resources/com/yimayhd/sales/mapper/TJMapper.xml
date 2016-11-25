@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yimayhd.erpcenter.dal.sales.tj.dao.TJMapper" >
-	 <resultMap id="ShopProjectResultMap" type="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJShopProject" >
+<mapper namespace="com.yihg.tj.dao.TJMapper" >
+	 <resultMap id="ShopProjectResultMap" type="com.yihg.tj.po.TJShopProject" >
 	    <id column="id" property="id" jdbcType="INTEGER" />
 	    <result column="biz_id" property="bizId" jdbcType="INTEGER" />
 	    <result column="group_id" property="groupId" jdbcType="INTEGER" />
@@ -35,7 +35,7 @@
 	       <result column="sale_operator_id" property="saleOperatorId" jdbcType="INTEGER" />
 	  </resultMap>
   		
-  	 <resultMap id="GroupProfitResultMap" type="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupProfit" >
+  	 <resultMap id="GroupProfitResultMap" type="com.yihg.tj.po.TJGroupProfit" >
   	 	<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="biz_id" property="bizId" jdbcType="INTEGER" />
 		<result column="group_id" property="groupId" jdbcType="INTEGER" />
@@ -93,42 +93,10 @@
 		<result column="person_avgCost" property="personAvgCost" jdbcType="DECIMAL" />
   	 </resultMap>
   
-   	 <resultMap id="GroupQueryResultMap" type="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupQueryId">
+   	 <resultMap id="GroupQueryResultMap" type="com.yihg.tj.po.TJGroupQueryId">
    	 	<id column="id" property="groupId" jdbcType="INTEGER" />
    	 	<result column="biz_id" property="bizId" jdbcType="INTEGER" />
    	 </resultMap>
-   	 
-   	 <resultMap id="ShopItemsResultMap" type="com.yimayhd.erpcenter.dal.sales.client.tj.po.ShopItems" >
-  	 	<id column="id" property="id" jdbcType="INTEGER" />
-		<result column="bsdId" property="bsdId" jdbcType="INTEGER" />
-		<result column="bsdGoodsId" property="bsdGoodsId" jdbcType="INTEGER" />
-		<result column="bsdGoodsName" property="bsdGoodsName" jdbcType="VARCHAR" />
-		<result column="bsdRepayValStr" property="bsdRepayValStr" jdbcType="VARCHAR" />
-		<result column="bsdBuyTotal" property="bsdBuyTotal" jdbcType="INTEGER" />
-		<result column="bsdRepayTotal" property="bsdRepayTotal" jdbcType="INTEGER" />
-		
-		<result column="bsId" property="bsId" jdbcType="INTEGER" />
-		<result column="bsSupplierId" property="bsSupplierId" jdbcType="INTEGER" />
-		<result column="bsPersonNumSum" property="bsPersonNumSum" jdbcType="INTEGER" />
-		<result column="bsPersonNum" property="bsPersonNum" jdbcType="INTEGER" />
-		<result column="bsTotalFaceSum" property="bsTotalFaceSum" jdbcType="INTEGER" />
-		<result column="bsTotalFace" property="bsTotalFace" jdbcType="INTEGER" />
-		<result column="bsShopDate" property="bsShopDate" jdbcType="INTEGER" />
-		
-		<result column="goId" property="goId" jdbcType="INTEGER" />
-		<result column="goSaleOperatorId" property="goSaleOperatorId" jdbcType="INTEGER" />
-		
-		<result column="tgId" property="tgId" jdbcType="INTEGER" />
-		<result column="tgBizId" property="tgBizId" jdbcType="INTEGER" />
-		<result column="tgOperatorId" property="tgOperatorId" jdbcType="INTEGER" />
-		<result column="tgPrudctBrandId" property="tgPrudctBrandId" jdbcType="INTEGER" />
-		<result column="tgDateStart" property="tgDateStart" jdbcType="INTEGER" />
-		<result column="tgProductName" property="tgProductName" jdbcType="VARCHAR" />
-		<result column="tgProductBrandName" property="tgProductBrandName" jdbcType="VARCHAR" />
-		<result column="tgGroupMode" property="tgGroupMode" jdbcType="INTEGER" />
-		<result column="tgGroupState" property="tgGroupState" jdbcType="INTEGER" />
-  	</resultMap>
-   	 
    	 
    	 <delete id="clearTjShopProject">
   			DELETE FROM tj_shop_project
@@ -152,7 +120,7 @@
 	</select>
 	
 	
-	 <insert id="insertTjShopProjest" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJShopProject" >
+	 <insert id="insertTjShopProjest" parameterType="com.yihg.tj.po.TJShopProject" >
 	   	INSERT INTO tj_shop_project
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="bizId != null">
@@ -939,7 +907,7 @@
 		where  1=1
 		<include refid="selectGroupProfitListPage_Where"/>
    	</select>
-	 <insert id="insertGroupProfit" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupProfit">
+	 <insert id="insertGroupProfit" parameterType="com.yihg.tj.po.TJGroupProfit">
 	 INSERT INTO `tj_group_profit` (
 	 	biz_id, group_id, group_mode,
 	 	group_code, group_state, 
@@ -1003,7 +971,7 @@
 	</select>
 	
 	
-	 <insert id="insetTJRecord" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJRecord" >
+	 <insert id="insetTJRecord" parameterType="com.yihg.tj.po.TJRecord" >
 	   	INSERT INTO tj_record
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="bizId != null">
@@ -1045,7 +1013,7 @@
 	  </insert>
 	
 	
-	<resultMap id="GroupShopResultMap" type="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupShop" >
+	<resultMap id="GroupShopResultMap" type="com.yihg.tj.po.TJGroupShop" >
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="biz_id" property="bizId" jdbcType="INTEGER" />
 		<result column="group_id" property="groupId" jdbcType="INTEGER" />
@@ -1083,7 +1051,7 @@
 	</resultMap>
 	
 	
-	<insert id="insertTJGroupShop" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJGroupShop" >
+	<insert id="insertTJGroupShop" parameterType="com.yihg.tj.po.TJGroupShop" >
 	   	INSERT INTO tj_group_shop
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="bizId != null">
@@ -1318,7 +1286,9 @@
 			FROM  tour_group g 
 			LEFT JOIN group_order o ON g.id=o.group_id 
 		WHERE g.biz_id = ${page.parameter.bizId} AND  g.group_state IN (1,3,4)
-		and group_code not like '%变更%'
+		
+		<!-- #and group_code not like '%变更%'  -->
+		
 		
 		<if test="'groupDate'==page.parameter.dateType and page.parameter.startTime != null">and g.date_start <![CDATA[>=]]> #{page.parameter.startTime} </if>
 		<if test="'groupDate'==page.parameter.dateType and page.parameter.endTime != null">and g.date_start <![CDATA[<=]]> #{page.parameter.endTime}	</if>
@@ -1361,108 +1331,7 @@
 		<if test="page.parameter.shopSupplierName != null">and s.supplier_name like CONCAT('%','${page.parameter.shopSupplierName}','%')</if>
 		GROUP BY t1.id) t2
 	</select>
-
-	<select id="selectTJGroupListPageDump" resultType="java.util.HashMap">
-		SELECT
-		t2.group_id,
-		t2.group_mode,
-		t2.`group_code`,
-		t2.date_start,
-		t2.date_end,
-		t2.total_adult,
-		t2.total_child,
-		t2.total_guide,
-		t2.product_name,
-		t2.product_brand_name,
-		t2.sale_operator_id,
-		t2.source_type_id,
-		t2.source_type_name,
-		t2.total_repay,
-		t2.province_name,
-		t2.yj total_comm,
-		(t2.total_repay - t2.yj) shop_profit,
-		t2.operator_id,
-		t2.operator_name
-		FROM
-		(
-		SELECT
-		t1.id group_id,
-		t1.group_mode,
-		t1.`group_code`,
-		t1.date_start,
-		t1.date_end,
-		t1.total_adult,
-		t1.total_child,
-		t1.total_guide,
-		t1.product_name,
-		t1.product_brand_name,
-		t1.sale_operator_id,
-		t1.source_type_id,
-		t1.source_type_name,
-		t1.province_name,
-		SUM(s.total_repay) total_repay,
-		t1.yj,
-		t1.operator_id,
-		t1.operator_name
-		FROM
-		(
-		SELECT
-		t0.id,
-		t0.date_start,
-		t0.date_end,
-		total_adult,
-		total_child,
-		total_guide,
-		t0.product_name,
-		t0.product_brand_name,
-		t0.sale_operator_id,
-		t0.source_type_id,
-		t0.source_type_name,
-		t0.province_name,
-		SUM(IFNULL(c.total, 0)) yj,
-		t0.group_mode,
-		t0.`group_code`,
-		t0.operator_id,
-		t0.operator_name
-		FROM
-		(
-		SELECT
-		g.id,
-		g.date_start,
-		g.date_end,
-		IFNULL(g.total_adult, 0) total_adult,
-		IFNULL(g.total_child, 0) total_child,
-		IFNULL(g.total_guide, 0) total_guide,
-		g.product_name,
-		g.product_brand_name,
-		o.`sale_operator_id`,
-		o.source_type_id,
-		o.province_name,
-		o.source_type_name,
-		g.group_mode,
-		g.`group_code`,
-		g.operator_id,
-		g.operator_name
-		FROM
-		tour_group g
-		LEFT JOIN group_order o ON g.id = o.group_id
-		GROUP BY
-		g.id
-		) t0
-		LEFT JOIN finance_commission c ON t0.id = c.group_id
-		GROUP BY
-		t0.id
-		) t1
-		LEFT JOIN booking_shop s ON t1.id = s.`group_id`
-		LEFT JOIN booking_guide e ON t1.id = e.group_id
-		AND e.guide_id = s.guide_id
-		GROUP BY
-		t1.id
-		) t2
-		<if test="limit!=null">
-		limit #{limit}
-	     </if>
-	</select>
+	
 	<!-- 归档查询 -->
 	<select id="selectTJGroupListPage2" resultType="java.util.HashMap">
 		SELECT group_id, group_mode, group_code, date_start, date_end, operator_id, operator_name, 
@@ -1537,60 +1406,6 @@
 
 		 GROUP BY tt.supplier_id,tt.guide_id
 	</select>
-
-
-	<select id="selectTJShopOfGroupDump" resultType="java.util.HashMap" parameterType="java.util.HashMap">
-		SELECT
-		tt.supplier_id shop_supplier_id,
-		tt.supplier_name shop_supplier_name,
-		SUM(tt.person_num) person_num,
-		tt.shop_date,
-		tt.guide_name,
-		tt.user_name guide_manage_name,
-		SUM(tt.total_face) total_fact,
-		SUM(tt.total_repay) total_repay
-		FROM
-		(
-		SELECT
-		g.`biz_id`,
-		g.id AS group_id,
-		o.`sale_operator_id`,
-		g.group_mode,
-		s.id AS booking_id,
-		g.`group_code`,
-		g.`group_state`,
-		g.`operator_id`,
-		g.`operator_name`,
-		g.`date_start`,
-		g.date_end,
-		s.person_buy_avg,
-		s.`supplier_id`,
-		s.`supplier_name`,
-		s.`guide_id`,
-		e.guide_name,
-		e.`user_name`,
-		s.`shop_date`,
-		s.`person_num`,
-		s.`total_face`,
-		s.total_repay,
-		g.product_name,
-		g.product_brand_name
-		FROM
-		booking_shop s
-		LEFT JOIN tour_group g ON s.`group_id` = g.`id`
-		LEFT JOIN group_order o ON g.id = o.group_id
-		LEFT JOIN booking_guide e ON g.id = e.group_id
-		AND e.guide_id = s.guide_id
-		WHERE
-		g.id = #{parameter.groupId} AND  g.group_state IN (1,3,4)
-
-		GROUP BY
-		s.id
-		) tt
-		GROUP BY
-		tt.supplier_id,
-		tt.guide_id
-	</select>
 	
 	<!-- 归档查询 -->
 	<select id="selectTJShopOfGroup2" resultType="java.util.HashMap" parameterType="java.util.HashMap">
@@ -1635,14 +1450,9 @@
 			left join (select group_id,sum(total) total from booking_supplier where supplier_type=120 group by group_id) as bsoi on (tg.id=bsoi.group_id)
 			left join (select group_id,sum(total_repay) total,sum(total_face) totalBuy from booking_shop group by group_id) as bsr on (tg.id=bsr.group_id)
 			left join (select group_id,sum(total) total from finance_commission group by group_id) as fc on (tg.id=fc.group_id)
-			join (
-				select group_id 
-				from group_order 
-				where 1=1 
-					<if test="page.parameter.sourceTypeId != null and page.parameter.sourceTypeId !=-1">
-						and source_type_id=#{page.parameter.sourceTypeId}
-					</if> 
-				group by group_id ) g on (tg.id=g.group_id)
+			<if test="page.parameter.sourceTypeId != null and page.parameter.sourceTypeId !=-1">
+				join (select group_id from group_order where  and source_type_id=#{page.parameter.sourceTypeId} group by group_id ) g on (tg.id=g.group_id)
+			</if> 
 			WHERE tg.biz_id = #{page.parameter.bizId,jdbcType=INTEGER} and tg.group_state in (1,3,4)
 			
 			<if test="page.parameter.startTime != null">and tg.date_start <![CDATA[>=]]> #{page.parameter.startTime} </if>
@@ -2050,7 +1860,7 @@ sum(totalBuy) all_shop_sales,
 		SELECT t.* from tj_shop_project t where t.group_id= #{groupId} AND t.`booking_id`=#{supplierId} AND t.`detail_id`=#{detailId}
 	</select>
 	
-	<update id="updateTjShopProject" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJShopProject">
+	<update id="updateTjShopProject" parameterType="com.yihg.tj.po.TJShopProject">
 		update tj_shop_project 
 		<set>
 			<if test="bizId != null">
@@ -2141,7 +1951,7 @@ sum(totalBuy) all_shop_sales,
 			where id = #{id,jdbcType=INTEGER}
 	</update>
 	
-	<update id="updateTjShopProjectByBookingId" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJShopProject">
+	<update id="updateTjShopProjectByBookingId" parameterType="com.yihg.tj.po.TJShopProject">
 		update tj_shop_project 
 		<set>
 			<if test="bizId != null">
@@ -2224,7 +2034,7 @@ sum(totalBuy) all_shop_sales,
 	</update>
 	
 	
-		<update id="updateTjShopProjectByDetailId" parameterType="com.yimayhd.erpcenter.dal.sales.client.tj.po.TJShopProject">
+		<update id="updateTjShopProjectByDetailId" parameterType="com.yihg.tj.po.TJShopProject">
 		update tj_shop_project 
 		<set>
 			<if test="bizId != null">
@@ -2316,35 +2126,4 @@ sum(totalBuy) all_shop_sales,
   	<delete id="deleteByBookingId">
    		delete from tj_shop_project where booking_id = #{bookingId,jdbcType=INTEGER} 
    	</delete>
-   	
-   	<!-- 全量dump购物项目统计 -->
-   	<select id="selectShopItemsListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="ShopItemsResultMap">
-		SELECT t.id AS bsdId,t.`goods_id` AS bsdGoodsId,t.`goods_name` AS bsdGoodsName,t.`repay_val` AS bsdRepayValStr,t.`buy_total` AS bsdBuyTotal,t.`repay_total` AS bsdRepayTotal,
-				s.id AS bsId,s.`supplier_id` AS bsSupplierId,s.`supplier_name` AS bsSupplierName,s.`person_num` AS bsPersonNum,s.`total_face` AS bsTotalFace,s.`shop_date` AS bsShopDate,
-				o.id AS goId,o.`sale_operator_id` AS goSaleOperatorId,
-				g.id AS tgId,g.`biz_id` AS tgBizId,g.`operator_id` AS tgOperatorId,g.`prudct_brand_id` AS tgPrudctBrandId,g.`date_start` AS tgDateStart,g.`product_name` AS tgProductName,
-				g.`product_brand_name` AS tgProductBrandName,g.`group_mode` AS tgGroupMode,g.`group_state` AS tgGroupState
-				FROM `booking_shop_detail` t 
-				LEFT JOIN booking_shop s ON t.`booking_id`=s.`id`
-				LEFT JOIN tour_group g ON s.`group_id`=g.`id`
-				LEFT JOIN group_order o ON g.id=o.group_id 			
-			 GROUP BY t.id	
-	</select>
-	<!-- 全量dump购物项目-购物店统计 -->
-   	<select id="selectShopListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="ShopItemsResultMap">
-		SELECT GROUP_CONCAT(DISTINCT tt.bsdGoodsName) AS bsdGoodsNameStr,tt.bsId,tt.bsSupplierId,tt.bsSupplierName,SUM(tt.bsPersonNum) bsPersonNumSum ,SUM(tt.bsTotalFace) bsTotalFaceSum,
-			tt.bsShopDate,tt.goId,tt.goSaleOperatorId,tt.tgId,tt.tgBizId,tt.tgOperatorId,tt.tgPrudctBrandId,tt.tgDateStart,tt.tgProductName,tt.tgProductBrandName,tt.tgGroupMode,tt.tgGroupState
-		FROM 
-		(SELECT t.`goods_id` AS bsdGoodsId,t.`goods_name` AS bsdGoodsName,t.`repay_val` AS bsdRepayValStr,t.`buy_total` AS bsdBuyTotal,t.`repay_total` AS bsdRepayTotal,
-			s.id AS bsId,s.`supplier_id` AS bsSupplierId,s.`supplier_name` AS bsSupplierName,s.`person_num` AS bsPersonNum,s.`total_face` AS bsTotalFace,s.`shop_date` AS bsShopDate,
-			o.id AS goId,o.`sale_operator_id` AS goSaleOperatorId,
-			g.id AS tgId,g.`biz_id` AS tgBizId,g.`operator_id` AS tgOperatorId,g.`prudct_brand_id` AS tgPrudctBrandId,g.`date_start` AS tgDateStart,g.`product_name` AS tgProductName,
-			g.`product_brand_name` AS tgProductBrandName,g.`group_mode` AS tgGroupMode,g.`group_state` AS tgGroupState
-						FROM `booking_shop_detail` t 
-						LEFT JOIN booking_shop s ON t.`booking_id`=s.`id`
-						LEFT JOIN tour_group g ON s.`group_id`=g.`id`
-						 LEFT JOIN group_order o ON g.id=o.group_id 			
-					 GROUP BY s.id	) tt
-		GROUP BY tt.bsSupplierId
-	</select>
 </mapper>

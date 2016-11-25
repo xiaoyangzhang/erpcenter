@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yimayhd.erpcenter.dal.sales.operation.dao.BookingDeliveryMapper" >
-  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery" >
+<mapper namespace="com.yihg.operation.dao.BookingDeliveryMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingDelivery" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="order_id" property="orderId" jdbcType="INTEGER" />
     <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
     <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
     <result column="supplier_order_no" property="supplierOrderNo" jdbcType="VARCHAR" />
@@ -26,16 +27,17 @@
     <result column="create_time" property="createTime" jdbcType="BIGINT" />
     <result column="audit_user" property="auditUser" jdbcType="VARCHAR" />
     <result column="audit_user_id" property="auditUserId" jdbcType="INTEGER" />
-    <result column="audit_time" property="auditTime" jdbcType="DATE" />    
+    <result column="audit_time" property="auditTime" jdbcType="DATE" />
+    <result column="push_status" property="pushStatus" jdbcType="INTEGER" />
   </resultMap>
-  <resultMap type="com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingDeliveryStatics" id="staticsResultMap">
+  <resultMap type="com.yihg.operation.vo.BookingDeliveryStatics" id="staticsResultMap">
   		<result column="booking_count" property="bookingCount" jdbcType="INTEGER" />
   		<result column="booking_total_price" property="bookingTotalPrice" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, group_id, supplier_id,supplier_name,supplier_order_no, contact, contact_tel, contact_fax, 
+    id, group_id,order_id,supplier_id,supplier_name,supplier_order_no, contact, contact_tel, contact_fax, 
     contact_mobile, person_adult,person_child, person_guide, date_arrival, remark, total, total_cash, state_booking, 
-    state_finance, user_id,user_name, booking_date,create_time,audit_user,audit_user_id,audit_time
+    state_finance, user_id,user_name, booking_date,create_time,audit_user,audit_user_id,audit_time,push_status
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -53,25 +55,25 @@
     delete from booking_delivery
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery" useGeneratedKeys="true" keyProperty="id" >
-    insert into booking_delivery (id, group_id, supplier_id,supplier_name,supplier_order_no, 
+  <insert id="insert" parameterType="com.yihg.operation.po.BookingDelivery" useGeneratedKeys="true" keyProperty="id" >
+    insert into booking_delivery (id, group_id, order_id,supplier_id,supplier_name,supplier_order_no, 
       contact, contact_tel, contact_fax, 
       contact_mobile, person_adult, person_child, 
       person_guide, date_arrival, remark, 
       total, state_booking, 
-      state_finance, user_id,user_name,booking_date, create_time
+      state_finance, user_id,user_name,booking_date, create_time,push_status
       )
-    values (#{id,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, #{supplierId,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER}, #{supplierId,jdbcType=INTEGER}, 
       #{supplierName,jdbcType=VARCHAR},#{supplierOrderNo,jdbcType=VARCHAR},
       #{contact,jdbcType=VARCHAR}, #{contactTel,jdbcType=VARCHAR}, #{contactFax,jdbcType=VARCHAR}, 
       #{contactMobile,jdbcType=VARCHAR}, #{personAdult,jdbcType=INTEGER}, #{personChild,jdbcType=INTEGER}, 
       #{personGuide,jdbcType=INTEGER}, #{dateArrival,jdbcType=DATE}, #{remark,jdbcType=VARCHAR}, 
       #{total,jdbcType=DECIMAL}, #{stateBooking,jdbcType=TINYINT}, 
       #{stateFinance,jdbcType=TINYINT}, #{userId,jdbcType=INTEGER},
-      #{userName,jdbcType=VARCHAR},#{bookingDate,jdbcType=DATE}, #{createTime,jdbcType=BIGINT}
+      #{userName,jdbcType=VARCHAR},#{bookingDate,jdbcType=DATE}, #{createTime,jdbcType=BIGINT}, #{pushStatus, jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingDelivery" useGeneratedKeys="true" keyProperty="id">
     insert into booking_delivery
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -79,6 +81,9 @@
       </if>
       <if test="groupId != null" >
         group_id,
+      </if>
+       <if test="orderId != null" >
+        order_id,
       </if>
       <if test="supplierId != null" >
         supplier_id,
@@ -140,6 +145,9 @@
       <if test="createTime != null" >
         create_time,
       </if>
+      <if test="pushStatus != null">
+        push_status
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -147,6 +155,9 @@
       </if>
       <if test="groupId != null" >
         #{groupId,jdbcType=INTEGER},
+      </if>
+       <if test="orderId != null" >
+        #{orderId,jdbcType=INTEGER},
       </if>
       <if test="supplierId != null" >
         #{supplierId,jdbcType=INTEGER},
@@ -208,13 +219,19 @@
       <if test="createTime != null" >
         #{createTime,jdbcType=BIGINT},
       </if>
+      <if test="pushStatus != null">
+        #{pushStatus, jdbcType=INTEGER}
+      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingDelivery" >
     update booking_delivery
     <set >
       <if test="groupId != null" >
         group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+         <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=INTEGER},
       </if>
       <if test="supplierId != null" >
         supplier_id = #{supplierId,jdbcType=INTEGER},
@@ -276,12 +293,16 @@
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=BIGINT},
       </if>
+      <if test="pushStatus != null">
+        push_status = #{pushStatus, jdbcType=INTEGER}
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery" >
+  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingDelivery" >
     update booking_delivery
     set group_id = #{groupId,jdbcType=INTEGER},
+      order_id = #{orderId,jdbcType=INTEGER},
       supplier_id = #{supplierId,jdbcType=INTEGER},
       supplier_name=#{supplierName,jdbcType=VARCHAR},
       supplier_order_no=#{supplierOrderNo,jdbcType=VARCHAR},
@@ -301,7 +322,8 @@
       user_id = #{userId,jdbcType=INTEGER},
       user_name = #{userName,jdbcType=VARCHAR},
       booking_date = #{bookingDate,jdbcType=DATE},
-      create_time = #{createTime,jdbcType=BIGINT}
+      create_time = #{createTime,jdbcType=BIGINT},
+      push_status = #{pushStatus, jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   
@@ -348,7 +370,7 @@
 	FROM booking_delivery_order bdo
 	WHERE booking_id=#{bookingId})
   </select>
-  <update id="updateGuestCntByGroupId" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery">
+  <update id="updateGuestCntByGroupId" parameterType="com.yihg.operation.po.BookingDelivery">
   	update booking_delivery
     <set >
       <if test="personAdult != null" >

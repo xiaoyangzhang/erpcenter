@@ -20,6 +20,7 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.rocketmq.client.producer.LocalTransactionExecuter;
 import com.alibaba.rocketmq.client.producer.LocalTransactionState;
@@ -37,8 +38,8 @@ import com.yimayhd.erpcenter.dal.product.dao.ProductInfoMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductRemarkMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductRightMapper;
 import com.yimayhd.erpcenter.dal.product.dao.ProductRouteMapper;
+import com.yimayhd.erpcenter.dal.product.dao.TaobaoProductMapper;
 import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
-import com.yimayhd.erpcenter.dal.product.dto.ProductStockDTO;
 import com.yimayhd.erpcenter.dal.product.message.ProductInfoUpdateMessageDTO;
 import com.yimayhd.erpcenter.dal.product.po.PriceView;
 import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
@@ -49,6 +50,7 @@ import com.yimayhd.erpcenter.dal.product.po.ProductRight;
 import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
 import com.yimayhd.erpcenter.dal.product.po.ProductSales;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoProduct;
 import com.yimayhd.erpcenter.dal.product.query.ProductStatePageQueryDTO;
 import com.yimayhd.erpcenter.dal.product.query.ProductStockPageQueryDTO;
 import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
@@ -56,6 +58,7 @@ import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStateConverter;
 import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStockConverter;
 import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
 import com.yimayhd.erpcenter.dal.product.topic.ProductTopic;
+import com.yimayhd.erpcenter.dal.product.utils.HttpUtil;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultItemVo;
@@ -88,6 +91,9 @@ public class ProductInfoDalImpl implements ProductInfoDal{
     
     @Autowired
     private MsgSenderService msgSender;
+    
+    @Autowired
+    private TaobaoProductMapper taobaoProductMapper;
 
 	@Override
 	public int insertSelective(final ProductInfo record) {
@@ -111,9 +117,17 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 //		 pageBean.setResult(list);
 //		 return pageBean;
 //	}
+	
 	@Override
-	public PageBean<ProductInfo> findProductInfos(
-			PageBean<ProductInfo> pageBean, Map parameters) {
+    public PageBean<TaobaoProduct>selectTaobaoProduct(PageBean pageBean, Integer bizId) {
+        List<TaobaoProduct> list = taobaoProductMapper.selectTaobaoProductListPage(pageBean,bizId);
+        pageBean.setResult(list);
+        return pageBean;
+    }
+    
+	
+	@Override
+	public PageBean<ProductInfo> findProductInfos(PageBean<ProductInfo> pageBean, Map parameters) {
 		if(1==1){
 			List<ProductInfo> list = infoMapper.selectProductInfoListPage(pageBean, parameters);
 			pageBean.setResult(list);
@@ -126,8 +140,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	}
 	
 	@Override
-	public PageBean<ProductInfo> selectProductListPage(
-			PageBean<ProductInfo> pageBean, Map parameters) {
+	public PageBean<ProductInfo> selectProductListPage(PageBean<ProductInfo> pageBean, Map parameters) {
 		List<ProductInfo> list = infoMapper.selectProductListPage(pageBean, parameters);
 		pageBean.setResult(list);
 		return pageBean;
@@ -697,6 +710,77 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		 List<ProductInfo> productInfoList = infoMapper.selectProductDumpListPage(pageBean);
 		 pageBean.setResult(productInfoList);
 		 return pageBean;
+	}
+	
+    @Override
+    public void syncTaoBaoProducts(String authClient) {
+    	
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("authClient", authClient);
+		
+		final String response = HttpUtil.doPost("http://121.41.173.162:30000/yihg-top-api/taoBaoProducts/productsList.do", map);
+    	Boolean dbResult = transactionTemplateProduct.execute(new TransactionCallback<Boolean>() {
+
+			@Override
+			public Boolean doInTransaction(TransactionStatus status) {
+				try {
+					if (StringUtils.isNotBlank(response)) {
+			            // 访问淘宝交易API
+		                List<TaoBaoProducts> productsList = JSONArray.parseArray(response,
+		                        TaoBaoProducts.class);
+		                if (productsList.size() > 0) {
+		                	  for(TaoBaoProducts item:productsList){
+		                		  // TODO 加判断
+		                		  TaobaoProduct tp= taobaoProductMapper.selectTaobaoProductBynumIidAndModified(item.getNum_iid());
+		                		  if(tp!=null){   // 已有产品
+		                			  if(tp.getModified()!=item.getModified()){      // 修改时间不相等就更新
+		                			  tp.setOuterId(item.getOuter_id());
+		                		  if(item.getTitle()!=null || item.getTitle()!=""){   // 判断title是否有值
+		                			  tp.setTitle(item.getTitle());
+		                		  }else{
+		                			  tp.setTitle(item.getOuter_id());
+		                		  }
+		                		  tp.setCid(item.getCid());
+		                		  tp.setModified(item.getModified());
+		                		  tp.setNumIid(item.getNum_iid());
+		                		  taobaoProductMapper.updateByPrimaryKeySelective(tp);
+		                			  }
+		                		  }else{   // 没有产品
+		                     		  TaobaoProduct taobaoProduct=new TaobaoProduct(); 
+		                    		  taobaoProduct.setOuterId(item.getOuter_id());
+		                    		  if(item.getTitle()!=null || item.getTitle()!=""){   // 判断title是否有值
+		                    			   taobaoProduct.setTitle(item.getTitle());
+		                    		  }else{
+		                    			  taobaoProduct.setTitle(item.getOuter_id());
+		                    		  }
+		                    		  taobaoProduct.setCid(item.getCid());
+		                    		  taobaoProduct.setModified(item.getModified());
+		                    		  taobaoProduct.setNumIid(item.getNum_iid());
+		                    		  taobaoProductMapper.insertSelective(taobaoProduct);
+		                		  }
+		                      }
+		                }
+		            }
+					return true;
+				} catch (Exception e) {
+					status.setRollbackOnly();
+					LOGGER.error("error:{}",e);
+					return false;
+				}
+			}
+		});
+
+    }
+
+    
+    @Override
+    public ProductInfo findByNumIid(String numIid) {
+        return infoMapper.selectByNumIidOrOuterId(numIid, null);
+    }
+
+	@Override
+	public ProductInfo selectByProSourceType(Integer bizId, Integer productId) {
+		return infoMapper.selectByProSourceType(bizId, productId);
 	}
 }
 

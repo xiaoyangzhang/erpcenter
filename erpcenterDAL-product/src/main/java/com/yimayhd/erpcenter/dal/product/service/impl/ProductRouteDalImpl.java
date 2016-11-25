@@ -149,6 +149,75 @@ public class ProductRouteDalImpl implements ProductRouteDal{
 		}
         return true;
     }
+    
+    @Override
+	public boolean copyProductRoute(final ProductRouteVo productRouteVo) {
+    	
+    	Boolean dbResult = transactionTemplateProduct.execute(new TransactionCallback<Boolean>() {
+    		@Override
+			public Boolean doInTransaction(TransactionStatus status) {
+    			try{
+    				Integer productId = productRouteVo.getProductId();
+    		        ProductInfo productInfo = productInfoMapper.selectByPrimaryKey(productId);
+    		        List<ProductRouteDayVo> productRoteDayVoList = productRouteVo.getProductRoteDayVoList();
+    		        //备注信息
+    		        ProductRemark productRemark = productRouteVo.getProductRemark();
+    		        productRemark.setProductId(productRouteVo.getProductId());
+//    		        remarkMapper.insertSelective(productRemark);
+    		        remarkService.copyProductRemark(productRemark);
+    				productInfo.setTravelDays(productRoteDayVoList.size());
+    		        productInfoMapper.updateByPrimaryKeySelective(productInfo);
+    		        for(ProductRouteDayVo productRouteDayVo : productRoteDayVoList){
+    		            //productRoute主表
+    		            ProductRoute productRoute = productRouteDayVo.getProductRoute();
+    		            if(productRoute != null){
+    		                productRoute.setProductId(productId);
+    		                productRoute.setCreateTime(System.currentTimeMillis());
+    		                productRouteMapper.insert(productRoute);
+    		                List<ProductRouteTraffic> productRouteTrafficList = productRouteDayVo.getProductRouteTrafficList();
+    		                if(productRouteTrafficList != null){
+    		                    for(ProductRouteTraffic productRouteTraffic : productRouteTrafficList){
+    		                        //交通
+    		                        productRouteTraffic.setRouteId(productRoute.getId());
+    		                        productRouteTraffic.setCreateTime(System.currentTimeMillis());
+    		                        productRouteTrafficMapper.insert(productRouteTraffic);
+    		                    }
+    		                }
+
+    		                List<ProductRouteSupplier> productOptionsSupplierList = productRouteDayVo.getProductOptionsSupplierList();
+    		                if(productOptionsSupplierList != null){
+    		                    for(ProductRouteSupplier productRouteSupplier : productOptionsSupplierList){
+    		                        //备选商家
+    		                        productRouteSupplier.setRouteId(productRoute.getId());
+    		                        productRouteSupplier.setCreateTime(System.currentTimeMillis());
+    		                        productRouteSupplierMapper.insert(productRouteSupplier);
+    		                    }
+    		                }
+
+    		                List<ProductAttachment> productAttachments = productRouteDayVo.getProductAttachments();
+    		                if(productAttachments != null){
+    		                    for(ProductAttachment productAttachment : productAttachments){
+    		                        productAttachment.setObjId(productRoute.getId());
+    		                        productAttachment.setCreateTime(System.currentTimeMillis());
+    		                        productAttachmentMapper.insert(productAttachment);
+    		                    }
+    		                }
+    		            }
+
+    		        }
+    		        return true;
+    			}catch(Exception e){
+    				status.setRollbackOnly(); 
+					LOGGER.error("copyProductRoute failed!  ProductRouteVo={}", JSON.toJSONString(productRouteVo), e);
+					return false;
+    			}
+    		}
+    	});
+    	if( dbResult == null || !dbResult ){
+			return false;
+		}
+        return true;
+	}
 
     @Override
     public boolean editProductRoute(final ProductRouteVo productRouteVo) {

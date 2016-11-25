@@ -3,7 +3,6 @@ package com.yimayhd.erpcenter.biz.sys.service.impl;
 import java.util.List;
 import java.util.Set;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +132,36 @@ public class PlatformOrgBizImpl implements PlatformOrgBiz{
 			Set<Integer> sets) {		
 		return platformOrgDal.getOrgListByIdSet(bizId, sets);
 	}
+	@Override
+	public String getMappingSupplierIdByOrgId(Integer orgId) {
+		PlatformOrgPo orgPo=platformOrgDal.findByOrgId(orgId);
+		if (orgPo == null)
+			return "0";
+		else{
+			if (orgPo.getMappingSupplierId() != null){
+				Integer supplierId = orgPo.getMappingSupplierId();
+				return supplierId.toString();
+			}else{
+				Integer pid = orgPo.getParentId();
+				String ret = getMappingSupplierIdByOrgId(pid);
+				return ret;
+			}
+		}
+	}
 	
+	public List<PlatformOrgPo> selectOrgListByIdSet(Integer bizId,Set<Integer> sets) {		
+		return platformOrgDal.selectOrgListByIdSet(bizId,sets);
+	}
+	
+	public List<PlatformOrgPo> selectSubDeptNumOrgList(Integer bizId,
+			List<Integer> parentIdList) {
+		return platformOrgDal.selectSubDeptNumOrgList(bizId,parentIdList);		
+	}
+	
+	@Override
+    public PlatformOrgPo getCompanyByEmployeeId2(Integer bizId,
+            Integer employeeId) {
+        return platformOrgDal.getCompanyByEmployeeId2(bizId,employeeId);
+    }
 	
 }

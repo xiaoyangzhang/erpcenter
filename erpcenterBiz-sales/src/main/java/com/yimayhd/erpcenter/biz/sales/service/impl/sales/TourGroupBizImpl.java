@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yihg.mybatis.utility.PageBean;
@@ -392,7 +393,7 @@ public class TourGroupBizImpl implements TourGroupBiz {
 
 	@Override
 	public BookingGroup selectBookingFinanceShopGroupListPageSum(PageBean pageBean, Integer curBizId,
-			Set<Integer> dataUserIdSet) {
+																 Set<Integer> dataUserIdSet) {
 		return tourGroupDal.selectBookingFinanceShopGroupListPageSum(pageBean, curBizId, dataUserIdSet);
 	}
 

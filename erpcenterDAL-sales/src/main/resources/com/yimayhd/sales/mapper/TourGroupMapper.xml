@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper">
-	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup">
+<mapper namespace="com.yihg.sales.dao.TourGroupMapper">
+	<resultMap id="BaseResultMap" type="com.yihg.sales.po.TourGroup">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="biz_id" property="bizId" jdbcType="INTEGER" />
 		<result column="group_mode" property="groupMode" jdbcType="INTEGER" />
@@ -23,6 +23,8 @@
 		<result column="total_adult" property="totalAdult" jdbcType="INTEGER" />
 		<result column="total_child" property="totalChild" jdbcType="INTEGER" />
 		<result column="total_guide" property="totalGuide" jdbcType="INTEGER" />
+		<result column="total_baby" property="totalBaby" jdbcType="INTEGER" />
+		
 		<result column="service_standard" property="serviceStandard"
 			jdbcType="VARCHAR" />
 		<result column="remark" property="remark" jdbcType="VARCHAR" />
@@ -52,12 +54,16 @@
 		<result column="total_income_shop" property="totalIncomeShop"
 			jdbcType="DECIMAL" />
 		<result column="total_cost" property="totalCost" jdbcType="DECIMAL" />
+		<result column="sumTotalCost" property="sumTotalCost" jdbcType="DECIMAL" />
+		<result column="sumTotalIncome" property="sumTotalIncome" jdbcType="DECIMAL" />
+		
 		<result column="total_budget" property="totalBudget" jdbcType="DECIMAL" />
 		<result column="total_cost_cash" property="totalCostCash"
 			jdbcType="DECIMAL" />
 		<result column="audit_user" property="auditUser" jdbcType="DECIMAL" />
 		<result column="supplier_name" property="supplierName"
 			jdbcType="VARCHAR" />
+		<result column="receive_mode" property="receiveMode" jdbcType="VARCHAR" />
 		<!-- <collection property="groupOrderList" ofType="com.yihg.sales.po.GroupOrder" >
 			<id column="orderId" property="id"/>
 			<result column="supplier_name" property="supplierName"/>
@@ -68,7 +74,7 @@
 		</collection> -->
 	</resultMap>
 
-	<resultMap id="BookingGroup" type="com.yimayhd.erpcenter.dal.sales.client.query.vo.BookingGroup">
+	<resultMap id="BookingGroup" type="com.yihg.operation.vo.BookingGroup">
 		<result column="groupId" property="groupId" jdbcType="INTEGER" />
 		<result column="groupCode" property="groupCode" jdbcType="VARCHAR" />
 		<result column="dateStart" property="dateStart" jdbcType="DATE" />
@@ -101,7 +107,7 @@
 		<result column="state_lock" property="stateLock" jdbcType="INTEGER" />
 	</resultMap>
 
-	<resultMap id="QualityTourGroup" type="com.yimayhd.erpcenter.dal.sales.client.quality.vo.QualityTourGroupVo">
+	<resultMap id="QualityTourGroup" type="com.yihg.quality.vo.QualityTourGroupVo">
 		<result column="group_id" property="groupId" jdbcType="INTEGER" />
 		<result column="group_code" property="groupCode" jdbcType="VARCHAR" />
 		<result column="date_start" property="dateStart" jdbcType="DATE" />
@@ -122,7 +128,7 @@
 		<result column="score" property="score" jdbcType="DECIMAL" />
 		<result column="group_state" property="groupState" jdbcType="INTEGER" />
 	</resultMap>
-	<resultMap id="OperatorGroupStaticMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.vo.OperatorGroupStatic">
+	<resultMap id="OperatorGroupStaticMap" type="com.yihg.sales.vo.OperatorGroupStatic">
 		<result column="groupNum" property="groupNum" jdbcType="INTEGER" />
 		<result column="operatorName" property="operatorName" jdbcType="VARCHAR" />
 		<result column="totalAdult" property="totalAdult" jdbcType="INTEGER" />
@@ -144,7 +150,7 @@
 		prudct_brand_id,
 		product_brand_name,
 		product_id,
-		product_name, date_start, date_end,daynum,ifnull(total_adult,0) total_adult,
+		product_name, date_start, date_end,daynum,ifnull(total_adult,0) total_adult,total_baby,
 		ifnull(total_child,0) total_child,
 		ifnull(total_guide,0) total_guide, service_standard, remark, remark_internal,
 		notice,
@@ -358,6 +364,139 @@
 		tg.id =
 		#{id,jdbcType=INTEGER}
 	</select>
+	
+	<!-- XTSM：销售利润统计 -->
+	<select id="selectSaleProfitByModeAndTourId" resultType="java.math.BigDecimal">
+		SELECT
+		SUM(gop.`total_price`)
+		FROM
+		tour_group tg
+		LEFT
+		JOIN group_order go
+		ON
+		go.`group_id` = tg.id
+		LEFT JOIN group_order_price gop
+		ON gop.`order_id`
+		= go.`id`
+		AND gop.`mode` = #{mode,jdbcType=INTEGER}
+		WHERE
+		tg.id =
+		#{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectSumCostProfit" resultMap="BaseResultMap">
+		select SUM(tg.total_cost) as sumTotalCost ,SUM(tg.total_income) as sumTotalIncome  
+		from tour_group tg 
+		where
+		tg.group_state != -1
+		and
+		tg.biz_id = #{bizId,jdbcType=INTEGER}
+		<if test="set!=null">
+			AND tg.operator_id in
+			<foreach item="item" index="index" collection="set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="tourGroup.groupCode!=null and tourGroup.groupCode!=''">
+			and tg.group_code LIKE
+			CONCAT('%','${tourGroup.groupCode}','%')
+		</if>
+		<if
+			test="tourGroup.productName!=null and tourGroup.productName!=''">
+			and CONCAT('【',tg.product_brand_name,'】',tg.product_name) LIKE
+			CONCAT('%','${tourGroup.productName}','%')
+		</if>
+		<if
+			test="tourGroup.saleOperatorIds !=null and tourGroup.saleOperatorIds !=''">
+			and tg.operator_id in (${tourGroup.saleOperatorIds})
+		</if>
+		<choose>
+			<when
+				test="tourGroup.startTime != null and tourGroup.startTime !='' and tourGroup.endTime != null and tourGroup.endTime != ''">
+    			<![CDATA[  and tg.date_start >=date_format(#{tourGroup.startTime},'%Y-%m-%d')  and tg.date_start <=date_format(#{tourGroup.endTime},'%Y-%m-%d')]]>
+			</when>
+			<when
+				test="tourGroup.startTime != null and tourGroup.startTime !='' and (tourGroup.endTime == null or tourGroup.endTime == '' )">
+				and
+				tg.date_start=date_format(#{tourGroup.startTime},'%Y-%m-%d')
+			</when>
+			<when
+				test="tourGroup.endTime != null and tourGroup.endTime != '' and  (tourGroup.startTime == null or tourGroup.startTime == '' )">
+  	 			<![CDATA[  and tg.date_start =date_format(#{tourGroup.endTime},'%Y-%m-%d')]]>
+			</when>
+		</choose>
+		order by tg.date_start,create_time
+	</select>
+	
+	<select id="selectSaleProfitByTourConAndMode" resultMap="BaseResultMap">
+		SELECT
+		SUM(income) as income,
+		SUM(budget) as totalBudget,
+		ss.group_code,
+		ss.product_name,
+		ss.product_brand_name,
+		ss.operator_id,
+		ss.date_start
+		FROM (
+		SELECT
+		(CASE WHEN gop.mode=0 THEN gop.total_price ELSE 0 END)
+		income,
+		(CASE WHEN gop.mode=1 THEN gop.total_price ELSE 0 END) budget,
+		tg.group_code,
+		tg.product_name,
+		tg.product_brand_name,
+		tg.date_start,
+		tg.operator_id 
+		FROM
+		tour_group tg
+		LEFT JOIN group_order go
+		ON go.group_id
+		=
+		tg.id
+		inner JOIN group_order_price gop
+		ON gop.order_id = go.id
+		WHERE
+		tg.group_state != - 1
+		AND tg.biz_id = #{bizId,jdbcType=INTEGER}) ss
+		where 1=1
+		<if test="set!=null">
+			AND ss.operator_id in
+			<foreach item="item" index="index" collection="set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="page.parameter.groupCode!=null and page.parameter.groupCode!=''">
+			and ss.group_code LIKE
+			CONCAT('%','${page.parameter.groupCode}','%')
+		</if>
+		<if
+			test="page.parameter.productName!=null and page.parameter.productName!=''">
+			and CONCAT('【',ss.product_brand_name,'】',ss.product_name) LIKE
+			CONCAT('%','${page.parameter.productName}','%')
+		</if>
+		<if
+			test="page.parameter.saleOperatorIds !=null and page.parameter.saleOperatorIds !=''">
+			and ss.operator_id in (${page.parameter.saleOperatorIds})
+		</if>
+		<choose>
+			<when
+				test="page.parameter.startTime != null and page.parameter.startTime !='' and page.parameter.endTime != null and page.parameter.endTime != ''">
+    			<![CDATA[  and ss.date_start >=date_format(#{page.parameter.startTime},'%Y-%m-%d')  and ss.date_start <=date_format(#{page.parameter.endTime},'%Y-%m-%d')]]>
+			</when>
+			<when
+				test="page.parameter.startTime != null and page.parameter.startTime !='' and (page.parameter.endTime == null or page.parameter.endTime == '' )">
+				and
+				ss.date_start=date_format(#{page.parameter.startTime},'%Y-%m-%d')
+			</when>
+			<when
+				test="page.parameter.endTime != null and page.parameter.endTime != '' and  (page.parameter.startTime == null or page.parameter.startTime == '' )">
+  	 			<![CDATA[  and ss.date_start =date_format(#{page.parameter.endTime},'%Y-%m-%d')]]>
+			</when>
+		</choose>
+	</select>
+	
 	<select id="selectProfitByTourConAndMode" resultMap="BaseResultMap">
 		SELECT
 		SUM(income) as income,
@@ -483,6 +622,67 @@
 		</choose>
 		order by tg.create_time desc
 	</select>
+	
+	<select id="selectSaleProfitByTourCon" resultMap="BaseResultMap"
+		parameterType="com.yihg.mybatis.utility.PageBean">
+		select
+		tg.id,
+		tg.group_code,
+		tg.date_start,
+		tg.product_brand_name,
+		tg.product_name,
+		tg.total_adult,
+		tg.total_child,
+		tg.total_guide,
+		tg.total_baby,
+		tg.operator_name,
+		tg.operator_id,
+		tg.group_state,
+		tg.create_time
+		from
+		tour_group tg
+		where
+		tg.group_state != -1
+		and tg.biz_id =
+		#{bizId,jdbcType=INTEGER}
+		<if test="set!=null">
+			AND tg.operator_id in
+			<foreach item="item" index="index" collection="set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="page.parameter.groupCode!=null and page.parameter.groupCode!=''">
+			and tg.group_code LIKE
+			CONCAT('%','${page.parameter.groupCode}','%')
+		</if>
+		<if
+			test="page.parameter.productName!=null and page.parameter.productName!=''">
+			and CONCAT('【',tg.product_brand_name,'】',tg.product_name) LIKE
+			CONCAT('%','${page.parameter.productName}','%')
+		</if>
+		<if
+			test="page.parameter.saleOperatorIds !=null and page.parameter.saleOperatorIds !=''">
+			and tg.operator_id in (${page.parameter.saleOperatorIds})
+		</if>
+		<choose>
+			<when
+				test="page.parameter.startTime != null and page.parameter.startTime !='' and page.parameter.endTime != null and page.parameter.endTime != ''">
+    			<![CDATA[  and tg.date_start >=date_format(#{page.parameter.startTime},'%Y-%m-%d')  and tg.date_start <=date_format(#{page.parameter.endTime},'%Y-%m-%d')]]>
+			</when>
+			<when
+				test="page.parameter.startTime != null and page.parameter.startTime !='' and (page.parameter.endTime == null or page.parameter.endTime == '' )">
+				and
+				tg.date_start=date_format(#{page.parameter.startTime},'%Y-%m-%d')
+			</when>
+			<when
+				test="page.parameter.endTime != null and page.parameter.endTime != '' and  (page.parameter.startTime == null or page.parameter.startTime == '' )">
+  	 			<![CDATA[  and tg.date_start =date_format(#{page.parameter.endTime},'%Y-%m-%d')]]>
+			</when>
+		</choose>
+		order by tg.create_time desc
+	</select>
+	
 	<select id="selectProfitByTourConListPage" resultMap="BaseResultMap"
 		parameterType="com.yihg.mybatis.utility.PageBean">
 		select
@@ -497,6 +697,77 @@
 		tg.total_adult,
 		tg.total_child,
 		tg.total_guide,
+		tg.operator_name,
+		tg.group_state,
+		tg.create_time,
+		tg.operator_id
+		from
+		tour_group tg
+		left join
+		group_order go
+		on go.group_id
+		= tg.id
+		where
+		tg.group_state != -1
+		and
+		tg.biz_id = #{bizId,jdbcType=INTEGER}
+		<if test="set!=null">
+			AND tg.operator_id in
+			<foreach item="item" index="index" collection="set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="page.parameter.groupCode!=null and page.parameter.groupCode!=''">
+			and tg.group_code LIKE
+			CONCAT('%','${page.parameter.groupCode}','%')
+		</if>
+		<if
+			test="page.parameter.productName!=null and page.parameter.productName!=''">
+			and CONCAT('【',tg.product_brand_name,'】',tg.product_name) LIKE
+			CONCAT('%','${page.parameter.productName}','%')
+		</if>
+		<if
+			test="page.parameter.saleOperatorIds !=null and page.parameter.saleOperatorIds !=''">
+			and tg.operator_id in (${page.parameter.saleOperatorIds})
+		</if>
+		<choose>
+			<when
+				test="page.parameter.startTime != null and page.parameter.startTime !='' and page.parameter.endTime != null and page.parameter.endTime != ''">
+    			<![CDATA[  and tg.date_start >=date_format(#{page.parameter.startTime},'%Y-%m-%d')  and tg.date_start <=date_format(#{page.parameter.endTime},'%Y-%m-%d')]]>
+			</when>
+			<when
+				test="page.parameter.startTime != null and page.parameter.startTime !='' and (page.parameter.endTime == null or page.parameter.endTime == '' )">
+				and
+				tg.date_start=date_format(#{page.parameter.startTime},'%Y-%m-%d')
+			</when>
+			<when
+				test="page.parameter.endTime != null and page.parameter.endTime != '' and  (page.parameter.startTime == null or page.parameter.startTime == '' )">
+  	 			<![CDATA[  and tg.date_start =date_format(#{page.parameter.endTime},'%Y-%m-%d')]]>
+			</when>
+		</choose>
+		group by tg.id
+		order by tg.date_start,create_time
+	</select>
+	
+	<!-- XTSM：销售利润统计 -->
+	<select id="selectSaleProfitByTourListPage" resultMap="BaseResultMap"
+		parameterType="com.yihg.mybatis.utility.PageBean">
+		select
+		tg.id,
+		tg.group_code,
+		tg.group_mode,
+		go.supplier_name as supplierName,
+		go.receive_mode as receiveMode,
+		tg.total_income,
+		tg.total_cost,
+		tg.date_start,
+		tg.product_brand_name,
+		tg.product_name,
+		tg.total_adult,
+		tg.total_child,
+		tg.total_guide,
+		tg.total_baby,
 		tg.operator_name,
 		tg.group_state,
 		tg.create_time,
@@ -661,7 +932,7 @@
 
 
 	<select id="selectTotalSKGroup" resultMap="BaseResultMap"
-		parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup">
+		parameterType="com.yihg.sales.po.TourGroup">
 		select
 		IFNULL(sum(t.total_adult),0) as total_adult,
 		IFNULL(sum(t.total_child),0) as total_child
@@ -774,7 +1045,7 @@
 		set group_state = -1
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
-	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup"
+	<insert id="insert" parameterType="com.yihg.sales.po.TourGroup"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into tour_group (id,
 		biz_id, group_mode,
@@ -784,7 +1055,7 @@
 		product_name,
 		date_start, date_end,daynum,
 		total_adult, total_child,
-		total_guide,
+		total_guide,total_baby,
 		service_standard, remark, remark_internal,
 		notice,
 		other_notice,
@@ -809,6 +1080,7 @@
 		#{totalAdult,jdbcType=INTEGER},
 		#{totalChild,jdbcType=INTEGER},
 		#{totalGuide,jdbcType=INTEGER},
+		#{totalBaby,jdbcType=INTEGER},
 		#{serviceStandard,jdbcType=VARCHAR},
 		#{remark,jdbcType=VARCHAR},
 		#{remarkInternal,jdbcType=VARCHAR},
@@ -827,7 +1099,7 @@
 		#{totalIncomeShop,jdbcType=DECIMAL},#{totalIncomeShopCash,jdbcType=DECIMAL}
 		)
 	</insert>
-	<insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup"
+	<insert id="insertSelective" parameterType="com.yihg.sales.po.TourGroup"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into tour_group
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -1060,11 +1332,14 @@
 			LAST_INSERT_ID()
 		</selectKey>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup">
+	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.sales.po.TourGroup">
 		update tour_group
 		<set>
 			<if test="bizId != null">
 				biz_id = #{bizId,jdbcType=INTEGER},
+			</if>
+			<if test="totalBaby != null">
+				total_baby = #{totalBaby,jdbcType=INTEGER},
 			</if>
 			<if test="groupMode != null">
 				group_mode = #{groupMode,jdbcType=INTEGER},
@@ -1188,9 +1463,10 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup">
+	<update id="updateByPrimaryKey" parameterType="com.yihg.sales.po.TourGroup">
 		update tour_group
 		set biz_id = #{bizId,jdbcType=INTEGER},
+		total_baby = #{totalBaby,jdbcType=INTEGER},
 		group_mode =
 		#{groupMode,jdbcType=INTEGER},
 		group_code =
@@ -1500,6 +1776,12 @@
 		SET total_income=(SELECT SUM(IFNULL(total,0)) FROM group_order WHERE
 		group_id=tour_group.id)
 		WHERE id=#{groupId,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateWapType" parameterType="java.lang.Integer">
+		UPDATE tour_group
+		SET wap_type=1
+		WHERE id=#{id,jdbcType=INTEGER}
 	</update>
 
 	<update id="updateStateToSeal">
@@ -2147,6 +2429,13 @@
 		select
 		<include refid="Base_Column_List" />
 		from tour_group t where t.group_code = #{code} and t.group_state!=-1
+
+	</select>
+	
+	<select id="findByGroupCode" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tour_group t where t.group_code = #{code}
 
 	</select>
 	<select id="selectAgeCount" parameterType="java.util.HashMap"
@@ -4105,14 +4394,46 @@
 		group by tg.id) m
 	</select>
 	
-	<select id="selectTourGroupDumpListPage" resultMap="BaseResultMap"
-		parameterType="com.yihg.mybatis.utility.PageBean">
-		select
-		<include refid="Base_Column_List" /> 
-		from
-		tour_group
-		where
-		group_state != -1
-	</select>
-	
+	<select id="selectPushDeliveryListPage" resultMap="BookingGroup"
+        parameterType="com.yihg.mybatis.utility.PageBean">
+        SELECT tg.id AS groupId, bd.id AS bookingId,
+        group_code AS groupCode,
+        date_start AS dateStart,
+        date_end AS dateEnd,
+        group_mode AS groupMode,
+        product_name AS productName,
+        product_brand_name AS productBrandName,
+        0 AS orderId,
+        ' ' AS supplierName,
+        bd.supplier_name AS bookSupplierName,
+        IFNULL(tg.`total_adult`,0)  AS adultCount,
+        IFNULL(tg.total_child,0)  AS childCount,
+        IFNULL(tg.`total_guide`,0)  AS guideCount,
+        operator_name AS operatorName,
+        group_state AS groupState,
+        SUM(IFNULL(bd.`total`,0)) AS price,
+        COUNT(bd.id) AS COUNT,bd.push_status AS pushStatus,
+        pa.app_key AS driverName <!-- driverName临时使用 接收方的app_key  -->
+        FROM tour_group AS tg
+        LEFT JOIN booking_delivery bd ON(tg.`id`= bd.`group_id`)
+        RIGHT JOIN yihg_erp_user.plat_auth AS pa 
+        ON(bd.supplier_id = pa.supplier_id AND pa.plat_status = 1)
+        WHERE tg.biz_id = #{bizId,jdbcType=INTEGER}
+        AND tg.group_state in (0,1,3,4)
+        <if test="page.parameter.startTime != null and page.parameter.startTime !=''">
+            <![CDATA[AND tg.date_start >= #{page.parameter.startTime}]]>
+        </if>
+        <if test="page.parameter.endTime != null and page.parameter.endTime != ''">
+            <![CDATA[AND tg.date_start <= #{page.parameter.endTime}]]>
+        </if>
+        <if test="page.parameter.groupCode != null and page.parameter.groupCode != ''">
+            AND tg.group_code LIKE
+            CONCAT('%','${page.parameter.groupCode}','%')
+        </if>
+        <if test="page.parameter.pushStatus > -1">
+            AND push_status = #{page.parameter.pushStatus}
+        </if>
+        GROUP BY tg.id
+        ORDER BY tg.date_start,tg.create_time 
+    </select>
 </mapper>

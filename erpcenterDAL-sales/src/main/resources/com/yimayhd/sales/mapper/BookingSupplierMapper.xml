@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierMapper" >
-  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier" >
+<mapper namespace="com.yihg.operation.dao.BookingSupplierMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingSupplier" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
@@ -36,10 +36,10 @@
     <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
     <result column="finance_total" property="financeTotal" jdbcType="DECIMAL" />
     <result column="pay_status" property="payStatus" jdbcType="INTEGER" />
-    
+    <result column="guest_ids" property="guestIds" jdbcType="VARCHAR" />
   </resultMap>
   
-  <resultMap id="AirTicketResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingAirTicket" >
+  <resultMap id="AirTicketResultMap" type="com.yihg.operation.po.BookingAirTicket" >
   	<id column="id" property="id" jdbcType="INTEGER" />
     <result column="biz_id" property="bizId" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
@@ -71,7 +71,7 @@
   <sql id="Base_Column_List" >
     id, group_id, supplier_type,sub_type, supplier_id, contact, contact_tel, contact_fax, contact_mobile, 
     cash_type, is_default, remark, total, total_cash, state_booking, state_finance, user_id,user_name, supplier_name,
-    create_time,booking_date,audit_user,audit_user_id,audit_time,operate_price,order_id
+    create_time,booking_date,audit_user,audit_user_id,audit_time,operate_price,order_id,guest_ids
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -111,7 +111,7 @@
     delete from booking_supplier
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier" keyProperty="id" useGeneratedKeys="true" >
+  <insert id="insert" parameterType="com.yihg.operation.po.BookingSupplier" keyProperty="id" useGeneratedKeys="true" >
     insert into booking_supplier (id, group_id, supplier_type,sub_type ,booking_no,
       supplier_id, contact, contact_tel, 
       contact_fax, contact_mobile, cash_type, 
@@ -125,7 +125,7 @@
       #{totalCash,jdbcType=DECIMAL}, #{stateBooking,jdbcType=TINYINT}, #{stateFinance,jdbcType=TINYINT},#{bookingDate,jdbcType=DATE},
       #{userId,jdbcType=INTEGER},#{userName,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT},#{supplierName,jdbcType=VARCHAR},#{orderId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier" keyProperty="id" useGeneratedKeys="true" >
+  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingSupplier" keyProperty="id" useGeneratedKeys="true" >
     insert into booking_supplier
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -196,6 +196,9 @@
       </if>
       <if test="bookingNo != null" >
         booking_no,
+      </if>
+       <if test="guestIds != null" >
+        guest_ids,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -268,9 +271,12 @@
       <if test="bookingNo != null" >
         #{bookingNo,jdbcType=VARCHAR},
       </if>
+        <if test="guestIds != null" >
+       #{guestIds,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingSupplier" >
     update booking_supplier
     <set >
       <if test="groupId != null" >
@@ -330,10 +336,13 @@
       <if test="operatePrice != null" >
         operate_price = #{operatePrice,jdbcType=DECIMAL},
       </if>
+       <if test="guestIds != null" >
+     guest_ids = #{guestIds,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier" >
+  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingSupplier" >
     update booking_supplier
     set group_id = #{groupId,jdbcType=INTEGER},
       supplier_type = #{supplierType,jdbcType=INTEGER},
@@ -359,7 +368,11 @@
 		SELECT bs.*,(SELECT GROUP_CONCAT(DISTINCT CONCAT_WS('-' ,guide_name,guide_mobile))  FROM `booking_guide` WHERE group_id=#{groupId}  ) guideInfo
 		 FROM booking_supplier bs WHERE group_id=#{groupId} AND supplier_type= #{supplierType}
   </select>
-	<resultMap type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierPO" id="BookingSupplierPO">
+    <select id="getBookingSupplierByGroupId" resultMap="BaseResultMap">
+		SELECT bs.*,(SELECT GROUP_CONCAT(DISTINCT CONCAT_WS('-' ,guide_name,guide_mobile))  FROM `booking_guide` WHERE group_id=#{groupId}  ) guideInfo
+		 FROM booking_supplier bs WHERE group_id=#{groupId}
+  </select>
+	<resultMap type="com.yihg.operation.po.BookingSupplierPO" id="BookingSupplierPO">
 		 <result column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
@@ -423,7 +436,7 @@
    </select>
   <select id="getBookingSupplierPOByGroupIdAndType" resultMap="BookingSupplierPO">
 		SELECT 
-		<include refid="Column_List" />,(SELECT GROUP_CONCAT(DISTINCT CONCAT_WS('-' ,guide_name,guide_mobile))  FROM `booking_guide` WHERE group_id=#{groupId}   ) guideInfo
+		<include refid="Column_List" />,(SELECT GROUP_CONCAT(DISTINCT CONCAT_WS('-' ,guide_name,guide_mobile))  FROM `booking_guide` WHERE group_id=1341   ) guideInfo
 		FROM booking_supplier bs left join booking_supplier_detail det on bs.id=det.booking_id  WHERE  group_id=#{groupId} AND supplier_type= #{supplierType} 
 		 
 		  </select>
@@ -479,7 +492,7 @@
    </select>
    
    
-   <select id="getFinanceSupplierByFinanceGuide" resultMap="BaseResultMap"  parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide">
+   <select id="getFinanceSupplierByFinanceGuide" resultMap="BaseResultMap"  parameterType="com.yihg.finance.po.FinanceGuide">
    
    SELECT b.*,t.operator_name <if test="id == null" >,IFNULL(f.`total`, 0)  ftotal,f.`id` fid</if> 
    FROM booking_supplier b,tour_group t<if test="id == null" >,finance_guide f </if>
@@ -497,7 +510,7 @@
       </if> 
    </select>
    
-   <select id="getFinanceSupplier" resultMap="BaseResultMap"  parameterType="com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide">
+   <select id="getFinanceSupplier" resultMap="BaseResultMap"  parameterType="com.yihg.finance.po.FinanceGuide">
    
    SELECT b.*,t.operator_name , f.pay_status pstatus,f.pay_user_name payusername,f.pay_time paytime <if test="id == null" >,IFNULL(f.`total`, 0)  ftotal,f.`id` fid</if> 
    FROM booking_supplier b,tour_group t<if test="id == null" >,finance_guide f </if>
@@ -565,7 +578,7 @@ WHERE    booking_id IN
 	 </update>
 
 
-  <resultMap  type="com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingSupplierAndDetailVO" id="BookingSupplierAndDetailVO">
+  <resultMap  type="com.yihg.operation.vo.BookingSupplierAndDetailVO" id="BookingSupplierAndDetailVO">
     <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
     <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
     <result column="supplier_type" property="supplierType" jdbcType="INTEGER" />
@@ -916,4 +929,9 @@ WHERE    booking_id IN
 	<update id="fix_SupplierName_bookingDelivery">
 				UPDATE booking_delivery   SET `supplier_name`=#{supplierName,jdbcType=VARCHAR} WHERE `supplier_id`=#{supplierId,jdbcType=INTEGER};
 	</update>	
+	
+	  <select id="selectTicketInfo" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	  	select guest_ids,user_name,create_time from booking_supplier
+	  	where  group_id in(SELECT group_id FROM group_order WHERE id in(select id from group_order where ext_res_id=#{resId}))
+	  </select>
 </mapper>

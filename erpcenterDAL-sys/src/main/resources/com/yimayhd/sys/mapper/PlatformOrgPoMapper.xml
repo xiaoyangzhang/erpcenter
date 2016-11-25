@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.PlatformOrgMapper" >
+<mapper namespace="com.yihg.sys.dao.PlatformOrgMapper" >
   
-  <resultMap type="com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo" id="platformOrgPo">
+  <resultMap type="com.yihg.sys.po.PlatformOrgPo" id="platformOrgPo">
         <id column="org_id" property="orgId" />
         <result column="sys_id" property="sysId" />
         <result column="org_path" property="orgPath" />
@@ -13,6 +13,7 @@
         <result column="seq_num" property="seqNum" />
         <result column="comment" property="comment" />
         <result column="status" property="status" />
+        <result column="mapping_supplier_id" property="mappingSupplierId" />
         <result column="del_status" property="delStatus" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
@@ -53,7 +54,7 @@
         <if test="sysId != null"> and org.sys_id = #{sysId}  </if>
   	 </select>
   	 
-  	 <update id="update" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo">
+  	 <update id="update" parameterType="platformOrgPo">
 		UPDATE platform_org
 		<set>
 			<if test="sysId != null"> sys_id = #{sysId}, </if>
@@ -64,6 +65,7 @@
 			<if test="seqNum != null"> seq_num = #{seqNum}, </if>
 			<if test="comment != null"> comment = #{comment}, </if>
 			<if test="status != null"> status = #{status}, </if>
+			<if test="mappingSupplierId != null"> mapping_supplier_id = #{mappingSupplierId}, </if>
 			<if test="createTime != null"> create_time = #{createTime}, </if>
 			<if test="updateTime != null"> update_time = #{updateTime}, </if>
 			logo = #{logo}
@@ -71,12 +73,12 @@
 		WHERE org_id = #{orgId}
 	</update>
   	 
-  	 <insert id="add" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo">
+  	 <insert id="add" parameterType="platformOrgPo">
 	  	 <selectKey resultType="java.lang.Integer" keyProperty="orgId" order="AFTER" >
 	      SELECT LAST_INSERT_ID()
 	    </selectKey>
 		INSERT INTO platform_org
-            (`biz_id`,`sys_id`,`parent_id`,`name`,`code`,`seq_num`,`comment`,`status`,`del_status`,`create_time`,`update_time`,logo,org_path)
+            (`biz_id`,`sys_id`,`parent_id`,`name`,`code`,`seq_num`,`comment`,`status`,`del_status`,`create_time`,`update_time`,logo,org_path,mapping_supplier_id)
 		VALUES (
 		#{bizId,jdbcType=INTEGER},
 		#{sysId,jdbcType=INTEGER},
@@ -90,7 +92,8 @@
         #{createTime,jdbcType=DATE},
         #{updateTime,jdbcType=DATE},
         #{logo,jdbcType=VARCHAR},
-        #{orgPath,jdbcType=VARCHAR})
+        #{orgPath,jdbcType=VARCHAR},
+        #{mappingSupplierId,jdbcType=INTEGER})
 	</insert>
 	<update id="del">
 		UPDATE platform_org set del_status=0 WHERE org_id=#{orgId}
@@ -169,6 +172,7 @@
 		WHERE biz_id=#{bizId,jdbcType=INTEGER} AND parent_id = (SELECT org_id FROM platform_org WHERE biz_id=#{bizId,jdbcType=INTEGER} AND parent_id=0 and `status`=1 and del_status=1)
 		and `status`=1 and del_status=1
 	</select>
+	
 	<select id="getOrgListByIdSet" resultMap="platformOrgPo" >
 		SELECT * FROM platform_org
 		WHERE biz_id=#{bizId,jdbcType=INTEGER}
@@ -178,4 +182,28 @@
 		</foreach>
 		 ORDER BY seq_num
 	</select>
+	
+	<select id="selectOrgListByIdSet" resultMap="platformOrgPo" >
+		SELECT org_id,name
+		,(SELECT count(*) from platform_org where `status`=1 AND del_status =1 and parent_id=org.org_id) as biz_id
+		 FROM platform_org as org
+		WHERE biz_id=#{bizId,jdbcType=INTEGER} AND STATUS = 1 AND del_status =1 
+		AND org_id IN
+		<foreach collection="sets" item="item" index="index" open="(" separator="," close=")">
+			#{item,jdbcType=INTEGER}
+		</foreach>
+		ORDER BY seq_num;
+	</select>
+	
+	<select id="selectSubDeptNumOrgList" resultMap="platformOrgPo" >
+		SELECT org_id,`name`,parent_id
+		,(SELECT count(*) from platform_employee where `status`=1 and org_id =platform_org.org_id) as biz_id
+		 FROM platform_org
+		WHERE biz_id=#{bizId,jdbcType=INTEGER} AND STATUS = 1 AND del_status =1 AND parent_id IN
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item,jdbcType=INTEGER}
+		</foreach>
+		 ORDER BY seq_num
+	</select> 
+	
 </mapper>

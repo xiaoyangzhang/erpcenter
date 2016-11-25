@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper" >
-  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest" >
+<mapper namespace="com.yihg.sales.dao.GroupOrderGuestMapper" >
+  <resultMap id="BaseResultMap" type="com.yihg.sales.po.GroupOrderGuest" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="order_id" property="orderId" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
@@ -20,6 +20,10 @@
     <result column="is_guide" property="isGuide" jdbcType="INTEGER" />
     <result column="man" property="man" jdbcType="INTEGER" />
     <result column="woman" property="woman" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="ticketTime" property="ticketTime" jdbcType="VARCHAR" />
+    <result column="groupId" property="groupId" jdbcType="INTEGER" />
+    <result column="group_code" property="groupCode" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, order_id, name, type, certificate_type_id, certificate_num, gender, mobile, native_place, 
@@ -46,9 +50,14 @@
 	group_order_guest gog ,
 	group_order go,
 	tour_group tg
-	where gog.order_id=go.id and gog.is_leader =#{isLeader}
+	where gog.order_id=go.id 
 		and go.group_id=tg.id
 		and tg.id=#{groupId}
+		<if test="isLeader != null" >
+        	and gog.is_leader =#{isLeader}
+      	</if>
+	order by gog.order_id
+	
   </select>
    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -100,7 +109,7 @@
 	</select>
 	  <select id="selectGenderSum" resultMap="BaseResultMap"
 		parameterType="java.lang.Integer">
-		select SUM(gender=0) man,SUM(gender=1) woman
+		select ifnull(SUM(gender=1),0) man,ifnull(SUM(gender=0),0) woman
 		from group_order_guest
 		where order_id = #{orderId,jdbcType=INTEGER}
 	</select>
@@ -108,7 +117,7 @@
     delete from group_order_guest
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest" >
+  <insert id="insert" parameterType="com.yihg.sales.po.GroupOrderGuest" >
     insert into group_order_guest (id, order_id, name, 
       type, certificate_type_id, certificate_num, 
       gender, mobile, native_place, 
@@ -122,7 +131,7 @@
       #{isLeader,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT},#{isGuide,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest" >
+  <insert id="insertSelective" parameterType="com.yihg.sales.po.GroupOrderGuest" >
     insert into group_order_guest
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -225,7 +234,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.sales.po.GroupOrderGuest" >
     update group_order_guest
     <set >
       <if test="orderId != null" >
@@ -276,7 +285,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest" >
+  <update id="updateByPrimaryKey" parameterType="com.yihg.sales.po.GroupOrderGuest" >
     update group_order_guest
     set order_id = #{orderId,jdbcType=INTEGER},
       name = #{name,jdbcType=VARCHAR},
@@ -433,4 +442,16 @@ GROUP BY order_id
 			AND 1=2
 		</if> 	
 	</select>
+	
+	<select id="getEmployeeByMobile" resultMap="BaseResultMap">
+        select *
+        from group_order_guest
+        where mobile=#{mobile}
+  	 </select>
+	
+	  <select id="selectGuestTicketInfo"  resultMap="BaseResultMap" parameterType="Integer">
+	  SELECT g.*,'' userName,'' TicketTime,tg.id groupId, tg.group_code
+	  FROM group_order_guest g join group_order go on (g.order_id=go.id) join tour_group tg on (tg.id=go.group_id)
+	  WHERE g.order_id in (select id from group_order where ext_res_id=#{resId})
+	  </select>
 </mapper>

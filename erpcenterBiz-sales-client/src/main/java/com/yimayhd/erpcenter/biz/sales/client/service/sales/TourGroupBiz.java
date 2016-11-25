@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
 import org.apache.ibatis.annotations.Param;
 
 import com.yihg.mybatis.utility.PageBean;
@@ -440,7 +441,7 @@ public interface TourGroupBiz {
 	PageBean selectBookingFinanceShopGroupListPage(PageBean pageBean,
 			Integer curBizId, Set<Integer> dataUserIdSet);
 	BookingGroup selectBookingFinanceShopGroupListPageSum(PageBean pageBean,
-			Integer curBizId, Set<Integer> dataUserIdSet);
+														  Integer curBizId, Set<Integer> dataUserIdSet);
 	
 	Map<String, Integer>  getOrderCountAndPersonCountByProduct(Map conditionmMap);
 	/**
