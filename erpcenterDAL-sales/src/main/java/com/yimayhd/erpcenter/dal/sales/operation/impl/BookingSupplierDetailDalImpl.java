@@ -293,4 +293,9 @@ public class BookingSupplierDetailDalImpl implements
 		return bookingSupplierDetailMapper.selectBookingSupplierDetailByGroupId(groupId);
 	}
 	
+	@Override
+	public List<BookingSupplierDetail>selectTicketByResId(String resIds,Integer bizId) {
+		List<BookingSupplierDetail>list= bookingSupplierDetailMapper.selectTicketByResId(resIds,bizId);
+		return list;
+	}
 }

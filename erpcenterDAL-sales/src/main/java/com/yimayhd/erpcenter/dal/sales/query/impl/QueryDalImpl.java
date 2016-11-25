@@ -142,15 +142,17 @@ public class QueryDalImpl implements QueryDAL {
 		List<GroupBookingInfo> bookingGroups =operationMapper.selectGroupBookingListPage(pageBean, bizId, set);
 		if(bookingGroups!=null && bookingGroups.size()>0){
 			for(GroupBookingInfo bg : bookingGroups){
-				if(bg.getGroupMode().intValue()>0){
-					List<Map<String,Object>> orderMap= groupOrderMapper.getOrderBreifInfoByGroupId(bg.getGroupId());
-					if(orderMap!=null && orderMap.size()>0){
-						Map<String,Object> map = orderMap.get(0);
-						bg.setOrderId(TypeUtils.castToInt(map.get("orderId")));
-						bg.setReceiveMode(TypeUtils.castToString(map.get("receiveMode")));
+				if (bg.getGroupMode() != null){
+					if(bg.getGroupMode().intValue()>0){
+						List<Map<String,Object>> orderMap= groupOrderMapper.getOrderBreifInfoByGroupId(bg.getGroupId());
+						if(orderMap!=null && orderMap.size()>0){
+							Map<String,Object> map = orderMap.get(0);
+							bg.setOrderId(TypeUtils.castToInt(map.get("orderId")));
+							bg.setReceiveMode(TypeUtils.castToString(map.get("receiveMode")));
+						}
+					}else{
+						bg.setReceiveMode("");
 					}
-				}else{
-					bg.setReceiveMode("");
 				}
 			}
 		}
@@ -345,7 +347,6 @@ public class QueryDalImpl implements QueryDAL {
 		List<Map<String,Object>> detailList = queryMapper.getGuestSourceShoppingByOrderIds(pageBean,set);
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
-		
 		if(orderList!=null && orderList.size()>0){
 		
 			for(Map<String,Object> map : orderList){
