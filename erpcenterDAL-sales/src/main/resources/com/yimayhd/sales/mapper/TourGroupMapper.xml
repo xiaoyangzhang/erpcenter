@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sales.dao.TourGroupMapper">
-	<resultMap id="BaseResultMap" type="com.yihg.sales.po.TourGroup">
+<mapper namespace="com.yimayhd.sales.mapper.TourGroupMapper">
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="biz_id" property="bizId" jdbcType="INTEGER" />
 		<result column="group_mode" property="groupMode" jdbcType="INTEGER" />
@@ -74,7 +74,7 @@
 		</collection> -->
 	</resultMap>
 
-	<resultMap id="BookingGroup" type="com.yihg.operation.vo.BookingGroup">
+	<resultMap id="BookingGroup" type="com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup">
 		<result column="groupId" property="groupId" jdbcType="INTEGER" />
 		<result column="groupCode" property="groupCode" jdbcType="VARCHAR" />
 		<result column="dateStart" property="dateStart" jdbcType="DATE" />
@@ -107,7 +107,7 @@
 		<result column="state_lock" property="stateLock" jdbcType="INTEGER" />
 	</resultMap>
 
-	<resultMap id="QualityTourGroup" type="com.yihg.quality.vo.QualityTourGroupVo">
+	<resultMap id="QualityTourGroup" type="com.yimayhd.erpcenter.dal.sales.client.quality.vo.QualityTourGroupVo">
 		<result column="group_id" property="groupId" jdbcType="INTEGER" />
 		<result column="group_code" property="groupCode" jdbcType="VARCHAR" />
 		<result column="date_start" property="dateStart" jdbcType="DATE" />
@@ -128,7 +128,7 @@
 		<result column="score" property="score" jdbcType="DECIMAL" />
 		<result column="group_state" property="groupState" jdbcType="INTEGER" />
 	</resultMap>
-	<resultMap id="OperatorGroupStaticMap" type="com.yihg.sales.vo.OperatorGroupStatic">
+	<resultMap id="OperatorGroupStaticMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.vo.OperatorGroupStatic">
 		<result column="groupNum" property="groupNum" jdbcType="INTEGER" />
 		<result column="operatorName" property="operatorName" jdbcType="VARCHAR" />
 		<result column="totalAdult" property="totalAdult" jdbcType="INTEGER" />
@@ -932,7 +932,7 @@
 
 
 	<select id="selectTotalSKGroup" resultMap="BaseResultMap"
-		parameterType="com.yihg.sales.po.TourGroup">
+		parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup">
 		select
 		IFNULL(sum(t.total_adult),0) as total_adult,
 		IFNULL(sum(t.total_child),0) as total_child
@@ -1045,7 +1045,7 @@
 		set group_state = -1
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
-	<insert id="insert" parameterType="com.yihg.sales.po.TourGroup"
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into tour_group (id,
 		biz_id, group_mode,
@@ -1099,7 +1099,7 @@
 		#{totalIncomeShop,jdbcType=DECIMAL},#{totalIncomeShopCash,jdbcType=DECIMAL}
 		)
 	</insert>
-	<insert id="insertSelective" parameterType="com.yihg.sales.po.TourGroup"
+	<insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into tour_group
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -1332,7 +1332,7 @@
 			LAST_INSERT_ID()
 		</selectKey>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.sales.po.TourGroup">
+	<update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup">
 		update tour_group
 		<set>
 			<if test="bizId != null">
@@ -1463,7 +1463,7 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yihg.sales.po.TourGroup">
+	<update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup">
 		update tour_group
 		set biz_id = #{bizId,jdbcType=INTEGER},
 		total_baby = #{totalBaby,jdbcType=INTEGER},

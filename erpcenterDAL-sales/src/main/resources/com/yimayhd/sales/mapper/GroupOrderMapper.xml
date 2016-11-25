@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sales.dao.GroupOrderMapper">
-	<resultMap id="BaseResultMap" type="com.yihg.sales.po.GroupOrder">
+<mapper namespace="com.yimayhd.sales.mapper.GroupOrderMapper">
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="biz_id" property="bizId" jdbcType="INTEGER" />
 		<result column="group_id" property="groupId" jdbcType="INTEGER" />
@@ -120,11 +120,11 @@
 		<result column="push_time_update" property="pushTimeUpdate" jdbcType="DATE" />
 		<result column="push_supplier_name" property="pushSupplierName" jdbcType="VARCHAR" />
 		<result column="buyer_nick" property="buyerNick" jdbcType="VARCHAR" />
-		<association property="tourGroup" column="group_id" select="com.yihg.sales.dao.TourGroupMapper.selectByPrimaryKey" />
+		<association property="tourGroup" column="group_id" select="com.yimayhd.sales.mapper.TourGroupMapper.selectByPrimaryKey" />
 	</resultMap>
 
 
-	<resultMap id="SaleOperatorOrderStaticMap" type="com.yihg.sales.vo.SaleOperatorOrderStatic">
+	<resultMap id="SaleOperatorOrderStaticMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorOrderStatic">
 		<result column="orderNum" property="orderNum" jdbcType="INTEGER" />
 		<result column="saleOperatorName" property="saleOperatorName" jdbcType="VARCHAR" />
 		<result column="numAdult" property="numAdult" jdbcType="INTEGER" />
@@ -140,7 +140,7 @@
 	</resultMap>
 
 
-	<resultMap id="SaleOperatorMap" type="com.yihg.sales.vo.SaleOperatorVo">
+	<resultMap id="SaleOperatorMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorVo">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="group_id" property="groupId" jdbcType="INTEGER" />
 		<result column="order_type" property="orderType" jdbcType="INTEGER" />
@@ -168,7 +168,7 @@
 		<result column="orderNum" property="orderNum" jdbcType="INTEGER" />
 		<result column="saleOperatorName" property="saleOperatorName" jdbcType="VARCHAR" />
 	</resultMap>
-	<resultMap id="SalePriceMap" type="com.yihg.sales.vo.SalePrice">
+	<resultMap id="SalePriceMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalePrice">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="mode" property="mode" jdbcType="INTEGER" />
 		<result column="order_id" property="orderId" jdbcType="INTEGER" />
@@ -2413,7 +2413,7 @@
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
 
-	<insert id="insert" parameterType="com.yihg.sales.po.GroupOrder" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder" useGeneratedKeys="true" keyProperty="id">
 		insert into group_order
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -2811,7 +2811,7 @@
 			LAST_INSERT_ID()
 		</selectKey>
 	</insert>
-	<insert id="insertSelective" parameterType="com.yihg.sales.po.GroupOrder" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder" useGeneratedKeys="true" keyProperty="id">
 		insert into group_order
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -3165,7 +3165,7 @@
 			LAST_INSERT_ID()
 		</selectKey>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.sales.po.GroupOrder">
+	<update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		update group_order
 		<set>
 			<if test="bizId != null">
@@ -3378,7 +3378,7 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yihg.sales.po.GroupOrder">
+	<update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		update group_order
 		set biz_id = #{bizId,jdbcType=INTEGER},
 		group_id =
@@ -3487,7 +3487,7 @@
 		WHERE id=#{orderId,jdbcType=INTEGER}
 	</update>
 
-	<resultMap id="ProductGuestStaticsMap" type="com.yihg.query.vo.ProductGuestStaticsVo">
+	<resultMap id="ProductGuestStaticsMap" type="com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestStaticsVo">
 		<result column="product_brand_name" property="productBrandName" jdbcType="VARCHAR" />
 		<result column="product_name" property="productName" jdbcType="VARCHAR" />
 		<result column="guestcnt" property="guestCnt" jdbcType="INTEGER" />
@@ -3765,7 +3765,7 @@
 		WHERE group_id =
 		#{groupId}
 	</select>
-	<select id="selectGroupNumForQuery" resultMap="BaseResultMap" parameterType="com.yihg.sales.po.GroupOrder">
+	<select id="selectGroupNumForQuery" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		SELECT
 		p.supplier_name AS supplierName,
 		COUNT(p.supplier_name) AS
@@ -3887,7 +3887,7 @@
 		id=#{groupId}
 	</update>
 
-	<select id="selectGroupIdsByReceiveMode" resultType="java.util.HashMap" parameterType="com.yihg.sales.vo.TourGroupVO">
+	<select id="selectGroupIdsByReceiveMode" resultType="java.util.HashMap" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO">
 		SELECT DISTINCT group_id FROM `group_order`
 		WHERE
 		<if test="receiveMode==null or receiveMode==''">
@@ -4580,7 +4580,8 @@
 		ORDER BY a.create_time desc,a.departure_date desc
 	</select>
 
-	<select id="selectTotalSpecialOrder" resultMap="BaseResultMap" parameterType="com.yihg.sales.po.GroupOrder">
+	<select id="selectTotalSpecialOrder" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder
+">
 		select IFNULL(sum(a.num_adult),0) as numAdult ,
 		IFNULL(sum(a.num_child),0) as numChild, IFNULL(sum(a.num_guide),0) as
 		numGuide, IFNULL(sum(a.total),0) as total from group_order a left join
@@ -4680,7 +4681,8 @@
 		ORDER BY a.departure_date,a.create_time
 	</select>
 
-<select id="selectTotalTaobaoOrder" resultMap="BaseResultMap" parameterType="com.yihg.sales.po.GroupOrder">
+<select id="selectTotalTaobaoOrder" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder
+">
 		select IFNULL(sum(a.num_adult),0) as numAdult ,
 		IFNULL(sum(a.num_child),0) as numChild, IFNULL(sum(a.num_guide),0) as
 		numGuide, IFNULL(sum(a.total),0) as total from group_order a left join
@@ -4788,7 +4790,8 @@
 		ORDER BY a.departure_date,a.create_time
 	</select>
 	
-	<select id="selectTotalTaobaoGuestNameOrder" resultMap="BaseResultMap" parameterType="com.yihg.sales.po.GroupOrder">
+	<select id="selectTotalTaobaoGuestNameOrder" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder
+">
 		select IFNULL(sum(a.num_adult),0) as numAdult ,
 		IFNULL(sum(a.num_child),0) as numChild, IFNULL(sum(a.num_guide),0) as
 		numGuide, IFNULL(sum(a.total),0) as total from group_order a left join
@@ -5251,7 +5254,7 @@
 		ORDER BY ttt.guestCnt DESC
 
 	</select>
-	<select id="departmentOrderStatistics" resultType="com.yihg.query.vo.DepartmentOrderResult">
+	<select id="departmentOrderStatistics" resultType="com.yimayhd.erpcenter.dal.sales.client.query.vo.DepartmentOrderResult">
 		SELECT SUM(go.`num_adult`) numAdult,SUM(go.`num_child`)
 		numChild,DATE_FORMAT(FROM_UNIXTIME(go.`create_time`/1000,'%Y-%m-%d'),'%Y-%m-%d')
 		createDate,
@@ -5657,7 +5660,7 @@
 		order by departure_date,create_time
 	</select>
 
-	<update id="updateResOrderState" parameterType="com.yihg.sales.po.GroupOrder">
+	<update id="updateResOrderState" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		update group_order
 		<set>
 			<if test="remarkInternal != null">
@@ -5842,7 +5845,7 @@
 		order by departure_date,create_time
 	</select>
 
-	<update id="updateResAdminOrderState" parameterType="com.yihg.sales.po.GroupOrder">
+	<update id="updateResAdminOrderState" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		update group_order
 		<set>
 			<if test="remarkInternal != null">
@@ -5933,7 +5936,7 @@
 		order by departure_date,create_time
 	</select>
 
-	<update id="updateExtResState" parameterType="com.yihg.sales.po.GroupOrder">
+	<update id="updateExtResState" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		update group_order
 		<set>
 			<if test="extResState != null">
@@ -6051,7 +6054,7 @@
 		ORDER BY go.sale_operator_id
 	</select>
 	
-	<update id="updateExtVisa" parameterType="com.yihg.sales.po.GroupOrder">
+	<update id="updateExtVisa" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		update group_order
 		<set>
 			<if test="extVisaInfo != null">

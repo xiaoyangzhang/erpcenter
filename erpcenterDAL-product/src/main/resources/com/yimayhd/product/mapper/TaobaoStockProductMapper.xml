@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yihg.product.dao.TaobaoStockProductMapper">
-  <resultMap id="BaseResultMap" type="com.yihg.product.po.TaobaoStockProduct">
+<mapper namespace="com.yimayhd.product.mapper.TaobaoStockProductMapper">
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="product_id" jdbcType="INTEGER" property="productId" />
     <result column="stock_id" jdbcType="INTEGER" property="stockId" />
@@ -19,14 +19,14 @@
     delete from taobao_stock_product
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.product.po.TaobaoStockProduct">
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into taobao_stock_product (product_id, stock_id)
     values (#{productId,jdbcType=INTEGER}, #{stockId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.product.po.TaobaoStockProduct" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct" useGeneratedKeys="true" keyProperty="id">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -48,7 +48,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.TaobaoStockProduct">
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct">
     update taobao_stock_product
     <set>
       <if test="productId != null">
@@ -60,7 +60,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.TaobaoStockProduct">
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct">
     update taobao_stock_product
     set product_id = #{productId,jdbcType=INTEGER},
       stock_id = #{stockId,jdbcType=INTEGER}
@@ -73,12 +73,12 @@
 		from taobao_stock_product
 		where stock_id = #{stockId}
 	</select>
-	<delete id="deleteTaoBaoStockProduct" parameterType="com.yihg.product.po.TaobaoStockProduct">
+	<delete id="deleteTaoBaoStockProduct" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct">
     	delete from taobao_stock_product
     	where stock_id = #{stockId,jdbcType=INTEGER} and product_id=#{productId}
   </delete>
   
-   <select id="findStockProductInfo" parameterType="com.yihg.product.po.TaobaoStockProduct"
+   <select id="findStockProductInfo" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct"
 		resultMap="BaseResultMap">
 		select id, product_id, stock_id 
 		from taobao_stock_product

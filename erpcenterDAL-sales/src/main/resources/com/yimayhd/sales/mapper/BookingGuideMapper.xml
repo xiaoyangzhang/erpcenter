@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.operation.dao.BookingGuideMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingGuide" >
+<mapper namespace="com.yimayhd.sales.mapper.BookingGuideMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="booking_no" property="bookingNo" jdbcType="VARCHAR" />
@@ -23,9 +23,9 @@
      <result column="state_lock" property="stateLock" jdbcType="TINYINT" />
   </resultMap>
  
-  <!--  <resultMap id="bookingGuideListCount" type="com.yihg.operation.po.BookingGuideListCount" ></resultMap> -->
-  <!--  <resultMap id="bookingGuideListSelect" type="com.yihg.operation.po.BookingGuideListSelect" ></resultMap> -->
- <!--  <typeAlias type="com.yihg.operation.po.BookingGuideListSelect" alias="bookingGuideListSelect"/>  --> 
+  <!--  <resultMap id="bookingGuideListCount" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideListCount" ></resultMap> -->
+  <!--  <resultMap id="bookingGuideListSelect" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideListSelect" ></resultMap> -->
+ <!--  <typeAlias type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideListSelect" alias="bookingGuideListSelect"/>  --> 
  
   <sql id="Base_Column_List" >
     id, group_id, guide_id,booking_no,guide_name,guide_mobile, is_default, remark,driver_id,driver_name, total, state_booking, state_finance,booking_detail_id, 
@@ -80,7 +80,7 @@
     delete from booking_guide
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.operation.po.BookingGuide" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide" >
     insert into booking_guide (id, group_id, guide_id, 
       is_default, remark, total, 
       state_booking, state_finance, user_id, 
@@ -90,7 +90,7 @@
       #{stateBooking,jdbcType=TINYINT}, #{stateFinance,jdbcType=TINYINT}, #{userId,jdbcType=INTEGER}, 
       #{createTime,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingGuide" >
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide" >
    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -212,7 +212,7 @@
   <update id="updateBygroupId" parameterType="java.lang.Integer">
   	UPDATE booking_guide SET is_default = 0 WHERE group_id=#{groupId,jdbcType=INTEGER};
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingGuide" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide" >
     update booking_guide
     <set >
       <if test="groupId != null" >
@@ -269,7 +269,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingGuide" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide" >
     update booking_guide
     set group_id = #{groupId,jdbcType=INTEGER},
       guide_id = #{guideId,jdbcType=INTEGER},
@@ -293,7 +293,7 @@
    	select count(id) from booking_guide where create_time between #{curDay} and #{nextDay}
    </select>
    
-   <select id="selectBookingGuideListCountListPage" resultType="com.yihg.operation.po.BookingGuideListCount"
+   <select id="selectBookingGuideListCountListPage" resultType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideListCount"
 		parameterType="com.yihg.mybatis.utility.PageBean">
 SELECT t.guide_id guideId,t.guide_name guideName,t.guide_mobile guideMobile,
 SUM(CASE WHEN <![CDATA[t.state_booking<3]]> THEN 1 ELSE 0 END ) state0,
@@ -361,7 +361,7 @@ GROUP BY tour.id,guide.`guide_id`
 	</select>
 	
 
-<select id="selectBookingGuideListSelectListPage" resultType="com.yihg.operation.po.BookingGuideListSelect" parameterType="com.yihg.mybatis.utility.PageBean">
+<select id="selectBookingGuideListSelectListPage" resultType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideListSelect" parameterType="com.yihg.mybatis.utility.PageBean">
 SELECT
 bg.id,t.id groupId,group_code groupCode,date_start dateStart,group_mode groupMode,product_name productName,product_brand_name productBrandName,
 IF (group_mode = 0,'散客团',(SELECT supplier_name FROM group_order o WHERE
@@ -450,12 +450,12 @@ ORDER BY t.date_start,t.id
 			WHERE t1.`group_id`= #{groupId}
 	</select>	
 	
-	<update id="updateStateLock" parameterType="com.yihg.operation.po.BookingGuide" >
+	<update id="updateStateLock" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide" >
     update booking_guide
     set  state_lock=1
     where group_id = #{groupId,jdbcType=INTEGER}
   </update>
-  	<update id="updateStateUnlock" parameterType="com.yihg.operation.po.BookingGuide" >
+  	<update id="updateStateUnlock" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide" >
     update booking_guide
     set  state_lock=0
     where group_id = #{groupId,jdbcType=INTEGER}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yihg.taobao.dao.PlatTaobaoTradeMapper">
-	<resultMap id="BaseResultMap" type="com.yihg.taobao.po.PlatTaobaoTrade">
+<mapper namespace="com.yimayhd.sales.mapper.PlatTaobaoTradeMapper">
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade">
 		<id column="id" jdbcType="INTEGER" property="id" />
 		<result column="biz_id" jdbcType="INTEGER" property="bizId" />
 		<result column="tid" jdbcType="VARCHAR" property="tid" />
@@ -87,7 +87,7 @@
 		DELETE FROM plat_taobao_trade
 		WHERE id = #{id,jdbcType=INTEGER}
 	</delete>
-	<insert id="insert" parameterType="com.yihg.taobao.po.PlatTaobaoTrade">
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade">
 		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
@@ -121,7 +121,7 @@
 		#{receive_count,jdbcType=VARCHAR},#{isBrushSingle,jdbcType=INTEGER},
 		#{departurePlace,jdbcType=INTEGER},	#{customerService,jdbcType=VARCHAR})
 	</insert>
-	<insert id="insertSelective" parameterType="com.yihg.taobao.po.PlatTaobaoTrade" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade" useGeneratedKeys="true" keyProperty="id">
 		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
@@ -365,7 +365,7 @@
             </if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.taobao.po.PlatTaobaoTrade">
+	<update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade">
 		update plat_taobao_trade
 		<set>
 			<if test="bizId != null">
@@ -488,7 +488,7 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yihg.taobao.po.PlatTaobaoTrade">
+	<update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade">
 		UPDATE plat_taobao_trade
 		SET biz_id = #{bizId,jdbcType=INTEGER},
 		tid = #{tid,jdbcType=INTEGER},
@@ -574,7 +574,7 @@
 		ORDER BY created DESC
 	</select>
 
-<select id="selectTaobaoshopSalesStatistics" parameterType="com.yihg.taobao.po.PlatTaobaoTrade" resultMap="BaseResultMap">
+<select id="selectTaobaoshopSalesStatistics" parameterType="com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade" resultMap="BaseResultMap">
 SELECT IFNULL(sum(o.num),0) orders,IFNULL(COUNT(DISTINCT t.buyer_nick),0) buyers,IFNULL(SUM(t.payment), 0) payment,
 <!-- SUM(IFNULL(o.total_fee, 0)) totalFee -->
 IFNULL(SUM(o.payment), 0) totalFee
@@ -609,7 +609,7 @@ and t.status IN ('WAIT_SELLER_SEND_GOODS','WAIT_BUYER_CONFIRM_GOODS','TRADE_FINI
 		</if>
 </select>
 
-<select id="selectTaobaoshopSalesStatisticsOther" parameterType="com.yihg.taobao.po.PlatTaobaoTrade" resultMap="BaseResultMap">
+<select id="selectTaobaoshopSalesStatisticsOther" parameterType="com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade" resultMap="BaseResultMap">
 SELECT  IFNULL(sum(o.num),0) orders,IFNULL(COUNT(DISTINCT t.buyer_nick),0) buyers,IFNULL(SUM(t.payment), 0) payment,
 		          IFNULL(SUM(t.step_paid_fee), 0) totalFee  
 		FROM plat_taobao_trade_order o

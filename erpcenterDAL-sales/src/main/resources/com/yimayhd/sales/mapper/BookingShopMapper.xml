@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.operation.dao.BookingShopMapper">
-	<resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingShop">
+<mapper namespace="com.yimayhd.sales.mapper.BookingShopMapper">
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="group_id" property="groupId" jdbcType="INTEGER" />
 		<result column="booking_no" property="bookingNo" jdbcType="VARCHAR" />
@@ -37,7 +37,7 @@
 		<result column="total_money" property="totalMoney" jdbcType="DECIMAL" />
 
 	</resultMap>
-	<resultMap id="ShopResultMap" type="com.yihg.operation.po.BookingShopDet">
+	<resultMap id="ShopResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDet">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="group_id" property="groupId" jdbcType="INTEGER" />
 		<result column="booking_no" property="bookingNo" jdbcType="VARCHAR" />
@@ -106,7 +106,7 @@
 		booking_shop
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
-	<insert id="insert" parameterType="com.yihg.operation.po.BookingShop" keyProperty="id" useGeneratedKeys="true" >
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop" keyProperty="id" useGeneratedKeys="true" >
 		insert into booking_shop (id,
 		group_id, booking_no,
 		supplier_id, guide_id, shop_date,
@@ -131,7 +131,7 @@
 		#{createTime,jdbcType=BIGINT},
 		#{supplierName,jdbcType=VARCHAR})
 	</insert>
-	<insert id="insertSelective" parameterType="com.yihg.operation.po.BookingShop" keyProperty="id" useGeneratedKeys="true" >
+	<insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop" keyProperty="id" useGeneratedKeys="true" >
 		insert into booking_shop
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -264,7 +264,7 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingShop"  >
+	<update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop"  >
 		update booking_shop
 		<set>
 			<if test="groupId != null">
@@ -332,7 +332,7 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingShop" >
+	<update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop" >
 		update
 		booking_shop
 		set group_id = #{groupId,jdbcType=INTEGER},
@@ -506,7 +506,7 @@
 			</if>
 		</if>
 	</sql>
-	<select id="getGuideShopListPageTotal" resultType="com.yihg.operation.vo.QueryGuideShop">
+	<select id="getGuideShopListPageTotal" resultType="com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryGuideShop">
 		select 
 			sum(t1.adultNum) adultNumTotal,
 			sum(t1.childNum) childNumTotal,
@@ -536,7 +536,7 @@
 	</select>
 	
 	
-	<select id="getGuideShopListPage" resultType="com.yihg.operation.vo.QueryGuideShop"
+	<select id="getGuideShopListPage" resultType="com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryGuideShop"
 		parameterType="com.yihg.mybatis.utility.PageBean">
 		SELECT
 		t.id AS groupId,
@@ -573,14 +573,14 @@
   
   
   
-    <select id="getShopSelect" resultType="com.yihg.operation.po.BookingShopSelect">
+    <select id="getShopSelect" resultType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopSelect">
 		SELECT COUNT(id) shopCount,SUM(person_num*person_buy_avg) jhSales,SUM(total_face) factSales,SUM(person_repay_total) personRepayTotal,
 			SUM(total_repay) totalRepay, SUM(CASE WHEN state_finance>0 THEN 1 ELSE 0 END) auditCount FROM booking_shop 
 			where group_id = #{groupId}	GROUP BY group_id 
   	</select>
   	
   	
-  	 <select id="getshopInfoDetailListPage" resultType="com.yihg.operation.vo.QueryShopInfo" parameterType="com.yihg.mybatis.utility.PageBean">
+  	 <select id="getshopInfoDetailListPage" resultType="com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryShopInfo" parameterType="com.yihg.mybatis.utility.PageBean">
 				SELECT shop.id,tgroup.id groupId,gorder.id orderId,tgroup.group_mode groupMode,tgroup.group_code groupCode,shop.user_name userName,tgroup.operator_name operatorName,guide.guide_name guideName
 		,shop.supplier_name supplierName,shop.shop_date shopDate,shop.person_num personNum,shop.person_repay_price personRepayPrice,
 		(shop.person_num*shop.person_buy_avg) jhSales,shop.total_face totalFace,shop.total_repay totalRepay
@@ -888,7 +888,7 @@
 	</select>
 	
 	<!-- 根据导游安排中的groupID查询购物信息 -->
-	<select id="selectByGroupId"  parameterType="com.yihg.operation.po.BookingShop" resultMap="BaseResultMap">
+	<select id="selectByGroupId"  parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop" resultMap="BaseResultMap">
 	    select 
 	    	<include refid="Base_Column_List" />
 	    from booking_shop
