@@ -109,5 +109,10 @@ public class BookingDeliveryBizImpl implements BookingDeliveryBiz {
 		return deliveryDao.getBookingDeliveryByOrderId(orderId);
 	}
 	*/
+    @Override
+    public void updatePushStatus(Integer bookingId){
+        bookingDeliveryDal.updatePushStatus(bookingId);
+    }
+
 
 }

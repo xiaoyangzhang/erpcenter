@@ -495,4 +495,19 @@ public class ProductPricePlusFacadeImpl implements ProductPricePlusFacade{
 		}
 		return resultSupport;
 	}
+
+	
+	@Override
+	public ToSupplierListResult toSupplierList2(ProductSupplierConditionDTO conditionDTO) {
+		
+		ProductInfo productInfo = productInfoBiz.findProductInfoById(conditionDTO.getProductId());
+		
+		List<ProductGroupSupplier>  supplierList = productGroupSupplierBiz.selectSupplierList(conditionDTO.getCondition());
+		
+		ToSupplierListResult result = new ToSupplierListResult();
+		result.setGroupSuppliers(supplierList);
+		result.setProductInfo(productInfo);
+		
+		return result;
+	}
 }

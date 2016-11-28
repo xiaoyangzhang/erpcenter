@@ -89,6 +89,14 @@ public interface ProductPricePlusFacade {
 	 */
 	ToSupplierListResult toSupplierList(ProductSupplierConditionDTO conditionDTO);
 	
+	
+	/**
+	 *  交通资源管理（包机）->产品->设置组团社访问权限
+	 * @param conditionDTO
+	 * @return
+	 */
+	ToSupplierListResult toSupplierList2(ProductSupplierConditionDTO conditionDTO);
+	
 	/**
 	 * 跳转到添加价格组页面
 	 * @param id 产品组团社表id

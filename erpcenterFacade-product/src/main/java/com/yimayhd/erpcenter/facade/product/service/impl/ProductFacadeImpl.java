@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.facade.result.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,16 +61,6 @@ import com.yimayhd.erpcenter.facade.query.ProductPriceListDTO;
 import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
-import com.yimayhd.erpcenter.facade.result.ComponentProductListResult;
-import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
-import com.yimayhd.erpcenter.facade.result.ProductDataRightResult;
-import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
-import com.yimayhd.erpcenter.facade.result.ProductPriceListResult;
-import com.yimayhd.erpcenter.facade.result.ResultSupport;
-import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
-import com.yimayhd.erpcenter.facade.result.ToProductRemarkResult;
-import com.yimayhd.erpcenter.facade.result.ToProductTagResult;
-import com.yimayhd.erpcenter.facade.result.WebResult;
 import com.yimayhd.erpcenter.facade.service.ProductFacade;
 
 /**
@@ -368,9 +359,6 @@ public class ProductFacadeImpl implements ProductFacade{
 	
 	/**
 	 * 产品价格列表
-	 * @param productInfo
-	 * @param productName
-	 * @param name
 	 * @return
 	 */
 	public ProductPriceListResult productPriceList(ProductPriceListDTO productPriceListDTO){
@@ -659,10 +647,6 @@ public class ProductFacadeImpl implements ProductFacade{
 	
 	/**
 	 * 产品价格打印预览
-	 * @param request
-	 * @param response
-	 * @param model
-	 * @param productIds
 	 * @return
 	 */
 	public List<ProductGroupSupplierVo> productPricePreview(int bizId, String productIds) {
@@ -966,5 +950,82 @@ public class ProductFacadeImpl implements ProductFacade{
 		boolean result = productRouteBiz.editProductRoute(productRouteVo);
 		return result;
 	}
+	@Override
+	public TaoBaoProductListResult taobaoProductList(String cpxlPP, Integer bizId){
+		TaoBaoProductListResult result = new TaoBaoProductListResult();
+
+		try{
+			List<DicInfo> brandList = dicBiz.getListByTypeCode(cpxlPP, bizId);
+			result.setBrandList(brandList);
+			result.setOrgTreeJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(bizId));
+			result.setOrgUserTreeJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(bizId));
+			result.setSuccess(true);
+		}catch (Exception e){
+			result.setSuccess(false);
+		}
+		return  result;
+	}
+	@Override
+	public TaoBaoProductListResult taobaoProductListTable(String cpxlPP,Integer bizId,PageBean pageBean){
+		TaoBaoProductListResult result = new TaoBaoProductListResult();
+
+		try{
+
+			// 省市
+			List<RegionInfo> allProvince = regionBiz.getAllProvince();
+			result.setAllProvince(allProvince);
+			List<DicInfo> brandList = dicBiz.getListByTypeCode(cpxlPP, bizId);
+			result.setBrandList(brandList);
+			pageBean = productInfoBiz.selectTaobaoProduct(pageBean, bizId);
+			result.setPageBean(pageBean);
+			result.setSuccess(true);
+		}catch (Exception e){
+			result.setSuccess(false);
+		}
+		return  result;
+	}
+	@Override
+	public ToCopyResult toCopyHtml(Integer productId,String cpxlPP,Integer bizId){
+		ToCopyResult result = new ToCopyResult();
+
+		try{
+			ProductInfoVo productInfoVo = productInfoBiz.findProductInfoVoById(productId);
+			ProductRemark productRemark = productRemarkBiz.findProductRemarkByProductId(productId);
+			// 产品名称
+			List<DicInfo> brandList = dicBiz.getListByTypeCode(cpxlPP,bizId);
+
+			result.setProductInfoVo(productInfoVo);
+			result.setProductRemark(productRemark);
+			result.setBrandList(brandList);
+			result.setSuccess(true);
+		}catch (Exception e){
+			result.setSuccess(false);
+		}
+		return  result;
+	}
+	@Override
+	public WebResult<Integer> copyProductInfo(ProductSaveDTO productSaveDTO,String myBizCode){
+		WebResult<Integer> result = new WebResult<Integer>();
+
+		try{
+			ProductInfoVo info = productSaveDTO.getProductInfoVo();
+			ProductRouteVo productRouteVo= productSaveDTO.getProductRouteVo();
+			int id = productInfoBiz.saveProductInfo(info, myBizCode, dicBiz.getById(info.getProductInfo().getBrandId()).getCode());
+
+			if (info.getProductInfo().getId() == null) {
+				productRouteVo.setProductId(id);
+				productRouteBiz.copyProductRoute(productRouteVo);
+			}else{
+				productRouteBiz.editProductRoute(productRouteVo);
+			}
+			result.setValue(id);
+			result.setSuccess(true);
+		}catch (Exception e){
+			result.setValue(-1);
+			result.setSuccess(false);
+		}
+		return  result;
+	}
+
 
 }

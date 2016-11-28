@@ -59,8 +59,8 @@ public class BookingDeliveryResult extends ResultSupport implements Serializable
 	}
 	private List<BookingSupplierDetail> supplierDetails;
 	private List<BookingGuide> bookingGuides;
-	
-	
+
+
 	public List<BookingSupplierDetail> getSupplierDetails() {
 		return supplierDetails;
 	}
@@ -121,6 +121,6 @@ public class BookingDeliveryResult extends ResultSupport implements Serializable
 	public void setGroupCanEdit(boolean groupCanEdit) {
 		this.groupCanEdit = groupCanEdit;
 	}
-	
-	
+
+
 }

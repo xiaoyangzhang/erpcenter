@@ -52,4 +52,6 @@ public interface BookingDeliveryBiz {
 	 * @return
 	 */
 	List<BookingDelivery> selectInitDeliveryList(Integer groupId);
+
+	void updatePushStatus(Integer bookingId);
 }
