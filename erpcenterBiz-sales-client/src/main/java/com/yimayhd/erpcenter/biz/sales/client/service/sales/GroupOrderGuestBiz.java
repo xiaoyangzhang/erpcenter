@@ -86,5 +86,18 @@ public interface GroupOrderGuestBiz {
      * @return
      */
     List<GroupOrderGuest> getGuestByGroupIdAndIsLeader(Integer groupId,Integer isLeader) ;
+    /**
+     * 根绝resId查询客人信息
+     * @param resId
+     * @return
+     */
+    List<GroupOrderGuest> selectGuestTicketInfo(Integer resId);
+    
+    /**
+	 * 根据手机号获取用户信息
+	 * @param mobile
+	 * @return
+	 */
+    List<GroupOrderGuest> getEmployeeByMobile(String mobile);
     
 }
