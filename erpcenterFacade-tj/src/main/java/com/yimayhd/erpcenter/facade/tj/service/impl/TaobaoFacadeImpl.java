@@ -4,8 +4,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +20,7 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductStockBiz;
+import com.yimayhd.erpcenter.biz.product.service.TaoBaoStockBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.SpecialGroupOrderBiz;
@@ -39,6 +42,7 @@ import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade;
 import com.yimayhd.erpcenter.facade.tj.client.errorcode.TjErrorCode;
 import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
+import com.yimayhd.erpcenter.facade.tj.client.query.PushTradeQueryDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.SaveSpecialGroupDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ShopSalesStatisticsQueryDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListTableDTO;
@@ -76,6 +80,8 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	private TaobaoOrderBiz taobaoOrderBiz;
 	@Autowired
 	private TourGroupBiz tourGroupBiz;
+	@Autowired
+	private TaoBaoStockBiz taoBaoStockBiz;
 	
 	/**
 	 * 操作单
@@ -560,8 +566,31 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		return result;
 	}
 	
-	
-	
+	public String savePushTrade(PushTradeQueryDTO pushTradeQueryDTO) {
+		PageBean<PlatTaobaoTrade> pageBean = new PageBean<PlatTaobaoTrade>();
+        pageBean.setPage(1);
+        pageBean.setPageSize(Constants.PAGESIZE);
+        
+        pageBean = taobaoOrderBiz.savePushTrade(pushTradeQueryDTO.getTid(), pushTradeQueryDTO.getAuthClient(), pushTradeQueryDTO.getResponse());
+        
+        List<PlatTaobaoTrade> pttList = pageBean.getResult();
+        List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+        
+     // 获取备注(扣除库存)
+        for (PlatTaobaoTrade pt : pttList) {
+            if (pt.getReceiveCount() !=null && new Integer(pt.getReceiveCount())>0){
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("numIid", pt.getNumIid());//自编码、日期、数量, PlatTaobaoTradeOrderId
+                map.put("depDate", pt.getDepartureDate());
+                map.put("receiveCount", pt.getReceiveCount());
+                map.put("receiveCount", pt.getReceiveCount());
+                map.put("taobaoOrderId", pt.getId().toString());
+                mapList.add(map);
+            }
+        }
+        taoBaoStockBiz.updateProductStockByTaobao(mapList);
+        return "OK";
+	}
 	@Override
 	public PresellProductStatisticsListResult selectNotPresellProductStatisticsListPage(PresellProductStatistics queryDTO) {
 		PresellProductStatisticsListResult result = new PresellProductStatisticsListResult();
@@ -581,6 +610,4 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		
 		return result;
 	}
-	
-	
 }
