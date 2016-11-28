@@ -4,13 +4,18 @@ import java.text.ParseException;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
+import com.yimayhd.erpcenter.facade.tj.client.query.PushTradeQueryDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.SaveSpecialGroupDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.ShopSalesStatisticsQueryDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOriginalOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ToEditTaobaoOrderDTO;
 import com.yimayhd.erpcenter.facade.tj.client.result.AddNewTaobaoOrderResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.ImportTaobaoOrderTableResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.PresellProductStatisticsListResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.SaveSpecialGroupResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.ShopSalesStatisticsResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListTableResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.ToEditTaobaoOrderResult;
@@ -72,4 +77,20 @@ public interface TaobaoFacade{
      * 同步 by tid
      */
 	public PageBean synchroByTid(TaobaoOriginalOrderTableDTO taobaoOriginalOrderTableDTO);
+	
+	
+	public ShopSalesStatisticsResult selectTaobaoshopSalesStatistics(ShopSalesStatisticsQueryDTO queryDTO);
+	
+	
+	public PresellProductStatisticsListResult selectPresellProductStatisticsListPage(PresellProductStatistics queryDTO);
+	
+
+	public String savePushTrade(PushTradeQueryDTO pushTradeQueryDTO);
+
+	
+	public PresellProductStatisticsListResult selectNotPresellProductStatisticsListPage(PresellProductStatistics queryDTO);
+	
+	
+	public PresellProductStatisticsListResult selectSaleOperatorSalesStatisticsListPage(PresellProductStatistics queryDTO);
+
 }

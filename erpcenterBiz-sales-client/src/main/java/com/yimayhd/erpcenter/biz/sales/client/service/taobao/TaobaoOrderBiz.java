@@ -64,4 +64,27 @@ public interface TaobaoOrderBiz {
 	 */
 	void updateNEW(String idss);
 	
+	void updateOrderId(Integer orderId);
+	/**
+     * 查询淘宝原始单 根据时间
+     * @param pageBean
+     * @param bizId
+     * @return
+     */
+    PageBean<PlatTaobaoTrade> syncTaobaoOrderByTime(PageBean<PlatTaobaoTrade> pageBean, Integer bizId);
+
+    
+	PlatTaobaoTrade selectTaobaoshopSalesStatistics(PlatTaobaoTrade  platTaobaoTrade,Integer bizId);
+	
+	PageBean<PlatTaobaoTrade>selectPresellProductStatisticsListPage(PageBean<PlatTaobaoTrade> pageBean,Integer bizId);
+	
+	PageBean<PlatTaobaoTrade>selectPresellTaobaoOrderListPage(PageBean<PlatTaobaoTrade> pageBean,Integer bizId);
+	
+	PageBean<PlatTaobaoTrade>selectNotPresellProductStatisticsListPage(PageBean<PlatTaobaoTrade> pageBean,Integer bizId);
+	
+	PageBean<PlatTaobaoTrade>selectSaleOperatorSalesStatisticsListPage(PageBean<PlatTaobaoTrade> pageBean,Integer bizId);
+	
+	PageBean<PlatTaobaoTrade> savePushTrade(String tid, String authClient, String response);
+
+	
 }

@@ -231,4 +231,52 @@ public class TaobaoOrderBizImpl implements TaobaoOrderBiz {
     public void updateNEW(String idss) {
     	taobaoOrderDal.updateNEW(idss);
     }
+
+	@Override
+	public void updateOrderId(Integer orderId) {
+		taobaoOrderDal.updateOrderId(orderId);
+	}
+
+	@Override
+	public PageBean<PlatTaobaoTrade> syncTaobaoOrderByTime(PageBean<PlatTaobaoTrade> pageBean, Integer bizId) {
+		return taobaoOrderDal.syncTaobaoOrderByTime(pageBean, bizId);
+	}
+
+	@Override
+	public PlatTaobaoTrade selectTaobaoshopSalesStatistics(PlatTaobaoTrade platTaobaoTrade, Integer bizId) {
+		return taobaoOrderDal.selectTaobaoshopSalesStatistics(platTaobaoTrade, bizId);
+	}
+
+	@Override
+	public PageBean<PlatTaobaoTrade> selectPresellProductStatisticsListPage(PageBean<PlatTaobaoTrade> pageBean,
+			Integer bizId) {
+		
+		return  taobaoOrderDal.selectPresellProductStatisticsListPage(pageBean, bizId);
+	}
+
+	@Override
+	public PageBean<PlatTaobaoTrade> selectPresellTaobaoOrderListPage(PageBean<PlatTaobaoTrade> pageBean,
+			Integer bizId) {
+		
+		return taobaoOrderDal.selectPresellTaobaoOrderListPage(pageBean, bizId);
+	}
+
+	@Override
+	public PageBean<PlatTaobaoTrade> selectNotPresellProductStatisticsListPage(PageBean<PlatTaobaoTrade> pageBean,
+			Integer bizId) {
+		return taobaoOrderDal.selectNotPresellProductStatisticsListPage(pageBean, bizId);
+	}
+
+	@Override
+	public PageBean<PlatTaobaoTrade> selectSaleOperatorSalesStatisticsListPage(PageBean<PlatTaobaoTrade> pageBean,
+			Integer bizId) {
+		
+		return taobaoOrderDal.selectSaleOperatorSalesStatisticsListPage(pageBean, bizId);
+	}
+
+	@Override
+	public PageBean<PlatTaobaoTrade> savePushTrade(String tid, String authClient, String response) {
+		
+		return taobaoOrderDal.savePushTrade(tid, authClient, response);
+	}
 }
