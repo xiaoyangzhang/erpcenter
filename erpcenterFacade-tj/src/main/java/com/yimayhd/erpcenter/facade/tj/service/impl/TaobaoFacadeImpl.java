@@ -39,12 +39,14 @@ import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade;
 import com.yimayhd.erpcenter.facade.tj.client.errorcode.TjErrorCode;
 import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.SaveSpecialGroupDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.ShopSalesStatisticsQueryDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOriginalOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ToEditTaobaoOrderDTO;
 import com.yimayhd.erpcenter.facade.tj.client.result.AddNewTaobaoOrderResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.ImportTaobaoOrderTableResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.SaveSpecialGroupResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.ShopSalesStatisticsResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListTableResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.ToEditTaobaoOrderResult;
@@ -535,6 +537,16 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		
 		PageBean<PlatTaobaoTrade> pageBean=taobaoOrderBiz.selectTaobaoOrderByTid(taobaoOriginalOrderTableDTO.getPageBean(),taobaoOriginalOrderTableDTO.getBizId());
 		return pageBean ; 
+	}
+	@Override
+	public ShopSalesStatisticsResult selectTaobaoshopSalesStatistics(ShopSalesStatisticsQueryDTO queryDTO) {
+		ShopSalesStatisticsResult result = new ShopSalesStatisticsResult();
+		PlatTaobaoTrade trade = taobaoOrderBiz.selectTaobaoshopSalesStatistics(queryDTO.getPlatTaobaoTrade(),
+				 queryDTO.getBizId());
+		
+		result.setTrade(trade);
+		
+		return result;
 	}
 	
 }
