@@ -89,20 +89,18 @@ public class AgencyOrderDealFacadeImpl implements AgencyOrderDealFacade {
 			for (GroupOrder groupOrder : orderList) {
 				groupOrder.setExtResState(3);
 				groupOrder.setState(orderState);
-				groupOrder.setExtResConfirmId(null);
-				groupOrder.setExtResConfirmName("");
+//				groupOrder.setExtResConfirmId(null);
+//				groupOrder.setExtResConfirmName("");
 				groupOrderBiz.loadUpdateExtResState(groupOrder);
 				
-				//库存变更
-				TrafficResStocklog trafficResStocklog=new TrafficResStocklog();
-				trafficResStocklog.setAdjustAction(TRAFFICRES_STOCK_ACTION.ORDER_CLEAN.toString());
-				trafficResStocklog.setAdjustNum(groupOrder.getNumAdult()+groupOrder.getNumChild());
-				trafficResStocklog.setResId(groupOrder.getExtResId());//参数为resId：资源ID
-				trafficResStocklog.setAdjustTime(new Date());
-				trafficResStocklog.setUserId(null);
-				trafficResStocklog.setUserName("");
+				//修改 traffic_res_stocklog 预留订单状态为已确认
+				TrafficResStocklog updateStockLog=new TrafficResStocklog();
+				updateStockLog.setAdjustState(2);
+				updateStockLog.setResId(groupOrder.getExtResId());
+				updateStockLog.setOrderId(groupOrder.getId());
+				trafficResBiz.updateStockLog_AdjustState(updateStockLog);
 				
-				trafficResBiz.insertTrafficResStocklog(trafficResStocklog);
+				
 				trafficResBiz.updateStockOrStockDisable(groupOrder.getExtResId());
 			}
 		}

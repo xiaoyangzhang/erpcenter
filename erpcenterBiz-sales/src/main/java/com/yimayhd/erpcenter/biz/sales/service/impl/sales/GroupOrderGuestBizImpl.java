@@ -107,7 +107,6 @@ public class GroupOrderGuestBizImpl implements GroupOrderGuestBiz {
 		return groupOrderGuestDal.getGuestByGroupIdAndIsLeader(groupId, isLeader);
 	}
 
-
 	@Override
 	public List<GroupOrderGuest> selectGuestTicketInfo(Integer resId) {
 		List<GroupOrderGuest> list= groupOrderGuestDal.selectGuestTicketInfo(resId);

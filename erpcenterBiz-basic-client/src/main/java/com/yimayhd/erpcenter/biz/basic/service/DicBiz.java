@@ -20,6 +20,7 @@ public interface DicBiz {
 	
 	List<DicInfo> getListByTypeCode(String typeCode,Integer bizId);
 	
+	
 	/**
 	 * 得到佣金项目类型树状字符串
 	 * @param typeCode
