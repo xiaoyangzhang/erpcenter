@@ -71,9 +71,6 @@ public interface GroupOrderMapper {
     /**
      * 根据团号查询团下所有订单数据
      *
-     * @param pageBean
-     * @param bizId
-     * @param set
      * @return
      */
     List<GroupOrder> selectSubOrderList(@Param("groupId") Integer groupId);
@@ -150,7 +147,6 @@ public interface GroupOrderMapper {
      *
      * @param pageBean
      * @param bizId
-     * @param mode
      * @return
      */
     GroupOrder selectProfitByConAndMode(@Param("page") PageBean<GroupOrder> pageBean,
