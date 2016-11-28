@@ -2,9 +2,14 @@ package com.yimayhd.erpcenter.facade.sales.service.impl;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.yimayhd.erpcenter.facade.sales.result.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +81,21 @@ import com.yimayhd.erpcenter.facade.sales.query.ChangeGroupDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ProfitQueryByTourDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ToSKConfirmPreviewDTO;
 import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToOrderLockTableDTO;
+import com.yimayhd.erpcenter.facade.sales.result.BookingProfitTableResult;
+import com.yimayhd.erpcenter.facade.sales.result.GetPushInfoResult;
+import com.yimayhd.erpcenter.facade.sales.result.ProfitQueryByTourResult;
+import com.yimayhd.erpcenter.facade.sales.result.PushWapResult;
+import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
+import com.yimayhd.erpcenter.facade.sales.result.ToAddTourGroupOrderResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToChangeGroupResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToGroupListResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToOtherInfoResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToPreviewResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToProfitQueryTableResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToSKChargePreviewResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToSKConfirmPreviewResult;
+import com.yimayhd.erpcenter.facade.sales.result.ToSaleChargeResult;
+import com.yimayhd.erpcenter.facade.sales.result.TogroupRequirementResult;
 import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToOrderLockListResult;
 import com.yimayhd.erpcenter.facade.sales.service.TourGroupFacade;
 import com.yimayhd.erpcenter.facade.sales.utils.DateUtils;
@@ -547,17 +567,11 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                     SupplierGuide guideInfo = supplierGuideBiz.getGuideInfoById(item.getGuideId()); //数据库读取导游信息
                     if (null != guideInfo){
                         gGuide.setGuideMobile(guideInfo.getMobile());
-                        if(guideInfo.getIdCardNo().length()==15 || guideInfo.getIdCardNo().length()==18){
-                            gGuide.setGuideCertificateNo(guideInfo.getIdCardNo());  //长度 15,18
-                        }else{
-                            pushWapResult.setSuccess(false);
-                            pushWapResult.setResultMsg("推送信息失败,请输入正确的证件号！");
-                            return pushWapResult;
-                        }
+                        gGuide.setGuideCertificateNo(guideInfo.getIdCardNo());
                         gGuide.setGuideLicenseNo(guideInfo.getLicenseNo());
                         gGuide.setGuideGender(guideInfo.getGender()==0?1:0);  //导游基础信息1女，0男， 接口数据：0女，1男
                     }
-                    /*if (null != item.getDriverId()){
+                    if (null != item.getDriverId()){
                         SupplierDriver sDriver = supplierDriverBiz.getDriverInfoById(item.getDriverId());//司机信息
                         if (sDriver != null){
                             gGuide.setDriverName(sDriver.getName());
@@ -1360,7 +1374,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
             List<GroupOrderGuest> guests = groupOrderGuestBiz
                     .selectByOrderId(orderId);
-            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(orderId,groupOrder.getGroupId());
+            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(orderId,curBizId);
             toPreviewResult.setGroupOrder(groupOrder);
             toPreviewResult.setGuests(guests);
             toPreviewResult.setGroupRoute(groupRoute);
@@ -1812,8 +1826,9 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
     /**
      * 省内交通
      *
-     * @param groupOrderTransports 0表示接信息 1表示送信息
+     * @param groupOrderTransports
      * @param
+     *            0表示接信息 1表示送信息
      * @return
      */
     public String getSourceType(List<GroupOrderTransport> groupOrderTransports) {

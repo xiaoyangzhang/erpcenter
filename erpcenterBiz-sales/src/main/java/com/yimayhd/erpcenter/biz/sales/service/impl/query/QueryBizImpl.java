@@ -36,7 +36,8 @@ public class QueryBizImpl implements QueryBiz {
 	@Override
 	public String productGuestStatics(
 			ProductGuestCondition condition,Set<Integer> userIds) {
-		 List<ProductGuestStaticsVo> list = queryDAL.productGuestStatics(condition,userIds);
+		return queryDAL.productGuestStatics(condition, userIds);
+		/* List<ProductGuestStaticsVo> list = queryDAL.productGuestStatics2(condition,userIds);
 		if(list!=null && list.size()>0){
 			int len = list.size();
 			
@@ -58,13 +59,14 @@ public class QueryBizImpl implements QueryBiz {
 			
 			return sb.substring(0, sb.length()-1); 
 		}
-		return "";
+		return "";*/
 	}
 
 	@Override
 	public String guestSourceStatics(
 			ProductGuestCondition condition,Set<Integer> userIds) {
-		List<Map<String, Object>> list = queryDAL.guestSourceStatics(condition,userIds);
+		return queryDAL.guestSourceStatics(condition,userIds);
+		/*List<Map<String, Object>> list = queryDAL.guestSourceStatics(condition,userIds);
 		if(list!=null && list.size()>0){
 			int len = list.size();
 			
@@ -87,7 +89,7 @@ public class QueryBizImpl implements QueryBiz {
 			
 			return sb.substring(0, sb.length()-1); 
 		}
-		return "";
+		return "";*/
 	}
 	//TODO 待抽取
 	@Override
@@ -147,13 +149,13 @@ public class QueryBizImpl implements QueryBiz {
 	@Override
 	public List<ProductGuestStaticsVo> productGuestStatics2(
 			ProductGuestCondition condition, Set<Integer> userIds) {
-		return  queryDAL.productGuestStatics(condition,userIds);
+		return  queryDAL.productGuestStatics2(condition,userIds);
 	}
 //
 	@Override
 	public List<Map<String, Object>> guestSourceStatics2(
 			ProductGuestCondition condition, Set<Integer> userIds) {
-		return queryDAL.guestSourceStatics(condition,userIds);
+		return queryDAL.guestSourceStatics2(condition,userIds);
 	}
 
 	@Override
