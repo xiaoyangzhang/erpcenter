@@ -64,8 +64,11 @@ public interface TourGroupFacade {
 	public ProfitQueryByTourResult toProfitQueryTableByTour(ProfitQueryByTourDTO profitQueryByTourDTO);
 	public ToSKConfirmPreviewResult toSKConfirmPreview(ToSKConfirmPreviewDTO toSKConfirmPreviewDTO);
 
-    public ProfitEverifyTableResult toProfitEverifyTable(GroupOrder groupOrder, Integer page, Integer pageSize,Integer bizId,Set<Integer> dataUserIdSet);
-
+    public ProfitEverifyTableResult toProfitEverifyTable(GroupOrder groupOrder, Integer page, Integer pageSize, Integer bizId, Set<Integer> dataUserIdSet);
+    public BookingProfitTableResult toSaleProfitListByTour(Integer bizId);
+    public ProfitQueryByTourResult toSaleProfitTableByTour(ProfitQueryByTourDTO profitQueryByTourDTO);
+    public BookingProfitTableResult operatorSummaryTable(TourGroup tour,Integer bizId,Set<Integer> userIdSet);
+    public BookingProfitTableResult toProfitSaleExcel(GroupOrder groupOrder,Integer bizId,Set<Integer> userIdSet);
 
 
 }

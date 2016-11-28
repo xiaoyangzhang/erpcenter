@@ -1811,8 +1811,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
     /**
      * 省内交通
      *
-     * @param groupOrderTransports
-     * @param 0表示接信息 1表示送信息
+     * @param groupOrderTransports 0表示接信息 1表示送信息
      * @return
      */
     public String getSourceType(List<GroupOrderTransport> groupOrderTransports) {
@@ -2053,7 +2052,17 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
         }
         return bookingProfitTableResult;
     }
-
+    @Override
+    public BookingProfitTableResult toSaleProfitListByTour(Integer bizId){
+        BookingProfitTableResult bookingProfitTableResult = new BookingProfitTableResult();
+        try {
+            bookingProfitTableResult.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(bizId));
+            bookingProfitTableResult.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(bizId));
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return bookingProfitTableResult;
+    }
     public ToOrderLockListResult toOrderLockList(Integer bizId){
     	ToOrderLockListResult result=new ToOrderLockListResult();
 
@@ -2102,8 +2111,135 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
 
 		return result;
 	}
-	
-	public ProfitQueryByTourResult toProfitQueryTableByTour(ProfitQueryByTourDTO profitQueryByTourDTO){
+    public ProfitQueryByTourResult toSaleProfitTableByTour(ProfitQueryByTourDTO profitQueryByTourDTO){
+
+        PageBean<TourGroup> pageBean = new PageBean<TourGroup>();
+        pageBean.setPage(profitQueryByTourDTO.getPage());
+        Integer pageSize = profitQueryByTourDTO.getPageSize();
+        if (pageSize == null) {
+            pageSize = com.yimayhd.erpcenter.dal.product.constans.Constants.PAGESIZE;
+        }
+        pageBean.setPageSize(pageSize);
+        TourGroup tour = profitQueryByTourDTO.getTour();
+        pageBean.setParameter(tour);
+        // 如果人员为空并且部门不为空，则取部门下的人id
+        if (StringUtils.isBlank(tour.getSaleOperatorIds())
+                && StringUtils.isNotBlank(tour.getOrgIds())) {
+            Set<Integer> set = new HashSet<Integer>();
+            String[] orgIdArr = tour.getOrgIds().split(",");
+            for (String orgIdStr : orgIdArr) {
+                set.add(Integer.valueOf(orgIdStr));
+            }
+            set = platformEmployeeBiz.getUserIdListByOrgIdList(profitQueryByTourDTO.getBizId(),set);
+            String salesOperatorIds = "";
+            for (Integer usrId : set) {
+                salesOperatorIds += usrId + ",";
+            }
+            if (!salesOperatorIds.equals("")) {
+                tour.setSaleOperatorIds(
+                        salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+            }
+        }
+        pageBean = tourGroupBiz.selectSaleProfitByTourListPage(pageBean,
+                profitQueryByTourDTO.getBizId(),profitQueryByTourDTO.getUserIdSet());
+        // 统计成人、小孩、全陪
+        PageBean<TourGroup> pb = tourGroupBiz.selectSaleProfitByTourCon(pageBean,
+                profitQueryByTourDTO.getBizId(), profitQueryByTourDTO.getUserIdSet());
+
+        // 总成本、总收入
+        TourGroup group = tourGroupBiz.selectSaleProfitByTourConAndMode(pageBean,
+                profitQueryByTourDTO.getBizId(), profitQueryByTourDTO.getUserIdSet());
+
+        TourGroup groupCost = tourGroupBiz.selectSumCostProfit(tour,
+                profitQueryByTourDTO.getBizId(), profitQueryByTourDTO.getUserIdSet());
+
+        if (group == null) {
+            group = new TourGroup();
+            group.setIncome(new BigDecimal(0));
+            group.setTotalBudget(new BigDecimal(0));
+        }
+        if (groupCost == null) {
+            groupCost = new TourGroup();
+            groupCost.setSumTotalIncome(new BigDecimal(0));
+            groupCost.setSumTotalCost(new BigDecimal(0));
+        }
+        ProfitQueryByTourResult result = new ProfitQueryByTourResult();
+        result.setPageBean(pageBean);
+        result.setPb(pb);
+        result.setGroup(group);
+        result.setGroupCost(groupCost);
+        return result;
+    }
+
+    @Override
+    public BookingProfitTableResult operatorSummaryTable(TourGroup tour, Integer bizId,Set<Integer> userIdSet) {
+        PageBean pageBean = new PageBean();
+        pageBean.setPage(1);
+        pageBean.setPageSize(10000);
+        if (StringUtils.isBlank(tour.getSaleOperatorIds())
+                && StringUtils.isNotBlank(tour.getOrgIds())) {
+            Set<Integer> set = new HashSet<Integer>();
+            String[] orgIdArr = tour.getOrgIds().split(",");
+            for (String orgIdStr : orgIdArr) {
+                set.add(Integer.valueOf(orgIdStr));
+            }
+            set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId,set);
+            String operatorIds = "";
+            for (Integer usrId : set) {
+                operatorIds += usrId + ",";
+            }
+            if (!operatorIds.equals("")) {
+                tour.setSaleOperatorIds(operatorIds.substring(0, operatorIds.length() - 1));
+            }
+        }
+        pageBean.setParameter(tour);
+        Map<String,Object> map = tourGroupBiz.selectBookingProfitTotal(pageBean,bizId, userIdSet);
+        pageBean = tourGroupBiz.selectBookingProfitList(pageBean, bizId, userIdSet);
+        List result = pageBean.getResult();
+        if (result != null && result.size() > 0) {
+            for (Object obj : result) {
+                TourGroup tGroup = (TourGroup) obj;
+                if (tGroup.getGroupMode() < 1) {
+                    tGroup.setSupplierName("散客团");
+                }
+            }
+        }
+        BookingProfitTableResult result1 = new BookingProfitTableResult();
+        result1.setPageBean(pageBean);
+        result1.setSum(map);
+        return  result1;
+    }
+
+    @Override
+    public BookingProfitTableResult toProfitSaleExcel(GroupOrder groupOrder, Integer bizId, Set<Integer> userIdSet) {
+        if (StringUtils.isBlank(groupOrder.getSaleOperatorIds()) && StringUtils.isNotBlank(groupOrder.getOrgIds())) {
+            Set<Integer> set = new HashSet<Integer>();
+            String[] orgIdArr = groupOrder.getOrgIds().split(",");
+            for (String orgIdStr : orgIdArr) {
+                set.add(Integer.valueOf(orgIdStr));
+            }
+            set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
+            String salesOperatorIds = "";
+            for (Integer usrId : set) {
+                salesOperatorIds += usrId + ",";
+            }
+            if (!salesOperatorIds.equals("")) {
+                groupOrder.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+            }
+        }
+        PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
+        pageBean.setPage(1);
+        pageBean.setPageSize(10000);
+        pageBean.setParameter(groupOrder);
+        pageBean = groupOrderBiz.selectProfitEverifyListPage(pageBean, bizId, userIdSet, 1);
+        Map<String,Object> map = groupOrderBiz.selectProfitEverifyByTotal(pageBean, bizId, userIdSet, 1);
+        BookingProfitTableResult result1 = new BookingProfitTableResult();
+        result1.setPageBean(pageBean);
+        result1.setSum(map);
+        return  result1;
+    }
+
+    public ProfitQueryByTourResult toProfitQueryTableByTour(ProfitQueryByTourDTO profitQueryByTourDTO){
 		Integer bizId = profitQueryByTourDTO.getBizId();
 		TourGroup tour = profitQueryByTourDTO.getTour();
 		Set<Integer> userIdSet = profitQueryByTourDTO.getUserIdSet();

@@ -2,6 +2,7 @@ package com.yimayhd.erpcenter.facade.supplier.service;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.facade.supplier.query.SupplierContractVoDTO;
+import com.yimayhd.erpcenter.facade.supplier.result.ContractPagaResult;
 import com.yimayhd.erpcenter.facade.supplier.result.ContractSupplierListResult;
 import com.yimayhd.erpcenter.facade.supplier.result.NewContractPagaResult;
 import com.yimayhd.erpcenter.facade.supplier.result.WebResult;
@@ -31,7 +32,7 @@ public interface ContractFacade {
 
     public ContractSupplierListResult contractSupplierList(Integer bizId,PageBean<SupplierInfo> pageBean,String provinceId,String cityId);
 
-    public WebResult<PageBean> contractList( String supplierId,PageBean<SupplierContract> pageBean,Integer bizId);
+    public ContractPagaResult contractList(String supplierId, PageBean<SupplierContract> pageBean, Integer bizId);
 
     public WebResult<PageBean> fleetList(Integer bizId,PageBean<SupplierContract> pageBean,Integer supplierId);
 
@@ -47,4 +48,8 @@ public interface ContractFacade {
     public WebResult<Boolean> copyContract(Integer supplierId, Integer contractId);
 
     public WebResult<Boolean> deleteFleetContract(Integer bizId,Integer contractId);
+
+    public NewContractPagaResult newDeliveryContractPage(Integer bizId,String supplierId);
+
+    public NewContractPagaResult editDeliveryContractPage(Integer bizId,String contractId);
 }
