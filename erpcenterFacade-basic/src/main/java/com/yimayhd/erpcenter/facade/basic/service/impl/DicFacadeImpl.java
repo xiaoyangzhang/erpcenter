@@ -153,4 +153,10 @@ public class DicFacadeImpl implements DicFacade {
 		return dicBiz.getListByTypeCode(typeCode, bizId);
 	}
 	
+	@Override
+	public List<DicInfo> getListByTypeCode(String typeCode) {
+		return dicBiz.getListByTypeCode(typeCode,0);
+	}
+	
+	
 }
