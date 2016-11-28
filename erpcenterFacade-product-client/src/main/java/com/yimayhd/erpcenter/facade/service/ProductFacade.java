@@ -21,16 +21,7 @@ import com.yimayhd.erpcenter.facade.query.ProductPriceListDTO;
 import com.yimayhd.erpcenter.facade.query.ProductRemarkDTO;
 import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
-import com.yimayhd.erpcenter.facade.result.ComponentProductListResult;
-import com.yimayhd.erpcenter.facade.result.GetProductRouteResult;
-import com.yimayhd.erpcenter.facade.result.ProductDataRightResult;
-import com.yimayhd.erpcenter.facade.result.ProductInfoResult;
-import com.yimayhd.erpcenter.facade.result.ProductPriceListResult;
-import com.yimayhd.erpcenter.facade.result.ResultSupport;
-import com.yimayhd.erpcenter.facade.result.ToProductAddResult;
-import com.yimayhd.erpcenter.facade.result.ToProductRemarkResult;
-import com.yimayhd.erpcenter.facade.result.ToProductTagResult;
-import com.yimayhd.erpcenter.facade.result.WebResult;
+import com.yimayhd.erpcenter.facade.result.*;
 
 
 /**
@@ -233,4 +224,36 @@ public interface ProductFacade {
 	ProductInfoResult viewRoute(Integer productId);
 	boolean saveProductRoute(ProductRouteVo productRouteVo);
 	boolean editProductRoute(ProductRouteVo productRouteVo);
+
+	/**
+	 * @author liyong
+	 * @param cpxlPP
+	 * @param bizId
+	 * @return
+	 */
+	TaoBaoProductListResult taobaoProductList(String cpxlPP,Integer bizId);
+
+	/**
+	 * @author liyong
+	 * @param cpxlPP
+	 * @param bizId
+	 * @param pageBean
+	 * @return
+	 */
+	TaoBaoProductListResult taobaoProductListTable(String cpxlPP,Integer bizId,PageBean pageBean);
+
+	/**
+	 * @author liyong
+	 * @param productId
+	 * @param cpxlPP
+	 * @param bizId
+	 * @return
+	 */
+	ToCopyResult toCopyHtml(Integer productId,String cpxlPP,Integer bizId);
+
+	WebResult<Integer> copyProductInfo(ProductSaveDTO productSaveDTO,String myBizCode);
+
+
+
+
 }
