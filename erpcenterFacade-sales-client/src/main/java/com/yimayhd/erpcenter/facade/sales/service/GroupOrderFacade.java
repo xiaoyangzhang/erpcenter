@@ -2,6 +2,9 @@ package com.yimayhd.erpcenter.facade.sales.service;
 
 import java.text.ParseException;
 
+import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.facade.sales.query.ReportStatisticsQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.query.grouporder.*;
 import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
 import com.yimayhd.erpcenter.facade.sales.result.grouporder.*;
@@ -154,5 +157,8 @@ public interface GroupOrderFacade {
 	ImportOrderTableResult importOrderTable(ImportOrderTableDTO importOrderTableDTO);
 
 	ImportOrderTableResult saveTransferOrder(ImportOrderTableDTO importOrderTableDTO);
+	
+	
+	public ReportStatisticsResult selectMonthlyReportStatisticsListPage(ReportStatisticsQueryDTO queryDTO);
 
 }
