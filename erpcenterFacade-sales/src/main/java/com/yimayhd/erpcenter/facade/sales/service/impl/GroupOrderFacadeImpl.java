@@ -3612,6 +3612,15 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		
 		return result;
 	}
+
+	@Override
+	public ReportStatisticsNoPageResult selectMonthlyReportStatistics(ReportStatisticsQueryDTO queryDTO) {
+		ReportStatisticsNoPageResult  result = new ReportStatisticsNoPageResult();
+		List<GroupOrder> orderList  = groupOrderService.selectMonthlyReportStatistics(queryDTO.getPageBean(), queryDTO.getBizId());
+		result.setOrderList(orderList);
+		
+		return result;
+	}
 	
 	
 	

@@ -160,5 +160,8 @@ public interface GroupOrderFacade {
 	
 	
 	public ReportStatisticsResult selectMonthlyReportStatisticsListPage(ReportStatisticsQueryDTO queryDTO);
+	
+	
+	public ReportStatisticsNoPageResult selectMonthlyReportStatistics(ReportStatisticsQueryDTO queryDTO); 
 
 }
