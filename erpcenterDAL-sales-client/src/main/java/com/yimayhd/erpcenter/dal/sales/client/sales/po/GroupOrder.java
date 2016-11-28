@@ -1,9 +1,12 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.po;
 
-
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.yimayhd.erpcenter.common.util.LogFieldAnno;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy;

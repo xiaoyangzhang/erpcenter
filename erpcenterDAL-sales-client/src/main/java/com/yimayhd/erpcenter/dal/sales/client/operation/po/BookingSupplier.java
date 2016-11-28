@@ -1,6 +1,5 @@
 package com.yimayhd.erpcenter.dal.sales.client.operation.po;
 
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;

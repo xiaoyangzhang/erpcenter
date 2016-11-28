@@ -1,6 +1,5 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.po;
 
-
 import java.io.Serializable;
 
 import com.yimayhd.erpcenter.common.util.LogFieldAnno;

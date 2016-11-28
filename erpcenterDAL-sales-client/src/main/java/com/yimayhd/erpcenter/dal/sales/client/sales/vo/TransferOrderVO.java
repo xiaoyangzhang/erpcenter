@@ -1,6 +1,5 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.vo;
 
-
 import java.io.Serializable;
 import java.util.List;
 
