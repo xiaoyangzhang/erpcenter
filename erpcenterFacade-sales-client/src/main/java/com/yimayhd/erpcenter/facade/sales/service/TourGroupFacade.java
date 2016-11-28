@@ -9,21 +9,7 @@ import com.yimayhd.erpcenter.facade.sales.query.ChangeGroupDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ProfitQueryByTourDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ToSKConfirmPreviewDTO;
 import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToOrderLockTableDTO;
-import com.yimayhd.erpcenter.facade.sales.result.BookingProfitTableResult;
-import com.yimayhd.erpcenter.facade.sales.result.GetPushInfoResult;
-import com.yimayhd.erpcenter.facade.sales.result.ProfitQueryByTourResult;
-import com.yimayhd.erpcenter.facade.sales.result.PushWapResult;
-import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
-import com.yimayhd.erpcenter.facade.sales.result.ToAddTourGroupOrderResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToChangeGroupResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToGroupListResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToOtherInfoResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToPreviewResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToProfitQueryTableResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToSKChargePreviewResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToSKConfirmPreviewResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToSaleChargeResult;
-import com.yimayhd.erpcenter.facade.sales.result.TogroupRequirementResult;
+import com.yimayhd.erpcenter.facade.sales.result.*;
 import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToOrderLockListResult;
 
 /**
@@ -78,6 +64,7 @@ public interface TourGroupFacade {
 	public ProfitQueryByTourResult toProfitQueryTableByTour(ProfitQueryByTourDTO profitQueryByTourDTO);
 	public ToSKConfirmPreviewResult toSKConfirmPreview(ToSKConfirmPreviewDTO toSKConfirmPreviewDTO);
 
+    public ProfitEverifyTableResult toProfitEverifyTable(GroupOrder groupOrder, Integer page, Integer pageSize,Integer bizId,Set<Integer> dataUserIdSet);
 
 
 

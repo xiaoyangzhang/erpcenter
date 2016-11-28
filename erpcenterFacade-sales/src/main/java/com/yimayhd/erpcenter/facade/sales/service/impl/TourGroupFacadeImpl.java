@@ -2,14 +2,9 @@ package com.yimayhd.erpcenter.facade.sales.service.impl;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.yimayhd.erpcenter.facade.sales.result.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,21 +76,6 @@ import com.yimayhd.erpcenter.facade.sales.query.ChangeGroupDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ProfitQueryByTourDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ToSKConfirmPreviewDTO;
 import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToOrderLockTableDTO;
-import com.yimayhd.erpcenter.facade.sales.result.BookingProfitTableResult;
-import com.yimayhd.erpcenter.facade.sales.result.GetPushInfoResult;
-import com.yimayhd.erpcenter.facade.sales.result.ProfitQueryByTourResult;
-import com.yimayhd.erpcenter.facade.sales.result.PushWapResult;
-import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
-import com.yimayhd.erpcenter.facade.sales.result.ToAddTourGroupOrderResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToChangeGroupResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToGroupListResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToOtherInfoResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToPreviewResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToProfitQueryTableResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToSKChargePreviewResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToSKConfirmPreviewResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToSaleChargeResult;
-import com.yimayhd.erpcenter.facade.sales.result.TogroupRequirementResult;
 import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToOrderLockListResult;
 import com.yimayhd.erpcenter.facade.sales.service.TourGroupFacade;
 import com.yimayhd.erpcenter.facade.sales.utils.DateUtils;
@@ -110,6 +90,7 @@ import com.yimayhd.erpresource.dal.po.SupplierGuide;
 import com.yimayhd.erpresource.dal.po.SupplierImg;
 import com.yimayhd.erpresource.dal.po.SupplierImgType;
 import com.yimayhd.erpresource.dal.po.SupplierInfo;
+import org.springframework.web.util.WebUtils;
 
 /**
  * @ClassName: ${ClassName}
@@ -513,7 +494,30 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                 }
 
                 //TODO 订单行程 暂时先不做
+                List<GroupRoute> rlist = groupRouteBiz.selectByOrderId(ord.getId());
+                if (rlist != null && rlist.size() > 0) {
+                    for (GroupRoute item : rlist) {
+                        AssistantGroupRoute gRoute = new AssistantGroupRoute();
+                        gRoute.setId(0);
+                        gRoute.setRouteId(item.getId());
+                        gRoute.setOrderId(item.getOrderId());
+                        gRoute.setGroupId(0);
+                        if (tourGroup.getGroupMode()>0){
+                            //团队情况
+                            gRoute.setGroupId(tourGroup.getId());
+                        }
+                        gRoute.setDayNum(item.getDayNum());
+                        gRoute.setGroupDate(DateUtils.format(item.getGroupDate()));
+                        gRoute.setBreakfast(item.getBreakfast());
+                        gRoute.setLunch(item.getLunch());
+                        gRoute.setSupper(item.getSupper());
+                        gRoute.setHotelName(item.getHotelName());
+                        gRoute.setRouteDesp(item.getRouteDesp());
+                        gRoute.setRouteTip(item.getRouteTip());
 
+                        routeList.add(gRoute);
+                    }
+                }
             }
 
             //guideList 司机及导游
@@ -543,11 +547,17 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                     SupplierGuide guideInfo = supplierGuideBiz.getGuideInfoById(item.getGuideId()); //数据库读取导游信息
                     if (null != guideInfo){
                         gGuide.setGuideMobile(guideInfo.getMobile());
-                        gGuide.setGuideCertificateNo(guideInfo.getIdCardNo());
+                        if(guideInfo.getIdCardNo().length()==15 || guideInfo.getIdCardNo().length()==18){
+                            gGuide.setGuideCertificateNo(guideInfo.getIdCardNo());  //长度 15,18
+                        }else{
+                            pushWapResult.setSuccess(false);
+                            pushWapResult.setResultMsg("推送信息失败,请输入正确的证件号！");
+                            return pushWapResult;
+                        }
                         gGuide.setGuideLicenseNo(guideInfo.getLicenseNo());
                         gGuide.setGuideGender(guideInfo.getGender()==0?1:0);  //导游基础信息1女，0男， 接口数据：0女，1男
                     }
-                    if (null != item.getDriverId()){
+                    /*if (null != item.getDriverId()){
                         SupplierDriver sDriver = supplierDriverBiz.getDriverInfoById(item.getDriverId());//司机信息
                         if (sDriver != null){
                             gGuide.setDriverName(sDriver.getName());
@@ -563,6 +573,28 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                             //车队
                             BookingSupplier bs = bookingSupplierBiz.selectByPrimaryKey(bookingSupplierDetail.getBookingId());
                             gGuide.setDriverCompany(bs.getSupplierName());
+                        }
+                    }*/
+                    if (null != item.getBookingDetailId()) {
+                        // 车牌号
+                        BookingSupplierDetail bookingSupplierDetail = bookingSupplierDetailBiz
+                                .selectByPrimaryKey(item.getBookingDetailId());
+                        if (null != bookingSupplierDetail) {
+                            gGuide.setDriverLicenseCar(bookingSupplierDetail.getCarLisence());
+                            // 车队
+                            BookingSupplier bs = bookingSupplierBiz
+                                    .selectByPrimaryKey(bookingSupplierDetail.getBookingId());
+                            gGuide.setDriverCompany(bs.getSupplierName());
+
+                            if (bookingSupplierDetail.getDriverId() != null){
+                                SupplierDriver sDriver = supplierDriverBiz .getDriverInfoById(bookingSupplierDetail.getDriverId());// 司机信息
+                                if (sDriver != null) {
+                                    gGuide.setDriverName(sDriver.getName());
+                                    gGuide.setDriverMobile(sDriver.getMobile());
+                                    gGuide.setDriverGender(sDriver.getGender() == 0 ? 1 : 0); // 司机基础信息1女，0男，
+                                }
+                            }
+
                         }
                     }
                     guideList.add(gGuide);
@@ -1031,6 +1063,9 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
         try {
             List<RegionInfo> allProvince = regionBiz.getAllProvince();
             toGroupListResult.setAllProvince(allProvince);
+            toGroupListResult.setPpList(dicBiz.getListByTypeCode(BasicConstants.CPXL_PP,curBizId));
+            toGroupListResult.setSourceTypeList(dicBiz.getListByTypeCode(Constants.GUEST_SOURCE_TYPE,curBizId));
+            toGroupListResult.setTypeList(dicBiz.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE,curBizId));
             toGroupListResult.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(curBizId));
             toGroupListResult.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(curBizId));
         } catch (Exception e) {
@@ -1057,6 +1092,11 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                 gop.setTotalPrice(gop.getUnitPrice()*gop.getNumPerson());
                 prices.add(gop) ;
             }
+            /* 银行信息 */
+            List<SysBizBankAccount> sysBizBankAccountList = sysBizBankAccountBiz.getListByBizId(curBizId);
+            toPreviewResult.setSysBizBankAccountList(sysBizBankAccountList);
+
+
             List<GroupRoute> routes = groupRouteBiz.selectByOrderId(orderId);
             SupplierInfo supplier = supplierBiz.selectBySupplierId(groupOrder
                     .getSupplierId());
@@ -1224,6 +1264,10 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             toPreviewResult.setGuideString(guideString);
             toPreviewResult.setGuestGuideString(guestGuideString);
 
+            /* 银行信息 */
+            List<SysBizBankAccount> sysBizBankAccountList = sysBizBankAccountBiz.getListByBizId(curBizId);
+            toPreviewResult.setSysBizBankAccountList(sysBizBankAccountList);
+
             // 根据散客订单统计酒店信息
             List<GroupRequirement> grogShopList = groupRequirementBiz
                     .selectByOrderAndType(groupOrder.getId(), 3);
@@ -1297,7 +1341,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
             List<GroupOrderGuest> guests = groupOrderGuestBiz
                     .selectByOrderId(orderId);
-            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(orderId);
+            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(orderId,groupOrder.getGroupId());
             GroupOrderGuest genderSum=groupOrderGuestBiz.selectGenderSum(orderId);
             toPreviewResult.setGroupOrder(groupOrder);
             toPreviewResult.setGuests(guests);
@@ -1316,7 +1360,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
             List<GroupOrderGuest> guests = groupOrderGuestBiz
                     .selectByOrderId(orderId);
-            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(orderId);
+            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(orderId,groupOrder.getGroupId());
             toPreviewResult.setGroupOrder(groupOrder);
             toPreviewResult.setGuests(guests);
             toPreviewResult.setGroupRoute(groupRoute);
@@ -1768,9 +1812,8 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
     /**
      * 省内交通
      *
-     * @param groupOrderTransports
+     * @param groupOrderTransports 0表示接信息 1表示送信息
      * @param
-     *            0表示接信息 1表示送信息
      * @return
      */
     public String getSourceType(List<GroupOrderTransport> groupOrderTransports) {
@@ -2218,8 +2261,129 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
 		
 		return result;
 	}
-	
-	/**
+
+    @Override
+    public ProfitEverifyTableResult toProfitEverifyTable(GroupOrder groupOrder, Integer page, Integer pageSize,Integer bizId,Set<Integer> dataUserIdSet) {
+        try {
+            ProfitEverifyTableResult result = new ProfitEverifyTableResult();
+            PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
+            if(page==null){
+                pageBean.setPage(1);
+            }else{
+                pageBean.setPage(page);
+            }
+            if(pageSize==null){
+                pageBean.setPageSize(com.yimayhd.erpcenter.dal.product.constans.Constants.PAGESIZE);
+            }else{
+                pageBean.setPageSize(pageSize);
+            }
+
+            if (groupOrder.getDateType() != null && groupOrder.getDateType() == 2) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                if (!"".equals(groupOrder.getStartTime())) {
+                    groupOrder.setStartTime(sdf.parse(groupOrder.getStartTime()).getTime() + "");
+                }
+                if (!"".equals(groupOrder.getEndTime())) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(sdf.parse(groupOrder.getEndTime()));
+                    calendar.add(Calendar.DAY_OF_MONTH, +1);// 让日期加1
+                    groupOrder.setEndTime(calendar.getTime().getTime() + "");
+                }
+
+            }
+
+            if (StringUtils.isBlank(groupOrder.getSaleOperatorIds()) && StringUtils.isNotBlank(groupOrder.getOrgIds())) {
+                Set<Integer> set = new HashSet<Integer>();
+                String[] orgIdArr = groupOrder.getOrgIds().split(",");
+                for (String orgIdStr : orgIdArr) {
+                    set.add(Integer.valueOf(orgIdStr));
+                }
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
+                String salesOperatorIds = "";
+                for (Integer usrId : set) {
+                    salesOperatorIds += usrId + ",";
+                }
+                if (!salesOperatorIds.equals("")) {
+                    groupOrder.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+                }
+            }
+
+            pageBean.setPage(page);
+            pageBean.setParameter(groupOrder);
+            //查询内部结算信息
+            pageBean = groupOrderBiz.selectProfitEverifyListPage(pageBean, bizId,dataUserIdSet, 1);
+
+            List<GroupOrder> list = pageBean.getResult();
+            Integer pageTotalAudit = 0;
+            Integer pageTotalChild = 0;
+            Integer pageTotalGuide = 0;
+            //收入
+            BigDecimal sum_total = new BigDecimal(0);
+            //其它收入
+            BigDecimal sum_qdtotal = new BigDecimal(0);
+            //成本
+            BigDecimal sum_budget = new BigDecimal(0);
+            //毛利
+            BigDecimal sum_g_profit = new BigDecimal(0);
+
+            if (pageBean.getResult() != null && pageBean.getResult().size() > 0) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                for (GroupOrder groupOrder2 : list) {
+                    pageTotalAudit += groupOrder2.getNumAdult() == null ? 0 : groupOrder2.getNumAdult();
+                    pageTotalChild += groupOrder2.getNumChild() == null ? 0 : groupOrder2.getNumChild();
+                    pageTotalGuide += groupOrder2.getNumGuide() == null ? 0 : groupOrder2.getNumGuide();
+                    sum_total=sum_total.add(groupOrder2.getTotal()==null?new BigDecimal(0): groupOrder2.getTotal());
+                    sum_qdtotal=sum_qdtotal.add(groupOrder2.getQdtotal()==null?new BigDecimal(0):groupOrder2.getQdtotal());
+                    sum_budget=sum_budget.add(groupOrder2.getBudget()==null?new BigDecimal(0):groupOrder2.getBudget());
+                    sum_g_profit=sum_g_profit.add(groupOrder2.getG_profit()==null?new BigDecimal(0):groupOrder2.getG_profit());
+
+                    Long createTime = groupOrder2.getCreateTime();
+                    String dateStr = sdf.format(createTime);
+                    groupOrder2.setCreateTimeStr(dateStr);
+                }
+            }
+
+            List<DicInfo> typeList = dicBiz.getListByTypeCode(com.yimayhd.erpcenter.common.contants.BasicConstants.SALES_TEAM_TYPE,
+                    bizId);
+
+
+            //查询内部结算信息
+            GroupOrder groupOrderTatol=groupOrderBiz.selectProfitEverifyByCon(groupOrder,bizId,dataUserIdSet, 1);
+            result.setPageTotalAudit(pageTotalAudit);
+            result.setPageTotalChild(pageTotalChild);
+            result.setPageTotalGuide(pageTotalGuide);
+            result.setSum_budget(sum_budget);
+            result.setSum_g_profit(sum_g_profit);
+            result.setSum_qdtotal(sum_qdtotal);
+            result.setPageBean(pageBean);
+            if(groupOrderTatol==null){
+                result.setGroupOrderTatol(true);
+                return result;
+            }
+            //人数
+            String numberPeople=groupOrderTatol.getNumAdult()+"+"+groupOrderTatol.getNumChild()+"+"+groupOrderTatol.getNumGuide();
+            //收入
+            BigDecimal z_sum_total = (BigDecimal) (groupOrderTatol.getSumTotal()==null?(new BigDecimal(0)):groupOrderTatol.getSumTotal());
+            //其它收入
+            BigDecimal z_sum_qdtotal = (BigDecimal) (groupOrderTatol.getSumQdtotal()==null?(new BigDecimal(0)):groupOrderTatol.getSumQdtotal());
+            //成本
+            BigDecimal z_sum_budget = (BigDecimal) (groupOrderTatol.getSumBudget()==null?(new BigDecimal(0)):groupOrderTatol.getSumBudget());
+            //毛利
+            BigDecimal z_sum_profit =(BigDecimal) (groupOrderTatol.getSumProfit()==null?(new BigDecimal(0)):groupOrderTatol.getSumProfit());
+            result.setNumberPeople(numberPeople);
+            result.setZ_sum_total(z_sum_total);
+            result.setZ_sum_budget(z_sum_budget);
+            result.setZ_sum_qdtotal(z_sum_qdtotal);
+            result.setZ_sum_profit(z_sum_profit);
+            return result;
+        }catch (Exception e){
+            logger.error("toProfitEverifyTable error:",e);
+        }
+
+        return null;
+    }
+
+    /**
 	 * 组织所有导游信息
 	 * 
 	 * @param guides
