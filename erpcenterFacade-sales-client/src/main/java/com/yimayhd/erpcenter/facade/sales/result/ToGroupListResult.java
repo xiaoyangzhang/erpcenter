@@ -16,6 +16,8 @@ public class ToGroupListResult extends ResultSupport {
     private String orgJsonStr;
     private String orgUserJsonStr;
     private List<DicInfo> sourceTypeList;
+    private List<DicInfo> typeList;
+    private List<DicInfo> ppList;
 
     public List<RegionInfo> getAllProvince() {
         return allProvince;
@@ -47,6 +49,20 @@ public class ToGroupListResult extends ResultSupport {
 
     public void setSourceTypeList(List<DicInfo> sourceTypeList) {
         this.sourceTypeList = sourceTypeList;
+    }
+    public List<DicInfo> getTypeList() {
+        return typeList;
+    }
+
+    public void setTypeList(List<DicInfo> typeList) {
+        this.typeList = typeList;
+    }
+    public List<DicInfo> getPpList() {
+        return ppList;
+    }
+
+    public void setPpList(List<DicInfo> ppList) {
+        this.ppList = ppList;
     }
 
 }

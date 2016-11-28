@@ -3224,8 +3224,12 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 	@Override
 	public ImportOrderTableResult saveTransferOrder(ImportOrderTableDTO importOrderTableDTO) {
 		ImportOrderTableResult importOrderTableResult = new ImportOrderTableResult();
+		try {
 		importOrderTableResult.setGroupOrderId(groupOrderService.importGroupOrder(importOrderTableDTO.getOrderIds(), importOrderTableDTO.getSaleOperatorId(),
 				importOrderTableDTO.getSaleOperatorName(), importOrderTableDTO.getOperatorId(), importOrderTableDTO.getOperatorName(), importOrderTableDTO.getSupplierId(), importOrderTableDTO.getSupplierName(), importOrderTableDTO.getOrderType()));
+		} catch (Exception e) {
+			log.error("", e);
+		}
 		return importOrderTableResult;
 	}
 
