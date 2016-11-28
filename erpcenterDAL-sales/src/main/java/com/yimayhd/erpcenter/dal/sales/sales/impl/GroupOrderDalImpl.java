@@ -1458,7 +1458,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 
 
 	   /**
-     * @see 内部结算(销售)—审核功能
+     * @see —审核功能
      * @author TengDong
      * @param record 团队订单
      * @return  boolean
@@ -1652,7 +1652,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     }
 
 	    /**
-	     * @see 内部结算销售 总合计
+	     *   总合计
 	     * @Auther TengDong
 	     * @Date 20161102
 	     * @param groupOrder
@@ -1678,7 +1678,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 	}
 
 	 /**
-     * @see 内部结算
+     * @see
      * @Auth TengDong
      * @Date 20161031
      * @param pageBean  model

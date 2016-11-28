@@ -2370,6 +2370,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             BigDecimal z_sum_budget = (BigDecimal) (groupOrderTatol.getSumBudget()==null?(new BigDecimal(0)):groupOrderTatol.getSumBudget());
             //毛利
             BigDecimal z_sum_profit =(BigDecimal) (groupOrderTatol.getSumProfit()==null?(new BigDecimal(0)):groupOrderTatol.getSumProfit());
+            result.setGroupOrderTatol(false);
             result.setNumberPeople(numberPeople);
             result.setZ_sum_total(z_sum_total);
             result.setZ_sum_budget(z_sum_budget);
