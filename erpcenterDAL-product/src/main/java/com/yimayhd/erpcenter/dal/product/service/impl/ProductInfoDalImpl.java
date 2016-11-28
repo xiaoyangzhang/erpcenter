@@ -137,7 +137,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	
 	@Override
 	public PageBean<ProductInfo> selectProductListPage(PageBean<ProductInfo> pageBean, Map parameters) {
-		List<ProductInfo> list = infoMapper.selectProductListPage(pageBean, parameters);
+		List<ProductInfo> list = null;//infoMapper.selectProductListPage(pageBean, parameters);
 		pageBean.setResult(list);
 		return pageBean;
 	}

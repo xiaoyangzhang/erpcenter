@@ -1,7 +1,8 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.po;
 
-import com.yihg.basic.util.LogFieldAnno;
-import com.yihg.operation.po.BookingShopDetailDeploy;
+
+import com.yimayhd.erpcenter.common.util.LogFieldAnno;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

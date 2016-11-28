@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.vo;
 
-import com.yihg.sales.po.*;
+
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 
 import java.io.Serializable;
 import java.util.List;

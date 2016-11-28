@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.vo;
 
-import com.yihg.sales.po.GroupOrderGuest;
+
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 
 import java.io.Serializable;
 import java.util.ArrayList;
