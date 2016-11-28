@@ -75,4 +75,6 @@ public interface BookingSupplierFacade {
     PageBean getTrainTicketGroupList(PageBean pageBean,TourGroupVO tourGroup, Set<Integer> set);
     PageBean getInsuranceGroupList(PageBean pageBean,TourGroupVO tourGroup, Set<Integer> set);
     PageBean getIncomeGroupList(PageBean pageBean,TourGroupVO tourGroup, Set<Integer> set);
+    
+    AYToAddSight
 }
