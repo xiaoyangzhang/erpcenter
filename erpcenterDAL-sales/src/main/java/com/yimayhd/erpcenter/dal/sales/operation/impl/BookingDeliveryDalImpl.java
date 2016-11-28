@@ -323,5 +323,11 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 		return bookingDeliveryMapper.getBookingDeliveryByOrderId(orderId);
 	}
 	*/
-	
+	@Override
+    public void updatePushStatus(Integer bookingId) {
+	    BookingDelivery delivery = new BookingDelivery();
+	    delivery.setId(bookingId);
+	    delivery.setPushStatus(1);
+	    bookingDeliveryMapper.updateByPrimaryKeySelective(delivery);
+    }
 }

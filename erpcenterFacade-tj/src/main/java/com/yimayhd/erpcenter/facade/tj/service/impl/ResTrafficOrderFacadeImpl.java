@@ -2,7 +2,6 @@ package com.yimayhd.erpcenter.facade.tj.service.impl;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +30,11 @@ import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.common.contants.BasicConstants.LOG_ACTION;
+import com.yimayhd.erpcenter.common.util.LogFieldUtil;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
-import com.yimayhd.erpcenter.dal.basic.utils.LogFieldUtil;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
-import com.yimayhd.erpcenter.dal.product.constans.Constants.TRAFFICRES_STOCK_ACTION;
+import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResStocklog;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
@@ -243,61 +242,56 @@ public class ResTrafficOrderFacadeImpl implements ResTrafficOrderFacade{
 	}
 	
 	private String Update_OrderState(int bizId,int userId,String myBizCode,PlatformEmployeePo curUser, String id,String extResState){
-		//  0待确认（占位）、1已确认（占位）、2正常取消（退还），3系统执行自动任务取消（清位）
+		//  0待确认（占位）、1已确认（占位）、2取消（退还）
 		// 订单状态 1正常  -1删除  0 待确认
 		
-		String actionStr = "", briefStr = "";
+		String briefStr = "";
 		Integer orderState = 0;
 		GroupOrder order = groupOrderBiz.selectByPrimaryKey(Integer.valueOf(id));
+		TrafficResStocklog updateStockLog=new TrafficResStocklog();
 		if("0".equals(extResState)){
 			briefStr = "更改状态为：待确认";
-			if (order.getType().equals(1))
-				actionStr = TRAFFICRES_STOCK_ACTION.ORDER_SOLD.toString();
-			else
-				actionStr = TRAFFICRES_STOCK_ACTION.ORDER_RESERVE.toString();
+			updateStockLog.setAdjustState(0);
 			order.setExtResConfirmId(curUser.getEmployeeId());
 			order.setExtResConfirmName(curUser.getName());
 		}
 		if("1".equals(extResState)){
 			orderState = 1;
+			updateStockLog.setAdjustState(1);
 			briefStr = "更改状态为：已确认";
-			actionStr = "";
 			order.setExtResConfirmId(curUser.getEmployeeId());
 			order.setExtResConfirmName(curUser.getName());
 			toGroup(order.getId(), order.getOrderType(), bizId,userId,myBizCode,curUser);
 		}
 		if("2".equals(extResState)){
+			updateStockLog.setAdjustState(2);
 			briefStr = "更改状态为：取消";
-			actionStr = TRAFFICRES_STOCK_ACTION.ORDER_CANCEL.toString();
 		}
-		if("3".equals(extResState)){
-			briefStr = "更改状态为：清位取消";
-			actionStr = TRAFFICRES_STOCK_ACTION.ORDER_CLEAN.toString();
-		}
-		
+		//更新group_order表
 		order.setExtResState(Integer.valueOf(extResState));
 		order.setState(orderState);
 		int nums = groupOrderBiz.loadUpdateExtResState(order);
 		
+		//若状态改为已确认，则需要更改 traffic_res_stocklog 预留订单状态为已确认
+		updateStockLog.setResId(order.getExtResId());
+		updateStockLog.setOrderId(order.getId());
+		trafficResBiz.updateStockLog_AdjustState(updateStockLog);
+		
+		//更新产品已售数量  
+		TrafficResProduct trafficResProduct=trafficResBiz.selectTrafficProductInfoByProductCode(order.getProductId(), order.getExtResId());
+		if (null != trafficResProduct){
+			Integer sumPerson = groupOrderBiz.selectSumPersonByProductId(trafficResProduct.getResId(), trafficResProduct.getProductCode(), order.getDepartureDate());
+			trafficResProduct.setNumSold(sumPerson);
+			trafficResBiz.updateNumSoldById(trafficResProduct);
+		}
+				
+		//更新库存
+		trafficResBiz.updateStockOrStockDisable(order.getExtResId());
 		
 		//日志
 		Integer groupId = order.getGroupId()==null?0:order.getGroupId();
 		insertLog(LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(), LOG_ACTION.UPDATE, "group_order", order.getId(), groupId ,briefStr, null, null));
 
-		//库存变更
-		if (!"".equals(actionStr)){
-			TrafficResStocklog trafficResStocklog=new TrafficResStocklog();
-			trafficResStocklog.setAdjustAction(actionStr);
-			trafficResStocklog.setAdjustNum(order.getNumAdult()+order.getNumChild());
-			trafficResStocklog.setResId(order.getExtResId());//参数为resId：资源ID
-			trafficResStocklog.setAdjustTime(new Date());
-			trafficResStocklog.setUserId(curUser.getEmployeeId());
-			trafficResStocklog.setUserName(curUser.getName());
-			trafficResBiz.insertTrafficResStocklog(trafficResStocklog);
-			//更新库存
-			trafficResBiz.updateStockOrStockDisable(order.getExtResId());
-		}
-		 
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("success", nums);
 		return JSON.toJSONString(map);
@@ -355,8 +349,8 @@ public class ResTrafficOrderFacadeImpl implements ResTrafficOrderFacade{
 		return JSON.toJSONString(map);
 	}
 	
-	private void insertLog(LogOperator log){
-		List<LogOperator> logList = new ArrayList<LogOperator>();
+	private void insertLog(com.yimayhd.erpcenter.common.po.LogOperator log){
+		List<com.yimayhd.erpcenter.common.po.LogOperator> logList = new ArrayList<com.yimayhd.erpcenter.common.po.LogOperator>();
 		logList.add(log);
 		logOperatorBiz.insert(logList);
 	}

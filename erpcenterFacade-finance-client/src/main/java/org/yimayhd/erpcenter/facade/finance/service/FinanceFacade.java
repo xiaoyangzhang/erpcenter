@@ -16,6 +16,7 @@ import org.yimayhd.erpcenter.facade.finance.query.FinAuditDTO;
 import org.yimayhd.erpcenter.facade.finance.query.IncomeJoinTableListDTO;
 import org.yimayhd.erpcenter.facade.finance.query.IncomeOrPayDTO;
 import org.yimayhd.erpcenter.facade.finance.query.PayDTO;
+import org.yimayhd.erpcenter.facade.finance.query.PushWapListTableDTO;
 import org.yimayhd.erpcenter.facade.finance.query.QuerySettleCommissionDTO;
 import org.yimayhd.erpcenter.facade.finance.query.QuerySettleListDTO;
 import org.yimayhd.erpcenter.facade.finance.query.QueryShopCommissionStatsDTO;
@@ -32,6 +33,7 @@ import org.yimayhd.erpcenter.facade.finance.query.VerifyBillDTO;
 import org.yimayhd.erpcenter.facade.finance.result.CheckBillResult;
 import org.yimayhd.erpcenter.facade.finance.result.DiatributeBillResult;
 import org.yimayhd.erpcenter.facade.finance.result.IncomeOrPaytResult;
+import org.yimayhd.erpcenter.facade.finance.result.QueryPushWapListTableResult;
 import org.yimayhd.erpcenter.facade.finance.result.QuerySettleCommissionResult;
 import org.yimayhd.erpcenter.facade.finance.result.QuerySettleListResult;
 import org.yimayhd.erpcenter.facade.finance.result.QueryShopCommissionStatsResult;
@@ -414,4 +416,9 @@ public interface FinanceFacade{
 	List<BookingSupplierDetail> getBookingSupplierDetailById(Integer bookingSupplierId);
 	
 	SupplierInfo getSupplierById(Integer supplierId);
+	
+	/**
+	 * 行程助手推送
+	 */
+	QueryPushWapListTableResult pushWapListTable(PushWapListTableDTO queryDTO);
 }

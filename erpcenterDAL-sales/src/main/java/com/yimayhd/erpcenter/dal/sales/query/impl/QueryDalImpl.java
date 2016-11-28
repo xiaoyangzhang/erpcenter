@@ -48,64 +48,65 @@ public class QueryDalImpl implements QueryDAL {
 	private GroupRequirementMapper requirementMapper;
 	
 	@Override
-	public List<ProductGuestStaticsVo> productGuestStatics(
+	public String productGuestStatics(
 			ProductGuestCondition condition,Set<Integer> userIds) {
-		return orderMapper.productGuestStatics(condition,userIds);
-//		if(list!=null && list.size()>0){
-//			int len = list.size();
-//			
-//			StringBuilder sb = new StringBuilder();
-//			int otherTotal = 0;
-//			for(int idx=0;idx<list.size();idx++){
-//				ProductGuestStaticsVo vo =list.get(idx);
-//				
-//					sb.append("['");
-//					sb.append(vo.getProductBrandName());
-//					sb.append("【");
-//					sb.append(vo.getProductName());
-//					sb.append("】");
-//					sb.append("',");
-//					sb.append(vo.getGuestCnt().intValue());
-//					sb.append("],");				
-//				
-//			}
-//			
-//			return sb.substring(0, sb.length()-1); 
-//		}
-//		return "";
+		List<ProductGuestStaticsVo> list = orderMapper.productGuestStatics(condition,userIds);
+		if(list!=null && list.size()>0){
+			int len = list.size();
+			
+			StringBuilder sb = new StringBuilder();
+			int otherTotal = 0;
+			for(int idx=0;idx<list.size();idx++){
+				ProductGuestStaticsVo vo =list.get(idx);
+				
+					sb.append("['");
+					sb.append(vo.getProductBrandName());
+					sb.append("【");
+					sb.append(vo.getProductName());
+					sb.append("】");
+					sb.append("',");
+					sb.append(vo.getGuestCnt().intValue());
+					sb.append("],");				
+				
+			}
+			
+			return sb.substring(0, sb.length()-1); 
+		}
+		return "";
 	}
 
 	@Override
-	public List<Map<String,Object>> guestSourceStatics(
+	public String guestSourceStatics(
 			ProductGuestCondition condition,Set<Integer> userIds) {
-		return orderMapper.guestSourceStatics(condition,userIds);
-//		if(list!=null && list.size()>0){
-//			int len = list.size();
-//			
-//			StringBuilder sb = new StringBuilder();
-//			int otherTotal = 0;
-//			for(int idx=0;idx<list.size();idx++){
-//				Map<String,Object> map =list.get(idx);
-//			
-//					sb.append("['");
-//					sb.append(map.get("provinceName"));
-//					sb.append("（");
-//					sb.append(map.get("adultCnt"));
-//					sb.append("大");
-//					sb.append(map.get("childCnt"));
-//					sb.append("小）',");
-//					sb.append(map.get("guestCnt"));
-//					sb.append("],");				
-//				
-//			}
-//			
-//			return sb.substring(0, sb.length()-1); 
-//		}
-//		return "";
+		List<Map<String,Object>> list = orderMapper.guestSourceStatics(condition,userIds);
+		if(list!=null && list.size()>0){
+			int len = list.size();
+			
+			StringBuilder sb = new StringBuilder();
+			int otherTotal = 0;
+			for(int idx=0;idx<list.size();idx++){
+				Map<String,Object> map =list.get(idx);
+			
+					sb.append("['");
+					sb.append(map.get("provinceName"));
+					sb.append("（");
+					sb.append(map.get("adultCnt"));
+					sb.append("大");
+					sb.append(map.get("childCnt"));
+					sb.append("小）',");
+					sb.append(map.get("guestCnt"));
+					sb.append("],");				
+				
+			}
+			
+			return sb.substring(0, sb.length()-1); 
+		}
+		return "";
 	}
 
 	@Override
 	public String getGroupNumStatics(List<GroupOrder> list,Integer dataType) {
+		// TODO Auto-generated method stub
 		
 		if(list!=null && list.size()>0){
 			int len = list.size();

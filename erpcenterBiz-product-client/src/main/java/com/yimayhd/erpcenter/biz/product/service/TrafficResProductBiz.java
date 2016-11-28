@@ -26,4 +26,8 @@ public interface TrafficResProductBiz {
 	
 	Integer selectResProductNameCount(Integer productCode,Integer  resId);
 
+	TrafficResProduct selectNumSoldCount(Integer resId);
+
+	int updateResProductNumStock(Integer id,Integer numStock);
+
 }

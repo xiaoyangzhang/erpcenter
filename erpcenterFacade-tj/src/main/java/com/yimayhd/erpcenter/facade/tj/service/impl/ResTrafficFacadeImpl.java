@@ -6,8 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -18,15 +20,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.ctc.wstx.util.StringUtil;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.LogOperatorBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
+import com.yimayhd.erpcenter.biz.product.service.ProductGroupSupplierBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
 import com.yimayhd.erpcenter.biz.product.service.TrafficResBiz;
 import com.yimayhd.erpcenter.biz.product.service.TrafficResProductBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingGuideBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierDetailBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderPriceBiz;
@@ -39,16 +44,19 @@ import com.yimayhd.erpcenter.common.contants.BasicConstants.LOG_ACTION;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
-import com.yimayhd.erpcenter.dal.basic.utils.LogFieldUtil;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.TrafficRes;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResLine;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResStocklog;
+import com.yimayhd.erpcenter.dal.product.vo.ProductSupplierCondition;
 import com.yimayhd.erpcenter.dal.product.vo.TrafficResVo;
 import com.yimayhd.erpcenter.dal.sales.client.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePayDetail;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
@@ -56,8 +64,11 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SpecialGroupOrderVO;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.facade.tj.client.errorcode.TjErrorCode;
+import com.yimayhd.erpcenter.facade.tj.client.query.BookingSupplierDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.DetailsStocklogDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.MakeCollectionsDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.SaveBookingDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.ToSaveResNumsSoldDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ToSearchListDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ToUpdateProductPriceDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TrafficChangeDTO;
@@ -68,12 +79,16 @@ import com.yimayhd.erpcenter.facade.tj.client.query.TrafficResProductDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TrafficSaveResOrderDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TraficchangeResStateDTO;
 import com.yimayhd.erpcenter.facade.tj.client.result.GetProductInfoResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.ToAddSupplierResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.ToSearchListResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.ToTraficEditResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.ToUpdateResNumStockStateResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.TrafficAddResOrderResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.WebResult;
 import com.yimayhd.erpcenter.facade.tj.client.service.ResTrafficFacade;
 import com.yimayhd.erpcenter.facade.tj.client.utils.LogUtils;
+import com.yimayhd.erpresource.biz.service.SupplierItemBiz;
+import com.yimayhd.erpresource.dal.po.SupplierItem;
 
 
 public class ResTrafficFacadeImpl implements ResTrafficFacade{
@@ -108,6 +123,21 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 	private TrafficResProductBiz trafficResProductBiz;
 	@Autowired
 	private LogOperatorBiz logOperatorBiz;
+	
+	@Autowired
+	private ProductGroupSupplierBiz productGroupSupplierBiz;
+	
+	@Autowired
+	private BookingSupplierBiz bookingSupplierBiz;
+	
+	@Autowired
+	private BookingGuideBiz bookingGuideBiz;
+	
+	@Autowired
+	private BookingSupplierDetailBiz bookingSupplierDetailBiz;
+	
+	@Autowired
+	private SupplierItemBiz supplierItemBiz;
 	
 	/**
 	 * 交通资源table
@@ -356,7 +386,6 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 				 trp.setBabyProxy((trp.getBabySuggestPrice().subtract(trp.getBabySamePay())).subtract(trp.getBadyProxyPay()));
 			 }
 		 }
-
 		return pageBean;
 	}
 	
@@ -371,7 +400,6 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		TrafficAddResOrderResult result = new TrafficAddResOrderResult();
 		int id = trafficResDTO.getTrafficProductInfoId();
 		PlatformEmployeePo curUser = trafficResDTO.getCurUser();
-		String orgSupplierMapping = trafficResDTO.getOrgSupplierMapping();
 		int bizId = trafficResDTO.getBizId();
 //		model.addAttribute("operType", 1);
 		TrafficResProduct trafficResProduct=trafficResBiz.selectTrafficProductInfo(id);
@@ -385,22 +413,8 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		groupOrder.setContactTel(curUser.getPhone());
 		groupOrder.setContactFax(curUser.getFax());
 		SpecialGroupOrderVO  vo = new SpecialGroupOrderVO();
-		String defaultSupplierId = "", defaultSupplierName = "";
-		if (!StringUtils.isBlank(orgSupplierMapping)){
-			JSONArray jary = JSON.parseArray(orgSupplierMapping);
-			for(int i = 0 ; i < jary.size() ; i++){
-				JSONObject Obj = jary.getJSONObject(i);
-				if ( curUser.getOrgId().toString().equals(Obj.getString("orgId")) && 
-						Constants.TRAVELAGENCY.toString().equals(Obj.getString("supplierType"))){
-					defaultSupplierId = Obj.getString("supplierId");
-					defaultSupplierName = Obj.getString("supplierName");
-				}
-			}
-		}
-		if(NumberUtils.isNumber(defaultSupplierId)){
-			groupOrder.setSupplierId(Integer.parseInt(defaultSupplierId));
-		}
-		groupOrder.setSupplierName(defaultSupplierName);
+		groupOrder.setSupplierId(trafficResDTO.getSupplierId());
+		groupOrder.setSupplierName(trafficResDTO.getSupplierName());
 		vo.setGroupOrder(groupOrder);
 		result.setVo(vo);
 		List<DicInfo> jdxjList = dicBiz.getListByTypeCode(BasicConstants.GYXX_JDXJ);
@@ -499,7 +513,7 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		PlatformEmployeePo curUser = trafficSaveResOrderDTO.getCurUser();
 		int userId = trafficSaveResOrderDTO.getUserId();
 		String orderNo = trafficSaveResOrderDTO.getOrderNo();
-		Integer num, orderId = 0;
+		Integer num, orderId = 0, isAdd = 0;
 		GroupOrder go = null;
 		if(see != null&&see==1){
 			try {
@@ -514,16 +528,14 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 			return result;
 		}
 		TrafficResProduct trafficResProduct=trafficResBiz.selectTrafficProductInfo(trpId);
-		vo.getGroupOrder().setExtResCleanTime(trafficResProduct.getReserveTime());
-		
-		if(vo.getGroupOrder().getId()!=null){                    // 计算编辑页面库存
-			orderId = vo.getGroupOrder().getId();
-			go=groupOrderBiz.selectByPrimaryKey(orderId);
-			num=vo.getGroupOrder().getNumAdult()+vo.getGroupOrder().getNumChild()-(go.getNumAdult()+go.getNumChild());
-		}else{                     // 计算新增页面库存
-			num=vo.getGroupOrder().getNumAdult()+vo.getGroupOrder().getNumChild();
+		if(trafficResProduct.getReserveTime()>0){
+			vo.getGroupOrder().setExtResCleanTime(trafficResProduct.getReserveTime());
 		}
-		if(vo.getGroupOrder().getId()==null){
+		
+		num=vo.getGroupOrder().getNumAdult()+vo.getGroupOrder().getNumChild();
+		
+		if(vo.getGroupOrder().getId()==null){// 计算编辑页面库存
+			isAdd = 1;
 			vo.getGroupOrder().setOrderNo(orderNo);
 		}
 		vo.getGroupOrder().setExtResPrepay(((new BigDecimal(vo.getGroupOrder().getNumAdult()).multiply(trafficResProduct.getAdultMinDeposit())).
@@ -567,25 +579,23 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		
 		 //减资源库存
 		TrafficResStocklog trafficResStocklog=new TrafficResStocklog();
-		if(vo.getGroupOrder().getType()==0){
-			trafficResStocklog.setAdjustAction(com.yimayhd.erpcenter.dal.product.constans.Constants.TRAFFICRES_STOCK_ACTION.ORDER_RESERVE.toString()); // 预留
-		}
-		if(vo.getGroupOrder().getType()==1){
-			trafficResStocklog.setAdjustAction(com.yimayhd.erpcenter.dal.product.constans.Constants.TRAFFICRES_STOCK_ACTION.ORDER_SOLD.toString()); // 全款
-		}
+		trafficResStocklog.setAdjustAction(com.yimayhd.erpcenter.dal.product.constans.Constants.TRAFFICRES_STOCK_ACTION.ORDER_SOLD.toString()); // 全款
+		trafficResStocklog.setOrderId(orderId);
 		trafficResStocklog.setAdjustNum(num);
 		trafficResStocklog.setResId(vo.getGroupOrder().getExtResId());
 		trafficResStocklog.setAdjustTime(new Date());
 		trafficResStocklog.setUserId(userId);
 		trafficResStocklog.setUserName(curUser.getName());
-		if (num > 0){
+		if (isAdd == 1){
 			trafficResBiz.insertTrafficResStocklog(trafficResStocklog); //Stock表 
 			logList.add(LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(),LOG_ACTION.INSERT, "traffic_res_stocklog", 0, trafficResProduct.getResId() ,"库位变动", trafficResStocklog, null));
+		}else{
+			trafficResBiz.updateTrafficResStockLogByOrderId(trafficResStocklog); 
 		}
 		
 		//更新产品已售数量  
 		if (null != trafficResProduct){
-			Integer sumPerson = groupOrderBiz.selectSumPersonByProductId(trafficResProduct.getProductCode(), vo.getGroupOrder().getDepartureDate());
+			Integer sumPerson = groupOrderBiz.selectSumPersonByProductId(trafficResProduct.getResId(),trafficResProduct.getProductCode(), vo.getGroupOrder().getDepartureDate());
 			trafficResProduct.setNumSold(sumPerson);
 			trafficResBiz.updateNumSoldById(trafficResProduct);
 		}
@@ -634,6 +644,30 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 	 */
 	public List<TrafficResProduct> toProductBindingList(Integer resId){
 		List<TrafficResProduct> resProList = trafficResProductBiz.loadTrafficResProductInfo(resId);
+		
+		//查找 product_group_supplier表，若包含了当前产品的组团社，表示销售权限是指定的而不是开放的
+		//product_group_supplier.group_id 存储的是res_id，只是借用字段
+		Set<Integer> productIds = new HashSet<Integer>();
+		for(TrafficResProduct item : resProList){
+			productIds.add(item.getProductCode());
+			item.setUserId(0);
+		}
+		if (productIds.size()>0){
+			ProductSupplierCondition condition = new ProductSupplierCondition();
+			condition.setProductIds(productIds);
+			condition.setPageSize(10000);
+			condition.setGroupId(resId);
+			List<ProductGroupSupplier> supplierList = productGroupSupplierBiz.selectSupplierList(condition);
+			
+			for(TrafficResProduct item : resProList){
+				for(ProductGroupSupplier su : supplierList){
+					if (su.getProductId().equals(item.getProductCode())){
+						item.setUserId(1);
+					}
+				}
+			}
+			
+		}
 		return resProList;
 	}
 	
@@ -883,6 +917,167 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		result.setPage(page);
 		result.setPageBean(pageBean);
 		return result;
+	}
+	
+	public List<GroupOrderGuest> ticketInfo(Integer resId) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");     
+		List<GroupOrderGuest> list=groupOrderGuestBiz.selectGuestTicketInfo(resId);
+		List<BookingSupplier>	bs=bookingSupplierBiz.selectTicketInfo(resId);
+		if(bs!=null&&bs.size()>0){
+			for(GroupOrderGuest gog:list){
+				for(BookingSupplier sb:bs){
+					if (sb.getGuestIds().contains(Integer.toString(gog.getId()))) {
+						gog.setUserName(sb.getUserName());
+						gog.setTicketTime((sdf.format(sb.getCreateTime())));
+					}
+				}
+			}
+		}
+		return list;
+	}
+	
+	public String addTicket(Integer resId) {
+		return trafficResBiz.selectTrafficResAndLineInfoById1(resId);
+	}
+	
+	/**
+	 * 跳转到供应商编辑或新增页面
+	 *
+	 * @param model
+	 * @param groupId
+	 * @param bookingId
+	 */
+	public ToAddSupplierResult toAddSupplier(BookingSupplierDTO bookingSupplierDTO) {
+		ToAddSupplierResult result = new ToAddSupplierResult();
+		if (bookingSupplierDTO.getBookingId() != null) {
+			BookingSupplier supplier = bookingSupplierBiz.selectByPrimaryKey(bookingSupplierDTO.getBookingId());
+			
+			List<BookingSupplierDetail> detailList = bookingSupplierDetailBiz.selectByPrimaryBookId(bookingSupplierDTO.getBookingId());
+			result.setSupplier(supplier);
+			result.setDetailList(detailList);
+			
+			if (supplier.getSupplierType().equals(Constants.SCENICSPOT)) {
+				List<SupplierItem> supplierItems = supplierItemBiz.findSupplierItemBySupplierId(supplier.getSupplierId());
+				result.setSupplierItems(supplierItems);
+			}
+		}
+		
+		if (bookingSupplierDTO.getGroupId() != null) {
+			List<BookingGuide> bookingGuides = bookingGuideBiz.selectGuidesByGroupId(bookingSupplierDTO.getGroupId());
+			result.setBookingGuides(bookingGuides);
+		}
+		
+		//从字典中查询结算方式
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bookingSupplierDTO.getBizId());
+		result.setCashTypes(cashTypes);
+		return result;
+	}
+	
+	/**
+	 * 保存新增出票
+	 *
+	 * @param request
+	 * @param reponse
+	 * @param booking
+	 * @param groupId
+	 * @param supplierType
+	 * @param supplierId
+	 * @return
+	 * @throws ParseException s
+	 */
+	public void saveBooking(SaveBookingDTO saveBookingDTO) {
+		List<BookingSupplierDetail> details=saveBookingDTO.getDetails();
+		BookingSupplier bookingSupplier = saveBookingDTO.getBookingSupplier();
+		String bookingNo = null;
+		if (bookingSupplier.getId() == null) {
+			int count = bookingSupplierBiz.getBookingCountByTypeAndTime(bookingSupplier.getSupplierType());
+			String code = saveBookingDTO.getCode();
+			bookingNo = code + Constants.SUPPLIERSHORTCODEMAP.get(bookingSupplier.getSupplierType()) + new SimpleDateFormat("yyMMdd").format(new Date()) + (count + 100);
+			bookingSupplier.setBookingNo(bookingNo);
+		}
+		Integer bookingId=bookingSupplierBiz.insertSelective(bookingSupplier);
+		for(BookingSupplierDetail item:details){
+			item.setBookingId(bookingId);
+			if(item.getItemNum()>0){
+				bookingSupplierDetailBiz.insertSelective(item);
+			}
+		}
+	}
+	
+	/**
+	 * 跳转至机位库存状态页面
+	 * @param request
+	 * @param resId
+	 * @param model
+	 * @return
+	 */
+	public ToUpdateResNumStockStateResult toUpdateResNumStockState(Integer id){
+		ToUpdateResNumStockStateResult result = new ToUpdateResNumStockStateResult();
+		TrafficRes trafficResBean = trafficResBiz.findTrafficResById(id);
+		List<TrafficResProduct> resBindingProList = trafficResProductBiz.loadTrafficResProductInfo(id);
+		TrafficResProduct sumResProBean = trafficResProductBiz.selectNumSoldCount(id);
+		
+		result.setResBindingProList(resBindingProList);
+		result.setTrafficResBean(trafficResBean);
+		result.setSumResProBean(sumResProBean);
+		return result;
+	}
+	
+	/**
+	 * 保存机位库存信息
+	 * @param request
+	 * @param productBean
+	 * @return
+	 */
+	public String toSaveResNumsSold(ToSaveResNumsSoldDTO toSaveResNumsSoldDTO){
+		//日志 
+		List<LogOperator> logList = new ArrayList<LogOperator>();
+		PlatformEmployeePo curUser = toSaveResNumsSoldDTO.getCurUser();
+		
+				
+		TrafficRes trafficResBean = trafficResBiz.findTrafficResById(Integer.valueOf(id));
+		Integer newId = 0;
+		if(null != toSaveResNumsSoldDTO.getNumStock()){
+			if(Integer.valueOf(toSaveResNumsSoldDTO.getNumStock()) != trafficResBean.getNumStock()){
+				TrafficResStocklog trafficResStocklog=new TrafficResStocklog();
+				trafficResStocklog.setAdjustAction(com.yimayhd.erpcenter.dal.product.constans.Constants.TRAFFICRES_STOCK_ACTION.STOCK.toString());
+				trafficResStocklog.setAdjustNum(toSaveResNumsSoldDTO.getPoorNumStock());
+				trafficResStocklog.setResId(Integer.valueOf(toSaveResNumsSoldDTO.getId()));
+				trafficResStocklog.setAdjustTime(new Date());
+				trafficResStocklog.setUserId(toSaveResNumsSoldDTO.getUserId());
+				trafficResStocklog.setUserName(toSaveResNumsSoldDTO.getUserName());
+				newId = trafficResBiz.insertTrafficResStocklog(trafficResStocklog);
+				trafficResBiz.updateStockOrStockDisable(Integer.valueOf(toSaveResNumsSoldDTO.getId()));
+				
+				logList.add(LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(),LOG_ACTION.UPDATE, "traffic_res_stocklog", newId, Integer.valueOf(toSaveResNumsSoldDTO.getId()), String.format(" 调整【总量】：%s", toSaveResNumsSoldDTO.getPoorNumStock().toString()), null, null));
+			}
+		}
+		if(null != toSaveResNumsSoldDTO.getNumDisable()){
+			if(Integer.valueOf(toSaveResNumsSoldDTO.getNumDisable()) != trafficResBean.getNumDisable()){
+				TrafficResStocklog trafficResStocklog=new TrafficResStocklog();
+				trafficResStocklog.setAdjustAction(com.yimayhd.erpcenter.dal.product.constans.Constants.TRAFFICRES_STOCK_ACTION.STOCK_DISABLE.toString());
+				trafficResStocklog.setAdjustNum(toSaveResNumsSoldDTO.getPoorNumDisable());
+				trafficResStocklog.setResId(Integer.valueOf(toSaveResNumsSoldDTO.getId()));
+				trafficResStocklog.setAdjustTime(new Date());
+				trafficResStocklog.setUserId(toSaveResNumsSoldDTO.getUserId());
+				trafficResStocklog.setUserName(toSaveResNumsSoldDTO.getUserName());
+				newId = trafficResBiz.insertTrafficResStocklog(trafficResStocklog);
+				trafficResBiz.updateStockOrStockDisable(Integer.valueOf(toSaveResNumsSoldDTO.getId()));
+				
+				logList.add(LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(),LOG_ACTION.UPDATE, "traffic_res_stocklog", newId, Integer.valueOf(toSaveResNumsSoldDTO.getId()), String.format(" 调整【机动位】：%s", toSaveResNumsSoldDTO.getPoorNumDisable().toString()), null, null));
+			}
+		}
+		
+		logOperatorBiz.insert(logList);
+		
+		List<TrafficResProduct> resProBeanList = JSON.parseArray(toSaveResNumsSoldDTO.getProductList(), TrafficResProduct.class);
+		for(TrafficResProduct resProBean: resProBeanList){
+			trafficResProductBiz.updateResProductNumStock(
+					Integer.valueOf(resProBean.getId()),Integer.valueOf(resProBean.getNumStock()));
+		}
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("success", 1);
+		return JSON.toJSONString(map);
 	}
 
 }

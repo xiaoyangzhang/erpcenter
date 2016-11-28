@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.sales.dao.GroupOrderPriceMapper">
-	<resultMap id="BaseResultMap" type="com.yihg.sales.po.GroupOrderPrice">
+<mapper namespace="com.yimayhd.sales.mapper.GroupOrderPriceMapper">
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="mode" property="mode" jdbcType="INTEGER" />
 		<result column="order_id" property="orderId" jdbcType="INTEGER" />
@@ -81,7 +81,7 @@
 		delete from group_order_price
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
-	<insert id="insert" parameterType="com.yihg.sales.po.GroupOrderPrice">
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice">
 		insert into group_order_price (id, mode, order_id,item_id,
 		item_name, remark, unit_price,
 		num_times, num_person, total_price,
@@ -95,7 +95,7 @@
 		#{rowState,jdbcType=INTEGER}, #{creatorId,jdbcType=INTEGER}, #{creatorName,jdbcType=VARCHAR},
 		#{createTime,jdbcType=BIGINT},#{priceLockState,jdbcType=INTEGER})
 	</insert>
-	<insert id="insertSelective" parameterType="com.yihg.sales.po.GroupOrderPrice">
+	<insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice">
 		insert into group_order_price
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="mode != null">
@@ -186,7 +186,7 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.sales.po.GroupOrderPrice">
+	<update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice">
 		update group_order_price
 		<set>
 			<if test="mode != null">
@@ -234,7 +234,7 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yihg.sales.po.GroupOrderPrice">
+	<update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice">
 		update group_order_price
 		set mode = #{mode,jdbcType=INTEGER},
 		order_id = #{orderId,jdbcType=INTEGER},

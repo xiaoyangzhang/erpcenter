@@ -1,10 +1,10 @@
 package com.yimayhd.erpcenter.dal.product.dao;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yihg.product.po.ProductInfo;
-import com.yihg.product.po.ProductSales;
-import com.yihg.product.vo.StockStaticsResultVOPlus;
-import com.yihg.product.vo.StockStaticsResultVo;
+import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.po.ProductSales;
+import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultVOPlus;
+import com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

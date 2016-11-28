@@ -1,7 +1,8 @@
 package com.yimayhd.erpcenter.dal.sys.dao;
 
-import com.yihg.sys.po.PlatformOrgPo;
 import org.apache.ibatis.annotations.Param;
+
+import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 
 import java.util.List;
 import java.util.Set;

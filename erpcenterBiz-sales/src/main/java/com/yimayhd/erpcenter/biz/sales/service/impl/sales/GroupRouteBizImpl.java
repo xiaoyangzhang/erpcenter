@@ -14,7 +14,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 
 import org.springframework.transaction.annotation.Transactional;
 
-public class GroupRouteServiceImpl implements GroupRouteBiz {
+public class GroupRouteBizImpl implements GroupRouteBiz {
 
 	@Autowired
 	private GroupRouteDal groupRouteDal;

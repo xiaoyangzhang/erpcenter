@@ -1,6 +1,6 @@
 package com.yimayhd.erpcenter.dal.product.dao;
 
-import com.yihg.product.po.TrafficResLine;
+import com.yimayhd.erpcenter.dal.product.po.TrafficResLine;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

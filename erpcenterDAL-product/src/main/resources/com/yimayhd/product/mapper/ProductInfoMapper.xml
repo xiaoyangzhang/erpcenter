@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.product.dao.ProductInfoMapper">
-	<resultMap id="BaseResultMap" type="com.yihg.product.po.ProductInfo">
+<mapper namespace="com.yimayhd.product.mapper.ProductInfoMapper">
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.ProductInfo">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="biz_id" property="bizId" jdbcType="INTEGER" />
 		<result column="code" property="code" jdbcType="VARCHAR" />
@@ -34,19 +34,19 @@
 		<result column="product_sys_id" property="productSysId" jdbcType="INTEGER" />
 		<result column="source_type" property="sourceType" jdbcType="INTEGER" />
 		<result column="taobao_num_iid" property="taobaoNumIid" jdbcType="VARCHAR" />
-		<collection property="productGroupList" ofType="com.yihg.product.po.ProductGroup">
+		<collection property="productGroupList" ofType="com.yimayhd.erpcenter.dal.product.po.ProductGroup">
 			<id column="groupId" property="id" />
 			<result column="name" property="name" />
 		</collection>
 		
 	</resultMap>
 
-	<resultMap id="BaseResultMapExt" type="com.yihg.product.vo.StockStaticsResultVo">
+	<resultMap id="BaseResultMapExt" type="com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultVo">
 		<id column="id" property="productId" jdbcType="INTEGER" />
 		<result column="brand_name" property="brandName" jdbcType="VARCHAR" />
 		<result column="name_city" property="productName" jdbcType="VARCHAR" />
 	</resultMap>
-	<resultMap id="BaseResultMapExt2" type="com.yihg.product.vo.StockStaticsResultVOPlus">
+	<resultMap id="BaseResultMapExt2" type="com.yimayhd.erpcenter.dal.product.vo.StockStaticsResultVOPlus">
 		<id column="id" property="productId" jdbcType="INTEGER" />
 		<result column="brand_name" property="brandName" jdbcType="VARCHAR" />
 		<result column="name_city" property="productName" jdbcType="VARCHAR" />
@@ -71,7 +71,7 @@
 		delete from product_info
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
-	<insert id="insert" parameterType="com.yihg.product.po.ProductInfo">
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductInfo">
 		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
@@ -92,7 +92,7 @@
 		#{creatorId,jdbcType=INTEGER},
 		#{creatorName,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}),#{productSysId,jdbcType=INTEGER})
 	</insert>
-	<insert id="insertSelective" parameterType="com.yihg.product.po.ProductInfo" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductInfo" useGeneratedKeys="true" keyProperty="id">
 		insert into product_info
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="productSysId != null">
@@ -229,7 +229,7 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.ProductInfo">
+	<update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductInfo">
 		update product_info
 		<set>
 			<if test="bizId != null">
@@ -312,7 +312,7 @@
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	<update id="updateByPrimaryKey" parameterType="com.yihg.product.po.ProductInfo">
+	<update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.product.po.ProductInfo">
 		update product_info
 		set biz_id = #{bizId,jdbcType=INTEGER},
 		code = #{code,jdbcType=VARCHAR},
@@ -341,7 +341,7 @@
 		where id = #{id,jdbcType=INTEGER}
 	</update>
 
-	<select id="selectProductSalesListPage" resultType="com.yihg.product.po.ProductSales" parameterType="com.yihg.mybatis.utility.PageBean">
+	<select id="selectProductSalesListPage" resultType="com.yimayhd.erpcenter.dal.product.po.ProductSales" parameterType="com.yihg.mybatis.utility.PageBean">
 		SELECT
 		info.id,
 		info.code,
@@ -376,7 +376,7 @@
 		</if>
 		ORDER BY info.create_time
 	</select>
-	<select id="selectProductSalesPlusListPage" resultType="com.yihg.product.po.ProductSales" parameterType="com.yihg.mybatis.utility.PageBean">
+	<select id="selectProductSalesPlusListPage" resultType="com.yimayhd.erpcenter.dal.product.po.ProductSales" parameterType="com.yihg.mybatis.utility.PageBean">
 		SELECT
 		info.id,
 		info.code,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yihg.operation.dao.BookingDeliveryMapper" >
-  <resultMap id="BaseResultMap" type="com.yihg.operation.po.BookingDelivery" >
+<mapper namespace="com.yimayhd.sales.mapper.BookingDeliveryMapper" >
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="group_id" property="groupId" jdbcType="INTEGER" />
     <result column="order_id" property="orderId" jdbcType="INTEGER" />
@@ -30,7 +30,7 @@
     <result column="audit_time" property="auditTime" jdbcType="DATE" />
     <result column="push_status" property="pushStatus" jdbcType="INTEGER" />
   </resultMap>
-  <resultMap type="com.yihg.operation.vo.BookingDeliveryStatics" id="staticsResultMap">
+  <resultMap type="com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingDeliveryStatics" id="staticsResultMap">
   		<result column="booking_count" property="bookingCount" jdbcType="INTEGER" />
   		<result column="booking_total_price" property="bookingTotalPrice" jdbcType="DECIMAL" />
   </resultMap>
@@ -55,7 +55,7 @@
     delete from booking_delivery
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.operation.po.BookingDelivery" useGeneratedKeys="true" keyProperty="id" >
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery" useGeneratedKeys="true" keyProperty="id" >
     insert into booking_delivery (id, group_id, order_id,supplier_id,supplier_name,supplier_order_no, 
       contact, contact_tel, contact_fax, 
       contact_mobile, person_adult, person_child, 
@@ -73,7 +73,7 @@
       #{userName,jdbcType=VARCHAR},#{bookingDate,jdbcType=DATE}, #{createTime,jdbcType=BIGINT}, #{pushStatus, jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.operation.po.BookingDelivery" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery" useGeneratedKeys="true" keyProperty="id">
     insert into booking_delivery
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -224,7 +224,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.operation.po.BookingDelivery" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery" >
     update booking_delivery
     <set >
       <if test="groupId != null" >
@@ -299,7 +299,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.operation.po.BookingDelivery" >
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery" >
     update booking_delivery
     set group_id = #{groupId,jdbcType=INTEGER},
       order_id = #{orderId,jdbcType=INTEGER},
@@ -370,7 +370,7 @@
 	FROM booking_delivery_order bdo
 	WHERE booking_id=#{bookingId})
   </select>
-  <update id="updateGuestCntByGroupId" parameterType="com.yihg.operation.po.BookingDelivery">
+  <update id="updateGuestCntByGroupId" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery">
   	update booking_delivery
     <set >
       <if test="personAdult != null" >

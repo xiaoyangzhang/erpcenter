@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yihg.product.dao.TaobaoStockLogMapper">
-  <resultMap id="BaseResultMap" type="com.yihg.product.po.TaobaoStockLog">
+<mapper namespace="com.yimayhd.product.mapper.TaobaoStockLogMapper">
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="stock_id" jdbcType="INTEGER" property="stockId" />
     <result column="stock_date_id" jdbcType="INTEGER" property="stockDateId" />
@@ -51,7 +51,7 @@
     delete from taobao_stock_log
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.yihg.product.po.TaobaoStockLog">
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -62,7 +62,7 @@
       #{num,jdbcType=INTEGER}, #{createUser,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yihg.product.po.TaobaoStockLog">
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -108,7 +108,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yihg.product.po.TaobaoStockLog">
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog">
     update taobao_stock_log
     <set>
       <if test="stockId != null">
@@ -135,7 +135,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yihg.product.po.TaobaoStockLog">
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog">
     update taobao_stock_log
     set stock_id = #{stockId,jdbcType=INTEGER},
       stock_date_id = #{stockDateId,jdbcType=INTEGER},
