@@ -5,6 +5,7 @@ import java.text.ParseException;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
+import com.yimayhd.erpcenter.facade.tj.client.query.PushTradeQueryDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.SaveSpecialGroupDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ShopSalesStatisticsQueryDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListTableDTO;
@@ -82,4 +83,6 @@ public interface TaobaoFacade{
 	
 	
 	public PresellProductStatisticsListResult selectPresellProductStatisticsListPage(PresellProductStatistics queryDTO);
+	
+	public String savePushTrade(PushTradeQueryDTO pushTradeQueryDTO);
 }
