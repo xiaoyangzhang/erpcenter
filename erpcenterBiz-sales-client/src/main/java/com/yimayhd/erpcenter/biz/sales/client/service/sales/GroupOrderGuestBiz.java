@@ -86,5 +86,9 @@ public interface GroupOrderGuestBiz {
      * @return
      */
     List<GroupOrderGuest> getGuestByGroupIdAndIsLeader(Integer groupId,Integer isLeader) ;
-    
+
+
+    public List<GroupOrderGuest> selectGuestTicketInfo(Integer resId);
+
+    public List<GroupOrderGuest> getEmployeeByMobile(String mobile);
 }
