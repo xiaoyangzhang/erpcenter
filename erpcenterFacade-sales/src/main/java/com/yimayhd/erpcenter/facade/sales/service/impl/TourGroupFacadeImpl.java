@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.facade.sales.result.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,21 +82,6 @@ import com.yimayhd.erpcenter.facade.sales.query.ChangeGroupDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ProfitQueryByTourDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ToSKConfirmPreviewDTO;
 import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToOrderLockTableDTO;
-import com.yimayhd.erpcenter.facade.sales.result.BookingProfitTableResult;
-import com.yimayhd.erpcenter.facade.sales.result.GetPushInfoResult;
-import com.yimayhd.erpcenter.facade.sales.result.ProfitQueryByTourResult;
-import com.yimayhd.erpcenter.facade.sales.result.PushWapResult;
-import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
-import com.yimayhd.erpcenter.facade.sales.result.ToAddTourGroupOrderResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToChangeGroupResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToGroupListResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToOtherInfoResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToPreviewResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToProfitQueryTableResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToSKChargePreviewResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToSKConfirmPreviewResult;
-import com.yimayhd.erpcenter.facade.sales.result.ToSaleChargeResult;
-import com.yimayhd.erpcenter.facade.sales.result.TogroupRequirementResult;
 import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToOrderLockListResult;
 import com.yimayhd.erpcenter.facade.sales.service.TourGroupFacade;
 import com.yimayhd.erpcenter.facade.sales.utils.DateUtils;
@@ -571,7 +557,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                         gGuide.setGuideLicenseNo(guideInfo.getLicenseNo());
                         gGuide.setGuideGender(guideInfo.getGender()==0?1:0);  //导游基础信息1女，0男， 接口数据：0女，1男
                     }
-                    if (null != item.getDriverId()){
+                    /**if (null != item.getDriverId()){
                         SupplierDriver sDriver = supplierDriverBiz.getDriverInfoById(item.getDriverId());//司机信息
                         if (sDriver != null){
                             gGuide.setDriverName(sDriver.getName());
@@ -1353,9 +1339,8 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
         ToPreviewResult toPreviewResult = new ToPreviewResult();
         try {
             GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
-            List<GroupOrderGuest> guests = groupOrderGuestBiz
-                    .selectByOrderId(orderId);
-            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(orderId,groupOrder.getGroupId());
+            List<GroupOrderGuest> guests = groupOrderGuestBiz .selectByOrderId(orderId);
+            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(orderId,null);
             GroupOrderGuest genderSum=groupOrderGuestBiz.selectGenderSum(orderId);
             toPreviewResult.setGroupOrder(groupOrder);
             toPreviewResult.setGuests(guests);
@@ -1374,7 +1359,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
             List<GroupOrderGuest> guests = groupOrderGuestBiz
                     .selectByOrderId(orderId);
-            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(orderId,curBizId);
+            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(null,groupOrder.getGroupId());
             toPreviewResult.setGroupOrder(groupOrder);
             toPreviewResult.setGuests(guests);
             toPreviewResult.setGroupRoute(groupRoute);
@@ -1827,8 +1812,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
      * 省内交通
      *
      * @param groupOrderTransports
-     * @param
-     *            0表示接信息 1表示送信息
+     * @param 0表示接信息 1表示送信息
      * @return
      */
     public String getSourceType(List<GroupOrderTransport> groupOrderTransports) {
@@ -2278,7 +2262,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
 	}
 
     @Override
-    public ProfitEverifyTableResult toProfitEverifyTable(GroupOrder groupOrder, Integer page, Integer pageSize,Integer bizId,Set<Integer> dataUserIdSet) {
+    public ProfitEverifyTableResult toProfitEverifyTable(GroupOrder groupOrder, Integer page, Integer pageSize, Integer bizId, Set<Integer> dataUserIdSet) {
         try {
             ProfitEverifyTableResult result = new ProfitEverifyTableResult();
             PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
