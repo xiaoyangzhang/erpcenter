@@ -57,6 +57,7 @@ import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListTableResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.ToEditTaobaoOrderResult;
 import com.yimayhd.erpcenter.facade.tj.client.service.TaobaoFacade;
+import org.springframework.web.util.WebUtils;
 
 public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	private static final Logger LOGGER = LoggerFactory.getLogger("TaobaoFacadeImpl");
@@ -156,11 +157,27 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 			}
 		}
 		PageBean<GroupOrder> page = new PageBean<GroupOrder>();
-		page.setParameter(groupOrder);
-		page.setPage(groupOrder.getPage()==null?1:groupOrder.getPage());
-		page.setPageSize(groupOrder.getPageSize() == null ? Constants.PAGESIZE
-				: groupOrder.getPageSize());
-		page =groupOrderBiz.selectSpecialOrderListPage(page, bizId,taobaoOrderListTableDTO.getDataUserIdSets());
+//		page.setParameter(groupOrder);
+//		page.setPage(groupOrder.getPage()==null?1:groupOrder.getPage());
+//		page.setPageSize(groupOrder.getPageSize() == null ? Constants.PAGESIZE
+//				: groupOrder.getPageSize());
+//		page =groupOrderBiz.selectSpecialOrderListPage(page, bizId,taobaoOrderListTableDTO.getDataUserIdSets());
+
+		if (!"".equals(groupOrder.getGuestName()) || !"".equals(groupOrder.getMobile())) {
+			page.setParameter(groupOrder);
+			page.setPage(groupOrder.getPage() == null ? 1 : groupOrder.getPage());
+			page.setPageSize(groupOrder.getPageSize() == null ? Constants.PAGESIZE : groupOrder.getPageSize());
+			page = groupOrderBiz.selectTaobaoOrderGuestNameListPage(page, bizId,
+					taobaoOrderListTableDTO.getDataUserIdSets(), 1);
+		} else {
+			page.setParameter(groupOrder);
+			page.setPage(groupOrder.getPage() == null ? 1 : groupOrder.getPage());
+			page.setPageSize(groupOrder.getPageSize() == null ? Constants.PAGESIZE : groupOrder.getPageSize());
+			page = groupOrderBiz.selectTaobaoOrderListPage(page, bizId,
+					taobaoOrderListTableDTO.getDataUserIdSets(), 1);
+		}
+
+
 		result.setPage(page);
 		
 //		List<GroupOrder> list = page.getResult();
@@ -189,7 +206,16 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 //		model.addAttribute("pageTotalGuide",pageTotalGuide);
 //		model.addAttribute("pageTotal", pageTotal);
 //		model.addAttribute("page", page);
-		GroupOrder go = groupOrderBiz.selectTotalSpecialOrder(groupOrder, bizId,taobaoOrderListTableDTO.getDataUserIdSets());
+//		GroupOrder go = groupOrderBiz.selectTotalSpecialOrder(groupOrder, bizId,taobaoOrderListTableDTO.getDataUserIdSets());
+		GroupOrder go = null;
+		if(!"".equals(groupOrder.getGuestName()) || !"".equals(groupOrder.getMobile())){
+			go = groupOrderBiz.selectTotalTaobaoGuestNameOrder(groupOrder,
+					bizId, taobaoOrderListTableDTO.getDataUserIdSets());
+		}else{
+			go = groupOrderBiz.selectTotalTaobaoOrder(groupOrder,
+					bizId,taobaoOrderListTableDTO.getDataUserIdSets());
+		}
+
 		result.setGroupOrder(go);
 //		model.addAttribute("totalAudit", go.getNumAdult());
 //		model.addAttribute("totalChild", go.getNumChild());
