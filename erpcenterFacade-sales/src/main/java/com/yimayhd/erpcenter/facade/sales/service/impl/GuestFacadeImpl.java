@@ -21,6 +21,7 @@ import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.biz.service.SupplierDriverBiz;
 import com.yimayhd.erpresource.biz.service.SupplierGuideBiz;
 import com.yimayhd.erpresource.biz.service.SupplierImgBiz;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -259,9 +260,10 @@ public class GuestFacadeImpl implements GuestFacade {
         return guestResult;
     }
 
-	@Override
-	public GuestResult getEmployeeByMobile(String loginName) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public GuestResult getEmployeeByMobile(String mobile) {
+		GuestResult result=new GuestResult();
+		result.setGroupOrderGuestList(groupOrderGuestBiz.getEmployeeByMobile(mobile));
+		return result;
 	}
 }
