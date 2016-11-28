@@ -16,6 +16,7 @@ import java.util.Set;
 import com.yimayhd.erpcenter.biz.sys.service.PlatAuthBiz;
 import com.yimayhd.erpcenter.dal.sys.po.PlatAuth;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
+import com.yimayhd.erpcenter.facade.sales.query.ReportStatisticsQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.query.grouporder.*;
 import com.yimayhd.erpcenter.facade.sales.result.grouporder.*;
 import com.yimayhd.erpcenter.facade.sales.utils.*;
@@ -3602,4 +3603,16 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		}
 		return sb.toString();
 	}
+
+	@Override
+	public ReportStatisticsResult selectMonthlyReportStatisticsListPage(ReportStatisticsQueryDTO queryDTO) {
+		ReportStatisticsResult  result = new ReportStatisticsResult();
+		PageBean<GroupOrder> pageBean = groupOrderService.selectMonthlyReportStatisticsListPage(queryDTO.getPageBean(), queryDTO.getBizId());
+		result.setPageBean(pageBean);
+		
+		return result;
+	}
+	
+	
+	
 }

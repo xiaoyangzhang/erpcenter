@@ -591,4 +591,23 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
         taoBaoStockBiz.updateProductStockByTaobao(mapList);
         return "OK";
 	}
+	@Override
+	public PresellProductStatisticsListResult selectNotPresellProductStatisticsListPage(PresellProductStatistics queryDTO) {
+		PresellProductStatisticsListResult result = new PresellProductStatisticsListResult();
+		PageBean<PlatTaobaoTrade> pageBean = taobaoOrderBiz.selectNotPresellProductStatisticsListPage(queryDTO.getPageBean(), queryDTO.getBizId());
+		result.setPageBean(pageBean);
+		
+		return result;
+	}
+	
+	
+	
+	@Override
+	public PresellProductStatisticsListResult selectSaleOperatorSalesStatisticsListPage(PresellProductStatistics queryDTO) {
+		PresellProductStatisticsListResult result = new PresellProductStatisticsListResult();
+		PageBean<PlatTaobaoTrade> pageBean = taobaoOrderBiz.selectSaleOperatorSalesStatisticsListPage(queryDTO.getPageBean(), queryDTO.getBizId());
+		result.setPageBean(pageBean);
+		
+		return result;
+	}
 }

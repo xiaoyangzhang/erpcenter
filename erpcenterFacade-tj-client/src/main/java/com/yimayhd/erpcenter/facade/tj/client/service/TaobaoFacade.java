@@ -84,5 +84,13 @@ public interface TaobaoFacade{
 	
 	public PresellProductStatisticsListResult selectPresellProductStatisticsListPage(PresellProductStatistics queryDTO);
 	
+
 	public String savePushTrade(PushTradeQueryDTO pushTradeQueryDTO);
+
+	
+	public PresellProductStatisticsListResult selectNotPresellProductStatisticsListPage(PresellProductStatistics queryDTO);
+	
+	
+	public PresellProductStatisticsListResult selectSaleOperatorSalesStatisticsListPage(PresellProductStatistics queryDTO);
+
 }
