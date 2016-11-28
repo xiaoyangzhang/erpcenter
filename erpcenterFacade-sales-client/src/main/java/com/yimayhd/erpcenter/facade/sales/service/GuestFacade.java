@@ -23,6 +23,7 @@ public interface GuestFacade {
     public GuestResult getCertificateNums(Integer orderId);
     public GuestResult guestCertificateNumValidate(String guestCertificateNum,Integer orderId);
     public GuestResult getGuestOrderInfo( String guestCertificateNum,Integer orderId);
+    public GuestResult getEmployeeByMobile(String loginName);
 
 
 
