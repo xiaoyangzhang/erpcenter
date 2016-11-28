@@ -258,4 +258,10 @@ public class GuestFacadeImpl implements GuestFacade {
         }
         return guestResult;
     }
+
+	@Override
+	public GuestResult getEmployeeByMobile(String loginName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
