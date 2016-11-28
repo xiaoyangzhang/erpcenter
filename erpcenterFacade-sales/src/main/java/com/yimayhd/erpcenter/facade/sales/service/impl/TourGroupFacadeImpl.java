@@ -1297,7 +1297,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
             List<GroupOrderGuest> guests = groupOrderGuestBiz
                     .selectByOrderId(orderId);
-            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(orderId);
+            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(orderId,groupOrder.getGroupId());
             GroupOrderGuest genderSum=groupOrderGuestBiz.selectGenderSum(orderId);
             toPreviewResult.setGroupOrder(groupOrder);
             toPreviewResult.setGuests(guests);
@@ -1316,7 +1316,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
             List<GroupOrderGuest> guests = groupOrderGuestBiz
                     .selectByOrderId(orderId);
-            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(orderId);
+            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(orderId,curBizId);
             toPreviewResult.setGroupOrder(groupOrder);
             toPreviewResult.setGuests(guests);
             toPreviewResult.setGroupRoute(groupRoute);
