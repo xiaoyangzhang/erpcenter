@@ -142,6 +142,12 @@ public class SysPlatformOrgFacadeImpl implements SysPlatformOrgFacade{
 			result.setPlatformOrgPos(platformOrgPos);
 		return result;
 	}
+
+	@Override
+	public PlatformOrgPo getCompanyByEmployeeId2(Integer bizId, Integer employeeId) {
+		return platformOrgBiz.getCompanyByEmployeeId2(bizId,employeeId);
+	}
+
 	@Override
 	public PlatformOrgPoListResult getSecLevelOrgList(Integer bizId) {		
 		List<PlatformOrgPo> platformOrgPos =  platformOrgBiz.getSecLevelOrgList(bizId);
