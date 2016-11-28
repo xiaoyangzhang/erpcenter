@@ -11,15 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.LogOperatorBiz;
@@ -44,6 +40,8 @@ import com.yimayhd.erpcenter.common.contants.BasicConstants.LOG_ACTION;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
+import com.yimayhd.erpcenter.dal.basic.utils.LogFieldUtil;
+import com.yimayhd.erpcenter.dal.product.po.ProductGroupSupplier;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.TrafficRes;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResLine;
@@ -936,7 +934,7 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		return list;
 	}
 	
-	public String addTicket(Integer resId) {
+	public TrafficRes addTicket(Integer resId) {
 		return trafficResBiz.selectTrafficResAndLineInfoById1(resId);
 	}
 	
@@ -1035,7 +1033,7 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		PlatformEmployeePo curUser = toSaveResNumsSoldDTO.getCurUser();
 		
 				
-		TrafficRes trafficResBean = trafficResBiz.findTrafficResById(Integer.valueOf(id));
+		TrafficRes trafficResBean = trafficResBiz.findTrafficResById(Integer.valueOf(toSaveResNumsSoldDTO.getId()));
 		Integer newId = 0;
 		if(null != toSaveResNumsSoldDTO.getNumStock()){
 			if(Integer.valueOf(toSaveResNumsSoldDTO.getNumStock()) != trafficResBean.getNumStock()){
