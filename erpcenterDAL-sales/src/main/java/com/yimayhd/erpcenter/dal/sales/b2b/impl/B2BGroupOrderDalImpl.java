@@ -11,6 +11,8 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
 
 /**
  * Created by zm on 2016/6/17.

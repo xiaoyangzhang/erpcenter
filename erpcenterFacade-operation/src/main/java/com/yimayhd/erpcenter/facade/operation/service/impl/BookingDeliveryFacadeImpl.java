@@ -1,46 +1,18 @@
 
 package com.yimayhd.erpcenter.facade.operation.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryPriceBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingGuideBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierDetailBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderTransportBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRequirementBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRouteBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.*;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
+import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.dal.sales.client.constants.Constants;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryOrder;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryPrice;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrintPo;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.*;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.facade.operation.errorcode.OperationErrorCode;
 import com.yimayhd.erpcenter.facade.operation.result.BookingDeliveryResult;
 import com.yimayhd.erpcenter.facade.operation.result.ResultSupport;
@@ -48,6 +20,11 @@ import com.yimayhd.erpcenter.facade.operation.result.WebResult;
 import com.yimayhd.erpcenter.facade.operation.service.BookingDeliveryFacade;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.dal.po.SupplierInfo;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+
+import java.util.*;
 
 /**
  * @ClassName: BookingDeliveryFacadeImpl
@@ -83,6 +60,8 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 	private GroupRequirementBiz groupRequirementBiz;
 	@Autowired
 	private DicBiz dicBiz;
+	@Autowired
+	private PlatformOrgBiz platformOrgBiz;
 	@Override
 	public BookingDeliveryResult getDeliveryBookingDetailList(Integer groupId) {
 		BookingDeliveryResult result = new BookingDeliveryResult();
@@ -235,7 +214,7 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
                 // 根据散客订单统计酒店信息
                 List<GroupRequirement> grogShopList = groupRequirementBiz.selectByOrderAndType(order.getId(), 3);
                 if (grogShopList.size() > 0) {
-                    if (StringUtils.isNotBlank(grogShopList.get(0).getHotelLevel())) {
+                    if (StringUtils.isNotBlank(grogShopList.get(0).getHotelLevel()) && !"".equals(grogShopList.get(0).getHotelLevel())) {
                         gopp.setHotelLevel(dicBiz.getById(Integer.parseInt(grogShopList.get(0).getHotelLevel())).getValue()
                                 + "\n");
                     }
@@ -287,6 +266,25 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 			TourGroupVO tourGroup, Set<Integer> set) {
 		pageBean = tourGroupBiz.getLocalTravelAngencyGroupList(pageBean, tourGroup, set);
 		return pageBean;
+	}
+
+	@Override
+	public Integer getOrgIdBy(Integer orderId ,Integer bizId) {
+		try{
+			GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
+			Integer saleOperatorId = groupOrder.getSaleOperatorId();
+			// 根据销售人员ID获得销售人员所在
+			PlatformOrgPo pop = platformOrgBiz.getCompanyByEmployeeId2(bizId,saleOperatorId);
+
+			if (pop != null) {
+				return pop.getOrgId();
+			}else{
+				return -1;
+			}
+		}catch (Exception e){
+			return -1;
+		}
+
 	}
 
 }

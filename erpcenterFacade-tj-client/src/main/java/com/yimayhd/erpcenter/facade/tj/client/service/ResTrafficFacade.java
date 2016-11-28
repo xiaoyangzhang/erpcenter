@@ -199,7 +199,7 @@ public interface ResTrafficFacade {
 	
 	public List<GroupOrderGuest> ticketInfo(Integer resId);
 	
-	public String addTicket(Integer resId);
+	public TrafficRes addTicket(Integer resId);
 	
 	/**
 	 * 跳转到供应商编辑或新增页面

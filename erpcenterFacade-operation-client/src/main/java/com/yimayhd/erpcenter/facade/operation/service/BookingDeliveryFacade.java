@@ -74,4 +74,6 @@ public interface BookingDeliveryFacade {
 	BookingDeliveryResult getBookingDeliveryInfo(Integer bookingId,Integer bizId);
 	BookingDeliveryResult getDeliveryPriceInfo(Integer bizId,PageBean pageBean,Set<Integer> set,String carInfo);
 	PageBean  getLocalTravelAngencyGroupList(PageBean pageBean,TourGroupVO tourGroup,Set<Integer> set);
+
+	Integer getOrgIdBy(Integer orderId ,Integer bizId);
 }

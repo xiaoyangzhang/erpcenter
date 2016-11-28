@@ -127,5 +127,9 @@
 			<groupId>com.taobao.tair</groupId>
 			<artifactId>tair-client</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.yimayhd.erpresource</groupId>
+			<artifactId>erpresourceBiz-client</artifactId>
+		</dependency>
 	</dependencies>
 </project>

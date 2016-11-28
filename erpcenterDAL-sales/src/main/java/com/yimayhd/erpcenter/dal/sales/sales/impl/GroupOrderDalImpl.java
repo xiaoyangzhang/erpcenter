@@ -41,6 +41,8 @@ import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderTransportMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRequirementMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.util.GenerateCodeUtil;
@@ -86,6 +88,12 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     private FinanceCommissionDeductionMapper financeCommissionDeductionMapper;
     @Autowired
     private SalesSolrQueryManage salesSolrQueryManage;
+    
+    @Autowired
+    private GroupRequirementMapper requirementMapper;
+    
+    @Autowired
+    private GroupOrderTransportMapper transportMapper;
     
     
     @Override
@@ -1226,27 +1234,35 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 		return orders;
 	}
 
+	/**
     @Override
     public PageBean<GroupOrder> findByTime(String orderStr, PageBean<GroupOrder> pageBean, Integer bizId, Integer userId, String userName) {
         return groupOrderPriceMapper.findByTime(orderStr, pageBean, bizId, userId, userName);
     }
-
+	*/
+    
     /**
 	 * 根据订单列表查询price信息
 	 * @param orderIds
 	 * @return
 	 */
+    /**
 	public GroupOrderPrice getPriceTotalByOrderIds(List<Integer> orderIds,Integer mode){
 		return groupOrderPriceMapper.getPriceTotalByOrderIds(orderIds,mode);
 	}
 	
+	*/
+	
+	
+	/**
 	@Override
     public PageBean<GroupOrder> selectOrderListPage( PageBean<GroupOrder> pageBean) {
         List<GroupOrder> orders = groupOrderMapper.selectOrderDumpListPage(pageBean);
         pageBean.setResult(orders);
         return pageBean;
     }
-
+	*/
+	
     @Transactional
     private void saveOrUpdateTransferOrder(String orderStr, Integer bizId, Integer userId,
             String userName) {
@@ -1695,6 +1711,20 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 		return pageBean;
 
 	}
+
+	  	@Override
+	    public PageBean<GroupOrder> findByTime(String orderStr, PageBean<GroupOrder> pageBean,
+	            Integer bizId, Integer userId, String userName) {
+
+	        // 保存订单
+	        saveOrUpdateTransferOrder(orderStr, bizId, userId, userName);
+
+	        // 获取接口中心团订单信息
+	        List<GroupOrder> orders = groupOrderMapper.selectByTimeListPage(pageBean, bizId);
+	        pageBean.setResult(orders);
+
+	        return pageBean;
+	    }
 
 }
 
