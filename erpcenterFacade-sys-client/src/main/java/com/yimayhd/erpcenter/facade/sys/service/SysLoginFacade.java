@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.facade.sys.service;
 
+import com.yimayhd.erpcenter.dal.sys.po.MsgInfoDetail;
 import com.yimayhd.erpcenter.facade.sys.query.UserSessionDTO;
 import com.yimayhd.erpcenter.facade.sys.result.PlatformEmployeeResult;
 import com.yimayhd.erpcenter.facade.sys.result.SysBizInfoResult;
@@ -76,4 +77,5 @@ public interface SysLoginFacade {
 	 */
 	int delUserSession(String sessionId);
 
+	MsgInfoDetail findMsgCountByUserId(Integer bizId,Integer employeeId);
 }
