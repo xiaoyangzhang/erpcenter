@@ -1,8 +1,9 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.po;
 
-import com.yihg.basic.util.LogFieldAnno;
 
 import java.io.Serializable;
+
+import com.yimayhd.erpcenter.common.util.LogFieldAnno;
 
 public class GroupOrderGuest implements Serializable{
     /**

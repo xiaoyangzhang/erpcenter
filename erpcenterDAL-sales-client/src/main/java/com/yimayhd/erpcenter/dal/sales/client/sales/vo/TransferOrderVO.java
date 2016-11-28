@@ -1,9 +1,14 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.vo;
 
-import com.yihg.sales.po.*;
 
 import java.io.Serializable;
 import java.util.List;
+
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TransferOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TransferOrderFamily;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TransferOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TransferOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TransferOrderRoute;
 
 public class TransferOrderVO implements Serializable {
 

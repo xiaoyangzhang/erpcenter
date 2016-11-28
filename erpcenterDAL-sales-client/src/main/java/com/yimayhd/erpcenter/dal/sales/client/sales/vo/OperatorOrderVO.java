@@ -1,10 +1,11 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.vo;
 
-import com.yihg.sales.po.GroupOrderGuest;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 
 public class OperatorOrderVO implements Serializable {
 	/**
