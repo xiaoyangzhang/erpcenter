@@ -11,14 +11,8 @@ import com.yimayhd.erpcenter.facade.tj.client.query.ShopSalesStatisticsQueryDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOriginalOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ToEditTaobaoOrderDTO;
-import com.yimayhd.erpcenter.facade.tj.client.result.AddNewTaobaoOrderResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.ImportTaobaoOrderTableResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.PresellProductStatisticsListResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.SaveSpecialGroupResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.ShopSalesStatisticsResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListTableResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.ToEditTaobaoOrderResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.*;
+import org.springframework.ui.Model;
 
 public interface TaobaoFacade{
 	
@@ -92,5 +86,8 @@ public interface TaobaoFacade{
 	
 	
 	public PresellProductStatisticsListResult selectSaleOperatorSalesStatisticsListPage(PresellProductStatistics queryDTO);
+
+
+	WebResult<PageBean> toOrderPreview(TaobaoOrderListTableDTO taobaoOrderListTableDTO);
 
 }

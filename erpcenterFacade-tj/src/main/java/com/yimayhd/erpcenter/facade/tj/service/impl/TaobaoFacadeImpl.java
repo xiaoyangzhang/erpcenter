@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.facade.tj.client.result.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,14 +49,6 @@ import com.yimayhd.erpcenter.facade.tj.client.query.ShopSalesStatisticsQueryDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOriginalOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ToEditTaobaoOrderDTO;
-import com.yimayhd.erpcenter.facade.tj.client.result.AddNewTaobaoOrderResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.ImportTaobaoOrderTableResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.PresellProductStatisticsListResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.SaveSpecialGroupResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.ShopSalesStatisticsResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListTableResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.ToEditTaobaoOrderResult;
 import com.yimayhd.erpcenter.facade.tj.client.service.TaobaoFacade;
 import org.springframework.web.util.WebUtils;
 
@@ -635,5 +628,48 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		result.setPageBean(pageBean);
 		
 		return result;
+	}
+	@Override
+	public WebResult<PageBean> toOrderPreview(TaobaoOrderListTableDTO taobaoOrderListTableDTO){
+		WebResult<PageBean> webResult = new WebResult<PageBean>();
+		try{
+			GroupOrder groupOrder = taobaoOrderListTableDTO.getGroupOrder();
+
+			if (StringUtils.isBlank(groupOrder.getSaleOperatorIds()) && StringUtils.isNotBlank(groupOrder.getOrgIds())) {
+				Set<Integer> set = new HashSet<Integer>();
+				String[] orgIdArr = groupOrder.getOrgIds().split(",");
+				for (String orgIdStr : orgIdArr) {
+					set.add(Integer.valueOf(orgIdStr));
+				}
+				set = platformEmployeeBiz.getUserIdListByOrgIdList(taobaoOrderListTableDTO.getBizId(), set);
+				String salesOperatorIds = "";
+				for (Integer usrId : set) {
+					salesOperatorIds += usrId + ",";
+				}
+				if (!salesOperatorIds.equals("")) {
+					groupOrder.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+				}
+			}
+			PageBean<GroupOrder> page = new PageBean<GroupOrder>();
+			if (!"".equals(groupOrder.getGuestName())) {
+				page.setPage(1);
+				page.setPageSize(10000);
+				page.setParameter(groupOrder);
+				page = groupOrderBiz.selectOperatorGuestNameListPage(page, taobaoOrderListTableDTO.getBizId(),
+						taobaoOrderListTableDTO.getDataUserIdSets(), 1);
+			} else {
+				page.setPage(1);
+				page.setPageSize(10000);
+				page.setParameter(groupOrder);
+				page = groupOrderBiz.selectOperatorOrderListPage(page,taobaoOrderListTableDTO.getBizId(),
+						taobaoOrderListTableDTO.getDataUserIdSets(), 1);
+			}
+			webResult.setValue(page);
+			webResult.setSuccess(true);
+		}catch (Exception e){
+			webResult.setSuccess(false);
+		}
+		return webResult;
+
 	}
 }
