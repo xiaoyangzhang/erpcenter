@@ -8,6 +8,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.facade.tj.client.query.AddSivaInfoDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
+import com.yimayhd.erpcenter.facade.tj.client.query.PresellTaobaoOriginalOrderDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.PushTradeQueryDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.SaveSpecialGroupDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ShopSalesStatisticsQueryDTO;
@@ -142,4 +143,25 @@ public interface TaobaoFacade{
      * @throws ParseException
      */
 	public List<GroupOrder> loadGroupOrderVisaInfo(String mobile) throws ParseException;
+	
+	/**
+     * 预售淘宝原始单table.
+     *
+     * @param request
+     * @param model
+     * @param pageSize
+     * @param page
+     * @return
+     */
+    public PresellTaobaoOriginalOrderDTO presellTaobaoOriginalOrder_table(PresellTaobaoOriginalOrderDTO presellTaobaoOriginalOrderDTO);
+    
+    /**
+     * 跳转至客人名单信息列表页面
+     * 
+     * @param request
+     * @param model
+     * @param userRightType   0为销售，1为计调
+     * @return
+     */
+    public TaobaoOrderListByOpDTO findGroupOrderGuestPage(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO);
 }

@@ -24,8 +24,8 @@ import com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import com.yimayhd.erpcenter.facade.tj.client.result.*;
-
 import com.yimayhd.erpcenter.facade.tj.client.utils.LogUtils;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +52,7 @@ import com.yimayhd.erpcenter.facade.tj.client.errorcode.TjErrorCode;
 import com.yimayhd.erpcenter.facade.tj.client.query.AddSivaInfoDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
+import com.yimayhd.erpcenter.facade.tj.client.query.PresellTaobaoOriginalOrderDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.PushTradeQueryDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.SaveSpecialGroupDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ShopSalesStatisticsQueryDTO;
@@ -967,7 +968,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	public void saveVisaInfo(AddSivaInfoDTO addSivaInfoDTO) {
         groupOrderBiz.updateExtVisa(addSivaInfoDTO.getOrderBean());
     }
-	
+	@Override
 	public List<GroupOrder> loadGroupOrderVisaInfo(String mobile) throws ParseException{
         List<GroupOrder> goBeanList = groupOrderBiz.selectByOrderIdExtVisaListPage(mobile);
         List<GroupOrder> groupOrderList = new ArrayList<GroupOrder>();
@@ -993,5 +994,61 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
         }
 //        model.addAttribute("groupOrderList", groupOrderList);
         return groupOrderList;
+    }
+	
+	 /**
+     * 预售淘宝原始单table.
+     *
+     * @param request
+     * @param model
+     * @param pageSize
+     * @param page
+     * @return
+     */
+	@Override
+    public PresellTaobaoOriginalOrderDTO presellTaobaoOriginalOrder_table(PresellTaobaoOriginalOrderDTO presellTaobaoOriginalOrderDTO) {
+        PageBean<PlatTaobaoTrade> pageBean = new PageBean<PlatTaobaoTrade>();
+        if (presellTaobaoOriginalOrderDTO.getPage() == null) {
+            pageBean.setPage(1);
+        } else {
+            pageBean.setPage(presellTaobaoOriginalOrderDTO.getPage());
+        }
+        if (presellTaobaoOriginalOrderDTO.getPageSize() == null) {
+            pageBean.setPageSize(Constants.PAGESIZE);
+        } else {
+            pageBean.setPageSize(presellTaobaoOriginalOrderDTO.getPageSize());
+        }
+//        Map<String, Object> pm = WebUtils.getQueryParamters(request);
+//        pm.put("myStoreId", presellTaobaoOriginalOrderDTO.getAuthClient());
+//        pm.put("curUserName", WebUtils.getCurrentUserSession(request).getName());
+        Map<String, Object> pm=presellTaobaoOriginalOrderDTO.getPm();
+        pageBean.setParameter(pm);
+        pageBean = taobaoOrderBiz.selectPresellTaobaoOrderListPage(pageBean, presellTaobaoOriginalOrderDTO.getBizId());
+        //model.addAttribute("pageBean", pageBean);
+        presellTaobaoOriginalOrderDTO.setPageBean(pageBean);
+        return presellTaobaoOriginalOrderDTO;
+    }
+	
+    /**
+     * 跳转至客人名单信息列表页面
+     * 
+     * @param request
+     * @param model
+     * @param userRightType   0为销售，1为计调
+     * @return
+     */
+	@Override
+    public TaobaoOrderListByOpDTO findGroupOrderGuestPage(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO) {
+        //Integer bizId = WebUtils.getCurBizId(request);
+        List<DicInfo> typeList = dicBiz.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE, taobaoOrderListByOpDTO.getBizId());
+//        model.addAttribute("typeList", typeList);
+//        model.addAttribute("orgJsonStr", orgService.getComponentOrgTreeJsonStr(bizId));
+//        model.addAttribute("orgUserJsonStr", platformEmployeeService.getComponentOrgUserTreeJsonStr(bizId));
+//        model.addAttribute("userRightType", userRightType);
+        
+        taobaoOrderListByOpDTO.setTypeList(typeList);
+        taobaoOrderListByOpDTO.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(taobaoOrderListByOpDTO.getBizId()));
+		taobaoOrderListByOpDTO.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(taobaoOrderListByOpDTO.getBizId()));
+        return taobaoOrderListByOpDTO;
     }
 }
