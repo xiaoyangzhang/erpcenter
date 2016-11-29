@@ -8,10 +8,12 @@ import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
 import com.yimayhd.erpcenter.facade.tj.client.query.PushTradeQueryDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.SaveSpecialGroupDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ShopSalesStatisticsQueryDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListByOpDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOriginalOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ToEditTaobaoOrderDTO;
 import com.yimayhd.erpcenter.facade.tj.client.result.*;
+
 import org.springframework.ui.Model;
 
 public interface TaobaoFacade{
@@ -89,5 +91,10 @@ public interface TaobaoFacade{
 
 
 	WebResult<PageBean> toOrderPreview(TaobaoOrderListTableDTO taobaoOrderListTableDTO);
+	
+	/**
+	 * 计调操作单
+	 */
+	public TaobaoOrderListByOpDTO taobaoOrderListByOp(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO);
 
 }

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.yimayhd.erpcenter.facade.tj.client.result.*;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,10 +47,12 @@ import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
 import com.yimayhd.erpcenter.facade.tj.client.query.PushTradeQueryDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.SaveSpecialGroupDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ShopSalesStatisticsQueryDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListByOpDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOriginalOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ToEditTaobaoOrderDTO;
 import com.yimayhd.erpcenter.facade.tj.client.service.TaobaoFacade;
+
 import org.springframework.web.util.WebUtils;
 
 public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
@@ -671,5 +674,26 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		}
 		return webResult;
 
+	}
+	@Override
+	public TaobaoOrderListByOpDTO taobaoOrderListByOp(
+			TaobaoOrderListByOpDTO taobaoOrderListByOpDTO) {
+		List<DicInfo> pp = dicBiz.getListByTypeCode(BasicConstants.CPXL_PP, taobaoOrderListByOpDTO.getBizId());
+		taobaoOrderListByOpDTO.setPp(pp);
+		List<RegionInfo> allProvince = regionBiz.getAllProvince();
+		taobaoOrderListByOpDTO.setAllProvince(allProvince);
+
+
+		List<DicInfo> typeList = dicBiz.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE, taobaoOrderListByOpDTO.getBizId());
+		//model.addAttribute("typeList", typeList);
+		taobaoOrderListByOpDTO.setTypeList(typeList);
+		List<DicInfo> sourceTypeList = dicBiz.getListByTypeCode(Constants.GUEST_SOURCE_TYPE, taobaoOrderListByOpDTO.getBizId());
+		//model.addAttribute("sourceTypeList", sourceTypeList);
+		taobaoOrderListByOpDTO.setSourceTypeList(sourceTypeList);
+//		model.addAttribute("orgJsonStr", orgService.getComponentOrgTreeJsonStr(bizId));
+//		model.addAttribute("orgUserJsonStr", platformEmployeeService.getComponentOrgUserTreeJsonStr(bizId));
+		taobaoOrderListByOpDTO.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(taobaoOrderListByOpDTO.getBizId()));
+		taobaoOrderListByOpDTO.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(taobaoOrderListByOpDTO.getBizId()));
+		return taobaoOrderListByOpDTO;
 	}
 }
