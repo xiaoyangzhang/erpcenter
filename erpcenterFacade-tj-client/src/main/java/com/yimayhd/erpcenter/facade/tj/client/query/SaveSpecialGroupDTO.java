@@ -1,7 +1,10 @@
 package com.yimayhd.erpcenter.facade.tj.client.query;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SpecialGroupOrderVO;
 
 public class SaveSpecialGroupDTO implements Serializable{
@@ -20,6 +23,10 @@ public class SaveSpecialGroupDTO implements Serializable{
 	private String taobaoOrderIds;
 	private String myBizCode;
 	private Integer groupMode;
+
+	private List<LogOperator> logList = new ArrayList<LogOperator>();
+
+
 	
 	public String getOrderNo() {
 		return orderNo;
@@ -76,4 +83,11 @@ public class SaveSpecialGroupDTO implements Serializable{
 		this.groupMode = groupMode;
 	}
 
+	public List<LogOperator> getLogList() {
+		return logList;
+	}
+
+	public void setLogList(List<LogOperator> logList) {
+		this.logList = logList;
+	}
 }

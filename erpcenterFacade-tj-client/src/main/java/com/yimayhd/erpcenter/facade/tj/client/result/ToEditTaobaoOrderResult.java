@@ -2,9 +2,13 @@ package com.yimayhd.erpcenter.facade.tj.client.result;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SpecialGroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade;
 
@@ -25,9 +29,18 @@ public class ToEditTaobaoOrderResult extends ResultSupport{
 	private List<RegionInfo> allProvince;
 	private int count;
 	private List<RegionInfo> cityList;
+	private List<RegionInfo> DepartCityList;
 	private String guideStr;
 	private List<PlatTaobaoTrade> orders;
 	private String tbOrderIds;
+	private GroupOrder groupOrder = new GroupOrder();
+	private Boolean groupCanEdit;
+
+	private Map<String, Object> bookingInfo;
+
+	private List<BookingDelivery> bdList;
+
+	private TourGroup tg;
 	
 	public Integer getOperType() {
 		return operType;
@@ -133,4 +146,51 @@ public class ToEditTaobaoOrderResult extends ResultSupport{
 		this.tbOrderIds = tbOrderIds;
 	}
 
+	public List<RegionInfo> getDepartCityList() {
+		return DepartCityList;
+	}
+
+	public void setDepartCityList(List<RegionInfo> departCityList) {
+		DepartCityList = departCityList;
+	}
+
+	public Boolean getGroupCanEdit() {
+		return groupCanEdit;
+	}
+
+	public void setGroupCanEdit(Boolean groupCanEdit) {
+		this.groupCanEdit = groupCanEdit;
+	}
+
+	public Map<String, Object> getBookingInfo() {
+		return bookingInfo;
+	}
+
+	public void setBookingInfo(Map<String, Object> bookingInfo) {
+		this.bookingInfo = bookingInfo;
+	}
+
+	public List<BookingDelivery> getBdList() {
+		return bdList;
+	}
+
+	public void setBdList(List<BookingDelivery> bdList) {
+		this.bdList = bdList;
+	}
+
+	public TourGroup getTg() {
+		return tg;
+	}
+
+	public void setTg(TourGroup tg) {
+		this.tg = tg;
+	}
+
+	public GroupOrder getGroupOrder() {
+		return groupOrder;
+	}
+
+	public void setGroupOrder(GroupOrder groupOrder) {
+		this.groupOrder = groupOrder;
+	}
 }
