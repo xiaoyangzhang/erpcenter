@@ -43,6 +43,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SpecialGroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade;
 import com.yimayhd.erpcenter.facade.tj.client.errorcode.TjErrorCode;
+import com.yimayhd.erpcenter.facade.tj.client.query.AddSivaInfoDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
 import com.yimayhd.erpcenter.facade.tj.client.query.PushTradeQueryDTO;
@@ -820,7 +821,32 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		// TODO Auto-generated method stub
 		groupOrderBiz.goBackToOP(orderId);
 	}
-	
-	
+	@Override
+	public AddSivaInfoDTO addSivaInfo(AddSivaInfoDTO addSivaInfoDTO) {
+	        GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(addSivaInfoDTO.getOrderId());
+	        String extVisa = groupOrder.getExtVisaInfo();
+
+	        GroupOrder orderBean = new GroupOrder();
+	        if (!"".equals(extVisa)) {
+	            String[] guestInfo = extVisa.split("@");
+	            orderBean.setCompanyName(guestInfo[0]);
+	            orderBean.setExpressOrderNo(guestInfo[1]);
+	            orderBean.setPatTime(guestInfo[2]);
+	            orderBean.setReceiptTime(guestInfo[3]);
+	            orderBean.setSendSignTime(guestInfo[4]);
+	            orderBean.setSendTime(guestInfo[5]);
+
+	        } else {
+	            orderBean.setPatTime(addSivaInfoDTO.getBookingDate().substring(0, 10));
+	        }
+//	        model.addAttribute("orderBean", orderBean);
+//	        model.addAttribute("orderMode", orderMode);
+//	        model.addAttribute("orderId", orderId);
+//	        int bizId = WebUtils.getCurBizId(request);
+//	        model.addAttribute("bizId", bizId);
+	        addSivaInfoDTO.setOrderBean(orderBean);
+	        
+	        return addSivaInfoDTO;
+	    }
 	
 }

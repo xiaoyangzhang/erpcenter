@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.facade.tj.client.service;
 import java.text.ParseException;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.facade.tj.client.query.AddSivaInfoDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
 import com.yimayhd.erpcenter.facade.tj.client.query.PushTradeQueryDTO;
@@ -108,5 +109,15 @@ public interface TaobaoFacade{
 	public void updateLockStateToFinance(Integer orderId) ;
 	
 	public void goBackToOP(Integer orderId);
+	/**
+     * 选中签证填写信息
+     * 
+     * @param request
+     * @param model
+     * @param orderMode
+     * @return
+     * @throws ParseException
+     */
+	public AddSivaInfoDTO addSivaInfo(AddSivaInfoDTO addSivaInfoDTO) ;
 
 }
