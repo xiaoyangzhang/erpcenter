@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.facade.sys.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.yihg.mybatis.utility.PageBean;
@@ -15,4 +16,7 @@ public interface SysMsgInfoFacade {
 	Integer modifyStatus(MsgInfoDetail mid);
 	MsgInfo findMsgByMid(Map<String, Object> param);
 	PageBean<MsgInfo> findNoticeListPage(PageBean<MsgInfo> pageBean, Map<String, String> param);
+
+	List<MsgInfo> findMsgInfo(Map<String, Object> param);
+
 }
