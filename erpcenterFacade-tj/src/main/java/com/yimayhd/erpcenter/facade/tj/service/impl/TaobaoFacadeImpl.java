@@ -795,5 +795,32 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 //	                optMap.containsKey(menuCode.concat("_").concat(PermissionConstants.CHANGE_PRICE)));
 	        return taobaoOrderListByOpDTO;
 	    }
+	@Override
+	public void changeOrderLockState(Integer orderId) {
+		// TODO Auto-generated method stub
+		groupOrderBiz.changeOrderLockState(orderId);
+	}
+	@Override
+	public void changeorderLockStateByOp(Integer orderId) {
+		// TODO Auto-generated method stub
+		groupOrderBiz.changeorderLockStateByOp(orderId);
+	}
+	@Override
+	public void goBackOrderLockStateByOp(Integer orderId) {
+		// TODO Auto-generated method stub
+		groupOrderBiz.goBackOrderLockStateByOp(orderId);
+	}
+	@Override
+	public void updateLockStateToFinance(Integer orderId) {
+		// TODO Auto-generated method stub
+		groupOrderBiz.updateLockStateToFinance(orderId);
+	}
+	@Override
+	public void goBackToOP(Integer orderId) {
+		// TODO Auto-generated method stub
+		groupOrderBiz.goBackToOP(orderId);
+	}
+	
+	
 	
 }
