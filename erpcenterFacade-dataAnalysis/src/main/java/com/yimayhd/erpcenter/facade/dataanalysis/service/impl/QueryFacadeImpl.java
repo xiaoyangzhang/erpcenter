@@ -171,105 +171,110 @@ public class QueryFacadeImpl implements QueryFacade {
             for (GroupOrder gg : goListOutLayer) {
                 // List<Map<String, Object>> listMap = new
                 // ArrayList<Map<String,Object>>();
-                // System.out.println(gg.getProductBrandName()+","+gg.getProductName()+","+gg.getDepartureDate()+","+gg.getNumAdult()+","+gg.getNumChild());
-
-                for (GroupOrder go : pbInnerLayer) {
-                    // System.out.println("-------"+go.getProductBrandName()+"--------"+go.getProductName()+","+go.getDepartureDate()+","+go.getNumAdult()+","+go.getNumChild()+","+go.getPerson());
-                    if (go.getProductBrandName().equals(gg.getProductBrandName())
-                            && go.getProductName().equals(gg.getProductName())) {
-                        String firstDate = go.getDepartureDate().substring(8, 10);
-                        if ("01".equals(firstDate)) {
-                            gg.setDay1(go.getPerson());
+                if (gg != null) {
+                    System.out.println(gg.getProductBrandName() + "," + gg.getProductName() + "," + gg.getDepartureDate() + "," + gg.getNumAdult() + "," + gg.getNumChild());
+                    for (GroupOrder go : pbInnerLayer) {
+                        if(go != null){
+                        System.out.println("-------" + go.getProductBrandName() + "--------" + go.getProductName() + "," + go.getDepartureDate() + "," + go.getNumAdult() + "," + go.getNumChild() + "," + go.getPerson());
+                        if (gg.getProductBrandName() != null && gg.getProductName() != null && go.getProductBrandName() != null && go.getProductName() != null) {
+                            if (go.getProductBrandName().equals(gg.getProductBrandName())
+                                    && go.getProductName().equals(gg.getProductName())) {
+                                String firstDate = go.getDepartureDate().substring(8, 10);
+                                if ("01".equals(firstDate)) {
+                                    gg.setDay1(go.getPerson());
+                                }
+                                if ("02".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay2(go.getPerson());
+                                }
+                                if ("03".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay3(go.getPerson());
+                                }
+                                if ("04".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay4(go.getPerson());
+                                }
+                                if ("05".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay5(go.getPerson());
+                                }
+                                if ("06".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay6(go.getPerson());
+                                }
+                                if ("07".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay7(go.getPerson());
+                                }
+                                if ("08".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay8(go.getPerson());
+                                }
+                                if ("09".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay9(go.getPerson());
+                                }
+                                if ("10".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay10(go.getPerson());
+                                }
+                                if ("11".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay11(go.getPerson());
+                                }
+                                if ("12".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay12(go.getPerson());
+                                }
+                                if ("13".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay13(go.getPerson());
+                                }
+                                if ("14".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay14(go.getPerson());
+                                }
+                                if ("15".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay15(go.getPerson());
+                                }
+                                if ("16".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay16(go.getPerson());
+                                }
+                                if ("17".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay17(go.getPerson());
+                                }
+                                if ("18".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay18(go.getPerson());
+                                }
+                                if ("19".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay19(go.getPerson());
+                                }
+                                if ("20".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay20(go.getPerson());
+                                }
+                                if ("21".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay21(go.getPerson());
+                                }
+                                if ("22".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay22(go.getPerson());
+                                }
+                                if ("23".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay23(go.getPerson());
+                                }
+                                if ("24".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay24(go.getPerson());
+                                }
+                                if ("25".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay25(go.getPerson());
+                                }
+                                if ("26".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay26(go.getPerson());
+                                }
+                                if ("27".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay27(go.getPerson());
+                                }
+                                if ("28".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay28(go.getPerson());
+                                }
+                                if ("29".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay29(go.getPerson());
+                                }
+                                if ("30".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay30(go.getPerson());
+                                }
+                                if ("31".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay31(go.getPerson());
+                                }
+                            }
                         }
-                        if ("02".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay2(go.getPerson());
-                        }
-                        if ("03".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay3(go.getPerson());
-                        }
-                        if ("04".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay4(go.getPerson());
-                        }
-                        if ("05".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay5(go.getPerson());
-                        }
-                        if ("06".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay6(go.getPerson());
-                        }
-                        if ("07".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay7(go.getPerson());
-                        }
-                        if ("08".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay8(go.getPerson());
-                        }
-                        if ("09".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay9(go.getPerson());
-                        }
-                        if ("10".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay10(go.getPerson());
-                        }
-                        if ("11".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay11(go.getPerson());
-                        }
-                        if ("12".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay12(go.getPerson());
-                        }
-                        if ("13".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay13(go.getPerson());
-                        }
-                        if ("14".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay14(go.getPerson());
-                        }
-                        if ("15".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay15(go.getPerson());
-                        }
-                        if ("16".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay16(go.getPerson());
-                        }
-                        if ("17".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay17(go.getPerson());
-                        }
-                        if ("18".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay18(go.getPerson());
-                        }
-                        if ("19".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay19(go.getPerson());
-                        }
-                        if ("20".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay20(go.getPerson());
-                        }
-                        if ("21".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay21(go.getPerson());
-                        }
-                        if ("22".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay22(go.getPerson());
-                        }
-                        if ("23".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay23(go.getPerson());
-                        }
-                        if ("24".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay24(go.getPerson());
-                        }
-                        if ("25".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay25(go.getPerson());
-                        }
-                        if ("26".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay26(go.getPerson());
-                        }
-                        if ("27".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay27(go.getPerson());
-                        }
-                        if ("28".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay28(go.getPerson());
-                        }
-                        if ("29".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay29(go.getPerson());
-                        }
-                        if ("30".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay30(go.getPerson());
-                        }
-                        if ("31".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay31(go.getPerson());
                         }
                     }
                 }
