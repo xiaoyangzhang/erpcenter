@@ -4580,8 +4580,7 @@
 		ORDER BY a.create_time desc,a.departure_date desc
 	</select>
 
-	<select id="selectTotalSpecialOrder" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder
-">
+	<select id="selectTotalSpecialOrder" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		select IFNULL(sum(a.num_adult),0) as numAdult ,
 		IFNULL(sum(a.num_child),0) as numChild, IFNULL(sum(a.num_guide),0) as
 		numGuide, IFNULL(sum(a.total),0) as total from group_order a left join
@@ -4681,8 +4680,7 @@
 		ORDER BY a.departure_date,a.create_time
 	</select>
 
-<select id="selectTotalTaobaoOrder" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder
-">
+<select id="selectTotalTaobaoOrder" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		select IFNULL(sum(a.num_adult),0) as numAdult ,
 		IFNULL(sum(a.num_child),0) as numChild, IFNULL(sum(a.num_guide),0) as
 		numGuide, IFNULL(sum(a.total),0) as total from group_order a left join
@@ -4790,8 +4788,7 @@
 		ORDER BY a.departure_date,a.create_time
 	</select>
 	
-	<select id="selectTotalTaobaoGuestNameOrder" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder
-">
+	<select id="selectTotalTaobaoGuestNameOrder" resultMap="BaseResultMap" parameterType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder">
 		select IFNULL(sum(a.num_adult),0) as numAdult ,
 		IFNULL(sum(a.num_child),0) as numChild, IFNULL(sum(a.num_guide),0) as
 		numGuide, IFNULL(sum(a.total),0) as total from group_order a left join
