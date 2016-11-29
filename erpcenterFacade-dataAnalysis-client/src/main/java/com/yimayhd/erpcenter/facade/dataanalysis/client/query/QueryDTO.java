@@ -39,6 +39,8 @@ public class QueryDTO implements Serializable {
     private String citysSupplierIds;
     private String supplierLevel;
 
+    private String groupMode;
+
     private ProductGuestShoppingCondition productGuestShoppingCondition;
 
     public ProductGuestShoppingCondition getProductGuestShoppingCondition() {
@@ -249,5 +251,13 @@ public class QueryDTO implements Serializable {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getGroupMode() {
+        return groupMode;
+    }
+
+    public void setGroupMode(String groupMode) {
+        this.groupMode = groupMode;
     }
 }

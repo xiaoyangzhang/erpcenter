@@ -1281,7 +1281,24 @@ public class QueryFacadeImpl implements QueryFacade {
     public QueryResult productProfitList(QueryDTO queryDTO) {
         QueryResult queryResult = new QueryResult();
         try {
-            queryResult.setPlanedPersonCount(productGroupPriceBiz.selectProductByProduct(queryDTO.getParameters()));
+            QueryResult pb = commonQuery(queryDTO);
+            List result = pb.getPageBean().getResult();
+            Map paramters = queryDTO.getParameters();
+            Map conditionMap = new HashMap();
+            if (result != null && result.size() > 0) {
+
+                if (queryDTO.getGroupMode().equals("0")) {
+                    for (int i = 0; i < result.size(); i++) {
+                        Map map = (Map) result.get(i);
+                        String productBrandId = (String) map.get("productBrandId");
+                        String productId = (String) map.get("productId");
+                        conditionMap.put("productBrandId", productBrandId);
+                        conditionMap.put("productId", productId);
+                        queryResult.setPlanedPersonCount(productGroupPriceBiz.selectProductByProduct(queryDTO.getParameters()));
+                    }
+                }
+            }
+
         } catch (Exception e) {
             logger.error("", e);
         }
