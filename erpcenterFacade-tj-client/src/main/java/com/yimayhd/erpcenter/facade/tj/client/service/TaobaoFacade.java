@@ -167,4 +167,9 @@ public interface TaobaoFacade{
     public TaobaoOrderListByOpDTO findGroupOrderGuestPage(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO);
     
     public ToSaleGuestListExcelDTO toSaleGuestListExcel(ToSaleGuestListExcelDTO toSaleGuestListExcelDTO);
+    
+    // 导出Export
+    public ToSaleGuestListExcelDTO toGroupOrderGuesExport(ToSaleGuestListExcelDTO toSaleGuestListExcelDTO);
+    
+    public TaobaoOrderListByOpDTO loadGroupOrderGuestList(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO) throws ParseException;
 }

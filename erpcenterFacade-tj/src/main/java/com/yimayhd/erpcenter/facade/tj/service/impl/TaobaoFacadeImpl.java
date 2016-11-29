@@ -1144,4 +1144,68 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		        toSaleGuestListExcelDTO.setPageBean(pageBean);
 		        return toSaleGuestListExcelDTO;
 	    }
+		 
+		 public ToSaleGuestListExcelDTO toGroupOrderGuesExport(ToSaleGuestListExcelDTO toSaleGuestListExcelDTO){    
+			 if(toSaleGuestListExcelDTO.getDoType()==1){
+				 GroupOrder vo = new GroupOrder();
+			        vo.setPage(toSaleGuestListExcelDTO.getPage());
+			        vo.setPageSize(toSaleGuestListExcelDTO.getPageSize());
+			        vo.setStartTime(toSaleGuestListExcelDTO.getStartTime());
+			        vo.setEndTime(toSaleGuestListExcelDTO.getEndTime());
+			        vo.setRemark(toSaleGuestListExcelDTO.getRemark());
+			        vo.setGuestName(toSaleGuestListExcelDTO.getGuestName());
+			        vo.setOrderNo(toSaleGuestListExcelDTO.getOrderMode());
+			        vo.setGroupCode(toSaleGuestListExcelDTO.getGroupCode());
+			        vo.setSaleOperatorIds(toSaleGuestListExcelDTO.getSaleOperatorIds());
+			        vo.setOrgIds(toSaleGuestListExcelDTO.getOrgIds());
+			        vo.setOperType(Integer.valueOf(toSaleGuestListExcelDTO.getOperType()));
+			        vo.setReceiveMode(toSaleGuestListExcelDTO.getReceiveMode());
+			        vo.setOrgNames(toSaleGuestListExcelDTO.getOrgNames());
+			        vo.setSaleOperatorName(toSaleGuestListExcelDTO.getSaleOperatorName());
+			        vo.setSupplierName(toSaleGuestListExcelDTO.getSupplierName());
+			        vo.setGender(toSaleGuestListExcelDTO.getGender());
+			        vo.setAgeFirst(toSaleGuestListExcelDTO.getAgeFirst());
+			        vo.setAgeSecond(toSaleGuestListExcelDTO.getAgeSecond());
+			        vo.setNativePlace(toSaleGuestListExcelDTO.getNativePlace());
+			        if (StringUtils.isBlank(vo.getSaleOperatorIds()) && StringUtils.isNotBlank(vo.getOrgIds())) {
+			            Set<Integer> set = new HashSet<Integer>();
+			            String[] orgIdArr = vo.getOrgIds().split(",");
+			            for (String orgIdStr : orgIdArr) {
+			                set.add(Integer.valueOf(orgIdStr));
+			            }
+			            set = platformEmployeeBiz.getUserIdListByOrgIdList(toSaleGuestListExcelDTO.getBizId(), set);
+			            String salesOperatorIds = "";
+			            for (Integer usrId : set) {
+			                salesOperatorIds += usrId + ",";
+			            }
+			            if (!salesOperatorIds.equals("")) {
+			                vo.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+			            }
+			        }
+			        PageBean pageBean = new PageBean();
+			        if (toSaleGuestListExcelDTO.getPage() == null) {
+			            pageBean.setPage(1);
+			        } else {
+			            pageBean.setPage(toSaleGuestListExcelDTO.getPage());
+			        }
+			        if (toSaleGuestListExcelDTO.getPageSize() == null) {
+			            pageBean.setPageSize(Constants.PAGESIZE);
+			        } else {
+			            pageBean.setPageSize(toSaleGuestListExcelDTO.getPageSize());
+			        }
+			        pageBean.setParameter(vo);
+			        pageBean.setPage(toSaleGuestListExcelDTO.getPage());
+			        toSaleGuestListExcelDTO.setPageBean(pageBean);
+			 }else if(toSaleGuestListExcelDTO.getDoType()==2){
+				 PageBean pageBean = new PageBean();
+				 pageBean=toSaleGuestListExcelDTO.getPageBean();
+				 pageBean = groupOrderBiz.selectGroupOrderGuestListPage(pageBean, toSaleGuestListExcelDTO.getBizId(),
+						  toSaleGuestListExcelDTO.getDataUserIdSets(),toSaleGuestListExcelDTO.getUserRightType());
+				 toSaleGuestListExcelDTO.setPageBean(pageBean);
+			 }
+			 
+			 return toSaleGuestListExcelDTO;
+			          
+
+			    }
 }
