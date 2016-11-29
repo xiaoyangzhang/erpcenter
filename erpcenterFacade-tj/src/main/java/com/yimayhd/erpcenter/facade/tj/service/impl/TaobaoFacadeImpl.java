@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.facade.tj.service.impl;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -676,8 +677,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 
 	}
 	@Override
-	public TaobaoOrderListByOpDTO taobaoOrderListByOp(
-			TaobaoOrderListByOpDTO taobaoOrderListByOpDTO) {
+	public TaobaoOrderListByOpDTO taobaoOrderListByOp(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO) {
 		List<DicInfo> pp = dicBiz.getListByTypeCode(BasicConstants.CPXL_PP, taobaoOrderListByOpDTO.getBizId());
 		taobaoOrderListByOpDTO.setPp(pp);
 		List<RegionInfo> allProvince = regionBiz.getAllProvince();
@@ -696,4 +696,131 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		taobaoOrderListByOpDTO.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(taobaoOrderListByOpDTO.getBizId()));
 		return taobaoOrderListByOpDTO;
 	}
+	
+	  public TaobaoOrderListByOpDTO taobaoOrderListByOp_table(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO) throws ParseException {
+		  GroupOrder groupOrder=taobaoOrderListByOpDTO.getGroupOrder();
+	        if (groupOrder.getDateType() != null && groupOrder.getDateType() == 2) {
+	            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	            if (!"".equals(groupOrder.getStartTime())) {
+	                groupOrder.setStartTime(sdf.parse(groupOrder.getStartTime()).getTime() + "");
+	            }
+	            if (!"".equals(groupOrder.getEndTime())) {
+	                Calendar calendar = Calendar.getInstance();
+	                calendar.setTime(sdf.parse(groupOrder.getEndTime()));
+	                calendar.add(Calendar.DAY_OF_MONTH, +1);// 让日期加1
+	                groupOrder.setEndTime(calendar.getTime().getTime() + "");
+	            }
+
+	        }
+
+	        if (StringUtils.isBlank(groupOrder.getSaleOperatorIds()) && StringUtils.isNotBlank(groupOrder.getOrgIds())) {
+	            Set<Integer> set = new HashSet<Integer>();
+	            String[] orgIdArr = groupOrder.getOrgIds().split(",");
+	            for (String orgIdStr : orgIdArr) {
+	                set.add(Integer.valueOf(orgIdStr));
+	            }
+	            set = platformEmployeeBiz.getUserIdListByOrgIdList(taobaoOrderListByOpDTO.getBizId(), set);
+	            String salesOperatorIds = "";
+	            for (Integer usrId : set) {
+	                salesOperatorIds += usrId + ",";
+	            }
+	            if (!salesOperatorIds.equals("")) {
+	                groupOrder.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+	            }
+	        }
+	        PageBean<GroupOrder> page = new PageBean<GroupOrder>();
+	        if (!"".equals(groupOrder.getGuestName()) || !"".equals(groupOrder.getMobile())) {
+	            page.setParameter(groupOrder);
+	            page.setPage(groupOrder.getPage() == null ? 1 : groupOrder.getPage());
+	            page.setPageSize(groupOrder.getPageSize() == null ? Constants.PAGESIZE : groupOrder.getPageSize());
+	            page = groupOrderBiz.selectTaobaoOrderGuestNameListPage(page, taobaoOrderListByOpDTO.getBizId(),
+	            		taobaoOrderListByOpDTO.getDataUserIdSets(), 0);
+	        } else {
+	            page.setParameter(groupOrder);
+	            page.setPage(groupOrder.getPage() == null ? 1 : groupOrder.getPage());
+	            page.setPageSize(groupOrder.getPageSize() == null ? Constants.PAGESIZE : groupOrder.getPageSize());
+	            page = groupOrderBiz.selectTaobaoOrderListPage(page, taobaoOrderListByOpDTO.getBizId(),
+	            		taobaoOrderListByOpDTO.getDataUserIdSets(), 0);
+	        }
+
+	        List<GroupOrder> list = page.getResult();
+	        Integer pageTotalAudit = 0;
+	        Integer pageTotalChild = 0;
+	        Integer pageTotalGuide = 0;
+	        BigDecimal pageTotal = new BigDecimal(0);
+	        if (page.getResult() != null && page.getResult().size() > 0) {
+	            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	            for (GroupOrder groupOrder2 : list) {
+	                pageTotalAudit += groupOrder2.getNumAdult() == null ? 0 : groupOrder2.getNumAdult();
+	                pageTotalChild += groupOrder2.getNumChild() == null ? 0 : groupOrder2.getNumChild();
+	                pageTotalGuide += groupOrder2.getNumGuide() == null ? 0 : groupOrder2.getNumGuide();
+	                pageTotal = pageTotal.add(groupOrder2.getTotal() == null ? new BigDecimal(0) : groupOrder2.getTotal());
+	                Long createTime = groupOrder2.getCreateTime();
+	                String dateStr = sdf.format(createTime);
+	                groupOrder2.setCreateTimeStr(dateStr);
+	            }
+	        }
+	        List<DicInfo> typeList = dicBiz.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE,
+	        		taobaoOrderListByOpDTO.getBizId());
+//	        model.addAttribute("typeList", typeList);
+//	        model.addAttribute("pageTotalAudit", pageTotalAudit);
+//	        model.addAttribute("pageTotalChild", pageTotalChild);
+//	        model.addAttribute("pageTotalGuide", pageTotalGuide);
+//	        model.addAttribute("pageTotal", pageTotal);
+//	        model.addAttribute("page", page);
+	        
+	        taobaoOrderListByOpDTO.setTypeList(typeList);
+	        taobaoOrderListByOpDTO.setPageTotalAudit(pageTotalAudit);
+	        taobaoOrderListByOpDTO.setPageTotalChild(pageTotalChild);
+	        taobaoOrderListByOpDTO.setPageTotalGuide(pageTotalGuide);
+	        taobaoOrderListByOpDTO.setPageTotal(pageTotal);
+	        taobaoOrderListByOpDTO.setPage(page);
+	        GroupOrder go = null;
+	        if(!"".equals(groupOrder.getGuestName()) || !"".equals(groupOrder.getMobile())){
+	        	go = groupOrderBiz.selectTotalTaobaoGuestNameOrder(groupOrder,
+	        			taobaoOrderListByOpDTO.getBizId(), taobaoOrderListByOpDTO.getDataUserIdSets());
+	        }else{
+	        	go = groupOrderBiz.selectTotalTaobaoOrder(groupOrder,
+	        			taobaoOrderListByOpDTO.getBizId(), taobaoOrderListByOpDTO.getDataUserIdSets());
+	        }
+//	        model.addAttribute("totalAudit", go.getNumAdult());
+//	        model.addAttribute("totalChild", go.getNumChild());
+//	        model.addAttribute("totalGuide", go.getNumGuide());
+//	        model.addAttribute("total", go.getTotal());
+	        taobaoOrderListByOpDTO.setGroupOrder(go);
+//	        UserSession user = WebUtils.getCurrentUserSession(request);
+//	        Map<String, Boolean> optMap = user.getOptMap();
+//	        String menuCode = PermissionConstants.JDGL_JDCZD;
+//	        model.addAttribute("CHANGE_PRICE",
+//	                optMap.containsKey(menuCode.concat("_").concat(PermissionConstants.CHANGE_PRICE)));
+	        return taobaoOrderListByOpDTO;
+	    }
+	@Override
+	public void changeOrderLockState(Integer orderId) {
+		// TODO Auto-generated method stub
+		groupOrderBiz.changeOrderLockState(orderId);
+	}
+	@Override
+	public void changeorderLockStateByOp(Integer orderId) {
+		// TODO Auto-generated method stub
+		groupOrderBiz.changeorderLockStateByOp(orderId);
+	}
+	@Override
+	public void goBackOrderLockStateByOp(Integer orderId) {
+		// TODO Auto-generated method stub
+		groupOrderBiz.goBackOrderLockStateByOp(orderId);
+	}
+	@Override
+	public void updateLockStateToFinance(Integer orderId) {
+		// TODO Auto-generated method stub
+		groupOrderBiz.updateLockStateToFinance(orderId);
+	}
+	@Override
+	public void goBackToOP(Integer orderId) {
+		// TODO Auto-generated method stub
+		groupOrderBiz.goBackToOP(orderId);
+	}
+	
+	
+	
 }

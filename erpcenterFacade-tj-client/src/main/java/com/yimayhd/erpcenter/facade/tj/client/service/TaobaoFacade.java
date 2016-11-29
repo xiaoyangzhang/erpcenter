@@ -96,5 +96,17 @@ public interface TaobaoFacade{
 	 * 计调操作单
 	 */
 	public TaobaoOrderListByOpDTO taobaoOrderListByOp(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO);
+	
+	public TaobaoOrderListByOpDTO taobaoOrderListByOp_table(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO) throws ParseException;
+	
+	public void changeOrderLockState(Integer orderId);
+	
+	public void changeorderLockStateByOp(Integer orderId) ;
+	
+	public void goBackOrderLockStateByOp(Integer orderId);
+	
+	public void updateLockStateToFinance(Integer orderId) ;
+	
+	public void goBackToOP(Integer orderId);
 
 }
