@@ -101,4 +101,6 @@ public interface SysPlatformOrgFacade {
 	public PlatformOrgPo getCompanyByEmployeeId2(Integer bizId,
 												 Integer employeeId) ;
 
+	String[] getOrgMappingSupplierId(Integer orgId);
+
 }

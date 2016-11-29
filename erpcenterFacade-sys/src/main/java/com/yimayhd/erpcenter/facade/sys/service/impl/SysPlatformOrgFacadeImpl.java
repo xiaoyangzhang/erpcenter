@@ -3,13 +3,11 @@ package com.yimayhd.erpcenter.facade.sys.service.impl;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
-import com.yimayhd.erpcenter.biz.sys.util.SysConfig;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.dal.sys.po.SysDataRight;
 import com.yimayhd.erpcenter.facade.sys.query.PlatformOrgPoDTO;
@@ -25,8 +23,6 @@ public class SysPlatformOrgFacadeImpl implements SysPlatformOrgFacade{
 
 	@Autowired
 	private PlatformOrgBiz platformOrgBiz;
-	@Autowired
-	private SysConfig config;
 	@Autowired
 	private SupplierBiz supplierBiz;
 	
@@ -179,46 +175,11 @@ public class SysPlatformOrgFacadeImpl implements SysPlatformOrgFacade{
 	}
 	
 	/**
-	 * 获取当前公司或商家编码
-	 * TODO 设置开关：有的公司取商家编码，有的公司取公司编码
-	 * @param request
-	 * @return
-	 */
-	public String getMyBizCode(Integer bizId,Integer orgId){
-		//WebUtils.getCurBizCode(request)
-		return platformOrgBiz.getCompanyCodeByOrgId(bizId, orgId);
-	}
-	
-	/**
-	 * 获取当前公司或商家logo
-	 * TODO 设置开关：有的公司取商家logo，有的公司取公司logo
-	 * @param request
-	 * @return
-	 */
-	public String getMyBizLogo(Integer bizId,Integer orgId){		
-		//WebUtils.getCurBizLogo(path, request)
-		return getOrgLogo(bizId, orgId);
-	}
-	
-	/**
-	 * 根据orgId向上遍历查找logo
-	 * @param bizId
-	 * @param orgId
-	 * @return
-	 */
-	public String getOrgLogo(Integer bizId,Integer orgId){
-		String logo = platformOrgBiz.getLogoByOrgId(bizId,orgId); 
-		if(StringUtils.isNotBlank(logo)){
-			return config.getImgServerUrl()+logo;
-		}
-		return null;
-	}
-	
-	/**
 	 * 根据orgId向上遍历查找 登录者对应的默认组团社信息
 	 * @param orgId
 	 * @return [0]为supplierId, [1]为supplierName
 	 */
+	@Override
 	public String[] getOrgMappingSupplierId(Integer orgId){
 		String ret[] = new String[]{"0",""};
 		String SupplierId = platformOrgBiz.getMappingSupplierIdByOrgId(orgId); 
