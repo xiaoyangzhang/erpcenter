@@ -117,9 +117,6 @@ public interface TaobaoFacade{
 	/**
      * 选中签证填写信息
      * 
-     * @param request
-     * @param model
-     * @param orderMode
      * @return
      * @throws ParseException
      */
@@ -128,8 +125,6 @@ public interface TaobaoFacade{
 	/**
      * 保存签证信息
      * 
-     * @param orderMode
-     * @param countStr
      * @return
      */
 	public void saveVisaInfo(AddSivaInfoDTO addSivaInfoDTO);
@@ -137,9 +132,6 @@ public interface TaobaoFacade{
 	/**
      * 查询签证客户信息
      * 
-     * @param request
-     * @param reponse
-     * @param model
      * @param mobile
      * @return
      * @throws ParseException
@@ -149,10 +141,6 @@ public interface TaobaoFacade{
 	/**
      * 预售淘宝原始单table.
      *
-     * @param request
-     * @param model
-     * @param pageSize
-     * @param page
      * @return
      */
     public PresellTaobaoOriginalOrderDTO presellTaobaoOriginalOrder_table(PresellTaobaoOriginalOrderDTO presellTaobaoOriginalOrderDTO);
@@ -160,9 +148,6 @@ public interface TaobaoFacade{
     /**
      * 跳转至客人名单信息列表页面
      * 
-     * @param request
-     * @param model
-     * @param userRightType   0为销售，1为计调
      * @return
      */
     public TaobaoOrderListByOpDTO findGroupOrderGuestPage(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO);
@@ -176,12 +161,19 @@ public interface TaobaoFacade{
     
 	 /**
      * 改价格
-     * 
-     * @param request
-     * @param model
      * @return
      */
     public ChangePriceDTO changePrice(ChangePriceDTO changePriceDTO);
     
     public void savePrice(ChangePriceDTO changePriceDTO) ;
+
+	/**
+	 * 旅游综合保障计划投保书
+	 * @param taobaoOrderListTableDTO
+	 * @param page
+	 * @param pageSize
+	 * @param userRightType
+	 * @return
+	 */
+	WebResult<PageBean> saleInsurance(TaobaoOrderListTableDTO taobaoOrderListTableDTO,Integer page,Integer pageSize,Integer userRightType);
 }

@@ -79,6 +79,7 @@ import com.yimayhd.erpcenter.facade.tj.client.result.ToEditTaobaoOrderResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.WebResult;
 import com.yimayhd.erpcenter.facade.tj.client.service.TaobaoFacade;
 import com.yimayhd.erpcenter.facade.tj.client.utils.LogUtils;
+import org.springframework.web.util.WebUtils;
 
 public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	private static final Logger LOGGER = LoggerFactory.getLogger("TaobaoFacadeImpl");
@@ -1234,6 +1235,48 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 					e.printStackTrace();
 				}
 		    }
-		 
-		 
+
+	@Override
+	public  WebResult<PageBean> saleInsurance(TaobaoOrderListTableDTO taobaoOrderListTableDTO,Integer page,Integer pageSize,Integer userRightType){
+		WebResult<PageBean> webResult = new WebResult<PageBean>();
+		try{
+			GroupOrder vo = taobaoOrderListTableDTO.getGroupOrder();
+
+			if (StringUtils.isBlank(vo.getSaleOperatorIds()) && StringUtils.isNotBlank(vo.getOrgIds())) {
+				Set<Integer> set = new HashSet<Integer>();
+				String[] orgIdArr = vo.getOrgIds().split(",");
+				for (String orgIdStr : orgIdArr) {
+					set.add(Integer.valueOf(orgIdStr));
+				}
+				set = platformEmployeeBiz.getUserIdListByOrgIdList(taobaoOrderListTableDTO.getBizId(), set);
+				String salesOperatorIds = "";
+				for (Integer usrId : set) {
+					salesOperatorIds += usrId + ",";
+				}
+				if (!salesOperatorIds.equals("")) {
+					vo.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+				}
+			}
+			PageBean pageBean = new PageBean();
+			if (page == null) {
+				pageBean.setPage(1);
+			} else {
+				pageBean.setPage(page);
+			}
+			if (pageSize == null) {
+				pageBean.setPageSize(10000);
+			} else {
+				pageBean.setPageSize(10000);
+			}
+			pageBean.setParameter(vo);
+			pageBean.setPage(page);
+			pageBean = groupOrderBiz.selectGroupOrderGuestListPage(pageBean, taobaoOrderListTableDTO.getBizId(),
+					taobaoOrderListTableDTO.getDataUserIdSets(),userRightType);
+			webResult.setValue(pageBean);
+			webResult.setSuccess(true);
+		}catch (Exception e){
+			webResult.setSuccess(false);
+		}
+		return webResult;
+	}
 }
