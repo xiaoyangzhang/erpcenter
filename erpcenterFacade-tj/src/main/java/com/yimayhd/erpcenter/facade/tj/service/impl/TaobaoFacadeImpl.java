@@ -1,45 +1,17 @@
 package com.yimayhd.erpcenter.facade.tj.service.impl;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.yimayhd.erpcenter.biz.basic.service.LogOperatorBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryPriceBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.query.QueryBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
-import com.yimayhd.erpcenter.biz.sys.service.MsgInfoBiz;
-import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
-import com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate;
-import com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
-import com.yimayhd.erpcenter.facade.tj.client.result.*;
-import com.yimayhd.erpcenter.facade.tj.client.utils.LogUtils;
-
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,18 +19,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
+import com.yimayhd.erpcenter.biz.basic.service.LogOperatorBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductStockBiz;
 import com.yimayhd.erpcenter.biz.product.service.TaoBaoStockBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryPriceBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.query.QueryBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderPriceBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRouteBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.SpecialGroupOrderBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.taobao.TaobaoOrderBiz;
+import com.yimayhd.erpcenter.biz.sys.service.MsgInfoBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.BaseResult;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
-import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
+import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SpecialGroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade;
@@ -75,9 +67,17 @@ import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOriginalOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ToEditTaobaoOrderDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ToSaleGuestListExcelDTO;
+import com.yimayhd.erpcenter.facade.tj.client.result.AddNewTaobaoOrderResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.ImportTaobaoOrderTableResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.PresellProductStatisticsListResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.SaveSpecialGroupResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.ShopSalesStatisticsResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListTableResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.ToEditTaobaoOrderResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.WebResult;
 import com.yimayhd.erpcenter.facade.tj.client.service.TaobaoFacade;
-
-import org.springframework.web.util.WebUtils;
+import com.yimayhd.erpcenter.facade.tj.client.utils.LogUtils;
 
 public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	private static final Logger LOGGER = LoggerFactory.getLogger("TaobaoFacadeImpl");
@@ -102,8 +102,6 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	@Autowired
 	private TourGroupBiz tourGroupBiz;
 	@Autowired
-	private TaoBaoStockBiz taoBaoStockBiz;
-	@Autowired
 	private BookingDeliveryBiz bookingDeliveryBiz;
 	@Autowired
 	private TaoBaoStockBiz taobaoStockBiz;
@@ -118,8 +116,6 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 
 	@Autowired
 	private BookingDeliveryPriceBiz bookingDeliveryPriceBiz;
-	@Autowired
-	private BookingDeliveryBiz deliveryBiz;
 	@Autowired
 	private BookingSupplierBiz bookingSupplierBiz;
 	@Autowired
@@ -344,7 +340,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 			result.setGroupCanEdit(tourGroupBiz.checkGroupCanEdit(groupOrder.getGroupId()));
 			result.setBookingInfo(datas);
 
-			List<BookingDelivery> list = deliveryBiz.getDeliveryListByGroupId(groupOrder.getGroupId());
+			List<BookingDelivery> list = bookingDeliveryBiz.getDeliveryListByGroupId(groupOrder.getGroupId());
 			if (list != null && list.size() > 0) {
 				for (BookingDelivery delivery : list) {
 					delivery.setPriceList(bookingDeliveryPriceBiz.getPriceListByBookingId(delivery.getId()));
@@ -657,7 +653,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 				mapList.add(map);
 			}
 		}
-		taoBaoStockBiz.updateProductStockByTaobao(mapList);
+		taobaoStockBiz.updateProductStockByTaobao(mapList);
 		return pageBean ;
 	}
 	/**
@@ -697,7 +693,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 				mapList.add(map);
 			}
 		}
-		taoBaoStockBiz.updateProductStockByTaobao(mapList);
+		taobaoStockBiz.updateProductStockByTaobao(mapList);
 
 		return pageBean ;
 	}
@@ -743,7 +739,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
                 mapList.add(map);
             }
         }
-        taoBaoStockBiz.updateProductStockByTaobao(mapList);
+        taobaoStockBiz.updateProductStockByTaobao(mapList);
         return "OK";
 	}
 	@Override
