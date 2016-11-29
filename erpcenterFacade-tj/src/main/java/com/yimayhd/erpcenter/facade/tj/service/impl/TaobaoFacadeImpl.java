@@ -1011,10 +1011,6 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	 /**
      * 预售淘宝原始单table.
      *
-     * @param request
-     * @param model
-     * @param pageSize
-     * @param page
      * @return
      */
 	@Override
@@ -1043,10 +1039,6 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	
     /**
      * 跳转至客人名单信息列表页面
-     * 
-     * @param request
-     * @param model
-     * @param userRightType   0为销售，1为计调
      * @return
      */
 	@Override
@@ -1105,7 +1097,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	        taobaoOrderListByOpDTO.setPageBean(pageBean);
 	        return taobaoOrderListByOpDTO;
 	    }
-	    
+
 	@Override
 	public ToSaleGuestListExcelDTO toSaleGuestListExcel(ToSaleGuestListExcelDTO toSaleGuestListExcelDTO) {
 			 GroupOrder vo = new GroupOrder();
@@ -1212,12 +1204,10 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 			 
 			 return toSaleGuestListExcelDTO;
 			    }
-		 
+
 		 /**
 		     * 改价格
 		     * 
-		     * @param request
-		     * @param model
 		     * @return
 		     */
 	@Override
