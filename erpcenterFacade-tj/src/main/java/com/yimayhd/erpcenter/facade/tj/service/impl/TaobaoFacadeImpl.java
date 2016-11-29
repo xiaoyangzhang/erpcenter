@@ -64,6 +64,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SpecialGroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade;
 import com.yimayhd.erpcenter.facade.tj.client.errorcode.TjErrorCode;
 import com.yimayhd.erpcenter.facade.tj.client.query.AddSivaInfoDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.ChangePriceDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
 import com.yimayhd.erpcenter.facade.tj.client.query.PresellTaobaoOriginalOrderDTO;
@@ -1067,7 +1068,8 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
         return taobaoOrderListByOpDTO;
     }
 	
-	    public TaobaoOrderListByOpDTO loadGroupOrderGuestList(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO) throws ParseException {
+	@Override
+	public TaobaoOrderListByOpDTO loadGroupOrderGuestList(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO) throws ParseException {
 	    	GroupOrder groupOrder=taobaoOrderListByOpDTO.getGroupOrder();
 	        if (StringUtils.isBlank(groupOrder.getSaleOperatorIds()) && StringUtils.isNotBlank(groupOrder.getOrgIds())) {
 	            Set<Integer> set = new HashSet<Integer>();
@@ -1108,7 +1110,8 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	        return taobaoOrderListByOpDTO;
 	    }
 	    
-		 public ToSaleGuestListExcelDTO toSaleGuestListExcel(ToSaleGuestListExcelDTO toSaleGuestListExcelDTO) {
+	@Override
+	public ToSaleGuestListExcelDTO toSaleGuestListExcel(ToSaleGuestListExcelDTO toSaleGuestListExcelDTO) {
 			 GroupOrder vo = new GroupOrder();
 		        vo.setPage(toSaleGuestListExcelDTO.getPage());
 		        vo.setPageSize(toSaleGuestListExcelDTO.getPageSize());
@@ -1148,8 +1151,9 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		        toSaleGuestListExcelDTO.setPageBean(pageBean);
 		        return toSaleGuestListExcelDTO;
 	    }
-		 
-		 public ToSaleGuestListExcelDTO toGroupOrderGuesExport(ToSaleGuestListExcelDTO toSaleGuestListExcelDTO){    
+	
+	@Override
+	public ToSaleGuestListExcelDTO toGroupOrderGuesExport(ToSaleGuestListExcelDTO toSaleGuestListExcelDTO){    
 			 if(toSaleGuestListExcelDTO.getDoType()==1){
 				 GroupOrder vo = new GroupOrder();
 			        vo.setPage(toSaleGuestListExcelDTO.getPage());
@@ -1198,6 +1202,8 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 			            pageBean.setPageSize(toSaleGuestListExcelDTO.getPageSize());
 			        }
 			        pageBean.setParameter(vo);
+			        pageBean = groupOrderBiz.selectGroupOrderGuestListPage(pageBean, toSaleGuestListExcelDTO.getBizId(),
+			        		toSaleGuestListExcelDTO.getDataUserIdSets(),toSaleGuestListExcelDTO.getUserRightType());
 			        pageBean.setPage(toSaleGuestListExcelDTO.getPage());
 			        toSaleGuestListExcelDTO.setPageBean(pageBean);
 			 }else if(toSaleGuestListExcelDTO.getDoType()==2){
@@ -1209,7 +1215,39 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 			 }
 			 
 			 return toSaleGuestListExcelDTO;
-			          
-
 			    }
+		 
+		 /**
+		     * 改价格
+		     * 
+		     * @param request
+		     * @param model
+		     * @return
+		     */
+	@Override
+	public ChangePriceDTO changePrice(ChangePriceDTO changePriceDTO) {
+		        List<GroupOrderPrice> gop = groupOrderPriceBiz.selectByOrder(changePriceDTO.getOrderId());
+		        //model.addAttribute("gop", gop);
+		        List<DicInfo> lysfxmList = dicBiz.getListByTypeCode(BasicConstants.GYXX_LYSFXM,
+		        		changePriceDTO.getBizId());
+		        //model.addAttribute("lysfxmList", lysfxmList);
+		        //model.addAttribute("orderId", orderId);
+		        changePriceDTO.setGop(gop);
+		        changePriceDTO.setLysfxmList(lysfxmList);
+		        return changePriceDTO;
+		    }
+
+
+	@Override
+	public void savePrice(ChangePriceDTO changePriceDTO) {
+		        try {
+					specialGroupOrderBiz.savePrice(changePriceDTO.getGroupOrderPrices(), changePriceDTO.getOrderId(), changePriceDTO.getUserId(),
+							changePriceDTO.getUserName(), changePriceDTO.getBizId());
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    }
+		 
+		 
 }

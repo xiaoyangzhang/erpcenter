@@ -6,6 +6,7 @@ import java.util.List;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.facade.tj.client.query.AddSivaInfoDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.ChangePriceDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
 import com.yimayhd.erpcenter.facade.tj.client.query.PresellTaobaoOriginalOrderDTO;
@@ -172,4 +173,15 @@ public interface TaobaoFacade{
     public ToSaleGuestListExcelDTO toGroupOrderGuesExport(ToSaleGuestListExcelDTO toSaleGuestListExcelDTO);
     
     public TaobaoOrderListByOpDTO loadGroupOrderGuestList(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO) throws ParseException;
+    
+	 /**
+     * 改价格
+     * 
+     * @param request
+     * @param model
+     * @return
+     */
+    public ChangePriceDTO changePrice(ChangePriceDTO changePriceDTO);
+    
+    public void savePrice(ChangePriceDTO changePriceDTO) ;
 }
