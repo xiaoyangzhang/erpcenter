@@ -11,8 +11,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.biz.basic.service.LogOperatorBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryPriceBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.query.QueryBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
+import com.yimayhd.erpcenter.biz.sys.service.MsgInfoBiz;
+import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import com.yimayhd.erpcenter.facade.tj.client.result.*;
 
+import com.yimayhd.erpcenter.facade.tj.client.utils.LogUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +37,6 @@ import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductStockBiz;
 import com.yimayhd.erpcenter.biz.product.service.TaoBaoStockBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.SpecialGroupOrderBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.taobao.TaobaoOrderBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
@@ -36,9 +45,6 @@ import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SpecialGroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade;
@@ -81,12 +87,32 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	private TourGroupBiz tourGroupBiz;
 	@Autowired
 	private TaoBaoStockBiz taoBaoStockBiz;
-	
+	@Autowired
+	private BookingDeliveryBiz bookingDeliveryBiz;
+	@Autowired
+	private TaoBaoStockBiz taobaoStockBiz;
+
+	@Autowired
+	private GroupRouteBiz groupRouteBiz;
+	@Autowired
+	private MsgInfoBiz msgInfoBiz;
+
+	@Autowired
+	private GroupOrderPriceBiz groupOrderPriceBiz;
+
+	@Autowired
+	private BookingDeliveryPriceBiz bookingDeliveryPriceBiz;
+	@Autowired
+	private BookingDeliveryBiz deliveryBiz;
+	@Autowired
+	private BookingSupplierBiz bookingSupplierBiz;
+	@Autowired
+	private QueryBiz queryBiz;
+	@Autowired
+	private LogOperatorBiz logBiz;
+
 	/**
 	 * 操作单
-	 * 
-	 * @param request
-	 * @param model
 	 * @return
 	 */
 	public TaobaoOrderListResult taobaoOrderList(int bizId) {
@@ -107,12 +133,8 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	}
 	/**
 	 * 操作单table
-	 * @param request
-	 * @param reponse
-	 * @param model
-	 * @param groupOrder
 	 * @return
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	public TaobaoOrderListTableResult taobaoOrderList_table(TaobaoOrderListTableDTO taobaoOrderListTableDTO) {
 		TaobaoOrderListTableResult result = new TaobaoOrderListTableResult();
@@ -135,7 +157,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 				result.setErrorCode(TjErrorCode.DATE_CONVERSION_ERROR);
 				return result;
 			}
-			
+
 		}
 		if (StringUtils.isBlank(groupOrder.getSaleOperatorIds())
 				&& StringUtils.isNotBlank(groupOrder.getOrgIds())) {
@@ -177,7 +199,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 
 
 		result.setPage(page);
-		
+
 //		List<GroupOrder> list = page.getResult();
 //		Integer pageTotalAudit=0;
 //		Integer pageTotalChild=0;
@@ -220,8 +242,8 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 //		model.addAttribute("totalGuide", go.getNumGuide());
 //		model.addAttribute("total", go.getTotal());
 		return result;
-	}	
-	
+	}
+
 	/*操作单-编辑*/
 	public ToEditTaobaoOrderResult toEditTaobaoOrder(ToEditTaobaoOrderDTO toEditTaobaoOrderDTO){
 		ToEditTaobaoOrderResult result = new ToEditTaobaoOrderResult();
@@ -255,8 +277,11 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		int count=0;
 		if("stock".equals(vo.getGroupOrder().getOrderBusiness())){
 			try {
-				count = productStockBiz.getRestCountByProductIdAndDate(groupOrder.getProductId(),sdf.parse(groupOrder.getDepartureDate()));
-			} catch (ParseException e) {
+//				count = productStockBiz.getRestCountByProductIdAndDate(groupOrder.getProductId(),sdf.parse(groupOrder.getDepartureDate()));
+				TaobaoStockDate tsd = productStockBiz.selectStockDataById(groupOrder.getProductId());
+				if (tsd != null)
+					count = tsd.getStockCount() - tsd.getSaleCount();
+			} catch (Exception e) {
 				LOGGER.error("toEditTaobaoOrder dateChange error",e);
 				result.setErrorCode(TjErrorCode.DATE_CONVERSION_ERROR);
 				return result;
@@ -265,9 +290,15 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		result.setCount(count);
 		List<RegionInfo> cityList = null;
 		if(vo.getGroupOrder().getProvinceId()!=null && vo.getGroupOrder().getProvinceId()!=-1){
-			cityList=regionBiz.getRegionById(vo.getGroupOrder().getProvinceId()+""); 
+			cityList=regionBiz.getRegionById(vo.getGroupOrder().getProvinceId()+"");
 		}
 		result.setCityList(cityList);
+
+		List<RegionInfo> DepartCityList = null;
+		if (vo.getGroupOrder().getDepartProvinceId() != null && vo.getGroupOrder().getDepartProvinceId() != -1) {
+			DepartCityList = regionBiz.getRegionById(vo.getGroupOrder().getDepartProvinceId() + "");
+		}
+		result.setDepartCityList(DepartCityList);
 		String guideStr="";
 		List<GroupOrderGuest> guestList = groupOrderGuestBiz.selectByOrderId(orderId);
 		if(guestList!=null){
@@ -278,7 +309,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 			}
 		}
 		result.setGuideStr(guideStr);
-		List<PlatTaobaoTrade> orders = null; 
+		List<PlatTaobaoTrade> orders = null;
 		orders=taobaoOrderBiz.selectTaobaoOrderByOrderId(orderId);
 		result.setOrders(orders);
 		String tbOrderIds = "";
@@ -290,15 +321,30 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		if (!"".equals(tbOrderIds))
 			tbOrderIds = tbOrderIds.substring(0, tbOrderIds.length()-1);
 		result.setTbOrderIds(tbOrderIds);
-		
+
+
+		if (groupOrder.getGroupId() != null) {
+			Map<String, Object> datas = bookingSupplierBiz.AYSelectBookingInfo(groupOrder.getGroupId());
+			result.setGroupCanEdit(tourGroupBiz.checkGroupCanEdit(groupOrder.getGroupId()));
+			result.setBookingInfo(datas);
+
+			List<BookingDelivery> list = deliveryBiz.getDeliveryListByGroupId(groupOrder.getGroupId());
+			if (list != null && list.size() > 0) {
+				for (BookingDelivery delivery : list) {
+					delivery.setPriceList(bookingDeliveryPriceBiz.getPriceListByBookingId(delivery.getId()));
+				}
+			}
+			result.setBdList(list);
+			TourGroup tg = tourGroupBiz.selectByPrimaryKey(groupOrder.getGroupId());
+			result.setTg(tg);
+		}
+		result.setGroupOrder(groupOrder);
+
 		return result;
 	}
 
 	/**
 	 * 跳转到新增订单页面
-	 * @param request
-	 * @param reponse
-	 * @param model
 	 * @return
 	 */
 	public AddNewTaobaoOrderResult addNewTaobaoOrder(int bizId) {
@@ -312,8 +358,8 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 //		SpecialGroupOrderVO  vo = new SpecialGroupOrderVO();
 //		vo.setGroupOrder(groupOrder);
 //		model.addAttribute("vo", vo);
-		
-		
+
+
 		List<DicInfo> jdxjList = dicBiz.getListByTypeCode(BasicConstants.GYXX_JDXJ);
 		result.setJdxjList(jdxjList);
 		List<DicInfo> jtfsList = dicBiz
@@ -327,19 +373,16 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		result.setTypeList(typeList);
 		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 		result.setAllProvince(allProvince);
-		
+
 		List<DicInfo> lysfxmList = dicBiz.getListByTypeCode(
 				BasicConstants.GYXX_LYSFXM, bizId);
 		result.setLysfxmList(lysfxmList);
 //		model.addAttribute("config", config);
 		return result;
 	}
-	
+
 	/**
 	 * 保存订单
-	 * @param request
-	 * @param reponse
-	 * @param model
 	 * @return
 	 */
 	public SaveSpecialGroupResult saveSpecialGroup(SaveSpecialGroupDTO saveSpecialGroupDTO){
@@ -351,68 +394,116 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		if(vo.getGroupOrder().getId()==null){
 			vo.getGroupOrder().setOrderNo(saveSpecialGroupDTO.getOrderNo());
 		}
-		Integer orderId;
+		Integer orderId=0;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Integer newNum = vo.getGroupOrder().getNumAdult()
 				+ vo.getGroupOrder().getNumChild();
 		Integer oldNum = 0;
+		Boolean isStock = false;
 		try {
 			if("stock".equals(vo.getGroupOrder().getOrderBusiness())){
-			if (vo.getGroupOrder().getId() != null) {
-				GroupOrder groupOrder =groupOrderBiz.findById(vo.getGroupOrder().getId());
-				oldNum = groupOrder.getNumAdult()
-						+groupOrder.getNumChild();
-			}
-			//查出库存(剩余人数)
-			int freeCount = productStockBiz.getRestCountByProductIdAndDate(vo.getGroupOrder().getProductId(),sdf.parse(vo.getGroupOrder().getDepartureDate()));
-			//实际库存应该是修改前人数+库存
-			freeCount = oldNum + freeCount;
-			if(newNum > freeCount){
-				//如果新增人数大于库存,则不能保存
-				saveSpecialGroupResult.setErrorCode(TjErrorCode.INVENTORY_SHORTAGE);
-				saveSpecialGroupResult.setResultMsg(errorJson("由于库存剩余数有变化，目前剩余库存不足【" + newNum + "】！实际库存还有【" + freeCount + "】"));
-				return saveSpecialGroupResult;
-			}
-			
-			if (vo.getGroupOrder().getId() == null) {
-				productStockBiz.updateStockCount(vo.getGroupOrder()
-						.getProductId(), sdf.parse(vo.getGroupOrder()
-						.getDepartureDate()), newNum );
+				TaobaoStockDate tsd = productStockBiz.selectStockDataById(vo.getGroupOrder().getProductId());
+				if (tsd != null) {
+
+					if (vo.getGroupOrder().getId() != null) {
+						GroupOrder groupOrder =groupOrderBiz.findById(vo.getGroupOrder().getId());
+						oldNum = groupOrder.getNumAdult()
+								+groupOrder.getNumChild();
+					}
+					//查出库存(剩余人数)
+					int freeCount = tsd.getStockCount() - tsd.getSaleCount(); // 查出库存(剩余人数)
+					//实际库存应该是修改前人数+库存
+					freeCount = oldNum + freeCount;
+					if(newNum > freeCount){
+						//如果新增人数大于库存,则不能保存
+						saveSpecialGroupResult.setErrorCode(TjErrorCode.INVENTORY_SHORTAGE);
+						saveSpecialGroupResult.setResultMsg(errorJson("由于库存剩余数有变化，目前剩余库存不足【" + newNum + "】！实际库存还有【" + freeCount + "】"));
+						return saveSpecialGroupResult;
+					}
+					isStock = true;
 				}
+
+
+				if (vo.getGroupOrder().getId() == null) {
+					productStockBiz.updateStockCount(vo.getGroupOrder()
+							.getProductId(), sdf.parse(vo.getGroupOrder()
+							.getDepartureDate()), newNum );
+					}
 			}
-			orderId = specialGroupOrderBiz.saveOrUpdateSpecialOrderInfo(vo,userId,userName,bizId);
-			//todo取出原来ids，并对比现在在的ids，得到要删除的ids ,　　比如原来：１,２,３,４　删除了2,3－> 14, 
+
+			GroupOrder go = null;
+			List<GroupOrderPrice> incomeList = null;
+			List<GroupOrderGuest> guestList = null;
+			List<GroupOrderTransport> transList = null;
+			// 日志保存
+			List<LogOperator> logList = new ArrayList<LogOperator>();
+
+
+			orderId = specialGroupOrderBiz.saveOrUpdateSpecialOrderInfo(vo, saveSpecialGroupDTO.getUserId(),
+					saveSpecialGroupDTO.getUserName(), saveSpecialGroupDTO.getBizId());
+
+			// 日志OrderId赋值
+			LogUtils.LogRow_SetValue(logList, "group_order", orderId, null);
+			LogUtils.LogRow_SetValue(logList, "group_order_price", null, orderId);
+			LogUtils.LogRow_SetValue(logList, "group_order_guest", null, orderId);
+			LogUtils.LogRow_SetValue(logList, "group_order_transport", null, orderId);
+
+			if (isStock) {
+				TaobaoStockLog sLog = taobaoStockBiz
+						.selectLogByStockDateIdAndOrderId(vo.getGroupOrder().getProductId(), orderId);
+				if (sLog == null) {
+					sLog = new TaobaoStockLog();
+					sLog.setId(0);
+					sLog.setStockId(vo.getGroupOrder().getProductBrandId());
+					sLog.setStockDateId(vo.getGroupOrder().getProductId());
+					sLog.setCreateUser(saveSpecialGroupDTO.getUserName());
+					sLog.setOrderId(orderId);
+					sLog.setTaobaoOrderId(0);
+					sLog.setNum(newNum);
+					productStockBiz.insertTaobaoStockLogSelective(sLog);
+				} else {
+					sLog.setNum(newNum);
+					productStockBiz.updateTaobaoStockLogSelective(sLog);
+				}
+				productStockBiz.updateByLog(sLog.getStockDateId());
+			}
+			//todo取出原来ids，并对比现在在的ids，得到要删除的ids ,　　比如原来：１,２,３,４　删除了2,3－> 14,
 			String id = saveSpecialGroupDTO.getTaobaoOrderId();
 			if(id !="" && id.length()>0){
 				id=id.substring(0,id.length()-1);
-				taobaoOrderBiz.updateTaobaoOrderIdToZero(id);
+				taobaoOrderBiz.updateTaobaoOrderIdToZero(id);// 已改为platTaobaoTradeOrderId
 			}
 			String ids = saveSpecialGroupDTO.getTaobaoOrderIds();
 			if(ids.length()>0 && ids !=""){
-				taobaoOrderBiz.updateTaobaoOrderId(orderId, ids);
+				taobaoOrderBiz.updateTaobaoOrderId(orderId, ids);// 已改为platTaobaoTradeOrderId
 			}
-			List<GroupOrder> orderList = groupOrderBiz.selectGroupOrderById(orderId);
-			List<MergeGroupOrderVO> result = new ArrayList<MergeGroupOrderVO>();
-			for (int i = 0; i < orderList.size();) {
-				GroupOrder order = orderList.get(i);
-				GroupOrder groupOrder = groupOrderBiz.findById(order.getId());
-				groupOrder.setGroupCode(order.getGroupCode());
-				orderList.remove(order);
-				MergeGroupOrderVO mov = new MergeGroupOrderVO();
-				mov.getOrderList().add(groupOrder);
-				result.add(mov);
+			if (vo.getGroupOrder().getOrderType() == 1) {
+				// 团队情况（不需要并团）
+				List<GroupOrder> orderList = groupOrderBiz.selectGroupOrderById(orderId);
+				List<MergeGroupOrderVO> result = new ArrayList<MergeGroupOrderVO>();
+				for (int i = 0; i < orderList.size();) {
+					GroupOrder order = orderList.get(i);
+					GroupOrder groupOrder = groupOrderBiz.findById(order.getId());
+					groupOrder.setGroupCode(order.getGroupCode());
+					orderList.remove(order);
+					MergeGroupOrderVO mov = new MergeGroupOrderVO();
+					mov.getOrderList().add(groupOrder);
+					result.add(mov);
+				}
+				specialGroupOrderBiz.mergetGroupTaobao(result, bizId,
+						userId, userName, saveSpecialGroupDTO.getMyBizCode());
+				GroupOrder groupOrder=groupOrderBiz.findById(orderId);
+				TourGroup tourGroup=tourGroupBiz.selectByPrimaryKey(groupOrder.getGroupId());
+				tourGroup.setGroupMode(saveSpecialGroupDTO.getGroupMode());
+				tourGroupBiz.updateByPrimaryKey(tourGroup);
 			}
-			specialGroupOrderBiz.mergetGroupTaobao(result, bizId,
-					userId, userName, saveSpecialGroupDTO.getMyBizCode());
-			GroupOrder groupOrder=groupOrderBiz.findById(orderId);
-			TourGroup tourGroup=tourGroupBiz.selectByPrimaryKey(groupOrder.getGroupId());
-			tourGroup.setGroupMode(saveSpecialGroupDTO.getGroupMode());
-			tourGroupBiz.updateByPrimaryKey(tourGroup);
+			// 插入到日志
+			logBiz.insert(logList);
 		} catch (ParseException e) {
 			saveSpecialGroupResult.setErrorCode(TjErrorCode.MODIFY_ERROR);
 			saveSpecialGroupResult.setResultMsg("操作失败,请检查后重试！");
 			return saveSpecialGroupResult;
-		}	
+		}
 		if("stock".equals(vo.getGroupOrder().getOrderBusiness())&&vo.getGroupOrder().getId() != null){
 			try {productStockBiz.updateStockCount(vo.getGroupOrder()
 						.getProductId(), sdf.parse(vo.getGroupOrder()
@@ -422,17 +513,13 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 				saveSpecialGroupResult.setResultMsg("更新库存失败！");
 				return saveSpecialGroupResult;
 			}
-		 } 
+		 }
 		saveSpecialGroupResult.setResultJson(successJson("groupId",orderId+""));
 		return saveSpecialGroupResult;
 	}
-	
+
 	/**
 	 * 淘宝订单导入页面table
-	 * @param request
-	 * @param model
-	 * @param pageSize
-	 * @param page
 	 * @return
 	 */
 	public ImportTaobaoOrderTableResult import_taobaoOrder_table(ImportTaobaoOrderTableDTO importTaobaoOrderTableDTO) {
@@ -461,25 +548,19 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		result.setPageBean(pageBean);
 		return result;
 	}
-	
+
 	/**
 	 * 确定
-	 * @param request
-	 * @param model
 	 * @return
 	 */
 	public String taobaoOrder_GetByIds(String ids){
-		List<PlatTaobaoTrade> orders = null; 
+		List<PlatTaobaoTrade> orders = null;
 		orders=taobaoOrderBiz.selectTaobaoOrderById(ids);
 		return JSON.toJSONString(orders);
 	}
-	
+
 	/**
 	 * 淘宝原始单table（爱游）
-	 * @param request
-	 * @param model
-	 * @param pageSize
-	 * @param page
 	 * @return
 	 */
 	public PageBean taobaoOriginalOrder_table(TaobaoOriginalOrderTableDTO taobaoOriginalOrderTableDTO) {
@@ -497,14 +578,14 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 //		Map<String,Object> pm  = WebUtils.getQueryParamters(request);
 //		pm.put("myStoreId",authClient);
 //		pm.put("curUserName",WebUtils.getCurrentUserSession(request).getName());
-//		
+//
 //		pm.put("startMin",pm.get("startMin")+" 00:00:00");
 //		pm.put("startMax",pm.get("startMax")+" 23:59:59");
-//		
+//
 //		pageBean.setParameter(pm);
-		
+
 		PageBean<PlatTaobaoTrade> pageBean = taobaoOrderBiz.selectTaobaoOrder(taobaoOriginalOrderTableDTO.getPageBean(), taobaoOriginalOrderTableDTO.getBizId());
-		
+
 		return pageBean;
 	}
 	/**
@@ -539,11 +620,11 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 //		pm.put("curUserName",WebUtils.getCurrentUserSession(request).getName());
 //		pm.put("startMin",startTime+" 00:00:00");
 //		pm.put("startMax",endTime+" 23:59:59");
-//		
+//
 //		pageBean.setParameter(pm);
-		
+
 		PageBean<PlatTaobaoTrade> pageBean = taobaoOrderBiz.selectTaobaoOrder(taobaoOriginalOrderTableDTO.getPageBean(), taobaoOriginalOrderTableDTO.getBizId());
-		return pageBean ; 
+		return pageBean ;
 	}
 	/**
      * 同步 by tid
@@ -564,20 +645,20 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 //		pm.put("myStoreId",authClient);
 //		pm.put("curUserName",WebUtils.getCurrentUserSession(request).getName());
 //		pm.put("tid",tid);
-//		
+//
 //		pageBean.setParameter(pm);
-		
+
 		PageBean<PlatTaobaoTrade> pageBean=taobaoOrderBiz.selectTaobaoOrderByTid(taobaoOriginalOrderTableDTO.getPageBean(),taobaoOriginalOrderTableDTO.getBizId());
-		return pageBean ; 
+		return pageBean ;
 	}
 	@Override
 	public ShopSalesStatisticsResult selectTaobaoshopSalesStatistics(ShopSalesStatisticsQueryDTO queryDTO) {
 		ShopSalesStatisticsResult result = new ShopSalesStatisticsResult();
 		PlatTaobaoTrade trade = taobaoOrderBiz.selectTaobaoshopSalesStatistics(queryDTO.getPlatTaobaoTrade(),
 				 queryDTO.getBizId());
-		
+
 		result.setTrade(trade);
-		
+
 		return result;
 	}
 	@Override
@@ -586,20 +667,20 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		PresellProductStatisticsListResult result = new PresellProductStatisticsListResult();
 		PageBean<PlatTaobaoTrade> pageBean = taobaoOrderBiz.selectPresellProductStatisticsListPage(queryDTO.getPageBean(), queryDTO.getBizId());
 		result.setPageBean(pageBean);
-		
+
 		return result;
 	}
-	
+
 	public String savePushTrade(PushTradeQueryDTO pushTradeQueryDTO) {
 		PageBean<PlatTaobaoTrade> pageBean = new PageBean<PlatTaobaoTrade>();
         pageBean.setPage(1);
         pageBean.setPageSize(Constants.PAGESIZE);
-        
+
         pageBean = taobaoOrderBiz.savePushTrade(pushTradeQueryDTO.getTid(), pushTradeQueryDTO.getAuthClient(), pushTradeQueryDTO.getResponse());
-        
+
         List<PlatTaobaoTrade> pttList = pageBean.getResult();
         List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
-        
+
      // 获取备注(扣除库存)
         for (PlatTaobaoTrade pt : pttList) {
             if (pt.getReceiveCount() !=null && new Integer(pt.getReceiveCount())>0){
@@ -620,18 +701,18 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		PresellProductStatisticsListResult result = new PresellProductStatisticsListResult();
 		PageBean<PlatTaobaoTrade> pageBean = taobaoOrderBiz.selectNotPresellProductStatisticsListPage(queryDTO.getPageBean(), queryDTO.getBizId());
 		result.setPageBean(pageBean);
-		
+
 		return result;
 	}
-	
-	
-	
+
+
+
 	@Override
 	public PresellProductStatisticsListResult selectSaleOperatorSalesStatisticsListPage(PresellProductStatistics queryDTO) {
 		PresellProductStatisticsListResult result = new PresellProductStatisticsListResult();
 		PageBean<PlatTaobaoTrade> pageBean = taobaoOrderBiz.selectSaleOperatorSalesStatisticsListPage(queryDTO.getPageBean(), queryDTO.getBizId());
 		result.setPageBean(pageBean);
-		
+
 		return result;
 	}
 	@Override

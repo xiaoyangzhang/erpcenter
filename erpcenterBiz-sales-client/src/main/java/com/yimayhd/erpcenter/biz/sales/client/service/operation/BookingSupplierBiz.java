@@ -99,4 +99,6 @@ public interface BookingSupplierBiz {
 
 	public List<BookingSupplier> selectTicketInfo(Integer resId);
 
+	public Map<String, Object> AYSelectBookingInfo(Integer groupId);
+
 }

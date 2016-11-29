@@ -233,4 +233,10 @@ public class BookingSupplierBizImpl implements BookingSupplierBiz{
 	}
 
 
+	@Override
+	public Map<String, Object> AYSelectBookingInfo(Integer groupId) {
+
+		return bookingSupplierDal.AYSelectBookingInfo(groupId);
+	}
+
 }
