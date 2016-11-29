@@ -303,10 +303,12 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
 
     }
 
-    @Override
-    public String makeCodeByMode(Integer bizId, String bizCode, String dateTime, int sort) {
-        return null;
-    }
+    /*@Override
+    public String makeCodeByMode(Integer bizId, String bizCode,
+                                 String dateTime, int sort) {
+        String code = bizCode + dateTime.replace("-", "") + sort;
+        return code;
+    }*/
 
     // 获得当天0点时间
 //    public long getTimesmorning(String dateTime) throws ParseException {
@@ -477,27 +479,27 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
 
     @Override
     public void changeOrderLockState(Integer orderId) {
-
+        groupOrderDal.changeOrderLockState(orderId);
     }
 
     @Override
     public void changeorderLockStateByOp(Integer orderId) {
-
+        groupOrderDal.changeorderLockStateByOp(orderId);
     }
 
     @Override
     public void goBackOrderLockStateByOp(Integer orderId) {
-
+        groupOrderDal.goBackOrderLockStateByOp(orderId);
     }
 
     @Override
     public void updateLockStateToFinance(Integer orderId) {
-
+        groupOrderDal.updateLockStateToFinance(orderId);
     }
 
     @Override
     public void goBackToOP(Integer orderId) {
-
+        groupOrderDal.goBackToOP(orderId);
     }
 
     @Override
@@ -544,12 +546,12 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
 
     @Override
     public PageBean<GroupOrder> selectTaobaoOrderListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer userRightType) {
-        return null;
+        return groupOrderDal.selectTaobaoOrderListPage(pageBean, bizId, set, userRightType);
     }
 
     @Override
     public PageBean<GroupOrder> selectTaobaoOrderGuestNameListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer userRightType) {
-        return null;
+        return groupOrderDal.selectTaobaoOrderGuestNameListPage(pageBean, bizId, set, userRightType);
     }
 
     @Override
@@ -559,12 +561,12 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
 
     @Override
     public GroupOrder selectTotalTaobaoOrder(GroupOrder groupOrder, Integer bizId, Set<Integer> set) {
-        return null;
+        return groupOrderDal.selectTotalTaobaoOrder(groupOrder, bizId, set);
     }
 
     @Override
     public GroupOrder selectTotalTaobaoGuestNameOrder(GroupOrder groupOrder, Integer bizId, Set<Integer> set) {
-        return null;
+        return groupOrderDal.selectTotalTaobaoGuestNameOrder(groupOrder, bizId, set);
     }
 
 
@@ -1116,12 +1118,12 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
 
     @Override
     public Integer updateExtVisa(GroupOrder record) {
-        return null;
+        return groupOrderDal.updateExtVisa(record);
     }
 
     @Override
     public List<GroupOrder> selectByOrderIdExtVisaListPage(String mobile) {
-        return null;
+        return groupOrderDal.selectByOrderIdExtVisaListPage(mobile);
     }
 
 
