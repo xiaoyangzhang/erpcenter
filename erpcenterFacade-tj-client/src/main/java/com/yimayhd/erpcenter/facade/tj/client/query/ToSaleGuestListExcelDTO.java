@@ -36,7 +36,21 @@ public class ToSaleGuestListExcelDTO implements Serializable{
 	
 	private PageBean pageBean;
 	
+	private Integer doType;
 	
+	
+	/**
+	 * @return the doType
+	 */
+	public Integer getDoType() {
+		return doType;
+	}
+	/**
+	 * @param doType the doType to set
+	 */
+	public void setDoType(Integer doType) {
+		this.doType = doType;
+	}
 	/**
 	 * @return the pageBean
 	 */
