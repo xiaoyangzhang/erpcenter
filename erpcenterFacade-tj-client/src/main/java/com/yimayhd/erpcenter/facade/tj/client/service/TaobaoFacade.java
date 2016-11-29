@@ -1,8 +1,10 @@
 package com.yimayhd.erpcenter.facade.tj.client.service;
 
 import java.text.ParseException;
+import java.util.List;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.facade.tj.client.query.AddSivaInfoDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
@@ -120,4 +122,24 @@ public interface TaobaoFacade{
      */
 	public AddSivaInfoDTO addSivaInfo(AddSivaInfoDTO addSivaInfoDTO) ;
 
+	/**
+     * 保存签证信息
+     * 
+     * @param orderMode
+     * @param countStr
+     * @return
+     */
+	public void saveVisaInfo(AddSivaInfoDTO addSivaInfoDTO);
+	
+	/**
+     * 查询签证客户信息
+     * 
+     * @param request
+     * @param reponse
+     * @param model
+     * @param mobile
+     * @return
+     * @throws ParseException
+     */
+	public List<GroupOrder> loadGroupOrderVisaInfo(String mobile) throws ParseException;
 }

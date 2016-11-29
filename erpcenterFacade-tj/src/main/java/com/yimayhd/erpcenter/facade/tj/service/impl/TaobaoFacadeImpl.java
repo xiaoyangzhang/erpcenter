@@ -849,4 +849,34 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	        return addSivaInfoDTO;
 	    }
 	
+	public void saveVisaInfo(AddSivaInfoDTO addSivaInfoDTO) {
+        groupOrderBiz.updateExtVisa(addSivaInfoDTO.getOrderBean());
+    }
+	
+	public List<GroupOrder> loadGroupOrderVisaInfo(String mobile) throws ParseException{
+        List<GroupOrder> goBeanList = groupOrderBiz.selectByOrderIdExtVisaListPage(mobile);
+        List<GroupOrder> groupOrderList = new ArrayList<GroupOrder>();
+        if (goBeanList.size() > 0) {
+            GroupOrder orderBean = null;
+            for (GroupOrder go : goBeanList) {
+                orderBean = new GroupOrder();
+                orderBean.setGuestName(go.getGuestName());
+                orderBean.setMobile(go.getMobile());
+                String[] extVisaInfo = go.getExtVisaInfo().split(",");
+                for (String guestString : extVisaInfo) {
+                    if (guestString.length() > 0) {
+                        String[] guestInfo = guestString.split("@");
+                        orderBean.setPatTime(guestInfo[2]);
+                        orderBean.setReceiptTime(guestInfo[3]);
+                        orderBean.setSendSignTime(guestInfo[4]);
+                        orderBean.setSendTime(guestInfo[5]);
+                    }
+                    groupOrderList.add(orderBean);
+                }
+            }
+
+        }
+//        model.addAttribute("groupOrderList", groupOrderList);
+        return groupOrderList;
+    }
 }
