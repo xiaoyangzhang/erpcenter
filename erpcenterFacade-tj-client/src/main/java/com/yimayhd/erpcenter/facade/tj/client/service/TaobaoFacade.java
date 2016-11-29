@@ -16,6 +16,7 @@ import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListByOpDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOriginalOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ToEditTaobaoOrderDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.ToSaleGuestListExcelDTO;
 import com.yimayhd.erpcenter.facade.tj.client.result.*;
 
 import org.springframework.ui.Model;
@@ -164,4 +165,6 @@ public interface TaobaoFacade{
      * @return
      */
     public TaobaoOrderListByOpDTO findGroupOrderGuestPage(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO);
+    
+    public ToSaleGuestListExcelDTO toSaleGuestListExcel(ToSaleGuestListExcelDTO toSaleGuestListExcelDTO);
 }

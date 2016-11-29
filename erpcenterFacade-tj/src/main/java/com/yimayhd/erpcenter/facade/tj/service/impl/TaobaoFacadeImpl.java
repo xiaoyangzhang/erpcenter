@@ -1,10 +1,16 @@
 package com.yimayhd.erpcenter.facade.tj.service.impl;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +33,13 @@ import com.yimayhd.erpcenter.facade.tj.client.result.*;
 import com.yimayhd.erpcenter.facade.tj.client.utils.LogUtils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +55,7 @@ import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.BaseResult;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
+import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
@@ -60,6 +74,7 @@ import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListByOpDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOriginalOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ToEditTaobaoOrderDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.ToSaleGuestListExcelDTO;
 import com.yimayhd.erpcenter.facade.tj.client.service.TaobaoFacade;
 
 import org.springframework.web.util.WebUtils;
@@ -1051,4 +1066,86 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		taobaoOrderListByOpDTO.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(taobaoOrderListByOpDTO.getBizId()));
         return taobaoOrderListByOpDTO;
     }
+	
+	    public TaobaoOrderListByOpDTO loadGroupOrderGuestList(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO) throws ParseException {
+	    	GroupOrder groupOrder=taobaoOrderListByOpDTO.getGroupOrder();
+	        if (StringUtils.isBlank(groupOrder.getSaleOperatorIds()) && StringUtils.isNotBlank(groupOrder.getOrgIds())) {
+	            Set<Integer> set = new HashSet<Integer>();
+	            String[] orgIdArr = groupOrder.getOrgIds().split(",");
+	            for (String orgIdStr : orgIdArr) {
+	                set.add(Integer.valueOf(orgIdStr));
+	            }
+	            set = platformEmployeeBiz.getUserIdListByOrgIdList(taobaoOrderListByOpDTO.getBizId(), set);
+	            String salesOperatorIds = "";
+	            for (Integer usrId : set) {
+	                salesOperatorIds += usrId + ",";
+	            }
+	            if (!salesOperatorIds.equals("")) {
+	                groupOrder.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+	            }
+	        }
+	        PageBean pageBean = new PageBean();
+	        if (taobaoOrderListByOpDTO.getPages() == null) {
+	            pageBean.setPage(1);
+	        } else {
+	            pageBean.setPage(taobaoOrderListByOpDTO.getPages());
+	        }
+	        if (taobaoOrderListByOpDTO.getPageSize() == null) {
+	            pageBean.setPageSize(Constants.PAGESIZE);
+	        } else {
+	            pageBean.setPageSize(taobaoOrderListByOpDTO.getPageSize());
+	        }
+	        pageBean.setPage(taobaoOrderListByOpDTO.getPages());
+	        pageBean.setParameter(groupOrder);
+	        pageBean = groupOrderBiz.selectGroupOrderGuestListPage(pageBean, taobaoOrderListByOpDTO.getBizId(),
+	        		taobaoOrderListByOpDTO.getDataUserIdSets(),taobaoOrderListByOpDTO.getUserRightType());
+	        //model.addAttribute("pageBean", pageBean);
+	        List<DicInfo> typeList = dicBiz.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE,
+	        		taobaoOrderListByOpDTO.getBizId());
+	        //model.addAttribute("typeList", typeList);
+	        taobaoOrderListByOpDTO.setTypeList(typeList);
+	        taobaoOrderListByOpDTO.setPageBean(pageBean);
+	        return taobaoOrderListByOpDTO;
+	    }
+	    
+		 public ToSaleGuestListExcelDTO toSaleGuestListExcel(ToSaleGuestListExcelDTO toSaleGuestListExcelDTO) {
+			 GroupOrder vo = new GroupOrder();
+		        vo.setPage(toSaleGuestListExcelDTO.getPage());
+		        vo.setPageSize(toSaleGuestListExcelDTO.getPageSize());
+		        vo.setStartTime(toSaleGuestListExcelDTO.getStartTime());
+		        vo.setEndTime(toSaleGuestListExcelDTO.getEndTime());
+		        vo.setRemark(toSaleGuestListExcelDTO.getRemark());
+		        vo.setGuestName(toSaleGuestListExcelDTO.getGuestName());
+		        vo.setOrderNo(toSaleGuestListExcelDTO.getOrderMode());
+		        vo.setGroupCode(toSaleGuestListExcelDTO.getGroupCode());
+		        vo.setSaleOperatorIds(toSaleGuestListExcelDTO.getSaleOperatorIds());
+		        vo.setOrgIds(toSaleGuestListExcelDTO.getOrgIds());
+		        vo.setOperType(Integer.valueOf(toSaleGuestListExcelDTO.getOperType()));
+		        vo.setReceiveMode(toSaleGuestListExcelDTO.getReceiveMode());
+		        vo.setOrgNames(toSaleGuestListExcelDTO.getOrgNames());
+		        vo.setSaleOperatorName(toSaleGuestListExcelDTO.getSaleOperatorName());
+		        vo.setSupplierName(toSaleGuestListExcelDTO.getSupplierName());
+		        vo.setGender(toSaleGuestListExcelDTO.getGender());
+		        vo.setAgeFirst(toSaleGuestListExcelDTO.getAgeFirst());
+		        vo.setAgeSecond(toSaleGuestListExcelDTO.getAgeSecond());
+		        vo.setNativePlace(toSaleGuestListExcelDTO.getNativePlace());
+		        
+		        PageBean pageBean = new PageBean();
+		        if (toSaleGuestListExcelDTO.getPage() == null) {
+		            pageBean.setPage(1);
+		        } else {
+		            pageBean.setPage(toSaleGuestListExcelDTO.getPage());
+		        }
+		        if (toSaleGuestListExcelDTO.getPageSize() == null) {
+		            pageBean.setPageSize(10000);
+		        } else {
+		            pageBean.setPageSize(10000);
+		        }
+		        pageBean.setParameter(vo);
+		        pageBean.setPage(toSaleGuestListExcelDTO.getPage());
+		        pageBean = groupOrderBiz.selectGroupOrderGuestListPage(pageBean, toSaleGuestListExcelDTO.getBizId(),
+		        		toSaleGuestListExcelDTO.getDataUserIdSets(),toSaleGuestListExcelDTO.getUserRightType());
+		        toSaleGuestListExcelDTO.setPageBean(pageBean);
+		        return toSaleGuestListExcelDTO;
+	    }
 }

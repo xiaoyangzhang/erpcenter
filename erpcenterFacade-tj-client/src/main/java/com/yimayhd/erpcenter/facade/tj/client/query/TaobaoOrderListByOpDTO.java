@@ -23,6 +23,66 @@ public class TaobaoOrderListByOpDTO implements Serializable{
 	
 	private GroupOrder groupOrder;
 	private Set<Integer> dataUserIdSets;
+	
+	private Integer pageTotalAudit;
+	private Integer pageTotalChild;
+	private Integer pageTotalGuide;
+	private BigDecimal pageTotal;
+	private PageBean<GroupOrder> page;
+	
+	
+	private PageBean pageBean;
+	private Integer pageSize; 
+	private Integer pages;
+	private Integer userRightType;
+	/**
+	 * @return the pageBean
+	 */
+	public PageBean getPageBean() {
+		return pageBean;
+	}
+	/**
+	 * @param pageBean the pageBean to set
+	 */
+	public void setPageBean(PageBean pageBean) {
+		this.pageBean = pageBean;
+	}
+	/**
+	 * @return the pageSize
+	 */
+	public Integer getPageSize() {
+		return pageSize;
+	}
+	/**
+	 * @param pageSize the pageSize to set
+	 */
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
+	/**
+	 * @return the pages
+	 */
+	public Integer getPages() {
+		return pages;
+	}
+	/**
+	 * @param pages the pages to set
+	 */
+	public void setPages(Integer pages) {
+		this.pages = pages;
+	}
+	/**
+	 * @return the userRightType
+	 */
+	public Integer getUserRightType() {
+		return userRightType;
+	}
+	/**
+	 * @param userRightType the userRightType to set
+	 */
+	public void setUserRightType(Integer userRightType) {
+		this.userRightType = userRightType;
+	}
 	/**
 	 * @return the dataUserIdSets
 	 */
@@ -95,11 +155,7 @@ public class TaobaoOrderListByOpDTO implements Serializable{
 	public void setPage(PageBean<GroupOrder> page) {
 		this.page = page;
 	}
-	private Integer pageTotalAudit;
-	private Integer pageTotalChild;
-	private Integer pageTotalGuide;
-	private BigDecimal pageTotal;
-	private PageBean<GroupOrder> page;
+
 	/**
 	 * @return the bizId
 	 */

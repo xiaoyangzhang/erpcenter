@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.facade.sys.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,5 +71,9 @@ public class SysMsgInfoFacadeImpl implements SysMsgInfoFacade{
 			Map<String, String> param) {
 		// TODO Auto-generated method stub
 		return msgInfoBiz.findNoticeListPage(pageBean, param);
+	}
+	@Override
+	public List<MsgInfo> findMsgInfo(Map<String, Object> param){
+		return msgInfoBiz.findMsgInfo(param);
 	}
 }
