@@ -9,8 +9,8 @@ public class ToSaleOperatorOrderStaticTableDTO extends BaseDTO {
 	private SaleOperatorOrderStatic soos;
 	private Integer page;
 	private Integer pageSize;
-	private Integer bizId;
-	private Set<Integer> userIdSet;
+//	private Integer bizId;
+//	private Set<Integer> userIdSet;
 
 	public SaleOperatorOrderStatic getSoos() {
 		return soos;
@@ -36,19 +36,19 @@ public class ToSaleOperatorOrderStaticTableDTO extends BaseDTO {
 		this.pageSize = pageSize;
 	}
 
-	public Integer getBizId() {
-		return bizId;
-	}
-
-	public void setBizId(Integer bizId) {
-		this.bizId = bizId;
-	}
-
-	public Set<Integer> getUserIdSet() {
-		return userIdSet;
-	}
-
-	public void setUserIdSet(Set<Integer> userIdSet) {
-		this.userIdSet = userIdSet;
-	}
+//	public Integer getBizId() {
+//		return bizId;
+//	}
+//
+//	public void setBizId(Integer bizId) {
+//		this.bizId = bizId;
+//	}
+//
+//	public Set<Integer> getUserIdSet() {
+//		return userIdSet;
+//	}
+//
+//	public void setUserIdSet(Set<Integer> userIdSet) {
+//		this.userIdSet = userIdSet;
+//	}
 }

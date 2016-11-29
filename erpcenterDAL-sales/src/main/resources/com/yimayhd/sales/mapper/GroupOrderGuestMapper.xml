@@ -429,8 +429,8 @@ GROUP BY order_id
 		<if test="page.parameter.mobile !=null and page.parameter.mobile !=''">
 			AND mobile like concat('%',#{page.parameter.mobile},'%')
 		</if> 
- 		<if test="(page.parameter.mobile ==null or page.parameter.mobile =='' ) and ( page.parameter.guestName ==null or page.parameter.guestName =='')">
+ 		<!--<if test="(page.parameter.mobile ==null or page.parameter.mobile =='' ) and ( page.parameter.guestName ==null or page.parameter.guestName =='')">
 			AND 1=2
-		</if> 	
+		</if> 	-->
 	</select>
 </mapper>

@@ -52,6 +52,7 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GuestInfoStatisti
 import com.yimayhd.erpcenter.facade.dataanalysis.client.result.QueryResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.service.QueryFacade;
 import com.yimayhd.erpresource.dal.constants.Constants;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @ClassName: ${ClassName}
@@ -1275,8 +1276,39 @@ public class QueryFacadeImpl implements QueryFacade {
     @Override
     public QueryResult productProfitList(QueryDTO queryDTO) {
         QueryResult queryResult = new QueryResult();
+        PageBean pb = new PageBean();
+        if (queryDTO.getPage() == null) {
+            pb.setPage(1);
+        }else {
+
+            pb.setPage(queryDTO.getPage());
+        }
+        if (queryDTO.getPageSize() == null) {
+            pb.setPageSize(Constants.PAGESIZE);
+        }else {
+
+            pb.setPageSize(queryDTO.getPageSize());
+        }
+        pb.setParameter(queryDTO.getParameters());
+        getCommonService(queryDTO.getSvc()).queryListPage(queryDTO.getSl(),pb);
         try {
-            queryResult.setPlanedPersonCount(productGroupPriceBiz.selectProductByProduct(queryDTO.getParameters()));
+            List result = pb.getResult();
+            Map paramters = queryDTO.getParameters();
+            Map conditionMap = new HashMap();
+            if (!CollectionUtils.isEmpty(result)) {
+
+                if (paramters.get("groupMode").equals('0')) {
+                    for (int i = 0; i < result.size(); i++) {
+                        Map map = (Map) result.get(i);
+                        String productBrandId = (String) map.get("productBrandId");
+                        String productId = (String) map.get("productId");
+                        paramters.put("productBrandId", productBrandId);
+                        paramters.put("productId", productId);
+                        map.put("planedPersonCount", productGroupPriceBiz.selectProductByProduct(paramters));
+                    }
+                }
+            }
+            queryResult.setPageBean(pb);
         } catch (Exception e) {
             logger.error("", e);
         }
@@ -1349,8 +1381,8 @@ public class QueryFacadeImpl implements QueryFacade {
     public QueryResult getAccountDetail(QueryDTO queryDTO) {
         QueryResult queryResult = new QueryResult();
         try {
-            QueryResult queryResult_1 = commonQuery(queryDTO);
-            PageBean pb = queryResult_1.getPageBean();
+            queryResult = commonQuery(queryDTO);
+            PageBean pb = queryResult.getPageBean();
             if (StringUtils.isNotBlank(queryDTO.getSsl())) {
                 Map pm = (Map) pb.getParameter();
                 pm.put("parameter", pm);

@@ -705,13 +705,13 @@
 			and go.receive_mode like
 			concat('%',#{page.parameter.receiveMode},'%')
 		</if>
-		<if test="page.parameter.orderType == 0">and
-			go.order_type <![CDATA[=]]>0
+		<if test="page.parameter.orderType == 1">and
+			go.order_type <![CDATA[>]]>0
 		</if>
-		<if test="page.parameter.orderType == 1 ">go.order_type <![CDATA[=]]>0
+		<if test="page.parameter.orderType == 0 ">and go.order_type <![CDATA[=]]>0
 		</if>
 
-		<if test="page.parameter.orderType == -1 ">go.order_type <![CDATA[=]]>-1
+		<if test="page.parameter.orderType == -1 ">and go.order_type <![CDATA[=]]>-1
 		</if>
 		<if test="page.parameter.priceType == 0">
 			and gop.mode =0
@@ -791,12 +791,12 @@
 			and go.receive_mode like
 			concat('%',#{page.parameter.receiveMode},'%')
 		</if>
-		<if test="page.parameter.orderType == 0">and
-			go.order_type <![CDATA[=]]>0
+		<if test="page.parameter.orderType == 1">and
+			go.order_type <![CDATA[>]]>0
 		</if>
-		<if test="page.parameter.orderType == 1 ">go.order_type <![CDATA[=]]>0
+		<if test="page.parameter.orderType == 0 ">and go.order_type <![CDATA[=]]>0
 		</if>
-		<if test="page.parameter.orderType == -1 ">go.order_type <![CDATA[=]]>-1
+		<if test="page.parameter.orderType == -1 ">and go.order_type <![CDATA[=]]>-1
 		</if>
 		<if test="page.parameter.itemId != -1">
 			and gop.item_id = ${page.parameter.itemId}

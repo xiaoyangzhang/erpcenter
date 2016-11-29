@@ -1,12 +1,7 @@
 package com.yimayhd.erpcenter.dal.sales.query.impl;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.Resource;
 
@@ -29,6 +24,7 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderTransportMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRequirementMapper;
+import org.springframework.util.CollectionUtils;
 
 public class QueryDalImpl implements QueryDAL {
 
@@ -175,20 +171,31 @@ public class QueryDalImpl implements QueryDAL {
 			PageBean<SaleOperatorVo> pageBean, Integer bizId, Set<Integer> set) {
 		
 		SaleOperatorVo paramObj = (SaleOperatorVo)pageBean.getParameter();
-		List<GroupOrderGuest> guestList = guestMapper.selectOrderIdsByNameOrMobile(pageBean);
-		if(guestList != null && guestList.size() > 0){
-			Set<Integer> orderIdSet = new HashSet<Integer>();
-			for(GroupOrderGuest guest : guestList){
-				orderIdSet.add(guest.getOrderId());
+		Set<Integer> orderIdSet = null;
+		if (StringUtils.isNotBlank(paramObj.getGuestName()) || (StringUtils.isNotBlank(paramObj.getMobile()))) {
+			orderIdSet = new HashSet<Integer>();
+			List<GroupOrderGuest> guestList = guestMapper.selectOrderIdsByNameOrMobile(pageBean);
+			if(!CollectionUtils.isEmpty(guestList)){
+				for(GroupOrderGuest guest : guestList){
+					orderIdSet.add(guest.getOrderId());
+				}
+
 			}
 			if(orderIdSet.size()==0){
 				orderIdSet.add(-1);
 			}
-			paramObj.setOrderIdSet(orderIdSet);
 		}
-		
+		paramObj.setOrderIdSet(orderIdSet);
+//		if(orderIdSet.size()==0){
+//			orderIdSet.add(-1);
+//		}
+//		paramObj.setOrderIdSet(orderIdSet);
+//		if (CollectionUtils.isEmpty(orderIdSet)) {
+//			paramObj.setOrderIdSet(null);
+//		}
+//		pageBean.getParameter().
 		List<SaleOperatorVo> orders = groupOrderMapper.selectSaleOperatorByConListPage(pageBean, bizId, set);
-		if(orders != null && orders.size() > 0){
+		if(!CollectionUtils.isEmpty(orders)){
 			SaleOperatorVo order = null;
 			StringBuilder sb = new StringBuilder();
 			for(int i = 0; i < orders.size(); i++){
@@ -199,16 +206,17 @@ public class QueryDalImpl implements QueryDAL {
 				sb.append(order.getId());
 			}
 			String orderIds = sb.toString();
-			
+
 			List<Map<String, Object>> guests = guestMapper.selectGuestForOrders(pageBean, orderIds);
 			this.mergeGuestsInOrders(orders, guests);
-			
+
 			List<Map<String, Object>> requirements = requirementMapper.selectRequirementForOrders(pageBean, orderIds);
 			this.mergeRequirementsInOrders(orders, requirements);
-			
+
 			List<Map<String, Object>> transports = transportMapper.selectTransportForOrders(pageBean, orderIds);
 			this.mergeTransportsInOrders(orders, transports);
 		}
+
 		pageBean.setResult(orders);
 		return pageBean;
 	}

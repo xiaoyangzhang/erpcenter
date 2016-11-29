@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.util.TypeUtils;
@@ -196,14 +197,17 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 	public ToSaleOperatorTableResult toSaleOperatorTable(PageBean pageBean,ToSaleOperatorPreviewDTO toSaleOperatorPreviewDTO) {
 
-		SaleOperatorVo order = toSaleOperatorPreviewDTO.getOrder();
+//		SaleOperatorVo order = toSaleOperatorPreviewDTO.getOrder();
 		Integer bizId = toSaleOperatorPreviewDTO.getBizId();
 		Set<Integer> userIdSet = toSaleOperatorPreviewDTO.getUserIdSet();
 
 		
 		pageBean = queryBiz.selectSaleOperatorByConListPage(pageBean, bizId, userIdSet);
+		Map<String, Object> sumPerson = new HashMap<String,Object>();
+		if (!CollectionUtils.isEmpty(pageBean.getResult())) {
 
-		Map<String, Object> sumPerson = queryBiz.selectSaleOperatorTotalPerson(pageBean, bizId, userIdSet);
+			 sumPerson = queryBiz.selectSaleOperatorTotalPerson(pageBean, bizId, userIdSet);
+		}
 
 		
 		ToSaleOperatorTableResult result = new ToSaleOperatorTableResult();
@@ -232,9 +236,9 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public ToSaleOperatorOrderStaticTableResult toSaleOperatorOrderStaticTable(PageBean pageBean,
 			ToSaleOperatorOrderStaticTableDTO toSaleOperatorOrderStaticTableDTO) {
 
-		SaleOperatorOrderStatic soos = toSaleOperatorOrderStaticTableDTO.getSoos();
-		Integer page = toSaleOperatorOrderStaticTableDTO.getPage();
-		Integer pageSize = toSaleOperatorOrderStaticTableDTO.getPageSize();
+//		SaleOperatorOrderStatic soos = toSaleOperatorOrderStaticTableDTO.getSoos();
+//		Integer page = toSaleOperatorOrderStaticTableDTO.getPage();
+//		Integer pageSize = toSaleOperatorOrderStaticTableDTO.getPageSize();
 		Integer bizId = toSaleOperatorOrderStaticTableDTO.getBizId();
 		Set<Integer> userIdSet = toSaleOperatorOrderStaticTableDTO.getUserIdSet();
 
@@ -251,9 +255,9 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	public ToOperatorGroupStaticTableResult toOperatorGroupStaticTable(PageBean pageBean,
 			ToOperatorGroupStaticTableDTO toOperatorGroupStaticTableDTO) {
 
-		OperatorGroupStatic ogs = toOperatorGroupStaticTableDTO.getOgs();
-		Integer page = toOperatorGroupStaticTableDTO.getPage();
-		Integer pageSize = toOperatorGroupStaticTableDTO.getPageSize();
+//		OperatorGroupStatic ogs = toOperatorGroupStaticTableDTO.getOgs();
+//		Integer page = toOperatorGroupStaticTableDTO.getPage();
+//		Integer pageSize = toOperatorGroupStaticTableDTO.getPageSize();
 		Integer bizId = toOperatorGroupStaticTableDTO.getBizId();
 		Set<Integer> userIdSet = toOperatorGroupStaticTableDTO.getUserIdSet();
 
@@ -1164,7 +1168,42 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 	}
 
 	public GetAgeListByProductResult getAgeListByProduct(GetAgeListByProductDTO getAgeListByProductDTO){
-		
+		Map paramters= getAgeListByProductDTO.getQueryParamters();
+		String sl=paramters.get("sl")+"";
+		String page=paramters.get("page")+"";
+		String pageSize=paramters.get("pageSize")+"";
+		Object svcObj = paramters.get("svc");
+		String svc = null;
+		if (svcObj == null) {
+            svc = "";
+        }
+
+		PageBean pb = new PageBean();
+		if (page == null || !StringUtils.isNumeric(page)){
+			pb.setPage(1);
+		}
+		if (pageSize == null || !StringUtils.isNumeric(pageSize)) {
+			pb.setPageSize(Constants.PAGESIZE);
+		}
+		if (StringUtils.isBlank((String) paramters.get("saleOperatorIds"))
+				&& StringUtils.isNotBlank((String) paramters.get("orgIds"))) {
+			Set<Integer> set = new HashSet<Integer>();
+			String[] orgIdArr = paramters.get("orgIds").toString().split(",");
+			for (String orgIdStr : orgIdArr) {
+				set.add(Integer.valueOf(orgIdStr));
+			}
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(getAgeListByProductDTO.getBizId(), set);
+
+			String salesOperatorIds = "";
+			for (Integer usrId : set) {
+				salesOperatorIds += usrId + ",";
+			}
+			if (!salesOperatorIds.equals("")) {
+				paramters.put("saleOperatorIds", salesOperatorIds.substring(0,salesOperatorIds.length() - 1));
+			}
+		}
+		pb.setParameter(paramters);
+		pb = getCommonBiz(svc).queryListPage(sl, pb);
 		List<Map<String, Object>> ageMaps = tourGroupBiz.selectAgeCount(getAgeListByProductDTO.getQueryParamters());
 		
 		Map<Object, Object> ageMap = new HashMap<Object, Object>();
@@ -1172,12 +1211,13 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			ageMap.put(map2.get("ageRanges"), map2.get("agecnt"));
 		}
 	
-		Map personMap = getAgeListByProductDTO.getQueryParamters();
+		Map personMap = queryBiz.getPersonCountMap(paramters);
 		
 		GetAgeListByProductResult result=new GetAgeListByProductResult();
+		result.setPageBean(pb);
 		result.setAgeMaps(ageMaps);
 		result.setPersonMap(personMap);
-		
+		result.setAgeMap(ageMap);
 		return result;
 	}
 	
@@ -2010,16 +2050,19 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			groupOrder.setDateType(1);
 		}
 		if (groupOrder.getDateType() != null && groupOrder.getDateType() == 2) {
-			if (groupOrder.getStartTime() != null) {
-			//	groupOrder.setStartTime(new SimpleDateFormat("yyyy-MM-dd")
-			//			.parse(groupOrder.getStartTime()).getTime() + "");
-			}
-			if (groupOrder.getEndTime() != null) {
-				Calendar calendar = new GregorianCalendar();
-			//	calendar.setTime(new SimpleDateFormat("yyyy-MM-dd")
-			//			.parse(groupOrder.getEndTime()));
-				calendar.add(calendar.DATE, 1);// 把日期往后增加一天.整数往后推,负数往前移动
-				groupOrder.setEndTime(calendar.getTime().getTime() + "");
+			try {
+				if (groupOrder.getStartTime() != null) {
+                    groupOrder.setStartTime((new SimpleDateFormat("yyyy-MM-dd").parse(groupOrder.getStartTime()).getTime()+""));
+                }
+				if (groupOrder.getEndTime() != null) {
+                    Calendar calendar = new GregorianCalendar();
+                    calendar.setTime(new SimpleDateFormat("yyyy-MM-dd")
+                            .parse(groupOrder.getEndTime()));
+                    calendar.add(calendar.DATE, 1);// 把日期往后增加一天.整数往后推,负数往前移动
+                    groupOrder.setEndTime(calendar.getTime().getTime()+"");
+                }
+			} catch (ParseException e) {
+				e.printStackTrace();
 			}
 
 		}
