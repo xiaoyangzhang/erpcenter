@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yimayhd.product.mapper.TaobaoStockLogMapper">
+<mapper namespace="com.yimayhd.erpcenter.dal.product.dao.TaobaoStockLogMapper">
   <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="stock_id" jdbcType="INTEGER" property="stockId" />

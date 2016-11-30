@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yimayhd.erpcenter.dal.product.dao.TaobaoProductMapper">
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.TaobaoProduct">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="num_iid" jdbcType="VARCHAR" property="numIid" />
+    <result column="outer_id" jdbcType="VARCHAR" property="outerId" />
+    <result column="cid" jdbcType="VARCHAR" property="cid" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="props" jdbcType="VARCHAR" property="props" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, num_iid, outer_id, cid, title, props, created, modified
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from taobao_product
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from taobao_product
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoProduct">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into taobao_product (num_iid, outer_id, cid, 
+      title, props, created, 
+      modified)
+    values (#{numIid,jdbcType=VARCHAR}, #{outerId,jdbcType=VARCHAR}, #{cid,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{props,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, 
+      #{modified,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoProduct">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into taobao_product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="numIid != null">
+        num_iid,
+      </if>
+      <if test="outerId != null">
+        outer_id,
+      </if>
+      <if test="cid != null">
+        cid,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="props != null">
+        props,
+      </if>
+      <if test="created != null">
+        created,
+      </if>
+      <if test="modified != null">
+        modified,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="numIid != null">
+        #{numIid,jdbcType=VARCHAR},
+      </if>
+      <if test="outerId != null">
+        #{outerId,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null">
+        #{cid,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="props != null">
+        #{props,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null">
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified != null">
+        #{modified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoProduct">
+    update taobao_product
+    <set>
+      <if test="numIid != null">
+        num_iid = #{numIid,jdbcType=VARCHAR},
+      </if>
+      <if test="outerId != null">
+        outer_id = #{outerId,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null">
+        cid = #{cid,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="props != null">
+        props = #{props,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified != null">
+        modified = #{modified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoProduct">
+    update taobao_product
+    set num_iid = #{numIid,jdbcType=VARCHAR},
+      outer_id = #{outerId,jdbcType=VARCHAR},
+      cid = #{cid,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      props = #{props,jdbcType=VARCHAR},
+      created = #{created,jdbcType=TIMESTAMP},
+      modified = #{modified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="findTaobaoProductById" parameterType="java.util.Set"
+		resultMap="BaseResultMap">
+		select id, num_iid, outer_id, cid, title, props, created, modified 
+		from taobao_product
+		where 1=1 
+		<if test="set != null">
+			and id in
+			<foreach item="item" index="index" collection="set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+	
+<insert id="insertTaobaoProduct" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoProduct" 
+	useGeneratedKeys="true" keyProperty="id">
+    insert into taobao_product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="numIid != null">
+        num_iid,
+      </if>
+      <if test="outerId != null">
+        outer_id,
+      </if>
+      <if test="cid != null">
+        cid,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="props != null">
+        props,
+      </if>
+      <if test="created != null">
+        created,
+      </if>
+      <if test="modified != null">
+        modified,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="numIid != null">
+        #{numIid,jdbcType=VARCHAR},
+      </if>
+      <if test="outerId != null">
+        #{outerId,jdbcType=VARCHAR},
+      </if>
+      <if test="cid != null">
+        #{cid,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="props != null">
+        #{props,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null">
+        #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified != null">
+        #{modified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+	
+	<select id="findTaoBaoProductStockListPage" parameterType="com.yihg.mybatis.utility.PageBean" 
+		resultType="java.util.HashMap">
+	    select tsd.stock_id,ts.stock_name, tb.outer_id,tb.title,tsd.stock_date,tsd.stock_count,tsd.sale_count,tsd.stock_count-tsd.sale_count stockBalance,tsd.id as stockDateId 
+		from taobao_stock_date tsd join taobao_stock ts on (tsd.stock_id=ts.id) 
+		join taobao_stock_product tsp on (tsp.stock_id=ts.id)
+		join taobao_product tb on (tsp.product_id=tb.id)
+		where tsd.stock_date=#{page.parameter.stockDate} 
+	    <if test="page.parameter.outerId != null and page.parameter.outerId!=''">
+			and outer_id LIKE CONCAT('%',#{page.parameter.outerId},'%' )
+		</if>
+		<if test="page.parameter.stockName != null and page.parameter.stockName!=''">
+			and stock_name LIKE CONCAT('%',#{page.parameter.stockName},'%' )
+		</if>
+		<if test="page.parameter.title != null and page.parameter.title!=''">
+			and title LIKE CONCAT('%',#{page.parameter.title},'%' )
+		</if>
+    </select>
+	<select id="findTaoBaoProductListPage" parameterType="com.yihg.mybatis.utility.PageBean" 
+		resultMap="BaseResultMap">
+	    select id, num_iid, outer_id, cid, title, props, created, modified
+	    from taobao_product
+	    where 1=1 
+	    <if test="page.parameter.outerId != null and page.parameter.outerId!=''">
+			and outer_id LIKE CONCAT('%',#{page.parameter.outerId},'%' )
+		</if>
+		<if test="page.parameter.title != null and page.parameter.title!=''">
+			and title LIKE CONCAT('%',#{page.parameter.title},'%' )
+		</if>
+  </select>
+  
+   <select id="selectTaobaoProductListPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
+    select * from taobao_product
+      where   1=1
+	  <if test="page.parameter.title != null and page.parameter.title!=''">
+           AND title LIKE CONCAT('%',#{page.parameter.title},'%' )
+         </if>
+         <if test="page.parameter.outerId != null and page.parameter.outerId!=''">
+           AND outer_id LIKE CONCAT('%',#{page.parameter.outerId},'%' )
+         </if>
+  </select>
+  
+   <select id="selectTaobaoProductBynumIidAndModified" resultMap="BaseResultMap" >
+    select * from taobao_product
+      where  num_iid=#{numIid}
+  </select>
+</mapper>
