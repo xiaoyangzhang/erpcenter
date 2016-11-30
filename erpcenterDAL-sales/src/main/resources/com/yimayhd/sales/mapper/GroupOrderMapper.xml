@@ -120,7 +120,7 @@
 		<result column="push_time_update" property="pushTimeUpdate" jdbcType="DATE" />
 		<result column="push_supplier_name" property="pushSupplierName" jdbcType="VARCHAR" />
 		<result column="buyer_nick" property="buyerNick" jdbcType="VARCHAR" />
-		<association property="tourGroup" column="group_id" select="com.yimayhd.sales.mapper.TourGroupMapper.selectByPrimaryKey" />
+		<association property="tourGroup" column="group_id" select="com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper.selectByPrimaryKey" />
 	</resultMap>
 
 
