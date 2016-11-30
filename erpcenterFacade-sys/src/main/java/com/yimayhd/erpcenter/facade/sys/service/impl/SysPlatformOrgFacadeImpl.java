@@ -15,12 +15,16 @@ import com.yimayhd.erpcenter.facade.sys.result.PlatformOrgPoListResult;
 import com.yimayhd.erpcenter.facade.sys.result.PlatformOrgPoResult;
 import com.yimayhd.erpcenter.facade.sys.result.SysDataRightListResult;
 import com.yimayhd.erpcenter.facade.sys.service.SysPlatformOrgFacade;
+import com.yimayhd.erpresource.biz.service.SupplierBiz;
+import com.yimayhd.erpresource.dal.po.SupplierInfo;
 
 public class SysPlatformOrgFacadeImpl implements SysPlatformOrgFacade{
 	private static final Logger logger=LoggerFactory.getLogger(SysPlatformOrgFacadeImpl.class);
 
 	@Autowired
 	private PlatformOrgBiz platformOrgBiz;
+	@Autowired
+	private SupplierBiz supplierBiz;
 	
 	@Override
 	public PlatformOrgPoListResult findByPid(Integer pid,Integer sysId) {
@@ -142,6 +146,12 @@ public class SysPlatformOrgFacadeImpl implements SysPlatformOrgFacade{
 			result.setPlatformOrgPos(platformOrgPos);
 		return result;
 	}
+
+	@Override
+	public PlatformOrgPo getCompanyByEmployeeId2(Integer bizId, Integer employeeId) {
+		return platformOrgBiz.getCompanyByEmployeeId2(bizId,employeeId);
+	}
+
 	@Override
 	public PlatformOrgPoListResult getSecLevelOrgList(Integer bizId) {		
 		List<PlatformOrgPo> platformOrgPos =  platformOrgBiz.getSecLevelOrgList(bizId);
@@ -162,6 +172,24 @@ public class SysPlatformOrgFacadeImpl implements SysPlatformOrgFacade{
 	@Override
 	public int saveOrg(PlatformOrgPoDTO po) {
 		return platformOrgBiz.saveOrg(po.getPlatformOrgPo());
+	}
+	
+	/**
+	 * 根据orgId向上遍历查找 登录者对应的默认组团社信息
+	 * @param orgId
+	 * @return [0]为supplierId, [1]为supplierName
+	 */
+	@Override
+	public String[] getOrgMappingSupplierId(Integer orgId){
+		String ret[] = new String[]{"0",""};
+		String SupplierId = platformOrgBiz.getMappingSupplierIdByOrgId(orgId); 
+		if(!"0".equals(SupplierId)){
+			SupplierInfo supInfo = supplierBiz.selectBySupplierId(Integer.valueOf(SupplierId));
+			if (supInfo != null)
+				ret[1] = supInfo.getNameFull();
+			ret[0] = SupplierId;
+		}
+		return ret;
 	}
 	
 	

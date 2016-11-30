@@ -1,11 +1,11 @@
 package com.yimayhd.erpcenter.dal.sales.taobao.dao;
 
-import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
 import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTradeOrder;
 
+import java.util.List;
 
 public interface PlatTaobaoTradeOrderMapper {
     int deleteByPrimaryKey(Integer id);
@@ -19,6 +19,8 @@ public interface PlatTaobaoTradeOrderMapper {
     int updateByPrimaryKeySelective(PlatTaobaoTradeOrder record);
 
     int updateByPrimaryKey(PlatTaobaoTradeOrder record);
-    
-    List<PlatTaobaoTradeOrder> selectByTid(@Param("tid") String tid);
+
+    PlatTaobaoTradeOrder selectByTid(@Param("tid") String tid, @Param("oid") String oid);
+
+    List<PlatTaobaoTradeOrder> selectByOrderId(@Param("orderId") Integer orderId);
 }

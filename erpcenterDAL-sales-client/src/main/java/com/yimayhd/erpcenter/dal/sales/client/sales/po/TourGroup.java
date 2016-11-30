@@ -1,13 +1,15 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.po;
 
+
+
+import com.yimayhd.erpcenter.common.util.LogFieldAnno;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import com.yimayhd.erpcenter.common.util.LogFieldAnno;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 
 public class TourGroup implements Serializable {
 
@@ -64,6 +66,8 @@ public class TourGroup implements Serializable {
 	private Integer totalChild;
 	@LogFieldAnno(description="陪同人数")
 	private Integer totalGuide;
+	@LogFieldAnno(description="婴儿人数")
+	private Integer totalBaby;
 	@LogFieldAnno(description="服务标准")
 	private String serviceStandard;
 	@LogFieldAnno(description="备注")
@@ -106,9 +110,13 @@ public class TourGroup implements Serializable {
 
 	private BigDecimal income; // 收入--团所有收入
 	private BigDecimal totalBudget; // 收入--团所有成本
+	
+	private BigDecimal sumTotalCost; // 
+	private BigDecimal sumTotalIncome; // 
 
 	private Integer supplierId; // 组团社ID，定制团时做数据冗余用
 	private String supplierName; // 组团社名称，定制团时做数据冗余用
+	private String receiveMode;
 	private String orgNames;
 
 	private String orgIds;
@@ -122,8 +130,46 @@ public class TourGroup implements Serializable {
 	private Boolean containSealedGroup;
 	private List<GroupOrder> groupOrderList;
 	
+	public String getReceiveMode() {
+		return receiveMode;
+	}
+
+	public void setReceiveMode(String receiveMode) {
+		this.receiveMode = receiveMode;
+	}
+
 	public List<GroupOrder> getGroupOrderList() {
 		return groupOrderList;
+	}
+
+	public BigDecimal getSumTotalCost() {
+		return sumTotalCost;
+	}
+
+	public void setSumTotalCost(BigDecimal sumTotalCost) {
+		this.sumTotalCost = sumTotalCost;
+	}
+
+
+
+	public BigDecimal getSumTotalIncome() {
+		return sumTotalIncome;
+	}
+
+
+
+	public void setSumTotalIncome(BigDecimal sumTotalIncome) {
+		this.sumTotalIncome = sumTotalIncome;
+	}
+
+
+
+	public Integer getTotalBaby() {
+		return totalBaby;
+	}
+
+	public void setTotalBaby(Integer totalBaby) {
+		this.totalBaby = totalBaby;
 	}
 
 	public void setGroupOrderList(List<GroupOrder> groupOrderList) {

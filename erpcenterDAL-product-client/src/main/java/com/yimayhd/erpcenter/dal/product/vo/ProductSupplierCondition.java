@@ -1,11 +1,18 @@
 package com.yimayhd.erpcenter.dal.product.vo;
 
 import java.io.Serializable;
+import java.util.Set;
 
 public class ProductSupplierCondition implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer productId;
+	private Integer groupId;
 	private String supplierName;
 	private String city;
+	private Set<Integer> productIds;
 	/**
 	 * 排除掉的组团社id
 	 */
@@ -53,6 +60,18 @@ public class ProductSupplierCondition implements Serializable {
 	}
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
+	}
+	public Integer getGroupId() {
+		return groupId;
+	}
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
+	}
+	public Set<Integer> getProductIds() {
+		return productIds;
+	}
+	public void setProductIds(Set<Integer> productIds) {
+		this.productIds = productIds;
 	}
 	
 	

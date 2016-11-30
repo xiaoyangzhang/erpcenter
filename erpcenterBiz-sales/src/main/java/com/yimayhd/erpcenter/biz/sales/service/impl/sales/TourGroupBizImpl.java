@@ -5,13 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
-import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.AutocompleteInfo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
@@ -35,6 +33,11 @@ public class TourGroupBizImpl implements TourGroupBiz {
 	@Override
 	public void delFitTourGroup(Integer groupId) {
 		tourGroupDal.delFitTourGroup(groupId);
+	}
+
+	@Override
+	public void updateWapType(Integer groupId) {
+		tourGroupDal.updateWapType(groupId);
 	}
 
 	@Override
@@ -221,6 +224,11 @@ public class TourGroupBizImpl implements TourGroupBiz {
 	}
 
 	@Override
+	public PageBean<TourGroup> selectSaleProfitByTourListPage(PageBean<TourGroup> pageBean, Integer bizId, Set<Integer> set) {
+		return tourGroupDal.selectSaleProfitByTourListPage(pageBean, bizId, set);
+	}
+
+	@Override
 	public List<TourGroup> selectTourGroupBycreateTime(Long createTime, Integer bizId) {
 		return tourGroupDal.selectTourGroupBycreateTime(createTime, bizId);
 	}
@@ -267,8 +275,23 @@ public class TourGroupBizImpl implements TourGroupBiz {
 	}
 
 	@Override
+	public PageBean<TourGroup> selectSaleProfitByTourCon(PageBean<TourGroup> pageBean, Integer bizId, Set<Integer> set) {
+		return tourGroupDal.selectSaleProfitByTourCon( pageBean, bizId, set);
+	}
+
+	@Override
 	public TourGroup selectProfitByTourConAndMode(PageBean<TourGroup> pageBean, Integer bizId, Set<Integer> set) {
 		return tourGroupDal.selectProfitByTourConAndMode(pageBean, bizId, set);
+	}
+
+	@Override
+	public TourGroup selectSaleProfitByTourConAndMode(PageBean<TourGroup> pageBean, Integer bizId, Set<Integer> set) {
+		return tourGroupDal.selectSaleProfitByTourConAndMode( pageBean, bizId, set);
+	}
+
+	@Override
+	public TourGroup selectSumCostProfit(TourGroup tourGroup, Integer bizId, Set<Integer> set) {
+		return tourGroupDal.selectSumCostProfit( tourGroup, bizId, set);
 	}
 
 	@Override
@@ -279,7 +302,7 @@ public class TourGroupBizImpl implements TourGroupBiz {
 	@Override
 	public List<AutocompleteInfo> getSupplierNameList(String supplierType) {
 
-		return null;
+		return tourGroupDal.getSupplierNameList( supplierType);
 	}
 
 	@Override
@@ -370,7 +393,7 @@ public class TourGroupBizImpl implements TourGroupBiz {
 
 	@Override
 	public BookingGroup selectBookingFinanceShopGroupListPageSum(PageBean pageBean, Integer curBizId,
-			Set<Integer> dataUserIdSet) {
+																 Set<Integer> dataUserIdSet) {
 		return tourGroupDal.selectBookingFinanceShopGroupListPageSum(pageBean, curBizId, dataUserIdSet);
 	}
 
@@ -484,12 +507,22 @@ public class TourGroupBizImpl implements TourGroupBiz {
 	}
 
 	@Override
+	public TourGroup findByGroupCode(String code) {
+		return tourGroupDal.findByGroupCode(code);
+	}
+
+	@Override
 	public void changeGroup(Integer groupId, Integer guideId) {
-		
+		tourGroupDal.changeGroup(groupId,guideId);
 	}
 	
 	@Override
 	public List<TourGroup> selecGroupBefAutoMergerGroup(Integer bizId,String startTime,Integer productId) {
 		return tourGroupDal.selecGroupBefAutoMergerGroup(bizId,startTime,productId);
+	}
+
+	@Override
+	public PageBean getPushDeliveryList(PageBean pageBean, Integer bizId) {
+		return tourGroupDal.getPushDeliveryList(pageBean, bizId);
 	}
 }

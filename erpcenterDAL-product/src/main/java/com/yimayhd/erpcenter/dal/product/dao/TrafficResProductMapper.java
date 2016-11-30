@@ -1,12 +1,11 @@
 package com.yimayhd.erpcenter.dal.product.dao;
 
-import java.util.List;
-import java.util.Set;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Set;
 
 public interface TrafficResProductMapper {
     /**
@@ -53,7 +52,7 @@ public interface TrafficResProductMapper {
     
     int insertTrafficResProduct(TrafficResProduct record);
     
-    TrafficResProduct selectResProductId(@Param("id")Integer id);
+    TrafficResProduct selectResProductId(@Param("id") Integer id);
     
     int updateToSaveResProduct(TrafficResProduct productBean);
 
@@ -64,7 +63,7 @@ public interface TrafficResProductMapper {
    	 */
     List<TrafficResProduct> selectTrafficProductByResId(Integer resId);
     
-    int delResProduct(@Param("id")Integer id);
+    int delResProduct(@Param("id") Integer id);
     
     List<TrafficResProduct> findByResProductId(@Param("id") Set<Integer> id);
     
@@ -78,13 +77,17 @@ public interface TrafficResProductMapper {
     
     TrafficResProduct selectTrafficProductInfo(@Param("id") Integer id);
     
-    int updateNumSoldById (TrafficResProduct record);
+    int updateNumSoldById(TrafficResProduct record);
     
-    TrafficResProduct selectTrafficProductInfoByProductCode(@Param("productCode") Integer  productCode,@Param("resId") Integer  resId);
+    TrafficResProduct selectTrafficProductInfoByProductCode(@Param("productCode") Integer productCode, @Param("resId") Integer resId);
     
     List<TrafficResProduct>selectResProductListPage(@Param("page") PageBean pageBean);
     
     TrafficResProduct findByResProId(@Param("id") Integer id);
     
-    int selectResProductNameCount(@Param("productCode") Integer  productCode,@Param("resId") Integer  resId);
+    int selectResProductNameCount(@Param("productCode") Integer productCode, @Param("resId") Integer resId);
+    
+    TrafficResProduct selectNumSoldCount(@Param("resId") Integer resId);
+    
+    int updateResProductNumStock(@Param("id") Integer id, @Param("numStock") Integer numStock);
 }

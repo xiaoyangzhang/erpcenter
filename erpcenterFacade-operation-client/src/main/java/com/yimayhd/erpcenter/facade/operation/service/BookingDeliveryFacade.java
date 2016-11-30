@@ -74,4 +74,41 @@ public interface BookingDeliveryFacade {
 	BookingDeliveryResult getBookingDeliveryInfo(Integer bookingId,Integer bizId);
 	BookingDeliveryResult getDeliveryPriceInfo(Integer bizId,PageBean pageBean,Set<Integer> set,String carInfo);
 	PageBean  getLocalTravelAngencyGroupList(PageBean pageBean,TourGroupVO tourGroup,Set<Integer> set);
+
+	/**
+	 * @author liyong
+	 * @param orderId
+	 * @param bizId
+	 * @return
+	 */
+	Integer getOrgIdBy(Integer orderId ,Integer bizId);
+
+	/**
+	 * @author liyong
+	 * @param pageBean
+	 * @param bizId
+	 * @return
+	 */
+	WebResult<PageBean> pushListTable(PageBean pageBean ,Integer bizId);
+
+	/**
+	 * @author liyong
+	 * @param groupId
+	 * @param bookingId
+	 * @param bizId
+	 * @param fromAppKey
+	 * @param fromSecretKey
+	 * @param toAppKey
+	 * @return
+	 */
+	WebResult<String> pushRemoteSave(Integer groupId, Integer bookingId,Integer bizId, String fromAppKey, String fromSecretKey, String toAppKey);
+
+	/**
+	 * @author liyong
+	 * @param bookingId
+	 * @return
+	 */
+	WebResult<Boolean> updatePushStatus(Integer bookingId);
+
+
 }

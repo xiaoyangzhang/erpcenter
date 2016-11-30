@@ -1,11 +1,11 @@
 package com.yimayhd.erpcenter.dal.sales.taobao.dao;
 
-import java.util.List;
+import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade;
+import java.util.List;
 
 public interface PlatTaobaoTradeMapper {
     int deleteByPrimaryKey(Integer id);
@@ -20,8 +20,19 @@ public interface PlatTaobaoTradeMapper {
 
     int updateByPrimaryKey(PlatTaobaoTrade record);
     
-    PlatTaobaoTrade selectByTid(@Param("tid") String tid);
+    List<PlatTaobaoTrade> selectByTid(@Param("tid") String tid);
     
+	PlatTaobaoTrade selectTaobaoshopSalesStatistics(@Param("platTaobaoTrade") PlatTaobaoTrade platTaobaoTrade, @Param("bizId") Integer bizId);
+	
+	PlatTaobaoTrade selectTaobaoshopSalesStatisticsOther(@Param("platTaobaoTrade") PlatTaobaoTrade platTaobaoTrade, @Param("bizId") Integer bizId);
+	
+	List<PlatTaobaoTrade>selectPresellProductStatisticsListPage(@Param("page") PageBean<PlatTaobaoTrade> pageBean, @Param("bizId") Integer bizId);
+	
+	List<PlatTaobaoTrade>selectPresellTaobaoOrderListPage(@Param("page") PageBean<PlatTaobaoTrade> pageBean, @Param("bizId") Integer bizId);
+	
+	List<PlatTaobaoTrade>selectNotPresellProductStatisticsListPage(@Param("page") PageBean<PlatTaobaoTrade> pageBean, @Param("bizId") Integer bizId);
+	
+	List<PlatTaobaoTrade>selectSaleOperatorSalesStatisticsListPage(@Param("page") PageBean<PlatTaobaoTrade> pageBean, @Param("bizId") Integer bizId);
     /**
 	 * 查询淘宝原始单
 	 */
@@ -29,19 +40,21 @@ public interface PlatTaobaoTradeMapper {
 	/**
 	 * 查询淘宝原始单BY id
 	 */
-	List<PlatTaobaoTrade>selectTaobaoOrderById( @Param("ids") String ids);
+	List<PlatTaobaoTrade>selectTaobaoOrderById(@Param("ids") String ids);
+	
+	List<PlatTaobaoTrade>selectAllByOrderId(@Param("orderId") Integer orderId);
 	/**
 	 * 更新淘宝原始单orderId plat_taobao_trade表
 	 *@param orderId 
 	 * @param ids 订单ID
 	 */
-	void updateTaobaoOrderId(@Param("orderId") Integer orderId,@Param("ids") String ids);
+	void updateTaobaoOrderId(@Param("orderId") Integer orderId, @Param("ids") String ids);
 	/**
 	 * 更新淘宝原始单orderId   plat_taobao_trade_order表
 	 *@param orderId 
 	 * @param ids 订单ID
 	 */
-	void updateTaobaoOrderIdToOrder(@Param("orderId") Integer orderId,@Param("ids") String ids);
+	void updateTaobaoOrderIdToOrder(@Param("orderId") Integer orderId, @Param("ids") String ids);
 	/**
 	 * 更新淘宝原始单orderId为0 plat_taobao_trade表
 	 * @param id 
@@ -57,7 +70,7 @@ public interface PlatTaobaoTradeMapper {
 	 * 查询淘宝原始单BY orderId
 	 * @param id 为OrderId
 	 */
-	List<PlatTaobaoTrade>selectTaobaoOrderByOrderId( @Param("id") Integer id);
+	List<PlatTaobaoTrade>selectTaobaoOrderByOrderId(@Param("id") Integer id);
 	/**
 	 * 更新淘宝原始单状态  CANCEL
 	 * @param id 

@@ -288,11 +288,14 @@ public class BookingShopDalImpl implements BookingShopDal{
 		return shopMapper.existBookingShop(supplierId);
 	}
 
+//	@Override
+//	public ShopGroupOrderOthersPO selectShopGroupOrderOthersByOrderId(Integer id) {
+//		
+//		return shopMapper.selectShopGroupOrderOthersByOrderId(id);
+//	}
+
 	@Override
-	public ShopGroupOrderOthersPO selectShopGroupOrderOthersByOrderId(Integer id) {
-		
-		return shopMapper.selectShopGroupOrderOthersByOrderId(id);
+	public QueryGuideShop getGuideShopListPageTotal(PageBean pageBean, Set<Integer> set) {
+		return shopMapper.getGuideShopListPageTotal(pageBean, set);
 	}
-
-
 }

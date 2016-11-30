@@ -4,15 +4,12 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,25 +29,9 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.vo.PaymentExportVO;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.DeparentmentOrderCondition;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.DepartmentOrderResult;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupRequirementDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupRouteDal;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupOrderVO;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupPriceVo;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorOrderStatic;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorVo;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalePrice;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalesVO;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 import com.yimayhd.erpcenter.dal.sales.client.solr.dto.GroupOrderDTO;
 import com.yimayhd.erpcenter.dal.sales.client.solr.query.GroupOrderPageQueryDTO;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.FinanceCommissionDeductionMapper;
@@ -60,6 +41,8 @@ import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderTransportMapper;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRequirementMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.util.GenerateCodeUtil;
@@ -105,6 +88,12 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     private FinanceCommissionDeductionMapper financeCommissionDeductionMapper;
     @Autowired
     private SalesSolrQueryManage salesSolrQueryManage;
+    
+    @Autowired
+    private GroupRequirementMapper requirementMapper;
+    
+    @Autowired
+    private GroupOrderTransportMapper transportMapper;
     
     
     @Override
@@ -216,8 +205,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     public void updateGroupOrder(GroupOrder groupOrder,
                                  List<GroupOrderGuest> list) {
         groupOrderMapper.updateByPrimaryKeySelective(groupOrder);
-        List<GroupOrderGuest> gogList = groupOrderGuestMapper
-                .selectByOrderId(groupOrder.getId());
+        List<GroupOrderGuest> gogList = groupOrderGuestMapper.selectByOrderId(groupOrder.getId());
         for (GroupOrderGuest groupOrderGuest : gogList) {
             groupOrderGuestMapper.deleteByPrimaryKey(groupOrderGuest.getId());
         }
@@ -308,8 +296,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
             tourGroup.setOrderNum(orderList2.size());
             tourGroup.setGroupMode(0);
             TourGroup selectGroupCodeSort = tourGroupMapper
-                    .selectGroupCodeSort(bizId, 0, orderList2.get(0)
-                            .getDepartureDate());
+                    .selectGroupCodeSort(bizId, 0, orderList2.get(0).getDepartureDate());
             String makeCodeByMode = GenerateCodeUtil.makeCodeByMode(
                     supplierCode,
                     0,
@@ -556,9 +543,47 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     }
 
     @Override
-    public List<GroupPriceVo> selectSupplierByGroupIdAndSupplierId(
-            Integer groupId, Integer supplierId) {
-        List<GroupOrder> orders = groupOrderMapper.selectSupplierByGroupIdAndSupplierId(groupId, supplierId);
+    public void changeOrderLockState(Integer orderId) {
+    	groupOrderMapper.updateOrderLockState(orderId);
+    }
+
+    @Override
+    public void changeorderLockStateByOp(Integer orderId) {
+    	groupOrderMapper.updateOrderLockStateByOp(orderId);
+    }
+
+    @Override
+    public void goBackOrderLockStateByOp(Integer orderId) {
+    	groupOrderMapper.goBackOrderLockStateByOp(orderId);
+    }
+
+    @Override
+    public void updateLockStateToFinance(Integer orderId) {
+    	GroupOrder groupOrder=groupOrderMapper.selectByPrimaryKey(orderId);
+    	if(groupOrder.getGroupId() != null){
+    	List<GroupOrder> lists=groupOrderMapper.selectOrderByGroupId(groupOrder.getGroupId());
+    	for(GroupOrder item:lists){
+    		groupOrderMapper.updateLockStateToFinance(item.getId());
+    	}
+    	}
+    }
+
+    @Override
+    public void goBackToOP(Integer orderId) {
+    	GroupOrder groupOrder=groupOrderMapper.selectByPrimaryKey(orderId);
+    	if(groupOrder.getGroupId() != null){
+    	List<GroupOrder> lists=groupOrderMapper.selectOrderByGroupId(groupOrder.getGroupId());
+    	for(GroupOrder item:lists){
+    		groupOrderMapper.updateOrderLockStateByOp(item.getId());
+    	}
+    	}
+    }
+
+    @Override
+    public List<GroupPriceVo> selectSupplierByGroupIdAndSupplierId(Integer groupId,
+            Integer supplierId) {
+        List<GroupOrder> orders = groupOrderMapper.selectSupplierByGroupIdAndSupplierId(groupId,
+                supplierId);
         List<GroupPriceVo> vos = new ArrayList<GroupPriceVo>();
         GroupPriceVo vo = null;
         for (GroupOrder order : orders) {
@@ -602,6 +627,21 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     }
 
     @Override
+    public PageBean<GroupOrder> selectTaobaoOrderListPage(PageBean<GroupOrder> pageBean,
+                                                          Integer bizId, Set<Integer> set, Integer userRightType) {
+        List<GroupOrder> list = groupOrderMapper.selectTaobaoOrderListPage(pageBean, bizId, set, userRightType);
+        pageBean.setResult(list);
+        return pageBean;
+    }
+
+    @Override
+    public PageBean<GroupOrder> selectTaobaoOrderGuestNameListPage(PageBean<GroupOrder> pageBean,
+                                                                   Integer bizId, Set<Integer> set, Integer userRightType) {
+        List<GroupOrder> list = groupOrderMapper.selectTaobaoOrderGuestNameListPage(pageBean, bizId, set, userRightType);
+        pageBean.setResult(list);
+        return pageBean;
+    }
+    @Override
     public GroupOrder selectTotalSpecialOrder(GroupOrder groupOrder, Integer bizId, Set<Integer> set) {
         if(1==1){
         	return groupOrderMapper.selectTotalSpecialOrder(groupOrder, bizId, set);
@@ -615,16 +655,23 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 
 
     @Override
-    public PageBean<GroupOrder> selectOrderLockByConListPage(
-            PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set) {
-        if(1==1){
-        	   List<GroupOrder> orders = groupOrderMapper.selectOrderLockByConListPage(pageBean, bizId, set);
-               pageBean.setResult(orders);
-        }else{
-        	GroupOrderPageQueryDTO queryDTO=LockOrderConverter.toQueryDTO( pageBean, bizId, set);
-        	SolrSearchPageDTO<GroupOrderDTO> solrPageResult=salesSolrQueryManage.searchLockOrder(queryDTO);
-        	return LockOrderConverter.dto2PageBean(solrPageResult,pageBean);
-        }
+    public GroupOrder selectTotalTaobaoOrder(GroupOrder groupOrder, Integer bizId,
+            Set<Integer> set) {
+        return groupOrderMapper.selectTotalTaobaoOrder(groupOrder, bizId, set);
+    }
+
+    @Override
+    public GroupOrder selectTotalTaobaoGuestNameOrder(GroupOrder groupOrder, Integer bizId,
+            Set<Integer> set) {
+        return groupOrderMapper.selectTotalTaobaoGuestNameOrder(groupOrder, bizId, set);
+    }
+
+    @Override
+    public PageBean<GroupOrder> selectOrderLockByConListPage(PageBean<GroupOrder> pageBean,
+            Integer bizId, Set<Integer> set) {
+        List<GroupOrder> orders = groupOrderMapper.selectOrderLockByConListPage(pageBean, bizId,
+                set);
+        pageBean.setResult(orders);
         return pageBean;
     }
 
@@ -1008,9 +1055,6 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     /**
      * 根据接站牌获取团id列表
      * 预定安排，查询条件
-     *
-     * @param bizId
-     * @param receiveMode
      * @return
      */
     @Override
@@ -1166,12 +1210,12 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     public Integer delGroupOrderId(Integer id) {
 		return groupOrderMapper.delGroupOrderId(id);
     }
-	
-	@Override
-	public Integer selectSumPersonByProductId(Integer productId, String departureDate) {
-		Integer sumPerson = groupOrderMapper.selectSumPersonByProductId(productId, departureDate);
-		return sumPerson;
-	}
+
+    @Override
+    public Integer selectSumPersonByProductId(Integer resId, Integer productId, String departureDate) {
+        Integer sumPerson = groupOrderMapper.selectSumPersonByProductId(resId, productId, departureDate);
+        return sumPerson;
+    }
 
 	@Override
 	public List<GroupOrder> selectOrderOverTime() {
@@ -1189,22 +1233,498 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 		List<FinanceCommission> orders = financeCommissionDeductionMapper.selectByGroupId(groupId);
 		return orders;
 	}
-	
+
 	/**
+    @Override
+    public PageBean<GroupOrder> findByTime(String orderStr, PageBean<GroupOrder> pageBean, Integer bizId, Integer userId, String userName) {
+        return groupOrderPriceMapper.findByTime(orderStr, pageBean, bizId, userId, userName);
+    }
+	*/
+    
+    /**
 	 * 根据订单列表查询price信息
 	 * @param orderIds
 	 * @return
 	 */
+    /**
 	public GroupOrderPrice getPriceTotalByOrderIds(List<Integer> orderIds,Integer mode){
 		return groupOrderPriceMapper.getPriceTotalByOrderIds(orderIds,mode);
 	}
 	
+	*/
+	
+	
+	/**
 	@Override
     public PageBean<GroupOrder> selectOrderListPage( PageBean<GroupOrder> pageBean) {
         List<GroupOrder> orders = groupOrderMapper.selectOrderDumpListPage(pageBean);
         pageBean.setResult(orders);
         return pageBean;
     }
-}
+	*/
+	
+    @Transactional
+    private void saveOrUpdateTransferOrder(String orderStr, Integer bizId, Integer userId,
+            String userName) {
+        if (StringUtils.isNotBlank(orderStr)) {
+            JSONObject jsonObj = JSONObject.parseObject(orderStr);
 
+            if (jsonObj.get("data") != null) {
+                List<TransferOrderVO> orderVoList = JSONArray
+                        .parseArray(jsonObj.getJSONArray("data").toString(), TransferOrderVO.class);
+
+                for (TransferOrderVO orderVo : orderVoList) {
+                    TransferOrder tfOrder = new TransferOrder();
+                    tfOrder = orderVo.getTransferOrder();
+
+                    GroupOrder gOrder = new GroupOrder();
+                    gOrder = groupOrderMapper.selectByPushOrderId(tfOrder.getId());
+
+                    // 订单
+                    Integer orderId = saveOrUpdateGroupOrder(bizId, gOrder, tfOrder, userId,
+                            userName);
+                    // 订单客人
+                    saveOrUpdateGroupOrderGuest(orderId, gOrder, orderVo.getGuests());
+                    // 订单价格
+                    saveOrUpdateGroupOrderPrice(orderId, gOrder, orderVo.getPrices(), userId,
+                            userName);
+                    // 订单行程
+                    saveOrUpdateGroupRoute(orderId, gOrder, orderVo.getRoutes());
+                }
+            }
+        }
+    }
+
+    @Transactional
+    @Override
+    public Integer importGroupOrder(String[] orderIds, Integer saleOperatorId,
+            String saleOperatorName, Integer operatorId, String operatorName, Integer supplierId,
+            String supplierName, Integer orderType) {
+        GroupOrder groupOrder = new GroupOrder();
+        for (String str : orderIds) {
+            groupOrder.setId(Integer.parseInt(str));
+            groupOrder.setSaleOperatorId(saleOperatorId);
+            groupOrder.setSaleOperatorName(saleOperatorName);
+            groupOrder.setOperatorId(operatorId);
+            groupOrder.setOperatorName(operatorName);
+            groupOrder.setSupplierId(supplierId);
+            groupOrder.setSupplierName(supplierName);
+            groupOrder.setState(1);
+            groupOrder.setOrderType(orderType);
+
+            groupOrderMapper.updateByPrimaryKeySelective(groupOrder);
+        }
+        return groupOrder == null ? 0 : groupOrder.getId();
+    }
+
+    private Integer saveOrUpdateGroupOrder(Integer bizId, GroupOrder groupOrder,
+                                           TransferOrder tfOrder, Integer userId, String userName) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if (groupOrder == null) {
+            groupOrder = new GroupOrder();
+            groupOrder.setBizId(bizId);
+            groupOrder.setDepartureDate(sdf.format(tfOrder.getDateStart()));
+            groupOrder.setGroupCode(tfOrder.getOrderCodeSend());
+            groupOrder.setContactName(tfOrder.getSupplierUserName());
+            groupOrder.setContactTel(tfOrder.getSupplierUserMobile());
+            groupOrder.setContactMobile(tfOrder.getSupplierUserMobile());
+            groupOrder.setContactFax(tfOrder.getSupplierUserFax());
+            groupOrder.setNumAdult(Integer.valueOf(tfOrder.getPersonAdult()));
+            groupOrder.setNumChild(Integer.valueOf(tfOrder.getPersonChild()));
+            groupOrder.setNumGuide(Integer.valueOf(tfOrder.getPersonGuide()));
+            groupOrder.setProductName(tfOrder.getOrderProductName());
+            groupOrder.setOrderType(Integer.valueOf(0));
+            groupOrder.setState(Integer.valueOf(0));
+            groupOrder.setTotal(tfOrder.getTotal());
+            groupOrder.setServiceStandard(tfOrder.getRemarkService());
+            groupOrder.setRemark(tfOrder.getRemark());
+            groupOrder.setCreatorId(userId);
+            groupOrder.setCreatorName(userName);
+            groupOrder.setCreateTime(Long.valueOf(System.currentTimeMillis()));
+            groupOrder.setPushOrderId(tfOrder.getId());
+            groupOrder.setPushTimeUpdate(tfOrder.getTimeUpdate());
+            groupOrder.setPushSupplierName(tfOrder.getApiSupplierName());
+
+            groupOrderMapper.insertSelective(groupOrder);
+        } else {
+            if (groupOrder.getPushTimeUpdate() != tfOrder.getTimeUpdate()) {
+                groupOrderMapper.updateByPrimaryKeySelective(groupOrder);
+            }
+        }
+        return groupOrder.getId();
+    }
+
+    private void saveOrUpdateGroupOrderGuest(Integer orderId, GroupOrder groupOrder,
+            List<TransferOrderGuest> tfoGuests) {
+        for (TransferOrderGuest guest : tfoGuests) {
+            GroupOrderGuest gOrderGuest = new GroupOrderGuest();
+            gOrderGuest.setOrderId(orderId);
+            gOrderGuest.setName(guest.getName());
+            gOrderGuest.setType(guest.getType());
+            gOrderGuest.setCertificateNum(guest.getCertificateNum());
+            gOrderGuest.setGender(guest.getGender());
+            gOrderGuest.setMobile(guest.getMobile());
+            gOrderGuest.setNativePlace(guest.getNativePlace());
+            gOrderGuest.setAge(guest.getAge());
+            gOrderGuest.setCareer(guest.getCareer());
+            gOrderGuest.setIsSingleRoom(guest.getIsSingleRoom());
+            gOrderGuest.setRemark(guest.getRemark());
+            gOrderGuest.setCreateTime(Long.valueOf(System.currentTimeMillis()));
+
+            if (groupOrder == null) {
+                groupOrderGuestMapper.insertSelective(gOrderGuest);
+            } else {
+                groupOrderGuestMapper.updateByPrimaryKeySelective(gOrderGuest);
+            }
+        }
+
+    }
+
+    private void saveOrUpdateGroupOrderPrice(Integer orderId, GroupOrder groupOrder,
+            List<TransferOrderPrice> tfoPrices, Integer userId, String userName) {
+        for (TransferOrderPrice price : tfoPrices) {
+            GroupOrderPrice gOrderPrice = new GroupOrderPrice();
+
+            gOrderPrice.setOrderId(orderId);
+            gOrderPrice.setItemName(price.getItem());
+            gOrderPrice.setRemark(price.getRemark());
+            gOrderPrice
+                    .setUnitPrice(Double.valueOf(Double.parseDouble(price.getPrice().toString())));
+            gOrderPrice.setNumTimes(Double.valueOf(1.5D));
+            gOrderPrice.setNumPerson(
+                    Double.valueOf(Double.parseDouble(price.getNumPerson().toString())));
+            gOrderPrice
+                    .setTotalPrice(Double.valueOf(Double.parseDouble(price.getTotal().toString())));
+            gOrderPrice.setRowState(Integer.valueOf(1));
+            gOrderPrice.setCreatorId(userId);
+            gOrderPrice.setCreatorName(userName);
+            gOrderPrice.setCreateTime(Long.valueOf(System.currentTimeMillis()));
+
+            if (groupOrder == null) {
+                groupOrderPriceMapper.insertSelective(gOrderPrice);
+            } else {
+                groupOrderPriceMapper.updateByPrimaryKeySelective(gOrderPrice);
+            }
+        }
+    }
+
+    private void saveOrUpdateGroupRoute(Integer orderId, GroupOrder groupOrder,
+            List<TransferOrderRoute> tfoRoutes) {
+        for (TransferOrderRoute route : tfoRoutes) {
+            GroupRoute gRoute = new GroupRoute();
+            gRoute.setOrderId(orderId);
+            gRoute.setDayNum(route.getDayVal());
+            gRoute.setGroupDate(route.getDateVal());
+            gRoute.setBreakfast(route.getBreakfast());
+            gRoute.setLunch(route.getLunch());
+            gRoute.setSupper(route.getSupper());
+            gRoute.setHotelName(route.getHotels());
+            gRoute.setRouteDesp(route.getRouteDesp());
+            gRoute.setCreateTime(Long.valueOf(System.currentTimeMillis()));
+
+            if (groupOrder == null) {
+                groupRouteMapper.insertSelective(gRoute);
+            } else {
+                groupRouteMapper.updateByPrimaryKeySelective(gRoute);
+            }
+        }
+    }
+
+	@Override
+	public List<GroupOrder> selectBySaleOperatorId(Integer bizId, DeparentmentOrderCondition
+			condition, Set<Integer> set) {
+		return groupOrderMapper.selectBySaleOperatorId(bizId, condition,set);
+	}
+
+	@Override
+	public PageBean selectGroupOrderGuestListPage(PageBean pageBean, Integer bizId,Set<Integer> set,Integer userRightType) {
+		List<Map<String,Object>> result = groupOrderMapper.selectGroupOrderGuestListPage(pageBean, bizId,set,userRightType);
+	    pageBean.setResult(result);
+	    return pageBean;
+	}
+
+	@Override
+	public PageBean<GroupOrder>selectMonthlyReportStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId){
+		List<GroupOrder> groupOrders=groupOrderMapper.selectgroupIdByAY(pageBean, bizId);
+		Set<Integer> groupIds= new HashSet() ;
+		for(GroupOrder item:groupOrders){
+			groupIds.add(item.getGroupId());
+		}
+		if(groupIds.size()==0){
+			return pageBean;
+		}
+		List<GroupOrder> gos=groupOrderMapper.selectMonthlyReportStatisticsListPage(pageBean, bizId, groupIds);
+		pageBean.setResult(gos);
+		return pageBean;
+	}
+
+	@Override
+	public List<GroupOrder>selectMonthlyReportStatistics(PageBean<GroupOrder> pageBean, Integer bizId){
+		List<GroupOrder> groupOrders=groupOrderMapper.selectgroupIdByAY(pageBean, bizId);
+		Set<Integer> groupIds= new HashSet() ;
+		for(GroupOrder item:groupOrders){
+			groupIds.add(item.getGroupId());
+		}
+		if(groupIds.size()==0){
+			return groupOrders;
+		}
+		List<GroupOrder> gos=groupOrderMapper.selectMonthlyReportStatistics(pageBean, bizId, groupIds);
+		return gos;
+	}
+
+
+	   /**
+     * @see —审核功能
+     * @author TengDong
+     * @param record 团队订单
+     * @return  boolean
+     */
+	public boolean updateGroupOrderByB2b_export_state(GroupOrder record) {
+		try{
+			int sign=groupOrderMapper.updateByPrimaryKeySelective(record);
+			if(sign>0){
+				return true;
+			}else{
+				return false;
+			}
+		}catch(Exception e){
+			log.info("------------内部结算(销售)—审核功能异常-----------------"+e.getMessage());
+			return false;
+		}
+
+	}
+
+
+	@Override
+	public PageBean<GroupOrder> selectOperatorOrderListPage(PageBean<GroupOrder> pageBean, Integer bizId,
+			Set<Integer> set, Integer userRightType) {
+		GroupOrder paramGoOrder = (GroupOrder) pageBean.getParameter();
+		List<GroupOrderGuest> guestList = groupOrderGuestMapper.selectOrderIdsByNameOrMobile(pageBean);
+		if(guestList != null && guestList.size() > 0){
+			Set<Integer> orderIdSet = new HashSet<Integer>();
+			for(GroupOrderGuest guest : guestList){
+				orderIdSet.add(guest.getOrderId());
+			}
+			if(orderIdSet.size()==0){
+				orderIdSet.add(-1);
+			}
+			paramGoOrder.setOrderIdSet(orderIdSet);
+		}
+		 List<GroupOrder> orderList =
+				 groupOrderMapper.selectTaobaoOrderListPage(pageBean, bizId, set, userRightType);
+		 if(orderList != null && orderList.size() > 0){
+			 GroupOrder order = null;
+				StringBuilder sb = new StringBuilder();
+				for(int i = 0; i < orderList.size(); i++){
+					if(i > 0){
+						sb.append(",");
+					}
+					order = orderList.get(i);
+					sb.append(order.getId());
+				}
+
+			String orderIds = sb.toString();
+
+			List<Map<String, Object>> guests = groupOrderGuestMapper.selectGuestForOrders(pageBean, orderIds);
+			this.mergeGuestsInOrders(orderList, guests);
+
+			List<Map<String, Object>> requirements = requirementMapper.selectRequirementForOrders(pageBean, orderIds);
+			this.mergeRequirementsInOrders(orderList, requirements);
+
+			List<Map<String, Object>> transports = transportMapper.selectTransportForOrders(pageBean, orderIds);
+			this.mergeTransportsInOrders(orderList, transports);
+		}
+		 pageBean.setResult(orderList);
+		 return pageBean;
+	 }
+
+
+	@Override
+	public PageBean<GroupOrder> selectOperatorGuestNameListPage(PageBean<GroupOrder> pageBean, Integer bizId,
+			Set<Integer> set, Integer userRightType) {
+		GroupOrder paramGoOrder = (GroupOrder) pageBean.getParameter();
+		List<GroupOrderGuest> guestList = groupOrderGuestMapper.selectOrderIdsByNameOrMobile(pageBean);
+		if(guestList != null && guestList.size() > 0){
+			Set<Integer> orderIdSet = new HashSet<Integer>();
+			for(GroupOrderGuest guest : guestList){
+				orderIdSet.add(guest.getOrderId());
+			}
+			if(orderIdSet.size()==0){
+				orderIdSet.add(-1);
+			}
+			paramGoOrder.setOrderIdSet(orderIdSet);
+		}
+		 List<GroupOrder> orderList =
+				 groupOrderMapper.selectTaobaoOrderGuestNameListPage(pageBean, bizId, set, userRightType);
+		 if(orderList != null && orderList.size() > 0){
+			 GroupOrder order = null;
+				StringBuilder sb = new StringBuilder();
+				for(int i = 0; i < orderList.size(); i++){
+					if(i > 0){
+						sb.append(",");
+					}
+					order = orderList.get(i);
+					sb.append(order.getId());
+				}
+
+			String orderIds = sb.toString();
+
+			List<Map<String, Object>> guests = groupOrderGuestMapper.selectGuestForOrders(pageBean, orderIds);
+			this.mergeGuestsInOrders(orderList, guests);
+
+			List<Map<String, Object>> requirements = requirementMapper.selectRequirementForOrders(pageBean, orderIds);
+			this.mergeRequirementsInOrders(orderList, requirements);
+
+			List<Map<String, Object>> transports = transportMapper.selectTransportForOrders(pageBean, orderIds);
+			this.mergeTransportsInOrders(orderList, transports);
+		}
+		 pageBean.setResult(orderList);
+		 return pageBean;
+	 }
+
+	public void mergeRequirementsInOrders(List<GroupOrder> orders, List<Map<String, Object>> requirements){
+		if(orders == null || orders.size() == 0 || requirements == null || requirements.size() == 0){
+			return;
+		}
+
+		GroupOrder order = null;
+
+		for(int i = 0; i < orders.size(); i++){
+			order = orders.get(i);
+
+			Map<String, Object> requirement = null;
+			for(int j = 0; j < requirements.size(); j++){
+				requirement = requirements.get(j);
+				Integer requirementOrderId = (Integer)requirement.get("order_id");
+				if(order.getId().intValue() == requirementOrderId.intValue()){
+					order.setHotelLevels(requirement.get("hotelLevels").toString());
+					order.setHotelNums(requirement.get("hotelNums").toString());
+					break;
+				}
+			}
+		}
+	}
+
+	public void mergeGuestsInOrders(List<GroupOrder> orders, List<Map<String, Object>> guests){
+		if(orders == null || orders.size() == 0 || guests == null || guests.size() == 0){
+			return;
+		}
+
+		GroupOrder order = null;
+
+		for(int i = 0; i < orders.size(); i++){
+			order = orders.get(i);
+
+			Map<String, Object> guest = null;
+			for(int j = 0; j < guests.size(); j++){
+				guest = guests.get(j);
+				Integer guestOrderId = (Integer)guest.get("order_id");
+				if(order.getId().intValue() == guestOrderId.intValue()){
+					order.setGuestNames(guest.get("guestNames").toString());
+					break;
+				}
+			}
+		}
+	}
+
+	public void mergeTransportsInOrders(List<GroupOrder> orders, List<Map<String, Object>> transports){
+		if(orders == null || orders.size() == 0 || transports == null || transports.size() == 0){
+			return;
+		}
+
+		GroupOrder order = null;
+
+		for(int i = 0; i < orders.size(); i++){
+			order = orders.get(i);
+
+			Map<String, Object> transport = null;
+			for(int j = 0; j < transports.size(); j++){
+				transport = transports.get(j);
+				Integer guestOrderId = (Integer)transport.get("order_id");
+				if(order.getId().intValue() == guestOrderId.intValue()){
+					order.setUpAir(transport.get("upAir").toString());
+					order.setOffAir(transport.get("offAir").toString());
+					order.setTrans(transport.get("trans").toString());
+					break;
+				}
+			}
+		}
+	}
+
+
+
+
+
+	@Override
+	public Integer updateExtVisa(GroupOrder record) {
+		int num = groupOrderMapper.updateExtVisa(record);
+		return num;
+	}
+
+	 @Override
+    public List<GroupOrder> selectByOrderIdExtVisaListPage(String mobile) {
+        List<GroupOrder> list = groupOrderMapper.selectByOrderIdExtVisaList(mobile);
+        return list;
+    }
+
+	    /**
+	     *   总合计
+	     * @Auther TengDong
+	     * @Date 20161102
+	     * @param groupOrder
+	     * @param bizId
+	     * @param set
+	     * @param userRightType
+	     * @return
+	     */
+	public GroupOrder selectProfitEverifyByCon(
+			GroupOrder groupOrder, Integer bizId, Set<Integer> set,
+			Integer userRightType) {
+
+			GroupOrder mapResult=groupOrderMapper.selectProfitEverifyByCon(groupOrder,bizId,set,userRightType);
+
+		return mapResult;
+
+	}
+
+	@Override
+	public Map<String, Object> selectProfitEverifyByTotal(PageBean pageBean, Integer bizId,
+			Set<Integer> set,Integer userRightType) {
+		return groupOrderMapper.selectProfitEverifyByTotal(pageBean, bizId, set,userRightType);
+	}
+
+	 /**
+     * @see
+     * @Auth TengDong
+     * @Date 20161031
+     * @param pageBean  model
+     * @param bizId
+     * @param set
+     * @param userRightType
+     * @return
+     */
+	public PageBean<GroupOrder> selectProfitEverifyListPage(
+			PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set,
+			Integer userRightType) {
+		List<GroupOrder> result = groupOrderMapper.selectProfitEverifyListPage(pageBean, bizId, set, userRightType);
+		pageBean.setResult(result);
+		return pageBean;
+
+	}
+
+	  	@Override
+	    public PageBean<GroupOrder> findByTime(String orderStr, PageBean<GroupOrder> pageBean,
+	            Integer bizId, Integer userId, String userName) {
+
+	        // 保存订单
+	        saveOrUpdateTransferOrder(orderStr, bizId, userId, userName);
+
+	        // 获取接口中心团订单信息
+	        List<GroupOrder> orders = groupOrderMapper.selectByTimeListPage(pageBean, bizId);
+	        pageBean.setResult(orders);
+
+	        return pageBean;
+	    }
+
+}
 

@@ -21,5 +21,6 @@
 	<bean id="productTagDal" class="com.yimayhd.erpcenter.dal.product.service.impl.ProductTagDalImpl" />
 	<bean id="trafficResDal" class="com.yimayhd.erpcenter.dal.product.service.impl.TrafficResDalImpl" />
 	<bean id="trafficResProductDal" class="com.yimayhd.erpcenter.dal.product.service.impl.TrafficResProductDalImpl" />
+	<bean id="taoBaoStockDal" class="com.yimayhd.erpcenter.dal.product.service.impl.TaoBaoStockDalImpl" />
 	
 </beans>

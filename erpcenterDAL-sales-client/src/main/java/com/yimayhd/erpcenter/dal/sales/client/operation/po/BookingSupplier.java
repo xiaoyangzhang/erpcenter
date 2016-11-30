@@ -1,14 +1,11 @@
 package com.yimayhd.erpcenter.dal.sales.client.operation.po;
 
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 import com.yimayhd.erpcenter.common.util.LogFieldAnno;
-
-
 
 public class BookingSupplier implements Serializable{
 	@LogFieldAnno(isKey = true)
@@ -72,8 +69,18 @@ public class BookingSupplier implements Serializable{
     private String guideInfo;
     private List<BookingSupplierDetail> detailList;
     private Boolean canDelete;
+    private String guestIds;
     
-    public String getGuideInfo() {
+    
+    public String getGuestIds() {
+		return guestIds;
+	}
+
+	public void setGuestIds(String guestIds) {
+		this.guestIds = guestIds;
+	}
+
+	public String getGuideInfo() {
 		return guideInfo;
 	}
 

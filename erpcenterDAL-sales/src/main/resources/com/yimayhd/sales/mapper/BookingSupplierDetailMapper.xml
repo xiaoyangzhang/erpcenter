@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierDetailMapper" >
+<mapper namespace="com.yimayhd.sales.mapper.BookingSupplierDetailMapper" >
   <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
@@ -23,11 +23,15 @@
     <result column="driver_tel" property="driverTel" jdbcType="VARCHAR" />
     <result column="car_lisence" property="carLisence" jdbcType="VARCHAR" />
     <result column="fangdiao_luru" property="fangDiaoLuRu" jdbcType="VARCHAR" />
+    <result column="res_id" property="resId" jdbcType="INTEGER" />
+    <result column="sumTicket" property="sumTicket" jdbcType="INTEGER" />
+    <result column="resIds" property="resIds" jdbcType="VARCHAR" />
+    <result column="sale_item_price" property="saleItemPrice" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, booking_id, type1_id, type1_name, type2_id, type2_name, item_date,item_date_to ,item_num, 
     item_price, item_num_minus, item_total, item_brief, ticket_departure, ticket_arrival, 
-    ticket_flight, driver_id, driver_name,driver_tel,car_lisence, fangdiao_luru
+    ticket_flight, driver_id, driver_name,driver_tel,car_lisence, fangdiao_luru,sale_item_price
   </sql>
   <select id="selectBookingSupplierDetailByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
 	   SELECT 	
@@ -76,14 +80,14 @@
       item_date, item_date_to, item_num, item_price, 
       item_num_minus, item_total, item_brief, 
       ticket_departure, ticket_arrival, ticket_flight, 
-      driver_id, driver_name,driver_tel,car_lisence, fangdiao_luru)
+      driver_id, driver_name,driver_tel,car_lisence, fangdiao_luru,sale_item_price)
     values (#{id,jdbcType=INTEGER}, #{bookingId,jdbcType=INTEGER}, #{type1Id,jdbcType=INTEGER}, 
       #{type1Name,jdbcType=VARCHAR}, #{type2Id,jdbcType=INTEGER}, #{type2Name,jdbcType=VARCHAR}, 
       #{itemDate,jdbcType=DATE},#{itemDateTo,jdbcType=DATE}, #{itemNum,jdbcType=DECIMAL}, #{itemPrice,jdbcType=DECIMAL}, 
       #{itemNumMinus,jdbcType=DECIMAL}, #{itemTotal,jdbcType=DECIMAL}, #{itemBrief,jdbcType=VARCHAR}, 
       #{ticketDeparture,jdbcType=VARCHAR}, #{ticketArrival,jdbcType=VARCHAR}, #{ticketFlight,jdbcType=VARCHAR}, 
       #{driverId,jdbcType=INTEGER}, #{driverName,jdbcType=VARCHAR},#{driverTel,jdbcType=VARCHAR},#{carLisence,jdbcType=VARCHAR},
-      #{fangDiaoLuRu,jdbcType=VARCHAR})
+      #{fangDiaoLuRu,jdbcType=VARCHAR},#{saleItemPrice,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail" >
     insert into booking_supplier_detail
@@ -272,6 +276,9 @@
       <if test="carLisence != null" >
         car_lisence = #{carLisence,jdbcType=VARCHAR},
       </if>
+      <if test="saleItemPrice != null" >
+        sale_item_price = #{saleItemPrice,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -390,7 +397,16 @@
 				and bs.user_id in (${parameter.saleOperatorIds})
 			</if>
 		</if>
-			 
 </select>
   
+  <select id="selectTicketByResId" resultMap="BaseResultMap" >
+    select ext_res_id as res_id, sum(a.item_num) sumTicket
+	from booking_supplier_detail a 
+	join booking_supplier b on (a.booking_id=b.id)
+	join tour_group tg on (b.group_id=tg.id) 
+	join group_order go on (tg.id=go.group_id)
+  where go.ext_res_id<![CDATA[>]]>0 and tg.biz_id=${bizId} and go.ext_res_id in (${resIds})
+group by go.ext_res_id
+  
+  </select>
 </mapper>

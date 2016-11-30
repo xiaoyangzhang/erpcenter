@@ -1,6 +1,5 @@
 package com.yimayhd.erpcenter.dal.sales.sales.dao;
 
-
 import java.util.List;
 import java.util.Map;
 
@@ -34,36 +33,40 @@ public interface GroupOrderGuestMapper {
     
     Integer selectNumGuideByOrderID(Integer id) ;
     
-    List<GroupOrderGuest> getGroupOrderGuestList(@Param("parameter")Map parameter);
+    List<GroupOrderGuest> getGroupOrderGuestList(@Param("parameter") Map parameter);
     /**
      * 传入参数，查询所有客人的性别信息
      * @param parameter
      * @return
      */
-    List<GroupOrderGuest> selectGroupOrderGuestList(@Param("parameter")Map parameter);
+    List<GroupOrderGuest> selectGroupOrderGuestList(@Param("parameter") Map parameter);
     /**
      * 传入参数，查询所有客人的年龄段分布
      * @param parameter
      * @return
      */
     
-    List<Map<String,Object>> selectGuestAgeList(@Param("parameter")Map parameter);
+    List<Map<String,Object>> selectGuestAgeList(@Param("parameter") Map parameter);
     /**
      * 传入参数，查询所有客人的客源地分布
      * @param parameter
      * @return
      */
-    List<Map<String,Object>> selectGuestSourceList(@Param("parameter")Map parameter);
+    List<Map<String,Object>> selectGuestSourceList(@Param("parameter") Map parameter);
 
-    List<GroupOrderGuest> getGuestByGuestCertificateNum(@Param("guestCertificateNum")String guestCertificateNum,@Param("orderId")Integer orderId);
+    List<GroupOrderGuest> getGuestByGuestCertificateNum(@Param("guestCertificateNum") String guestCertificateNum, @Param("orderId") Integer orderId);
     
-    List<GroupOrderGuest> getGuestByGroupIdAndType(@Param("groupId")Integer groupId,@Param("guestType")Integer guestType) ;
+    List<GroupOrderGuest> getGuestByGroupIdAndType(@Param("groupId") Integer groupId, @Param("guestType") Integer guestType) ;
     
-    List<GroupOrderGuest> getGuestByGroupIdAndIsLeader(@Param("groupId")Integer groupId,@Param("isLeader")Integer isLeader) ;
-    String getGuestInfoByOrderId(@Param("orderId")Integer orderId);
+    List<GroupOrderGuest> getGuestByGroupIdAndIsLeader(@Param("groupId") Integer groupId, @Param("isLeader") Integer isLeader) ;
+    String getGuestInfoByOrderId(@Param("orderId") Integer orderId);
     
     
-	List<Map<String,Object>> selectGuestForOrders(@Param("page")PageBean pageBean, @Param("orderIds")String orderIds);
+	List<Map<String,Object>> selectGuestForOrders(@Param("page") PageBean pageBean, @Param("orderIds") String orderIds);
 	
-	List<GroupOrderGuest> selectOrderIdsByNameOrMobile(@Param("page")PageBean pageBean);
+	List<GroupOrderGuest> selectOrderIdsByNameOrMobile(@Param("page") PageBean pageBean);
+	
+	 List<GroupOrderGuest> selectGuestTicketInfo(@Param("resId") Integer resId) ;
+	 
+	 List<GroupOrderGuest> getEmployeeByMobile(String mobile);
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.PlatformEmployeeMapper" >
+<mapper namespace="com.yimayhd.sys.mapper.PlatformEmployeeMapper" >
   
   	<resultMap type="com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo" id="platformEmployeePo">
         <id column="employee_id" property="employeeId" />
@@ -95,7 +95,7 @@ GROUP BY p.`employee_id`
 		where employee_id = #{employeeId}
 	</update>
   	 
-  	 <insert id="addEmployee" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo" useGeneratedKeys="true" keyProperty="employeeId">
+  	 <insert id="addEmployee" parameterType="platformEmployeePo" useGeneratedKeys="true" keyProperty="employeeId">
 		insert into platform_employee
             (employee_id,biz_id,org_id,login_name,password,name,gender,position,phone,mobile,fax,email,qq_code,status,del_status,is_super,create_time,update_time)
 		values 
@@ -200,5 +200,15 @@ GROUP BY p.`employee_id`
 		 <foreach collection="set" item="item" index="index" open="(" separator="," close=")">  
         	#{item,jdbcType=INTEGER}
     	</foreach>  	
+	</select>
+	
+	<select id="getOrgIdListByEmployee" resultMap="platformEmployeePo">
+		select * from platform_employee 
+		where biz_id=#{bizId} and status=1 AND del_status=1 
+		and org_id in
+		 <foreach collection="set" item="item" index="index" open="(" separator="," close=")">  
+        	#{item,jdbcType=INTEGER}
+    	</foreach>
+		ORDER BY org_id
 	</select>
 </mapper>

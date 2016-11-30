@@ -48,7 +48,9 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.facade.operation.errorcode.OperationErrorCode;
+import com.yimayhd.erpcenter.facade.operation.query.AYToAddSightQueryDTO;
 import com.yimayhd.erpcenter.facade.operation.query.BookingDeliveryQueryDTO;
+import com.yimayhd.erpcenter.facade.operation.result.AYToAddSightResult;
 import com.yimayhd.erpcenter.facade.operation.result.BookingSupplierResult;
 import com.yimayhd.erpcenter.facade.operation.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.operation.result.WebResult;
@@ -607,5 +609,33 @@ public class BookingSupplierFacadeImpl implements BookingSupplierFacade {
 		PageBean page = tourGroupBiz.getIncomeGroupList(pageBean, tourGroup, set);
 		return page;
 	}
+	
+	
+	@Override
+	public AYToAddSightResult getAYToAddSight(AYToAddSightQueryDTO queryDTO) {
+		AYToAddSightResult result = new AYToAddSightResult();
+		
+		TourGroup tg = tourGroupBiz.selectByPrimaryKey(queryDTO.getGroupId());
+
+		//酒店类型
+		List<DicInfo> hotelType1 = dicBiz.getListByTypeCode(Constants.HOTEL_TYPE_CODE_1);
+		
+		//餐厅
+		List<DicInfo> resTypes = dicBiz.getListByTypeCode(Constants.RESTAURANT_TYPE_CODE);
+		
+		//车型
+		List<DicInfo> carTypes = dicBiz.getListByTypeCode(Constants.FLEET_TYPE_CODE);
+		
+		
+		result.setCarTypes(carTypes);
+		result.setHotelType1(hotelType1);
+		result.setResTypes(resTypes);
+		result.setTourGroup(tg);
+		
+		return result;
+	}
+	
+	
+	
 
 }

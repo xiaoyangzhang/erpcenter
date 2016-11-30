@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import com.yimayhd.erpcenter.common.util.LogFieldAnno;
 
-
 public class GroupOrderGuest implements Serializable{
     /**
 	 * 
@@ -43,7 +42,44 @@ public class GroupOrderGuest implements Serializable{
     private Integer man;
     private Integer woman;
     
+    private String userName;
+    private String ticketTime;
+    private String groupCode;
+    private Integer groupId;
     
+    
+	public String getGroupCode() {
+		return groupCode;
+	}
+
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
+	}
+
+	public Integer getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getTicketTime() {
+		return ticketTime;
+	}
+
+	public void setTicketTime(String ticketTime) {
+		this.ticketTime = ticketTime;
+	}
+
 
 	public Integer getMan() {
 		return man;

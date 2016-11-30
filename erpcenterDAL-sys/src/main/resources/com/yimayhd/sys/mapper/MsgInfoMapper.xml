@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yimayhd.sys.mapper.MsgInfoMapper">
+	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.MsgInfo">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="biz_id" jdbcType="INTEGER" property="bizId" />
+		<result column="msg_type" jdbcType="INTEGER" property="msgType" />
+		<result column="msg_title" jdbcType="VARCHAR" property="msgTitle" />
+		<result column="msg_text" jdbcType="VARCHAR" property="msgText" />
+		<result column="operator_id" jdbcType="INTEGER" property="operatorId" />
+		<result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
+		<result column="create_time" jdbcType="VARCHAR" property="createTime" />
+		<result column="group_id" jdbcType="INTEGER" property="groupId" />
+		<result column="order_id" jdbcType="INTEGER" property="orderId" />
+		<result column="booking_id" jdbcType="INTEGER" property="bookingId" />
+		<result column="total_count"  jdbcType="INTEGER" property="totalCount" />
+		<result column="read_count"  jdbcType="INTEGER" property="readCount" />
+		<result column="unread_count"  jdbcType="INTEGER" property="unReadCount" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, biz_id, msg_type, msg_title, msg_text, operator_id, operator_name, create_time,
+		group_id,
+		order_id, booking_id
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from msg_info
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from msg_info
+		where id =
+		#{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.MsgInfo">
+		insert into msg_info (id, biz_id, msg_type,
+		msg_title,
+		operator_id, operator_name,
+		create_time, group_id, order_id,
+		booking_id, msg_text)
+		values
+		(#{id,jdbcType=INTEGER}, #{bizId,jdbcType=INTEGER}, #{msgType,jdbcType=INTEGER},
+		#{msgTitle,jdbcType=VARCHAR}, #{operatorId,jdbcType=INTEGER}, #{operatorName,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP}, #{groupId,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER},
+		#{bookingId,jdbcType=INTEGER},
+		#{msgText,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.MsgInfo" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into msg_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="bizId != null">
+				biz_id,
+			</if>
+			<if test="msgType != null">
+				msg_type,
+			</if>
+			<if test="msgTitle != null">
+				msg_title,
+			</if>
+			<if test="operatorId != null">
+				operator_id,
+			</if>
+			<if test="operatorName != null">
+				operator_name,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="groupId != null">
+				group_id,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			<if test="bookingId != null">
+				booking_id,
+			</if>
+			<if test="msgText != null">
+				msg_text,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="bizId != null">
+				#{bizId,jdbcType=INTEGER},
+			</if>
+			<if test="msgType != null">
+				#{msgType,jdbcType=INTEGER},
+			</if>
+			<if test="msgTitle != null">
+				#{msgTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorId != null">
+				#{operatorId,jdbcType=INTEGER},
+			</if>
+			<if test="operatorName != null">
+				#{operatorName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="groupId != null">
+				#{groupId,jdbcType=INTEGER},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="bookingId != null">
+				#{bookingId,jdbcType=INTEGER},
+			</if>
+			<if test="msgText != null">
+				#{msgText,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.MsgInfo">
+		update msg_info
+		<set>
+			<if test="bizId != null">
+				biz_id = #{bizId,jdbcType=INTEGER},
+			</if>
+			<if test="msgType != null">
+				msg_type = #{msgType,jdbcType=INTEGER},
+			</if>
+			<if test="msgTitle != null">
+				msg_title = #{msgTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="operatorId != null">
+				operator_id = #{operatorId,jdbcType=INTEGER},
+			</if>
+			<if test="operatorName != null">
+				operator_name = #{operatorName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="groupId != null">
+				group_id = #{groupId,jdbcType=INTEGER},
+			</if>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="bookingId != null">
+				booking_id = #{bookingId,jdbcType=INTEGER},
+			</if>
+			<if test="msgText != null">
+				msg_text = #{msgText,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sys.po.MsgInfo">
+		update msg_info
+		set biz_id =
+		#{bizId,jdbcType=INTEGER},
+		msg_type = #{msgType,jdbcType=INTEGER},
+		msg_title =
+		#{msgTitle,jdbcType=VARCHAR},
+		operator_id = #{operatorId,jdbcType=INTEGER},
+		operator_name =
+		#{operatorName,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=VARCHAR},
+		group_id =
+		#{groupId,jdbcType=INTEGER},
+		order_id = #{orderId,jdbcType=INTEGER},
+		booking_id =
+		#{bookingId,jdbcType=INTEGER},
+		msg_text = #{msgText,jdbcType=VARCHAR})
+		where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectMsgInfoListPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
+		SELECT
+		mi.id,mi.msg_title,mi.msg_text,mi.operator_name,mi.create_time,mi.order_id,mid.id AS
+		midId,mid.`status`
+		FROM msg_info AS mi
+		LEFT JOIN msg_info_detail AS mid on(mi.id=mid.msg_info_id)
+		WHERE mi.biz_id=#{page.parameter.bizId,jdbcType=INTEGER}
+		AND
+		mid.user_id=#{page.parameter.userId,jdbcType=INTEGER}
+		AND
+		mi.msg_type=#{page.parameter.msgType,jdbcType=INTEGER}
+		<if test="page.parameter.status > -1">
+			AND mid.`status`=#{page.parameter.status,jdbcType=INTEGER}
+		</if>
+		<if test="param.startTime != null and param.startTime != ''">
+			AND mi.create_time <![CDATA[>= ]]>
+			#{param.startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="param.endTime != null and param.endTime != ''">
+			AND mi.create_time <![CDATA[<= ]]>
+			#{param.endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="page.parameter.msgTitle != null and page.parameter.msgTitle != ''">
+			AND mi.msg_title LIKE CONCAT('%',#{page.parameter.msgTitle,jdbcType=VARCHAR},'%' )
+		</if>
+
+		<if test="page.parameter.operatorName != null and page.parameter.operatorName != ''">
+			AND mi.operator_name LIKE
+			CONCAT('%',#{page.parameter.operatorName,jdbcType=VARCHAR},'%' )
+		</if>
+	</select>
+
+	<select id="selectMsgInfo" resultMap="BaseResultMap">
+		SELECT
+		mi.id,mi.msg_title,mi.msg_text,mi.operator_name,mi.create_time,mid.id AS midId,mid.`status`
+		FROM
+		msg_info AS mi
+		LEFT JOIN msg_info_detail AS mid on(mi.id=mid.msg_info_id)
+		WHERE
+		mi.biz_id=#{param.bizId,jdbcType=INTEGER}
+		AND mi.msg_type=1
+		AND mi.order_id=#{param.orderId,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectMsgByMid" resultMap="BaseResultMap">
+		SELECT
+		mi.msg_title,mi.msg_text,mi.operator_name,mi.create_time
+		FROM msg_info AS mi
+		WHERE
+		mi.biz_id=#{param.bizId,jdbcType=INTEGER}
+		AND mi.id=#{param.mid, jdbcType=INTEGER}
+	</select>
+
+	<select id="selectNoticeListPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
+		SELECT
+        mi.id,mi.msg_title,mi.msg_text,mi.create_time
+        ,(SELECT count(id) FROM msg_info_detail WHERE msg_info_id=mi.id) AS total_count
+        ,(SELECT count(id) FROM msg_info_detail WHERE `status`=0 AND msg_info_id=mi.id) AS unread_count
+        ,(SELECT count(id) FROM msg_info_detail WHERE `status`=1 AND msg_info_id=mi.id) AS read_count
+        FROM msg_info AS mi
+        WHERE mi.biz_id=#{page.parameter.bizId,jdbcType=INTEGER}
+        AND mi.msg_type=0
+        AND mi.operator_id=#{page.parameter.operatorId,jdbcType=INTEGER}
+		<if test="param.startTime != null and param.startTime != ''">
+			AND mi.create_time <![CDATA[>= ]]>
+			#{param.startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="param.endTime != null and param.endTime != ''">
+			AND mi.create_time <![CDATA[<= ]]>
+			#{param.endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="page.parameter.msgTitle != null and page.parameter.msgTitle != ''">
+			AND mi.msg_title LIKE CONCAT('%',#{page.parameter.msgTitle,jdbcType=VARCHAR},'%' )
+		</if>
+		ORDER BY mi.create_time DESC
+	</select>
+</mapper>

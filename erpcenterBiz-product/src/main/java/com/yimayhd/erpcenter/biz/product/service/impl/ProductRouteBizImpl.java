@@ -24,6 +24,11 @@ public class ProductRouteBizImpl implements ProductRouteBiz{
     }
 
     @Override
+    public boolean copyProductRoute(ProductRouteVo productRouteVo){
+    	return productRouteDal.copyProductRoute(productRouteVo);
+    }
+    
+    @Override
     public boolean editProductRoute(ProductRouteVo productRouteVo) {
         return productRouteDal.editProductRoute(productRouteVo);
     }

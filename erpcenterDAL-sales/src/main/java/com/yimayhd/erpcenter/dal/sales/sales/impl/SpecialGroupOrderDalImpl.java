@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.omg.PortableServer.ForwardRequestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.dal.sales.client.airticket.service.AirTicketRequestDal;
@@ -147,12 +148,12 @@ public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 				}
 			}
 		}
-		if (oList != null && oList.size() > 0) {
+		/*if (oList != null && oList.size() > 0) {
 			for (GroupOrderPrice groupOrderPrice : oList) {
 				groupOrderPriceMapper.deleteByPrimaryKey(groupOrderPrice
 						.getId());
 			}
-		}
+		}*/
 
 		// 收入
 
@@ -569,6 +570,10 @@ public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 			groupRouteVO.setOrderList(orderList);
 
 			for (GroupOrder groupOrder : orderList) {
+				if (orderId == null) {
+					orderId = groupOrder.getId();
+				}
+
 				List<GroupRoute> rouList = groupRouteMapper
 						.selectByOrderId(groupOrder.getId());
 				if (rouList != null && rouList.size() > 0) {
@@ -585,6 +590,7 @@ public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 					}
 				}
 			}
+			if (dayNum == null) dayNum = 1;
 			GroupOrder go = groupOrderMapper.selectByPrimaryKey(orderId);
 
 			List<GroupRouteDayVO> groupRouteDayVOList = new ArrayList<GroupRouteDayVO>();
@@ -656,10 +662,10 @@ public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 			}else { //更新
 				TourGroup tourGroup = new TourGroup();
 				tourGroup.setId(groupOrder.getGroupId());
-				tourGroup.setCreateTime(System.currentTimeMillis());
-				tourGroup.setGroupMode(-1);
-				tourGroup.setGroupState(0); // 默认已确认2015-12-08【欧】
-				tourGroup.setBizId(bizId);
+				//tourGroup.setCreateTime(System.currentTimeMillis());
+				//tourGroup.setGroupMode(1);
+				//tourGroup.setGroupState(0); // 默认已确认2015-12-08【欧】
+				//tourGroup.setBizId(bizId);
 				tourGroup.setOperatorId(operid);
 				tourGroup.setOperatorName(operName);
 				tourGroup.setOrderNum(orderList.size());
@@ -1037,5 +1043,43 @@ public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 		}
 	}
 	return groupOrder.getId();
+	}
+
+
+	@Override
+	public Integer savePrice(List<GroupOrderPrice> groupOrderPrices,Integer orderId,
+			Integer userId, String userName, Integer bizId){
+	List<GroupOrderPrice> incomeList = groupOrderPrices;
+	List<GroupOrderPrice> iList = groupOrderPriceMapper
+			.selectByOrderAndType(orderId, 0);
+	if (incomeList != null && incomeList.size() > 0) {
+		for (GroupOrderPrice groupOrderPrice : incomeList) {
+			if (groupOrderPrice.getId() == null) {
+				groupOrderPrice.setOrderId(orderId);
+				groupOrderPrice.setCreatorId(userId);
+				groupOrderPrice.setCreatorName(userName);
+				groupOrderPrice.setCreateTime(System.currentTimeMillis());
+				groupOrderPriceMapper.insert(groupOrderPrice);
+			} else {
+				groupOrderPriceMapper
+						.updateByPrimaryKeySelective(groupOrderPrice);
+				Iterator<GroupOrderPrice> iterator = iList.iterator();
+				while (iterator.hasNext()) {
+					GroupOrderPrice next = iterator.next();
+					if (groupOrderPrice.getId().equals(next.getId())) {
+						iterator.remove();
+					}
+				}
+			}
+		}
+	}
+	if (iList != null && iList.size() > 0) {
+		for (GroupOrderPrice groupOrderPrice : iList) {
+			groupOrderPriceMapper.deleteByPrimaryKey(groupOrderPrice
+					.getId());
+		}
+	}
+		groupOrderDal.updateOrderAndGroupPrice(orderId);
+	return orderId;
 	}
 }

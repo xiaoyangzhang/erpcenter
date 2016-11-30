@@ -3,178 +3,212 @@ package com.yimayhd.erpcenter.dal.sales.client.taobao.po;
 import java.io.Serializable;
 import java.util.Date;
 
-public class PlatTaobaoTrade implements Serializable{
-	
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -6261869917654884981L;
+public class PlatTaobaoTrade implements Serializable {
 
-	private Integer id;
+    private static final long serialVersionUID = -6261869917654884981L;
 
+    private Integer id;
     private Integer bizId;
-
     private String tid;
-
     private Integer orderId;
-
     private String payment;
-
     private String postFee;
-
     private String receiverName;
-
     private String receiverState;
-
     private String receiverAddress;
-
     private String receiverZip;
-
     private String receiverMobile;
-
     private String receiverPhone;
-
     private String receiverCity;
-
     private String receiverDistrict;
-
     private Date created;
-
     private Date payTime;
-
     private Date modified;
-
     private Date endTime;
-
     private String alipayNo;
-
     private String buyerMemo;
-
     private String alipayId;
-
     private String buyerAlipayNo;
-
     private String buyerNick;
-
     private String buyerEmail;
-
     private String tradeFrom;
-
     private String status;
-
     private String type;
-
     private String stepTradeStatus;
-
     private String stepPaidFee;
-
     private Date syncTime;
-
     private String syncUsername;
-
     private String myState;
-
     private String myStoreId;
     private String sellerMemo;
     private String buyerMessage;
-    
     private String title;
-    
     private String skuPropertiesName;
-    
     private String outerIid;
-    
     private String price;
-    
     private Integer num;
-    
     private String oid;
-    
-	private Integer pageSize;
-	private Integer page = 1;
 
-    
+    private Integer pageSize;
+    private Integer page = 1;
+
+    private String numIid;
+    private String departureDate;
+    private String receiveCount;
+    private Integer isBrushSingle;
+    private String departurePlace;
+
+    private Integer orders;
+    private Integer buyers;
+    private Integer totalFee;
+    private Integer wapOrders;
+    private Integer wapBuyers;
+    private Integer wapPayment;
+    private Integer wapTotalFee;
+    private Date startTime;
+    private String divideOrderFee;
+    private String customerService;
+     private Integer isPresell;
+     private Integer dateType;
+     
+     
+    public String getDivideOrderFee() {
+		return divideOrderFee;
+	}
+
+	public void setDivideOrderFee(String divideOrderFee) {
+		this.divideOrderFee = divideOrderFee;
+	}
+
+	public Integer getWapOrders() {
+		return wapOrders;
+	}
+
+	public void setWapOrders(Integer wapOrders) {
+		this.wapOrders = wapOrders;
+	}
+
+	public Integer getWapBuyers() {
+		return wapBuyers;
+	}
+
+	public void setWapBuyers(Integer wapBuyers) {
+		this.wapBuyers = wapBuyers;
+	}
+
+	public Integer getWapPayment() {
+		return wapPayment;
+	}
+
+	public void setWapPayment(Integer wapPayment) {
+		this.wapPayment = wapPayment;
+	}
+
+	public Integer getWapTotalFee() {
+		return wapTotalFee;
+	}
+
+	public void setWapTotalFee(Integer wapTotalFee) {
+		this.wapTotalFee = wapTotalFee;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Integer getOrders() {
+		return orders;
+	}
+
+	public void setOrders(Integer orders) {
+		this.orders = orders;
+	}
+
+	public Integer getBuyers() {
+		return buyers;
+	}
+
+	public void setBuyers(Integer buyers) {
+		this.buyers = buyers;
+	}
+
+	public Integer getTotalFee() {
+		return totalFee;
+	}
+
+	public void setTotalFee(Integer totalFee) {
+		this.totalFee = totalFee;
+	}
 
 	public Integer getPageSize() {
-		return pageSize;
-	}
+        return pageSize;
+    }
 
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
 
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
-	}
+    public Integer getPage() {
+        return page;
+    }
 
+    public void setPage(Integer page) {
+        this.page = page;
+    }
 
-	public Integer getPage() {
-		return page;
-	}
+    public String getOuterIid() {
+        return outerIid;
+    }
 
+    public void setOuterIid(String outerIid) {
+        this.outerIid = outerIid;
+    }
 
-	public void setPage(Integer page) {
-		this.page = page;
-	}
+    public String getPrice() {
+        return price;
+    }
 
+    public void setPrice(String price) {
+        this.price = price;
+    }
 
-	public String getOuterIid() {
-		return outerIid;
-	}
+    public Integer getNum() {
+        return num;
+    }
 
+    public void setNum(Integer num) {
+        this.num = num;
+    }
 
-	public void setOuterIid(String outerIid) {
-		this.outerIid = outerIid;
-	}
+    public String getOid() {
+        return oid;
+    }
 
+    public void setOid(String oid) {
+        this.oid = oid;
+    }
 
-	public String getPrice() {
-		return price;
-	}
+    public String getTitle() {
+        return title;
+    }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public void setPrice(String price) {
-		this.price = price;
-	}
+    public String getSkuPropertiesName() {
+        return skuPropertiesName;
+    }
 
+    public void setSkuPropertiesName(String skuPropertiesName) {
+        this.skuPropertiesName = skuPropertiesName;
+    }
 
-	public Integer getNum() {
-		return num;
-	}
-
-
-	public void setNum(Integer num) {
-		this.num = num;
-	}
-
-
-	public String getOid() {
-		return oid;
-	}
-
-
-	public void setOid(String oid) {
-		this.oid = oid;
-	}
-
-
-	public String getTitle() {
-		return title;
-	}
-
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-
-	public String getSkuPropertiesName() {
-		return skuPropertiesName;
-	}
-
-
-	public void setSkuPropertiesName(String skuPropertiesName) {
-		this.skuPropertiesName = skuPropertiesName;
-	}
-
-	public String getSellerMemo() {
+    public String getSellerMemo() {
         return sellerMemo;
     }
 
@@ -189,6 +223,7 @@ public class PlatTaobaoTrade implements Serializable{
     public void setBuyerMessage(String buyerMessage) {
         this.buyerMessage = buyerMessage == null ? null : buyerMessage.trim();
     }
+
     public Integer getId() {
         return id;
     }
@@ -452,4 +487,68 @@ public class PlatTaobaoTrade implements Serializable{
     public void setMyStoreId(String myStoreId) {
         this.myStoreId = myStoreId == null ? null : myStoreId.trim();
     }
+
+    public String getDepartureDate() {
+        return departureDate;
+    }
+
+    public void setDepartureDate(String departureDate) {
+        this.departureDate = departureDate;
+    }
+
+    public String getReceiveCount() {
+        return receiveCount;
+    }
+
+    public void setReceiveCount(String receiveCount) {
+        this.receiveCount = receiveCount;
+    }
+
+    public Integer getIsBrushSingle() {
+        return isBrushSingle;
+    }
+
+    public void setIsBrushSingle(Integer isBrushSingle) {
+        this.isBrushSingle = isBrushSingle;
+    }
+
+    public String getNumIid() {
+        return numIid;
+    }
+
+    public void setNumIid(String numIid) {
+        this.numIid = numIid;
+    }
+
+    public String getDeparturePlace() {
+        return departurePlace;
+    }
+
+    public void setDeparturePlace(String departurePlace) {
+        this.departurePlace = departurePlace;
+    }
+
+    public String getCustomerService() {
+        return customerService;
+    }
+
+    public void setCustomerService(String customerService) {
+        this.customerService = customerService;
+    }
+
+	public Integer getIsPresell() {
+		return isPresell;
+	}
+
+	public void setIsPresell(Integer isPresell) {
+		this.isPresell = isPresell;
+	}
+
+	public Integer getDateType() {
+		return dateType;
+	}
+
+	public void setDateType(Integer dateType) {
+		this.dateType = dateType;
+	}
 }

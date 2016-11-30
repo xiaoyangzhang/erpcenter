@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.dal.sales.client.operation.vo;
 
+
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
@@ -8,7 +9,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 
 
@@ -64,7 +64,7 @@ public class BookingGroup implements Serializable {
 	//private Map<String, Integer> personCountMap;
 	private BookingShopSelect bookingShopSelect;
 	private TourGroup tourGroup;
-	
+
 	private Integer guideId;
 	private String guideName;
 	private BigDecimal total;
@@ -73,6 +73,8 @@ public class BookingGroup implements Serializable {
 	private String[] bookSupplierIdArr;
 	//private String guideInfo;
 	private Integer stateLock;
+	
+	private Integer pushStatus;
 	
 	
 	public Integer getStateLock() {
@@ -659,5 +661,13 @@ public class BookingGroup implements Serializable {
 	public void setUserNames(String userNames) {
 		this.userNames = userNames;
 	}
+
+    public Integer getPushStatus() {
+        return pushStatus;
+    }
+
+    public void setPushStatus(Integer pushStatus) {
+        this.pushStatus = pushStatus;
+    }
 	
 }

@@ -98,4 +98,9 @@ public interface SysPlatformOrgFacade {
 	 */
 	PlatformOrgPoListResult getSubLevelOrgList(Integer bizId,List<Integer> parentIdList);
 
+	public PlatformOrgPo getCompanyByEmployeeId2(Integer bizId,
+												 Integer employeeId) ;
+
+	String[] getOrgMappingSupplierId(Integer orgId);
+
 }

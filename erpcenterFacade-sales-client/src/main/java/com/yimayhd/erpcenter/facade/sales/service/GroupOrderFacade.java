@@ -2,59 +2,12 @@ package com.yimayhd.erpcenter.facade.sales.service;
 
 import java.text.ParseException;
 
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.AddGroupOrderDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.AddGroupOrderPriceDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.AddGroupOrderPriceManyDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.AddGroupOrderTransportDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.AddGroupRequirementDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.AddManyGroupOrderTransportDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.EditGroupGuestDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.EditGroupOrderDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.EditOrderGroupInfoDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.EditSupplierAndReceiveModeDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.GetFitOrderListDataDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.MergeGroupDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToDeliveryPriceTableDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToImpNotGroupListDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToNotGroupListDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToOrderLockTableDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToProductOrdersTableDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToSecImpNotGroupListDTO;
+import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.facade.sales.query.ReportStatisticsQueryDTO;
+import com.yimayhd.erpcenter.facade.sales.query.grouporder.*;
 import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.CreateGuestNamesResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.CreateIndividualResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.CreateSKGuideResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.CreateSKGuideUpOffResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.CreateShoppingDetailResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.CreatetOrderTicklingResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.CreatetTicklingResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.GetFitOrderListDataResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.PreviewFitGuideResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.PreviewFitTransferResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.PreviewGuestWithTransResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.PreviewGuestWithoutTransResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToAddGroupOrderResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToDeliveryPriceListResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToDeliveryPriceTableResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToEditGroupGuestResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToEditGroupOrderPriceResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToEditGroupOrderResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToEditGroupOrderTransportResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToEditGroupRequirementResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToFitEditResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToFitOrderListResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToImpNotGroupListResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToIndividualGuestTicklingResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToIndividualOrderGuestTicklingResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToLookGroupOrderResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToMergeGroupResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToNotGroupListResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToOrderLockListResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToOrderLockTableResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToProductOrdersListResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToProductOrdersTableResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToSecImpNotGroupListResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToShoppingDetailPreviewResult;
+import com.yimayhd.erpcenter.facade.sales.result.grouporder.*;
 
 /**
  * 
@@ -200,4 +153,15 @@ public interface GroupOrderFacade {
 	PreviewFitTransferResult previewFitTransfer(Integer groupId);
 
 	CreateIndividualResult createIndividual(Integer groupId);
+
+	ImportOrderTableResult importOrderTable(ImportOrderTableDTO importOrderTableDTO);
+
+	ImportOrderTableResult saveTransferOrder(ImportOrderTableDTO importOrderTableDTO);
+	
+	
+	public ReportStatisticsResult selectMonthlyReportStatisticsListPage(ReportStatisticsQueryDTO queryDTO);
+	
+	
+	public ReportStatisticsNoPageResult selectMonthlyReportStatistics(ReportStatisticsQueryDTO queryDTO); 
+
 }

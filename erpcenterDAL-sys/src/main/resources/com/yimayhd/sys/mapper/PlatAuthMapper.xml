@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yimayhd.sys.mapper.PlatAuthMapper">
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.PlatAuth">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="biz_id" jdbcType="INTEGER" property="bizId" />
+    <result column="plat_name" jdbcType="VARCHAR" property="platName" />
+    <result column="app_key" jdbcType="VARCHAR" property="appKey" />
+    <result column="app_secret" jdbcType="VARCHAR" property="appSecret" />
+    <result column="org_id" jdbcType="INTEGER" property="orgId" />
+    <result column="supplier_id" jdbcType="INTEGER" property="supplierId" />
+    <result column="plat_status" jdbcType="INTEGER" property="platStatus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, biz_id, plat_name, app_key, app_secret, org_id, supplier_id, plat_status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from plat_auth
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from plat_auth
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatAuth">
+    insert into plat_auth (id, biz_id, plat_name, 
+      app_key, app_secret, org_id, 
+      supplier_id, plat_status)
+    values (#{id,jdbcType=INTEGER}, #{bizId,jdbcType=INTEGER}, #{platName,jdbcType=VARCHAR}, 
+      #{appKey,jdbcType=VARCHAR}, #{appSecret,jdbcType=VARCHAR}, #{orgId,jdbcType=INTEGER}, 
+      #{supplierId,jdbcType=INTEGER}, #{platStatus,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatAuth">
+    insert into plat_auth
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="bizId != null">
+        biz_id,
+      </if>
+      <if test="platName != null">
+        plat_name,
+      </if>
+      <if test="appKey != null">
+        app_key,
+      </if>
+      <if test="appSecret != null">
+        app_secret,
+      </if>
+      <if test="orgId != null">
+        org_id,
+      </if>
+      <if test="supplierId != null">
+        supplier_id,
+      </if>
+      <if test="platStatus != null">
+        plat_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bizId != null">
+        #{bizId,jdbcType=INTEGER},
+      </if>
+      <if test="platName != null">
+        #{platName,jdbcType=VARCHAR},
+      </if>
+      <if test="appKey != null">
+        #{appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="appSecret != null">
+        #{appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null">
+        #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="supplierId != null">
+        #{supplierId,jdbcType=INTEGER},
+      </if>
+      <if test="platStatus != null">
+        #{platStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatAuth">
+    update plat_auth
+    <set>
+      <if test="bizId != null">
+        biz_id = #{bizId,jdbcType=INTEGER},
+      </if>
+      <if test="platName != null">
+        plat_name = #{platName,jdbcType=VARCHAR},
+      </if>
+      <if test="appKey != null">
+        app_key = #{appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="appSecret != null">
+        app_secret = #{appSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null">
+        org_id = #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="supplierId != null">
+        supplier_id = #{supplierId,jdbcType=INTEGER},
+      </if>
+      <if test="platStatus != null">
+        plat_status = #{platStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatAuth">
+    update plat_auth
+    set biz_id = #{bizId,jdbcType=INTEGER},
+      plat_name = #{platName,jdbcType=VARCHAR},
+      app_key = #{appKey,jdbcType=VARCHAR},
+      app_secret = #{appSecret,jdbcType=VARCHAR},
+      org_id = #{orgId,jdbcType=INTEGER},
+      supplier_id = #{supplierId,jdbcType=INTEGER},
+      plat_status = #{platStatus,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectByBizIdAndOrgNotZero" resultMap="BaseResultMap">
+    SELECT * FROM plat_auth 
+    WHERE plat_status = 1 AND org_id > 0 
+    AND biz_id = #{bizId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByBizIdAndOrgIdOrSupplierId" resultMap="BaseResultMap">
+  SELECT * FROM plat_auth 
+  WHERE plat_status = 1 AND biz_id = #{bizId,jdbcType=INTEGER} 
+  <if test="orgId != null">
+        AND org_id = #{orgId,jdbcType=INTEGER}
+  </if>
+  <if test="supplierId != null">
+  AND supplier_id = #{supplierId,jdbcType=INTEGER}
+  </if>
+  </select>
+</mapper>

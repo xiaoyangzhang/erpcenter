@@ -147,5 +147,16 @@ public class DicFacadeImpl implements DicFacade {
 		List<DicInfo> list = dicBiz.getListByTypeIdAndName(type, bizId, name);
 		return list;
 	}
+
+	@Override
+	public List<DicInfo> getListByTypeCode(String typeCode, Integer bizId) {
+		return dicBiz.getListByTypeCode(typeCode, bizId);
+	}
+	
+	@Override
+	public List<DicInfo> getListByTypeCode(String typeCode) {
+		return dicBiz.getListByTypeCode(typeCode,0);
+	}
+	
 	
 }

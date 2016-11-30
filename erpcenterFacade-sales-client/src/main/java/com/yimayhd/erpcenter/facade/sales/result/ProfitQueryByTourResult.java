@@ -10,7 +10,18 @@ public class ProfitQueryByTourResult implements Serializable{
 	private PageBean<TourGroup> pageBean;
 	private TourGroup group;
 	private PageBean<TourGroup> pb;
-	
+
+
+	private TourGroup groupCost;
+	public TourGroup getGroupCost() {
+		return groupCost;
+	}
+
+	public void setGroupCost(TourGroup groupCost) {
+		this.groupCost = groupCost;
+	}
+
+
 	public PageBean<TourGroup> getPageBean() {
 		return pageBean;
 	}

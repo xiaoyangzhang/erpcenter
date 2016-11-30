@@ -1,5 +1,14 @@
 package com.yimayhd.erpcenter.dal.basic.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.yimayhd.erpcenter.common.contants.BasicConstants;
+import com.yimayhd.erpcenter.common.util.LogFieldAnno;
+import com.yimayhd.erpcenter.common.util.NumberUtil;
+import com.yimayhd.erpcenter.dal.basic.po.LogFieldAnnoInfo;
+import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
+
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -8,14 +17,6 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.yimayhd.erpcenter.common.contants.BasicConstants.LOG_ACTION;
-import com.yimayhd.erpcenter.common.util.NumberUtil;
-import com.yimayhd.erpcenter.dal.basic.po.LogFieldAnnoInfo;
-import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
 
 /**
  * 
@@ -57,7 +58,7 @@ public class LogFieldUtil {
 							info.setFieldType(f.getType().getName());
 							
 							info.setFieldDescription(logf.description());
-							info.setFieldAction(LOG_ACTION.UPDATE.toString());
+							info.setFieldAction(BasicConstants.LOG_ACTION.UPDATE.toString());
 							if (java.util.Date.class.equals(f.getType())){
 								info.setValueEdit(null==oVal1?"":NumberUtil.formatDate((java.util.Date)oVal1));
 								info.setValueOrigin(null==oVal2?"":NumberUtil.formatDate((java.util.Date)oVal2));
@@ -93,7 +94,7 @@ public class LogFieldUtil {
 		return ret;
 	}
 	
-	private static String getLogText_DelOrInsertCompare(LOG_ACTION action, Object objUpdate) {
+	private static String getLogText_DelOrInsertCompare(BasicConstants.LOG_ACTION action, Object objUpdate) {
 		List<LogFieldAnnoInfo> logList = new ArrayList<LogFieldAnnoInfo>();
 		
 		Class<? extends Object> clazz = objUpdate.getClass();
@@ -183,8 +184,8 @@ public class LogFieldUtil {
 		return ret;
 	}
 	
-	private static LogOperator getLog_Object(int bizId, String editUser, LOG_ACTION action, String tableName, Integer tableId, 
-			Integer tableParentId, String logBrief, String logText) {
+	private static LogOperator getLog_Object(int bizId, String editUser, BasicConstants.LOG_ACTION action, String tableName, Integer tableId,
+											 Integer tableParentId, String logBrief, String logText) {
 		LogOperator log = new LogOperator();
 		log.setId(0);
 		log.setBizId(bizId);
@@ -225,8 +226,8 @@ public class LogFieldUtil {
 	 * @param originObj
 	 * @return
 	 */
-	public static LogOperator getLog_Instant(int bizId, String editUser, LOG_ACTION action, String tableName, Integer tableId, 
-			Integer tableParentId, String logBrief, Object editObj, Object originObj) {
+	public static LogOperator getLog_Instant(int bizId, String editUser, BasicConstants.LOG_ACTION action, String tableName, Integer tableId,
+											 Integer tableParentId, String logBrief, Object editObj, Object originObj) {
 		
 		String logText = "";
 		if (null != originObj){
@@ -256,7 +257,7 @@ public class LogFieldUtil {
 		//begin  遍历两个List 组成一个大字符串
 		String key1 = "", key2 = "", logText = "", logBrief = "";
 		boolean isExists;
-		LOG_ACTION rowAction = LOG_ACTION.INSERT;
+		BasicConstants.LOG_ACTION rowAction = BasicConstants.LOG_ACTION.INSERT;
 		
 		//两个List对比（新增、更新部份）
 		if (null != editList){
@@ -268,7 +269,7 @@ public class LogFieldUtil {
 					key2 = getLogText_InstantKeyValue(objOri);
 					if (key1.equals(key2)){
 						isExists = true;
-						rowAction = LOG_ACTION.UPDATE;
+						rowAction = BasicConstants.LOG_ACTION.UPDATE;
 						logBrief = "修改记录";
 						logText = getLogText_EditCompare(objEd, objOri);
 						break;
@@ -276,7 +277,7 @@ public class LogFieldUtil {
 				}
 				}
 				if (!isExists){
-					rowAction = LOG_ACTION.INSERT;
+					rowAction = BasicConstants.LOG_ACTION.INSERT;
 					logText = getLogText_DelOrInsertCompare(rowAction, objEd);
 					logBrief = "创建记录";
 					
@@ -305,7 +306,7 @@ public class LogFieldUtil {
 				}
 			}
 			if (!isExists){
-				rowAction = LOG_ACTION.DELETE;
+				rowAction = BasicConstants.LOG_ACTION.DELETE;
 				logText = getLogText_DelOrInsertCompare(rowAction, objOri);
 				logBrief = "删除记录";
 				LogOperator log = getLog_Object(bizId, editUser, rowAction, tableName, Integer.valueOf(key1), tableParentId, logBrief, logText);
@@ -322,7 +323,7 @@ public class LogFieldUtil {
 			if (fieldType == BigDecimal.class)
 				ret = ((BigDecimal)val1).compareTo(((BigDecimal)val2)) == 0;
 			else {
-				ret = val1.equals(val1);
+				ret = val1.equals(val2);
 			}
 		}
 	

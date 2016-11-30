@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper">
+<mapper namespace="com.yimayhd.sales.mapper.GroupOrderPriceMapper">
 	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice">
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="mode" property="mode" jdbcType="INTEGER" />
@@ -68,7 +68,15 @@
 		mode=#{mode,jdbcType=INTEGER}
 	</select>
 
-
+	<select id="selectByOrderAndTypeAndRowState" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from group_order_price
+		where order_id = #{orderId,jdbcType=INTEGER} and
+		mode=#{mode,jdbcType=INTEGER} and
+		row_state=#{rowState,jdbcType=INTEGER}
+	</select>
+	
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
 		delete from group_order_price
 		where id = #{id,jdbcType=INTEGER}
@@ -269,21 +277,7 @@
 		<!-- GROUP BY order_id -->
 	
 	</select>
-
-
-   <select id="getPriceTotalByOrderIds" parameterType="java.util.HashMap" resultMap="BaseResultMap">
-	SELECT  
-	sum(total_price) total_price
-	from `group_order_price` 
-		where 
-		 order_id in 
-         <foreach item="item" index="index" collection="orderIds" open="("
-                 separator="," close=")">
-          #{item}
-          </foreach>
-     and mode = #{mode}
-	</select>
-	 
+	
 	<update id="auditPriceByIds" parameterType="java.util.HashMap">
 		UPDATE group_order_price 
 		SET state_finance = #{stateFinance,jdbcType=INTEGER} 

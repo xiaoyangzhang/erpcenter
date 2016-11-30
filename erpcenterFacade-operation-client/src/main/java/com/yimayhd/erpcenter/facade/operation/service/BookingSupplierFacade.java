@@ -13,7 +13,9 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBillDetail;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
+import com.yimayhd.erpcenter.facade.operation.query.AYToAddSightQueryDTO;
 import com.yimayhd.erpcenter.facade.operation.query.BookingDeliveryQueryDTO;
+import com.yimayhd.erpcenter.facade.operation.result.AYToAddSightResult;
 import com.yimayhd.erpcenter.facade.operation.result.BookingSupplierResult;
 import com.yimayhd.erpcenter.facade.operation.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.operation.result.WebResult;
@@ -75,4 +77,8 @@ public interface BookingSupplierFacade {
     PageBean getTrainTicketGroupList(PageBean pageBean,TourGroupVO tourGroup, Set<Integer> set);
     PageBean getInsuranceGroupList(PageBean pageBean,TourGroupVO tourGroup, Set<Integer> set);
     PageBean getIncomeGroupList(PageBean pageBean,TourGroupVO tourGroup, Set<Integer> set);
+    
+    
+	public AYToAddSightResult getAYToAddSight(AYToAddSightQueryDTO queryDTO);
+    
 }

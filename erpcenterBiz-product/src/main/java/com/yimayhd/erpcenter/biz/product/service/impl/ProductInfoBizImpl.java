@@ -15,6 +15,7 @@ import com.yimayhd.erpcenter.dal.product.po.PriceView;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductRight;
 import com.yimayhd.erpcenter.dal.product.po.ProductSales;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoProduct;
 import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
 import com.yimayhd.erpcenter.dal.product.vo.ProductInfoVo;
 import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
@@ -28,7 +29,12 @@ public class ProductInfoBizImpl implements ProductInfoBiz{
 	public int insertSelective(ProductInfo record) {
 		return productInfoDal.insertSelective(record);
 	}
-
+	
+	@Override
+    public PageBean<TaobaoProduct>selectTaobaoProduct(PageBean pageBean, Integer bizId) {
+        return productInfoDal.selectTaobaoProduct(pageBean,bizId);
+    }
+	
 	@Override
 	public PageBean<ProductInfo> findProductInfos(
 			PageBean<ProductInfo> pageBean, Map parameters) {
@@ -230,5 +236,16 @@ public class ProductInfoBizImpl implements ProductInfoBiz{
 		return productInfoDal.selectProductInfoByPsId(productSysId);
 	}
 	
+	public void syncTaoBaoProducts(String authClient){
+		productInfoDal.syncTaoBaoProducts(authClient);
+	}
+    
+	public ProductInfo findByNumIid(String numIid){
+		return productInfoDal.findByNumIid(numIid);
+	}
+	
+	public ProductInfo selectByProSourceType(Integer bizId, Integer productId){
+		return productInfoDal.selectByProSourceType(bizId, productId);
+	}
 }
 

@@ -12,6 +12,8 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteTraffic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupRouteDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
 
+import org.springframework.transaction.annotation.Transactional;
+
 public class GroupRouteBizImpl implements GroupRouteBiz {
 
 	@Autowired
@@ -44,11 +46,12 @@ public class GroupRouteBizImpl implements GroupRouteBiz {
 				.selectGroupRouteTrafficByRouteId(groupRouteId);
 	}
 
+	@Transactional
 	@Override
 	public void saveGroupRoute(GroupRouteVO groupRouteVO) {
 		groupRouteDal.saveGroupRoute(groupRouteVO);
 	}
-
+	@Transactional
 	@Override
 	public void editGroupRoute(GroupRouteVO groupRouteVO) {
 		saveGroupRoute(groupRouteVO);
@@ -113,8 +116,8 @@ public class GroupRouteBizImpl implements GroupRouteBiz {
 	}
 	
 	@Override
-	public GroupRoute selectDayNumAndMaxday(Integer orderId){
-		return groupRouteDal.selectDayNumAndMaxday(orderId);
+	public GroupRoute selectDayNumAndMaxday(Integer orderId, Integer groupId){
+		return groupRouteDal.selectDayNumAndMaxday(orderId, groupId);
 	}
 
 	

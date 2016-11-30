@@ -46,6 +46,19 @@ public interface GroupOrderBiz {
 
     public void updateGroupOrder(GroupOrder groupOrder);
 
+
+    /**
+     * @see 内部结算(销售)—审核功能
+     * @author TengDong
+     * @param groupOrder团队订单
+     * @return  boolean
+     */
+    public boolean updateGroupOrderByB2b_export_state(GroupOrder groupOrder);
+
+
+
+
+
     public void delGroupOrder(Integer id);
 
     /**
@@ -94,8 +107,8 @@ public interface GroupOrderBiz {
     /**
      * @param bizCode 当前商家编码
      * @return
-     */
-   // public String makeCodeByMode(Integer bizId, String bizCode, String dateTime, int sort);
+     *//*
+    public String makeCodeByMode(Integer bizId, String bizCode, String dateTime, int sort);*/
 
 
     /**
@@ -198,13 +211,32 @@ public interface GroupOrderBiz {
 
     void updateGroupPrice(Integer groupId);
 
+    void changeOrderLockState(Integer orderId);
+
+    void changeorderLockStateByOp(Integer orderId);
+
+    void goBackOrderLockStateByOp(Integer orderId);
+
+    void updateLockStateToFinance(Integer orderId);
+
+    void goBackToOP(Integer orderId);
+
     List<GroupOrder> selectOrderByGroupIdAndBizIdAndSupplierId(Integer groupId, Integer supplierId, Integer bizId);
 
 
     //一地散
     PageBean<GroupOrder> selectSpecialOrderListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set);
 
+    //爱游淘宝
+    PageBean<GroupOrder> selectTaobaoOrderListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer userRightType);
+
+    PageBean<GroupOrder> selectTaobaoOrderGuestNameListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer userRightType);
+
     GroupOrder selectTotalSpecialOrder(GroupOrder groupOrder, Integer bizId, Set<Integer> set);
+
+    GroupOrder selectTotalTaobaoOrder(GroupOrder groupOrder, Integer bizId, Set<Integer> set);
+
+    GroupOrder selectTotalTaobaoGuestNameOrder(GroupOrder groupOrder, Integer bizId, Set<Integer> set);
 
     PageBean<GroupOrder> selectOrderLockByConListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set);
 
@@ -362,14 +394,72 @@ public interface GroupOrderBiz {
     
     Integer loadUpdateExtResState(GroupOrder record);
     
+    Integer updateExtVisa(GroupOrder record);
+
+    List<GroupOrder> selectByOrderIdExtVisaListPage(String mobile);
+
     Integer delGroupOrderId(Integer id);
 
-    Integer selectSumPersonByProductId(Integer productId,String departureDate);
+    Integer selectSumPersonByProductId(Integer resId,Integer productId,String departureDate);
     
     List<GroupOrder> selectOrderOverTime();
     
     List<FinanceCommission> selectFinanceCommissionByGroupId(Integer groupId);
     
     List<FinanceCommission> selectFCByGroupId(Integer groupId);
-} 
+
+    PageBean<GroupOrder> findByTime(String orderStr,PageBean<GroupOrder> pageBean,
+            Integer bizId, Integer userId, String userName);
+
+    Integer importGroupOrder(String[] orderIds, Integer saleOperatorId,
+            String saleOperatorName, Integer operatorId, String operatorName, Integer supplierId,
+            String supplierName, Integer orderType);
+
+    List<GroupOrder> selectBySaleOperatorId(Integer bizId,DeparentmentOrderCondition condition, Set<Integer> set);
+
+    PageBean selectGroupOrderGuestListPage(PageBean pageBean, Integer bizId,Set<Integer> set,Integer userRightType);
+
+    PageBean<GroupOrder>selectMonthlyReportStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId);
+
+    List<GroupOrder>selectMonthlyReportStatistics(PageBean<GroupOrder> pageBean, Integer bizId);
+
+
+    PageBean<GroupOrder> selectOperatorOrderListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer userRightType);
+
+    PageBean<GroupOrder> selectOperatorGuestNameListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer userRightType);
+
+    /**
+     * @see 内部结算
+     * @Auth TengDong
+     * @Date 20161031
+     * @param pageBean  model
+     * @param bizId
+     * @param set
+     * @param userRightType
+     * @return
+     */
+    public PageBean<GroupOrder> selectProfitEverifyListPage(PageBean<GroupOrder> pageBean,
+            Integer bizId, Set<Integer> set, Integer userRightType);
+
+
+    /**
+     * @see 内部结算销售 总合计
+     * @Auther TengDong
+     * @Date 20161102
+     * @param pageBean
+     * @param bizId
+     * @param set
+     * @param userRightType
+     * @return
+     */
+public GroupOrder selectProfitEverifyByCon(GroupOrder groupOrder, Integer bizId, Set<Integer> set,
+		Integer userRightType);
+
+Map<String, Object> selectProfitEverifyByTotal(PageBean pageBean,Integer bizId,Set<Integer> set,Integer userRightType);
+
+
+
+
+
+}
 

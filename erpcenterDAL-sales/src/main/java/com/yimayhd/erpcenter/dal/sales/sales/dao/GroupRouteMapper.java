@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.Param;
 
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
 
-
 public interface GroupRouteMapper {
 	int deleteByPrimaryKey(Integer id);
 
@@ -21,12 +20,12 @@ public interface GroupRouteMapper {
 	int updateByPrimaryKey(GroupRoute record);
 
 	List<GroupRoute> selectByGroupId(Integer groupId);
-	List<GroupRoute> selectByGroupIdAndSupplierId(@Param("groupId")Integer groupId,@Param("supplierId")Integer supplierId);
-	List<GroupRoute> selectByGroupIdAndBookingId(@Param("groupId")Integer groupId,@Param("bookingId")Integer bookingId);
+	List<GroupRoute> selectByGroupIdAndSupplierId(@Param("groupId") Integer groupId, @Param("supplierId") Integer supplierId);
+	List<GroupRoute> selectByGroupIdAndBookingId(@Param("groupId") Integer groupId, @Param("bookingId") Integer bookingId);
 
 	List<GroupRoute> selectByOrderId(Integer orderId);
 	
-	GroupRoute selectDayNumAndMaxday(Integer orderId);
+	GroupRoute selectDayNumAndMaxday(@Param("orderId") Integer orderId, @Param("groupId") Integer groupId);
 	
 	void deleteByGroupId(Integer id);
 	

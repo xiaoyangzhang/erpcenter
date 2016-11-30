@@ -19,6 +19,10 @@
 	<bean id="sysBizInfoBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.SysBizInfoBizImpl" />
 	<bean id="settleApplyBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.SettleApplyBizImpl" />
 	
+	<bean id="platAuthBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.PlatAuthBizImpl" />
+	<bean id="msgInfoBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.MsgInfoBizImpl" />
+	<bean id="msgInfoDetailBiz" class="com.yimayhd.erpcenter.biz.sys.service.impl.MsgInfoDetailBizImpl" />
+	
 	<!--  <bean id="configBean" class="com.yimayhd.erpcenter.biz.sys.util.SysConfig">
 		<property name="imgServerUrl" value="http://img.yimayholiday.com/v1/tfs/"></property>
         <property name="imgCutServerUrl" value="http://img.yimayholiday.com/v1/tfs/"></property>

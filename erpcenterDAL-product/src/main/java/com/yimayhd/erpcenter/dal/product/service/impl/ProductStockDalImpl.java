@@ -1,17 +1,20 @@
 package com.yimayhd.erpcenter.dal.product.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
-
+import java.text.ParseException;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.rocketmq.client.producer.LocalTransactionExecuter;
@@ -23,10 +26,14 @@ import com.alibaba.rocketmq.common.message.Message;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.common.mq.MsgSenderService;
 import com.yimayhd.erpcenter.dal.product.dao.ProductStockMapper;
+import com.yimayhd.erpcenter.dal.product.dao.TaobaoStockDateMapper;
+import com.yimayhd.erpcenter.dal.product.dao.TaobaoStockLogMapper;
 import com.yimayhd.erpcenter.dal.product.message.ProductInfoUpdateMessageDTO;
 import com.yimayhd.erpcenter.dal.product.message.ProductStockUpdateMessageDTO;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductStock;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog;
 import com.yimayhd.erpcenter.dal.product.query.StockQueryDTO;
 import com.yimayhd.erpcenter.dal.product.service.ProductStockDal;
 import com.yimayhd.erpcenter.dal.product.topic.ProductTopic;
@@ -41,13 +48,64 @@ public class ProductStockDalImpl implements ProductStockDal {
     private TransactionTemplate transactionTemplateProduct;
 	@Autowired
     private MsgSenderService msgSender;
+	@Resource
+    private TaobaoStockDateMapper taobaoStockDateMapper;
+    @Resource
+    private TaobaoStockLogMapper taobaoStockLogMapper;
 	
 	@Override
 	public List<ProductStock> getStocksByProductIdAndDateSpan(Integer productId,
 			Date startDate, Date endDate) {
 		return stockMapper.getStocksByProductIdAndDateSpan(productId, startDate,endDate);
 	}
+	
+	@Override
+    public int insertTaobaoStockDateSelective(TaobaoStockDate taobaoStockDate){
+    	taobaoStockDateMapper.insertSelective(taobaoStockDate);
+    	return taobaoStockDate.getId();
+    }
+    
+    @Override
+    public int updateTaobaoStockDateSelective(TaobaoStockDate taobaoStockDate){
+    	taobaoStockDateMapper.updateByPrimaryKeySelective(taobaoStockDate);
+    	return taobaoStockDate.getId();
+    }
+    
+    @Override
+    public int insertTaobaoStockLogSelective(TaobaoStockLog taobaoStockLog){
+    	taobaoStockLogMapper.insertSelective(taobaoStockLog);
+    	return taobaoStockLog.getId();
+    }
+    
+    @Override
+    public int updateTaobaoStockLogSelective(TaobaoStockLog taobaoStockLog){
+    	taobaoStockLogMapper.updateByPrimaryKeySelective(taobaoStockLog);
+    	return taobaoStockLog.getId();
+    }
 
+    @Override
+    public int  updateByLog(Integer stockDateId){
+    	taobaoStockDateMapper.updateByLog(stockDateId);
+    	return 1;
+    }
+    
+    @Override
+    public List<TaobaoStockDate> selectTaobaoStocksByProductIdAndDate(Integer stockId, Date startDate,
+            Date endDate) {
+        return taobaoStockDateMapper.selectTaobaoStocksByProductIdAndDate(stockId, startDate, endDate);
+    }
+    
+    @Override
+    public List<TaobaoStockLog>selectTaobaoStockLogByStockId(Integer stockId){
+    	List<TaobaoStockLog> list =taobaoStockLogMapper.selectByStockId(stockId);
+    	return list;
+    }
+    
+    @Override
+    public List<TaobaoStockLog>selectByStockDateIdAndCreateTime(Integer stockDateId,String startMax,String startMin){
+    	List<TaobaoStockLog> list =taobaoStockLogMapper.selectByStockDateIdAndCreateTime(stockDateId,startMax,startMin);
+    	return list;
+    }
 	
 	@Override
 	public void saveStock(final Integer productId,final List<ProductStock> stockList,final Date startDate,final Date endDate) {
@@ -200,6 +258,29 @@ public class ProductStockDalImpl implements ProductStockDal {
 		 pageBean.setResult(productInfoList);
 		 
 		 return pageBean;
+	}
+	
+    @Override
+    public void updateProductStockByTaobao(List<Map<String, String>> mapList) {
+        for (Map<String, String> map : mapList) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date;
+            try {
+                if (StringUtils.isNotBlank(map.get("depDate"))) {
+                    date = sdf.parse(map.get("depDate"));
+
+                    stockMapper.updateStockCount(Integer.parseInt(map.get("productId")), date,
+                            Integer.parseInt(map.get("receiveCount")));
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+	@Override
+	public TaobaoStockDate selectStockDataById(Integer id) {
+		return taobaoStockDateMapper.selectByPrimaryKey(id);
 	}
 
 }

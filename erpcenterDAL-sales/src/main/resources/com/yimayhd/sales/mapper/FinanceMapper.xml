@@ -3,17 +3,66 @@
 <mapper namespace="fin">
 
 	<sql id="selectByProperty">
-		SELECT *,
+		SELECT  *,
 		(total_adult+total_child) person_count,
 		(total_income-total_income_cash) total_income_balance,
 		(total_income-total_cost) total_profit,
-		(total_income-total_cost)/(IFNULL(total_adult,0)+IFNULL(total_child,0)+IFNULL(total_guide,0)) person_profit
+		(total_income-total_cost)/(IFNULL(total_adult,0)+IFNULL(total_child,0)+IFNULL(total_baby,0)+IFNULL(total_guide,0)) person_profit
 		FROM
 		tour_group 
 		WHERE 1=1 
 		<if test="parameter!=null and parameter.bizId!=null"> AND biz_id = ${parameter.bizId} </if>
 	</sql>
-
+	
+	<!-- 
+	TengDong 
+	Date 20161103
+	-->
+	<sql id="selectTourGroupOrGroupOrder">
+	
+		select 
+			DISTINCT a.*,
+			<![CDATA[ IF(a.group_mode<=0,b.receive_mode=null,b.receive_mode) receive_mode,
+			IF(a.group_mode<=0,b.supplier_name=null,b.supplier_name) supplier_name,]]>
+			IFNULL((a.total_adult+a.total_child),0) person_count,
+			IFNULL((a.total_income-a.total_income_cash),0) total_income_balance,
+			IFNULL((a.total_income-a.total_cost),0) total_profit,
+			IFNULL((a.total_income-a.total_cost)/(IFNULL(a.total_adult,0)+IFNULL(a.total_child,0)+IFNULL(a.total_guide,0)),0) person_profit
+			from tour_group a  left join  group_order b on(a.id=b.group_id)
+		WHERE 1=1 
+		<if test="parameter!=null and parameter.bizId!=null"> AND a.biz_id = ${parameter.bizId} </if>
+	</sql>
+	
+	<!-- 
+	TengDong 
+	Date 20161103
+	结算单审核
+	-->
+	<select id="selectSettleTourGroupOrGroupOrderListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		<include refid="selectTourGroupOrGroupOrder" />
+		<if test="parameter.start_min != null">and a.date_start <![CDATA[>=]]> #{parameter.start_min} </if>
+		<if test="parameter.start_max != null">and a.date_start <![CDATA[<=]]> #{parameter.start_max}	</if>
+		<if test="parameter.group_code != null">and a.group_code like '%${parameter.group_code}%' </if>
+		<if test="parameter.product_name != null">and a.product_name like '%${parameter.product_name}%' </if>
+		<if test="parameter.operator_name != null">and a.operator_name like '%${parameter.operator_name}%' </if>
+		<if test="parameter.operator_id != null">and a.operator_id in (${parameter.operator_id})</if>
+		<if test="parameter.group_state != null">and a.group_state = #{parameter.group_state} </if>
+		<if test="parameter.group_state == null">and a.group_state in(1,3,4) </if>
+		<if test="parameter.audit_user != null">and a.audit_user = #{parameter.audit_user} </if>
+		<if test="parameter.wap_type != null">and a.wap_type = #{parameter.wap_type} </if>
+		<if test="parameter.set != null">
+			and a.operator_id in
+			<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+			#{item}
+			</foreach>
+		</if>
+		<if test="parameter.supplier_name != null">and b.supplier_name like '%${parameter.supplier_name}%'</if>
+		<if test="parameter.receive_mode != null">and b.receive_mode like '%${parameter.receive_mode}%'</if>
+		order by a.date_start ,a.create_time 
+	</select>
+	
+	
+	
 	<!-- 查询收付款记录 -->
 	<select id="selectCashRecordListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
 		select a.*, b.detail_count from finance_pay a LEFT JOIN 
@@ -48,6 +97,7 @@
 		<if test="parameter.group_state != null">and group_state = #{parameter.group_state} </if>
 		<if test="parameter.group_state == null">and group_state in(1,3,4) </if>
 		<if test="parameter.audit_user != null">and audit_user = #{parameter.audit_user} </if>
+		<if test="parameter.wap_type != null">and wap_type = #{parameter.wap_type} </if>
 		<if test="parameter.set != null">
 			and operator_id in
 			<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
@@ -70,6 +120,7 @@
 	<select id="selectOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
 		select *,(IFNULL(total,0)-IFNULL(total_cash,0)) balance,FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') create_date from group_order where 1=1
 		<if test="groupId != null">and group_id = #{groupId} </if>
+		and state !=-1
 		order by create_time 
 	</select>
 	<!-- 购物收入审核 -->
@@ -241,7 +292,7 @@
             <if test="parameter.supType==6"> booking_shop </if>
             <if test="parameter.supType==12"> booking_supplier </if>
 		a inner join tour_group b on a.group_id = b.id
-		where a.supplier_id=#{parameter.supplierId} 
+		where a.supplier_id=#{parameter.supplierId} and b.group_state in (1,3,4)
 		<if test="parameter.orderNo!=null"> and 
 			<if test="parameter.supType==1"> a.receive_mode </if>
 			<if test="parameter.supType!=1"> a.booking_no </if>
@@ -278,7 +329,7 @@
 			<if test="parameter.supType!=16"> booking_supplier </if>
 		a inner join tour_group b on a.group_id = b.id
 		where
-		b.group_state != -1 and 
+		b.group_state in (1,3,4) and 
 		b.biz_id = #{parameter.bizId} and   
 		a.supplier_id=#{parameter.supplierId} 
 		<if test="parameter.supType==12"> 
@@ -419,7 +470,7 @@
 			SELECT * FROM (
 			SELECT a.id order_id,a.supplier_name,a.supplier_id,a.total_cash,
 				(IFNULL(a.total_repay, 0) + IFNULL(a.person_repay_total, 0)) total,
-				(IFNULL(a.total_repay, 0) + IFNULL(a.person_repay_total, 0) - IFNULL(a.total_cash, 0)) balance,b.* 
+				(IFNULL(a.total_repay, 0) + IFNULL(a.person_repay_total, 0) - IFNULL(a.total_cash, 0)) balance,b.*,0 as num_adult,0 as num_child,0 as num_guide
 				FROM booking_shop a
 				INNER JOIN tour_group b on b.id=a.group_id
 				WHERE b.biz_id = ${parameter.bizId}
@@ -442,7 +493,7 @@
 				
 			UNION ALL
 			SELECT a.id order_id,a.supplier_name,a.supplier_id,a.total_cash,a.total,
-				(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,b.* 
+				(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,b.* ,a.num_adult as num_adult,a.num_child as num_child,a.num_guide as num_guide
 				FROM group_order a
 				INNER JOIN tour_group b on b.id=a.group_id
 				WHERE b.biz_id = ${parameter.bizId}
@@ -464,7 +515,7 @@
 				</if>
 			UNION ALL
 			SELECT a.id order_id,a.supplier_name,a.supplier_id,a.total_cash,a.total,
-				(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,b.* 
+				(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,b.* ,0 as num_adult,0 as num_child,0 as num_guide
 				FROM booking_supplier a
 				INNER JOIN tour_group b on b.id=a.group_id
 				WHERE a.supplier_type=120
@@ -489,7 +540,7 @@
 		</if>
 		<if test="parameter.supplier_type == 1">
 			SELECT a.id order_id,a.supplier_name,a.supplier_id,a.total_cash,a.total,
-				(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,b.* 
+				(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,b.*  ,a.num_adult as num_adult,a.num_child as num_child,a.num_guide as num_guide
 				FROM group_order a
 				INNER JOIN tour_group b on b.id=a.group_id
 				WHERE b.biz_id = ${parameter.bizId}
@@ -514,7 +565,7 @@
 		<if test="parameter.supplier_type == 6">
 			SELECT a.id order_id,a.supplier_name,a.supplier_id,a.total_cash,
 				(IFNULL(a.total_repay, 0) + IFNULL(a.person_repay_total, 0)) total,	
-				(IFNULL(a.total_repay, 0) + IFNULL(a.person_repay_total, 0) - IFNULL(a.total_cash, 0)) balance,b.* 
+				(IFNULL(a.total_repay, 0) + IFNULL(a.person_repay_total, 0) - IFNULL(a.total_cash, 0)) balance,b.* ,0 as num_adult,0 as num_child,0 as num_guide
 				FROM booking_shop a
 				INNER JOIN tour_group b on b.id=a.group_id
 				WHERE b.biz_id = ${parameter.bizId}
@@ -538,7 +589,7 @@
 		</if>
 		<if test="parameter.supplier_type == 12">
 			SELECT a.id order_id,a.supplier_name,a.supplier_id,a.total_cash,a.total,
-				(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,b.* 
+				(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance,b.* ,0 as num_adult,0 as num_child,0 as num_guide
 				FROM booking_supplier a
 				INNER JOIN tour_group b on b.id=a.group_id
 				WHERE a.supplier_type=120
@@ -735,8 +786,10 @@
 		<if test="parameter.supplierType != null and parameter.supplierType == 16">
 			SELECT g.id as groupId,t.id,v.verify_code,g.group_mode,g.group_code,t.supplier_name,
 			(IFNULL(t.person_adult, 0) + IFNULL(t.person_child, 0) + IFNULL(t.person_guide, 0)) person_count,
-			t.supplier_order_no AS booking_no,t.booking_date,g.product_name,g.product_brand_name,g.operator_name,g.group_mode  groupModel,
+			t.supplier_order_no AS booking_no,t.booking_date,
+			g.product_name,g.product_brand_name,g.operator_name,t.user_name,g.group_mode  groupModel,
 			IFNULL(t.total, 0) total, IFNULL(t.total_cash, 0) total_cash,(IFNULL(t.total, 0) - IFNULL(t.total_cash, 0)) AS total_not
+			,'' receive_mode, total_adult adult,total_child child,total_guide guide
 			 FROM booking_delivery t 
 			LEFT JOIN finance_verify_detail d ON  t.id=d.booking_id
 			LEFT JOIN  finance_verify v ON d.verify_id=v.id
@@ -750,15 +803,16 @@
 		<if test="parameter.supplierType != null and parameter.supplierType == 1">
 			SELECT g.id as groupId, t.id,v.verify_code,g.group_mode,g.group_code,t.product_name,t.product_brand_name,
 			(IFNULL(t.num_adult, 0) + IFNULL(t.num_child, 0) + IFNULL(t.num_guide, 0)) person_count,
-			t.order_no AS booking_no,FROM_UNIXTIME(t.create_time/1000) AS booking_date,t.operator_name,
+			t.order_no AS booking_no,departure_date AS booking_date,t.operator_name,t.sale_operator_name as user_name,
 			t.supplier_name,g.group_mode groupModel,
 			IFNULL(t.total, 0) total, IFNULL(t.total_cash, 0) total_cash, (IFNULL(t.total, 0) - IFNULL(t.total_cash, 0)) AS total_not
+			,receive_mode, num_adult adult,num_child child,num_guide guide
 			 FROM group_order t
 			LEFT JOIN  tour_group g ON t.`group_id`=g.`id` 
 			LEFT JOIN finance_verify_detail d ON  t.id=d.`order_id`
 			LEFT JOIN  finance_verify v ON d.`verify_id`=v.id
 			where g.group_state in (1,3,4)  and t.biz_id = ${parameter.bizId}
-			<if test="parameter.booking_no != null">and t.order_no like '%${parameter.booking_no}%'</if>
+			<if test="parameter.booking_no != null">and t.receive_mode like '%${parameter.booking_no}%'</if>
 			<if test="parameter.supplierType != null and parameter.status != null and parameter.status==0"> AND v.verify_code IS NULL </if>
 			<if test="parameter.supplierType != null and  parameter.status != null and parameter.status==1">and v.supplier_type <![CDATA[=]]> #{parameter.supplierType} AND v.verify_code IS not NULL </if>
 		</if>
@@ -769,7 +823,9 @@
 			t.booking_no,t.booking_date,g.product_name,g.product_brand_name,g.operator_name,t.user_name,
 			 g.group_mode groupModel,
 			IFNULL(t.total, 0) total, IFNULL(t.total_cash, 0) total_cash, (IFNULL(t.total, 0) - IFNULL(t.total_cash, 0)) AS total_not
-			 FROM booking_supplier t 
+			,'' receive_mode, total_adult adult,total_child child,total_guide guide
+			
+			FROM booking_supplier t 
 			LEFT JOIN finance_verify_detail d ON  t.id=d.booking_id
 			LEFT JOIN  finance_verify v ON d.verify_id=v.id
 			LEFT JOIN tour_group g ON t.group_id=g.id

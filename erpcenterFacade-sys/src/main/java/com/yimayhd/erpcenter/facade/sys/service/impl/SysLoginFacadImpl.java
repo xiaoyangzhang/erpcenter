@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.yimayhd.erpcenter.biz.sys.service.MsgInfoDetailBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformMenuBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
@@ -14,6 +15,7 @@ import com.yimayhd.erpcenter.biz.sys.service.PlatformRoleBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformSessionBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SysBizConfigBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SysBizInfoBiz;
+import com.yimayhd.erpcenter.dal.sys.po.MsgInfoDetail;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformMenuPo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
@@ -43,6 +45,8 @@ public class SysLoginFacadImpl implements SysLoginFacade{
 	private SysBizConfigBiz sysBizConfigBiz;
 	@Autowired
 	private PlatformSessionBiz platformSessionBiz;
+	@Autowired
+	private MsgInfoDetailBiz msgInfoDetailBiz;
 
 	@Override
 	public SysBizInfoResult getBizInfoByCode(String code) {
@@ -107,5 +111,9 @@ public class SysLoginFacadImpl implements SysLoginFacade{
 		
 		return platformSessionBiz.delUserSession(sessionId);
 	}
+	
+	public MsgInfoDetail findMsgCountByUserId(Integer bizId,Integer userId){
+		return msgInfoDetailBiz.findMsgCountByUserId(bizId, userId);
+	};
 
 }

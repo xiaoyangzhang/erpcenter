@@ -1,20 +1,17 @@
 package com.yimayhd.erpcenter.dal.sales.operation.dao;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDet;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopSelect;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.ShopGroupOrderOthersPO;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryGuideShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryShopInfo;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public interface BookingShopMapper {
     int deleteByPrimaryKey(Integer id);
@@ -34,46 +31,41 @@ public interface BookingShopMapper {
 	Integer getSelectCountByGruopId(Integer groupId);
 	int updatetotalFace(int bId);
 
-	int getBookingCountByTime(@Param("curDay")Long curDay,@Param("nextDay")Long nextDay);
+	int getBookingCountByTime(@Param("curDay") Long curDay, @Param("nextDay") Long nextDay);
 	
-	List<BookingShopDet> getShopListByGroupIdAndShopDate(@Param("groupId")Integer groupId,@Param("shopDate")String shopDate);
+	List<BookingShopDet> getShopListByGroupIdAndShopDate(@Param("groupId") Integer groupId, @Param("shopDate") String shopDate);
 
 	
 
-	List<QueryGuideShop> getGuideShopListPage(@Param("page") PageBean pageBean,@Param("set")Set<Integer> set);
+	List<QueryGuideShop> getGuideShopListPage(@Param("page") PageBean pageBean, @Param("set") Set<Integer> set);
+	
+	QueryGuideShop getGuideShopListPageTotal(@Param("page") PageBean pageBean, @Param("set") Set<Integer> set);
 
-	BookingShopSelect getShopSelect(@Param("groupId")Integer groupId);
+	BookingShopSelect getShopSelect(@Param("groupId") Integer groupId);
 
-	List<QueryShopInfo> getshopInfoDetailListPage(@Param("page")PageBean pageBean);
+	List<QueryShopInfo> getshopInfoDetailListPage(@Param("page") PageBean pageBean);
 
-	List<BookingShop> selectShopListPage(@Param("page") PageBean pageBean, @Param("bizId")Integer bizId);
+	List<BookingShop> selectShopListPage(@Param("page") PageBean pageBean, @Param("bizId") Integer bizId);
 
-	List<BookingShopDetail> getShopDetailListByShopId(@Param("page") PageBean pageBean, @Param("id")Integer id);
+	List<BookingShopDetail> getShopDetailListByShopId(@Param("page") PageBean pageBean, @Param("id") Integer id);
 
-	List<BookingShop> selectShopVerifyListPage(@Param("page") PageBean pageBean, @Param("bizId")Integer bizId);
-	Integer selectShopVerifySum(@Param("page") PageBean pageBean, @Param("bizId")Integer bizId);
+	List<BookingShop> selectShopVerifyListPage(@Param("page") PageBean pageBean, @Param("bizId") Integer bizId);
+	Integer selectShopVerifySum(@Param("page") PageBean pageBean, @Param("bizId") Integer bizId);
 
-	List<BookingShopDetail> getShopVerifyDetailListByShopId(@Param("page") PageBean pageBean, @Param("id")Integer id, @Param("sum")String sum);
-	List<Map<String, Object>> getBookingShopList(@Param("groupId")Integer groupId,@Param("orderId")Integer orderId);
+	List<BookingShopDetail> getShopVerifyDetailListByShopId(@Param("page") PageBean pageBean, @Param("id") Integer id, @Param("sum") String sum);
+	List<Map<String, Object>> getBookingShopList(@Param("groupId") Integer groupId, @Param("orderId") Integer orderId);
 
-	List<BookingShop> getShopListByGroupIdAndGuideId(@Param("page") PageBean pageBean,@Param("groupId")Integer groupId, @Param("guideId")Integer guideId);
+	List<BookingShop> getShopListByGroupIdAndGuideId(@Param("page") PageBean pageBean, @Param("groupId") Integer groupId, @Param("guideId") Integer guideId);
 
-	List<BookingShop> getShopListByGroupIdAndSupplierId(@Param("groupId")Integer groupId,
-			@Param("supplierId")Integer supplierId,@Param("guideId")Integer guideId);
+	List<BookingShop> getShopListByGroupIdAndSupplierId(@Param("groupId") Integer groupId,
+                                                        @Param("supplierId") Integer supplierId, @Param("guideId") Integer guideId);
 
 	Integer existBookingShop(Integer supplierId);
 	
 	/**
 	 * 根据导游安排中的groupID查询领单申请信息
-	 * @param groupId
 	 * @return
 	 */
-	List<BookingShop> selectByGroupId(BookingShop bs);
-	/**
-	 * 根据订单id查询剩下的solr所需信息
-	 * @param id 订单id
-	 * @return
-	 */
-	ShopGroupOrderOthersPO selectShopGroupOrderOthersByOrderId(Integer id);
 	
+	List<BookingShop> selectByGroupId(BookingShop bs);
 }

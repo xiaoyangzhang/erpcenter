@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +32,6 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierPO;
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingGuideDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDal;
-import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.AutocompleteInfo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
@@ -128,6 +129,12 @@ public class TourGroupDalImpl implements TourGroupDal {
 			groupOrder.setGroupOrderGuestList(list);
 		}
 		return orderList;
+	}
+
+	@Override
+	public void updateWapType(Integer groupId) {
+		tourGroupMapper.updateWapType(groupId);
+
 	}
 
 	@Transactional
@@ -995,7 +1002,24 @@ public class TourGroupDalImpl implements TourGroupDal {
 		pageBean.setResult(tours);
 		return pageBean;
 	}
-
+	/**
+	 * XTSM：销售利润统计
+	 */
+	@Override
+	public PageBean<TourGroup> selectSaleProfitByTourListPage(PageBean<TourGroup> pageBean, Integer bizId,
+															  Set<Integer> set) {
+		List<TourGroup> tours = tourGroupMapper.selectSaleProfitByTourListPage(pageBean, bizId, set);
+		for (TourGroup tour : tours) {
+			if (tour != null) {
+				if (tour.getId() != null) {
+					tour.setBudget(tourGroupMapper.selectSaleProfitByModeAndTourId(tour.getId(), 1));
+					tour.setTotal(tourGroupMapper.selectSaleProfitByModeAndTourId(tour.getId(), 0));
+				}
+			}
+		}
+		pageBean.setResult(tours);
+		return pageBean;
+	}
 	@Override
 	public List<TourGroup> selectTourGroupBycreateTime(Long createTime, Integer bizId) {
 		return tourGroupMapper.selectTourGroupListByCreatetime(createTime, bizId);
@@ -1040,27 +1064,30 @@ public class TourGroupDalImpl implements TourGroupDal {
 	@Override
 	public PageBean<TourGroup> selectProfitByTourCon(PageBean<TourGroup> pageBean, Integer bizId, Set<Integer> set) {
 		List<TourGroup> tours = tourGroupMapper.selectProfitByTourCon(pageBean, bizId, set);
-		PageBean<TourGroup> page = new PageBean<TourGroup>();
-		page.setResult(tours);
-		return page;
+		pageBean.setResult(tours);
+		return pageBean;
+	}
+
+	@Override
+	public PageBean<TourGroup> selectSaleProfitByTourCon(PageBean<TourGroup> pageBean, Integer bizId, Set<Integer> set) {
+		List<TourGroup> tours = tourGroupMapper.selectSaleProfitByTourCon(pageBean, bizId, set);
+		pageBean.setResult(tours);
+		return pageBean;
+	}
+
+	@Override
+	public TourGroup selectSaleProfitByTourConAndMode(PageBean<TourGroup> pageBean, Integer bizId, Set<Integer> set) {
+		return tourGroupMapper.selectSaleProfitByTourConAndMode(pageBean, bizId, set);
+	}
+
+	@Override
+	public TourGroup selectSumCostProfit(TourGroup tourGroup, Integer bizId, Set<Integer> set) {
+		return tourGroupMapper.selectSumCostProfit(tourGroup, bizId, set);
 	}
 
 	@Override
 	public TourGroup selectProfitByTourConAndMode(PageBean<TourGroup> pageBean, Integer bizId, Set<Integer> set) {
-		
-		TourGroup tourGroup = null;
-		
-		if(1 == 0){
-			TourTotalProfitQueryDTO queryDTO = TourGroupConverter.convert2TourTotalProfitQueryDTO(pageBean, bizId, set);
-			TourGroupDTO tourGroupDTO = tourGroupSolrQueryManager.searchTotalTourGroup(queryDTO);
-			
-			tourGroup = TourGroupConverter.convert2TourTotalGroup(tourGroupDTO);
-			
-		}else{
-			tourGroup = tourGroupMapper.selectProfitByTourConAndMode(pageBean, bizId, set);
-		}
-		
-		return tourGroup;
+		return tourGroupMapper.selectProfitByTourConAndMode(pageBean, bizId, set);
 	}
 
 	@Override
@@ -1607,9 +1634,30 @@ public class TourGroupDalImpl implements TourGroupDal {
 	}
 	
 	@Override
-	public PageBean<TourGroup> selectTourGroupList(PageBean<TourGroup> pageBean) {
-		List<TourGroup> tourGroups = tourGroupMapper.selectTourGroupDumpListPage(pageBean);
-		pageBean.setResult(tourGroups);
-		return pageBean;
+	public TourGroup findByGroupCode(String code) {
+		return tourGroupMapper.findByGroupCode(code);
 	}
+
+	@Override
+    public PageBean getPushDeliveryList(PageBean pageBean, Integer bizId) {
+        List<BookingGroup> bookingGroups = null;
+        bookingGroups = tourGroupMapper.selectPushDeliveryListPage(pageBean, bizId);
+        if (bookingGroups != null && bookingGroups.size() > 0) {
+            for (BookingGroup bg : bookingGroups) {
+                if (bg.getGroupMode().intValue() > 0) {
+                    List<Map<String, Object>> orderMap = groupOrderMapper.getOrderBreifInfoByGroupId(
+                            bg.getGroupId());
+                    if (orderMap != null && orderMap.size() > 0) {
+                        Map<String, Object> map = orderMap.get(0);
+                        bg.setOrderId(TypeUtils.castToInt(map.get("orderId")));
+                        bg.setSupplierName(TypeUtils.castToString(map.get("supplierName")));
+                    }
+                } else {
+                    bg.setSupplierName("散客团");
+                }
+            }
+        }
+        pageBean.setResult(bookingGroups);
+        return pageBean;
+    }
 }

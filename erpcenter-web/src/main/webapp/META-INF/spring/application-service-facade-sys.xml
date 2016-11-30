@@ -28,5 +28,7 @@
 	<bean id="sysPlatformSysFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysPlatformSysFacadeImpl" />
 	
 	<bean id="sysSettleApplyFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysSettleApplyFacadeImpl" />
+	
+	<bean id="sysMsgInfoFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysMsgInfoFacadeImpl" />
 
 </beans>

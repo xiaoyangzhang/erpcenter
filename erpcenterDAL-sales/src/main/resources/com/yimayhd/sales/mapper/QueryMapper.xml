@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yimayhd.erpcenter.dal.sales.query.dao.QueryMapper">
+<mapper namespace="com.yimayhd.sales.mapper.QueryMapper">
   
 	<select id="getProductGuestShoppingGroupOrderListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
 		SELECT gog.product_brand_name,GROUP_CONCAT(DISTINCT gog.id) order_ids
@@ -38,23 +38,33 @@
 		GROUP BY go.province_name,go.city_name
 	</select>
 	<select id="getGuestSourceShoppingByOrderIds" resultType="java.util.HashMap">
-		<!-- SELECT go.province_name,go.city_name,SUM(IFNULL(bsdd.buy_total,0)) total,SUM(go.num_adult) adult
-		FROM group_order go LEFT JOIN (SELECT order_id,SUM(buy_total) buy_total FROM  `booking_shop_detail_deploy` GROUP BY order_id) bsdd  ON go.id=bsdd.order_id
-		WHERE go.id IN (${orderIds})
-		GROUP BY go.province_name,go.city_name -->
 		
 		SELECT go.supplier_id, go.province_name,go.city_name,SUM(IFNULL(bsdd.buy_total,0)) total,SUM(go.num_adult) adult
-		FROM group_order go JOIN (SELECT order_id,SUM(buy_total) buy_total FROM  `booking_shop_detail_deploy` where 1=1 
-						<if test="page.parameter.shopDetailDeploy.shoppingDataState != null">
-								<if test="page.parameter.shopDetailDeploy.shoppingDataState == 1">
-								and buy_total IS NOT NULL 
-								</if>
-								<if test="page.parameter.shopDetailDeploy.shoppingDataState == 0">
-								and buy_total IS NULL 
-								</if>
-						</if>		
-						GROUP BY order_id) bsdd  ON go.id=bsdd.order_id
-		WHERE  go.biz_id=#{page.parameter.bizId} and go.state=1
+		FROM 
+		tour_group tg 
+		
+		join
+		
+		group_order go  on tg.id = go.group_id
+		<!-- BUG 530 时 此处用 join -->
+		left JOIN 
+		(
+			SELECT order_id,SUM(buy_total) buy_total FROM  `booking_shop_detail_deploy` where 1=1 
+							<if test="page.parameter.shopDetailDeploy.shoppingDataState != null">
+									<if test="page.parameter.shopDetailDeploy.shoppingDataState == 1">
+									and buy_total IS NOT NULL 
+									</if>
+									<if test="page.parameter.shopDetailDeploy.shoppingDataState == 0">
+									and buy_total IS NULL 
+									</if>
+							</if>		
+							GROUP BY order_id
+		) bsdd  ON go.id=bsdd.order_id
+						
+						
+		WHERE  go.biz_id=#{page.parameter.bizId} and go.state=1 and tg.group_state in (1,3,4)
+		
+		
 		<if test="page.parameter.provinceId!=null">
 			AND go.province_id=#{page.parameter.provinceId}
 		</if>  
@@ -66,16 +76,23 @@
 		#{item}
 		</foreach>
 		<if test="page.parameter.startTime!=null and page.parameter.startTime!=''">
-			AND <![CDATA[go.departure_date>=#{page.parameter.startTime}]]>
+			<!-- AND go.departure_date>=#{page.parameter.startTime} -->
+			<![CDATA[
+			 	and tg.date_start >= #{page.parameter.startTime}
+			]]>
 		</if>
 		<if test="page.parameter.endTime!=null and page.parameter.endTime!=''">
-			AND <![CDATA[go.departure_date<=#{page.parameter.endTime}]]>
+			<![CDATA[
+			 	and tg.date_start <= #{page.parameter.endTime}
+			]]>
+			<!-- AND go.departure_date<=#{page.parameter.endTime} -->
 		</if>
 		<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds!=''">
 			AND go.operator_id IN (${page.parameter.saleOperatorIds})
 		</if>
 		<if test="page.parameter.productBrandName != null and page.parameter.productBrandName != ''"> 
-			and (go.product_brand_name like concat( '%',#{page.parameter.productBrandName},'%') or go.product_name like concat('%',#{page.parameter.productBrandName},'%') )
+			<!-- and (go.product_brand_name like concat( '%',#{page.parameter.productBrandName},'%') or go.product_name like concat('%',#{page.parameter.productBrandName},'%') ) -->
+			and (tg.product_brand_name like concat( '%',#{page.parameter.productBrandName},'%') or tg.product_name like concat('%',#{page.parameter.productBrandName},'%') )
 		</if>
 		<if test="page.parameter.supplierName != null and page.parameter.supplierName != ''">and 
 		go.supplier_name like concat( '%',#{page.parameter.supplierName},'%') </if>

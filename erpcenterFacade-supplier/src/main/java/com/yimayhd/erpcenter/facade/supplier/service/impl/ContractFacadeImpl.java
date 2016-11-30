@@ -2,6 +2,7 @@ package com.yimayhd.erpcenter.facade.supplier.service.impl;
 
 import java.util.List;
 
+import com.yimayhd.erpcenter.facade.supplier.result.ContractPagaResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -270,14 +271,16 @@ public class ContractFacadeImpl implements ContractFacade{
     }
 
     @Override
-    public WebResult<PageBean> contractList( String supplierId,PageBean<SupplierContract> pageBean,Integer bizId){
+    public ContractPagaResult contractList(String supplierId, PageBean<SupplierContract> pageBean, Integer bizId){
 
-    	WebResult<PageBean> webResult = new WebResult<PageBean>();
+		ContractPagaResult webResult = new ContractPagaResult();
 		try{
 	        BizSupplierRelation bizSupplierRelation = bizSupplierRelationBiz.getByBizIdAndSupplierId(bizId, Integer.valueOf(supplierId));
 	        if(bizSupplierRelation != null){
 	            pageBean = contractBiz.findContracts(pageBean, bizSupplierRelation.getId());
 	        }
+			SupplierInfo supplierInfo = supplierBiz.selectBySupplierId(Integer.valueOf(supplierId));
+			webResult.setSupplierInfo(supplierInfo);
 	        webResult.setValue(pageBean);
 		}catch (Exception e) {
 			log.error(e.getMessage());
@@ -392,4 +395,32 @@ public class ContractFacadeImpl implements ContractFacade{
 		return webResult;
 
     }
+
+	@Override
+	public NewContractPagaResult newDeliveryContractPage(Integer bizId, String supplierId) {
+		SupplierContractVo supplierContractVo = contractBiz.findContract(bizId, Integer.valueOf(supplierId), null);
+		List<DicInfo> dictTypeList = dicBiz.getListByTypeCode(BasicConstants.XMFY_DJXM,bizId);
+		List<DicInfo> dictSecLevelTypeList = dicBiz.getListByTypeCode(Constants.FLEET_LINE_BRAND_TYPE_CODE,bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		NewContractPagaResult result = new NewContractPagaResult();
+		result.setSupplierContractVo(supplierContractVo);
+		result.setDicInfoList(dictTypeList);
+		result.setDictSecLevelTypeList(dictSecLevelTypeList);
+		result.setCashTypes(cashTypes);
+		return result;
+	}
+
+	@Override
+	public NewContractPagaResult editDeliveryContractPage(Integer bizId, String contractId) {
+		SupplierContractVo supplierContractVo = contractBiz.findDelveryContract(bizId, Integer.valueOf(contractId));
+		List<DicInfo> dictTypeList = dicBiz.getListByTypeCode(BasicConstants.XMFY_DJXM,bizId);
+		List<DicInfo> dictSecLevelTypeList = dicBiz.getListByTypeCode(Constants.FLEET_LINE_BRAND_TYPE_CODE,bizId);
+		List<DicInfo> cashTypes = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
+		NewContractPagaResult result = new NewContractPagaResult();
+		result.setSupplierContractVo(supplierContractVo);
+		result.setDicInfoList(dictTypeList);
+		result.setDictSecLevelTypeList(dictSecLevelTypeList);
+		result.setCashTypes(cashTypes);
+		return result;
+	}
 }

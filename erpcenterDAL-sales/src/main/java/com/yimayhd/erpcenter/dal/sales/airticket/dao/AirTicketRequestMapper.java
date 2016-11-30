@@ -20,8 +20,8 @@ public interface AirTicketRequestMapper {
      * @param record
      * @return
      */
-    int delete(@Param("id") Integer id,@Param("bizId") Integer bizId, 
-    		@Param("opId")Integer opId, @Param("opName")String opName, @Param("comment")String comment);
+    int delete(@Param("id") Integer id, @Param("bizId") Integer bizId,
+               @Param("opId") Integer opId, @Param("opName") String opName, @Param("comment") String comment);
     /**
      * 单条更新
      * @param record
@@ -33,7 +33,7 @@ public interface AirTicketRequestMapper {
      * @param record
      * @return
      */
-    AirTicketRequest findRequest(@Param("id") Integer id,@Param("bizId") Integer bizId);
+    AirTicketRequest findRequest(@Param("id") Integer id, @Param("bizId") Integer bizId);
     /**
      * 分页查询
      * @param request
@@ -46,16 +46,17 @@ public interface AirTicketRequestMapper {
     
     List<AirTicketRequest> selectRequestListPageWithGroupOrder(PageBean<AirTicketRequest> pageBean);
     
+    int selectRequestIdByBKId(Integer bookingSupplierId);
     /**
      * 修改机票申请的状态
      */
-    int setStatus(@Param("param") HashMap<String, Object>param);
+    int setStatus(@Param("param") HashMap<String, Object> param);
     
     int countRequestByResource(@Param("resourceId") Integer resourceId, @Param("bizId") Integer bizId);
     
-    List<Integer> findRequestsByResource(@Param("id") Integer id,@Param("bizId") Integer bizId);
+    List<Integer> findRequestsByResource(@Param("id") Integer id, @Param("bizId") Integer bizId);
     
-    int updateBookingSupplierId(@Param("id") Integer id,@Param("bizId") Integer bizId, @Param("bookingSupplierId") Integer bookingSupplierId);
+    int updateBookingSupplierId(@Param("id") Integer id, @Param("bizId") Integer bizId, @Param("bookingSupplierId") Integer bookingSupplierId);
     
     List<Integer> selectRequestIdByOrderId(@Param("bizId") Integer bizId, @Param("orderId") Integer id);
     List<AirTicketRequest> findRequestsByGroupOrderId(@Param("bizId") Integer bizId, @Param("strOrderIds") String strOrderIds);

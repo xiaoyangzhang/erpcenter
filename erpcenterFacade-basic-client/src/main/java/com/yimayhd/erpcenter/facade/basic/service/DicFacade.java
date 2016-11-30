@@ -37,4 +37,8 @@ public interface DicFacade {
 	List<DicInfo> getListByTypeIdAndName(String type, String name);
 	
 	List<DicInfo> getListByTypeIdAndName(String type, int bizId, String name);
+	
+	List<DicInfo> getListByTypeCode(String typeCode, Integer bizId);
+	
+	public List<DicInfo> getListByTypeCode(String typeCode);
 }

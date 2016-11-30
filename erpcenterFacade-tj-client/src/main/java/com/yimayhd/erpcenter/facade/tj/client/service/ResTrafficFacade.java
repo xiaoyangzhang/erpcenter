@@ -1,15 +1,36 @@
 package com.yimayhd.erpcenter.facade.tj.client.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.common.contants.BasicConstants;
+import com.yimayhd.erpcenter.common.contants.BasicConstants.LOG_ACTION;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
+import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
+import com.yimayhd.erpcenter.dal.basic.utils.LogFieldUtil;
 import com.yimayhd.erpcenter.dal.product.po.TrafficRes;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
+import com.yimayhd.erpcenter.dal.product.po.TrafficResStocklog;
+import com.yimayhd.erpcenter.dal.sales.client.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePayDetail;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
+import com.yimayhd.erpcenter.facade.tj.client.query.BookingSupplierDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.DetailsStocklogDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.MakeCollectionsDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.SaveBookingDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.ToSaveResNumsSoldDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ToSearchListDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ToUpdateProductPriceDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TrafficChangeDTO;
@@ -20,10 +41,13 @@ import com.yimayhd.erpcenter.facade.tj.client.query.TrafficResProductDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TrafficSaveResOrderDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.TraficchangeResStateDTO;
 import com.yimayhd.erpcenter.facade.tj.client.result.GetProductInfoResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.ToAddSupplierResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.ToSearchListResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.ToTraficEditResult;
+import com.yimayhd.erpcenter.facade.tj.client.result.ToUpdateResNumStockStateResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.TrafficAddResOrderResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.WebResult;
+import com.yimayhd.erpresource.dal.po.SupplierItem;
 
 
 public interface ResTrafficFacade {
@@ -172,5 +196,49 @@ public interface ResTrafficFacade {
 	public GetProductInfoResult getProductInfo(TrafficResProductDTO trafficResProductDTO) ;
 	
 	public ToSearchListResult toSearchList(ToSearchListDTO toSearchListDTO) ;
+	
+	public List<GroupOrderGuest> ticketInfo(Integer resId);
+	
+	public TrafficRes addTicket(Integer resId);
+	
+	/**
+	 * 跳转到供应商编辑或新增页面
+	 *
+	 * @param model
+	 * @param groupId
+	 * @param bookingId
+	 */
+	public ToAddSupplierResult toAddSupplier(BookingSupplierDTO bookingSupplierDTO) ;
+	
+	/**
+	 * 保存新增出票
+	 *
+	 * @param request
+	 * @param reponse
+	 * @param booking
+	 * @param groupId
+	 * @param supplierType
+	 * @param supplierId
+	 * @return
+	 * @throws ParseException s
+	 */
+	public void saveBooking(SaveBookingDTO saveBookingDTO);
+	
+	/**
+	 * 跳转至机位库存状态页面
+	 * @param request
+	 * @param resId
+	 * @param model
+	 * @return
+	 */
+	public ToUpdateResNumStockStateResult toUpdateResNumStockState(Integer id);
+	
+	/**
+	 * 保存机位库存信息
+	 * @param request
+	 * @param productBean
+	 * @return
+	 */
+	public String toSaveResNumsSold(ToSaveResNumsSoldDTO toSaveResNumsSoldDTO);
 
 }

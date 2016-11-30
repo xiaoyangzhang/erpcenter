@@ -129,9 +129,10 @@ public class RequestFacadeImpl implements RequestFacade{
 			dateTo = dto.getDateTo();
 			dateType = dto.getDateType();
 		}
-		String productName="", lineName="", contactName="", orderNo="", endIssueDateFrom="", endIssueDateTo="", type;
+		String productName="", lineName="", contactName="", orderNo="", endIssueDateFrom="", endIssueDateTo="", saleName = "", type;
 		try {
 			productName = dto.getProductName();
+			saleName = dto.getSaleName();
 			lineName = dto.getLineName();
 			contactName = dto.getContactName();
 			endIssueDateFrom = dto.getEndIssueDateFrom();
@@ -141,6 +142,7 @@ public class RequestFacadeImpl implements RequestFacade{
 			dateTo = dateTo==null?"":dateTo;
 			productName = productName==null?"":productName;
 			lineName = lineName==null?"":lineName;
+			saleName = saleName==null?"":saleName;
 			contactName = contactName==null?"":contactName;
 			orderNo = orderNo==null?"":orderNo;
 		}catch(Exception e){
@@ -159,6 +161,7 @@ public class RequestFacadeImpl implements RequestFacade{
 		parameter.put("dateType", dateType);
 		parameter.put("productName", productName);
 		parameter.put("lineName", lineName);
+		parameter.put("saleName", saleName);
 		parameter.put("contactName", contactName);
 		parameter.put("orderNo", orderNo);
 		parameter.put("receiveMode", dto.getReceiveMode());

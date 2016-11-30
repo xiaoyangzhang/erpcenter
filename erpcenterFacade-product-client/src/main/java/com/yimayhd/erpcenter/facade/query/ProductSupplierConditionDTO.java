@@ -10,6 +10,16 @@ public class ProductSupplierConditionDTO implements Serializable {
 	
 	private ProductSupplierCondition condition = null;
 	
+	private Integer productId;
+	
+	
+	
+	public Integer getProductId() {
+		return productId;
+	}
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
 	public ProductSupplierCondition getCondition() {
 		return condition;
 	}

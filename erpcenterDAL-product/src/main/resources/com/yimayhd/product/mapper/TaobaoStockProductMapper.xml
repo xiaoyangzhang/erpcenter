@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yimayhd.product.mapper.TaobaoStockProductMapper">
+  <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="stock_id" jdbcType="INTEGER" property="stockId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, product_id, stock_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from taobao_stock_product
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from taobao_stock_product
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into taobao_stock_product (product_id, stock_id)
+    values (#{productId,jdbcType=INTEGER}, #{stockId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct" useGeneratedKeys="true" keyProperty="id">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into taobao_stock_product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="stockId != null">
+        stock_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="productId != null">
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="stockId != null">
+        #{stockId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct">
+    update taobao_stock_product
+    <set>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="stockId != null">
+        stock_id = #{stockId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct">
+    update taobao_stock_product
+    set product_id = #{productId,jdbcType=INTEGER},
+      stock_id = #{stockId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="findStockProductStockId" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select id, product_id, stock_id 
+		from taobao_stock_product
+		where stock_id = #{stockId}
+	</select>
+	<delete id="deleteTaoBaoStockProduct" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct">
+    	delete from taobao_stock_product
+    	where stock_id = #{stockId,jdbcType=INTEGER} and product_id=#{productId}
+  </delete>
+  
+   <select id="findStockProductInfo" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct"
+		resultMap="BaseResultMap">
+		select id, product_id, stock_id 
+		from taobao_stock_product
+		where stock_id = #{stockId,jdbcType=INTEGER} and product_id=#{productId}
+	</select>
+</mapper>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.PlatformRoleMapper" >
+<mapper namespace="com.yimayhd.sys.mapper.PlatformRoleMapper" >
   
  	<resultMap type="com.yimayhd.erpcenter.dal.sys.po.PlatformRolePo" id="platformRolePo">
         <id column="role_id" property="roleId" />
@@ -31,9 +31,11 @@
         	<if test="parameter.bizId != null"> and biz_id = #{parameter.bizId}  </if>
        		<if test="parameter.sysId != null"> and sys_id = #{parameter.sysId}  </if>
         	<if test="parameter.name != null"> and name like CONCAT('%','${parameter.name}','%' ) </if>
+        	<if test="parameter.groupName != null"> and group_name like CONCAT('%','${parameter.groupName}','%' ) </if>
 			<if test="parameter.code != null"> and code like CONCAT ('%','${parameter.code}','%')   </if>
 			<if test="parameter.status != null"> and status = #{parameter.status}  </if>
 			<if test="parameter.delStatus != null"> and del_status = #{parameter.delStatus}  </if>
+		order by group_name,`name`
   	 </select>
   	 
   	  <select id="getRoleList"  resultMap="platformRolePo" >
@@ -51,7 +53,7 @@
        		<if test="bizId != null"> and role.biz_id = #{bizId}  </if>
   	 </select>
   	
-  	 <update id="updateRole" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformRolePo">
+  	 <update id="updateRole" parameterType="platformRolePo">
 		update platform_role
 		<set>
 			<if test="sysId != null"> sys_id = #{sysId}, </if>
@@ -67,7 +69,7 @@
 		where role_id = #{roleId}
 	</update>
   	 
-  	 <insert id="addRole" parameterType="com.yimayhd.erpcenter.dal.sys.po.PlatformRolePo" useGeneratedKeys="true">
+  	 <insert id="addRole" parameterType="platformRolePo" useGeneratedKeys="true">
   	 
   		<!-- 返回主键 -->
 		<selectKey resultType="int" order="AFTER" keyProperty="roleId">

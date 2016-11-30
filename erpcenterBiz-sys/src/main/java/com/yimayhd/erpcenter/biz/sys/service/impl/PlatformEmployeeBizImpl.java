@@ -1,23 +1,16 @@
 package com.yimayhd.erpcenter.biz.sys.service.impl;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.util.TypeUtils;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.common.exception.ClientException;
@@ -199,6 +192,15 @@ public class PlatformEmployeeBizImpl implements PlatformEmployeeBiz {
 	@Override
 	public List<PlatformEmployeePo> getEmpList(Integer bizId, Set<Integer> set) {
 		return platformEmployeeDal.getEmpList(bizId, set);
+	}
+	
+	/**
+	 * 查询部门员工信息
+	 */
+	@Override
+	public List<PlatformEmployeePo> getOrgIdListByEmployee(Integer bizId, Set<Integer> set) {
+		List<PlatformEmployeePo> empBeanList = platformEmployeeDal.getOrgIdListByEmployee(bizId, set);
+		return empBeanList;
 	}
 
 }

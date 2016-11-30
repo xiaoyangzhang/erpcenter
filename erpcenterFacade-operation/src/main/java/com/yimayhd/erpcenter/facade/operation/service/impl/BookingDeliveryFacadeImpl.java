@@ -1,46 +1,23 @@
 
 package com.yimayhd.erpcenter.facade.operation.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryPriceBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingGuideBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierDetailBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderTransportBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRequirementBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRouteBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.operation.*;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
+import com.yimayhd.erpcenter.biz.sys.service.PlatAuthBiz;
+import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
+import com.yimayhd.erpcenter.common.util.DateUtil;
+import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.dal.sales.client.constants.Constants;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryOrder;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryPrice;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrintPo;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.*;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TransferOrderVO;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.facade.operation.errorcode.OperationErrorCode;
 import com.yimayhd.erpcenter.facade.operation.result.BookingDeliveryResult;
 import com.yimayhd.erpcenter.facade.operation.result.ResultSupport;
@@ -48,6 +25,23 @@ import com.yimayhd.erpcenter.facade.operation.result.WebResult;
 import com.yimayhd.erpcenter.facade.operation.service.BookingDeliveryFacade;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.dal.po.SupplierInfo;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.util.WebUtils;
+
+import java.util.*;
 
 /**
  * @ClassName: BookingDeliveryFacadeImpl
@@ -56,6 +50,8 @@ import com.yimayhd.erpresource.dal.po.SupplierInfo;
  * @date 2016年10月25日
  */
 public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(BookingDeliveryFacadeImpl.class);
 
 	@Autowired
 	private BookingDeliveryBiz bookingDeliveryBiz;
@@ -83,6 +79,10 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 	private GroupRequirementBiz groupRequirementBiz;
 	@Autowired
 	private DicBiz dicBiz;
+	@Autowired
+	private PlatformOrgBiz platformOrgBiz;
+	@Autowired
+	private PlatAuthBiz platAuthBiz;
 	@Override
 	public BookingDeliveryResult getDeliveryBookingDetailList(Integer groupId) {
 		BookingDeliveryResult result = new BookingDeliveryResult();
@@ -235,7 +235,7 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
                 // 根据散客订单统计酒店信息
                 List<GroupRequirement> grogShopList = groupRequirementBiz.selectByOrderAndType(order.getId(), 3);
                 if (grogShopList.size() > 0) {
-                    if (StringUtils.isNotBlank(grogShopList.get(0).getHotelLevel())) {
+                    if (StringUtils.isNotBlank(grogShopList.get(0).getHotelLevel()) && !"".equals(grogShopList.get(0).getHotelLevel())) {
                         gopp.setHotelLevel(dicBiz.getById(Integer.parseInt(grogShopList.get(0).getHotelLevel())).getValue()
                                 + "\n");
                     }
@@ -288,5 +288,332 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 		pageBean = tourGroupBiz.getLocalTravelAngencyGroupList(pageBean, tourGroup, set);
 		return pageBean;
 	}
+
+	@Override
+	public Integer getOrgIdBy(Integer orderId ,Integer bizId) {
+		try{
+			GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
+			Integer saleOperatorId = groupOrder.getSaleOperatorId();
+			// 根据销售人员ID获得销售人员所在
+			PlatformOrgPo pop = platformOrgBiz.getCompanyByEmployeeId2(bizId,saleOperatorId);
+
+			if (pop != null) {
+				return pop.getOrgId();
+			}else{
+				return -1;
+			}
+		}catch (Exception e){
+			return -1;
+		}
+
+	}
+
+	@Override
+	public WebResult<PageBean> pushListTable(PageBean pageBean, Integer bizId) {
+		WebResult<PageBean> result = new WebResult<PageBean>();
+		try {
+			PageBean pageBean1 = tourGroupBiz.getPushDeliveryList(pageBean, bizId);
+			result.setValue(pageBean1);
+		}catch (Exception e){
+			result.setSuccess(false);
+			LOGGER.error(e.getMessage());
+		}
+		return  result;
+	}
+
+	@Override
+	public WebResult<String> pushRemoteSave(Integer groupId, Integer bookingId,Integer bizId, String fromAppKey, String fromSecretKey, String toAppKey) {
+
+
+		WebResult<String> result = new WebResult<String>();
+		try{
+			// 推送信息给接口中心
+			// erp中地接社发送给地接社
+			List<GroupOrder> groupOrder = groupOrderBiz.selectOrderByGroupId(groupId);
+			TourGroup tourGroup = tourGroupBiz.selectByPrimaryKey(groupId);
+			BookingDelivery bd = bookingDeliveryBiz.getBookingInfoById(bookingId);
+			TransferOrderVO orderVo = new TransferOrderVO();
+			TransferOrder transferOrder = new TransferOrder();
+			List<TransferOrderFamily> familys = new ArrayList<TransferOrderFamily>();
+			List<TransferOrderGuest> guests = new ArrayList<TransferOrderGuest>();
+			List<TransferOrderPrice> prices = new ArrayList<TransferOrderPrice>();
+			List<TransferOrderRoute> routes = new ArrayList<TransferOrderRoute>();
+
+			orderVo.setTransferOrder(transferOrder);
+			orderVo.setFamilys(familys);
+			orderVo.setGuests(guests);
+			orderVo.setPrices(prices);
+			orderVo.setRoutes(routes);
+
+			// 给TransferOrder赋值
+			transferOrder.setId(0);
+			transferOrder.setAppId("");
+			transferOrder.setApiMethod("");
+			transferOrder.setSupplierId(bd.getSupplierId());
+			transferOrder.setSupplierName(bd.getSupplierName());
+			transferOrder.setFromOrderId(bd.getId());
+			transferOrder.setSendUserName(bd.getUserName());
+			transferOrder.setSendUserMobile("");
+			transferOrder.setSendUserTel("");
+			transferOrder.setSendUserFax("");
+			transferOrder.setBizId(bizId);
+			transferOrder.setOrderId(0);
+			transferOrder.setOrderCodeSend(tourGroup.getGroupCode());
+			transferOrder.setOrderCodeReceive("");// 接收方订单号
+			transferOrder.setOrderProductName(tourGroup.getProductName());
+			transferOrder.setSupplierUserName(bd.getContact());
+			transferOrder.setSupplierUserMobile(bd.getContactMobile());
+			transferOrder.setSupplierUserTel(bd.getContactTel());
+			transferOrder.setSupplierUserFax(bd.getContactFax());
+			transferOrder.setDaynum(tourGroup.getDaynum());
+			transferOrder.setDateStart(tourGroup.getDateStart());
+			transferOrder.setDateEnd(tourGroup.getDateEnd());
+			transferOrder.setPersonAdult(bd.getPersonAdult());
+			transferOrder.setPersonChild(bd.getPersonChild());
+			transferOrder.setPersonGuide(bd.getPersonGuide());
+			transferOrder.setRemark(bd.getRemark());
+			transferOrder.setRemarkService("");
+			transferOrder.setTotal(tourGroup.getTotal());
+			transferOrder.setStateReceive((byte) 0);
+			transferOrder.setStateUpdate((byte) 1);
+			transferOrder.setTimeReceive(null);
+			transferOrder.setTimeCreate(new Date());
+			transferOrder.setTimeUpdate(new Date());
+			transferOrder.setFromAppKey(fromAppKey);
+			transferOrder.setToAppKey(toAppKey);
+
+			//TransferOrderFamily
+			if (tourGroup.getGroupMode() <= 0) { // 散客团
+				if (groupOrder != null && groupOrder.size() > 0) {
+					for (GroupOrder go : groupOrder) {
+						TransferOrderFamily family = new TransferOrderFamily();
+						List<GroupOrderTransport> orderTransports = groupOrderTransportBiz
+								.selectByGroupId(go.getId());
+						family.setFromOrderId(bd.getId());
+						family.setFromOrderFamilyId(go.getId());
+						family.setLeaderName(go.getReceiveMode());
+						family.setPersonAdult(go.getNumAdult());
+						family.setPersonChild(go.getNumChild());
+						family.setHotelLevel(go.getHotelLevels());
+						family.setHotelNums(go.getHotelNums());
+						// 省外（长线）－接机信息
+						family.setTransportArrival(getAirInfo(orderTransports, 0));
+						// 省内（短线）－接送信息
+						family.setTransportMiddle(getSourceType(orderTransports));
+						// '接送信息：省外（长线）－送机信息',
+						family.setTransportLeave(getAirInfo(orderTransports, 1));
+						family.setRemark(go.getRemark());
+						familys.add(family);
+
+						// 给guestList赋值
+						List<GroupOrderGuest> gu = groupOrderGuestBiz.selectByOrderId(go.getId());
+						if (gu != null && gu.size() > 0) {
+							for (GroupOrderGuest item : gu) {
+								TransferOrderGuest guest = new TransferOrderGuest();
+								guest.setFromOrderId(bd.getId());
+								guest.setFromOrderFamilyId(item.getOrderId());
+								guest.setName(item.getName());
+								guest.setType(item.getType());
+								guest.setCertificateNum(item.getCertificateNum());
+								guest.setGender(item.getGender());
+								guest.setMobile(item.getMobile());
+								guest.setNativePlace(item.getNativePlace());
+								guest.setAge(item.getAge());
+								guest.setCareer(item.getCareer());
+								guest.setIsSingleRoom(item.getIsSingleRoom());
+								guest.setRemark(item.getRemark());
+								guests.add(guest);
+							}
+						}
+
+						// routeList
+						List<GroupRoute> rlist = groupRouteBiz.selectByOrderId(go.getId());
+						if (rlist != null && rlist.size() > 0) {
+							for (GroupRoute item : rlist) {
+								TransferOrderRoute gRoute = new TransferOrderRoute();
+								gRoute.setFromOrderId(bd.getId());
+								gRoute.setDayVal(item.getDayNum());
+								gRoute.setDateVal(item.getGroupDate());
+								gRoute.setBreakfast(item.getBreakfast());
+								gRoute.setLunch(item.getLunch());
+								gRoute.setSupper(item.getSupper());
+								gRoute.setHotels(item.getHotelName());
+								gRoute.setRouteDesp(item.getRouteDesp());
+								routes.add(gRoute);
+							}
+						}
+					}
+				}
+			} else {    // 团队订单
+				if (groupOrder != null && groupOrder.size() > 0) {
+					for (GroupOrder go : groupOrder) {
+						TransferOrderFamily family = new TransferOrderFamily();
+						family.setId(0);
+						family.setOrderId(0);
+						family.setFromOrderId(0);
+						family.setFromOrderFamilyId(0);
+						family.setLeaderName("");
+						family.setPersonAdult(0);
+						family.setPersonChild(0);
+						family.setHotelLevel("");
+						family.setHotelNums("");
+						family.setTransportArrival("");// 省外（长线）－接机信息
+						family.setTransportMiddle("");// 省内（短线）－接送信息
+						family.setTransportLeave("");// '接送信息：省外（长线）－送机信息',
+						family.setRemark("");
+						familys.add(family);
+
+						// 给guestList赋值
+						List<GroupOrderGuest> gu = groupOrderGuestBiz.selectByOrderId(go.getId());
+						if (gu != null && gu.size() > 0) {
+							for (GroupOrderGuest item : gu) {
+								TransferOrderGuest guest = new TransferOrderGuest();
+								guest.setFromOrderId(bd.getId());
+								guest.setFromOrderFamilyId(item.getOrderId());
+								guest.setName(item.getName());
+								guest.setType(item.getType());
+								guest.setCertificateNum(item.getCertificateNum());
+								guest.setGender(item.getGender());
+								guest.setMobile(item.getMobile());
+								guest.setNativePlace(item.getNativePlace());
+								guest.setAge(item.getAge());
+								guest.setCareer(item.getCareer());
+								guest.setIsSingleRoom(item.getIsSingleRoom());
+								guest.setRemark(item.getRemark());
+
+								guests.add(guest);
+							}
+						}
+						// routeList
+						List<GroupRoute> rlist = groupRouteBiz.selectByGroupId(tourGroup.getId());
+						if (rlist != null && rlist.size() > 0) {
+							for (GroupRoute item : rlist) {
+								TransferOrderRoute gRoute = new TransferOrderRoute();
+								gRoute.setFromOrderId(bd.getId());
+								gRoute.setDayVal(item.getDayNum());
+								gRoute.setDateVal(item.getGroupDate());
+								gRoute.setBreakfast(item.getBreakfast());
+								gRoute.setLunch(item.getLunch());
+								gRoute.setSupper(item.getSupper());
+								gRoute.setHotels(item.getHotelName());
+								gRoute.setRouteDesp(item.getRouteDesp());
+
+								routes.add(gRoute);
+							}
+						}
+					}
+				}
+			}
+			// priceList
+			List<BookingDeliveryPrice> bdp = bookingDeliveryPriceBiz
+					.getPriceListByBookingId(bd.getId());
+			if (bdp != null && bdp.size() > 0) {
+				for (BookingDeliveryPrice item : bdp) {
+					TransferOrderPrice price = new TransferOrderPrice();
+					price.setFromOrderId(bd.getId());
+					price.setItem(item.getItemName());
+					price.setRemark(item.getRemark());
+					price.setPrice(item.getUnitPrice());
+					price.setNumTimes(item.getNumTimes());
+					price.setNumPerson(item.getNumPerson());
+					price.setTotal(item.getTotalPrice());
+
+					prices.add(price);
+				}
+			}
+
+			String jsonStr = JSON.toJSONString(orderVo);
+			result.setValue(jsonStr);
+
+		}catch(Exception e){
+			result.setSuccess(false);
+			LOGGER.error(e.getMessage());
+		}
+		return  result;
+	}
+
+
+	@Override
+	public WebResult<Boolean> updatePushStatus(Integer bookingId){
+		WebResult<Boolean> result = new WebResult<Boolean>();
+		try{
+			bookingDeliveryBiz.updatePushStatus(bookingId);
+			result.setSuccess(true);
+		}catch (Exception e){
+			result.setSuccess(false);
+		}
+		return  result;
+	}
+
+
+
+
+
+	/**
+	 * 接送信息
+	 *
+	 * @param groupOrderTransports
+	 * @param flag                 0表示接信息 1表示送信息
+	 * @return
+	 */
+	public String getAirInfo(List<GroupOrderTransport> groupOrderTransports,
+							 Integer flag) {
+		StringBuilder sb = new StringBuilder();
+		if (flag == 0) {
+			for (GroupOrderTransport transport : groupOrderTransports) {
+				if (transport.getType() == 0 && transport.getSourceType() == 1) {
+					sb.append(
+							(transport.getDepartureCity() == null ? "" : transport.getDepartureCity()) + "/"
+									+ (transport.getArrivalCity() == null ? "" : transport.getArrivalCity()) + " "
+									+ (transport.getClassNo() == null ? "" : transport.getClassNo()) + " "
+									+ " 发出时间：" + (DateUtils.format(transport.getDepartureDate(), "MM-dd") == null ? "" : DateUtils.format(transport.getDepartureDate(), "MM-dd"))
+									+ " "
+									+ (transport.getDepartureTime() == null ? "" : transport.getDepartureTime()) + "\n");
+				}
+			}
+		}
+		if (flag == 1) {
+			for (GroupOrderTransport transport : groupOrderTransports) {
+				if (transport.getType() == 1 && transport.getSourceType() == 1) {
+					sb.append(
+							(transport.getDepartureCity() == null ? "" : transport.getDepartureCity()) + "/"
+									+ (transport.getArrivalCity() == null ? "" : transport.getArrivalCity()) + " "
+									+ (transport.getClassNo() == null ? "" : transport.getClassNo()) + " "
+									+ " 发出时间：" + (DateUtils.format(transport.getDepartureDate(), "MM-dd") == null ? "" : DateUtils.format(transport.getDepartureDate(), "MM-dd"))
+									+ " "
+									+ (transport.getDepartureTime() == null ? "" : transport.getDepartureTime()) + "\n");
+				}
+			}
+		}
+		return sb.toString();
+	}
+
+
+	/**
+	 * 省内交通
+	 *
+	 * @param groupOrderTransports
+	 * @return
+	 */
+	public String getSourceType(List<GroupOrderTransport> groupOrderTransports) {
+		StringBuilder sb = new StringBuilder();
+		for (GroupOrderTransport transport : groupOrderTransports) {
+			if (transport.getSourceType() == 0) {
+				Date departureDate = transport.getDepartureDate();
+				String departureTime = transport.getDepartureTime();
+				String md = "";
+				String hm = "";
+				if (departureTime != null) {
+					md = DateUtil.date2Str(departureDate, "MM-dd");
+					hm = departureTime;
+				}
+				sb.append(md + " " + transport.getDepartureCity() + "/"
+						+ transport.getArrivalCity() + " "
+						+ transport.getClassNo() + " " + hm + "\n");
+			}
+		}
+		return sb.toString();
+	}
+
 
 }

@@ -11,19 +11,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.alibaba.fastjson.JSON;
-import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sys.dao.PlatformOrgMapper;
 import com.yimayhd.erpcenter.dal.sys.dao.SysDataRightMapper;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.dal.sys.po.SysDataRight;
 import com.yimayhd.erpcenter.dal.sys.service.PlatformOrgDal;
 import com.yimayhd.erpcenter.dal.sys.utils.DateUtils;
-import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionTemplate;
 
 
 public class PlatformOrgDalImpl implements PlatformOrgDal {
@@ -183,6 +180,23 @@ public class PlatformOrgDalImpl implements PlatformOrgDal {
         }
         return code;
     }
+    
+	@Override
+	public String getMappingSupplierIdByOrgId(Integer orgId) {
+		PlatformOrgPo orgPo=orgMapper.findByOrgId(orgId);
+		if (orgPo == null)
+			return "0";
+		else{
+			if (orgPo.getMappingSupplierId() != null){
+				Integer supplierId = orgPo.getMappingSupplierId();
+				return supplierId.toString();
+			}else{
+				Integer pid = orgPo.getParentId();
+				String ret = getMappingSupplierIdByOrgId(pid);
+				return ret;
+			}
+		}
+	}
 
     @Override
     public String getComponentOrgTreeJsonStr(Integer bizId) {
@@ -285,6 +299,21 @@ public class PlatformOrgDalImpl implements PlatformOrgDal {
     public List<PlatformOrgPo> getOrgListByIdSet(Integer bizId,
                                                  Set<Integer> sets) {
         return orgMapper.getOrgListByIdSet(bizId, sets);
+    }
+    
+	public List<PlatformOrgPo> selectOrgListByIdSet(Integer bizId,Set<Integer> sets) {		
+		return orgMapper.selectOrgListByIdSet(bizId,sets);
+	}
+	
+	public List<PlatformOrgPo> selectSubDeptNumOrgList(Integer bizId,
+			List<Integer> parentIdList) {
+		return orgMapper.selectSubDeptNumOrgList(bizId,parentIdList);		
+	}
+	
+	@Override
+    public PlatformOrgPo getCompanyByEmployeeId2(Integer bizId,
+            Integer employeeId) {
+        return orgMapper.getCompanyByEmployeeId2(bizId,employeeId);
     }
 
 

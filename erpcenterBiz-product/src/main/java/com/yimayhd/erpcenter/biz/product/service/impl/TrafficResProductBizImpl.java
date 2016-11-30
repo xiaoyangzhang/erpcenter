@@ -1,12 +1,11 @@
 package com.yimayhd.erpcenter.biz.product.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.yimayhd.erpcenter.biz.product.service.TrafficResProductBiz;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
 import com.yimayhd.erpcenter.dal.product.service.TrafficResProductDal;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 public class TrafficResProductBizImpl implements TrafficResProductBiz{
 	
@@ -69,6 +68,16 @@ public class TrafficResProductBizImpl implements TrafficResProductBiz{
 	@Override
 	public Integer selectResProductNameCount(Integer productCode,Integer  resId) {
 		return trafficResProductDal.selectResProductNameCount(productCode,resId);
+	}
+
+	@Override
+	public TrafficResProduct selectNumSoldCount(Integer resId) {
+		return trafficResProductDal.selectNumSoldCount(resId);
+	}
+
+	@Override
+	public int updateResProductNumStock(Integer id, Integer numStock) {
+		return trafficResProductDal.updateResProductNumStock(id,numStock);
 	}
 
 }

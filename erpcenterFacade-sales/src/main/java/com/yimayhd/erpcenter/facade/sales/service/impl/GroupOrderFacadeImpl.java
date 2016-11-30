@@ -13,8 +13,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.biz.sys.service.PlatAuthBiz;
+import com.yimayhd.erpcenter.dal.sys.po.PlatAuth;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
+import com.yimayhd.erpcenter.facade.sales.query.ReportStatisticsQueryDTO;
+import com.yimayhd.erpcenter.facade.sales.query.grouporder.*;
+import com.yimayhd.erpcenter.facade.sales.result.grouporder.*;
+import com.yimayhd.erpcenter.facade.sales.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.erpcenterFacade.common.client.utils.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -86,63 +105,8 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalePrice;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TransportVO;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.facade.sales.constants.BizConfigConstant;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.AddGroupOrderDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.AddGroupOrderPriceDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.AddGroupOrderPriceManyDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.AddGroupOrderTransportDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.AddGroupRequirementDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.AddManyGroupOrderTransportDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.EditGroupGuestDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.EditGroupOrderDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.EditOrderGroupInfoDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.EditSupplierAndReceiveModeDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.GetFitOrderListDataDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.MergeGroupDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToDeliveryPriceTableDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToImpNotGroupListDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToNotGroupListDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToOrderLockTableDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToProductOrdersTableDTO;
-import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToSecImpNotGroupListDTO;
 import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.CreateGuestNamesResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.CreateIndividualResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.CreateSKGuideResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.CreateSKGuideUpOffResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.CreateShoppingDetailResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.CreatetOrderTicklingResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.CreatetTicklingResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.GetFitOrderListDataResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.PreviewFitGuideResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.PreviewFitTransferResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.PreviewGuestWithTransResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.PreviewGuestWithoutTransResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToAddGroupOrderResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToDeliveryPriceListResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToDeliveryPriceTableResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToEditGroupGuestResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToEditGroupOrderPriceResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToEditGroupOrderResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToEditGroupOrderTransportResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToEditGroupRequirementResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToFitEditResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToFitOrderListResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToImpNotGroupListResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToIndividualGuestTicklingResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToIndividualOrderGuestTicklingResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToLookGroupOrderResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToMergeGroupResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToNotGroupListResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToOrderLockListResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToOrderLockTableResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToProductOrdersListResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToProductOrdersTableResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToSecImpNotGroupListResult;
-import com.yimayhd.erpcenter.facade.sales.result.grouporder.ToShoppingDetailPreviewResult;
 import com.yimayhd.erpcenter.facade.sales.service.GroupOrderFacade;
-import com.yimayhd.erpcenter.facade.sales.utils.DateUtils;
-import com.yimayhd.erpcenter.facade.sales.utils.GroupCodeUtil;
-import com.yimayhd.erpcenter.facade.sales.utils.MergeGroupUtils;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.biz.service.SupplierGuideBiz;
 import com.yimayhd.erpresource.dal.po.SupplierContactMan;
@@ -150,6 +114,7 @@ import com.yimayhd.erpresource.dal.po.SupplierGuide;
 import com.yimayhd.erpresource.dal.po.SupplierInfo;
 
 public class GroupOrderFacadeImpl implements GroupOrderFacade {
+	private static final Logger log = LoggerFactory.getLogger("GroupOrderFacadeImpl");
 
 	@Autowired
 	private SupplierGuideBiz guideService;
@@ -228,6 +193,10 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 
 	@Autowired
 	private AirTicketRequestBiz airTicketRequestService;
+
+	@Autowired
+	private PlatAuthBiz platAuthBiz;
+
 
 	@Override
 	public ToOrderLockListResult toOrderLockList(Integer bizId) {
@@ -3166,7 +3135,105 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 
 		return result;
 	}
-	
+
+	@Override
+	public ImportOrderTableResult importOrderTable(ImportOrderTableDTO importOrderTableDTO) {
+		ImportOrderTableResult importOrderTableResult = new ImportOrderTableResult();
+		Map<String, Object> pm = importOrderTableDTO.getPm();
+
+		PlatformOrgPo pop = importOrderTableDTO.getPop();
+		String dateType = pm.get("dateType").toString();
+
+		Integer supplierId = Integer.parseInt(orgService.getMappingSupplierIdByOrgId(pop.getOrgId()));
+
+		PlatAuth pa = platAuthBiz.findByBizIdAndOrgIdOrSupplierId(importOrderTableDTO.getBizId(), null, supplierId);
+		// 接收方 app_key
+		String toAppKey = pa.getAppKey();
+
+		String resultStr = null;
+		try {
+			String timeStamp = DateUtil.date2Str(new Date(), "yyyy-MM-dd HH:mm:ss");
+			String secretKey = pa.getAppSecret();
+
+			// 签名
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("appKey", toAppKey);
+			params.put("timestamp", timeStamp);
+			String getSign = MD5Util.getSign_Taobao(secretKey, params);
+
+			// 访问参数
+			List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+			nameValuePairList.add(new BasicNameValuePair("toAppKey", toAppKey));
+			nameValuePairList.add(new BasicNameValuePair("timestamp", timeStamp));
+			nameValuePairList.add(new BasicNameValuePair("sign", getSign));
+			nameValuePairList.add(new BasicNameValuePair("dateType", dateType));
+			nameValuePairList.add(new BasicNameValuePair("startTime", (dateType.equals("1")) ? importOrderTableDTO.getStartTime() : importOrderTableDTO.getStartTime() + " 00:00:00"));
+			nameValuePairList.add(new BasicNameValuePair("endTime", (dateType.equals("1")) ? importOrderTableDTO.getEndTime() : importOrderTableDTO.getEndTime() + " 23:59:59"));
+
+			HttpPost httpPost = new HttpPost(OpenPlatformConstannt.openAPI_OrderMap.get("Url")
+					+ OpenPlatformConstannt.openAPI_OrderMap.get("callMethod"));
+
+			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairList, "utf-8"));
+			// 访问接口
+			CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
+
+			CloseableHttpResponse closeableHttpResponse = closeableHttpClient.execute(httpPost);
+
+			try {
+				HttpEntity httpEntity = closeableHttpResponse.getEntity();
+				resultStr = EntityUtils.toString(httpEntity);
+			} finally {
+				closeableHttpResponse.close();
+			}
+
+		} catch (Exception ex) {
+			log.error(ex.getMessage());
+		}
+
+		PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
+
+		pageBean.setPageSize(
+				importOrderTableDTO.getGroupOrder().getPageSize() == null ? Constants.PAGESIZE : importOrderTableDTO.getGroupOrder().getPageSize());
+		pageBean.setPage(importOrderTableDTO.getGroupOrder().getPage());
+
+		if (dateType.equals("1")) {
+			importOrderTableDTO.getGroupOrder().setStartTime(importOrderTableDTO.getStartTime() + " 00:00:00");
+			importOrderTableDTO.getGroupOrder().setEndTime(importOrderTableDTO.getEndTime() + " 23:59:59");
+		} else if (dateType.equals("2")) {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date startDate = null;
+			Date endDate = null;
+			try {
+				startDate = formatter.parse(importOrderTableDTO.getStartTime() + " 00:00:00");
+				endDate = formatter.parse(importOrderTableDTO.getEndTime() + " 23:59:59");
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			importOrderTableDTO.getGroupOrder().setStartTime(startDate.getTime() + "");
+			importOrderTableDTO.getGroupOrder().setEndTime(endDate.getTime() + "");
+		}
+
+		pageBean.setParameter(importOrderTableDTO.getGroupOrder());
+
+		pageBean = groupOrderService.findByTime(resultStr, pageBean, importOrderTableDTO.getBizId(),
+				importOrderTableDTO.getEmployeeId(),
+				importOrderTableDTO.getName());
+		importOrderTableResult.setPageBean(pageBean);
+		return importOrderTableResult;
+	}
+
+	@Override
+	public ImportOrderTableResult saveTransferOrder(ImportOrderTableDTO importOrderTableDTO) {
+		ImportOrderTableResult importOrderTableResult = new ImportOrderTableResult();
+		try {
+		importOrderTableResult.setGroupOrderId(groupOrderService.importGroupOrder(importOrderTableDTO.getOrderIds(), importOrderTableDTO.getSaleOperatorId(),
+				importOrderTableDTO.getSaleOperatorName(), importOrderTableDTO.getOperatorId(), importOrderTableDTO.getOperatorName(), importOrderTableDTO.getSupplierId(), importOrderTableDTO.getSupplierName(), importOrderTableDTO.getOrderType()));
+		} catch (Exception e) {
+			log.error("", e);
+		}
+		return importOrderTableResult;
+	}
+
 	//下面为公共方法抽取
 	/**
 	 * 返回地接社信息
@@ -3536,4 +3603,25 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		}
 		return sb.toString();
 	}
+
+	@Override
+	public ReportStatisticsResult selectMonthlyReportStatisticsListPage(ReportStatisticsQueryDTO queryDTO) {
+		ReportStatisticsResult  result = new ReportStatisticsResult();
+		PageBean<GroupOrder> pageBean = groupOrderService.selectMonthlyReportStatisticsListPage(queryDTO.getPageBean(), queryDTO.getBizId());
+		result.setPageBean(pageBean);
+		
+		return result;
+	}
+
+	@Override
+	public ReportStatisticsNoPageResult selectMonthlyReportStatistics(ReportStatisticsQueryDTO queryDTO) {
+		ReportStatisticsNoPageResult  result = new ReportStatisticsNoPageResult();
+		List<GroupOrder> orderList  = groupOrderService.selectMonthlyReportStatistics(queryDTO.getPageBean(), queryDTO.getBizId());
+		result.setOrderList(orderList);
+		
+		return result;
+	}
+	
+	
+	
 }

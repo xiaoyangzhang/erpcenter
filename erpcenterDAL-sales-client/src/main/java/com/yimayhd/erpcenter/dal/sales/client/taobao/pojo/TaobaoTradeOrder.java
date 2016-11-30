@@ -23,6 +23,7 @@ public class TaobaoTradeOrder implements Serializable {
     private Integer num;
     private String total_fee;
     private String payment;
+    private String divide_order_fee;
     private String discount_fee;
     private String adjust_fee;
     private String sku_properties_name;
@@ -30,7 +31,16 @@ public class TaobaoTradeOrder implements Serializable {
     private String outer_iid;
     private String refund_id;
     
-    public String getTid() {
+    
+    public String getDivide_order_fee() {
+		return divide_order_fee;
+	}
+
+	public void setDivide_order_fee(String divide_order_fee) {
+		this.divide_order_fee = divide_order_fee;
+	}
+
+	public String getTid() {
         return tid;
     }
     
@@ -127,7 +137,7 @@ public class TaobaoTradeOrder implements Serializable {
     }
     
     public String getPayment() {
-        return payment;
+    	return divide_order_fee == null ? payment : divide_order_fee;
     }
     
     public void setPayment(String payment) {

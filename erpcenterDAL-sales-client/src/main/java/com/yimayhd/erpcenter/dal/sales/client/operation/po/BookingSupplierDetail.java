@@ -1,12 +1,9 @@
 package com.yimayhd.erpcenter.dal.sales.client.operation.po;
 
-
 import java.io.Serializable;
 import java.util.Date;
 
 import com.yimayhd.erpcenter.common.util.LogFieldAnno;
-
-
 
 public class BookingSupplierDetail implements Serializable{
 	/**
@@ -30,7 +27,22 @@ public class BookingSupplierDetail implements Serializable{
     
     private String supplierName ; //字段冗余
 	private String fangDiaoLuRu;
+	private Integer resId;
+	private Integer sumTicket;
 	
+	
+	public Integer getResId() {
+		return resId;
+	}
+	public void setResId(Integer resId) {
+		this.resId = resId;
+	}
+	public Integer getSumTicket() {
+		return sumTicket;
+	}
+	public void setSumTicket(Integer sumTicket) {
+		this.sumTicket = sumTicket;
+	}
 	public String getFangDiaoLuRu() {
 		return fangDiaoLuRu;
 	}
@@ -68,6 +80,7 @@ public class BookingSupplierDetail implements Serializable{
     private String carLisence;
     private String driverTel;
     private Double totalNum;
+    private Double saleItemPrice;
     
     
     public String getSupplierName() {
@@ -237,4 +250,10 @@ public class BookingSupplierDetail implements Serializable{
     public void setDriverName(String driverName) {
         this.driverName = driverName == null ? null : driverName.trim();
     }
+	public Double getSaleItemPrice() {
+		return saleItemPrice;
+	}
+	public void setSaleItemPrice(Double saleItemPrice) {
+		this.saleItemPrice = saleItemPrice;
+	}
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yimayhd.erpcenter.dal.sales.taobao.dao.PlatTaobaoTradeOrderMapper">
+<mapper namespace="com.yimayhd.sales.mapper.PlatTaobaoTradeOrderMapper">
     <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTradeOrder">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="biz_id" jdbcType="INTEGER" property="bizId"/>
@@ -29,11 +29,13 @@
         <result column="my_store_id" jdbcType="VARCHAR" property="myStoreId"/>
         <result column="outer_iid" jdbcType="VARCHAR" property="outerIid"/>
         <result column="trade_id" jdbcType="INTEGER" property="tradeId"/>
+        
+        <result column="divide_order_fee" jdbcType="VARCHAR" property="divideOrderFee"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, biz_id, tid, oid, order_id, status, num_iid, title, price, sku_id, order_from, 
     modified, end_time, num, total_fee, payment, discount_fee, adjust_fee, sku_properties_name, 
-    refund_status, refund_id, sync_time, sync_username, my_state, my_store_id,  outer_iid,trade_id
+    refund_status, refund_id, sync_time, sync_username, my_state, my_store_id,  outer_iid,trade_id,divide_order_fee
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
@@ -41,11 +43,12 @@
         from plat_taobao_trade_order
         where id = #{id,jdbcType=INTEGER}
     </select>
-    <select id="selectByTid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="selectByTid" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from plat_taobao_trade_order
         where tid = #{tid,jdbcType=INTEGER}
+        AND oid = #{oid,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from plat_taobao_trade_order
@@ -63,7 +66,7 @@
         discount_fee, adjust_fee, sku_properties_name,
         refund_status, refund_id, sync_time,
         sync_username, my_state, my_store_id,
-        outer_iid,trade_id)
+        outer_iid,trade_id,divide_order_fee)
         values (#{bizId,jdbcType=INTEGER}, #{tid,jdbcType=INTEGER}, #{oid,jdbcType=INTEGER},
         #{orderId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{numIid,jdbcType=VARCHAR},
         #{title,jdbcType=VARCHAR}, #{price,jdbcType=VARCHAR}, #{skuId,jdbcType=VARCHAR},
@@ -72,7 +75,7 @@
         #{discountFee,jdbcType=VARCHAR}, #{adjustFee,jdbcType=VARCHAR}, #{skuPropertiesName,jdbcType=VARCHAR},
         #{refundStatus,jdbcType=VARCHAR}, #{refundId,jdbcType=VARCHAR}, #{syncTime,jdbcType=TIMESTAMP},
         #{syncUsername,jdbcType=VARCHAR}, #{myState,jdbcType=VARCHAR}, #{myStoreId,jdbcType=VARCHAR},
-        #{outerIid,jdbcType=VARCHAR},#{tradeId,jdbcType=INTEGER})
+        #{outerIid,jdbcType=VARCHAR},#{tradeId,jdbcType=INTEGER},#{divideOrderFee,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTradeOrder">
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -156,7 +159,10 @@
                 outer_iid,
             </if>
             <if test="tradeId!= null">
-            trade_id
+            trade_id,
+            </if>
+              <if test="divideOrderFee != null">
+                divide_order_fee 
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -236,7 +242,10 @@
                 #{outerIid,jdbcType=VARCHAR},
             </if>
             <if test="tradeId != null">
-            	#{tradeId,jdbcType=INTEGER}
+            	#{tradeId,jdbcType=INTEGER},
+            </if>
+              <if test="divideOrderFee != null">
+                #{divideOrderFee,jdbcType=VARCHAR}
             </if>
         </trim>
     </insert>
@@ -319,7 +328,10 @@
                 outer_iid = #{outerIid,jdbcType=VARCHAR},
             </if>
             <if test="tradeId !=null">
-            	trade_id = #{tradeId,jdbcType=INTEGER}
+            	trade_id = #{tradeId,jdbcType=INTEGER},
+            </if>
+              <if test="divideOrderFee != null">
+                divide_order_fee = #{divideOrderFee,jdbcType=VARCHAR}
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -351,7 +363,15 @@
       my_state = #{myState,jdbcType=VARCHAR},
       my_store_id = #{myStoreId,jdbcType=VARCHAR},
       outer_iid = #{outerIid,jdbcType=VARCHAR},
-      trade_id = #{tradeId,jdbcType=INTEGER}
+      trade_id = #{tradeId,jdbcType=INTEGER},
+      divide_order_fee = #{divideOrderFee,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+      <select id="selectByOrderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select *
+        from plat_taobao_trade_order
+        where order_id = #{orderId,jdbcType=INTEGER}
+    </select>
+    
 </mapper>

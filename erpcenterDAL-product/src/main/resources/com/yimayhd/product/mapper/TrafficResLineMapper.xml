@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yimayhd.erpcenter.dal.product.dao.TrafficResLineMapper">
+<mapper namespace="com.yimayhd.product.mapper.TrafficResLineMapper">
   <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.product.po.TrafficResLine">
     <!--
       WARNING - @mbggenerated
@@ -221,9 +221,9 @@
   </select>
   
   <select id="selectTrafficResLineByResId" resultMap="BaseResultMap">
-    select class_no,line_date,departure_city,departure_time,arrival_city,arrival_time,remark,user_id,user_name
+    select class_no,DATE_ADD(line_date,INTERVAL DATEDIFF(#{dateNew,jdbcType=VARCHAR},#{dateDeparture,jdbcType=VARCHAR}) DAY) line_date ,departure_city,departure_time,arrival_city,arrival_time,remark,user_id,user_name
     from traffic_res_line
-     where res_id = #{id,jdbcType=INTEGER}
+     where res_id = #{resId,jdbcType=INTEGER}
   </select>
   
 </mapper>

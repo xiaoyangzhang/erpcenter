@@ -106,4 +106,10 @@ public class BookingSupplierDetailBizImpl implements
         return bookingSupplierDetailDal.selectBookingSupplierDetailByGroupId(groupId);
     }
 
+
+    @Override
+    public List<BookingSupplierDetail>selectTicketByResId(String resIds,Integer bizId) {
+        List<BookingSupplierDetail>list= bookingSupplierDetailDal.selectTicketByResId(resIds,bizId);
+        return list;
+    }
 }

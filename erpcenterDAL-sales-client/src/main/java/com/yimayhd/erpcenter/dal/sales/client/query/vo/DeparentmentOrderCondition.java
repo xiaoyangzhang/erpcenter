@@ -15,6 +15,14 @@ public class DeparentmentOrderCondition implements Serializable {
 	private String orgIds;
 	private String operatorIds;
 	
+	private String saleOperatorIds;
+	
+	public String getSaleOperatorIds() {
+		return saleOperatorIds;
+	}
+	public void setSaleOperatorIds(String saleOperatorIds) {
+		this.saleOperatorIds = saleOperatorIds;
+	}
 	public Integer getBizId() {
 		return bizId;
 	}
