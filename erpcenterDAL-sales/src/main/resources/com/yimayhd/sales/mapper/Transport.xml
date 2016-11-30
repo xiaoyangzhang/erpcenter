@@ -43,6 +43,7 @@
 		  <if test="parameter.departureCity != null">and got.`departure_city` LIKE CONCAT('%',#{parameter.departureCity},'%')</if>
 	      <if test="parameter.arrivalCity != null">and got.`arrival_city` LIKE CONCAT('%',#{parameter.arrivalCity},'%')</if>
 	      <if test="parameter.destination != null"> AND got.`destination` LIKE CONCAT('%',#{parameter.destination},'%')</if>
+		  <if test="parameter.receiveMode != null"> AND go.`receive_mode` LIKE CONCAT('%',#{parameter.receiveMode},'%')</if>
 	      <if test="parameter.transportType != null"> AND got.`method` = #{parameter.transportType}</if>
 		) s
 		INNER JOIN tour_group tg 
