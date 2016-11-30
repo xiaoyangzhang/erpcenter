@@ -22,5 +22,6 @@
 	<bean id="productTagBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.ProductTagBizImpl" />
 	<bean id="trafficResBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.TrafficResBizImpl" />
 	<bean id="trafficResProductBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.TrafficResProductBizImpl" />
+	<bean id="taobaoStockBiz" class="com.yimayhd.erpcenter.biz.product.service.impl.TaoBaoStockBIzImpl" />
 	
 </beans>
