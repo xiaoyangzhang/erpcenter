@@ -172,105 +172,110 @@ public class QueryFacadeImpl implements QueryFacade {
             for (GroupOrder gg : goListOutLayer) {
                 // List<Map<String, Object>> listMap = new
                 // ArrayList<Map<String,Object>>();
-                // System.out.println(gg.getProductBrandName()+","+gg.getProductName()+","+gg.getDepartureDate()+","+gg.getNumAdult()+","+gg.getNumChild());
-
-                for (GroupOrder go : pbInnerLayer) {
-                    // System.out.println("-------"+go.getProductBrandName()+"--------"+go.getProductName()+","+go.getDepartureDate()+","+go.getNumAdult()+","+go.getNumChild()+","+go.getPerson());
-                    if (go.getProductBrandName().equals(gg.getProductBrandName())
-                            && go.getProductName().equals(gg.getProductName())) {
-                        String firstDate = go.getDepartureDate().substring(8, 10);
-                        if ("01".equals(firstDate)) {
-                            gg.setDay1(go.getPerson());
+                if (gg != null) {
+                    System.out.println(gg.getProductBrandName() + "," + gg.getProductName() + "," + gg.getDepartureDate() + "," + gg.getNumAdult() + "," + gg.getNumChild());
+                    for (GroupOrder go : pbInnerLayer) {
+                        if(go != null){
+                        System.out.println("-------" + go.getProductBrandName() + "--------" + go.getProductName() + "," + go.getDepartureDate() + "," + go.getNumAdult() + "," + go.getNumChild() + "," + go.getPerson());
+                        if (gg.getProductBrandName() != null && gg.getProductName() != null && go.getProductBrandName() != null && go.getProductName() != null) {
+                            if (go.getProductBrandName().equals(gg.getProductBrandName())
+                                    && go.getProductName().equals(gg.getProductName())) {
+                                String firstDate = go.getDepartureDate().substring(8, 10);
+                                if ("01".equals(firstDate)) {
+                                    gg.setDay1(go.getPerson());
+                                }
+                                if ("02".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay2(go.getPerson());
+                                }
+                                if ("03".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay3(go.getPerson());
+                                }
+                                if ("04".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay4(go.getPerson());
+                                }
+                                if ("05".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay5(go.getPerson());
+                                }
+                                if ("06".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay6(go.getPerson());
+                                }
+                                if ("07".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay7(go.getPerson());
+                                }
+                                if ("08".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay8(go.getPerson());
+                                }
+                                if ("09".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay9(go.getPerson());
+                                }
+                                if ("10".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay10(go.getPerson());
+                                }
+                                if ("11".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay11(go.getPerson());
+                                }
+                                if ("12".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay12(go.getPerson());
+                                }
+                                if ("13".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay13(go.getPerson());
+                                }
+                                if ("14".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay14(go.getPerson());
+                                }
+                                if ("15".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay15(go.getPerson());
+                                }
+                                if ("16".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay16(go.getPerson());
+                                }
+                                if ("17".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay17(go.getPerson());
+                                }
+                                if ("18".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay18(go.getPerson());
+                                }
+                                if ("19".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay19(go.getPerson());
+                                }
+                                if ("20".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay20(go.getPerson());
+                                }
+                                if ("21".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay21(go.getPerson());
+                                }
+                                if ("22".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay22(go.getPerson());
+                                }
+                                if ("23".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay23(go.getPerson());
+                                }
+                                if ("24".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay24(go.getPerson());
+                                }
+                                if ("25".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay25(go.getPerson());
+                                }
+                                if ("26".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay26(go.getPerson());
+                                }
+                                if ("27".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay27(go.getPerson());
+                                }
+                                if ("28".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay28(go.getPerson());
+                                }
+                                if ("29".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay29(go.getPerson());
+                                }
+                                if ("30".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay30(go.getPerson());
+                                }
+                                if ("31".equals(go.getDepartureDate().substring(8, 10))) {
+                                    gg.setDay31(go.getPerson());
+                                }
+                            }
                         }
-                        if ("02".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay2(go.getPerson());
-                        }
-                        if ("03".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay3(go.getPerson());
-                        }
-                        if ("04".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay4(go.getPerson());
-                        }
-                        if ("05".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay5(go.getPerson());
-                        }
-                        if ("06".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay6(go.getPerson());
-                        }
-                        if ("07".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay7(go.getPerson());
-                        }
-                        if ("08".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay8(go.getPerson());
-                        }
-                        if ("09".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay9(go.getPerson());
-                        }
-                        if ("10".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay10(go.getPerson());
-                        }
-                        if ("11".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay11(go.getPerson());
-                        }
-                        if ("12".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay12(go.getPerson());
-                        }
-                        if ("13".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay13(go.getPerson());
-                        }
-                        if ("14".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay14(go.getPerson());
-                        }
-                        if ("15".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay15(go.getPerson());
-                        }
-                        if ("16".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay16(go.getPerson());
-                        }
-                        if ("17".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay17(go.getPerson());
-                        }
-                        if ("18".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay18(go.getPerson());
-                        }
-                        if ("19".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay19(go.getPerson());
-                        }
-                        if ("20".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay20(go.getPerson());
-                        }
-                        if ("21".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay21(go.getPerson());
-                        }
-                        if ("22".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay22(go.getPerson());
-                        }
-                        if ("23".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay23(go.getPerson());
-                        }
-                        if ("24".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay24(go.getPerson());
-                        }
-                        if ("25".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay25(go.getPerson());
-                        }
-                        if ("26".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay26(go.getPerson());
-                        }
-                        if ("27".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay27(go.getPerson());
-                        }
-                        if ("28".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay28(go.getPerson());
-                        }
-                        if ("29".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay29(go.getPerson());
-                        }
-                        if ("30".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay30(go.getPerson());
-                        }
-                        if ("31".equals(go.getDepartureDate().substring(8, 10))) {
-                            gg.setDay31(go.getPerson());
                         }
                     }
                 }
@@ -1279,120 +1284,127 @@ public class QueryFacadeImpl implements QueryFacade {
         PageBean pb = new PageBean();
         if (queryDTO.getPage() == null) {
             pb.setPage(1);
-        }else {
+        } else {
 
             pb.setPage(queryDTO.getPage());
         }
         if (queryDTO.getPageSize() == null) {
             pb.setPageSize(Constants.PAGESIZE);
-        }else {
+        } else {
 
             pb.setPageSize(queryDTO.getPageSize());
         }
         pb.setParameter(queryDTO.getParameters());
-        getCommonService(queryDTO.getSvc()).queryListPage(queryDTO.getSl(),pb);
+        pb = getCommonService(queryDTO.getSvc()).queryListPage(queryDTO.getSl(), pb);
         try {
             List result = pb.getResult();
             Map paramters = queryDTO.getParameters();
-            Map conditionMap = new HashMap();
+//            Map conditionMap = new HashMap();
             if (!CollectionUtils.isEmpty(result)) {
 
                 if (paramters.get("groupMode").equals('0')) {
-                    for (int i = 0; i < result.size(); i++) {
-                        Map map = (Map) result.get(i);
-                        String productBrandId = (String) map.get("productBrandId");
-                        String productId = (String) map.get("productId");
-                        paramters.put("productBrandId", productBrandId);
-                        paramters.put("productId", productId);
-                        map.put("planedPersonCount", productGroupPriceBiz.selectProductByProduct(paramters));
+
+                    if (result != null && result.size() > 0) {
+
+                        if (queryDTO.getGroupMode().equals("0")) {
+                            for (int i = 0; i < result.size(); i++) {
+                                Map map = (Map) result.get(i);
+                                String productBrandId = (String) map.get("productBrandId");
+                                String productId = (String) map.get("productId");
+                                paramters.put("productBrandId", productBrandId);
+                                paramters.put("productId", productId);
+                                map.put("planedPersonCount", productGroupPriceBiz.selectProductByProduct(paramters));
+                            }
+                        }
                     }
+                    queryResult.setPageBean(pb);
+
                 }
             }
-            queryResult.setPageBean(pb);
-        } catch (Exception e) {
-            logger.error("", e);
-        }
-        return queryResult;
-    }
-
-    @Override
-    public QueryResult loadOrderId(QueryDTO queryDTO) {
-        QueryResult queryResult = new QueryResult();
-        try {
-            List<GroupOrder> groupOrders = groupOrderBiz
-                    .selectOrderByGroupId(queryDTO.getGroupId());
-            queryResult.setGroupOrders(groupOrders);
-        } catch (Exception e) {
-            logger.error("", e);
-        }
-        return queryResult;
-    }
-
-    @Override
-    public QueryResult productGuestDetailPreview(QueryDTO queryDTO) {
-        QueryResult queryResult = new QueryResult();
-        try {
-            if (StringUtils.isBlank(queryDTO.getProductGuestCondition().getOperatorIds()) && StringUtils.isNotBlank(queryDTO.getProductGuestCondition().getOrgIds())) {
-                Set<Integer> set = new HashSet<Integer>();
-                String[] orgIdArr = queryDTO.getProductGuestCondition().getOrgIds().split(",");
-                for (String orgIdStr : orgIdArr) {
-                    set.add(Integer.valueOf(orgIdStr));
+        }catch(Exception e){
+                    logger.error("", e);
                 }
-                set = platformEmployeeBiz.getUserIdListByOrgIdList(queryDTO.getBizId(), set);
-                String salesOperatorIds = "";
-                for (Integer usrId : set) {
-                    salesOperatorIds += usrId + ",";
-                }
-                if (!salesOperatorIds.equals("")) {
-                    queryDTO.getProductGuestCondition().setOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
-                }
-            }
-            // if (condition.getStartDate() != null) {
-            // condition.setStartDateNum(condition.getStartDate().getTime());
-            // }
-            // if (condition.getEndDate() != null) {
-            // condition.setEndDateNum(condition.getEndDate().getTime());
-            // }
-            if (queryDTO.getProductGuestCondition().getDateType() != null && queryDTO.getProductGuestCondition().getDateType() == 1) {
-                if (!"".equals(queryDTO.getProductGuestCondition().getStartDate())) {
-                    queryDTO.getProductGuestCondition().setStartDateNum(queryDTO.getProductGuestCondition().getStartDate().getTime());
-                }
-                if (!"".equals(queryDTO.getProductGuestCondition().getEndDate())) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(queryDTO.getProductGuestCondition().getEndDate());
-                    calendar.add(Calendar.DAY_OF_MONTH, +1);// 让日期加1
-                    queryDTO.getProductGuestCondition().setEndDateNum(calendar.getTime().getTime());
-                }
+                return queryResult;
             }
 
-          //  String imgPath = bizSettingCommon.getMyBizLogo(request);
-          //  model.addAttribute("imgPath", imgPath);
-            queryDTO.getProductGuestCondition().setBizId(queryDTO.getBizId());
-            List<ProductGuestStaticsVo> productGuestStatics = queryBiz.productGuestStatics2(queryDTO.getProductGuestCondition(),
-                    queryDTO.getUserIdSet());
-            queryResult.setProductGuestStatics(productGuestStatics);
-        } catch (Exception e) {
-            logger.error("", e);
-        }
-        return queryResult;
-    }
-
-    @Override
-    public QueryResult getAccountDetail(QueryDTO queryDTO) {
-        QueryResult queryResult = new QueryResult();
-        try {
-            queryResult = commonQuery(queryDTO);
-            PageBean pb = queryResult.getPageBean();
-            if (StringUtils.isNotBlank(queryDTO.getSsl())) {
-                Map pm = (Map) pb.getParameter();
-                pm.put("parameter", pm);
-                queryResult.setSum(getCommonService(queryDTO.getSvc()).queryOne(queryDTO.getSsl(), pm));
+            @Override
+            public QueryResult loadOrderId (QueryDTO queryDTO){
+                QueryResult queryResult = new QueryResult();
+                try {
+                    List<GroupOrder> groupOrders = groupOrderBiz
+                            .selectOrderByGroupId(queryDTO.getGroupId());
+                    queryResult.setGroupOrders(groupOrders);
+                } catch (Exception e) {
+                    logger.error("", e);
+                }
+                return queryResult;
             }
-        } catch (Exception e) {
-            logger.error("", e);
-        }
-        return queryResult;
-    }
+
+            @Override
+            public QueryResult productGuestDetailPreview (QueryDTO queryDTO){
+                QueryResult queryResult = new QueryResult();
+                try {
+                    if (StringUtils.isBlank(queryDTO.getProductGuestCondition().getOperatorIds()) && StringUtils.isNotBlank(queryDTO.getProductGuestCondition().getOrgIds())) {
+                        Set<Integer> set = new HashSet<Integer>();
+                        String[] orgIdArr = queryDTO.getProductGuestCondition().getOrgIds().split(",");
+                        for (String orgIdStr : orgIdArr) {
+                            set.add(Integer.valueOf(orgIdStr));
+                        }
+                        set = platformEmployeeBiz.getUserIdListByOrgIdList(queryDTO.getBizId(), set);
+                        String salesOperatorIds = "";
+                        for (Integer usrId : set) {
+                            salesOperatorIds += usrId + ",";
+                        }
+                        if (!salesOperatorIds.equals("")) {
+                            queryDTO.getProductGuestCondition().setOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+                        }
+                    }
+                    // if (condition.getStartDate() != null) {
+                    // condition.setStartDateNum(condition.getStartDate().getTime());
+                    // }
+                    // if (condition.getEndDate() != null) {
+                    // condition.setEndDateNum(condition.getEndDate().getTime());
+                    // }
+                    if (queryDTO.getProductGuestCondition().getDateType() != null && queryDTO.getProductGuestCondition().getDateType() == 1) {
+                        if (!"".equals(queryDTO.getProductGuestCondition().getStartDate())) {
+                            queryDTO.getProductGuestCondition().setStartDateNum(queryDTO.getProductGuestCondition().getStartDate().getTime());
+                        }
+                        if (!"".equals(queryDTO.getProductGuestCondition().getEndDate())) {
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(queryDTO.getProductGuestCondition().getEndDate());
+                            calendar.add(Calendar.DAY_OF_MONTH, +1);// 让日期加1
+                            queryDTO.getProductGuestCondition().setEndDateNum(calendar.getTime().getTime());
+                        }
+                    }
+
+                    //  String imgPath = bizSettingCommon.getMyBizLogo(request);
+                    //  model.addAttribute("imgPath", imgPath);
+                    queryDTO.getProductGuestCondition().setBizId(queryDTO.getBizId());
+                    List<ProductGuestStaticsVo> productGuestStatics = queryBiz.productGuestStatics2(queryDTO.getProductGuestCondition(),
+                            queryDTO.getUserIdSet());
+                    queryResult.setProductGuestStatics(productGuestStatics);
+                } catch (Exception e) {
+                    logger.error("", e);
+                }
+                return queryResult;
+            }
+
+            @Override
+            public QueryResult getAccountDetail (QueryDTO queryDTO){
+                QueryResult queryResult = new QueryResult();
+                try {
+                    queryResult = commonQuery(queryDTO);
+                    PageBean pb = queryResult.getPageBean();
+                    if (StringUtils.isNotBlank(queryDTO.getSsl())) {
+                        Map pm = (Map) pb.getParameter();
+                        pm.put("parameter", pm);
+                        queryResult.setSum(getCommonService(queryDTO.getSvc()).queryOne(queryDTO.getSsl(), pm));
+                    }
+                } catch (Exception e) {
+                    logger.error("", e);
+                }
+                return queryResult;
+            }
 
    /* @Override
     public QueryResult toBookingShopList(QueryDTO queryDTO) {
@@ -1447,22 +1459,22 @@ public class QueryFacadeImpl implements QueryFacade {
         return queryResult;
     }**/
 
-    /**
-     * 获取查询服务
-     *
-     * @author Jing.Zhuo
-     * @create 2015年8月18日 上午9:34:25
-     * @param svc
-     * @return
-     */
-    private CommonSaleBiz getCommonService(String svc) {
-        if (StringUtils.isBlank(svc)) {
-            svc = "commonSaleBiz";
+            /**
+             * 获取查询服务
+             *
+             * @author Jing.Zhuo
+             * @create 2015年8月18日 上午9:34:25
+             * @param svc
+             * @return
+             */
+        private CommonSaleBiz getCommonService (String svc){
+            if (StringUtils.isBlank(svc)) {
+                svc = "commonSaleBiz";
+            }
+            return appContext.getBean(svc, CommonSaleBiz.class);
         }
-        return appContext.getBean(svc, CommonSaleBiz.class);
-    }
 
-    private Integer zeroIfNull(Integer cnt) {
-        return cnt == null ? 0 : cnt;
+        private Integer zeroIfNull (Integer cnt){
+            return cnt == null ? 0 : cnt;
+        }
     }
-}
