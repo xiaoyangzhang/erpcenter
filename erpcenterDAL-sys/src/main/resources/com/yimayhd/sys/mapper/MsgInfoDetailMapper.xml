@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yimayhd.sys.mapper.MsgInfoDetailMapper">
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.MsgInfoDetailMapper">
 	<resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.MsgInfoDetail">
 		<id column="id" jdbcType="INTEGER" property="id" />
 		<result column="msg_info_id" jdbcType="INTEGER" property="msgInfoId" />
@@ -98,10 +98,10 @@
 	SELECT COUNT(mid.id) AS total_count,
 	(SELECT COUNT(mid.id) FROM msg_info_detail AS mid 
     LEFT JOIN msg_info AS mi ON (mid.msg_info_id=mi.id) 
-	WHERE `status`=0  AND mi.msg_type=0 AND user_id=#{userId,jdbcType=INTEGER}) AS read_count,
+	WHERE status=0  AND mi.msg_type=0 AND user_id=#{userId,jdbcType=INTEGER}) AS read_count,
 	(SELECT COUNT(mid.id) FROM msg_info_detail AS mid 
     LEFT JOIN msg_info AS mi ON (mid.msg_info_id=mi.id) 
-	WHERE `status`=0  AND mi.msg_type=1 AND user_id=#{userId,jdbcType=INTEGER}) AS unread_count
+	WHERE status=0  AND mi.msg_type=1 AND user_id=#{userId,jdbcType=INTEGER}) AS unread_count
 	FROM msg_info_detail AS mid 
 	LEFT JOIN msg_info AS mi ON (mid.msg_info_id=mi.id) 
 	WHERE mid.status=0 AND biz_id=#{bizId,jdbcType=INTEGER} AND user_id=#{userId,jdbcType=INTEGER}
