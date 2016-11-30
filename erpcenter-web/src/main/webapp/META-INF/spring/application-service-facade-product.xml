@@ -9,5 +9,6 @@
 	<bean id="productPricePlusFacade" class="com.yimayhd.erpcenter.facade.product.service.impl.ProductPricePlusFacadeImpl" />
 	<bean id="productStockFacade" class="com.yimayhd.erpcenter.facade.product.service.impl.ProductStockFacadeImpl" />
 	<bean id="productUpAndDownFrameFacade" class="com.yimayhd.erpcenter.facade.product.service.impl.ProductUpAndDownFrameFacadeImpl" />
+	<bean id="trafficResFacade" class="com.yimayhd.erpcenter.facade.product.service.impl.TrafficResFacadeImpl" />
  
 </beans>
