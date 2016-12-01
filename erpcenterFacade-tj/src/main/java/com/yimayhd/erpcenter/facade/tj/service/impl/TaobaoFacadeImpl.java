@@ -79,6 +79,8 @@ import com.yimayhd.erpcenter.facade.tj.client.result.ToEditTaobaoOrderResult;
 import com.yimayhd.erpcenter.facade.tj.client.result.WebResult;
 import com.yimayhd.erpcenter.facade.tj.client.service.TaobaoFacade;
 import com.yimayhd.erpcenter.facade.tj.client.utils.LogUtils;
+
+import org.springframework.ui.ModelMap;
 import org.springframework.web.util.WebUtils;
 
 public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
@@ -1279,4 +1281,69 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		}
 		return webResult;
 	}
+	
+	@Override
+	public TaobaoOrderListByOpDTO productProfitStatistics(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO){
+		 Integer bizId = taobaoOrderListByOpDTO.getBizId();
+         List<DicInfo> typeList = dicBiz.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE, bizId);
+//         model.addAttribute("typeList", typeList);
+//         model.addAttribute("orgJsonStr", orgService.getComponentOrgTreeJsonStr(WebUtils.getCurBizId(request)));
+//         model.addAttribute("orgUserJsonStr",
+//                 platformEmployeeService.getComponentOrgUserTreeJsonStr(WebUtils.getCurBizId(request)));
+         taobaoOrderListByOpDTO.setTypeList(typeList);
+         taobaoOrderListByOpDTO.setOrgJsonStr(platformOrgBiz.getComponentOrgTreeJsonStr(bizId));
+         taobaoOrderListByOpDTO.setOrgUserJsonStr(platformEmployeeBiz.getComponentOrgUserTreeJsonStr(bizId));
+         
+         return taobaoOrderListByOpDTO;
+	}
+	
+	@Override
+	 public TaobaoOrderListByOpDTO productProfitStatistics_table(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO){
+		  PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
+	        if (taobaoOrderListByOpDTO.getPages() == null) {
+	            pageBean.setPage(1);
+	        } else {
+	            pageBean.setPage(taobaoOrderListByOpDTO.getPages());
+	        }
+	        if (taobaoOrderListByOpDTO.getPageSize() == null) {
+	            pageBean.setPageSize(Constants.PAGESIZE);
+	        } else {
+	            pageBean.setPageSize(taobaoOrderListByOpDTO.getPageSize());
+	        }
+	        Map<String, Object> pm =taobaoOrderListByOpDTO.getPm();
+	        Object orgIds = pm.get("orgIds");
+	        if (orgIds != null && StringUtils.isNotBlank(orgIds.toString())) {
+	            Set<Integer> set = new HashSet<Integer>();
+	            String[] orgIdArr = orgIds.toString().split(",");
+	            for (String orgIdStr : orgIdArr) {
+	                set.add(Integer.valueOf(orgIdStr));
+	            }
+	            set = platformEmployeeBiz.getUserIdListByOrgIdList(taobaoOrderListByOpDTO.getBizId(), set);
+	            String salesOperatorIds = "";
+	            for (Integer usrId : set) {
+	                salesOperatorIds += usrId + ",";
+	            }
+	            if (!salesOperatorIds.equals("")) {
+	                pm.put("saleOperatorIds", salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+	            }
+	        }
+	        pm.put("set", taobaoOrderListByOpDTO.getDataUserIdSets());
+	        pageBean.setParameter(pm);
+	        pageBean = groupOrderBiz.selectProductProfitStatisticsListPage(pageBean, taobaoOrderListByOpDTO.getBizId());
+	        //model.addAttribute("pageBean", pageBean);
+	        taobaoOrderListByOpDTO.setPageBean(pageBean);
+	        //Integer bizId = WebUtils.getCurBizId(request);
+	        List<DicInfo> typeList = dicBiz.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE, taobaoOrderListByOpDTO.getBizId());
+	        //model.addAttribute("typeList", typeList);
+	        taobaoOrderListByOpDTO.setTypeList(typeList);;
+		return taobaoOrderListByOpDTO;
+	}
+	
+	@Override
+	public PageBean<GroupOrder> excelProductProfit(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO) {
+        PageBean<GroupOrder> pageBean =taobaoOrderListByOpDTO.getPage();
+        pageBean = groupOrderBiz.selectProductProfitStatisticsListPage(pageBean, taobaoOrderListByOpDTO.getBizId());
+        return pageBean;
+	}
+	
 }
