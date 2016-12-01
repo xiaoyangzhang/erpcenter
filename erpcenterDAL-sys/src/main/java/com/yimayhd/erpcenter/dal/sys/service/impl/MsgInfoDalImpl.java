@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.dal.sys.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yihg.mybatis.utility.PageBean;
@@ -27,13 +28,17 @@ public class MsgInfoDalImpl implements MsgInfoDal {
         if (miid > 0) {
             if (mi.getId() > 0) {
                 idss = ids.split(",");
-                namess = names.split(",");
+                if(!StringUtils.isBlank(names)){
+                	namess = names.split(",");
+                }
                 MsgInfoDetail mid;
                 for (int i = 0; i < idss.length; i++) {
                     mid = new MsgInfoDetail();
                     mid.setMsgInfoId(mi.getId());
                     mid.setUserId(Integer.parseInt(idss[i]));
-                    mid.setUserName(namess[i]);
+                    if(null!=namess && namess.length>0){
+                    	mid.setUserName(namess[i]);
+                    }
                     mid.setStatus(0);
                     try {
                         msgInfoDetailMapper.insertSelective(mid);
