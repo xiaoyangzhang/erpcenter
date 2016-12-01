@@ -1211,4 +1211,9 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
     public Map<String, Object> selectProfitEverifyByTotal(PageBean pageBean, Integer bizId, Set<Integer> set, Integer userRightType) {
         return groupOrderDal.selectProfitEverifyByTotal(pageBean, bizId, set,userRightType);
     }
+
+	@Override
+	public PageBean<GroupOrder> selectProductProfitStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId) {
+		return groupOrderDal.selectProductProfitStatisticsListPage(pageBean, bizId);
+	}
 }

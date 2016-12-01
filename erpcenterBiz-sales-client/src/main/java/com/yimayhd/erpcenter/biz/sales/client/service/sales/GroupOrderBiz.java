@@ -457,7 +457,7 @@ public GroupOrder selectProfitEverifyByCon(GroupOrder groupOrder, Integer bizId,
 
 Map<String, Object> selectProfitEverifyByTotal(PageBean pageBean,Integer bizId,Set<Integer> set,Integer userRightType);
 
-
+public PageBean<GroupOrder>selectProductProfitStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId);
 
 
 

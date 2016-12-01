@@ -176,4 +176,17 @@ public interface TaobaoFacade{
 	 * @return
 	 */
 	WebResult<PageBean> saleInsurance(TaobaoOrderListTableDTO taobaoOrderListTableDTO,Integer page,Integer pageSize,Integer userRightType);
+	
+    /**
+     * 产品利润统计
+     *
+     * @param request
+     * @param model
+     * @return
+     */
+	public TaobaoOrderListByOpDTO productProfitStatistics(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO);
+	
+	public TaobaoOrderListByOpDTO productProfitStatistics_table(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO);
+	
+	public PageBean<GroupOrder> excelProductProfit(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO);
 }
