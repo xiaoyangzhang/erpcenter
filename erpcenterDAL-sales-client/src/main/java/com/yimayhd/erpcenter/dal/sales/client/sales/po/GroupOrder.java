@@ -155,6 +155,7 @@ public class GroupOrder implements Serializable {
     private BigDecimal otherTotalBalance;
     private BigDecimal totalBudget; // 成本预算
     private BigDecimal totalIncome; // 成本收入
+    private BigDecimal totalCost;
     private List<Integer> idList;
     private String auditUser;
 
@@ -176,7 +177,15 @@ public class GroupOrder implements Serializable {
     
     private Integer byType;
    
-    public Integer getByType() {
+    public BigDecimal getTotalCost() {
+		return totalCost;
+	}
+
+	public void setTotalCost(BigDecimal totalCost) {
+		this.totalCost = totalCost;
+	}
+
+	public Integer getByType() {
 		return byType;
 	}
 
