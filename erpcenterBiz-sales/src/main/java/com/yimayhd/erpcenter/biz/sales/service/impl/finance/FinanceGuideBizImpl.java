@@ -212,7 +212,7 @@ public class FinanceGuideBizImpl implements FinanceGuideBiz {
 	@Transactional
 	public void batchInsertCommission(Integer bizId, Integer userId, String userName, List<FinanceCommission> list){
 		
-		financeGuideDal.batchInsertCommissionDeduction(bizId, userId, userName, list);
+		financeGuideDal.batchInsertCommission(bizId, userId, userName, list);
 	}
 	
 	/**
