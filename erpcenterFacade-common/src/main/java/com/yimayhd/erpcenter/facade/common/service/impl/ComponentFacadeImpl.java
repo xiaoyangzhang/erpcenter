@@ -28,6 +28,7 @@ import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.biz.service.SupplierDriverBiz;
 import com.yimayhd.erpresource.dal.po.SupplierDriver;
 import com.yimayhd.erpresource.dal.po.SupplierInfo;
+import org.springframework.web.util.WebUtils;
 
 /**
  * @ClassName: ${ClassName}
@@ -60,7 +61,8 @@ public class ComponentFacadeImpl implements ComponentFacade {
 	
 	@Autowired
 	private ProductStockBiz stockBiz;
-	
+	@Autowired
+	SysDataRightSupplierBiz sysDataRightSupplierBiz;
 	@Override
 	public List<PlatformOrgPo> getOrgTree(Integer bizId, Integer parentId) {
 		
@@ -69,7 +71,28 @@ public class ComponentFacadeImpl implements ComponentFacade {
 	}
 
 	@Override
-	public PageBean supplierList(Integer bizId, SupplierInfo supplierInfo) {
+	public PageBean supplierList(Integer bizId, SupplierInfo supplierInfo,String canEditPrice,Integer orgId) {
+
+		if(canEditPrice !=null &&supplierInfo.getSupplierType()==1 &&canEditPrice.equals("1")){
+			supplierInfo.setChooseType(1);
+			StringBuilder sb = new StringBuilder();
+			PlatformOrgPo org=orgBiz.findByOrgId(orgId);
+			String[] orgIdArr = org.getOrgPath().split("-");
+			for (String str : orgIdArr) {
+				if (sb.indexOf(str) < 0) {
+					sb.append(str + ",");
+				}
+			}
+			List<SysDataRightSupplier> lists=sysDataRightSupplierBiz.selectSysDataRightSupplierInOrgIds(sb.substring(0, sb.length()-1));
+			String ids = "";
+			if(lists !=null &&lists.size()>0){
+				for(SysDataRightSupplier item:lists){
+					ids += item.getSupplierId() + ",";
+				}
+				supplierInfo.setSupplierIds(ids.substring(0, ids.length() - 1));
+			}
+		}
+
 		PageBean pageBean = new PageBean();
 		pageBean.setPageSize(supplierInfo.getPageSize());
 		pageBean.setParameter(supplierInfo);

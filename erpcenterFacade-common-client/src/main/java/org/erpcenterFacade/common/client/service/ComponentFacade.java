@@ -21,7 +21,7 @@ public interface ComponentFacade {
 
 	List<PlatformOrgPo> getOrgTree(Integer bizId, Integer parentId);
 	
-	PageBean supplierList(Integer bizId, SupplierInfo supplierInfo);
+	PageBean supplierList(Integer bizId, SupplierInfo supplierInfo,String canEditPrice,Integer orgId);
 	
 	PageBean getMyDriverList(SupplierDriver driver, Integer bizId, Integer supplierId, Integer page, Integer pageSize);
 	
