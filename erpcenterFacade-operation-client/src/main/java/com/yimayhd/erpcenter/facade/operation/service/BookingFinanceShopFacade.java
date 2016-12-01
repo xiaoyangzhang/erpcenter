@@ -3,6 +3,7 @@
  */
 package com.yimayhd.erpcenter.facade.operation.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,11 +12,14 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGuidesVO;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingShopDetailDeployVO;
 import com.yimayhd.erpcenter.facade.operation.query.BookingFinanceShopQueryDTO;
 import com.yimayhd.erpcenter.facade.operation.result.BookingShopResult;
 import com.yimayhd.erpcenter.facade.operation.result.FinanceShopResult;
 import com.yimayhd.erpcenter.facade.operation.result.ResultSupport;
+import com.yimayhd.erpcenter.facade.operation.result.WebResult;
+import com.yimayhd.erpresource.dal.po.SupplierContractPriceDateInfo;
 
 /**
  * @ClassName: BookingFinanceShopFacade
@@ -56,5 +60,16 @@ public interface BookingFinanceShopFacade {
 	ResultSupport delBookingShop(Integer bookingId);
 	
 	ResultSupport delShopAndDetail(Integer bookingId);
-	String toSaveExcelData(BookingFinanceShopQueryDTO queryDTO) ;
+//	String toSaveExcelData(BookingFinanceShopQueryDTO queryDTO) ;
+
+
+	BookingShopResult findSupplierItemBySupplierId(Integer supplierId);
+
+	BookingShopResult selectByGroupCode(String groupCode);
+
+	WebResult<List<BookingGuidesVO>> selectBookingGuideVoByGroupId(Integer id);
+
+	WebResult<List<SupplierContractPriceDateInfo>> getContractPriceByPramas(Integer bizId, Integer supplierId, Integer supplierItemId, List<Date> dateList);
+
+	WebResult<Boolean> saveShopAndDetail(BookingFinanceShopQueryDTO queryDTO);
 }

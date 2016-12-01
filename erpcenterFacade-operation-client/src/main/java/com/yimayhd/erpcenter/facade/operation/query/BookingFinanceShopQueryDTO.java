@@ -1,13 +1,13 @@
 package com.yimayhd.erpcenter.facade.operation.query;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
+import com.yimayhd.erpresource.dal.po.SupplierItem;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.poi.ss.usermodel.Sheet;
-
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
-import com.yimayhd.erpresource.dal.po.SupplierItem;
 
 public class BookingFinanceShopQueryDTO implements Serializable {
 
@@ -18,12 +18,15 @@ public class BookingFinanceShopQueryDTO implements Serializable {
 	private Integer supplierId;
 	private Integer bizId;
 	private String bizCode;
-	private Sheet sheet;
+//	private Sheet sheet;
 	private List<SupplierItem> supplierItems;
 	private String userName;
 	private Integer userId;
 	private String supplierName;
 	private Map<String, Object> map;
+	private BookingShop shop =new BookingShop();
+
+	private List<BookingShopDetail> bShopDetails= new ArrayList<BookingShopDetail>();
 	
 	public Map<String, Object> getMap() {
 		return map;
@@ -67,12 +70,12 @@ public class BookingFinanceShopQueryDTO implements Serializable {
 	public void setBizCode(String bizCode) {
 		this.bizCode = bizCode;
 	}
-	public Sheet getSheet() {
-		return sheet;
-	}
-	public void setSheet(Sheet sheet) {
-		this.sheet = sheet;
-	}
+//	public Sheet getSheet() {
+//		return sheet;
+//	}
+//	public void setSheet(Sheet sheet) {
+//		this.sheet = sheet;
+//	}
 	
 	public List<SupplierItem> getSupplierItems() {
 		return supplierItems;
@@ -80,5 +83,20 @@ public class BookingFinanceShopQueryDTO implements Serializable {
 	public void setSupplierItems(List<SupplierItem> supplierItems) {
 		this.supplierItems = supplierItems;
 	}
-	
+
+	public BookingShop getShop() {
+		return shop;
+	}
+
+	public void setShop(BookingShop shop) {
+		this.shop = shop;
+	}
+
+	public List<BookingShopDetail> getbShopDetails() {
+		return bShopDetails;
+	}
+
+	public void setbShopDetails(List<BookingShopDetail> bShopDetails) {
+		this.bShopDetails = bShopDetails;
+	}
 }
