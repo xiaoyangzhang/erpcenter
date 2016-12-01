@@ -1304,9 +1304,7 @@ public class QueryFacadeImpl implements QueryFacade {
 
                 if (paramters.get("groupMode").equals('0')) {
 
-                    if (result != null && result.size() > 0) {
 
-                        if (queryDTO.getGroupMode().equals("0")) {
                             for (int i = 0; i < result.size(); i++) {
                                 Map map = (Map) result.get(i);
                                 String productBrandId = (String) map.get("productBrandId");
@@ -1319,8 +1317,7 @@ public class QueryFacadeImpl implements QueryFacade {
                     }
                     queryResult.setPageBean(pb);
 
-                }
-            }
+
         }catch(Exception e){
                     logger.error("", e);
                 }

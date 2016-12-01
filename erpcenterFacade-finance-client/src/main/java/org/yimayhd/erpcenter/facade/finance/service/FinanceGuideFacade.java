@@ -101,6 +101,12 @@ public interface FinanceGuideFacade{
 	 */
 	ToAddCommissionResult addCommission(Integer bizId, Integer groupId, String commType);
 	
+	/**
+	 * 跳转到扣除佣金录入页面
+	 */
+	ToAddCommissionResult addCommissionDeduction(Integer bizId, Integer groupId, String commType);
+
+	
 	ToAddCommission2Result addCommission2(AddCommission2DTO dto);
 	
 	/**

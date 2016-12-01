@@ -376,6 +376,19 @@ public class FinanceGuideFacadeImpl implements FinanceGuideFacade{
 		result.setDicInfoList(dicInfoList);
 		return result;
 	}
+	
+	@Override
+	public ToAddCommissionResult addCommissionDeduction(Integer bizId, Integer groupId, String commType) {
+		List<FinanceCommission> comList = financeGuideBiz.selectCommissionDeductionByGroupId(groupId);
+		List<BookingGuide> guideList = bookingGuideBiz.selectDistinctListByGroupId(groupId);
+		List<DicInfo> dicInfoList = dicBiz.getListByTypeCode(commType, bizId);
+		
+		ToAddCommissionResult result = new ToAddCommissionResult();
+		result.setComList(comList);
+		result.setGuideList(guideList);
+		result.setDicInfoList(dicInfoList);
+		return result;
+	}
 
 	@Override
 	public ToAddCommission2Result addCommission2(AddCommission2DTO dto) {
