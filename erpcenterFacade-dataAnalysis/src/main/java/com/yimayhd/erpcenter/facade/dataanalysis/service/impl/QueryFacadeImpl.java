@@ -1406,6 +1406,134 @@ public class QueryFacadeImpl implements QueryFacade {
                 return queryResult;
             }
 
+    @Override
+    public QueryResult departmentOrderListPage(QueryDTO queryDTO) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            Integer bizId = queryDTO.getBizId();
+            List<PlatformOrgPo> secLevelOrgList = null;
+            String staticsOrgIds = queryDTO.getStaticsOrgIds();
+            if (staticsOrgIds != null) {
+                String[] orgIdArr = staticsOrgIds.split(",");
+                Set<Integer> sets = new HashSet<Integer>();
+                for (String orgIdStr : orgIdArr) {
+                    sets.add(TypeUtils.castToInt(orgIdStr));
+                }
+                // 获取商户二级部门的集合
+                secLevelOrgList = platformOrgBiz.selectOrgListByIdSet(bizId, sets);
+            } else {
+                // 获取商户二级部门的集合
+                secLevelOrgList = platformOrgBiz.getSecLevelOrgList(bizId);
+            }
+            if (StringUtils.isBlank(queryDTO.getCondition().getSaleOperatorIds())
+                    && StringUtils.isNotBlank(queryDTO.getCondition().getOrgIds())) {
+                Set<Integer> set = new HashSet<Integer>();
+                String[] orgIdArr = queryDTO.getCondition().getOrgIds().split(",");
+                for (String orgIdStr : orgIdArr) {
+                    set.add(Integer.valueOf(orgIdStr));
+                }
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId,
+                        set);
+                String salesOperatorIds = "";
+                for (Integer usrId : set) {
+                    salesOperatorIds += usrId + ",";
+                }
+                if (!salesOperatorIds.equals("")) {
+                    queryDTO.getCondition().setSaleOperatorIds(
+                            salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+                }
+            }
+            queryDTO.getCondition().setBizId(bizId);
+           // model.addAttribute("secLevelOrgList", secLevelOrgList);//获取机构信息
+            queryResult.setSecLevelOrgList(secLevelOrgList);
+            List<Integer> orgIdList = new ArrayList<Integer>();
+            for (PlatformOrgPo org : secLevelOrgList) {
+                orgIdList.add(org.getOrgId());
+            }
+            // 获取当前商户三级部门的集合
+            List<PlatformOrgPo> subLevelOrgList = platformOrgBiz.selectSubDeptNumOrgList(
+                    bizId, orgIdList);
+           // model.addAttribute("subLevelOrgList", subLevelOrgList);//获取部门信息
+            queryResult.setSecLevelOrgList(secLevelOrgList);
+            Map<Integer, List<PlatformOrgPo>> orgDepMap = new HashMap<Integer, List<PlatformOrgPo>>();
+            //根据部门org_id获取部门员工信息
+            Set<Integer> sets = new HashSet<Integer>();
+            for (PlatformOrgPo org : subLevelOrgList) {
+                List<PlatformOrgPo> depList = null;
+                if (orgDepMap.containsKey(org.getParentId())) {
+                    depList = orgDepMap.get(org.getParentId());
+                } else {
+                    depList = new ArrayList<PlatformOrgPo>();
+                }
+                depList.add(org);
+                orgDepMap.put(org.getParentId(), depList);
+                sets.add(org.getOrgId());
+            }
+           // model.addAttribute("orgDepMap", orgDepMap);
+            queryResult.setOrgDepMap(orgDepMap);
+            List<PlatformEmployeePo> employeeList =
+                    platformEmployeeBiz.getOrgIdListByEmployee(bizId, sets);
+
+            //将员工信息放入Map中传入页面
+            Map<Integer, List<PlatformEmployeePo>> empMap =
+                    new HashMap<Integer, List<PlatformEmployeePo>>();
+            //获取员工Id
+            Set<Integer> saleOperatorIdSet = new HashSet<Integer>();
+            for (PlatformEmployeePo  emp: employeeList) {
+                List<PlatformEmployeePo> empList = null;
+                if (empMap.containsKey(emp.getOrgId())) {
+                    empList = empMap.get(emp.getOrgId());
+                } else {
+                    empList = new ArrayList<PlatformEmployeePo>();
+                }
+                empList.add(emp);
+                empMap.put(emp.getOrgId(), empList);
+                saleOperatorIdSet.add(emp.getEmployeeId());
+            }
+           // model.addAttribute("empMap", empMap);
+            queryResult.setEmpMap(empMap);
+
+            //根据员工id(employee_id=sale_operator_id)获取订单信息
+            List<GroupOrder> gOrdersList =
+                    groupOrderBiz.selectBySaleOperatorId(bizId,queryDTO.getCondition() ,queryDTO.getUserIdSet());
+
+            Map<Integer, List<GroupOrder>> orderMap =
+                    new HashMap<Integer, List<GroupOrder>>();
+
+		/*Set<Integer> productIdSet = new HashSet<Integer>();
+		for(GroupOrder goBean : gOrdersList){
+			productIdSet.add(goBean.getProductId());
+		}*/
+            //获取产品信息中产品来源信息
+		/*List<ProductInfo> proSourceTypeList =
+					productInfoService.selectByProSourceType(bizId, productIdSet);*/
+
+            for (GroupOrder go : gOrdersList) {
+			/*ProductInfo proSourceType =
+					productInfoService.selectByProSourceType(bizId, go.getProductId());*/
+			/*if(proSourceType != null){
+				go.setSourceTypes(proSourceType.getSourceType());
+			}*/
+                List<GroupOrder> orderList = null;
+                if (orderMap.containsKey(go.getSaleOperatorId())) {
+                    orderList = orderMap.get(go.getSaleOperatorId());
+                } else {
+                    orderList = new ArrayList<GroupOrder>();
+                }
+                orderList.add(go);
+                orderMap.put(go.getSaleOperatorId(), orderList);
+            }
+
+            //model.addAttribute("orderMap", orderMap);
+            //model.addAttribute("gOrdersList", gOrdersList);
+            queryResult.setOrderMap(orderMap);
+            queryResult.setgOrdersList(gOrdersList);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return queryResult;
+    }
+
    /* @Override
     public QueryResult toBookingShopList(QueryDTO queryDTO) {
         QueryResult queryResult = new QueryResult();

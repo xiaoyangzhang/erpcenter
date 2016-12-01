@@ -13,6 +13,7 @@ import com.yimayhd.erpcenter.dal.sales.client.query.vo.DepartmentOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestStaticsVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 
 /**
@@ -41,6 +42,9 @@ public class QueryResult extends BaseResult {
     private int planedPersonCount;
     private List<GroupOrder> groupOrders;
     private Map sum;
+    private Map<Integer, List<PlatformEmployeePo>> empMap;
+    private Map<Integer, List<GroupOrder>> orderMap;
+    private List<GroupOrder> gOrdersList;
 
     public Map getSum() {
         return sum;
@@ -214,5 +218,29 @@ public class QueryResult extends BaseResult {
 
     public void setPageBean(PageBean pageBean) {
         this.pageBean = pageBean;
+    }
+
+    public Map<Integer, List<PlatformEmployeePo>> getEmpMap() {
+        return empMap;
+    }
+
+    public void setEmpMap(Map<Integer, List<PlatformEmployeePo>> empMap) {
+        this.empMap = empMap;
+    }
+
+    public Map<Integer, List<GroupOrder>> getOrderMap() {
+        return orderMap;
+    }
+
+    public void setOrderMap(Map<Integer, List<GroupOrder>> orderMap) {
+        this.orderMap = orderMap;
+    }
+
+    public List<GroupOrder> getgOrdersList() {
+        return gOrdersList;
+    }
+
+    public void setgOrdersList(List<GroupOrder> gOrdersList) {
+        this.gOrdersList = gOrdersList;
     }
 }
