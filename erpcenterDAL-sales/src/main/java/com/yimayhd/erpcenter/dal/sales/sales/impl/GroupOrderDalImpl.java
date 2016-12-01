@@ -1725,6 +1725,13 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 
 	        return pageBean;
 	    }
+	  	
+		@Override
+		public PageBean<GroupOrder>selectProductProfitStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId){
+			List<GroupOrder> groupOrders=groupOrderMapper.selectProductProfitStatisticsListPage(pageBean, bizId);
+			pageBean.setResult(groupOrders);
+			return pageBean;
+		}
 
 }
 

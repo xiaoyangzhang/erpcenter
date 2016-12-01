@@ -21,7 +21,7 @@ public interface ComponentFacade {
 
 	List<PlatformOrgPo> getOrgTree(Integer bizId, Integer parentId);
 	
-	PageBean supplierList(Integer bizId, SupplierInfo supplierInfo,String canEditPrice,Integer orgId);
+	PageBean supplierList(Integer bizId, SupplierInfo supplierInfo);
 	
 	PageBean getMyDriverList(SupplierDriver driver, Integer bizId, Integer supplierId, Integer page, Integer pageSize);
 	
@@ -30,5 +30,7 @@ public interface ComponentFacade {
 	ResultSupport uploadRegion();
 	
 	CheckProductStockResult checkProductStock(Integer bizId, Integer year, Integer month);
+
+	void setSupplierIds(SupplierInfo supplierInfo,String canEditPrice,Integer orgId);
 
 }

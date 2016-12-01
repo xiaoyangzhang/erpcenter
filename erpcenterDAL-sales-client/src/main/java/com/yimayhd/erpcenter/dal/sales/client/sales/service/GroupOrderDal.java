@@ -457,6 +457,7 @@ public interface GroupOrderDal {
 
     Map<String, Object> selectProfitEverifyByTotal(PageBean pageBean,Integer bizId,Set<Integer> set,Integer userRightType);
 
+    PageBean<GroupOrder>selectProductProfitStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId);
 
 } 
 

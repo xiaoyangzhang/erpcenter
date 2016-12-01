@@ -528,6 +528,6 @@ public interface GroupOrderMapper {
      */
 	List<GroupOrder>selectMonthlyReportStatistics(@Param("page") PageBean<GroupOrder> pageBean, @Param("bizId") Integer bizId, @Param("set") Set<Integer> set);
 	
-	
+	List<GroupOrder>selectProductProfitStatisticsListPage(@Param("page") PageBean<GroupOrder> pageBean,@Param("bizId") Integer bizId);
 	
 }

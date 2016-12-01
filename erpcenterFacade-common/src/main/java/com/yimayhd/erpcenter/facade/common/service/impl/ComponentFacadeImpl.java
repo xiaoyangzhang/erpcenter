@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.yimayhd.erpcenter.biz.sys.service.SysDataRightSupplierBiz;
+import com.yimayhd.erpcenter.dal.sys.po.SysDataRightSupplier;
 import org.erpcenterFacade.common.client.errorcode.ProductErrorCode;
 import org.erpcenterFacade.common.client.result.CheckProductStockResult;
 import org.erpcenterFacade.common.client.result.ResultSupport;
@@ -71,28 +73,7 @@ public class ComponentFacadeImpl implements ComponentFacade {
 	}
 
 	@Override
-	public PageBean supplierList(Integer bizId, SupplierInfo supplierInfo,String canEditPrice,Integer orgId) {
-
-		if(canEditPrice !=null &&supplierInfo.getSupplierType()==1 &&canEditPrice.equals("1")){
-			supplierInfo.setChooseType(1);
-			StringBuilder sb = new StringBuilder();
-			PlatformOrgPo org=orgBiz.findByOrgId(orgId);
-			String[] orgIdArr = org.getOrgPath().split("-");
-			for (String str : orgIdArr) {
-				if (sb.indexOf(str) < 0) {
-					sb.append(str + ",");
-				}
-			}
-			List<SysDataRightSupplier> lists=sysDataRightSupplierBiz.selectSysDataRightSupplierInOrgIds(sb.substring(0, sb.length()-1));
-			String ids = "";
-			if(lists !=null &&lists.size()>0){
-				for(SysDataRightSupplier item:lists){
-					ids += item.getSupplierId() + ",";
-				}
-				supplierInfo.setSupplierIds(ids.substring(0, ids.length() - 1));
-			}
-		}
-
+	public PageBean supplierList(Integer bizId, SupplierInfo supplierInfo) {
 		PageBean pageBean = new PageBean();
 		pageBean.setPageSize(supplierInfo.getPageSize());
 		pageBean.setParameter(supplierInfo);
@@ -181,5 +162,28 @@ public class ComponentFacadeImpl implements ComponentFacade {
 		return result;
 	}
 
-    
+	@Override
+	public void setSupplierIds(SupplierInfo supplierInfo,String canEditPrice, Integer orgId) {
+		if(canEditPrice !=null && supplierInfo.getSupplierType()==1 &&canEditPrice.equals("1")){
+			supplierInfo.setChooseType(1);
+			StringBuilder sb = new StringBuilder();
+			PlatformOrgPo org=orgBiz.findByOrgId(orgId);
+			String[] orgIdArr = org.getOrgPath().split("-");
+			for (String str : orgIdArr) {
+				if (sb.indexOf(str) < 0) {
+					sb.append(str + ",");
+				}
+			}
+			List<SysDataRightSupplier> lists=sysDataRightSupplierBiz.selectSysDataRightSupplierInOrgIds(sb.substring(0, sb.length()-1));
+			String ids = "";
+			if(lists !=null &&lists.size()>0){
+				for(SysDataRightSupplier item:lists){
+					ids += item.getSupplierId() + ",";
+				}
+				supplierInfo.setSupplierIds(ids.substring(0, ids.length() - 1));
+			}
+		}
+	}
+
+
 }
