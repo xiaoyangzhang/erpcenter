@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.facade.dataanalysis.client.query;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.PaymentExportVO;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.DeparentmentOrderCondition;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestCondition;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestShoppingCondition;
@@ -38,6 +39,7 @@ public class QueryDTO implements Serializable {
     private PageBean pageBean;
     private String citysSupplierIds;
     private String supplierLevel;
+    private PaymentExportVO vo;
 
     private String groupMode;
 
@@ -259,5 +261,13 @@ public class QueryDTO implements Serializable {
 
     public void setGroupMode(String groupMode) {
         this.groupMode = groupMode;
+    }
+
+    public PaymentExportVO getVo() {
+        return vo;
+    }
+
+    public void setVo(PaymentExportVO vo) {
+        this.vo = vo;
     }
 }

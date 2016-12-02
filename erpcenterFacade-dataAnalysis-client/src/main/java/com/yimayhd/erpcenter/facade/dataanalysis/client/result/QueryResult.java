@@ -45,6 +45,7 @@ public class QueryResult extends BaseResult {
     private Map<Integer, List<PlatformEmployeePo>> empMap;
     private Map<Integer, List<GroupOrder>> orderMap;
     private List<GroupOrder> gOrdersList;
+    private Map parameters;
 
     public Map getSum() {
         return sum;
@@ -242,5 +243,13 @@ public class QueryResult extends BaseResult {
 
     public void setgOrdersList(List<GroupOrder> gOrdersList) {
         this.gOrdersList = gOrdersList;
+    }
+
+    public Map getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Map parameters) {
+        this.parameters = parameters;
     }
 }
