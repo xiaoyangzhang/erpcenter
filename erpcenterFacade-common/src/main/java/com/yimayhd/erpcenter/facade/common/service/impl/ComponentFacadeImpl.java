@@ -166,15 +166,7 @@ public class ComponentFacadeImpl implements ComponentFacade {
 	public void setSupplierIds(SupplierInfo supplierInfo,String canEditPrice, Integer orgId) {
 		if(canEditPrice !=null && supplierInfo.getSupplierType()==1 &&canEditPrice.equals("1")){
 			supplierInfo.setChooseType(1);
-			StringBuilder sb = new StringBuilder();
-			PlatformOrgPo org=orgBiz.findByOrgId(orgId);
-			String[] orgIdArr = org.getOrgPath().split("-");
-			for (String str : orgIdArr) {
-				if (sb.indexOf(str) < 0) {
-					sb.append(str + ",");
-				}
-			}
-			List<SysDataRightSupplier> lists=sysDataRightSupplierBiz.selectSysDataRightSupplierInOrgIds(sb.substring(0, sb.length()-1));
+			List<SysDataRightSupplier> lists=sysDataRightSupplierBiz.selectSysDataRightSupplierInOrgIds(orgId+"");
 			String ids = "";
 			if(lists !=null &&lists.size()>0){
 				for(SysDataRightSupplier item:lists){
