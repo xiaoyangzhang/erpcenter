@@ -8,6 +8,6 @@
 	
 	<bean id="dataAnalysisFacade" class="com.yimayhd.erpcenter.facade.dataanalysis.service.impl.DataAnalysisFacadeImpl" />
 	<bean id="queryFacade" class="com.yimayhd.erpcenter.facade.dataanalysis.service.impl.QueryFacadeImpl" />
-	
+	<bean id="placeOrderQueryFacade" class="com.yimayhd.erpcenter.facade.dataanalysis.service.impl.PlaceOrderQueryFacadeImpl" />
 	
 </beans>
