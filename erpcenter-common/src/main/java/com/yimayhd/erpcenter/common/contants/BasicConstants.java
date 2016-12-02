@@ -187,4 +187,8 @@ public class BasicConstants {
      * 日志动作类型
      */
     public static enum LOG_ACTION{INSERT, DELETE, UPDATE, SELECT};
+    
+    //分页默认
+    public static int DEFAULT_PAGE = 1;
+    public static int DEFAULT_PAGE_SIZE = 15;
 }

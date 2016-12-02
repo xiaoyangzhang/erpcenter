@@ -60,33 +60,70 @@
 
 	<select id="selectSysDataRightSupplierByOrgId" parameterType="integer" resultMap="BaseResultMap">
 			select id,org_id,biz_id,supplier_id
-			from  sys_data_right_supplier 
+			from  
+			sys_data_right_supplier 
 			where org_id = #{orgId}
 	</select>
 	
-	<select id="selectSupplierIdInOrgIds" parameterType="java.lang.String" resultMap="BaseResultMap">
-			SELECT distinct supplier_id FROM sys_data_right_supplier WHERE org_id in  (#{orgId})
+
+	<select id="selectSupplierIdInOrgIds" resultMap="BaseResultMap">
+			SELECT distinct supplier_id FROM sys_data_right_supplier WHERE org_id in  
+		<foreach collection="orgids" item="orgId"
+						open="(" close=")" separator=",">
+						#{orgId}
+					</foreach>
 	</select>
 	
-	
-	<sql id="selectOrgAuthSupplierIds_Where_Clause">
-		<if test="orgId != null and orgId != ''">
-			<![CDATA[
-				and a.org_id = #{orgId}
-			]]>
-		</if>
+	<select id="selectSupplierIdsListPage" parameterType="com.yihg.mybatis.utility.PageBean"
+		resultType="integer">
 		
-		<if test="supplierIds != null and supplierIds != ''">
-			<![CDATA[
-				and a.supplier_id in (${supplierIds})
-			]]>
-		</if>
-	</sql>
-	<select id="selectOrgAuthSupplierIds" parameterType="map" resultType="integer">
-		<![CDATA[
-			select a.supplier_id  as supplierId  from 	sys_data_right_supplier a where 1 = 1	
+		<![CDATA[ 
+			select distinct(a.supplier_id) from sys_data_right_supplier a 
+			where a.biz_id =#{param.parameter.bizId} 
 		]]>
-		<include refid="selectOrgAuthSupplierIds_Where_Clause"></include>
+
+		<if test="param.parameter.orgids != null ">
+			<![CDATA[
+				and a.org_id in 
+			]]>
+			<foreach collection="param.parameter.orgids" item="orgid"
+				open="(" close=")" separator=",">
+				#{orgid}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="selectAllOrgAuthSupplierIds" parameterType="map"
+		resultType="integer">
+		<![CDATA[ 
+			select distinct(a.supplier_id) from sys_data_right_supplier a 
+			where a.biz_id =#{bizId} 
+		]]>
+
+		<if test="orgids != null ">
+			<![CDATA[
+				and a.org_id in 
+			]]>
+			<foreach collection="orgids" item="orgid" open="(" close=")"
+				separator=",">
+				#{orgid}
+			</foreach>
+		</if>
+	</select>
+
+	<delete id="deleteOrgSupplierAuths" parameterType="map">
+		<![CDATA[  
+			delete a from sys_data_right_supplier a where a.biz_id = #{bizId} and a.org_id = #{orgid}
+			and a.supplier_id = #{supplierId}
+		]]>
+	</delete>
+	
+	<select id="selectOwnOrgSupplierIds" parameterType="map" resultType="integer">
+		<![CDATA[ 
+			select a.supplier_id from sys_data_right_supplier a 
+			 where 
+			a.org_id = #{orgid} and a.biz_id = #{bizId}
+		]]>
 	</select>
 	
 	
