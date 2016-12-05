@@ -1086,7 +1086,6 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	        } else {
 	            pageBean.setPageSize(taobaoOrderListByOpDTO.getPageSize());
 	        }
-	        pageBean.setPage(taobaoOrderListByOpDTO.getPages());
 	        pageBean.setParameter(groupOrder);
 	        pageBean = groupOrderBiz.selectGroupOrderGuestListPage(pageBean, taobaoOrderListByOpDTO.getBizId(),
 	        		taobaoOrderListByOpDTO.getDataUserIdSets(),taobaoOrderListByOpDTO.getUserRightType());

@@ -380,8 +380,7 @@ public class SpecialGroupFacadeImpl implements SpecialGroupFacade {
     public ToAddSpecialGroupResult toImpNotGroupList(GroupOrder groupOrder, String idLists, Integer bizId, Set<Integer> userIdSet) {
         ToAddSpecialGroupResult toAddSpecialGroupResult = new ToAddSpecialGroupResult();
         try {
-            if (null == groupOrder.getEndTime()
-                    && null == groupOrder.getDepartureDate()) {
+            if (null == groupOrder.getEndTime() && null == groupOrder.getDepartureDate()) {
                 Calendar c = Calendar.getInstance();
                 int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH);
@@ -394,12 +393,15 @@ public class SpecialGroupFacadeImpl implements SpecialGroupFacade {
                         + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DATE));
 
             }
-            String[] split = idLists.split(",");
             List<Integer> intIds = new ArrayList<Integer>();
-            for (String id : split) {
-                intIds.add(Integer.parseInt(id));
+            if (StringUtils.isNotBlank(idLists)){
+
+                String[] split = idLists.split(",");
+                for (String id : split) {
+                    intIds.add(Integer.parseInt(id));
+                }
+                groupOrder.setIdList(intIds);
             }
-            groupOrder.setIdList(intIds);
             groupOrder.setState(2);
             PageBean pageBean = new PageBean();
             pageBean.setPageSize(groupOrder.getPageSize() == null ? Constants.PAGESIZE

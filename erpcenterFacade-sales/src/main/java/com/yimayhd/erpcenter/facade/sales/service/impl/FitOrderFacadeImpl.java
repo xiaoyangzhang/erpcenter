@@ -720,18 +720,19 @@ public class FitOrderFacadeImpl implements FitOrderFacade{
 			c.set(year, month, 1);
 			groupOrder.setDepartureDate(c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-01");
 			c.set(year, month, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-			groupOrder
-					.setEndTime(c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DATE));
+			groupOrder.setEndTime(c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DATE));
 
 		}
-
-		String[] split = idLists.split(",");
 		List<Integer> intIds = new ArrayList<Integer>();
-		for (String id : split) {
-			intIds.add(Integer.parseInt(id));
+		if (StringUtils.isNotBlank(idLists)) {
+
+			String[] split = idLists.split(",");
+			for (String id : split) {
+				intIds.add(Integer.parseInt(id));
+			}
+			groupOrder.setIdList(intIds);
 		}
 
-		groupOrder.setIdList(intIds);
 		groupOrder.setDateType(1);
 		PageBean pageBean = new PageBean();
 		pageBean.setPageSize(groupOrder.getPageSize() == null ? Constants.PAGESIZE : groupOrder.getPageSize());

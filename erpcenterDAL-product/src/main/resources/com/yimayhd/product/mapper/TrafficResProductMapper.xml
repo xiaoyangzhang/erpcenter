@@ -356,8 +356,7 @@
 	</select>	
 
 	<update id="updateByCostPricePriceId" parameterType="java.util.List">
-		<foreach collection="costPriceList" index="index" item="item"
-			separator=";">
+		<foreach collection="costPriceList" index="index" item="item" open="" separator=";" close="">
 			update traffic_res_product
 			<set>
 				adult_cost_price=#{item.adultCostPrice},

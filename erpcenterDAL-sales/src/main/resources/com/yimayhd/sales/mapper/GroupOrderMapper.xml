@@ -1978,7 +1978,10 @@
 				and t.operator_id in (${page.parameter.saleOperatorIds})
 			</if>
 		</if>
+		<if test="page.parameter.orderLockState!=null">
 
+			and t.order_lock_state=#{page.parameter.orderLockState}
+		</if>
 		ORDER BY t.departure_date,t.create_time
 	</select>
 
