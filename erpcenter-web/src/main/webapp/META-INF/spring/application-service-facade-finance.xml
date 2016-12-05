@@ -9,5 +9,4 @@
  	<bean id="financeFacade" class="com.yimayhd.erpcenter.facade.finance.service.impl.FinanceFacadeImpl" />
  	<bean id="financeGuideFacade" class="com.yimayhd.erpcenter.facade.finance.service.impl.FinanceGuideFacadeImpl" />
  	<bean id="verifyFacade" class="com.yimayhd.erpcenter.facade.finance.service.impl.VerifyFacadeImpl" />
- 	<bean id="taobaoFacade" class="com.yimayhd.erpcenter.facade.tj.service.impl.TaobaoFacadeImpl" />
 </beans>
