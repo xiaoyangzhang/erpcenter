@@ -164,7 +164,7 @@ public interface FinanceFacade{
 	 * @param groupId
 	 * @return
 	 */
-	Map queryAuditViewInfo(Integer bizId, Integer groupId);
+	Map queryAuditViewInfo(Integer groupId, Integer bizId);
 
 	PageBean aduditStatisticsList(AduditStatisticsListDTO queryDTO);
 

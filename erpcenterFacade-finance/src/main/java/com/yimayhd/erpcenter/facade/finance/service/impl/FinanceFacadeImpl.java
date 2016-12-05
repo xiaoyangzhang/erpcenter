@@ -540,7 +540,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	}
 
 	@Override
-	public Map queryAuditViewInfo(Integer bizId, Integer groupId) {
+	public Map queryAuditViewInfo(Integer groupId, Integer bizId) {
 		Map map = financeBiz.queryAuditViewInfo(groupId, bizId);
 		return map;
 	}
