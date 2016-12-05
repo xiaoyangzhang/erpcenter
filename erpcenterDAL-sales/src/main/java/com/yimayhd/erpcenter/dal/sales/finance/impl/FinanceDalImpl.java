@@ -893,7 +893,7 @@ public class FinanceDalImpl implements FinanceDal {
 			for(int j = 0; j < arr.length; j++){
 				String item = arr[j];
 				String dateStr = item.substring(0, 18);
-				SimpleDateFormat dafaFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:sqlSessionSales");
+				SimpleDateFormat dafaFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				
 				tourGroup = new TourGroup();
 				tourGroup.setOperateLog(item + "<br/>");
