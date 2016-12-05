@@ -49,5 +49,10 @@ public class RegionFacadeImpl implements RegionFacade {
 		int i =  regionBiz.add(dicRegion);
 		return i;
 	}
-	
+
+	@Override
+	public List<RegionInfo> getAllProvince() {
+		return regionBiz.getAllProvince();
+	}
+
 }
