@@ -52,6 +52,9 @@ public class SysLoginFacadImpl implements SysLoginFacade{
 	public SysBizInfoResult getBizInfoByCode(String code) {
 		SysBizInfoResult result = new SysBizInfoResult();
 		SysBizInfo sys = sysBizInfoBiz.getBizInfoByCode(code);//根据企业编码获取企业信息
+		if(null == sys){
+			return null;
+		}
 		BeanUtils.copyProperties(sys, result);//将对应的属性值拷贝到result中
 		return result;
 	}

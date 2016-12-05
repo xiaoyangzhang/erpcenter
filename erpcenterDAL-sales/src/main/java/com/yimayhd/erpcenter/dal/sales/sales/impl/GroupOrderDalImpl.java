@@ -98,6 +98,9 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     
     @Override
     public GroupOrder findById(Integer id) {
+    	if(id <=0){
+    		return null;
+    	}
         GroupOrder order = groupOrderMapper.selectByPrimaryKey(id);
         TourGroup group = tourGroupMapper.selectByPrimaryKey(order.getGroupId());
         if (group != null) {
