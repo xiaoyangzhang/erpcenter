@@ -57,6 +57,7 @@ import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade;
 import com.yimayhd.erpcenter.facade.tj.client.errorcode.TjErrorCode;
 import com.yimayhd.erpcenter.facade.tj.client.query.AddSivaInfoDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ChangePriceDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.GroupOrderGuestDataListDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
 import com.yimayhd.erpcenter.facade.tj.client.query.PresellTaobaoOriginalOrderDTO;
@@ -1344,6 +1345,52 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
         PageBean<GroupOrder> pageBean =taobaoOrderListByOpDTO.getPage();
         pageBean = groupOrderBiz.selectProductProfitStatisticsListPage(pageBean, taobaoOrderListByOpDTO.getBizId());
         return pageBean;
+	}
+	
+	@Override
+	public GroupOrderGuestDataListDTO groupOrderGuestDataList(GroupOrderGuestDataListDTO groupOrderGuestDataListDTO){
+		 	String sidx =groupOrderGuestDataListDTO.getSidx();//来获得排序的列名，
+	        String sord =groupOrderGuestDataListDTO.getSord();//来获得排序方式
+
+	        if (StringUtils.isBlank(groupOrderGuestDataListDTO.getGroupOrder().getSaleOperatorIds()) && StringUtils.isNotBlank(groupOrderGuestDataListDTO.getGroupOrder().getOrgIds())) {
+	            Set<Integer> set = new HashSet<Integer>();
+	            String[] orgIdArr = groupOrderGuestDataListDTO.getGroupOrder().getOrgIds().split(",");
+	            for (String orgIdStr : orgIdArr) {
+	                set.add(Integer.valueOf(orgIdStr));
+	            }
+	            set = platformEmployeeBiz.getUserIdListByOrgIdList(groupOrderGuestDataListDTO.getBizId(), set);
+	            String salesOperatorIds = "";
+	            for (Integer usrId : set) {
+	                salesOperatorIds += usrId + ",";
+	            }
+	            if (!salesOperatorIds.equals("")) {
+	            	groupOrderGuestDataListDTO.getGroupOrder().setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+	            }
+	        }
+	        PageBean pageBean = new PageBean();
+	        if (groupOrderGuestDataListDTO.getPage() == null) {
+	            pageBean.setPage(1);
+	        } else {
+	            pageBean.setPage(groupOrderGuestDataListDTO.getPage());
+	        }
+	        if (groupOrderGuestDataListDTO.getPageSize() == null) {
+	            pageBean.setPageSize(Constants.PAGESIZE);
+	        } else {
+	            pageBean.setPageSize(groupOrderGuestDataListDTO.getRows());
+	        }
+	        pageBean.setPage(groupOrderGuestDataListDTO.getPage());
+	        pageBean.setParameter(groupOrderGuestDataListDTO.getGroupOrder());
+	        pageBean = groupOrderBiz.selectGroupOrderGuestListPageOu(pageBean, groupOrderGuestDataListDTO.getBizId(),
+	        		groupOrderGuestDataListDTO.getDataUserIdSets(),groupOrderGuestDataListDTO.getUserRightType(),sidx,sord);
+	        //model.addAttribute("pageBean", pageBean);
+	        List<DicInfo> typeList = dicBiz.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE,
+	        		groupOrderGuestDataListDTO.getBizId());
+	        //model.addAttribute("typeList", typeList);
+	        //pageBean.getResult().add(typeList);
+	        //System.out.println(JSON.toJSONString(pageBean));
+	        groupOrderGuestDataListDTO.setPageBean(pageBean);
+	        groupOrderGuestDataListDTO.setTypeList(typeList);
+	        return groupOrderGuestDataListDTO;
 	}
 	
 }

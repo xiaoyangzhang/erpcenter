@@ -452,12 +452,14 @@ public interface GroupOrderBiz {
      * @param userRightType
      * @return
      */
-public GroupOrder selectProfitEverifyByCon(GroupOrder groupOrder, Integer bizId, Set<Integer> set,
+    public GroupOrder selectProfitEverifyByCon(GroupOrder groupOrder, Integer bizId, Set<Integer> set,
 		Integer userRightType);
 
-Map<String, Object> selectProfitEverifyByTotal(PageBean pageBean,Integer bizId,Set<Integer> set,Integer userRightType);
+    Map<String, Object> selectProfitEverifyByTotal(PageBean pageBean,Integer bizId,Set<Integer> set,Integer userRightType);
 
-public PageBean<GroupOrder>selectProductProfitStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId);
+    public PageBean<GroupOrder>selectProductProfitStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId);
+
+    public PageBean selectGroupOrderGuestListPageOu(PageBean pageBean, Integer bizId,Set<Integer> set,Integer userRightType,String sidx,String sord);
 
 
 

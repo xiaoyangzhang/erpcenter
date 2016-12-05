@@ -57,4 +57,10 @@ public class LogFacadeImpl implements LogFacade {
 		result.setLog(log);
 		return result;
 	}
+
+	@Override
+	public void insert(List<LogOperator> list) {
+		// TODO Auto-generated method stub
+		logBiz.insert(list);
+	}
 }

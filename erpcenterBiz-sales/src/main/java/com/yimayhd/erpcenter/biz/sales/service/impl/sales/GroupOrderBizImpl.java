@@ -1216,4 +1216,11 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
 	public PageBean<GroupOrder> selectProductProfitStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId) {
 		return groupOrderDal.selectProductProfitStatisticsListPage(pageBean, bizId);
 	}
+
+	@Override
+	public PageBean selectGroupOrderGuestListPageOu(PageBean pageBean,
+			Integer bizId, Set<Integer> set, Integer userRightType,
+			String sidx, String sord) {
+		return groupOrderDal.selectGroupOrderGuestListPageOu(pageBean, bizId, set, userRightType, sidx, sord);
+	}
 }
