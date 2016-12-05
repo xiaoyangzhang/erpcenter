@@ -3503,7 +3503,7 @@
 	<select id="productGuestStatics" resultMap="ProductGuestStaticsMap">
 		SELECT
 		go.`product_brand_name`,go.`product_name`,COUNT(go.`id`)
-		orderCount,SUM(IFNULL(num_adult,0))+SUM(IFNULL(num_child,0))+SUM(IFNULL(num_guide,0)) guestcnt
+		orderCount,SUM(IFNULL(num_adult,0))+SUM(IFNULL(num_child,0)) guestcnt
 		FROM
 		`group_order` go
 		WHERE 1=1
