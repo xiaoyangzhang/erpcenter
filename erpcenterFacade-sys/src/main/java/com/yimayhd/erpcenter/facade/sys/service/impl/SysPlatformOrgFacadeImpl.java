@@ -226,7 +226,7 @@ public class SysPlatformOrgFacadeImpl implements SysPlatformOrgFacade{
 		//sysDataRightSupplierService.saveOrgAuthSuppliers(orgId, bizId, supplierIds, delSupplierIds);
 		pageBean.setParameter(requestParam);
 		pageBean = supplierBiz.selectOrgSupplierAuthListPage(pageBean);
-		return null;
+		return pageBean;
 	}
 
 	@Override
