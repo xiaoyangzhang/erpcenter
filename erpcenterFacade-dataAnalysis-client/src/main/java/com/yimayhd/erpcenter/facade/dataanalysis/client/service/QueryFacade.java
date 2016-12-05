@@ -38,6 +38,7 @@ public interface QueryFacade {
     public QueryResult productGuestDetailPreview(QueryDTO queryDTO);
     public QueryResult getAccountDetail(QueryDTO queryDTO);
     public QueryResult departmentOrderListPage(QueryDTO queryDTO);
+    public QueryResult toOrdersPreview(QueryDTO queryDTO);
 
   //  public QueryResult toBookingShopList(QueryDTO queryDTO);
    // public QueryResult queryGuestSourceStatics(QueryDTO queryDTO);

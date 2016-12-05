@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.PaymentExportVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
@@ -1525,6 +1526,44 @@ public class QueryFacadeImpl implements QueryFacade {
             //model.addAttribute("gOrdersList", gOrdersList);
             queryResult.setOrderMap(orderMap);
             queryResult.setgOrdersList(gOrdersList);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return queryResult;
+    }
+
+    @Override
+    public QueryResult toOrdersPreview(QueryDTO queryDTO) {
+        QueryResult queryResult = new QueryResult();
+        try {
+            PageBean<PaymentExportVO> pageBean = new PageBean<PaymentExportVO>();
+            Map parameters = queryDTO.getParameters();
+            if (StringUtils.isBlank(queryDTO.getVo().getOperatorIds())
+                    && StringUtils.isNotBlank(queryDTO.getVo().getOrgIds())) {
+                Set<Integer> set = new HashSet<Integer>();
+                String[] orgIdArr = queryDTO.getVo().getOrgIds().split(",");
+                for (String orgIdStr : orgIdArr) {
+                    set.add(Integer.valueOf(orgIdStr));
+                }
+                set = platformEmployeeBiz.getUserIdListByOrgIdList(
+                        queryDTO.getBizId(), set);
+                String salesOperatorIds = "";
+                for (Integer usrId : set) {
+                    salesOperatorIds += usrId + ",";
+                }
+                if (!salesOperatorIds.equals("")) {
+                    queryDTO.getVo().setSaleOperatorIds(salesOperatorIds.substring(0,
+                            salesOperatorIds.length() - 1));
+                    parameters.put("saleOperatorIds", salesOperatorIds.substring(0,
+                            salesOperatorIds.length() - 1));
+                }
+            }
+            pageBean.setParameter(queryDTO.getVo());
+            List<GroupOrder> orders = groupOrderBiz.selectPaymentDetailList(
+                    pageBean, queryDTO.getBizId(),
+                    queryDTO.getUserIdSet());
+            queryResult.setGroupOrders(orders);
+            queryResult.setParameters(parameters);
         } catch (Exception e) {
             logger.error("", e);
         }
