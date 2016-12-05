@@ -1664,10 +1664,10 @@ public class SupplierFacadeImpl implements SupplierFacade {
 			for (SupplierInfo info : supplierInfos) {
 				info.setState(1);
 				supplierBiz.updateSupplier(info);
-				webResult.setValue(true);
-				break;
+//				webResult.setValue(true);
+//				break;
 			}
-			
+			webResult.setValue(true);
 		}catch (Exception e) {
 			log.error(e.getMessage());
 			webResult.setErrorCode(new SupplierErrorCode("2001", e.getMessage()));
