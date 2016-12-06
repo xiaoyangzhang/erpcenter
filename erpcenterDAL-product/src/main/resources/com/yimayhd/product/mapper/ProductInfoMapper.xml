@@ -420,7 +420,7 @@
 	<select id="selectProductInfoListPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
 		select info.id, biz_id, code, type, brand_id, brand_name, name_city,
 		name_brief, travel_days, order_num, dest_province_id, dest_province_name,
-		dest_city_id, dest_city_name, state, creator_id, creator_name, create_time,info.operator_id,info.operator_name
+		dest_city_id, dest_city_name, state, creator_id, creator_name, create_time,info.operator_id,info.operator_name,product_sys_id
 		FROM product_info info, product_right pr
 		WHERE info.id=pr.product_id
 		<if test="parameter.orgId!=null">

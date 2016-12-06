@@ -1772,7 +1772,7 @@
 		</if>
 
 
-		<if test="page.parameter.orderLockState != null and page.parameter.orderLockState !=''">
+		<if test="page.parameter.orderLockState != null ">
 			and go.order_lock_state =#{page.parameter.orderLockState}
 		</if>
 		<if test="page.parameter.provinceId != null and page.parameter.provinceId !=-1">
@@ -1873,7 +1873,7 @@
 			and go.receive_mode LIKE
 			CONCAT('%','${groupOrder.receiveMode}','%')
 		</if>
-		<if test="groupOrder.orderLockState != null and groupOrder.orderLockState !=''">
+		<if test="groupOrder.orderLockState != null ">
 			and go.order_lock_state =#{groupOrder.orderLockState}
 		</if>
 		<if test="groupOrder.provinceId != null and groupOrder.provinceId !=-1">
@@ -1903,6 +1903,14 @@
 			<if test="groupOrder.saleOperatorIds!=null and groupOrder.saleOperatorIds!=''">
 				and go.operator_id in (${groupOrder.saleOperatorIds})
 			</if>
+		</if>
+		<if test="groupOrder.operType==3">
+			<if test="groupOrder.saleOperatorIds!=null and groupOrder.saleOperatorIds!=''">
+				and go.creator_id in (${groupOrder.saleOperatorIds})
+			</if>
+		</if>
+		<if test="groupOrder.sourceTypeId != null and groupOrder.sourceTypeId !=-1">
+			and go.source_type_id=#{groupOrder.sourceTypeId}
 		</if>
 	</select>
 
