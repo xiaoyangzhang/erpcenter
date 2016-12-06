@@ -413,6 +413,9 @@ public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 
 	@Override
 	public SpecialGroupOrderVO selectSpeciaOrderlInfoByOrderId(Integer orderId) {
+		if(orderId <=0){
+			return null;
+		}
 		// TODO Auto-generated method stub
 		SpecialGroupOrderVO vo = new SpecialGroupOrderVO();
 		GroupOrder groupOrder = groupOrderMapper.selectByPrimaryKey(orderId);
