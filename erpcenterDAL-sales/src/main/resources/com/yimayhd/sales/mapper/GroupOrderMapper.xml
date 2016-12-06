@@ -713,13 +713,13 @@
 			and go.receive_mode like
 			concat('%',#{page.parameter.receiveMode},'%')
 		</if>
-		<if test="page.parameter.orderType == 1">and
-			go.order_type <![CDATA[>]]>0
+		<if test="page.parameter.orderType == 0">and
+			go.order_type <![CDATA[=]]>0
 		</if>
-		<if test="page.parameter.orderType == 0 ">and go.order_type <![CDATA[=]]>0
+		<if test="page.parameter.orderType == 1 ">go.order_type <![CDATA[=]]>0
 		</if>
-
-		<if test="page.parameter.orderType == -1 ">and go.order_type <![CDATA[=]]>-1
+		
+		<if test="page.parameter.orderType == -1 ">go.order_type <![CDATA[=]]>-1
 		</if>
 		<if test="page.parameter.priceType == 0">
 			and gop.mode =0
@@ -791,12 +791,12 @@
 			and go.receive_mode like
 			concat('%',#{page.parameter.receiveMode},'%')
 		</if>
-		<if test="page.parameter.orderType == 1">and
-			go.order_type <![CDATA[>]]>0
+		<if test="page.parameter.orderType == 0">and
+			go.order_type <![CDATA[=]]>0
 		</if>
-		<if test="page.parameter.orderType == 0 ">and go.order_type <![CDATA[=]]>0
+		<if test="page.parameter.orderType == 1 ">go.order_type <![CDATA[=]]>0
 		</if>
-		<if test="page.parameter.orderType == -1 ">and go.order_type <![CDATA[=]]>-1
+		<if test="page.parameter.orderType == -1 ">go.order_type <![CDATA[=]]>-1
 		</if>
 		<if test="page.parameter.itemId != -1">
 			and gop.item_id = ${page.parameter.itemId}
@@ -1391,6 +1391,9 @@
 			<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
 				#{item}
 			</foreach>
+			</if>
+		<if test="page.parameter.orderNo!=null and page.parameter.orderNo!=''">
+			and go.order_mode<![CDATA[<>]]>0 and go.order_mode in (${page.parameter.orderNo})
 		</if>
 		<if test="page.parameter.tourGroup.groupCode!=null and page.parameter.tourGroup.groupCode!=''">
 			and tg.group_code LIKE
@@ -1454,6 +1457,9 @@
 			<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
 				#{item}
 			</foreach>
+		</if>
+		<if test="page.parameter.orderNo!=null and page.parameter.orderNo!=''">
+			and go.order_mode<![CDATA[<>]]>0 and go.order_mode in (${page.parameter.orderNo})
 		</if>
 		<if test="page.parameter.tourGroup.groupCode!=null and page.parameter.tourGroup.groupCode!=''">
 			and tg.group_code LIKE
@@ -1536,6 +1542,9 @@
 			<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
 				#{item}
 			</foreach>
+		</if>
+		<if test="page.parameter.orderNo!=null and page.parameter.orderNo!=''">
+			and go.order_mode<![CDATA[<>]]>0 and go.order_mode in (${page.parameter.orderNo})
 		</if>
 		<if test="page.parameter.provinceId != null and page.parameter.provinceId !=-1">
 			and go.province_id =#{page.parameter.provinceId}
@@ -6292,6 +6301,84 @@
 			and go.receive_mode LIKE CONCAT('%',#{page.parameter.receiveMode},'%')
 		</if>
 	</select>
+	
+		<select id="selectGroupOrderGuestListPageOu" resultType="java.util.HashMap" parameterType="com.yihg.mybatis.utility.PageBean">
+		select go.group_id,go.product_name,go.sale_operator_id,go.sale_operator_name,go.departure_date ,tg.group_code,
+		go.operator_id,go.operator_name,go.supplier_id,go.total,go.supplier_name,go.num_adult,go.num_child,go.order_mode,go.receive_mode, go.remark,go.creator_id,
+		gog.order_id,gog.`name`,gog.type,gog.certificate_num,gog.gender,gog.mobile,gog.native_place,gog.age
+		from group_order_guest as gog join group_order go on (gog.order_id=go.id) join tour_group tg on (tg.id=go.group_id)
+		where go.state=1 and go.biz_id = #{bizId}
+		<if test="set!=null">
+			<if test="userRightType==1">
+				and go.sale_operator_id in
+			</if>
+			<if test="userRightType!=1">
+				and go.operator_id in
+			</if>
+			<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="page.parameter.startTime != null and page.parameter.startTime != ''">
+			and go.departure_date <![CDATA[>=]]> #{page.parameter.startTime}
+		</if>
+		<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
+			and go.departure_date <![CDATA[<=]]> #{page.parameter.endTime}
+		</if>
+		<if test="page.parameter.operType==1">
+			<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds!=''">
+				and go.sale_operator_id in (${page.parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="page.parameter.operType==2">
+			<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds!=''">
+				and go.operator_id in (${page.parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="page.parameter.operType==3">
+			<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds!=''">
+				and go.creator_id in (${page.parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="page.parameter.groupCode!=null and page.parameter.groupCode != ''">
+			AND tg.group_code like concat('%',#{page.parameter.groupCode},'%')
+		</if>
+		<if test="page.parameter.orderNo!=null and page.parameter.orderNo!=''">
+			and go.order_mode<![CDATA[<>]]>0 and go.order_mode in (${page.parameter.orderNo})
+		</if>
+		<if test="page.parameter.remark != null and page.parameter.remark != ''">
+			and go.remark LIKE CONCAT('%',#{page.parameter.remark},'%')
+		</if>
+		<if test="page.parameter.guestName != null and page.parameter.guestName != ''">
+			and (gog.`name` LIKE CONCAT('%',#{page.parameter.guestName},'%') or gog.mobile LIKE CONCAT('%',#{page.parameter.guestName},'%'))
+		</if>
+		<if test="page.parameter.nativePlace != null and page.parameter.nativePlace != ''">
+			and gog.`native_place` LIKE CONCAT('%',#{page.parameter.nativePlace},'%')
+		</if>
+		<if test="page.parameter.supplierName != null and page.parameter.supplierName != ''">
+			and go.supplier_name LIKE CONCAT('%',#{page.parameter.supplierName},'%')
+		</if>
+
+		<if test="page.parameter.gender != null">
+			and gog.`gender` = #{page.parameter.gender}
+		</if>
+		<if test="page.parameter.ageFirst == null and page.parameter.ageSecond != null">
+			and gog.`age` <![CDATA[<=]]> #{page.parameter.ageSecond}
+		</if>
+		<if test="page.parameter.ageFirst != null and page.parameter.ageSecond == null">
+			and gog.`age` <![CDATA[>=]]> #{page.parameter.ageFirst}
+		</if>
+		<if test="page.parameter.ageSecond != null and page.parameter.ageFirst != null">
+			and gog.`age` BETWEEN #{page.parameter.ageFirst} AND #{page.parameter.ageSecond}
+		</if>
+		<if test="page.parameter.receiveMode != null">
+			and go.receive_mode LIKE CONCAT('%',#{page.parameter.receiveMode},'%')
+		</if>
+		<if test="sidx != null and sidx != ''">
+			order by ${sidx} ${sord}
+		</if>
+
+	</select>
 		
 		<select id="selectMonthlyReportStatistics" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BaseResultMap">
 			select * from (
@@ -6395,4 +6482,214 @@
 		</if>
 		) as aa order by date_start,group_id,supplier_type
 		</select>
+		
+	<select id="selectProductProfitStatisticsListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BaseResultMap">
+		SELECT go.supplier_name, go.order_mode, tg.product_id, tg.product_name,sum(go.adult) numAdult,sum(go.child) numChild
+		 ,sum(go.goTotal) totalIncome, sum(ifnull(oIn.otherIn,0))/sum(tg.total_adult+tg.total_child)*sum(go.adult+go.child) otherTotal, 
+		sum(tg.total_cost) /sum(tg.total_adult+tg.total_child)*sum(go.adult+go.child) as total_cost
+		FROM tour_group tg
+		JOIN (select group_id,supplier_id,supplier_name,order_mode,sum(total) goTotal,sum(num_adult) adult,sum(num_child) child 
+					from group_order  where group_id in (select id from tour_group 
+					 where biz_id=#{bizId,jdbcType=INTEGER} 
+			<if test="page.parameter.startMin != null and page.parameter.startMin != ''">
+			and date_start <![CDATA[>=]]> #{page.parameter.startMin} 
+			</if>
+			<if test="page.parameter.startMax != null and page.parameter.startMax != ''">
+			and date_start <![CDATA[<=]]> #{page.parameter.startMax}
+			</if>
+			<if test="page.parameter.productName != null and page.parameter.productName != ''">
+			and product_name like concat('%',#{page.parameter.productName},'%')  
+			</if>
+			<if test="page.parameter.operType == 1">
+			<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds !=''">
+				and operator_id in (${page.parameter.saleOperatorIds})
+			</if>
+			<if test="page.parameter.operatorIds!=null and page.parameter.operatorIds !=''">
+				and operator_id in (${page.parameter.operatorIds})
+			</if>
+			</if>
+		<!-- 	<if test="page.parameter.set!=null">
+			AND operator_id in
+			<foreach item="item" index="index" collection="page.parameter.set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			</if> -->
+		and group_state in (1,3,4) and group_mode <![CDATA[<=]]>0) 
+		 <if test="page.parameter.orderNo!=null and page.parameter.orderNo!=''">
+			 and order_mode in (${page.parameter.orderNo})
+			</if> 
+			<if test="page.parameter.supplierName != null and page.parameter.supplierName != ''">
+			and supplier_name like concat('%',#{page.parameter.supplierName},'%')  
+			</if>
+			<if test="page.parameter.operType == 2">
+			<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds !=''">
+				and sale_operator_id in (${page.parameter.saleOperatorIds})
+			</if>
+			<if test="page.parameter.operatorIds!=null and page.parameter.operatorIds !=''">
+				and sale_operator_id in (${page.parameter.operatorIds})
+			</if>
+			</if>
+						group by group_id,supplier_id,order_mode) go ON(tg.id=go.group_id)
+
+		left JoIN (select group_id, sum(total) as otherIn from booking_supplier where (sub_type = 1 or supplier_type=120) 
+					and group_id in (select id from tour_group  where biz_id=#{bizId,jdbcType=INTEGER} 	
+					<if test="page.parameter.startMin != null and page.parameter.startMin != ''">
+			and date_start <![CDATA[>=]]> #{page.parameter.startMin} 
+			</if>
+			<if test="page.parameter.startMax != null and page.parameter.startMax != ''">
+			and date_start <![CDATA[<=]]> #{page.parameter.startMax}
+			</if>
+			<if test="page.parameter.productName != null and page.parameter.productName != ''">
+			and product_name like concat('%',#{page.parameter.productName},'%')  
+			</if>
+			<if test="page.parameter.operType == 1">
+			<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds !=''">
+				and operator_id in (${page.parameter.saleOperatorIds})
+			</if>
+			<if test="page.parameter.operatorIds!=null and page.parameter.operatorIds !=''">
+				and operator_id in (${page.parameter.operatorIds})
+			</if>
+			</if>
+		<!-- 	<if test="page.parameter.set!=null">
+			AND operator_id in
+			<foreach item="item" index="index" collection="page.parameter.set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			</if> -->
+		and group_state in (1,3,4) and group_mode <![CDATA[<=]]>0
+					)  
+					group by group_id) oIn on (tg.id=oIn.group_id)
+			
+		where biz_id=#{bizId,jdbcType=INTEGER}	
+			<if test="page.parameter.startMin != null and page.parameter.startMin != ''">
+			and date_start <![CDATA[>=]]> #{page.parameter.startMin} 
+			</if>
+			<if test="page.parameter.startMax != null and page.parameter.startMax != ''">
+			and date_start <![CDATA[<=]]> #{page.parameter.startMax}
+			</if>
+			<if test="page.parameter.productName != null and page.parameter.productName != ''">
+			and product_name like concat('%',#{page.parameter.productName},'%')  
+			</if>
+			<if test="page.parameter.operType == 1">
+			<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds !=''">
+				and operator_id in (${page.parameter.saleOperatorIds})
+			</if>
+			<if test="page.parameter.operatorIds!=null and page.parameter.operatorIds !=''">
+				and operator_id in (${page.parameter.operatorIds})
+			</if>
+			</if>
+		<!-- 	<if test="page.parameter.set!=null">
+			AND operator_id in
+			<foreach item="item" index="index" collection="page.parameter.set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			</if> -->
+		group by tg.product_id,go.supplier_name,go.order_mode
+		
+		union all 
+		
+		SELECT  supplier_name,order_mode, tg.product_id, tg.product_name,sum(tg.total_adult) numAdult,sum(tg.total_child) numChild
+		 ,sum(go.goTotal) totalIncome, sum(ifnull(oIn.otherIn,0)) otherTotal, sum(tg.total_cost) as total_cost
+		FROM tour_group tg
+		 JOIN (select group_id,sum(total) goTotal,supplier_name,order_mode from group_order where order_type>0 and group_id in (select id from tour_group 
+		where biz_id=#{bizId,jdbcType=INTEGER} 
+		<if test="page.parameter.startMin != null and page.parameter.startMin != ''">
+			and date_start <![CDATA[>=]]> #{page.parameter.startMin} 
+			</if>
+			<if test="page.parameter.startMax != null and page.parameter.startMax != ''">
+			and date_start <![CDATA[<=]]> #{page.parameter.startMax}
+			</if>
+			<if test="page.parameter.productName != null and page.parameter.productName != ''">
+			and product_name like concat('%',#{page.parameter.productName},'%')  
+			</if>
+			<if test="page.parameter.operType == 1">
+			<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds !=''">
+				and operator_id in (${page.parameter.saleOperatorIds})
+			</if>
+			<if test="page.parameter.operatorIds!=null and page.parameter.operatorIds !=''">
+				and operator_id in (${page.parameter.operatorIds})
+			</if>
+			</if>
+		<!-- 	<if test="page.parameter.set!=null">
+			AND operator_id in
+			<foreach item="item" index="index" collection="page.parameter.set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			</if> -->
+		and group_state in (1,3,4) and group_mode <![CDATA[>]]>0)
+		 <if test="page.parameter.orderNo!=null and page.parameter.orderNo!=''">
+			 and order_mode in (${page.parameter.orderNo})
+			</if> 
+			<if test="page.parameter.supplierName != null and page.parameter.supplierName != ''">
+			and supplier_name like concat('%',#{page.parameter.supplierName},'%')  
+			</if>
+				<if test="page.parameter.operType == 2">
+			<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds !=''">
+				and sale_operator_id in (${page.parameter.saleOperatorIds})
+			</if>
+			<if test="page.parameter.operatorIds!=null and page.parameter.operatorIds !=''">
+				and sale_operator_id in (${page.parameter.operatorIds})
+			</if>
+			</if>
+		group by group_id,supplier_name,order_mode) go ON(tg.id=go.group_id)
+		left JoIN (select group_id, sum(total) as otherIn from booking_supplier where (sub_type = 1 or supplier_type=120) and group_id in (select id from tour_group 
+		where biz_id=#{bizId,jdbcType=INTEGER} 
+		<if test="page.parameter.startMin != null and page.parameter.startMin != ''">
+			and date_start <![CDATA[>=]]> #{page.parameter.startMin} 
+			</if>
+			<if test="page.parameter.startMax != null and page.parameter.startMax != ''">
+			and date_start <![CDATA[<=]]> #{page.parameter.startMax}
+			</if>
+			<if test="page.parameter.productName != null and page.parameter.productName != ''">
+			and product_name like concat('%',#{page.parameter.productName},'%')  
+			</if>
+			<if test="page.parameter.operType == 1">
+			<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds !=''">
+				and operator_id in (${page.parameter.saleOperatorIds})
+			</if>
+			<if test="page.parameter.operatorIds!=null and page.parameter.operatorIds !=''">
+				and operator_id in (${page.parameter.operatorIds})
+			</if>
+			</if>
+	<!-- 		<if test="page.parameter.set!=null">
+			AND operator_id in
+			<foreach item="item" index="index" collection="page.parameter.set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			</if> -->
+		and group_state in (1,3,4) and group_mode <![CDATA[>]]>0) 
+		group by group_id) oIn on (tg.id=oIn.group_id)
+		where tg.biz_id=#{bizId,jdbcType=INTEGER} 
+		<if test="page.parameter.startMin != null and page.parameter.startMin != ''">
+			and tg.date_start <![CDATA[>=]]> #{page.parameter.startMin} 
+			</if>
+			<if test="page.parameter.startMax != null and page.parameter.startMax != ''">
+			and tg.date_start <![CDATA[<=]]> #{page.parameter.startMax}
+			</if>
+			<if test="page.parameter.productName != null and page.parameter.productName != ''">
+			and tg.product_name like concat('%',#{page.parameter.productName},'%')  
+			</if>
+			<if test="page.parameter.operType == 1">
+			<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds !=''">
+				and tg.operator_id in (${page.parameter.saleOperatorIds})
+			</if>
+			<if test="page.parameter.operatorIds!=null and page.parameter.operatorIds !=''">
+				and tg.operator_id in (${page.parameter.operatorIds})
+			</if>
+			</if>
+			<!-- <if test="page.parameter.set!=null">
+			AND tg.operator_id in
+			<foreach item="item" index="index" collection="page.parameter.set" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			</if> -->
+		and tg.group_state in (1,3,4) and tg.group_mode <![CDATA[>]]> 0 
+		group by supplier_name,order_mode,tg.product_id 
+			</select>
 </mapper>

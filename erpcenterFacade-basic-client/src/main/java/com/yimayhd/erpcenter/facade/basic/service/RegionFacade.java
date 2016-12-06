@@ -20,4 +20,6 @@ public interface RegionFacade {
 	int isNode(String id);
 	
 	int add(RegionInfo dicRegion);
+
+	List<RegionInfo> getAllProvince();
 }

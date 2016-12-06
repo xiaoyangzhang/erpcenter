@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.biz.basic.service.LogOperatorBiz;
+import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
+import com.yimayhd.erpcenter.dal.basic.utils.LogFieldUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
@@ -101,6 +104,8 @@ public class BookingSupplierFacadeImpl implements BookingSupplierFacade {
 	private ContractBiz contractBiz;
 	@Autowired
 	private DicBiz dicBiz;
+	@Autowired
+	private LogOperatorBiz logOperatorBiz;
 //	@Autowired
 //	private logb
 	@Override
@@ -332,54 +337,64 @@ public class BookingSupplierFacadeImpl implements BookingSupplierFacade {
 	}
 	@Override
 	public WebResult<Map<String, Object>> saveBooking(BookingSupplier bookingSupplier, FinanceGuide financeGuide,String bizCode,PlatformEmployeePo curUser) {
-		 WebResult<Map<String, Object>> result = new WebResult<Map<String,Object>>();
+		WebResult<Map<String, Object>> result = new WebResult<Map<String,Object>>();
 		//如果未并团，则不对团进行校验
-			if (bookingSupplier.getGroupId() != null && bookingSupplier.getGroupId() != 0) {
-				if (!tourGroupBiz.checkGroupCanEdit(bookingSupplier.getGroupId())) {
+		if (bookingSupplier.getGroupId() != null && bookingSupplier.getGroupId() != 0) {
+			if (!tourGroupBiz.checkGroupCanEdit(bookingSupplier.getGroupId())) {
 //					return errorJson("该团已审核或封存，不允许修改该信息");
-					result.setErrorCode(OperationErrorCode.UNABLE_EDIT_ERROR);
-					return result;
-				}
+				result.setErrorCode(OperationErrorCode.UNABLE_EDIT_ERROR);
+				return result;
 			}
-			
-			
-			
-			String bookingNo = null;
-			if (bookingSupplier.getId() == null) {
-				int count = bookingSupplierBiz.getBookingCountByTypeAndTime(bookingSupplier.getSupplierType());
-				bookingNo = bizCode + Constants.SUPPLIERSHORTCODEMAP.get(bookingSupplier.getSupplierType()) + new SimpleDateFormat("yyMMdd").format(new Date()) + (count + 100);
-				bookingSupplier.setCreateTime((new Date()).getTime());
+		}
+		String bookingNo = null;
+		if (bookingSupplier.getId() == null) {
+			int count = bookingSupplierBiz.getBookingCountByTypeAndTime(bookingSupplier.getSupplierType());
+			bookingNo = bizCode + Constants.SUPPLIERSHORTCODEMAP.get(bookingSupplier.getSupplierType()) + new SimpleDateFormat("yyMMdd").format(new Date()) + (count + 100);
+			bookingSupplier.setCreateTime((new Date()).getTime());
+		}
+
+		//设置预订员
+		bookingSupplier.setUserId(curUser.getEmployeeId());
+		bookingSupplier.setUserName(curUser.getName());
+		//产生日志（主表）
+		List<LogOperator> logList = new ArrayList<LogOperator>();
+		if (bookingSupplier.getId() == null) {
+			logList.add(LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(), BasicConstants.LOG_ACTION.INSERT, "booking_supplier", bookingSupplier.getId(), 0
+					,String.format("创建酒店订单,商家:%s", bookingSupplier.getSupplierName()), bookingSupplier, null));
+		}else{
+			BookingSupplier orginBS = bookingSupplierBiz.selectByPrimaryKey(bookingSupplier.getId());
+			LogOperator lo =LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(), BasicConstants.LOG_ACTION.UPDATE, "booking_supplier", bookingSupplier.getId(), 0
+					,String.format("修改酒店订单,商家:%s", bookingSupplier.getSupplierName()), bookingSupplier, orginBS);
+			if (lo != null) {
+				logList.add(lo);
 			}
-			
-			//产生日志 明细表
-			//TODO 待完善
-//			List<LogOperator> logList = new ArrayList<LogOperator>();
-//			if (bookingSupplier.getId() != null) {
-//				for (BookingSupplierDetail detail : bookingSupplier.getDetailList()) {
-//					detail.setBookingId(bookingSupplier.getId());
-//				}
-//				List<BookingSupplierDetail> orginDb = bookingSupplierDetailBiz.selectByPrimaryBookId(bookingSupplier.getId());
-//				List<LogOperator> tmpList = LogFieldUtil.getLog_InstantList(curUser.getBizId(), curUser.getName(), "booking_supplier_detail", bookingSupplier.getId(), bookingSupplier.getDetailList(), orginDb);
-//				logList.addAll(tmpList);
-//			}
-//			logService.insert(logList);
-			
-			int id = bookingSupplierBiz.save(bookingSupplier, bookingNo);
-			BookingSupplier supplier = bookingSupplierBiz.selectByPrimaryKey(id);
-			
-			if (financeGuide != null) {
-				//导游报账
-				financeGuide.setBookingIdLink(supplier.getId());
-				financeGuide.setSupplierType(supplier.getSupplierType());
-				financeGuide.setGroupId(supplier.getGroupId());
-				financeGuideBiz.financeSave(financeGuide);
+		}
+		//产生日志 明细表
+		if (bookingSupplier.getId() != null) {
+			for (BookingSupplierDetail detail : bookingSupplier.getDetailList()) {
+				detail.setBookingId(bookingSupplier.getId());
 			}
-			
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("bookingId", id);
-			map.put("groupId", bookingSupplier.getGroupId());
-			map.put("stateBooking", supplier.getStateBooking());
-			result.setValue(map);
+			List<BookingSupplierDetail> orginDb = bookingSupplierDetailBiz.selectByPrimaryBookId(bookingSupplier.getId());
+			List<LogOperator> tmpList = LogFieldUtil.getLog_InstantList(curUser.getBizId(), curUser.getName(), "booking_supplier_detail", bookingSupplier.getId(), bookingSupplier.getDetailList(), orginDb);
+			logList.addAll(tmpList);
+		}
+		logOperatorBiz.insert(logList);
+		int id = bookingSupplierBiz.save(bookingSupplier, bookingNo);
+		BookingSupplier supplier = bookingSupplierBiz.selectByPrimaryKey(id);
+
+		if (financeGuide != null) {
+			//导游报账
+			financeGuide.setBookingIdLink(supplier.getId());
+			financeGuide.setSupplierType(supplier.getSupplierType());
+			financeGuide.setGroupId(supplier.getGroupId());
+			financeGuideBiz.financeSave(financeGuide);
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("bookingId", id);
+		map.put("groupId", bookingSupplier.getGroupId());
+		map.put("stateBooking", supplier.getStateBooking());
+		result.setValue(map);
+
 		return result;
 	}
 	@Override

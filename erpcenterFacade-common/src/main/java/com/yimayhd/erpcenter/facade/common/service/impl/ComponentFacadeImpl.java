@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.yimayhd.erpcenter.biz.sys.service.SysDataRightSupplierBiz;
+import com.yimayhd.erpcenter.dal.sys.po.SysDataRightSupplier;
 import org.erpcenterFacade.common.client.errorcode.ProductErrorCode;
 import org.erpcenterFacade.common.client.result.CheckProductStockResult;
 import org.erpcenterFacade.common.client.result.ResultSupport;
@@ -28,6 +30,7 @@ import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.biz.service.SupplierDriverBiz;
 import com.yimayhd.erpresource.dal.po.SupplierDriver;
 import com.yimayhd.erpresource.dal.po.SupplierInfo;
+import org.springframework.web.util.WebUtils;
 
 /**
  * @ClassName: ${ClassName}
@@ -60,7 +63,8 @@ public class ComponentFacadeImpl implements ComponentFacade {
 	
 	@Autowired
 	private ProductStockBiz stockBiz;
-	
+	@Autowired
+	SysDataRightSupplierBiz sysDataRightSupplierBiz;
 	@Override
 	public List<PlatformOrgPo> getOrgTree(Integer bizId, Integer parentId) {
 		
@@ -158,5 +162,20 @@ public class ComponentFacadeImpl implements ComponentFacade {
 		return result;
 	}
 
-    
+	@Override
+	public void setSupplierIds(SupplierInfo supplierInfo,String canEditPrice, Integer orgId) {
+		if(canEditPrice !=null && supplierInfo.getSupplierType()==1 &&canEditPrice.equals("1")){
+			supplierInfo.setChooseType(1);
+			List<SysDataRightSupplier> lists=sysDataRightSupplierBiz.selectSysDataRightSupplierInOrgIds(orgId);
+			String ids = "";
+			if(lists !=null &&lists.size()>0){
+				for(SysDataRightSupplier item:lists){
+					ids += item.getSupplierId() + ",";
+				}
+				supplierInfo.setSupplierIds(ids.substring(0, ids.length() - 1));
+			}
+		}
+	}
+
+
 }

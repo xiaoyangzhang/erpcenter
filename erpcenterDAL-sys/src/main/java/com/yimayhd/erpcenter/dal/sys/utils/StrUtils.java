@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.dal.sys.utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,6 +21,38 @@ public class StrUtils {
 		}
 		return null;
 		
+	}
+	
+	/**
+	 * 去除首尾字符
+	 * @author daixiaoman
+	 */
+	public static String trimLastAndFirstStr(String srcStr,String strChar)
+	{
+		String resStr = srcStr;
+		if(null != srcStr){
+			resStr = srcStr.trim();
+			if(resStr.startsWith(strChar)){
+				resStr = resStr.replaceAll("^("+strChar+")+","");
+			}
+			
+			if(resStr.endsWith(strChar)){
+				resStr = resStr.replaceAll("("+strChar+")+$","");
+			}
+		}
+		return resStr;
+	}
+	
+	public static List<String> strSplitList(String str,String splitChar){
+		if(StringUtils.isNotEmpty(str)){
+			String[] s = str.split(splitChar);
+			List<String> asList = new ArrayList<String>();
+			for(String splitS : s){
+				asList.add(splitS);
+			}
+			return asList;
+		}
+		return new ArrayList<String>();
 	}
 	
 }

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yimayhd.erpcenter.dal.sys.dao.SysDataRightSupplierMapper">
+
+ <resultMap id="BaseResultMap" type="com.yimayhd.erpcenter.dal.sys.po.SysDataRightSupplier" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="org_id" property="orgId" jdbcType="INTEGER" />
+    <result column="biz_id" property="bizId" jdbcType="VARCHAR" />
+    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+  </resultMap>
+  
+	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysDataRightSupplier"
+		useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			insert into sys_data_right_supplier
+				(
+					org_id,
+					biz_id,
+					supplier_id
+				)
+				 values 
+				(
+					#{orgId},
+					#{bizId},
+					#{supplierId}
+				)
+		]]>
+	</insert>
+	<update id="update" parameterType="com.yimayhd.erpcenter.dal.sys.po.SysDataRightSupplier">
+		<![CDATA[
+			update sys_data_right_supplier
+			set 
+				org_id=#{orgId},
+				biz_id=#{bizId},
+				supplier_id=#{supplierId}
+			where id = #{id}		
+		]]>
+	</update>
+
+	<delete id="delete" parameterType="integer">
+		<![CDATA[ 
+			delete from sys_data_right_supplier where id = #{id}
+		]]>
+	</delete>
+
+	<select id="select" parameterType="integer"
+		resultType="com.yimayhd.erpcenter.dal.sys.po.SysDataRightSupplier">
+		<![CDATA[
+			select  
+				a.id as id,
+				a.org_id as orgId,
+				a.biz_id as bizId,
+				a.supplier_id as supplierId
+			from 
+				sys_data_right_supplier a 
+			where a.id = #{id}
+		]]>
+	</select>
+
+
+	<select id="selectSysDataRightSupplierByOrgId" parameterType="integer" resultMap="BaseResultMap">
+			select id,org_id,biz_id,supplier_id
+			from  
+			sys_data_right_supplier 
+			where org_id = #{orgId}
+	</select>
+	
+
+	<select id="selectSupplierIdInOrgIds" resultMap="BaseResultMap">
+			SELECT distinct supplier_id FROM sys_data_right_supplier WHERE org_id in  
+		<foreach collection="orgids" item="orgId"
+						open="(" close=")" separator=",">
+						#{orgId}
+					</foreach>
+	</select>
+	
+	<select id="selectSupplierIdsListPage" parameterType="com.yihg.mybatis.utility.PageBean"
+		resultType="integer">
+		
+		<![CDATA[ 
+			select distinct(a.supplier_id) from sys_data_right_supplier a 
+			where a.biz_id =#{param.parameter.bizId} 
+		]]>
+
+		<if test="param.parameter.orgids != null ">
+			<![CDATA[
+				and a.org_id in 
+			]]>
+			<foreach collection="param.parameter.orgids" item="orgid"
+				open="(" close=")" separator=",">
+				#{orgid}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="selectAllOrgAuthSupplierIds" parameterType="map"
+		resultType="integer">
+		<![CDATA[ 
+			select distinct(a.supplier_id) from sys_data_right_supplier a 
+			where a.biz_id =#{bizId} 
+		]]>
+
+		<if test="orgids != null ">
+			<![CDATA[
+				and a.org_id in 
+			]]>
+			<foreach collection="orgids" item="orgid" open="(" close=")"
+				separator=",">
+				#{orgid}
+			</foreach>
+		</if>
+	</select>
+
+	<delete id="deleteOrgSupplierAuths" parameterType="map">
+		<![CDATA[  
+			delete a from sys_data_right_supplier a where a.biz_id = #{bizId} and a.org_id = #{orgid}
+			and a.supplier_id = #{supplierId}
+		]]>
+	</delete>
+	
+	<select id="selectOwnOrgSupplierIds" parameterType="map" resultType="integer">
+		<![CDATA[ 
+			select a.supplier_id from sys_data_right_supplier a 
+			 where 
+			a.org_id = #{orgid} and a.biz_id = #{bizId}
+		]]>
+	</select>
+	
+	
+	
+</mapper>

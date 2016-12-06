@@ -20,6 +20,7 @@ import com.yimayhd.erpcenter.facade.sales.query.ReportStatisticsQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.query.grouporder.*;
 import com.yimayhd.erpcenter.facade.sales.result.grouporder.*;
 import com.yimayhd.erpcenter.facade.sales.utils.*;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.HttpEntity;
@@ -3621,7 +3622,29 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		
 		return result;
 	}
+
+	@Override
+	public GroupOrder findOrderById(Integer bizId, Integer id) {
+		// TODO Auto-generated method stub
+		return groupOrderService.findOrderById(bizId, id);
+	}
+
+	@Override
+	public void changeorderLockStateByOp(Integer orderId) {
+		// TODO Auto-generated method stub
+		groupOrderService.changeorderLockStateByOp(orderId);
+	}
+
+	@Override
+	public void goBackOrderLockStateByOp(Integer orderId) {
+		// TODO Auto-generated method stub
+		groupOrderService.goBackOrderLockStateByOp(orderId);
+	}
 	
-	
+	@Override
+	public List<GroupOrderPrice> selectByOrder(Integer orderId) {
+		// TODO Auto-generated method stub
+		return groupOrderPriceService.selectByOrder(orderId);
+	}
 	
 }

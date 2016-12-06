@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.facade.tj.client.query;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.yihg.mybatis.utility.PageBean;
@@ -35,6 +36,22 @@ public class TaobaoOrderListByOpDTO implements Serializable{
 	private Integer pageSize; 
 	private Integer pages;
 	private Integer userRightType;
+	private Map<String, Object> pm;
+	
+	
+
+	/**
+	 * @return the pm
+	 */
+	public Map<String, Object> getPm() {
+		return pm;
+	}
+	/**
+	 * @param pm the pm to set
+	 */
+	public void setPm(Map<String, Object> pm) {
+		this.pm = pm;
+	}
 	/**
 	 * @return the pageBean
 	 */
