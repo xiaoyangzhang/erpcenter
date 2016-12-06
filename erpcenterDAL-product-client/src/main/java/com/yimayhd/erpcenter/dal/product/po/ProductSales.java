@@ -16,7 +16,16 @@ public class ProductSales implements Serializable{
 	private String groupDate;
 	
 	private Set<String> strSet;
-	
+	private String productTagVo;
+
+	public String getProductTagVo() {
+		return productTagVo;
+	}
+
+	public void setProductTagVo(String productTagVo) {
+		this.productTagVo = productTagVo;
+	}
+
 	public Set<String> getStrSet() {
 		return strSet;
 	}

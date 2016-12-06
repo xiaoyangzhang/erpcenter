@@ -45,8 +45,8 @@ public class ProductStockFacadeImpl implements ProductStockFacade{
 	@Override
 	public PageBean findProductSalesPlus(PageBean pageBean, Integer bizId,
 			Integer orgId) {
-		PageBean page = productInfoBiz.findProductSalesPlus(pageBean, bizId, orgId);
-		return page;
+		pageBean = productInfoBiz.findProductSalesPlus(pageBean, bizId, orgId);
+		return pageBean;
 	}
 
 	@Override
