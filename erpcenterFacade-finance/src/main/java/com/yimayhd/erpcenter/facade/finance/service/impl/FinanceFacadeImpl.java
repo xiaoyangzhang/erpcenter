@@ -540,7 +540,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	}
 
 	@Override
-	public Map queryAuditViewInfo(Integer bizId, Integer groupId) {
+	public Map queryAuditViewInfo(Integer groupId, Integer bizId) {
 		Map map = financeBiz.queryAuditViewInfo(groupId, bizId);
 		return map;
 	}
@@ -1512,7 +1512,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		
 		SettleCommissionListResult result = new SettleCommissionListResult();
 		
-		List<DicInfo> payTypeList = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS);
+		List<DicInfo> payTypeList = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 		result.setPayTypeList(payTypeList);
 		
 		List<SysBizBankAccount> bizAccountList = sysBizBankAccountBiz.getListByBizId(bizId);
@@ -1534,7 +1534,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	public SettleCommissionListResult settleCommissionDeductionList(Integer bizId, Integer groupId) {
 		SettleCommissionListResult result = new SettleCommissionListResult();
 		
-		List<DicInfo> payTypeList = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS);
+		List<DicInfo> payTypeList = dicBiz.getListByTypeCode(BasicConstants.GYXX_JSFS, bizId);
 		result.setPayTypeList(payTypeList);
 		
 		List<SysBizBankAccount> bizAccountList = sysBizBankAccountBiz.getListByBizId(bizId);
