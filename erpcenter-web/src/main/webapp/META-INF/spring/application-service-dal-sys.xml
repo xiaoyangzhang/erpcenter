@@ -17,6 +17,7 @@
 	<bean id="sysBizConfigDal" class="com.yimayhd.erpcenter.dal.sys.service.impl.SysBizConfigDalImpl" />
 	<bean id="sysBizInfoDal" class="com.yimayhd.erpcenter.dal.sys.service.impl.SysBizInfoDalImpl" />
 	<bean id="settleApplyDal" class="com.yimayhd.erpcenter.dal.sys.service.impl.SettleApplyDalImpl" />
+	<bean id="SysDataRightSupplierDal" class="com.yimayhd.erpcenter.dal.sys.service.impl.SysDataRightSupplierDalImpl" />
 	
 	<bean id="msgInfoDetailDal" class="com.yimayhd.erpcenter.dal.sys.service.impl.MsgInfoDetailDalImpl" />
 	<bean id="msgInfoDal" class="com.yimayhd.erpcenter.dal.sys.service.impl.MsgInfoDalImpl" />

@@ -126,5 +126,4 @@
               <property name="timeout" value="${export.dubbo.timeout}"/>
               <property name="retries" value="${dubbo.retries}"/>
   </bean>
-  
 </beans>

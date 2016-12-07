@@ -238,7 +238,14 @@ public class SpecialGroupFacadeImpl implements SpecialGroupFacade {
                 }
 
             }
-
+            if (StringUtils.isBlank(groupOrder.getStartTime()) && StringUtils.isBlank(groupOrder.getEndTime())) {
+                Calendar calendar = Calendar.getInstance();
+                String startTime = calendar.get(Calendar.YEAR)+"-"+(calendar.get(Calendar.MONTH)+1)+"-01";
+                groupOrder.setStartTime(startTime);
+                int dayofMonthEnd = calendar.getActualMaximum(Calendar.DATE);
+                String endTime = calendar.get(Calendar.YEAR)+"-"+(calendar.get(Calendar.MONTH)+1)+"-"+dayofMonthEnd;
+                groupOrder.setEndTime(endTime);
+            }
             if (StringUtils.isBlank(groupOrder.getSaleOperatorIds())
                     && StringUtils.isNotBlank(groupOrder.getOrgIds())) {
                 Set<Integer> set = new HashSet<Integer>();

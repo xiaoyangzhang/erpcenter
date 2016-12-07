@@ -108,7 +108,7 @@ public interface GroupOrderDal {
      * @param bizCode 当前商家编码
      * @return
      */
-   // public String makeCodeByMode(Integer bizId, String bizCode, String dateTime, int sort);
+    public String makeCodeByMode(Integer bizId, String bizCode, String dateTime, int sort);
 
 
     /**
@@ -421,6 +421,8 @@ public interface GroupOrderDal {
 
     PageBean<GroupOrder>selectMonthlyReportStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId);
 
+    PageBean selectGroupOrderGuestListPageOu(PageBean pageBean, Integer bizId,Set<Integer> set,Integer userRightType,String sidx,String sord);
+    
     List<GroupOrder>selectMonthlyReportStatistics(PageBean<GroupOrder> pageBean, Integer bizId);
 
 
@@ -457,6 +459,7 @@ public interface GroupOrderDal {
 
     Map<String, Object> selectProfitEverifyByTotal(PageBean pageBean,Integer bizId,Set<Integer> set,Integer userRightType);
 
+    PageBean<GroupOrder>selectProductProfitStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId);
 
 } 
 

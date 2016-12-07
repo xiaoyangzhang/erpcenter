@@ -1,9 +1,11 @@
 package com.yimayhd.erpcenter.facade.sales.service;
 
 import java.text.ParseException;
+import java.util.List;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
 import com.yimayhd.erpcenter.facade.sales.query.ReportStatisticsQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.query.grouporder.*;
 import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
@@ -163,5 +165,13 @@ public interface GroupOrderFacade {
 	
 	
 	public ReportStatisticsNoPageResult selectMonthlyReportStatistics(ReportStatisticsQueryDTO queryDTO); 
+	
+	public GroupOrder findOrderById(Integer bizId, Integer id);
+	
+	void changeorderLockStateByOp(Integer orderId);
+	
+	void goBackOrderLockStateByOp(Integer orderId);
+	
+	public List<GroupOrderPrice> selectByOrder(Integer orderId);
 
 }

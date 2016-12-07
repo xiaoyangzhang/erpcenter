@@ -62,6 +62,8 @@ import com.yimayhd.erpcenter.facade.query.ProductSaveDTO;
 import com.yimayhd.erpcenter.facade.query.ProductTagDTO;
 import com.yimayhd.erpcenter.facade.service.ProductFacade;
 
+import static com.yimayhd.erpcenter.dal.product.constans.Constants.*;
+
 /**
  * 
 * @ClassName: ProductFacadeImpl 
@@ -187,10 +189,10 @@ public class ProductFacadeImpl implements ProductFacade{
 	public ToProductTagResult toProductTags(int productId, int bizId) {
 		ToProductTagResult toProductTagResult = new ToProductTagResult();
 		
-		List<DicInfo> lineThemeList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_LINE_THEME,bizId);
-        List<DicInfo> lineLevelList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_LINE_LEVEL,bizId);
-        List<DicInfo> attendMethodList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_ATTEND_METHOD,bizId);
-        List<DicInfo> hotelLevelList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_HOTEL_LEVEL,bizId);
+		List<DicInfo> lineThemeList = dicBiz.getListByTypeCode(PRODUCT_TAG_LINE_THEME,bizId);
+        List<DicInfo> lineLevelList = dicBiz.getListByTypeCode(PRODUCT_TAG_LINE_LEVEL,bizId);
+        List<DicInfo> attendMethodList = dicBiz.getListByTypeCode(PRODUCT_TAG_ATTEND_METHOD,bizId);
+        List<DicInfo> hotelLevelList = dicBiz.getListByTypeCode(PRODUCT_TAG_HOTEL_LEVEL,bizId);
         List<DicInfo> daysPeriodList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_DAYS_PERIOD,bizId);
         List<DicInfo> priceRangeList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_PRICE_RANGE,bizId);
         List<DicInfo> exitDestinationList = dicBiz.getListByTypeCode(Constants.PRODUCT_TAG_EXIT_DESTINATION,bizId);
@@ -211,9 +213,9 @@ public class ProductFacadeImpl implements ProductFacade{
         }
 
         List<DictWithSelectInfoVo> lineThemeListPlus = new ArrayList<DictWithSelectInfoVo>();
-        if(selectedMap.get(Constants.PRODUCT_TAG_LINE_THEME) != null){
+        if(selectedMap.get(PRODUCT_TAG_LINE_THEME) != null){
             for(DicInfo dicInfo : lineThemeList){
-                lineThemeListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_LINE_THEME).contains(dicInfo.getId())));
+                lineThemeListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(PRODUCT_TAG_LINE_THEME).contains(dicInfo.getId())));
             }
         }else{
             for(DicInfo dicInfo : lineThemeList){
@@ -223,9 +225,9 @@ public class ProductFacadeImpl implements ProductFacade{
         toProductTagResult.setLineThemeListPlus(lineThemeListPlus);
 
         List<DictWithSelectInfoVo> lineLevelListPlus = new ArrayList<DictWithSelectInfoVo>();
-        if(selectedMap.get(Constants.PRODUCT_TAG_LINE_LEVEL) != null){
+        if(selectedMap.get(PRODUCT_TAG_LINE_LEVEL) != null){
             for(DicInfo dicInfo : lineLevelList){
-                lineLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_LINE_LEVEL).contains(dicInfo.getId())));
+                lineLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(PRODUCT_TAG_LINE_LEVEL).contains(dicInfo.getId())));
             }
         }else{
             for(DicInfo dicInfo : lineLevelList){
@@ -235,9 +237,9 @@ public class ProductFacadeImpl implements ProductFacade{
         toProductTagResult.setLineLevelListPlus(lineLevelListPlus);
 
         List<DictWithSelectInfoVo> attendMethodListPlus = new ArrayList<DictWithSelectInfoVo>();
-        if(selectedMap.get(Constants.PRODUCT_TAG_ATTEND_METHOD) != null){
+        if(selectedMap.get(PRODUCT_TAG_ATTEND_METHOD) != null){
             for(DicInfo dicInfo : attendMethodList){
-                attendMethodListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_ATTEND_METHOD).contains(dicInfo.getId())));
+                attendMethodListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(PRODUCT_TAG_ATTEND_METHOD).contains(dicInfo.getId())));
             }
         }else{
             for(DicInfo dicInfo : attendMethodList){
@@ -247,9 +249,9 @@ public class ProductFacadeImpl implements ProductFacade{
         toProductTagResult.setAttendMethodListPlus(attendMethodListPlus);
 
         List<DictWithSelectInfoVo> hotelLevelListPlus = new ArrayList<DictWithSelectInfoVo>();
-        if(selectedMap.get(Constants.PRODUCT_TAG_HOTEL_LEVEL) != null){
+        if(selectedMap.get(PRODUCT_TAG_HOTEL_LEVEL) != null){
             for(DicInfo dicInfo : hotelLevelList){
-                hotelLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(Constants.PRODUCT_TAG_HOTEL_LEVEL).contains(dicInfo.getId())));
+                hotelLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(PRODUCT_TAG_HOTEL_LEVEL).contains(dicInfo.getId())));
             }
         }else{
             for(DicInfo dicInfo : hotelLevelList){
@@ -910,8 +912,8 @@ public class ProductFacadeImpl implements ProductFacade{
 
 	@Override
 	public PageBean productAYList(PageBean pageBean, Map paramMap) {
-		PageBean bean = productInfoBiz.selectProductListPage(pageBean, paramMap);
-		return bean;
+		pageBean = productInfoBiz.selectProductListPage(pageBean, paramMap);
+		return pageBean;
 	}
 
 	@Override
@@ -1024,6 +1026,132 @@ public class ProductFacadeImpl implements ProductFacade{
 			result.setSuccess(false);
 		}
 		return  result;
+	}
+
+	@Override
+	public ToProductTagResult getProductTags(Integer bizId) {
+		List<DicInfo> lineThemeList = dicBiz.getListByTypeCode(PRODUCT_TAG_LINE_THEME,bizId);
+		List<DicInfo> lineLevelList = dicBiz.getListByTypeCode(PRODUCT_TAG_LINE_LEVEL,bizId);
+		List<DicInfo> attendMethodList = dicBiz.getListByTypeCode(PRODUCT_TAG_ATTEND_METHOD,bizId);
+		List<DicInfo> hotelLevelList = dicBiz.getListByTypeCode(PRODUCT_TAG_HOTEL_LEVEL,bizId);
+		List<DicInfo> daysPeriodList = dicBiz.getListByTypeCode(PRODUCT_TAG_DAYS_PERIOD,bizId);
+
+		List<DicInfo> priceRangeList = dicBiz.getListByTypeCode(PRODUCT_TAG_PRICE_RANGE,bizId);
+		List<DicInfo> exitDestinationList = dicBiz.getListByTypeCode(PRODUCT_TAG_EXIT_DESTINATION,bizId);
+		List<DicInfo> domesticDestinationList = dicBiz.getListByTypeCode(PRODUCT_TAG_DOMESTIC_DESTINATION,bizId);
+		List<DicInfo> typeList = dicBiz.getListByTypeCode(PRODUCT_TAG_TYPE,bizId);
+		Map<String, List<Integer>> selectedMap = new HashMap<String, List<Integer>>();
+
+		ToProductTagResult result = new ToProductTagResult();
+		//线路主题
+		List<DictWithSelectInfoVo> lineThemeListPlus = new ArrayList<DictWithSelectInfoVo>();
+		if(selectedMap.get(PRODUCT_TAG_LINE_THEME) != null){
+			for(DicInfo dicInfo : lineThemeList){
+				lineThemeListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(PRODUCT_TAG_LINE_THEME).contains(dicInfo.getId())));
+			}
+		}else{
+			for(DicInfo dicInfo : lineThemeList){
+				lineThemeListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+			}
+		}
+		result.setLineThemeListPlus(lineThemeListPlus);
+		//线路等级
+		List<DictWithSelectInfoVo> lineLevelListPlus = new ArrayList<DictWithSelectInfoVo>();
+		if(selectedMap.get(PRODUCT_TAG_LINE_LEVEL) != null){
+			for(DicInfo dicInfo : lineLevelList){
+				lineLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(PRODUCT_TAG_LINE_LEVEL).contains(dicInfo.getId())));
+			}
+		}else{
+			for(DicInfo dicInfo : lineLevelList){
+				lineLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+			}
+		}
+		result.setLineLevelListPlus(lineLevelListPlus);
+		//参团方式
+		List<DictWithSelectInfoVo> attendMethodListPlus = new ArrayList<DictWithSelectInfoVo>();
+		if(selectedMap.get(PRODUCT_TAG_ATTEND_METHOD) != null){
+			for(DicInfo dicInfo : attendMethodList){
+				attendMethodListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(PRODUCT_TAG_ATTEND_METHOD).contains(dicInfo.getId())));
+			}
+		}else{
+			for(DicInfo dicInfo : attendMethodList){
+				attendMethodListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+			}
+		}
+		result.setAttendMethodListPlus(attendMethodListPlus);
+		//酒店星级
+		List<DictWithSelectInfoVo> hotelLevelListPlus = new ArrayList<DictWithSelectInfoVo>();
+		if(selectedMap.get(PRODUCT_TAG_HOTEL_LEVEL) != null){
+			for(DicInfo dicInfo : hotelLevelList){
+				hotelLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(PRODUCT_TAG_HOTEL_LEVEL).contains(dicInfo.getId())));
+			}
+		}else{
+			for(DicInfo dicInfo : hotelLevelList){
+				hotelLevelListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+			}
+		}
+		result.setHotelLevelListPlus(hotelLevelListPlus);
+		//天数
+		List<DictWithSelectInfoVo> daysPeriodListPlus = new ArrayList<DictWithSelectInfoVo>();
+		if(selectedMap.get(PRODUCT_TAG_DAYS_PERIOD) != null){
+			for(DicInfo dicInfo : daysPeriodList){
+				daysPeriodListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(PRODUCT_TAG_DAYS_PERIOD).contains(dicInfo.getId())));
+			}
+		}else{
+			for(DicInfo dicInfo : daysPeriodList){
+				daysPeriodListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+			}
+		}
+		result.setDaysPeriodListPlus(daysPeriodListPlus);
+		//价格区间
+		List<DictWithSelectInfoVo> priceRangeListPlus = new ArrayList<DictWithSelectInfoVo>();
+		if(selectedMap.get(PRODUCT_TAG_PRICE_RANGE) != null){
+			for(DicInfo dicInfo : priceRangeList){
+				priceRangeListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(PRODUCT_TAG_PRICE_RANGE).contains(dicInfo.getId())));
+			}
+		}else{
+			for(DicInfo dicInfo : priceRangeList){
+				priceRangeListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+			}
+		}
+		result.setPriceRangeListPlus(priceRangeListPlus);
+		//出境目的地
+		List<DictWithSelectInfoVo> exitDestinationListPlus = new ArrayList<DictWithSelectInfoVo>();
+		if(selectedMap.get(PRODUCT_TAG_EXIT_DESTINATION) != null){
+			for(DicInfo dicInfo : exitDestinationList){
+				exitDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(PRODUCT_TAG_EXIT_DESTINATION).contains(dicInfo.getId())));
+			}
+		}else{
+			for(DicInfo dicInfo : exitDestinationList){
+				exitDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+			}
+		}
+		result.setExitDestinationListPlus(exitDestinationListPlus);
+		//国内目的地
+		List<DictWithSelectInfoVo> domesticDestinationListPlus = new ArrayList<DictWithSelectInfoVo>();
+		if(selectedMap.get(PRODUCT_TAG_DOMESTIC_DESTINATION) != null){
+			for(DicInfo dicInfo : domesticDestinationList){
+				domesticDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(PRODUCT_TAG_DOMESTIC_DESTINATION).contains(dicInfo.getId())));
+			}
+		}else{
+			for(DicInfo dicInfo : domesticDestinationList){
+				domesticDestinationListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+			}
+		}
+		result.setDomesticDestinationListPlus(domesticDestinationListPlus);
+		//类别
+		List<DictWithSelectInfoVo> typeListPlus = new ArrayList<DictWithSelectInfoVo>();
+		if(selectedMap.get(PRODUCT_TAG_TYPE) != null){
+			for(DicInfo dicInfo : typeList){
+				typeListPlus.add(new DictWithSelectInfoVo(dicInfo, selectedMap.get(PRODUCT_TAG_TYPE).contains(dicInfo.getId())));
+			}
+		}else{
+			for(DicInfo dicInfo : typeList){
+				typeListPlus.add(new DictWithSelectInfoVo(dicInfo, false));
+			}
+		}
+		result.setTypeListPlus(typeListPlus);
+		return result;
 	}
 
 
