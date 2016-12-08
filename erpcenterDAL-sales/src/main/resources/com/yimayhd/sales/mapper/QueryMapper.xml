@@ -17,25 +17,50 @@
 		<foreach item="item" index="index" collection="page.parameter.dataRightSet" open="(" separator="," close=")">
 		#{item}
 		</foreach>
-		<if test="page.parameter.dateStart!=null">
+		<if test="page.parameter.dateStart !=null ">
 		AND <![CDATA[gog.departure_date>=#{page.parameter.dateStart}]]>
 		</if>
-		<if test="page.parameter.dateEnd!=null">
+		<if test="page.parameter.dateEnd != null ">
 		AND <![CDATA[gog.departure_date<=#{page.parameter.dateEnd}]]>
 		</if>
 		<if test="page.parameter.operatorIds!=null and page.parameter.operatorIds!=''">
 		AND gog.operator_id IN (${page.parameter.operatorIds})
 		</if>
-		<if test="page.parameter.productBrandName != null">and 
-		(gog.product_brand_name like concat( '%',#{page.parameter.productBrandName},'%') or
-		gog.product_name like concat('%',#{page.parameter.productBrandName},'%')) </if>
+		<if test="page.parameter.productBrandName != null and page.parameter.productBrandName != '' ">
+		<![CDATA[
+			and 
+			(
+				gog.product_brand_name like concat( '%',#{page.parameter.productBrandName},'%') 
+			 		or
+				gog.product_name like concat('%',#{page.parameter.productBrandName},'%')
+			
+			) 
+		]]>
+		</if>
 		GROUP BY gog.product_brand_name
 	</select>
 	<select id="getGuestSourceShoppingByOrderId" resultType="java.util.HashMap">
-		SELECT go.province_name,go.city_name,SUM(IFNULL(bsdd.buy_total,0)) total,SUM(go.num_adult) adult
-		FROM group_order go LEFT JOIN (SELECT order_id,SUM(buy_total) buy_total FROM  `booking_shop_detail_deploy` GROUP BY order_id) bsdd  ON go.id=bsdd.order_id
-		WHERE go.id IN (${orderIds})
-		GROUP BY go.province_name,go.city_name
+		<![CDATA[
+			SELECT 
+				go.province_name,
+				go.city_name,
+				SUM(IFNULL(bsdd.buy_total,0)) total,
+				SUM(go.num_adult) adult
+			FROM 
+				group_order go 
+			LEFT JOIN 
+				(
+					SELECT order_id,SUM(buy_total) buy_total FROM  `booking_shop_detail_deploy` 
+					where order_id in (${orderIds})
+					GROUP BY order_id
+				) bsdd  
+				ON go.id=bsdd.order_id 
+			WHERE 
+			
+			go.id IN (${orderIds})
+			
+			GROUP BY go.province_name,go.city_name
+		]]>
 	</select>
 	<select id="getGuestSourceShoppingByOrderIds" resultType="java.util.HashMap">
 		

@@ -516,6 +516,9 @@ public interface GroupOrderMapper {
 	List<Map<String,Object>> selectGroupOrderGuestListPage(@Param("page") PageBean<GroupOrder> pageBean,
                                                            @Param("bizId") Integer bizId, @Param("set") Set<Integer> set, @Param("userRightType") Integer userRightType);
 	
+    List<Map<String,Object>> selectGroupOrderGuestListPageOu(@Param("page") PageBean<GroupOrder> pageBean,
+            @Param("bizId") Integer bizId,@Param("set") Set<Integer> set,@Param("userRightType") Integer userRightType,@Param("sidx")String sidx,@Param("sord")String sord);
+	
 	List<GroupOrder> selectgroupIdByAY(@Param("page") PageBean<GroupOrder> pageBean, @Param("bizId") Integer bizId);
 	
 	List<GroupOrder>selectMonthlyReportStatisticsListPage(@Param("page") PageBean<GroupOrder> pageBean, @Param("bizId") Integer bizId, @Param("set") Set<Integer> set);
@@ -528,6 +531,6 @@ public interface GroupOrderMapper {
      */
 	List<GroupOrder>selectMonthlyReportStatistics(@Param("page") PageBean<GroupOrder> pageBean, @Param("bizId") Integer bizId, @Param("set") Set<Integer> set);
 	
-	
+	List<GroupOrder>selectProductProfitStatisticsListPage(@Param("page") PageBean<GroupOrder> pageBean,@Param("bizId") Integer bizId);
 	
 }

@@ -1,5 +1,7 @@
 package com.yimayhd.erpcenter.facade.basic.service;
 
+import java.util.List;
+
 import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
 import com.yimayhd.erpcenter.facade.basic.result.SingleListResult;
 
@@ -10,4 +12,6 @@ import com.yimayhd.erpcenter.facade.basic.result.SingleListResult;
 public interface LogFacade {
 	
 	SingleListResult singleList(LogOperator log, Integer bizId);
+	
+	void insert(List<LogOperator> list);
 }

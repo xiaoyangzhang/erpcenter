@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.facade.sys.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.yihg.mybatis.utility.PageBean;
@@ -9,6 +10,7 @@ import com.yimayhd.erpcenter.dal.sys.po.SysDataRight;
 import com.yimayhd.erpcenter.facade.sys.query.PlatformOrgPoDTO;
 import com.yimayhd.erpcenter.facade.sys.result.PlatformOrgPoListResult;
 import com.yimayhd.erpcenter.facade.sys.result.PlatformOrgPoResult;
+import com.yimayhd.erpcenter.facade.sys.result.PlatformOrgSupplierAuthResult;
 import com.yimayhd.erpcenter.facade.sys.result.SysDataRightListResult;
 
 public interface SysPlatformOrgFacade {
@@ -103,4 +105,10 @@ public interface SysPlatformOrgFacade {
 
 	String[] getOrgMappingSupplierId(Integer orgId);
 
+	PlatformOrgSupplierAuthResult getOrgSupplierAuth(Integer orgId,Integer bizId);
+
+	public PageBean orgSupplierAuthTable(Integer orgId, Integer bizId,Integer page,Integer pageSize,
+										 String authStatus,Map<String, Object> requestParam );
+
+	public void saveOrgAuthSuppliers(int orgId,int bizId,List supplierIds,List delSupplierIds);
 }

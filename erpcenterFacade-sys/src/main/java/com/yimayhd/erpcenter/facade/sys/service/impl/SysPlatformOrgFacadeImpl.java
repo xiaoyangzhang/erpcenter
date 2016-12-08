@@ -1,8 +1,14 @@
 package com.yimayhd.erpcenter.facade.sys.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.biz.sys.service.SysDataRightSupplierBiz;
+import com.yimayhd.erpcenter.facade.sys.result.PlatformOrgSupplierAuthResult;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +23,7 @@ import com.yimayhd.erpcenter.facade.sys.result.SysDataRightListResult;
 import com.yimayhd.erpcenter.facade.sys.service.SysPlatformOrgFacade;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.dal.po.SupplierInfo;
+import org.springframework.web.util.WebUtils;
 
 public class SysPlatformOrgFacadeImpl implements SysPlatformOrgFacade{
 	private static final Logger logger=LoggerFactory.getLogger(SysPlatformOrgFacadeImpl.class);
@@ -25,7 +32,8 @@ public class SysPlatformOrgFacadeImpl implements SysPlatformOrgFacade{
 	private PlatformOrgBiz platformOrgBiz;
 	@Autowired
 	private SupplierBiz supplierBiz;
-	
+	@Autowired
+	SysDataRightSupplierBiz sysDataRightSupplierBiz;
 	@Override
 	public PlatformOrgPoListResult findByPid(Integer pid,Integer sysId) {
 		List<PlatformOrgPo> platformRolePos =  platformOrgBiz.findByPid(pid, sysId);
@@ -191,6 +199,40 @@ public class SysPlatformOrgFacadeImpl implements SysPlatformOrgFacade{
 		}
 		return ret;
 	}
-	
-	
+
+	@Override
+	public PlatformOrgSupplierAuthResult getOrgSupplierAuth(Integer orgId, Integer bizId) {
+		List<Integer> suppliperIds = sysDataRightSupplierBiz.selectAllOrgAuthSupplierIds(orgId, bizId);
+		List<Integer> ownSupplierIds = sysDataRightSupplierBiz.selectOwnOrgSupplierIds(orgId,bizId);
+		return  new PlatformOrgSupplierAuthResult(suppliperIds,ownSupplierIds);
+	}
+
+	@Override
+	public PageBean orgSupplierAuthTable(Integer orgId, Integer bizId,Integer page,Integer pageSize,
+										 String authStatus,Map<String, Object> requestParam ) {
+		PageBean pageBean = new PageBean();
+		pageBean.setPage(page);
+		pageBean.setPageSize(pageSize);
+		List<Integer> supplierids = null;
+
+		if(!"0".equals(authStatus)){
+			supplierids = sysDataRightSupplierBiz.selectAllOrgAuthSupplierIds(orgId,bizId);
+			if(supplierids == null){
+				supplierids = new ArrayList<Integer>();
+			}
+			supplierids.add(-1);
+			requestParam.put("supplierIds", StringUtils.join(supplierids,","));
+		}
+		//sysDataRightSupplierService.saveOrgAuthSuppliers(orgId, bizId, supplierIds, delSupplierIds);
+		pageBean.setParameter(requestParam);
+		pageBean = supplierBiz.selectOrgSupplierAuthListPage(pageBean);
+		return pageBean;
+	}
+
+	@Override
+	public void saveOrgAuthSuppliers(int orgId, int bizId, List supplierIds, List delSupplierIds) {
+		sysDataRightSupplierBiz.saveOrgAuthSuppliers(orgId,bizId,supplierIds,delSupplierIds);
+	}
+
+
 }

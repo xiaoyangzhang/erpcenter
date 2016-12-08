@@ -42,8 +42,11 @@ public class LogUtils {
 		if(!isNew){
 			orderId = objEdit.getId();
 			groupId = objEdit.getGroupId()==null?0: objEdit.getGroupId();
-			logList.add(LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(),LOG_ACTION.UPDATE, "group_order", orderId,  groupId,"修改订单", objEdit, objDb));
-		}else{                     
+			LogOperator log = LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(),LOG_ACTION.UPDATE, "group_order", orderId,  groupId,"修改订单", objEdit, objDb);
+			if (log != null) {
+				logList.add(log);
+			}
+		}else{
 			logList.add(LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(),LOG_ACTION.INSERT, "group_order", 0,  0,"创建订单", objEdit, null));
 		}
 		return logList;

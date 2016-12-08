@@ -117,13 +117,23 @@
 
 	<!-- 供应商统计- 总合计 -->
 	<select id="selectBookingSupplierSum" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-	SELECT count(bs.id) orderCount, SUM(total) total, Ifnull(SUM(total_cash),0) totalCash 
-		   ,SUM(bsd.itemNum) totalNum, SUM(bsd.itemNumMinus) totalNumMinus
-		   ,IFNULL(originalTotalBalance,0) originalTotalBalance
-	FROM booking_supplier bs
-	JOIN (SELECT booking_id,SUM(IFNULL(item_num,0)- IFNULL(`item_num_minus`,0)) itemNum,sum(IFNULL(`item_num_minus`,0)) itemNumMinus
-			   FROM booking_supplier_detail
-			   where 1=1 
+		select
+		SUM(orderCount) orderCount,
+		SUM(totalMon) total,
+		SUM(totalCashMon) totalCash ,
+		SUM(totalNum) totalNum,
+		SUM(totalNumMinus) totalNumMinus ,
+		SUM(originalTotalBalance) originalTotalBalance
+		from
+		(
+			SELECT count(bs.id) orderCount, bs.supplier_id supplierId,bs.supplier_name supplierName
+			,SUM(total) totalMon,Ifnull(SUM(total_cash),0) totalCashMon
+			,SUM(bsd.itemNum) totalNum, SUM(bsd.itemNumMinus) totalNumMinus
+			,IFNULL(originalTotalBalance,0) originalTotalBalance
+			FROM booking_supplier bs
+			JOIN (SELECT booking_id,SUM(IFNULL(item_num,0)- IFNULL(`item_num_minus`,0)) itemNum,sum(IFNULL(`item_num_minus`,0)) itemNumMinus
+			FROM booking_supplier_detail
+			<where>
 				<if test="parameter.selectDate!=null and parameter.selectDate==1">
 					<if test="parameter.startTime != null">and item_date<![CDATA[>=]]> #{parameter.startTime} </if>
 					<if test="parameter.endTime != null">and item_date<![CDATA[<=]]> #{parameter.endTime} </if>
@@ -131,31 +141,77 @@
 				<if test="parameter.type1Id!=null and parameter.type1Id!=''">
 					and type1_id = #{parameter.type1Id}
 				</if>
-			   GROUP BY booking_id 
-		) bsd ON bs.`id`=bsd.`booking_id` 
-	JOIN tour_group tg ON bs.`group_id`=tg.`id`
-	LEFT JOIN ( <!-- 期初数据 -->
-				SELECT bs.supplier_id, SUM(IFNULL(bs.total,0)-IFNULL(bs.total_cash,0)) originalTotalBalance
-				FROM booking_supplier bs
-				JOIN tour_group tg ON bs.`group_id`=tg.`id`
-				<if test="parameter.selectDate==1 or (parameter.type1Id!=null and parameter.type1Id!='')">
-				JOIN (SELECT booking_id FROM booking_supplier_detail where 1=1
-						<if test="parameter.selectDate!=null and parameter.selectDate==1">
-							<if test="parameter.startTime != null">and item_date<![CDATA[<]]> #{parameter.startTime} </if>
-						</if>
-						<if test="parameter.type1Id!=null and parameter.type1Id!=''"> and type1_id = #{parameter.type1Id} </if>
-			   			GROUP BY booking_id 
-					) bsd ON bs.`id`=bsd.`booking_id`
-				</if>
-				WHERE tg.biz_id=#{parameter.bizId} AND group_state in (1,3,4) 
-				<include refid="selectBookingSupplier_Where_Date_Pre"/>
-				<include refid="selectBookingSupplier_Where"/>
+			</where>
+			GROUP BY booking_id
+			) bsd ON bs.`id`=bsd.`booking_id`
+			JOIN tour_group tg ON bs.`group_id`=tg.`id`
+			LEFT JOIN ( <!-- 期初数据 -->
+			SELECT bs.supplier_id, SUM(IFNULL(bs.total,0)-IFNULL(bs.total_cash,0)) originalTotalBalance
+			FROM booking_supplier bs
+			JOIN tour_group tg ON bs.`group_id`=tg.`id`
+			<if test="parameter.selectDate==1 or (parameter.type1Id!=null and parameter.type1Id!='')">
+				JOIN (SELECT booking_id FROM booking_supplier_detail
+				<where>
+					<if test="parameter.selectDate!=null and parameter.selectDate==1">
+						<if test="parameter.startTime != null">and item_date<![CDATA[<]]> #{parameter.startTime} </if>
+					</if>
+					<if test="parameter.type1Id!=null and parameter.type1Id!=''"> and type1_id = #{parameter.type1Id} </if>
+				</where>
+				GROUP BY booking_id
+				) bsd ON bs.`id`=bsd.`booking_id`
+			</if>
+			WHERE tg.biz_id=#{parameter.bizId} AND group_state in (1,3,4)
+			<include refid="selectBookingSupplier_Where_Date_Pre"/>
+			<include refid="selectBookingSupplier_Where"/>
+			GROUP BY supplier_id
 			) pre on pre.supplier_id = bs.supplier_id
-	WHERE tg.biz_id=#{parameter.bizId} AND group_state in (1,3,4) 
-	<include refid="selectBookingSupplier_Where_Date"/>
-	<include refid="selectBookingSupplier_Where"/>
+			WHERE tg.biz_id=#{parameter.bizId} AND group_state in (1,3,4)
+			<include refid="selectBookingSupplier_Where_Date"/>
+			<include refid="selectBookingSupplier_Where"/>
+			group by bs.supplier_id, bs.supplier_name
+		) tol
 	</select>
-	
+	<!--<select id="selectBookingSupplierSum" parameterType="java.util.HashMap" resultType="java.util.HashMap">-->
+	<!--SELECT count(bs.id) orderCount, SUM(total) total, Ifnull(SUM(total_cash),0) totalCash -->
+		   <!--,SUM(bsd.itemNum) totalNum, SUM(bsd.itemNumMinus) totalNumMinus-->
+		   <!--,SUM(IFNULL(originalTotalBalance,0)) originalTotalBalance-->
+	<!--FROM booking_supplier bs-->
+	<!--JOIN (SELECT booking_id,SUM(IFNULL(item_num,0)- IFNULL(`item_num_minus`,0)) itemNum,sum(IFNULL(`item_num_minus`,0)) itemNumMinus-->
+			   <!--FROM booking_supplier_detail-->
+			   <!--where 1=1 -->
+				<!--<if test="parameter.selectDate!=null and parameter.selectDate==1">-->
+					<!--<if test="parameter.startTime != null">and item_date<![CDATA[>=]]> #{parameter.startTime} </if>-->
+					<!--<if test="parameter.endTime != null">and item_date<![CDATA[<=]]> #{parameter.endTime} </if>-->
+				<!--</if>-->
+				<!--<if test="parameter.type1Id!=null and parameter.type1Id!=''">-->
+					<!--and type1_id = #{parameter.type1Id}-->
+				<!--</if>-->
+			   <!--GROUP BY booking_id -->
+		<!--) bsd ON bs.`id`=bsd.`booking_id` -->
+	<!--JOIN tour_group tg ON bs.`group_id`=tg.`id`-->
+	<!--LEFT JOIN ( &lt;!&ndash; 期初数据 &ndash;&gt;-->
+				<!--SELECT bs.supplier_id, SUM(IFNULL(bs.total,0)-IFNULL(bs.total_cash,0)) originalTotalBalance-->
+				<!--FROM booking_supplier bs-->
+				<!--JOIN tour_group tg ON bs.`group_id`=tg.`id`-->
+				<!--<if test="parameter.selectDate==1 or (parameter.type1Id!=null and parameter.type1Id!='')">-->
+				<!--JOIN (SELECT booking_id FROM booking_supplier_detail where 1=1-->
+						<!--<if test="parameter.selectDate!=null and parameter.selectDate==1">-->
+							<!--<if test="parameter.startTime != null">and item_date<![CDATA[<]]> #{parameter.startTime} </if>-->
+						<!--</if>-->
+						<!--<if test="parameter.type1Id!=null and parameter.type1Id!=''"> and type1_id = #{parameter.type1Id} </if>-->
+			   			<!--GROUP BY booking_id -->
+					<!--) bsd ON bs.`id`=bsd.`booking_id`-->
+				<!--</if>-->
+				<!--WHERE tg.biz_id=#{parameter.bizId} AND group_state in (1,3,4) -->
+				<!--<include refid="selectBookingSupplier_Where_Date_Pre"/>-->
+				<!--<include refid="selectBookingSupplier_Where"/>-->
+				<!--GROUP BY supplier_id-->
+			<!--) pre on pre.supplier_id = bs.supplier_id-->
+	<!--WHERE tg.biz_id=#{parameter.bizId} AND group_state in (1,3,4) -->
+	<!--<include refid="selectBookingSupplier_Where_Date"/>-->
+	<!--<include refid="selectBookingSupplier_Where"/>-->
+	<!--</select>-->
+
 	
 	<!-- 供应商订单统计（订单）-->
 	<select id="selectbookingSupplier2DetailListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">

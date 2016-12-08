@@ -7,6 +7,7 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.facade.tj.client.query.AddSivaInfoDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ChangePriceDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.GroupOrderGuestDataListDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
 import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
 import com.yimayhd.erpcenter.facade.tj.client.query.PresellTaobaoOriginalOrderDTO;
@@ -176,4 +177,30 @@ public interface TaobaoFacade{
 	 * @return
 	 */
 	WebResult<PageBean> saleInsurance(TaobaoOrderListTableDTO taobaoOrderListTableDTO,Integer page,Integer pageSize,Integer userRightType);
+	
+    /**
+     * 产品利润统计
+     *
+     * @param request
+     * @param model
+     * @return
+     */
+	public TaobaoOrderListByOpDTO productProfitStatistics(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO);
+	
+	public TaobaoOrderListByOpDTO productProfitStatistics_table(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO);
+	
+	public PageBean<GroupOrder> excelProductProfit(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO);
+	
+	/**
+     * JqGrid 查询
+     * @param request
+     * @param model
+     * @param groupOrder
+     * @param rows
+     * @param pageSize
+     * @param page
+     * @param userRightType
+     * @return
+     */
+	public GroupOrderGuestDataListDTO groupOrderGuestDataList(GroupOrderGuestDataListDTO groupOrderGuestDataListDTO);
 }

@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.*;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -382,12 +383,12 @@ public class GroupOrderDalImpl implements GroupOrderDal {
         return cal.getTimeInMillis();
     }
 
-    /*@Override
+    @Override
     public String makeCodeByMode(Integer bizId, String bizCode,
                                  String dateTime, int sort) {
         String code = bizCode + dateTime.replace("-", "") + sort;
         return code;
-    }*/
+    }
 
     @Override
     public PageBean<GroupOrder> selectByConListPage(
@@ -1445,6 +1446,14 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 	    pageBean.setResult(result);
 	    return pageBean;
 	}
+	
+    @Override
+    public PageBean selectGroupOrderGuestListPageOu(PageBean pageBean, Integer bizId, Set<Integer> set, Integer userRightType, final String sidx, String sord) {
+        List<Map<String,Object>> result = groupOrderMapper.selectGroupOrderGuestListPageOu(pageBean, bizId,set,userRightType, sidx, sord);
+        System.out.println("--1----"+result);
+        pageBean.setResult(result);
+        return pageBean;
+    }
 
 	@Override
 	public PageBean<GroupOrder>selectMonthlyReportStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId){
@@ -1728,6 +1737,14 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 
 	        return pageBean;
 	    }
+	  	
+		@Override
+		public PageBean<GroupOrder>selectProductProfitStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId){
+			List<GroupOrder> groupOrders=groupOrderMapper.selectProductProfitStatisticsListPage(pageBean, bizId);
+			pageBean.setResult(groupOrders);
+			return pageBean;
+		}
+
 
 }
 

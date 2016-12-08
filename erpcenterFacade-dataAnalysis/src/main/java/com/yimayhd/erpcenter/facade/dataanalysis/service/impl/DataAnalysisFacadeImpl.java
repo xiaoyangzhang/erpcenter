@@ -1376,7 +1376,7 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 
 		return result;
 	}
-
+	@Override
 	public GetNumAndOrderResult getSupplierDetails(GetNumAndOrderDTO getNumAndOrderDTO){
 		
 		String sl=getNumAndOrderDTO.getSl();
