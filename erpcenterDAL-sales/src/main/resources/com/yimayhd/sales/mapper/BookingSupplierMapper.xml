@@ -597,16 +597,16 @@ WHERE    booking_id IN
 
 	<select id="selectAirTicketBookingListPage" resultMap="AirTicketResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
 	select b.id, o.biz_id, b.group_id, b.order_id, g.group_code, g.operator_id, g.operator_name, 
-		o.order_no, o.product_name, o.product_brand_name, o.receive_mode,
+		o.order_no, g.product_name, g.product_brand_name, o.receive_mode,
 		g.group_mode, b.supplier_id, b.supplier_name, b.booking_no,
 		b.contact, b.contact_tel, b.contact_fax, b.contact_mobile, o.departure_date as start_date, 
 		d.item_date as dep_date, b.cash_type, b.total, b.total_cash, b.state_finance
 		,GROUP_CONCAT(DISTINCT CONCAT (item_date,'【',ticket_Flight,'】',CAST(item_price AS DECIMAL (15, 0)),'*(',CAST(item_num AS DECIMAL (15, 0)),'-',CAST(item_num_minus AS DECIMAL (15, 1)),')') )details
 	FROM booking_supplier b 
-		LEFT JOIN group_order o ON b.order_id=o.id
-		LEFT JOIN tour_group g ON b.group_id=g.id
 		LEFT JOIN booking_supplier_detail d ON b.id=d.booking_id
-		WHERE o.biz_id=#{parameter.bizId} 
+		LEFT JOIN tour_group g ON b.group_id=g.id
+		LEFT JOIN group_order o ON b.order_id=o.id
+		WHERE g.biz_id=#{parameter.bizId} 
 		<if test="parameter.supplierType != null">
 			AND b.supplier_type = #{parameter.supplierType}</if>
 		<if test="parameter.dateFrom!=null">
@@ -653,10 +653,10 @@ WHERE    booking_id IN
 	
 	<select id="sumAirTicketBooking" resultType="java.util.HashMap" parameterType="com.yihg.mybatis.utility.PageBean">
 	select sum(total) total, sum(total_cash) totalCash from (select b.total, b.total_cash FROM booking_supplier b 
-		LEFT JOIN group_order o ON b.order_id=o.id
-		LEFT JOIN tour_group g ON b.group_id=g.id
 		LEFT JOIN booking_supplier_detail d ON b.id=d.booking_id
-		WHERE o.biz_id=#{parameter.bizId} 
+		LEFT JOIN tour_group g ON b.group_id=g.id
+		LEFT JOIN group_order o ON b.order_id=o.id
+		WHERE g.biz_id=#{parameter.bizId} 
 		<if test="parameter.supplierType != null">
 			AND b.supplier_type = #{parameter.supplierType}</if>
 		<if test="parameter.dateFrom!=null">
