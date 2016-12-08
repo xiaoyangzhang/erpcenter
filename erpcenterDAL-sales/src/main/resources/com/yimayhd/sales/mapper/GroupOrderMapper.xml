@@ -3930,7 +3930,7 @@
 			#{item}
 		</foreach>
 		<choose>
-			<when test="page.parameter.startTime != null and page.parameter.startTime !='' and page.parameter.endTime != null and page.parameter.endTime != ''">
+			<when test="page.parameter.startTime != null and page.parameter.endTime != null ">
 				<if test="page.parameter.dateType==1">
 					<![CDATA[  and a.departure_date >=#{page.parameter.startTime}  and a.departure_date <=#{page.parameter.endTime}]]>
 				</if>
@@ -3938,7 +3938,7 @@
 					<![CDATA[  and a.create_time >=#{page.parameter.startTime}  and a.create_time <=#{page.parameter.endTime}]]>
 				</if>
 			</when>
-			<when test="page.parameter.startTime != null and page.parameter.startTime !='' and (page.parameter.endTime == null or page.parameter.endTime == '' )">
+			<when test="page.parameter.startTime != null  and page.parameter.endTime == null  ">
 				<if test="page.parameter.dateType==1">
 					and a.departure_date=#{page.parameter.startTime}
 				</if>
@@ -3946,7 +3946,7 @@
 					<![CDATA[	and a.create_time<=#{page.parameter.startTime}]]>
 				</if>
 			</when>
-			<when test="page.parameter.endTime != null and page.parameter.endTime != '' and  (page.parameter.startTime == null or page.parameter.startTime == '' )">
+			<when test="page.parameter.endTime != null and  page.parameter.startTime == null ">
 				<if test="page.parameter.dateType==1">
 					<![CDATA[  and a.departure_date =#{page.parameter.endTime}]]>
 				</if>

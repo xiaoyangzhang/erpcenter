@@ -130,12 +130,9 @@ public class ProductFacadeImpl implements ProductFacade{
 			Map<String, Object> parameters) {
 		WebResult<PageBean<ProductInfo>> result = new WebResult<PageBean<ProductInfo>>(); 
 		try {
-			PageBean<ProductInfo> pageBeanResult = productInfoBiz.selectProductListPage(pageBean, parameters);
-			if (pageBeanResult == null  ) {
-				result.setErrorCode(ProductErrorCode.QUERY_ERROR);
-				return result;
-			}
-			result.setValue(pageBeanResult);
+			pageBean = productInfoBiz.selectProductListPage(pageBean, parameters);
+
+			result.setValue(pageBean);
 			return result;
 		} catch (Exception e) {
 			LOGGER.error("productInfoBiz.selectProductListPage param:PageBean={},parameters={}, error:{}",JSON.toJSONString(pageBean),JSON.toJSONString(parameters),e);

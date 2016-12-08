@@ -1036,6 +1036,7 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		TrafficRes trafficResBean = trafficResBiz.findTrafficResById(Integer.valueOf(toSaveResNumsSoldDTO.getId()));
 		Integer newId = 0;
 		if(null != toSaveResNumsSoldDTO.getNumStock()){
+
 			if(Integer.valueOf(toSaveResNumsSoldDTO.getNumStock()) != trafficResBean.getNumStock()){
 				TrafficResStocklog trafficResStocklog=new TrafficResStocklog();
 				trafficResStocklog.setAdjustAction(com.yimayhd.erpcenter.dal.product.constans.Constants.TRAFFICRES_STOCK_ACTION.STOCK.toString());

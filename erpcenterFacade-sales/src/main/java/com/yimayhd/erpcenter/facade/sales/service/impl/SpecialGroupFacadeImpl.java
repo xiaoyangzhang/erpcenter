@@ -387,13 +387,13 @@ public class SpecialGroupFacadeImpl implements SpecialGroupFacade {
     public ToAddSpecialGroupResult toImpNotGroupList(GroupOrder groupOrder, String idLists, Integer bizId, Set<Integer> userIdSet) {
         ToAddSpecialGroupResult toAddSpecialGroupResult = new ToAddSpecialGroupResult();
         try {
-            if (null == groupOrder.getEndTime() && null == groupOrder.getDepartureDate()) {
+            if (StringUtils.isBlank(groupOrder.getEndTime()) && StringUtils.isBlank(groupOrder.getStartTime())) {
                 Calendar c = Calendar.getInstance();
                 int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH);
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 c.set(year, month, 1);
-                groupOrder.setDepartureDate(c.get(Calendar.YEAR) + "-"
+                groupOrder.setStartTime(c.get(Calendar.YEAR) + "-"
                         + (c.get(Calendar.MONTH) + 1) + "-01");
                 c.set(year, month, c.getActualMaximum(Calendar.DAY_OF_MONTH));
                 groupOrder.setEndTime(c.get(Calendar.YEAR) + "-"
@@ -414,6 +414,7 @@ public class SpecialGroupFacadeImpl implements SpecialGroupFacade {
             pageBean.setPageSize(groupOrder.getPageSize() == null ? Constants.PAGESIZE
                     : groupOrder.getPageSize());
             pageBean.setPage(groupOrder.getPage()==null?1:groupOrder.getPage());
+            groupOrder.setDateType(1);
             pageBean.setParameter(groupOrder);
             pageBean =groupOrderBiz.selectSpecialOrderListPage(pageBean, bizId,userIdSet);
             List<DicInfo> pp = dicBiz.getListByTypeCode(BasicConstants.CPXL_PP,
