@@ -5,14 +5,11 @@ import java.util.Map;
 import java.util.Set;
 
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
+import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupInfoQueryForCarCar;
 import org.apache.ibatis.annotations.Param;
 
 import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AutocompleteInfo;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupComment;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupPriceAndPersons;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.OperatorGroupStatic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 
@@ -524,4 +521,6 @@ public interface TourGroupBiz {
 	List<TourGroup> selecGroupBefAutoMergerGroup(Integer bizId,String startTime,Integer productId);
 
 	PageBean getPushDeliveryList(PageBean pageBean,Integer bizId);
+
+	List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(PageBean<GroupInfoQueryForCarCar> pageBean);
 }

@@ -6700,4 +6700,28 @@
 		and tg.group_state in (1,3,4) and tg.group_mode <![CDATA[>]]> 0 
 		group by supplier_name,order_mode,tg.product_id 
 			</select>
+	<select id="selectGroupOrdersForCarCar" resultType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderForCarCar" parameterType="com.yihg.mybatis.utility.PageBean">
+		select go.id, group_id, supplier_id,supplier_name,
+		order_no,order_type,`type`,
+		total,
+		contact_name,
+		contact_tel,
+		contact_mobile, contact_fax,
+
+		num_adult,
+		num_child,
+		num_guide,
+
+		departure_date, product_id,
+		product_brand_id,
+		product_brand_name,
+		product_name,
+		receive_mode,
+
+		go.remark,tg.group_code
+		from group_order go left join tour_group tg on go.group_id = tg.id
+		where create_time <![CDATA[>=]]> #{page.parameter.startTime}
+		  and create_time <![CDATA[<=]]> #{page.parameter.endTime}
+		  and group_id=#{page.parameter.groupId}
+	</select>
 </mapper>

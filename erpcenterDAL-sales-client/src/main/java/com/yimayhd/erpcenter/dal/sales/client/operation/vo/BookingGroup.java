@@ -67,6 +67,7 @@ public class BookingGroup implements Serializable {
 
 	private Integer guideId;
 	private String guideName;
+	private String guideMobile;
 	private BigDecimal total;
 	private String bookingGuideId;
 	private Integer stateBooking;
@@ -75,8 +76,15 @@ public class BookingGroup implements Serializable {
 	private Integer stateLock;
 	
 	private Integer pushStatus;
-	
-	
+
+	public String getGuideMobile() {
+		return guideMobile;
+	}
+
+	public void setGuideMobile(String guideMobile) {
+		this.guideMobile = guideMobile;
+	}
+
 	public Integer getStateLock() {
 		return stateLock;
 	}

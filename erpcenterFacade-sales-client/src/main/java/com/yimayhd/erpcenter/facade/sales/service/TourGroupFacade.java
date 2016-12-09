@@ -1,9 +1,13 @@
 package com.yimayhd.erpcenter.facade.sales.service;
 
+import java.util.List;
 import java.util.Set;
 
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupForCarCar;
+import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupInfoQueryForCarCar;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.OtherInfoVO;
 import com.yimayhd.erpcenter.facade.sales.query.ChangeGroupDTO;
 import com.yimayhd.erpcenter.facade.sales.query.ProfitQueryByTourDTO;
@@ -69,6 +73,6 @@ public interface TourGroupFacade {
     public ProfitQueryByTourResult toSaleProfitTableByTour(ProfitQueryByTourDTO profitQueryByTourDTO);
     public BookingProfitTableResult operatorSummaryTable(TourGroup tour,Integer bizId,Set<Integer> userIdSet);
     public BookingProfitTableResult toProfitSaleExcel(GroupOrder groupOrder,Integer bizId,Set<Integer> userIdSet);
-
+    public List<TourGroupForCarCar> selectGroupInfoWithArrangedTransAndGuideForCarCar(PageBean<GroupInfoQueryForCarCar> pageBean);
 
 }

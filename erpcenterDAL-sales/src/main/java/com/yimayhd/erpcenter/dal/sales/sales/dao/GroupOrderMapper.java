@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.dal.sales.sales.dao;
 
+import com.alibaba.dubbo.container.page.Page;
 import com.yihg.mybatis.utility.PageBean;
 
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.PaymentExportVO;
@@ -8,6 +9,7 @@ import com.yimayhd.erpcenter.dal.sales.client.query.vo.DepartmentOrderResult;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestCondition;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestStaticsVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderForCarCar;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorOrderStatic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalePrice;
@@ -532,5 +534,6 @@ public interface GroupOrderMapper {
 	List<GroupOrder>selectMonthlyReportStatistics(@Param("page") PageBean<GroupOrder> pageBean, @Param("bizId") Integer bizId, @Param("set") Set<Integer> set);
 	
 	List<GroupOrder>selectProductProfitStatisticsListPage(@Param("page") PageBean<GroupOrder> pageBean,@Param("bizId") Integer bizId);
-	
+
+	List<GroupOrderForCarCar> selectGroupOrdersForCarCar(@Param("page")PageBean pageBean);
 }

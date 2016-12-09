@@ -4,6 +4,8 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
 import com.yimayhd.erpcenter.dal.sales.client.quality.vo.QualityTourGroupVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupForCarCar;
+import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupInfoQueryForCarCar;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.OperatorGroupStatic;
 import org.apache.ibatis.annotations.Param;
 
@@ -298,4 +300,6 @@ public interface TourGroupMapper {
 	
 	List<BookingGroup> selectPushDeliveryListPage(@Param("page") PageBean pageBean,
                                                   @Param("bizId") Integer bizId);
+
+	List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(@Param("page") PageBean<GroupInfoQueryForCarCar> pageBean);
 }
