@@ -51,6 +51,7 @@
 	<bean id="specialGroupOrderDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.SpecialGroupOrderDalImpl" />
 	<bean id="teamGroupDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.TeamGroupDalImpl" />
 	<bean id="tourGroupDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.TourGroupDalImpl" />
+	<bean id="doubleCarDal" class="com.yimayhd.erpcenter.dal.sales.car.impl.DoubleCarDalImpl" />
 	<!-- <bean id="bookingDal" class="com.yimayhd.erpcenter.dal.sales.query.impl.BookingDalImpl" />
 	 -->
 	<bean id="shopSolrDumpDal" class="com.yimayhd.erpcenter.dal.sales.sales.impl.ShopSolrDumpDalImpl" />
