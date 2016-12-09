@@ -254,6 +254,6 @@ public interface ProductFacade {
 	WebResult<Integer> copyProductInfo(ProductSaveDTO productSaveDTO,String myBizCode);
 
 	ToProductTagResult getProductTags(Integer bizId);
-
+	ResultSupport syncTaoBaoProducts(String authClient);
 
 }

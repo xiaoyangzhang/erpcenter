@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.yimayhd.erpcenter.biz.basic.service.LogOperatorBiz;
+import com.yimayhd.erpcenter.common.exception.ClientException;
 import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
 import com.yimayhd.erpcenter.dal.basic.utils.LogFieldUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -419,7 +420,13 @@ public class BookingSupplierFacadeImpl implements BookingSupplierFacade {
 	@Override
 	public ResultSupport delBookingSupplier(Integer bookingId, boolean flag) {
 		ResultSupport resultSupport = new ResultSupport();
-		bookingSupplierBiz.deleteSupplierWithFinanceByPrimaryKey(bookingId, true);
+		try {
+			bookingSupplierBiz.deleteSupplierWithFinanceByPrimaryKey(bookingId, true);
+		} catch (ClientException e) {
+			e.printStackTrace();
+			resultSupport.setSuccess(false);
+			resultSupport.setResultMsg(e.getMessage());
+		}
 		return resultSupport;
 	}
 	@Override

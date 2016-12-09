@@ -193,8 +193,7 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
             /**
              * 根据组团社id获取组团社名称
              */
-            List<GroupOrder> groupList = pageBean.getResult();
-            findTourGroupByConditionResult.setGroupOrderList(groupList);
+            findTourGroupByConditionResult.setGroupOrderList(result);
             findTourGroupByConditionResult.setPageBean(pageBean);
             findTourGroupByConditionResult.setGroupOrder(order);
 
