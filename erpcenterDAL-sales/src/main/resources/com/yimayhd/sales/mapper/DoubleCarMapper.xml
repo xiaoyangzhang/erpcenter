@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.yimayhd.erpcenter.dal.sales.car.dao.DoubleCarMapper" >
-  
+  	<resultMap id="Transport" type="com.yimayhd.erpcenter.dal.sales.client.car.po.TransPort" >
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+	    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+	    <result column="method" property="method" jdbcType="INTEGER" />
+	    <result column="class_no" property="classNo" jdbcType="VARCHAR" />
+	    <result column="source_type" property="sourceType" jdbcType="INTEGER" />
+	    <result column="type" property="type" jdbcType="INTEGER" />
+	    <result column="departure_city" property="departureCity" jdbcType="VARCHAR" />
+	    <result column="departure_station" property="departureStation" jdbcType="VARCHAR" />
+	    <result column="departure_date" property="departureDate" jdbcType="TIMESTAMP" />
+	    <result column="departure_time" property="departureTime" jdbcType="VARCHAR" />
+	    
+	    <result column="arrival_city" property="arrivalCity" jdbcType="VARCHAR" />
+	    <result column="arrival_station" property="arrivalStation" jdbcType="VARCHAR" />
+	    <result column="arrival_date" property="arrivalDate" jdbcType="TIMESTAMP" />
+	    <result column="arrival_time" property="arrivalTime" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="TransportHotel" type="com.yimayhd.erpcenter.dal.sales.client.car.po.TransPortHotel" >
+	    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+	    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+	    <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+	    <result column="item_date" property="itemDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+  	
+  	<select id="selectTransportByOrderId" resultMap="Transport">
+		SELECT o.group_id,t.id,t.order_id,t.method,t.type,t.class_no,t.source_type,t.departure_city,t.departure_station,t.departure_date,t.departure_time
+			,t.arrival_city,t.arrival_station,t.arrival_date,t.arrival_time 
+		FROM `group_order_transport` t JOIN `group_order` o ON t.order_id = o.id WHERE t.order_id = #{orderId,jdbcType=INTEGER})
+	</select>
+	
+	<select id="selectTransportByOrderIds" resultMap="Transport">
+		SELECT o.group_id,t.id,t.order_id,t.method,t.type,t.class_no,t.source_type,t.departure_city,t.departure_station,t.departure_date,t.departure_time
+			,t.arrival_city,t.arrival_station,t.arrival_date,t.arrival_time  
+		FROM `group_order_transport` t JOIN `group_order` o ON t.order_id = o.id WHERE t.order_id in (${orderIds})
+	</select>
+	
+	<select id="selectTransPortHotelByGroupIds" resultMap="TransportHotel">
+		SELECT d.item_date,t.group_id ,t.supplier_id,t.supplier_name  FROM `booking_supplier` t JOIN `booking_supplier_detail` d ON t.id = d.booking_id  
+		WHERE  t.supplier_type =3 AND t.group_id in (${groupIds})
+	</select>
 
 </mapper>
