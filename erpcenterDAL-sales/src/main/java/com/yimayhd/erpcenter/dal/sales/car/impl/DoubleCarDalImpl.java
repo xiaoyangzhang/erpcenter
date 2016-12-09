@@ -35,7 +35,7 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 						transPort.setHotelId(hotel.getSupplierId());
 					}
 					nameBuffer.append(hotel.getSupplierName());
-					if(j <= hotels.size() - 1 ){
+					if(j < hotels.size() - 1 ){
 						nameBuffer.append(",");
 					}
 				}
