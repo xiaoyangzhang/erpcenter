@@ -51,6 +51,8 @@
 	<bean id="teamGroupBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.TeamGroupBizImpl" />
 	<bean id="tourGroupBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.sales.TourGroupBizImpl" />
 	
+	<bean id="doubleCarBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.car.DoubleCarBizImpl" />
+	
 	<!-- taobao -->
 	<bean id="taobaoOrderBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.taobao.TaobaoOrderBizImpl" />
 	
