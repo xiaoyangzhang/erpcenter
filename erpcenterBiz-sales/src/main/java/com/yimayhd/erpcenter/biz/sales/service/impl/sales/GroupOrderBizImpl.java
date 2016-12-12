@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderForCarCar;
+import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupOrderQueryForCarCar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1223,4 +1225,11 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
 			String sidx, String sord) {
 		return groupOrderDal.selectGroupOrderGuestListPageOu(pageBean, bizId, set, userRightType, sidx, sord);
 	}
+
+    @Override
+    public List<GroupOrderForCarCar> selectGroupOrdersInOneGroupForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean) {
+        List<GroupOrderForCarCar> groupOrderForCarCars = groupOrderDal.selectGroupOrdersInOneGroupForCarCar(pageBean);
+
+        return groupOrderForCarCars;
+    }
 }

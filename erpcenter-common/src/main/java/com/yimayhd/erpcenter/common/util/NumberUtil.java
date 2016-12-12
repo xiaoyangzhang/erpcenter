@@ -68,6 +68,18 @@ public class NumberUtil {
 		   } 
 		   return true; 
 		}
+
+	/**
+	 * if arg == null,or arg <= 0,return false
+	 * @param arg
+	 * @return
+	 */
+	public static boolean isIntegerValid(Integer arg) {
+		if (arg == null || arg <= 0) {
+			return false;
+		}
+		return true;
+	}
 	public static void main(String[] args) {
 
 	}

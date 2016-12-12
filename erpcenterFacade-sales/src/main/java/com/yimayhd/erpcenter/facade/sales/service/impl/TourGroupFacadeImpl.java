@@ -10,8 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.alibaba.fastjson.JSON;
+import com.yimayhd.erpcenter.common.util.NumberUtil;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupInfoQueryForCarCar;
+import com.yimayhd.erpcenter.facade.sales.errorcode.OperationErrorCode;
 import com.yimayhd.erpcenter.facade.sales.result.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -76,7 +79,6 @@ import com.yimayhd.erpresource.dal.po.SupplierGuide;
 import com.yimayhd.erpresource.dal.po.SupplierImg;
 import com.yimayhd.erpresource.dal.po.SupplierImgType;
 import com.yimayhd.erpresource.dal.po.SupplierInfo;
-import org.springframework.web.util.WebUtils;
 
 /**
  * @ClassName: ${ClassName}
@@ -2220,9 +2222,17 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
     }
 
     @Override
-    public List<TourGroupForCarCar> selectGroupInfoWithArrangedTransAndGuideForCarCar(PageBean<GroupInfoQueryForCarCar> pageBean) {
+    public WebResult<List<TourGroupForCarCar>> selectGroupInfoWithArrangedTransAndGuideForCarCar(PageBean<GroupInfoQueryForCarCar> pageBean) {
+        logger.info("param pageBean={}", JSON.toJSONString(pageBean));
+        WebResult<List<TourGroupForCarCar>> result = new WebResult<List<TourGroupForCarCar>>();
+        if (NumberUtil.isIntegerValid(pageBean.getPage()) || NumberUtil.isIntegerValid(pageBean.getPageSize())) {
+            logger.error("params error:pageBean={}",JSON.toJSONString(pageBean));
+            result.setErrorCode(OperationErrorCode.PARAM_ERROR);
+            return result;
+        }
         List<TourGroupForCarCar> tourGroupForCarCars = tourGroupBiz.selectGroupInfoWithArrangedTransForCarCar(pageBean);
-        return tourGroupForCarCars;
+        result.setValue(tourGroupForCarCars);
+        return result;
     }
 
     public ProfitQueryByTourResult toProfitQueryTableByTour(ProfitQueryByTourDTO profitQueryByTourDTO){

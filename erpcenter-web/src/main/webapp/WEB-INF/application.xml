@@ -57,5 +57,6 @@
 	<import resource="../META-INF/spring/application-service-facade-ticket.xml" />
 	
 	<import resource="../META-INF/spring/application-manager-dal-solr.xml" />
+	<import resource="../META-INF/spring/application-scheduler.xml" />
 
 </beans>
