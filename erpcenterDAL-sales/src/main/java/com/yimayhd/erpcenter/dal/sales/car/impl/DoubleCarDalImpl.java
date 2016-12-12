@@ -3,7 +3,7 @@ package com.yimayhd.erpcenter.dal.sales.car.impl;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 import com.yimayhd.erpcenter.dal.sales.car.dao.DoubleCarMapper;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPort;
@@ -11,7 +11,7 @@ import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPortHotel;
 import com.yimayhd.erpcenter.dal.sales.client.car.service.DoubleCarDal;
 
 public class DoubleCarDalImpl implements DoubleCarDal{
-	@Autowired
+	@Resource
 	private DoubleCarMapper doubleCarMapper;
 	
 	@Override
