@@ -6,15 +6,14 @@ import java.util.Map;
 import java.util.Set;
 
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
+import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupInfoQueryForCarCar;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
+import com.yimayhd.erpcenter.dal.sys.service.PlatformEmployeeDal;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AutocompleteInfo;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupComment;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupPriceAndPersons;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.TourGroupDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.OperatorGroupStatic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
@@ -23,7 +22,8 @@ public class TourGroupBizImpl implements TourGroupBiz {
 
 	@Autowired
 	private TourGroupDal tourGroupDal;
-
+	@Autowired
+	private PlatformEmployeeDal platformEmployeeDal;
 	@Override
 	public List<GroupOrder> selectOrderAndGuestInfoByGroupId(Integer groupId) {
 		return tourGroupDal.selectOrderAndGuestInfoByGroupId(groupId);
@@ -524,5 +524,18 @@ public class TourGroupBizImpl implements TourGroupBiz {
 	@Override
 	public PageBean getPushDeliveryList(PageBean pageBean, Integer bizId) {
 		return tourGroupDal.getPushDeliveryList(pageBean, bizId);
+	}
+
+	@Override
+	public List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(PageBean<GroupInfoQueryForCarCar> pageBean) {
+		List<TourGroupForCarCar> bookingGroups = tourGroupDal.selectGroupInfoWithArrangedTransForCarCar(pageBean);
+		for (TourGroupForCarCar tourCar : bookingGroups) {
+			PlatformEmployeePo employeePo = platformEmployeeDal.findByEmployeeId(tourCar.getTourGroup().getOperatorId());
+			if (employeePo == null) {
+				tourCar.setOperatorMobile("");
+			}
+			tourCar.setOperatorMobile(employeePo.getMobile());
+		}
+		return bookingGroups;
 	}
 }

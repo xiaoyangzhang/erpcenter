@@ -2,15 +2,11 @@ package com.yimayhd.erpcenter.dal.sales.sales.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
+import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupInfoQueryForCarCar;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,19 +29,6 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryD
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingGuideDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AutocompleteInfo;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteAttachment;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteTraffic;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupComment;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupPriceAndPersons;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupRouteDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.TourGroupDal;
@@ -71,6 +54,7 @@ import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupCommentMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.util.GenerateCodeUtil;
 import com.yimayhd.erpcenter.dal.sales.solr.manager.TourGroupSolrQueryManager;
+import org.springframework.util.CollectionUtils;
 
 public class TourGroupDalImpl implements TourGroupDal {
 
@@ -1660,4 +1644,13 @@ public class TourGroupDalImpl implements TourGroupDal {
         pageBean.setResult(bookingGroups);
         return pageBean;
     }
+
+	@Override
+	public List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(PageBean<GroupInfoQueryForCarCar> pageBean) {
+		List<TourGroupForCarCar> bookingGroups = tourGroupMapper.selectGroupInfoWithArrangedTransForCarCar(pageBean);
+		if (CollectionUtils.isEmpty(bookingGroups)) {
+			return Collections.emptyList();
+		}
+		return bookingGroups;
+	}
 }

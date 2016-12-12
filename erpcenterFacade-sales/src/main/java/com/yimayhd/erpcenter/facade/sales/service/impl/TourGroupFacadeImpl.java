@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
+import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupInfoQueryForCarCar;
 import com.yimayhd.erpcenter.facade.sales.result.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -48,28 +50,6 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroup;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupGuide;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupOrderGuest;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupOrderTransport;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupRoute;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupRouteAttachment;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantGroupRouteSupplier;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantSupplier;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantSupplierImg;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AssistantSupplierImgType;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.AutocompleteInfo;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrintPo;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteAttachment;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.AssistantGroupVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.AssistantSupplierVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupPriceVo;
@@ -2237,6 +2217,12 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
         result1.setPageBean(pageBean);
         result1.setSum(map);
         return  result1;
+    }
+
+    @Override
+    public List<TourGroupForCarCar> selectGroupInfoWithArrangedTransAndGuideForCarCar(PageBean<GroupInfoQueryForCarCar> pageBean) {
+        List<TourGroupForCarCar> tourGroupForCarCars = tourGroupBiz.selectGroupInfoWithArrangedTransForCarCar(pageBean);
+        return tourGroupForCarCars;
     }
 
     public ProfitQueryByTourResult toProfitQueryTableByTour(ProfitQueryByTourDTO profitQueryByTourDTO){

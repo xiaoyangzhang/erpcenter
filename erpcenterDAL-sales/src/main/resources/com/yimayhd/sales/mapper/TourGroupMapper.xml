@@ -4436,4 +4436,20 @@
         GROUP BY tg.id
         ORDER BY tg.date_start,tg.create_time 
     </select>
+	<select id="selectGroupInfoWithArrangedTransForCarCar" resultType="com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupForCarCar" parameterType="com.yihg.mybatis.utility.PageBean" >
+		select tg.id,group_mode, group_code,prudct_brand_id,
+		product_brand_name,
+		product_id,
+		product_name, date_start, date_end,daynum,
+		ifnull(total_adult,0) total_adult,
+		ifnull(total_child,0) total_child,
+		ifnull(total_guide,0) total_guide, tg.remark,
+		 operator_id, operator_name,order_num,bg.`guide_id`,bg.`guide_name`,bg.`guide_mobile`
+		from tour_group tg join booking_delivery bd on tg.id=bd.group_id
+		JOIN booking_guide bg ON  tg.`id`= bg.`group_id`
+		 where create_time <![CDATA[>=]]> #{page.parameter.startTime}
+		  and create_time <![CDATA[<=]]> #{page.parameter.endTime}
+		and bd.supplier_name like concat ('%',${page.parameter.supplierName},'%')
+		AND bg.`is_default` = 1
+	</select>
 </mapper>
