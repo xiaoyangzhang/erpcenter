@@ -142,7 +142,13 @@
 		<result column="groupCost" property="groupCost" jdbcType="DECIMAL" />
 		<result column="totalIncome" property="totalIncome" jdbcType="DECIMAL" />
 	</resultMap>
+<resultMap id="tourGroupForCarCar" type="com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupForCarCar">
 
+	<result property="guideId" column="guide_id" />
+	<result property="guideName" column="guide_name" />
+	<result property="guideMobile" column="guide_mobile" />
+	<association property="tourGroup" resultMap="BaseResultMap"/>
+</resultMap>
 	<sql id="Base_Column_List">
 		id, biz_id, group_mode, group_code,group_code_mark,
 		group_code_sort,
@@ -4436,7 +4442,7 @@
         GROUP BY tg.id
         ORDER BY tg.date_start,tg.create_time 
     </select>
-	<select id="selectGroupInfoWithArrangedTransForCarCar" resultType="com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupForCarCar" parameterType="com.yihg.mybatis.utility.PageBean" >
+	<select id="selectGroupInfoWithArrangedTransForCarCar" resultMap="tourGroupForCarCar" parameterType="com.yihg.mybatis.utility.PageBean" >
 		select tg.id,group_mode, group_code,prudct_brand_id,
 		product_brand_name,
 		product_id,

@@ -10,6 +10,8 @@ import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestCondition;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestStaticsVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderForCarCar;
+import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupInfoQueryForCarCar;
+import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupOrderQueryForCarCar;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorOrderStatic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalePrice;
@@ -535,5 +537,5 @@ public interface GroupOrderMapper {
 	
 	List<GroupOrder>selectProductProfitStatisticsListPage(@Param("page") PageBean<GroupOrder> pageBean,@Param("bizId") Integer bizId);
 
-	List<GroupOrderForCarCar> selectGroupOrdersForCarCar(@Param("page")PageBean pageBean);
+	List<GroupOrderForCarCar> selectGroupOrdersInOneGroupForCarCar(@Param("page")PageBean<GroupOrderQueryForCarCar> pageBean);
 }

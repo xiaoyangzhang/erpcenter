@@ -5,10 +5,13 @@ import java.util.List;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderForCarCar;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
+import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupOrderQueryForCarCar;
 import com.yimayhd.erpcenter.facade.sales.query.ReportStatisticsQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.query.grouporder.*;
 import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
+import com.yimayhd.erpcenter.facade.sales.result.WebResult;
 import com.yimayhd.erpcenter.facade.sales.result.grouporder.*;
 
 /**
@@ -174,4 +177,5 @@ public interface GroupOrderFacade {
 	
 	public List<GroupOrderPrice> selectByOrder(Integer orderId);
 
+	WebResult<List<GroupOrderForCarCar>> selectGroupOrdersInOneGroupForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean);
 }

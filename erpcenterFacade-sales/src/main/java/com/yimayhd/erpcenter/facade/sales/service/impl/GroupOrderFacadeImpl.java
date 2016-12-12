@@ -13,11 +13,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.alibaba.fastjson.JSON;
 import com.yimayhd.erpcenter.biz.sys.service.PlatAuthBiz;
+import com.yimayhd.erpcenter.common.util.NumberUtil;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
+import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupOrderQueryForCarCar;
 import com.yimayhd.erpcenter.dal.sys.po.PlatAuth;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
+import com.yimayhd.erpcenter.facade.sales.errorcode.OperationErrorCode;
 import com.yimayhd.erpcenter.facade.sales.query.ReportStatisticsQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.query.grouporder.*;
+import com.yimayhd.erpcenter.facade.sales.result.WebResult;
 import com.yimayhd.erpcenter.facade.sales.result.grouporder.*;
 import com.yimayhd.erpcenter.facade.sales.utils.*;
 
@@ -85,18 +91,6 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupGuidePrintPo;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrintPo;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRequirement;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRoute;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteAttachment;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteSupplier;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupRouteTraffic;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupOrderPriceVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
@@ -3646,5 +3640,19 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		// TODO Auto-generated method stub
 		return groupOrderPriceService.selectByOrder(orderId);
 	}
-	
+
+	@Override
+	public WebResult<List<GroupOrderForCarCar>> selectGroupOrdersInOneGroupForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean) {
+		log.info("params:pageBean={}", JSON.toJSONString(pageBean));
+		WebResult<List<GroupOrderForCarCar>> result = new WebResult<List<GroupOrderForCarCar>>();
+		if (!NumberUtil.isIntegerValid(pageBean.getPage()) || !NumberUtil.isIntegerValid(pageBean.getPageSize())) {
+			log.error("params error:pageBean={}",JSON.toJSONString(pageBean));
+			result.setErrorCode(OperationErrorCode.PARAM_ERROR);
+			return result;
+		}
+		List<GroupOrderForCarCar> groupOrderForCarCars = groupOrderService.selectGroupOrdersInOneGroupForCarCar(pageBean);
+		result.setValue(groupOrderForCarCars);
+		return result;
+	}
+
 }

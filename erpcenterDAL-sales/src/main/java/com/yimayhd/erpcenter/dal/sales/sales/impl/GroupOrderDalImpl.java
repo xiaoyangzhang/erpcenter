@@ -9,6 +9,7 @@ import java.util.*;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
+import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupOrderQueryForCarCar;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.*;
 
 import org.apache.commons.lang3.StringUtils;
@@ -53,6 +54,7 @@ import com.yimayhd.erpcenter.dal.sales.solr.sales.converter.ProfitOrderConverter
 import com.yimayhd.erpcenter.dal.sales.solr.sales.converter.SaleOrderConverter;
 import com.yimayhd.erpcenter.dal.sales.solr.sales.converter.SpecialOrderConverter;
 import com.yimayhd.erpcenter.dal.sales.solr.sales.manage.SalesSolrQueryManage;
+import org.springframework.util.CollectionUtils;
 
 public class GroupOrderDalImpl implements GroupOrderDal {
     private static final Logger log = LoggerFactory
@@ -1744,6 +1746,15 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 			pageBean.setResult(groupOrders);
 			return pageBean;
 		}
+
+    @Override
+    public List<GroupOrderForCarCar> selectGroupOrdersInOneGroupForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean) {
+        List<GroupOrderForCarCar> groupOrderForCarCars = groupOrderMapper.selectGroupOrdersInOneGroupForCarCar(pageBean);
+        if (CollectionUtils.isEmpty(groupOrderForCarCars)) {
+            return Collections.emptyList();
+        }
+        return groupOrderForCarCars;
+    }
 
 
 }

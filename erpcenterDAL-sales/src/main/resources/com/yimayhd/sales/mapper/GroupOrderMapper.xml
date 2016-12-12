@@ -197,6 +197,11 @@
 		<result column="product_brand_name" property="productBrandName" jdbcType="VARCHAR" />
 
 	</resultMap>
+	<resultMap id="groupOrderForCarCar" type="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderForCarCar">
+
+		<result property="groupCode" column="group_code"/>
+		<association  resultMap="BaseResultMap" property="groupOrder"/>
+	</resultMap>
 	<sql id="Base_Column_List">
 		id, biz_id, group_id, supplier_id,supplier_name,order_business,
 		order_no,order_no_sort,order_type,type,contract_no,guest_source_id,guest_source_name,
@@ -6700,7 +6705,7 @@
 		and tg.group_state in (1,3,4) and tg.group_mode <![CDATA[>]]> 0 
 		group by supplier_name,order_mode,tg.product_id 
 			</select>
-	<select id="selectGroupOrdersForCarCar" resultType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderForCarCar" parameterType="com.yihg.mybatis.utility.PageBean">
+	<select id="selectGroupOrdersInOneGroupForCarCar" resultMap="groupOrderForCarCar" parameterType="com.yihg.mybatis.utility.PageBean">
 		select go.id, group_id, supplier_id,supplier_name,
 		order_no,order_type,`type`,
 		total,
@@ -6720,8 +6725,13 @@
 
 		go.remark,tg.group_code
 		from group_order go left join tour_group tg on go.group_id = tg.id
-		where create_time <![CDATA[>=]]> #{page.parameter.startTime}
+		where <!-- create_time <![CDATA[>=]]> #{page.parameter.startTime}
 		  and create_time <![CDATA[<=]]> #{page.parameter.endTime}
-		  and group_id=#{page.parameter.groupId}
+		  and -->
+		  group_id IN
+		<foreach item="item" index="index" collection="page.parameter.groupIdSet" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach>
 	</select>
 </mapper>

@@ -13,8 +13,8 @@ import java.util.List;
 public class TourGroupForCarCar implements Serializable {
     private static final long serialVersionUID = 2412973487524417016L;
 
-    private Integer supplierId;
-    private String supplierName;
+//    private Integer supplierId;
+//    private String supplierName;
     private TourGroup tourGroup;
     private String operatorMobile;
     private Integer guideId;
@@ -61,21 +61,21 @@ public class TourGroupForCarCar implements Serializable {
         tourGroup = tourGroup;
     }
 
-    public String getSupplierName() {
-        return supplierName;
-    }
-
-    public void setSupplierName(String supplierName) {
-        this.supplierName = supplierName;
-    }
-
-    public Integer getSupplierId() {
-        return supplierId;
-    }
-
-    public void setSupplierId(Integer supplierId) {
-        this.supplierId = supplierId;
-    }
+//    public String getSupplierName() {
+//        return supplierName;
+//    }
+//
+//    public void setSupplierName(String supplierName) {
+//        this.supplierName = supplierName;
+//    }
+//
+//    public Integer getSupplierId() {
+//        return supplierId;
+//    }
+//
+//    public void setSupplierId(Integer supplierId) {
+//        this.supplierId = supplierId;
+//    }
 
 
 

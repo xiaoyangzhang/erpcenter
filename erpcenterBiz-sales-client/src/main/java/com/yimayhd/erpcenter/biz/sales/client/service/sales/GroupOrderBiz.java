@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.alibaba.dubbo.container.page.Page;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderForCarCar;
+import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupOrderQueryForCarCar;
 import org.apache.ibatis.annotations.Param;
 
 import com.yihg.mybatis.utility.PageBean;
@@ -461,7 +464,7 @@ public interface GroupOrderBiz {
 
     public PageBean selectGroupOrderGuestListPageOu(PageBean pageBean, Integer bizId,Set<Integer> set,Integer userRightType,String sidx,String sord);
 
-
+    List<GroupOrderForCarCar> selectGroupOrdersInOneGroupForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean);
 
 }
 
