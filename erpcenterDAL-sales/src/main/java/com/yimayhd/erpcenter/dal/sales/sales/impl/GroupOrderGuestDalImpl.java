@@ -127,4 +127,8 @@ public class GroupOrderGuestDalImpl implements GroupOrderGuestDal {
 	public List<GroupOrderGuest> getEmployeeByMobile(String mobile) {
 		return groupOrderGuestMapper.getEmployeeByMobile(mobile);
 	}
+	@Override
+	public List<GroupOrderGuest> selectAllOrderGuestByGroupId(Integer groupId) {
+		return groupOrderGuestMapper.selectAllOrderGuestByGroupId(groupId);
+	}
 }

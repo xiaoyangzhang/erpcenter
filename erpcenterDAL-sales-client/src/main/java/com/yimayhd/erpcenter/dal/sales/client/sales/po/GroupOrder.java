@@ -2050,7 +2050,47 @@ public class GroupOrder implements Serializable {
 	public void setOtherTotalBalance(BigDecimal otherTotalBalance) {
 		this.otherTotalBalance = otherTotalBalance;
 	}
-	
+
+    private String sidx;//排序的字段
+
+    private String sord;//排序方式
+
+    private String orderModeType;
+
+    protected Integer rows; //每页显示的行数 如：15
+
+    public String getOrderModeType() {
+        return orderModeType;
+    }
+
+    public void setOrderModeType(String orderModeType) {
+        this.orderModeType = orderModeType;
+    }
+
+    public Integer getRows() {
+        return rows;
+    }
+
+    public void setRows(Integer rows) {
+        this.rows = rows;
+    }
+
+    public String getSidx() {
+        return sidx;
+    }
+
+    public void setSidx(String sidx) {
+        this.sidx = sidx;
+    }
+
+    public String getSord() {
+        return sord;
+    }
+
+    public void setSord(String sord) {
+        this.sord = sord;
+    }
+
 	
 	
 

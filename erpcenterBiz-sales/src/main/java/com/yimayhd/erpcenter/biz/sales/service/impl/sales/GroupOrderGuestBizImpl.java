@@ -116,6 +116,11 @@ public class GroupOrderGuestBizImpl implements GroupOrderGuestBiz {
 	public List<GroupOrderGuest> getEmployeeByMobile(String mobile) {
 		return groupOrderGuestDal.getEmployeeByMobile(mobile);
 	}
-	
+
+	@Override
+	public List<GroupOrderGuest> selectAllOrderGuestByGroupId(Integer groupId) {
+		return groupOrderGuestDal.selectAllOrderGuestByGroupId(groupId);
+	}
+
 
 }

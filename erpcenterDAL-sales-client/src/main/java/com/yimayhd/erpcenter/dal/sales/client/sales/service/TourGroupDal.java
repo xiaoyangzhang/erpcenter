@@ -33,7 +33,7 @@ public interface TourGroupDal {
 	/**
 	 * 旅行团的新增属性1
 	 * 
-	 * @param record
+	 * @param tourGroup
 	 * @return
 	 */
 	int insert(TourGroup tourGroup);
@@ -41,20 +41,17 @@ public interface TourGroupDal {
 	/**
 	 * 旅行团的新增属性2
 	 * 
-	 * @param record
 	 * @return
 	 */
 	TourGroup insertSelective(TourGroup tourGroup);
 
 	/**
 	 * 新增旅行团和订单信息
-	 * @param record
 	 * @return
 	 */
 	GroupOrder insertSelective(TourGroup tourGroup,GroupOrder groupOrder);
 	/**
 	 * 新增旅行团和订单信息、导游信息
-	 * @param record
 	 * @return
 	 */
 	GroupOrder insertSelective(TourGroup tourGroup,GroupOrder groupOrder,Integer groupId,Integer userId,String userName);
@@ -75,7 +72,6 @@ public interface TourGroupDal {
 	/**
 	 * 旅行团的修改属性1
 	 * 
-	 * @param record
 	 * @return
 	 */
 	int updateByPrimaryKeySelective(TourGroup tourGroup);
@@ -83,21 +79,18 @@ public interface TourGroupDal {
 	/**
 	 * 旅行团订单修改
 	 * 
-	 * @param record
 	 * @return
 	 */
 	GroupOrder updateByPrimaryKeySelective(TourGroup tourGroup,GroupOrder groupOrder);
 	/**
 	 * 旅行团的修改属性1
 	 * 
-	 * @param record
 	 * @return
 	 */
 	int updateByPrimaryKey(TourGroup tourGroup);
 
 	/**
 	 * 
-	 * @param supplierCode
 	 *            当前商家编码
 	 * @param mode
 	 *            团队类型 0散客团 其他数字为定制团
@@ -117,7 +110,6 @@ public interface TourGroupDal {
 	
 	/**
 	 * 散客团总共
-	 * @param pageBean
 	 * @param bizId
 	 * @return
 	 */
@@ -125,7 +117,6 @@ public interface TourGroupDal {
 	
 	/**
 	 * 旅行团的逻辑删除
-	 * @param id
 	 * @return
 	 */
 	int deleteTourGroupById(Integer groupId,Integer orderId);
@@ -172,7 +163,7 @@ public interface TourGroupDal {
 	/**
 	 * 根据团ID和创建时间查询计调需求
 	 * @param groupId
-	 * @param dateList
+	 * @param type
 	 * @return
 	 */
 	List<String> selectGroupRequirementByGroupId(Integer groupId,Integer type) ;
@@ -226,7 +217,6 @@ public interface TourGroupDal {
 	 * 统计所有团总收入总成本
 	 * @param pageBean
 	 * @param bizId
-	 * @param mode
 	 * @return
 	 */
 	TourGroup selectProfitByTourConAndMode(PageBean<TourGroup> pageBean,Integer bizId,Set<Integer> set);
@@ -524,4 +514,19 @@ public interface TourGroupDal {
 	List<TourGroup> selecGroupBefAutoMergerGroup(Integer bizId,String startTime,Integer productId);
 	
 	PageBean getPushDeliveryList(PageBean pageBean,Integer bizId);
+
+	/**
+	 *根据travelExportStatus 状态获取团ids集合
+	 * @author daixiaoman
+	 * @date 2016年12月5日 上午11:25:11
+	 */
+	public List<Integer> getGroupIdsByTravelExportStatus(Integer travelExportStatus,Integer bizId);
+
+	/**
+	 * 更新导出状态
+	 * @author daixiaoman
+	 * @date 2016年12月6日 上午11:11:30
+	 */
+	public void updateTourGroupTravelExportStatus(List<Integer> groupIds,Integer status);
+
 }

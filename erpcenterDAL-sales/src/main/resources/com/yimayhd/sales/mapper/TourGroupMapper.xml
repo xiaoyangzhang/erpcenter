@@ -64,14 +64,7 @@
 		<result column="supplier_name" property="supplierName"
 			jdbcType="VARCHAR" />
 		<result column="receive_mode" property="receiveMode" jdbcType="VARCHAR" />
-		<!-- <collection property="groupOrderList" ofType="com.yihg.sales.po.GroupOrder" >
-			<id column="orderId" property="id"/>
-			<result column="supplier_name" property="supplierName"/>
-			<collection property="orderPrices" ofType="com.yihg.sales.po.GroupOrderPrice" column="orderId">
-				<id column="priceId" property="id" />
-				<result column="totalPrice" property="totalPrice" />
-			</collection>
-		</collection> -->
+		<result column="travel_export_status" property="travelExportStatus" jdbcType="INTEGER" />
 	</resultMap>
 
 	<resultMap id="BookingGroup" type="com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup">
@@ -156,7 +149,7 @@
 		notice,
 		other_notice,
 		warm_notice, operator_id, operator_name,
-		create_time,update_id,update_name,update_time,order_num,total_income,total_income_cash,total_income_shop,total_income_shop_cash,total_cost,total_cost_cash
+		create_time,update_id,update_name,update_time,order_num,total_income,total_income_cash,total_income_shop,total_income_shop_cash,total_cost,total_cost_cash,travel_export_status
 	</sql>
 	<select id="selectOperatorGroupStaticListPage" resultMap="OperatorGroupStaticMap"
 		parameterType="com.yihg.mybatis.utility.PageBean">
@@ -927,7 +920,15 @@
 			test="page.parameter.groupState != null and page.parameter.groupState != -2">
 			and t.group_state =#{page.parameter.groupState}
 		</if>
-		order by t.date_start ,t.create_time
+
+		<choose>
+			<when test="page.parameter.sidx != null and page.parameter.sidx !=''">
+				ORDER BY ${page.parameter.sidx} ${page.parameter.sord}
+			</when>
+			<otherwise>
+				order by t.date_start ,t.create_time
+			</otherwise>
+		</choose>
 	</select>
 
 
@@ -4337,47 +4338,61 @@
 		) AND biz_id=#{bizId,jdbcType=INTEGER}
 	</select>
 	<select id="selectBookingProfitListPage" resultMap="BaseResultMap" >
-		SELECT tg.id as  id, tg.`group_code`,tg.`date_start`,tg.`total_adult`,tg.`total_child`,tg.`total_guide`,tg.`group_mode`,tg.`product_brand_name`,tg.`product_name`,
-		tg.`operator_name`,tg.`group_state`, ifnull(tg.`total_cost`,0) total_cost, sum(ifnull(gop.totalBudget,0)) totalBudget ,go.`supplier_name` FROM tour_group tg  JOIN group_order go ON tg.`id`=go.`group_id` 
-		LEFT JOIN (SELECT SUM(IFNULL(total_price,0)) totalBudget,order_id FROM group_order_price WHERE `mode`=1  GROUP BY order_id) gop ON go.`id`=gop.order_id 
-		WHERE tg.biz_id = #{bizId,jdbcType=INTEGER}
-		and tg.group_state in (0,1,3,4)
-		and tg.operator_id in
-		<foreach item="item" index="index" collection="set" open="("
-			separator="," close=")">
+		SELECT tg.id AS id, tg.`group_code`, tg.`date_start`, tg.`total_adult`, tg.`total_child`, tg.`total_guide`,
+		tg.`group_mode`, tg.`product_brand_name`, tg.`product_name`, tg.`operator_name`, tg.`group_state`,
+		ifnull(tg.`total_cost`,0) AS total_cost, ifnull(go.supplier_name, '散客团') supplierName,
+		ifnull(budget.totalBudget,0) AS totalBudget
+		FROM tour_group tg
+		LEFT JOIN group_order AS go ON (tg.id = go.group_id AND tg.group_mode > 0)
+		LEFT JOIN (SELECT group_id, SUM(gop.totalBudget) AS totalBudget FROM group_order AS o
+		LEFT JOIN (SELECT SUM(IFNULL(total_price,0)) AS totalBudget, order_id FROM group_order_price
+		WHERE `mode`=1 GROUP BY order_id) AS gop ON (o.`id` = gop.order_id AND o.`state` = 1)
+		GROUP BY group_id) AS budget on (tg.id = budget.group_id)
+		WHERE tg.biz_id = #{bizId,jdbcType=INTEGER} AND tg.group_state IN (0,1,3,4)
+		AND tg.operator_id IN
+		<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
 			#{item}
 		</foreach>
-		<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds !=''">
-			and tg.operator_id in (${page.parameter.saleOperatorIds})
+		<if test = "page.parameter.saleOperatorIds != null and page.parameter.saleOperatorIds != ''">
+			AND tg.operator_id IN (${page.parameter.saleOperatorIds})
 		</if>
 		<if test="page.parameter.groupCode != null and page.parameter.groupCode !=''">
-			and tg.group_code LIKE
-			CONCAT('%',#{page.parameter.groupCode},'%')
-		</if>		<if test="page.parameter.startTime!=null and page.parameter.startTime!=''">
-
-			and tg.date_start <![CDATA[>=]]> #{page.parameter.startTime}
+			AND tg.group_code LIKE CONCAT('%',#{page.parameter.groupCode},'%')
 		</if>
-		<if test="page.parameter.endTime!=null and page.parameter.endTime!=''">
-			and tg.date_start <![CDATA[<=]]> #{page.parameter.endTime}
+		<if test="page.parameter.startTime != null and page.parameter.startTime != ''">
+			AND tg.date_start <![CDATA[>=]]> #{page.parameter.startTime}
 		</if>
-		<if test="page.parameter.productName != null and page.parameter.productName !=''">and (tg.product_name like concat ('%',#{page.parameter.productName},'%') or
-			tg.product_brand_name like concat('%',#{page.parameter.productName},'%')) </if>
-		group by tg.id
-		order by tg.date_start,tg.create_time
+		<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
+			AND tg.date_start <![CDATA[<=]]> #{page.parameter.endTime}
+		</if>
+		<if test="page.parameter.productName != null and page.parameter.productName != ''">
+			AND tg.product_name LIKE CONCAT('%',#{page.parameter.productName},'%')
+		</if>
+		<if test="page.parameter.groupMode == 0">
+			and tg.group_mode = 0
+		</if>
+		<if test="page.parameter.groupMode > 0">
+			and tg.group_mode <![CDATA[>]]> 0
+		</if>
+		ORDER BY tg.date_start, tg.create_time
 	</select>
-	<select id="selectBookingProfitTotal" resultType="java.util.HashMap" >
-	select sum(total_adult) totalAdult,sum(total_child) totalChild,sum(total_guide) totalGuide,sum(total_cost) totalCost,sum(totalBudget) totalBudget  from (
-		SELECT tg.`total_adult`,tg.`total_child`,tg.`total_guide`, ifnull(tg.`total_cost`,0) total_cost, sum(ifnull(gop.totalBudget,0)) totalBudget  FROM tour_group tg  JOIN group_order go ON tg.`id`=go.`group_id` 
-		LEFT JOIN (SELECT SUM(IFNULL(total_price,0)) totalBudget,order_id FROM group_order_price WHERE `mode`=1  GROUP BY order_id) gop ON go.`id`=gop.order_id 
+	<select id="selectBookingProfitTotal" resultType="java.util.HashMap">
+		select sum(total_adult) totalAdult,sum(total_child) totalChild,sum(total_guide) totalGuide,sum(total_cost)
+		totalCost,sum(totalBudget) totalBudget from (
+		SELECT tg.`total_adult`,tg.`total_child`,tg.`total_guide`, ifnull(tg.`total_cost`,0) total_cost,
+		sum(ifnull(gop.totalBudget,0)) totalBudget FROM tour_group tg JOIN group_order go ON (tg.`id`=go.`group_id`
+		AND go.`state` = 1)
+		LEFT JOIN (SELECT SUM(IFNULL(total_price,0)) totalBudget,order_id FROM group_order_price WHERE `mode`=1 GROUP BY
+		order_id) gop ON go.`id`=gop.order_id
 		WHERE tg.biz_id = #{bizId,jdbcType=INTEGER}
 		and tg.group_state in (0,1,3,4)
 		and tg.operator_id in
 		<foreach item="item" index="index" collection="set" open="("
-			separator="," close=")">
+				 separator="," close=")">
 			#{item}
 		</foreach>
 		<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds !=''">
-			and tg.operator_id in (${page.parameter.saleOperatorIds})
+			and tg.operator_id in (#{page.parameter.saleOperatorIds})
 		</if>
 		<if test="page.parameter.groupCode != null and page.parameter.groupCode !=''">
 			and tg.group_code LIKE
@@ -4389,8 +4404,15 @@
 		<if test="page.parameter.endTime!=null and page.parameter.endTime!=''">
 			and tg.date_start <![CDATA[<=]]> #{page.parameter.endTime}
 		</if>
-		<if test="page.parameter.productName != null and page.parameter.productName !=''">and (tg.product_name like concat ('%',#{page.parameter.productName},'%') or
-			tg.product_brand_name like concat('%',#{page.parameter.productName},'%')) </if>
+		<if test="page.parameter.productName != null and page.parameter.productName !=''">
+			and tg.product_name like concat ('%',#{page.parameter.productName},'%')
+		</if>
+		<if test="page.parameter.groupMode == 0">
+			and tg.group_mode = 0
+		</if>
+		<if test="page.parameter.groupMode > 0">
+			and tg.group_mode <![CDATA[>]]> 0
+		</if>
 		group by tg.id) m
 	</select>
 	
@@ -4436,4 +4458,17 @@
         GROUP BY tg.id
         ORDER BY tg.date_start,tg.create_time 
     </select>
+
+	<select id="getGroupIdsByTravelExportStatus" resultType="Integer" parameterType="map">
+		<![CDATA[
+    		select a.id from tour_group a where a.travel_export_status = #{travelExportStatus} and a.biz_id = #{bizId}
+    	 ]]>
+	</select>
+	<update id="updateTourGroupTravelExportStatus">
+		update tour_group a set a.travel_export_status = #{travelExportStatus} where 1=1 and a.id in
+		<foreach collection="groupIds" open="(" close=")" separator="," item="groupId">
+			#{groupId}
+		</foreach>
+	</update>
+
 </mapper>

@@ -298,4 +298,17 @@ public interface TourGroupMapper {
 	
 	List<BookingGroup> selectPushDeliveryListPage(@Param("page") PageBean pageBean,
                                                   @Param("bizId") Integer bizId);
+	/**
+	 * 根据biz_id - travel_export_status获取集团id集合
+	 * @author daixiaoman
+	 * @date 2016年12月5日 上午11:22:46
+	 */
+	public List<Integer> getGroupIdsByTravelExportStatus(Map<String,Object> params);
+
+	/**
+	 * 更新导出状态
+	 * @author daixiaoman
+	 * @date 2016年12月6日 上午11:11:30
+	 */
+	public void updateTourGroupTravelExportStatus(@Param("groupIds")List<Integer> groupIds,@Param("travelExportStatus")Integer status);
 }
