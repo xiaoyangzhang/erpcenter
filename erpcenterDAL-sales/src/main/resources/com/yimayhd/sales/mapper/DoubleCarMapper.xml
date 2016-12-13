@@ -26,6 +26,16 @@
 	    <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
 	    <result column="item_date" property="itemDate" jdbcType="TIMESTAMP" />
 	</resultMap>
+	
+	<resultMap id="BookingDeliveryPrice" type="com.yimayhd.erpcenter.dal.sales.client.car.po.BookingDeliveryPrice" >
+	    <result column="id" property="groupId" jdbcType="INTEGER" />
+	    <result column="booking_id" property="supplierId" jdbcType="INTEGER" />
+	    <result column="unit_price" property="supplierName" jdbcType="DECIMAL" />
+	    <result column="num_times" property="itemDate" jdbcType="DECIMAL" />
+	    <result column="num_person" property="itemDate" jdbcType="DECIMAL" />
+	    <result column="total_price" property="itemDate" jdbcType="DECIMAL" />
+	    <result column="item_name" property="itemDate" jdbcType="VARCHAR" />
+	</resultMap>
   	
   	<select id="selectTransportByOrderId" resultMap="Transport">
 		SELECT o.group_id,t.id,t.order_id,t.method,t.type,t.class_no,t.source_type,t.departure_city,t.departure_station,t.departure_date,t.departure_time
@@ -43,4 +53,13 @@
 		SELECT d.item_date,t.group_id ,t.supplier_id,t.supplier_name  FROM `booking_supplier` t JOIN `booking_supplier_detail` d ON t.id = d.booking_id  
 		WHERE  t.supplier_type =3 AND t.group_id in (${groupIds})
 	</select>
+	
+	<select id="selectBookingDeliveryPriceListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BookingDeliveryPrice">
+		SELECT p.id, p.booking_id, p.unit_price, p.num_times, p.num_person, p.total_price, p.item_name
+		FROM booking_delivery_order o 
+		LEFT JOIN booking_delivery_price p ON o.booking_id = p.booking_id
+		WHERE o.order_id IN(${page.parameter.orderIds})
+	</select>	
+	
+	
 </mapper>

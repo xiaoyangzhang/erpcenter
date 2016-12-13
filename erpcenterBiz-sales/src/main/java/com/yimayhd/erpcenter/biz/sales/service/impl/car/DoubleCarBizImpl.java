@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.biz.sales.client.service.car.DoubleCarBiz;
+import com.yimayhd.erpcenter.dal.sales.client.car.po.BookingDeliveryPrice;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPort;
 import com.yimayhd.erpcenter.dal.sales.client.car.service.DoubleCarDal;
 
@@ -15,6 +16,11 @@ public class DoubleCarBizImpl implements DoubleCarBiz{
 	@Override
 	public List<TransPort> selectTransportByOrderId(int orderId) {
 		return doubleCarDal.selectTransportByOrderId(orderId);
+	}
+
+	@Override
+	public List<BookingDeliveryPrice> selectBookingDeliveryPrice(int orderId, int page, int pageSize) {
+		return doubleCarDal.selectBookingDeliveryPrice(orderId+"", page, pageSize);
 	}
 
 }
