@@ -10,5 +10,5 @@ public interface DoubleCarDal {
 
 	List<TransPort> selectTransportByOrderIds(String orderIds);
 	
-	List<BookingDeliveryPrice> selectBookingDeliveryPrice(String orderIds, int page, int pageSize);
+	List<BookingDeliveryPrice> selectDeliveryPrice(String orderIds, int page, int pageSize);
 }

@@ -110,7 +110,7 @@ public class TestController {
 	@RequestMapping(value = "/testSelectBookingDeliveryPrice")
 	public Object testSelectBookingDeliveryPrice(){
 
-		return doubleCarBiz.selectBookingDeliveryPrice(9146, 0, 0);
+		return doubleCarBiz.selectDeliveryPrice(9146, 0, 0);
 	}
 
 }
