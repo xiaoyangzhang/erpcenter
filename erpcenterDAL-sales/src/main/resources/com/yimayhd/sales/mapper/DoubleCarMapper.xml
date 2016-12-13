@@ -28,13 +28,13 @@
 	</resultMap>
 	
 	<resultMap id="BookingDeliveryPrice" type="com.yimayhd.erpcenter.dal.sales.client.car.po.BookingDeliveryPrice" >
-	    <result column="id" property="groupId" jdbcType="INTEGER" />
-	    <result column="booking_id" property="supplierId" jdbcType="INTEGER" />
-	    <result column="unit_price" property="supplierName" jdbcType="DECIMAL" />
-	    <result column="num_times" property="itemDate" jdbcType="DECIMAL" />
-	    <result column="num_person" property="itemDate" jdbcType="DECIMAL" />
-	    <result column="total_price" property="itemDate" jdbcType="DECIMAL" />
-	    <result column="item_name" property="itemDate" jdbcType="VARCHAR" />
+	    <result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
+	    <result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
+	    <result column="num_times" property="numTimes" jdbcType="DECIMAL" />
+	    <result column="num_person" property="numPerson" jdbcType="DECIMAL" />
+	    <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
+	    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
 	</resultMap>
   	
   	<select id="selectTransportByOrderId" resultMap="Transport">
