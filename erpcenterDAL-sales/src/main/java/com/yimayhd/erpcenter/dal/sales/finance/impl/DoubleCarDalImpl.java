@@ -1,13 +1,20 @@
 package com.yimayhd.erpcenter.dal.sales.finance.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.sales.client.car.po.BookingDeliveryPrice;
+import com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPort;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPortHotel;
 import com.yimayhd.erpcenter.dal.sales.client.car.service.DoubleCarDal;
+import com.yimayhd.erpcenter.dal.sales.client.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.DoubleCarMapper;
 
 public class DoubleCarDalImpl implements DoubleCarDal{
@@ -20,7 +27,57 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 		List<TransPort> list = doubleCarMapper.selectTransportByOrderId(orderId);
 		String groupIds = list2String(list);
 		List<TransPortHotel> hotels = doubleCarMapper.selectTransPortHotelByGroupIds(groupIds);
-		for (int i = 0;i <= list.size();i++) {
+		for (int i = 0;i < list.size();i++) {
+			TransPort transPort = list.get(i);
+			Date date;
+			if(transPort.getType() == 0){//接
+				date = transPort.getArrivalDate();
+			}else{//送
+				date = transPort.getDepartureDate();
+			}
+			StringBuffer nameBuffer = new StringBuffer();
+			for (int j = 0; j < hotels.size(); j++) {
+				TransPortHotel hotel = hotels.get(j);
+				if(null != date && hotel.getGroupId() == transPort.getGroupId() && hotel.getItemDate().compareTo(date) == 0){
+					if(transPort.getHotelId() == 0){
+						transPort.setHotelId(hotel.getSupplierId());
+					}
+					nameBuffer.append(hotel.getSupplierName()+",");
+				}
+			}
+			String hotelName = nameBuffer.toString();
+			if(!StringUtils.isBlank(hotelName)){
+				hotelName = hotelName.substring(0, hotelName.length()-1);
+			}
+			transPort.setHotelName(hotelName);
+		}
+		return list;
+	}
+	
+	
+	private static String list2String(List<TransPort> list){
+		if(list.size() <=0){
+			return null;
+		}
+		StringBuffer buffer = new StringBuffer();
+		boolean flag = false;
+		for (TransPort transPort : list) {
+			if(flag){
+				buffer.append(",");
+			}else{
+				flag = true;
+			}
+			buffer.append(transPort.getGroupId());
+		}
+		return buffer.toString();
+	}
+
+	@Override
+	public List<TransPort> selectTransportByOrderIds(String orderIds) {
+		List<TransPort> list = doubleCarMapper.selectTransportByOrderIds(orderIds);
+		String groupIds = list2String(list);
+		List<TransPortHotel> hotels = doubleCarMapper.selectTransPortHotelByGroupIds(groupIds);
+		for (int i = 0;i < list.size();i++) {
 			TransPort transPort = list.get(i);
 			Date date;
 			if(transPort.getType() == 0){//接
@@ -46,22 +103,46 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 		return list;
 	}
 	
-	
-	private static String list2String(List<TransPort> list){
-		if(list.size() <=0){
-			return null;
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List<BookingDeliveryPrice> selectDeliveryPrice(String orderIds, int page, int pageSize) {
+		
+		PageBean pageBean = new PageBean();
+		if(page == 0){
+			pageBean.setPage(1);
+		}else{
+			pageBean.setPage(page);
 		}
-		StringBuffer buffer = new StringBuffer();
-		boolean flag = false;
-		for (TransPort transPort : list) {
-			if(flag){
-				buffer.append(",");
-			}else{
-				flag = true;
-			}
-			buffer.append(transPort.getGroupId());
+		if(pageSize == 0){
+			pageBean.setPageSize(Constants.PAGESIZE);
+		}else{
+			pageBean.setPageSize(pageSize);
 		}
-		return buffer.toString();
+		Map<String, Object> parameters  = new HashMap<String, Object>();
+		parameters.put("orderIds", orderIds);
+		pageBean.setParameter(parameters);
+		List<BookingDeliveryPrice> list = doubleCarMapper.selectDeliveryPriceListPage(pageBean);
+		return list;
 	}
 
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List<GroupOrderGuest> selectOrderGuestListPage(String orderIds,int page, int pageSize) {
+		PageBean pageBean = new PageBean();
+		if(page == 0){
+			pageBean.setPage(1);
+		}else{
+			pageBean.setPage(page);
+		}
+		if(pageSize == 0){
+			pageBean.setPageSize(Constants.PAGESIZE);
+		}else{
+			pageBean.setPageSize(pageSize);
+		}
+		Map<String, Object> parameters  = new HashMap<String, Object>();
+		parameters.put("orderIds", orderIds);
+		pageBean.setParameter(parameters);
+		List<GroupOrderGuest> list = doubleCarMapper.selectGroupOrderGuestListPage(pageBean);
+		return list;
+	}
 }

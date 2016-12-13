@@ -26,6 +26,31 @@
 	    <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
 	    <result column="item_date" property="itemDate" jdbcType="TIMESTAMP" />
 	</resultMap>
+	
+	<resultMap id="BookingDeliveryPrice" type="com.yimayhd.erpcenter.dal.sales.client.car.po.BookingDeliveryPrice" >
+	    <result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="booking_id" property="bookingId" jdbcType="INTEGER" />
+	    <result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
+	    <result column="num_times" property="numTimes" jdbcType="DECIMAL" />
+	    <result column="num_person" property="numPerson" jdbcType="DECIMAL" />
+	    <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
+	    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="GroupOrderGuest" type="com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest" >
+	    <result column="id" property="id" jdbcType="INTEGER" />
+	    <result column="order_id" property="orderId" jdbcType="INTEGER" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+	    <result column="gender" property="gender" jdbcType="INTEGER" />
+	    <result column="age" property="age" jdbcType="INTEGER" />
+	    <result column="type" property="type" jdbcType="INTEGER" />
+	    <result column="certificate_type_id" property="certificateTypeId" jdbcType="INTEGER" />
+	    <result column="certificate_num" property="certificateNum" jdbcType="VARCHAR" />
+	    <result column="native_place" property="nativePlace" jdbcType="VARCHAR" />
+	    <result column="career" property="career" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
   	
   	<select id="selectTransportByOrderId" resultMap="Transport">
 		SELECT o.group_id,t.id,t.order_id,t.method,t.type,t.class_no,t.source_type,t.departure_city,t.departure_station,t.departure_date,t.departure_time
@@ -33,14 +58,28 @@
 		FROM `group_order_transport` t JOIN `group_order` o ON t.order_id = o.id WHERE t.order_id = #{orderId,jdbcType=INTEGER}
 	</select>
 	
-	<!-- <select id="selectTransportByOrderIds" resultMap="Transport">
+	<select id="selectTransportByOrderIds" resultMap="Transport">
 		SELECT o.group_id,t.id,t.order_id,t.method,t.type,t.class_no,t.source_type,t.departure_city,t.departure_station,t.departure_date,t.departure_time
 			,t.arrival_city,t.arrival_station,t.arrival_date,t.arrival_time  
 		FROM `group_order_transport` t JOIN `group_order` o ON t.order_id = o.id WHERE t.order_id in (${orderIds})
-	</select> -->
+	</select>
 	
 	<select id="selectTransPortHotelByGroupIds" resultMap="TransportHotel">
 		SELECT d.item_date,t.group_id ,t.supplier_id,t.supplier_name  FROM `booking_supplier` t JOIN `booking_supplier_detail` d ON t.id = d.booking_id  
 		WHERE  t.supplier_type =3 AND t.group_id in (${groupIds})
 	</select>
+	
+	<select id="selectDeliveryPriceListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BookingDeliveryPrice">
+		SELECT p.id, p.booking_id, p.unit_price, p.num_times, p.num_person, p.total_price, p.item_name
+		FROM booking_delivery_order o 
+		LEFT JOIN booking_delivery_price p ON o.booking_id = p.booking_id
+		WHERE o.order_id IN(${page.parameter.orderIds})
+	</select>
+	
+	<select id="selectGroupOrderGuestListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="GroupOrderGuest">
+		SELECT id, order_id, name, mobile, gender, age, TYPE, certificate_type_id, certificate_num, native_place, career, remark 
+		FROM group_order_guest
+		WHERE order_id IN(${page.parameter.orderIds})
+	</select>	
+	
 </mapper>

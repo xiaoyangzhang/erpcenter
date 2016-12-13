@@ -1,31 +1,24 @@
 package com.yimayhd.erpcenter.controller;
 
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.airticket.AirTicketOrderBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.car.DoubleCarBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SettleApplyBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
-import com.yimayhd.erpcenter.dal.basic.service.DicDal;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.query.ProductStockPageQueryDTO;
 import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
-import com.yimayhd.erpcenter.dal.product.service.ProductRemarkDal;
 import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
-import com.yimayhd.erpcenter.dal.product.vo.StockStaticCondition;
-import com.yimayhd.erpcenter.dal.sys.service.SettleApplyDal;
-import com.yimayhd.erpcenter.facade.query.ToSearchListStateDTO;
 import com.yimayhd.erpcenter.facade.service.ProductStockFacade;
 import com.yimayhd.erpcenter.facade.service.ProductUpAndDownFrameFacade;
 
@@ -51,6 +44,9 @@ public class TestController {
 	
 	@Autowired
 	private TourGroupBiz tourGroupBiz;
+	
+	@Autowired
+	private DoubleCarBiz doubleCarBiz;
 	
 	@RequestMapping(value = "/testBasicDal")
 	public Object testBasicDal(){
@@ -109,6 +105,38 @@ public class TestController {
 		
 		ProductStockPageQueryDTO queryDTO = new ProductStockPageQueryDTO();
 		return productSolrQueryManager.searchProductStock(queryDTO);
+	}
+	
+	@RequestMapping(value = "/testSelectDeliveryPrice")
+	public Object testSelectDeliveryPrice(){
+		return doubleCarBiz.selectDeliveryPrice(9146, 1, 10);
+	}
+	
+	@RequestMapping(value = "/testSelectDeliveryPrice2")
+	public Object testSelectDeliveryPrice2(){
+		return doubleCarBiz.selectDeliveryPrice("9146, 9130, 9129, 9034, 9032", 0, 100);
+	}
+	
+	@RequestMapping(value = "/testSelectOrderGuest")
+	public Object testSelectOrderGuest(){
+		return doubleCarBiz.selectOrderGuest(2, 1, 10);
+	}
+	
+	@RequestMapping(value = "/testSelectOrderGuest2")
+	public Object testSelectOrderGuest2(){
+		return doubleCarBiz.selectOrderGuest("2,3,35", 0, 100);
+	}
+	
+	@RequestMapping(value = "/testSelectTransport")
+	public Object testSelectTransport(){
+
+		return doubleCarBiz.selectTransportByOrderId(1060);
+	}
+	
+	@RequestMapping(value = "/testSelectTransports")
+	public Object testSelectTransports(){
+
+		return doubleCarBiz.selectTransportByOrderIds("1060");
 	}
 
 }
