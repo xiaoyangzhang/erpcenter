@@ -34,10 +34,15 @@ public class DoubleCarBizImpl implements DoubleCarBiz{
 
 	@Override
 	public SearchDeliveryPriceResult selectDeliveryPrice(int orderId, int page, int pageSize) {
-		
+		SearchDeliveryPriceResult result = selectDeliveryPrice(orderId+"", page, pageSize);
+		return result;
+	}
+
+	@Override
+	public SearchDeliveryPriceResult selectDeliveryPrice(String orderIds, int page, int pageSize) {
 		SearchDeliveryPriceResult result = new SearchDeliveryPriceResult();
 		try{
-			List<BookingDeliveryPrice> list = doubleCarDal.selectDeliveryPrice(orderId+"", page, pageSize);
+			List<BookingDeliveryPrice> list = doubleCarDal.selectDeliveryPrice(orderIds, page, pageSize);
 			result.setPriceList(list);
 		}catch(Exception ex){
 			result.setErrorCode(DoubleCarErrorCode.QUERY_ERROR);

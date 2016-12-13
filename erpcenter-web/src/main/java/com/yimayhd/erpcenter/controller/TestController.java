@@ -109,8 +109,12 @@ public class TestController {
 	
 	@RequestMapping(value = "/testSelectDeliveryPrice")
 	public Object testSelectDeliveryPrice(){
-
-		return doubleCarBiz.selectDeliveryPrice(9146, 0, 0);
+		return doubleCarBiz.selectDeliveryPrice(9146, 1, 10);
+	}
+	
+	@RequestMapping(value = "/testSelectDeliveryPrice2")
+	public Object testSelectDeliveryPrice2(){
+		return doubleCarBiz.selectDeliveryPrice("9146, 9130, 9129, 9034, 9032", 0, 100);
 	}
 
 }

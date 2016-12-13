@@ -12,5 +12,14 @@ public interface DoubleCarBiz {
 	SearchTransportsResult selectTransportByOrderIds(String orderIds);
 	
 	SearchDeliveryPriceResult selectDeliveryPrice(int orderId, int page, int pageSize);
+	
+	/**
+	 * 根据多个orderId查询记录
+	 * @param orderIds   	例如：9001,9005,1002
+	 * @param page
+	 * @param pageSize
+	 * @return
+	 */
+	SearchDeliveryPriceResult selectDeliveryPrice(String orderIds, int page, int pageSize);
 
 }
