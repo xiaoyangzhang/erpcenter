@@ -65,7 +65,7 @@
 	                </configuration>
         </plugin>
 		</plugins>
-		<finalName>erpcenterDAL-basic</finalName>
+		<finalName>erpcenterDAL-basic-client</finalName>
 	</build>
   <!-- <distributionManagement>
 		<snapshotRepository>
