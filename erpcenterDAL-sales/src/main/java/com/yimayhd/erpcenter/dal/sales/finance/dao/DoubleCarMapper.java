@@ -10,6 +10,8 @@ import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPortHotel;
 public interface DoubleCarMapper {
 
 	List<TransPort> selectTransportByOrderId(int orderId);
+	
+	List<TransPort> selectTransportByOrderIds(String orderIds);
 
 	List<TransPortHotel> selectTransPortHotelByGroupIds(@Param("groupIds") String groupIds);
 
