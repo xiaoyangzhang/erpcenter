@@ -102,7 +102,7 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 	
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List<BookingDeliveryPrice> selectBookingDeliveryPrice(String orderIds, int page, int pageSize) {
+	public List<BookingDeliveryPrice> selectDeliveryPrice(String orderIds, int page, int pageSize) {
 		
 		PageBean pageBean = new PageBean();
 		if(page == 0){
