@@ -112,5 +112,17 @@ public class TestController {
 
 		return doubleCarBiz.selectDeliveryPrice(9146, 0, 0);
 	}
+	
+	@RequestMapping(value = "/testSelectTransport")
+	public Object testSelectTransport(){
+
+		return doubleCarBiz.selectTransportByOrderId(1060);
+	}
+	
+	@RequestMapping(value = "/testSelectTransports")
+	public Object testSelectTransports(){
+
+		return doubleCarBiz.selectTransportByOrderIds("1060");
+	}
 
 }

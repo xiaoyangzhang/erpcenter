@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yihg.mybatis.utility.PageBean;
@@ -25,7 +26,7 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 		List<TransPort> list = doubleCarMapper.selectTransportByOrderId(orderId);
 		String groupIds = list2String(list);
 		List<TransPortHotel> hotels = doubleCarMapper.selectTransPortHotelByGroupIds(groupIds);
-		for (int i = 0;i <= list.size();i++) {
+		for (int i = 0;i < list.size();i++) {
 			TransPort transPort = list.get(i);
 			Date date;
 			if(transPort.getType() == 0){//接
@@ -40,13 +41,14 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 					if(transPort.getHotelId() == 0){
 						transPort.setHotelId(hotel.getSupplierId());
 					}
-					nameBuffer.append(hotel.getSupplierName());
-					if(j < hotels.size() - 1 ){
-						nameBuffer.append(",");
-					}
+					nameBuffer.append(hotel.getSupplierName()+",");
 				}
 			}
-			transPort.setHotelName(nameBuffer.toString());
+			String hotelName = nameBuffer.toString();
+			if(!StringUtils.isBlank(hotelName)){
+				hotelName = hotelName.substring(0, hotelName.length()-1);
+			}
+			transPort.setHotelName(hotelName);
 		}
 		return list;
 	}
@@ -74,7 +76,7 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 		List<TransPort> list = doubleCarMapper.selectTransportByOrderIds(orderIds);
 		String groupIds = list2String(list);
 		List<TransPortHotel> hotels = doubleCarMapper.selectTransPortHotelByGroupIds(groupIds);
-		for (int i = 0;i <= list.size();i++) {
+		for (int i = 0;i < list.size();i++) {
 			TransPort transPort = list.get(i);
 			Date date;
 			if(transPort.getType() == 0){//接
