@@ -112,6 +112,13 @@
     	<dependency>
 		    	<groupId>com.yimayhd.erpcenter</groupId>
 		    	<artifactId>erpcenterBiz-sales</artifactId>
+			<version>0.3.5-SNAPSHOT</version>
+
+		</dependency><dependency>
+		    	<groupId>com.yimayhd.erpcenter</groupId>
+		    	<artifactId>erpcenterBiz-sales-client</artifactId>
+			<version>0.3.5-SNAPSHOT</version>
+
 		</dependency>
     	<dependency>
     			<groupId>com.yimayhd.erpcenter</groupId>
@@ -144,9 +151,12 @@
 		<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenterDAL-sales</artifactId>
-		</dependency><dependency>
+			<version>0.3.5-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenterDAL-sales-client</artifactId>
+			<version>0.3.5-SNAPSHOT</version>
 		</dependency>
 		<!--<dependency>
 			<groupId>org.slf4j</groupId>
@@ -160,6 +170,7 @@
 		<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenter-common</artifactId>
+			<version>0.3.5-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.yimayhd.erpcenter</groupId>
@@ -168,9 +179,12 @@
 		<dependency>
 			<groupId>com.yimayhd.erpcenter</groupId>
 			<artifactId>erpcenterFacade-sales</artifactId>
-		</dependency><dependency>
+			<version>0.3.5-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>com.yimayhd.erpcenter</groupId>
 			<artifactId>erpcenterFacade-sales-client</artifactId>
+			<version>0.3.5-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.yimayhd.erpcenter</groupId>

@@ -58,7 +58,7 @@ public class TourGroupForCarCar implements Serializable {
     }
 
     public void setTourGroup(TourGroup tourGroup) {
-        tourGroup = tourGroup;
+        this.tourGroup = tourGroup;
     }
 
 //    public String getSupplierName() {
