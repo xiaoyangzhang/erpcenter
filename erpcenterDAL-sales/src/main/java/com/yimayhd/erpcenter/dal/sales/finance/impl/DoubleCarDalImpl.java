@@ -31,7 +31,7 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 			StringBuffer nameBuffer = new StringBuffer();
 			for (int j = 0; j < hotels.size(); j++) {
 				TransPortHotel hotel = hotels.get(j);
-				if(hotel.getGroupId() == transPort.getGroupId() && hotel.getItemDate().compareTo(date) == 0){
+				if(null != date && hotel.getGroupId() == transPort.getGroupId() && hotel.getItemDate().compareTo(date) == 0){
 					if(transPort.getHotelId() == 0){
 						transPort.setHotelId(hotel.getSupplierId());
 					}
