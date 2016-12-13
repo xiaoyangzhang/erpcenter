@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.yimayhd.erpcenter</groupId>
     <artifactId>erpcenter</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.3.0-SNAPSHOT</version>
   </parent>
   <artifactId>erpcenterFacade-finance-client</artifactId>
   <name>erpcenterFacade-finance-client</name>
