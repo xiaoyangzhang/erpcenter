@@ -144,6 +144,9 @@
 		<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenterDAL-sales</artifactId>
+		</dependency><dependency>
+				<groupId>com.yimayhd.erpcenter</groupId>
+				<artifactId>erpcenterDAL-sales-client</artifactId>
 		</dependency>
 		<!--<dependency>
 			<groupId>org.slf4j</groupId>
@@ -165,6 +168,9 @@
 		<dependency>
 			<groupId>com.yimayhd.erpcenter</groupId>
 			<artifactId>erpcenterFacade-sales</artifactId>
+		</dependency><dependency>
+			<groupId>com.yimayhd.erpcenter</groupId>
+			<artifactId>erpcenterFacade-sales-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.yimayhd.erpcenter</groupId>
