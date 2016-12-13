@@ -68,6 +68,11 @@ public class UserSession implements Serializable{
 	private Set<Integer> dataUserIdSet;	
 	
 	private Map<String,String> bizConfigMap;
+
+	/**
+	 * 用户登录认证身份令牌
+	 */
+	private String userToken;
 	
 	public Map<String, Map<String, Boolean>> getMenuOptMap() {
 		return menuOptMap;
@@ -158,6 +163,13 @@ public class UserSession implements Serializable{
 	}
 	public void setOrgInfo(PlatformOrgPo orgInfo) {
 		this.orgInfo = orgInfo;
+	}
+
+	public String getUserToken() {
+		return userToken;
+	}
+	public void setUserToken(String userToken) {
+		this.userToken = userToken;
 	}
 	
 }
