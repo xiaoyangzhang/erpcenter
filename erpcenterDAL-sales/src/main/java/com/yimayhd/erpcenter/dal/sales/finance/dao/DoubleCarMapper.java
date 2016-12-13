@@ -17,6 +17,6 @@ public interface DoubleCarMapper {
 
 	List<TransPortHotel> selectTransPortHotelByGroupIds(@Param("groupIds") String groupIds);
 	
-	List<BookingDeliveryPrice> selectBookingDeliveryPriceListPage(@Param("page") PageBean pageBean);
+	List<BookingDeliveryPrice> selectDeliveryPriceListPage(@Param("page") PageBean pageBean);
 	
 }

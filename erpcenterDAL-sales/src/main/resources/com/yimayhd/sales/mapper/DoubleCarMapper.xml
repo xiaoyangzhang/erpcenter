@@ -54,7 +54,7 @@
 		WHERE  t.supplier_type =3 AND t.group_id in (${groupIds})
 	</select>
 	
-	<select id="selectBookingDeliveryPriceListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BookingDeliveryPrice">
+	<select id="selectDeliveryPriceListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BookingDeliveryPrice">
 		SELECT p.id, p.booking_id, p.unit_price, p.num_times, p.num_person, p.total_price, p.item_name
 		FROM booking_delivery_order o 
 		LEFT JOIN booking_delivery_price p ON o.booking_id = p.booking_id

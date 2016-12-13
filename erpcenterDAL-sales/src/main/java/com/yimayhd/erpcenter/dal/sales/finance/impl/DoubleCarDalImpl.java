@@ -118,7 +118,7 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 		Map<String, Object> parameters  = new HashMap<String, Object>();
 		parameters.put("orderIds", orderIds);
 		pageBean.setParameter(parameters);
-		List<BookingDeliveryPrice> list = doubleCarMapper.selectBookingDeliveryPriceListPage(pageBean);
+		List<BookingDeliveryPrice> list = doubleCarMapper.selectDeliveryPriceListPage(pageBean);
 		return list;
 	}
 }
