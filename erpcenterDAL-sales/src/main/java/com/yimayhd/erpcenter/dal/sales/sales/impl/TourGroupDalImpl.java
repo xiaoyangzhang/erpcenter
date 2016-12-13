@@ -1660,4 +1660,17 @@ public class TourGroupDalImpl implements TourGroupDal {
         pageBean.setResult(bookingGroups);
         return pageBean;
     }
+
+	@Override
+	public List<Integer> getGroupIdsByTravelExportStatus(Integer travelExportStatus, Integer bizId) {
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("bizId",bizId);
+		params.put("travelExportStatus", travelExportStatus);
+		return tourGroupMapper.getGroupIdsByTravelExportStatus(params);
+	}
+
+	@Override
+	public void updateTourGroupTravelExportStatus(List<Integer> groupIds, Integer status) {
+		tourGroupMapper.updateTourGroupTravelExportStatus(groupIds, status);
+	}
 }

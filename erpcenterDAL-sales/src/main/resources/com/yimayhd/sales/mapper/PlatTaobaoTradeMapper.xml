@@ -537,7 +537,7 @@
  
 	<select id="selectTaobaoOrderListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BaseResultMap">
 		SELECT
-		a.tid,a.buyer_nick,a.created,b.payment,b.my_state,a.trade_from,a.my_store_id,b.id,b.title,b.outer_iid ,     
+		a.tid,a.buyer_nick,a.created,b.payment,b.my_state,a.trade_from,a.my_store_id,b.id,b.title,b.outer_iid ,b.order_id,
 		b.sku_properties_name,seller_memo, a.is_brush_single, b.num_iid,a.departure_date,
         a.receive_count
 		FROM plat_taobao_trade a
@@ -583,7 +583,7 @@ LEFT JOIN plat_taobao_trade_order o on (t.id=o.trade_id)
 where t.biz_id=#{bizId,jdbcType=INTEGER}
 and t.status IN ('WAIT_SELLER_SEND_GOODS','WAIT_BUYER_CONFIRM_GOODS','TRADE_FINISHED') 
 and t.type <![CDATA[<>]]> 'step' 
-and o.refund_status='NO_REFUND' 
+and o.refund_status!='SUCCESS'
 	<if test="platTaobaoTrade.dateType ==1">
 	<if test="platTaobaoTrade.startTime!= null and platTaobaoTrade.startTime!=''">
 			AND t.created <![CDATA[>=]]>#{platTaobaoTrade.startTime}
@@ -619,7 +619,7 @@ SELECT  IFNULL(sum(o.num),0) orders,IFNULL(COUNT(DISTINCT t.buyer_nick),0) buyer
 where t.biz_id=#{bizId,jdbcType=INTEGER}
 and t.step_trade_status in ('FRONT_PAID_FINAL_NOPAID','FRONT_PAID_FINAL_PAID') 
 and t.type='step' 
-and o.refund_status='NO_REFUND' 
+and o.refund_status!='SUCCESS'
 		<if test="platTaobaoTrade.dateType ==1">
 	<if test="platTaobaoTrade.startTime!= null and platTaobaoTrade.startTime!=''">
 			AND t.created <![CDATA[>=]]>#{platTaobaoTrade.startTime}
@@ -656,7 +656,7 @@ and o.refund_status='NO_REFUND'
 		WHERE t.biz_id=#{bizId,jdbcType=INTEGER}
 	and t.step_trade_status in ('FRONT_PAID_FINAL_NOPAID','FRONT_PAID_FINAL_PAID')
 	and t.type='step'
-	and o.refund_status='NO_REFUND'
+	and o.refund_status!='SUCCESS'
 	<if test="page.parameter.dateType==1">
 	<if test="page.parameter.startMin!= null and page.parameter.startMin!=''">
 			AND t.created <![CDATA[>=]]>#{page.parameter.startMin}
@@ -729,7 +729,7 @@ and o.refund_status='NO_REFUND'
 		LEFT JOIN plat_taobao_trade t on (t.id=o.trade_id)
 		WHERE t.biz_id=#{bizId,jdbcType=INTEGER}
 		and o.`STATUS` in ('WAIT_SELLER_SEND_GOODS','WAIT_BUYER_CONFIRM_GOODS','TRADE_BUYER_SIGNED','TRADE_FINISHED')
-		and o.refund_status='NO_REFUND'
+		and o.refund_status!='SUCCESS'
 		<if test="page.parameter.dateType==1">
 			<if test="page.parameter.startMin!= null and page.parameter.startMin!=''">
 					AND t.created <![CDATA[>=]]>#{page.parameter.startMin}
@@ -781,7 +781,7 @@ and o.refund_status='NO_REFUND'
 							WHERE t.biz_id=#{bizId,jdbcType=INTEGER}
 							and t.trade_from LIKE CONCAT('%wap%')
 					and	t.status IN ('WAIT_SELLER_SEND_GOODS','WAIT_BUYER_CONFIRM_GOODS','TRADE_FINISHED')
-					and o.refund_status='NO_REFUND'
+					and o.refund_status!='SUCCESS'
 					and t.type <![CDATA[<>]]> 'step'
 							<if test="page.parameter.dateType==1">
 						<if test="page.parameter.startMin!= null and page.parameter.startMin!=''">
@@ -813,7 +813,7 @@ and o.refund_status='NO_REFUND'
 		WHERE t.biz_id=#{bizId,jdbcType=INTEGER}
 	and 	t.status IN  ('WAIT_SELLER_SEND_GOODS','WAIT_BUYER_CONFIRM_GOODS','TRADE_FINISHED')
 	and t.type <![CDATA[<>]]> 'step'
-	and o.refund_status='NO_REFUND'
+	and o.refund_status !='SUCCESS'
 	<if test="page.parameter.dateType==1">
 	<if test="page.parameter.startMin!= null and page.parameter.startMin!=''">
 			AND t.created <![CDATA[>=]]>#{page.parameter.startMin}

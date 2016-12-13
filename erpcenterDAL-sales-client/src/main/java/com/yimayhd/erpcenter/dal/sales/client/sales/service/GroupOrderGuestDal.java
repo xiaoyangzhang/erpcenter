@@ -92,4 +92,11 @@ public interface GroupOrderGuestDal {
     public List<GroupOrderGuest> selectGuestTicketInfo(Integer resId);
 
     public List<GroupOrderGuest> getEmployeeByMobile(String mobile);
+
+    /**
+     * 根据团id 获取所有的团游客
+     * @author daixiaoman
+     * @date 2016年12月5日 上午9:50:46
+     */
+    public List<GroupOrderGuest> selectAllOrderGuestByGroupId(Integer groupId);
 }

@@ -716,4 +716,36 @@ public class TourGroup implements Serializable {
 		this.guideList = guideList;
 	}
 
+	private String sidx;//排序的字段
+
+	private String sord;//排序方式
+
+	public String getSidx() {
+		return sidx;
+	}
+
+	public void setSidx(String sidx) {
+		this.sidx = sidx;
+	}
+
+	public String getSord() {
+		return sord;
+	}
+
+	public void setSord(String sord) {
+		this.sord = sord;
+	}
+
+	/**
+	 * 数字旅游平台数据导出状态
+	 */
+	private Integer travelExportStatus;
+
+	public Integer getTravelExportStatus() {
+		return travelExportStatus;
+	}
+
+	public void setTravelExportStatus(Integer travelExportStatus) {
+		this.travelExportStatus = travelExportStatus;
+	}
 }

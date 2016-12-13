@@ -1223,4 +1223,9 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
 			String sidx, String sord) {
 		return groupOrderDal.selectGroupOrderGuestListPageOu(pageBean, bizId, set, userRightType, sidx, sord);
 	}
+
+    @Override
+    public PageBean<GroupOrder> selectPaymentStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId) {
+        return groupOrderDal.selectPaymentStatisticsListPage(pageBean,bizId);
+    }
 }

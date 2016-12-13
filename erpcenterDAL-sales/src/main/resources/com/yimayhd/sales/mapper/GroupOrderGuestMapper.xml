@@ -454,4 +454,14 @@ GROUP BY order_id
 	  FROM group_order_guest g join group_order go on (g.order_id=go.id) join tour_group tg on (tg.id=go.group_id)
 	  WHERE g.order_id in (select id from group_order where ext_res_id=#{resId})
 	  </select>
+
+
+  <select id="selectAllOrderGuestByGroupId" parameterType="Integer" resultMap="BaseResultMap">
+    <![CDATA[
+					select a.* from group_order_guest a
+					 join
+					(SELECT  id FROM `group_order` where group_id = #{groupId}) b
+					 on a.order_id = b.id
+				]]>
+  </select>
 </mapper>

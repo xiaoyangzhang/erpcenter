@@ -1,12 +1,11 @@
 package com.yimayhd.erpcenter.dal.sales.sales.dao;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 public interface GroupOrderGuestMapper {
     int deleteByPrimaryKey(Integer id);
@@ -69,4 +68,12 @@ public interface GroupOrderGuestMapper {
 	 List<GroupOrderGuest> selectGuestTicketInfo(@Param("resId") Integer resId) ;
 	 
 	 List<GroupOrderGuest> getEmployeeByMobile(String mobile);
+
+    /**
+     * 根据团id 获取团下面的全部游客
+     * @author daixiaoman
+     * @date 2016年12月5日 上午10:35:59
+     */
+    public List<GroupOrderGuest> selectAllOrderGuestByGroupId(Integer groupId);
+
 }

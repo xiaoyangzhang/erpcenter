@@ -525,4 +525,14 @@ public class TourGroupBizImpl implements TourGroupBiz {
 	public PageBean getPushDeliveryList(PageBean pageBean, Integer bizId) {
 		return tourGroupDal.getPushDeliveryList(pageBean, bizId);
 	}
+
+	@Override
+	public List<Integer> getGroupIdsByTravelExportStatus(Integer travelExportStatus, Integer bizId) {
+		return tourGroupDal.getGroupIdsByTravelExportStatus(travelExportStatus,bizId);
+	}
+
+	@Override
+	public void updateTourGroupTravelExportStatus(List<Integer> groupIds, Integer status) {
+		tourGroupDal.updateTourGroupTravelExportStatus(groupIds,status);
+	}
 }
