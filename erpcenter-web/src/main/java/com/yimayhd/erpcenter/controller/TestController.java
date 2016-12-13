@@ -107,8 +107,8 @@ public class TestController {
 		return productSolrQueryManager.searchProductStock(queryDTO);
 	}
 	
-	@RequestMapping(value = "/testSelectBookingDeliveryPrice")
-	public Object testSelectBookingDeliveryPrice(){
+	@RequestMapping(value = "/testSelectDeliveryPrice")
+	public Object testSelectDeliveryPrice(){
 
 		return doubleCarBiz.selectDeliveryPrice(9146, 0, 0);
 	}
