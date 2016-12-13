@@ -116,5 +116,15 @@ public class TestController {
 	public Object testSelectDeliveryPrice2(){
 		return doubleCarBiz.selectDeliveryPrice("9146, 9130, 9129, 9034, 9032", 0, 100);
 	}
+	
+	@RequestMapping(value = "/testSelectOrderGuest")
+	public Object testSelectOrderGuest(){
+		return doubleCarBiz.selectOrderGuest(2, 1, 10);
+	}
+	
+	@RequestMapping(value = "/testSelectOrderGuest2")
+	public Object testSelectOrderGuest2(){
+		return doubleCarBiz.selectOrderGuest("2,3,35", 0, 100);
+	}
 
 }
