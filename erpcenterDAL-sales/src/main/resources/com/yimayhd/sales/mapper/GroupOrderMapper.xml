@@ -199,8 +199,8 @@
 	</resultMap>
 	<resultMap id="groupOrderForCarCar" type="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderForCarCar">
 
-		<result property="groupCode" column="group_code"/>
-		<collection  ofType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder" property="groupOrderList">
+		<!--<result property="groupCode" column="group_code"/>-->
+		<association  javaType="com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder" property="groupOrder">
 			<id column="id" property="id" jdbcType="INTEGER" />
 			<result column="product_name" property="productName" jdbcType="VARCHAR" />
 			<result column="product_brand_name" property="productBrandName" jdbcType="VARCHAR" />
@@ -223,7 +223,7 @@
 			<result column="contact_mobile" property="contactMobile" jdbcType="VARCHAR" />
 			<result column="contact_fax" property="contactFax" jdbcType="VARCHAR" />
 			<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
-		</collection>
+		</association>
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, biz_id, group_id, supplier_id,supplier_name,order_business,
@@ -6746,7 +6746,7 @@
 		go.product_name,
 		receive_mode,
 
-		go.remark,tg.group_code
+		go.remark
 		from group_order go left join tour_group tg on go.group_id = tg.id
 		where <!-- create_time <![CDATA[>=]]> #{page.parameter.startTime}
 		  and create_time <![CDATA[<=]]> #{page.parameter.endTime}

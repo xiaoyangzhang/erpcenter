@@ -4463,7 +4463,7 @@
         ORDER BY tg.date_start,tg.create_time 
     </select>
 	<select id="selectGroupInfoWithArrangedTransForCarCar" resultMap="tourGroupForCarCar" parameterType="com.yihg.mybatis.utility.PageBean" >
-		select tg.id,group_mode, group_code,prudct_brand_id,
+		select tg.id,group_mode,group_code, prudct_brand_id,
 		product_brand_name,
 		product_id,
 		product_name, date_start, date_end,daynum,

@@ -9,25 +9,32 @@ import java.util.List;
 public class GroupOrderForCarCar implements Serializable {
     private static final long serialVersionUID = -707282179483459490L;
 
-    private List<GroupOrder> groupOrderList;
-    private String groupCode;
+    private GroupOrder groupOrder;
+//    private String groupCode;
     private String guestReresentativeName;
 
-    public List<GroupOrder> getGroupOrderList() {
-        return groupOrderList;
+    public GroupOrder getGroupOrder() {
+        return groupOrder;
     }
 
-    public void setGroupOrderList(List<GroupOrder> groupOrderList) {
-        this.groupOrderList = groupOrderList;
+    public void setGroupOrder(GroupOrder groupOrder) {
+        this.groupOrder = groupOrder;
     }
+    //    public List<GroupOrder> getGroupOrderList() {
+//        return groupOrderList;
+//    }
+//
+//    public void setGroupOrderList(List<GroupOrder> groupOrderList) {
+//        this.groupOrderList = groupOrderList;
+//    }
 
-    public String getGroupCode() {
-        return groupCode;
-    }
-
-    public void setGroupCode(String groupCode) {
-        this.groupCode = groupCode;
-    }
+//    public String getGroupCode() {
+//        return groupCode;
+//    }
+//
+//    public void setGroupCode(String groupCode) {
+//        this.groupCode = groupCode;
+//    }
 
     public String getGuestReresentativeName() {
         return guestReresentativeName;
