@@ -76,14 +76,14 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 		Set<Integer> userIdSet = totalSKGroupQueryDTO.getUserIdSet();
 		
 		if (null == tourGroup.getStartTime() && null == tourGroup.getEndTime()) {
-//			Calendar c = Calendar.getInstance();
-//			int year = c.get(Calendar.YEAR);
-//			int month = c.get(Calendar.MONTH);
-			//SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//			c.set(year, month, 1, 0, 0, 0);
-//			tourGroup.setStartTime(c.getTime());
-//			c.set(year, month, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-//			tourGroup.setEndTime(c.getTime());
+			Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			c.set(year, month, 1, 0, 0, 0);
+			tourGroup.setStartTime(c.getTime());
+			c.set(year, month, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			tourGroup.setEndTime(c.getTime());
 			tourGroup.setStartTime(DateUtils.fmt(DateUtils.getMonthFirstDay(), "yyyy-MM-dd"));
 			tourGroup.setEndTime(DateUtils.fmt(DateUtils.getMonthLastDay(), "yyyy-MM-dd"));
 		}
