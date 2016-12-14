@@ -316,5 +316,9 @@ public class PlatformOrgDalImpl implements PlatformOrgDal {
         return orgMapper.getCompanyByEmployeeId2(bizId,employeeId);
     }
 
-
+	@Override
+	public List<Integer> selectOrgListByParentIds(List<Integer> parentIdList) {
+		List<Integer> list = orgMapper.selectOrgListByParentIds(parentIdList);
+		return list;
+	}
 }

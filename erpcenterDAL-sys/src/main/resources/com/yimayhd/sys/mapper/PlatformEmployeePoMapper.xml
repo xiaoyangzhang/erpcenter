@@ -211,4 +211,11 @@ GROUP BY p.`employee_id`
     	</foreach>
 		ORDER BY org_id
 	</select>
+	
+	<select id="getOrgEmployeeListPage" resultMap="platformEmployeePo" parameterType="com.yihg.mybatis.utility.PageBean">
+        SELECT * FROM platform_employee WHERE status=1 AND del_status=1 AND org_id IN
+        <foreach collection="page.parameter.orgIds" item="item" index="index" open="(" separator="," close=")">  
+        	#{item,jdbcType=INTEGER}
+    	</foreach>
+  	 </select>
 </mapper>

@@ -51,4 +51,10 @@ public interface PlatformOrgMapper {
 	public List<PlatformOrgPo> selectSubDeptNumOrgList(@Param("bizId") Integer bizId,
                                                        @Param("list") List<Integer> parentIdList);
 	
+	/**
+	 * 根据parentIds查询部门
+	 * @param parentIdList
+	 * @return
+	 */
+	public List<Integer> selectOrgListByParentIds(@Param("list") List<Integer> parentIdList);
 }

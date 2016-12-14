@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.common.exception.ClientException;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
@@ -145,5 +147,12 @@ public interface PlatformEmployeeDal {
 	 * 查询部门员工信息
 	 */
 	public List<PlatformEmployeePo> getOrgIdListByEmployee(Integer bizId, Set<Integer> set) ;
+	
+	/**
+	 * 根据条件查询员工
+	 * @param pageBean
+	 * @return
+	 */
+	public List<PlatformEmployeePo> getOrgEmployeeListPage(PageBean pageBean);
 	
 }
