@@ -3642,7 +3642,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 	}
 
 	@Override
-	public WebResult<List<GroupOrderForCarCar>> selectGroupOrdersInOneGroupForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean) {
+	public WebResult<List<GroupOrderForCarCar>> selectGroupOrdersInGroupsForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean) {
 		log.info("params:pageBean={}", JSON.toJSONString(pageBean));
 		WebResult<List<GroupOrderForCarCar>> result = new WebResult<List<GroupOrderForCarCar>>();
 		if (!NumberUtil.isIntegerValid(pageBean.getPage()) || !NumberUtil.isIntegerValid(pageBean.getPageSize())) {
@@ -3650,8 +3650,8 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			result.setErrorCode(OperationErrorCode.PARAM_ERROR);
 			return result;
 		}
-		List<GroupOrderForCarCar> groupOrderForCarCars = groupOrderService.selectGroupOrdersInOneGroupForCarCar(pageBean);
-		result.setValue(groupOrderForCarCars);
+		List<GroupOrderForCarCar> groupOrderForCarCar = groupOrderService.selectGroupOrdersInGroupsForCarCar(pageBean);
+		result.setValue(groupOrderForCarCar);
 		return result;
 	}
 

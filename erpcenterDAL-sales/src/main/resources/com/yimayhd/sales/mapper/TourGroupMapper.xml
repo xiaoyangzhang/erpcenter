@@ -147,7 +147,27 @@
 	<result property="guideId" column="guide_id" />
 	<result property="guideName" column="guide_name" />
 	<result property="guideMobile" column="guide_mobile" />
-	<association property="tourGroup" resultMap="BaseResultMap"/>
+	<association property="tourGroup" resultMap="BaseResultMap" />
+		<!--<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+		<result column="operator_id" property="operatorId" jdbcType="INTEGER" />
+		<result column="total_adult" property="totalAdult" jdbcType="INTEGER" />
+		<result column="total_child" property="totalChild" jdbcType="INTEGER" />
+		<result column="total_guide" property="totalGuide" jdbcType="INTEGER" />
+		<result column="group_mode" property="groupMode" jdbcType="INTEGER" />
+		<result column="group_code" property="groupCode" jdbcType="VARCHAR" />
+		<result column="date_start" property="dateStart" jdbcType="DATE" />
+		<result column="date_end" property="dateEnd" jdbcType="DATE" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="prudct_brand_id" property="prudctBrandId"
+				jdbcType="INTEGER" />
+		<result column="product_brand_name" property="productBrandName"
+				jdbcType="VARCHAR" />
+		<result column="product_id" property="productId" jdbcType="INTEGER" />
+		<result column="product_name" property="productName" jdbcType="VARCHAR" />
+		<result column="daynum" property="daynum" jdbcType="INTEGER" />
+		<result column="order_num" property="orderNum" jdbcType="INTEGER" />
+	</association>-->
 </resultMap>
 	<sql id="Base_Column_List">
 		id, biz_id, group_mode, group_code,group_code_mark,
@@ -4443,19 +4463,19 @@
         ORDER BY tg.date_start,tg.create_time 
     </select>
 	<select id="selectGroupInfoWithArrangedTransForCarCar" resultMap="tourGroupForCarCar" parameterType="com.yihg.mybatis.utility.PageBean" >
-		select tg.id,group_mode, group_code,prudct_brand_id,
+		select tg.id,group_mode,group_code, prudct_brand_id,
 		product_brand_name,
 		product_id,
 		product_name, date_start, date_end,daynum,
 		ifnull(total_adult,0) total_adult,
 		ifnull(total_child,0) total_child,
 		ifnull(total_guide,0) total_guide, tg.remark,
-		 operator_id, operator_name,order_num,bg.`guide_id`,bg.`guide_name`,bg.`guide_mobile`
+		 tg.operator_id, tg.operator_name,order_num,bg.`guide_id`,bg.`guide_name`,bg.`guide_mobile`
 		from tour_group tg join booking_delivery bd on tg.id=bd.group_id
 		JOIN booking_guide bg ON  tg.`id`= bg.`group_id`
-		 where create_time <![CDATA[>=]]> #{page.parameter.startTime}
-		  and create_time <![CDATA[<=]]> #{page.parameter.endTime}
-		and bd.supplier_name like concat ('%',${page.parameter.supplierName},'%')
+		 where tg.create_time <![CDATA[>=]]> #{page.parameter.startTime}
+		  and tg.create_time <![CDATA[<=]]> #{page.parameter.endTime}
+		and bd.supplier_name like concat ('%','${page.parameter.supplierName}','%')
 		AND bg.`is_default` = 1
 	</select>
 </mapper>

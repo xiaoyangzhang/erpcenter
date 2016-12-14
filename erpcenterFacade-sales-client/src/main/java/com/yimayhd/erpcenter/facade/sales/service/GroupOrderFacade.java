@@ -177,5 +177,5 @@ public interface GroupOrderFacade {
 	
 	public List<GroupOrderPrice> selectByOrder(Integer orderId);
 
-	WebResult<List<GroupOrderForCarCar>> selectGroupOrdersInOneGroupForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean);
+	WebResult<List<GroupOrderForCarCar>> selectGroupOrdersInGroupsForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean);
 }

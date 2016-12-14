@@ -2225,7 +2225,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
     public WebResult<List<TourGroupForCarCar>> selectGroupInfoWithArrangedTransAndGuideForCarCar(PageBean<GroupInfoQueryForCarCar> pageBean) {
         logger.info("param pageBean={}", JSON.toJSONString(pageBean));
         WebResult<List<TourGroupForCarCar>> result = new WebResult<List<TourGroupForCarCar>>();
-        if (NumberUtil.isIntegerValid(pageBean.getPage()) || NumberUtil.isIntegerValid(pageBean.getPageSize())) {
+        if (!NumberUtil.isIntegerValid(pageBean.getPage()) || !NumberUtil.isIntegerValid(pageBean.getPageSize())) {
             logger.error("params error:pageBean={}",JSON.toJSONString(pageBean));
             result.setErrorCode(OperationErrorCode.PARAM_ERROR);
             return result;
