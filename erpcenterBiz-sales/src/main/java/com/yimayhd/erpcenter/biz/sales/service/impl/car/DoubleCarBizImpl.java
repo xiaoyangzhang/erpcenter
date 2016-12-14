@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.biz.sales.client.service.car.DoubleCarBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.errorCode.DoubleCarErrorCode;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.query.SynHotelQuery;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchDeliveryPriceResult;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchOrderGuestResult;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchTransportsResult;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SynHotelResult;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.BookingDeliveryPrice;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPort;
@@ -19,8 +21,10 @@ public class DoubleCarBizImpl implements DoubleCarBiz{
 	private DoubleCarDal doubleCarDal;
 
 	@Override
-	public List<TransPort> selectTransportByOrderId(int orderId) {
-		return doubleCarDal.selectTransportByOrderId(orderId);
+	public SearchTransportsResult selectTransportByOrderId(int orderId) {
+		SearchTransportsResult result = new SearchTransportsResult();
+		result.setTransPorts(doubleCarDal.selectTransportByOrderId(orderId));
+		return result;
 	}
 	
 	@Override
@@ -70,6 +74,16 @@ public class DoubleCarBizImpl implements DoubleCarBiz{
 			result.setErrorCode(DoubleCarErrorCode.QUERY_ERROR);
 			ex.printStackTrace();
 		}
+		return result;
+	}
+
+	@Override
+	public SynHotelResult synHotelMsg(SynHotelQuery query) {
+		SynHotelResult result = new SynHotelResult();
+		if(null == query){
+			result.setErrorCode(DoubleCarErrorCode.QUERY_ERROR);
+		}
+		result.setHotelMsgs(doubleCarDal.synHotelMsg(query.getGroupId(),query.getType(),query.getDepartureDate(),query.getArrivalDate()));
 		return result;
 	}
 
