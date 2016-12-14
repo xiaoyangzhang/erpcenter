@@ -14,7 +14,7 @@ public class ToSaveResNumsSoldDTO implements Serializable{
 	private String productList;
 	private String numStock;
 	private String numDisable;
-	private String id;
+	private Integer id;
 	private Integer poorNumStock;
 	private Integer poorNumDisable;
 	private Integer userId;
@@ -43,10 +43,10 @@ public class ToSaveResNumsSoldDTO implements Serializable{
 	public void setNumDisable(String numDisable) {
 		this.numDisable = numDisable;
 	}
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public Integer getPoorNumStock() {
