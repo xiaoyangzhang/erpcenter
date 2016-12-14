@@ -206,4 +206,11 @@
 		 ORDER BY seq_num
 	</select> 
 	
+	<!-- 根据parentIds查询部门 -->
+	<select id="selectOrgListByParentIds" resultType="Integer" >
+		SELECT org_id FROM `platform_org` WHERE status=1 AND del_status=1 AND parent_id IN
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item,jdbcType=INTEGER}
+		</foreach>
+	</select> 
 </mapper>

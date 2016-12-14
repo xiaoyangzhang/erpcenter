@@ -102,5 +102,11 @@ public interface PlatformOrgDal {
 	
     public PlatformOrgPo getCompanyByEmployeeId2(Integer bizId,
             Integer employeeId);
-
+    
+    /**
+     * 根据parentId查询部门信息
+     * @param parentIdList
+     * @return
+     */
+    public List<Integer> selectOrgListByParentIds(List<Integer> parentIdList);
 }
