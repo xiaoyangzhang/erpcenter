@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.dal.sales.finance.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.BookingDeliveryPrice;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sales.client.car.po.HotelMsg;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPort;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPortHotel;
 import com.yimayhd.erpcenter.dal.sales.client.car.service.DoubleCarDal;
@@ -29,11 +31,14 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 		List<TransPortHotel> hotels = doubleCarMapper.selectTransPortHotelByGroupIds(groupIds);
 		for (int i = 0;i < list.size();i++) {
 			TransPort transPort = list.get(i);
-			Date date;
+			Date date = null;
 			if(transPort.getType() == 0){//接
 				date = transPort.getArrivalDate();
-			}else{//送
-				date = transPort.getDepartureDate();
+			}else if(transPort.getType() == 1 && null != transPort.getDepartureDate()){//送
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(transPort.getDepartureDate());
+				cal.set(Calendar.DATE, cal.get(Calendar.DATE-1));
+				date = cal.getTime();
 			}
 			StringBuffer nameBuffer = new StringBuffer();
 			for (int j = 0; j < hotels.size(); j++) {
@@ -79,11 +84,14 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 		List<TransPortHotel> hotels = doubleCarMapper.selectTransPortHotelByGroupIds(groupIds);
 		for (int i = 0;i < list.size();i++) {
 			TransPort transPort = list.get(i);
-			Date date;
+			Date date = null;
 			if(transPort.getType() == 0){//接
 				date = transPort.getArrivalDate();
-			}else{//送
-				date = transPort.getDepartureDate();
+			}else if(transPort.getType() == 1 && null != transPort.getDepartureDate()){//送
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(transPort.getDepartureDate());
+				cal.set(Calendar.DATE, cal.get(Calendar.DATE-1));
+				date = cal.getTime();
 			}
 			StringBuffer nameBuffer = new StringBuffer();
 			for (int j = 0; j < hotels.size(); j++) {
@@ -144,5 +152,22 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 		pageBean.setParameter(parameters);
 		List<GroupOrderGuest> list = doubleCarMapper.selectGroupOrderGuestListPage(pageBean);
 		return list;
+	}
+
+
+	@Override
+	public List<HotelMsg> synHotelMsg(int groupId, int type,
+			java.sql.Date departureDate, java.sql.Date arrivalDate) {
+		
+		Date date = null;
+		if(type == 0){//接
+			date = arrivalDate;
+		}else if(type == 1){//送
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(departureDate);
+			cal.set(Calendar.DATE, cal.get(Calendar.DATE-1));
+			date = cal.getTime();
+		}
+		return doubleCarMapper.synHotelMsg(groupId,date);
 	}
 }

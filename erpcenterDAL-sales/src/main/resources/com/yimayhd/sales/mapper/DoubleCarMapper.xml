@@ -51,6 +51,11 @@
 	    <result column="career" property="career" jdbcType="VARCHAR" />
 	    <result column="remark" property="remark" jdbcType="VARCHAR" />
 	</resultMap>
+	
+	<resultMap id="HotelMsg" type="com.yimayhd.erpcenter.dal.sales.client.car.po.HotelMsg" >
+	    <result column="supplier_id" property="groupId" jdbcType="INTEGER" />
+	    <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+	</resultMap>
   	
   	<select id="selectTransportByOrderId" resultMap="Transport">
 		SELECT o.group_id,t.id,t.order_id,t.method,t.type,t.class_no,t.source_type,t.departure_city,t.departure_station,t.departure_date,t.departure_time
@@ -80,6 +85,11 @@
 		SELECT id, order_id, name, mobile, gender, age, TYPE, certificate_type_id, certificate_num, native_place, career, remark 
 		FROM group_order_guest
 		WHERE order_id IN(${page.parameter.orderIds})
+	</select>	
+	
+	<select id="synHotelMsg" resultMap="HotelMsg">
+		SELECT t.supplier_id,t.supplier_name FROM booking_supplier t JOIN booking_supplier_detail d ON t.id = d.booking_id 
+			WHERE t.supplier_type = 3 AND t.group_id = #{groupId,jdbcType=INTEGER} AND  d.item_date = #{date}
 	</select>	
 	
 </mapper>
