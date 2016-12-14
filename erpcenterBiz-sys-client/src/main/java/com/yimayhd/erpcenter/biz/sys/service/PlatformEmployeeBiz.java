@@ -153,4 +153,11 @@ public interface PlatformEmployeeBiz {
 	 * @return
 	 */
 	public SearchOrgEmployListResult getOrgEmployeeListPage(List<Integer> orgIds, int page, int pageSize);
+	
+	/**
+	 * 根据组织ID，查询组织下所有员工信息
+	 * @param orgIds
+	 * @return
+	 */
+	public SearchOrgEmployListResult getOrgEmployeeListPage(int orgId, int page, int pageSize);
 }

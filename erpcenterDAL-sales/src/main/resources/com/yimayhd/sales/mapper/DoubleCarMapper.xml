@@ -78,13 +78,19 @@
 		SELECT p.id, p.booking_id, p.unit_price, p.num_times, p.num_person, p.total_price, p.item_name
 		FROM booking_delivery_order o 
 		LEFT JOIN booking_delivery_price p ON o.booking_id = p.booking_id
-		WHERE o.order_id IN(${page.parameter.orderIds})
+		WHERE o.order_id IN
+		<foreach collection="page.parameter.orderIds" item="item" index="index" open="(" separator="," close=")">
+			#{item,jdbcType=INTEGER}
+		</foreach>
 	</select>
 	
 	<select id="selectGroupOrderGuestListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="GroupOrderGuest">
 		SELECT id, order_id, name, mobile, gender, age, TYPE, certificate_type_id, certificate_num, native_place, career, remark 
 		FROM group_order_guest
-		WHERE order_id IN(${page.parameter.orderIds})
+		WHERE order_id IN
+		<foreach collection="page.parameter.orderIds" item="item" index="index" open="(" separator="," close=")">
+			#{item,jdbcType=INTEGER}
+		</foreach>
 	</select>	
 	
 	<select id="synHotelMsg" resultMap="HotelMsg">

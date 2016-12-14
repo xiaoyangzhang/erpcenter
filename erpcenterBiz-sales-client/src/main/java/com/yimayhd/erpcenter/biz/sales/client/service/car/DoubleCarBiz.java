@@ -1,5 +1,7 @@
 package com.yimayhd.erpcenter.biz.sales.client.service.car;
 
+import java.util.List;
+
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.query.SynHotelQuery;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchDeliveryPriceResult;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchOrderGuestResult;
@@ -31,7 +33,7 @@ public interface DoubleCarBiz {
 	 * @param pageSize
 	 * @return
 	 */
-	SearchDeliveryPriceResult selectDeliveryPrice(String orderIds, int page, int pageSize);
+	SearchDeliveryPriceResult selectDeliveryPrice(List<Integer> orderIds, int page, int pageSize);
 	
 	SearchOrderGuestResult selectOrderGuest(int orderId, int page, int pageSize);
 	
@@ -42,7 +44,7 @@ public interface DoubleCarBiz {
 	 * @param pageSize
 	 * @return
 	 */
-	SearchOrderGuestResult selectOrderGuest(String orderIds, int page, int pageSize);
+	SearchOrderGuestResult selectOrderGuest(List<Integer> orderIds, int page, int pageSize);
 	
 	/**
 	 * 同步酒店

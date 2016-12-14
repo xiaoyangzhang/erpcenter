@@ -111,9 +111,8 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 		return list;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	@Override
-	public List<BookingDeliveryPrice> selectDeliveryPrice(String orderIds, int page, int pageSize) {
+	public PageBean<BookingDeliveryPrice> selectDeliveryPrice(List<Integer> orderIds, int page, int pageSize) {
 		
 		PageBean pageBean = new PageBean();
 		if(page == 0){
@@ -130,12 +129,13 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 		parameters.put("orderIds", orderIds);
 		pageBean.setParameter(parameters);
 		List<BookingDeliveryPrice> list = doubleCarMapper.selectDeliveryPriceListPage(pageBean);
-		return list;
+		pageBean.setResult(list);
+		return pageBean;
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public List<GroupOrderGuest> selectOrderGuestListPage(String orderIds,int page, int pageSize) {
+	public PageBean<GroupOrderGuest> selectOrderGuestListPage(List<Integer> orderIds,int page, int pageSize) {
 		PageBean pageBean = new PageBean();
 		if(page == 0){
 			pageBean.setPage(1);
@@ -151,7 +151,8 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 		parameters.put("orderIds", orderIds);
 		pageBean.setParameter(parameters);
 		List<GroupOrderGuest> list = doubleCarMapper.selectGroupOrderGuestListPage(pageBean);
-		return list;
+		pageBean.setResult(list);
+		return pageBean;
 	}
 
 

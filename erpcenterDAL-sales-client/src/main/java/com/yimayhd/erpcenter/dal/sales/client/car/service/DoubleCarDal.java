@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.dal.sales.client.car.service;
 import java.sql.Date;
 import java.util.List;
 
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.BookingDeliveryPrice;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.HotelMsg;
@@ -13,9 +14,9 @@ public interface DoubleCarDal {
 
 	List<TransPort> selectTransportByOrderIds(String orderIds);
 	
-	List<BookingDeliveryPrice> selectDeliveryPrice(String orderIds, int page, int pageSize);
+	PageBean<BookingDeliveryPrice> selectDeliveryPrice(List<Integer> orderIds, int page, int pageSize);
 	
-	List<GroupOrderGuest> selectOrderGuestListPage(String orderIds, int page, int pageSize);
+	PageBean<GroupOrderGuest> selectOrderGuestListPage(List<Integer> orderIds, int page, int pageSize);
 
 	List<HotelMsg> synHotelMsg(int groupId, int type, Date departureDate,
 			Date arrivalDate);

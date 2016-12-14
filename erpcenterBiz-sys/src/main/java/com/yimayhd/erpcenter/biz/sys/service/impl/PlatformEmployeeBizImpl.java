@@ -222,6 +222,7 @@ public class PlatformEmployeeBizImpl implements PlatformEmployeeBiz {
 		
 		try{
 			List<Integer> allOrgIds = new ArrayList<Integer>();
+			allOrgIds.addAll(orgIds);
 			while(true){
 				orgIds = platformOrgDal.selectOrgListByParentIds(orgIds);
 				if(CollectionUtils.isEmpty(orgIds)){
@@ -232,9 +233,13 @@ public class PlatformEmployeeBizImpl implements PlatformEmployeeBiz {
 			PageBean pageBean = new PageBean();
 			if(page == 0){
 				pageBean.setPage(1);
+			}else{
+				pageBean.setPage(page);
 			}
 			if(pageSize == 0){
 				pageBean.setPageSize(Constants.PAGESIZE);
+			}else{
+				pageBean.setPageSize(pageSize);
 			}
 			
 			Map<String, Object> parameter = new HashMap<String, Object>();
@@ -249,6 +254,14 @@ public class PlatformEmployeeBizImpl implements PlatformEmployeeBiz {
 			ex.printStackTrace();
 		}
 		
+		return result;
+	}
+
+	@Override
+	public SearchOrgEmployListResult getOrgEmployeeListPage(int orgId, int page, int pageSize) {
+		List<Integer> ids = new ArrayList<Integer>();
+		ids.add(orgId);
+		SearchOrgEmployListResult result = getOrgEmployeeListPage(ids, page, pageSize);
 		return result;
 	}
 

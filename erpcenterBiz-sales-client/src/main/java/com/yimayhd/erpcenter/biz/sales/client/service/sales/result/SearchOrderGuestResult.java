@@ -8,14 +8,31 @@ public class SearchOrderGuestResult extends ResultSupport{
 
 	private static final long serialVersionUID = -5636950350216985901L;
 	
-	private List<GroupOrderGuest> priceList;
+	private List<GroupOrderGuest> guestList;
+	private long totalCount;
+	private long totalPage;
 
-	public List<GroupOrderGuest> getPriceList() {
-		return priceList;
+	public List<GroupOrderGuest> getGuestList() {
+		return guestList;
 	}
 
-	public void setPriceList(List<GroupOrderGuest> priceList) {
-		this.priceList = priceList;
+	public void setGuestList(List<GroupOrderGuest> guestList) {
+		this.guestList = guestList;
 	}
-	
+
+	public long getTotalCount() {
+		return totalCount;
+	}
+
+	public void setTotalCount(long totalCount) {
+		this.totalCount = totalCount;
+	}
+
+	public long getTotalPage() {
+		return totalPage;
+	}
+
+	public void setTotalPage(long totalPage) {
+		this.totalPage = totalPage;
+	}
 }
