@@ -3642,15 +3642,15 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 	}
 
 	@Override
-	public WebResult<GroupOrderForCarCar> selectGroupOrdersInGroupsForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean) {
+	public WebResult<List<GroupOrderForCarCar>> selectGroupOrdersInGroupsForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean) {
 		log.info("params:pageBean={}", JSON.toJSONString(pageBean));
-		WebResult<GroupOrderForCarCar> result = new WebResult<GroupOrderForCarCar>();
+		WebResult<List<GroupOrderForCarCar>> result = new WebResult<List<GroupOrderForCarCar>>();
 		if (!NumberUtil.isIntegerValid(pageBean.getPage()) || !NumberUtil.isIntegerValid(pageBean.getPageSize())) {
 			log.error("params error:pageBean={}",JSON.toJSONString(pageBean));
 			result.setErrorCode(OperationErrorCode.PARAM_ERROR);
 			return result;
 		}
-		GroupOrderForCarCar groupOrderForCarCar = groupOrderService.selectGroupOrdersInGroupsForCarCar(pageBean);
+		List<GroupOrderForCarCar> groupOrderForCarCar = groupOrderService.selectGroupOrdersInGroupsForCarCar(pageBean);
 		result.setValue(groupOrderForCarCar);
 		return result;
 	}

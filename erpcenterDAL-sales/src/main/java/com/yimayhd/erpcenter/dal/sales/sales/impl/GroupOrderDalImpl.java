@@ -1748,10 +1748,12 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 		}
 
     @Override
-    public GroupOrderForCarCar selectGroupOrdersInGroupsForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean) {
-        GroupOrderForCarCar groupOrderForCarCar = groupOrderMapper.selectGroupOrdersInGroupsForCarCar(pageBean);
-
-        return groupOrderForCarCar;
+    public List<GroupOrderForCarCar> selectGroupOrdersInGroupsForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean) {
+        List<GroupOrderForCarCar> groupOrderForCarCars = groupOrderMapper.selectGroupOrdersInGroupsForCarCar(pageBean);
+        if (CollectionUtils.isEmpty(groupOrderForCarCars)) {
+            return Collections.emptyList();
+        }
+        return groupOrderForCarCars;
     }
 
 

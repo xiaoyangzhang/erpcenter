@@ -10,7 +10,7 @@ public class GroupOrderForCarCar implements Serializable {
     private static final long serialVersionUID = -707282179483459490L;
 
     private List<GroupOrder> groupOrderList;
-//    private String groupCode;
+    private String groupCode;
 //    private String guestReresentativeName;
 
     public List<GroupOrder> getGroupOrderList() {
@@ -21,13 +21,13 @@ public class GroupOrderForCarCar implements Serializable {
         this.groupOrderList = groupOrderList;
     }
 
-//    public String getGroupCode() {
-//        return groupCode;
-//    }
-//
-//    public void setGroupCode(String groupCode) {
-//        this.groupCode = groupCode;
-//    }
+    public String getGroupCode() {
+        return groupCode;
+    }
+
+    public void setGroupCode(String groupCode) {
+        this.groupCode = groupCode;
+    }
 
 //    public String getGuestReresentativeName() {
 //        return guestReresentativeName;
