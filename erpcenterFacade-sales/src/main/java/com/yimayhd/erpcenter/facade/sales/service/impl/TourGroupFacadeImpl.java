@@ -2585,4 +2585,12 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
 
     }
 
+    @Override
+    public ToProfitExcelResult getGroupIdsByTravelExportStatus(Integer c, Integer bizId) {
+        ToProfitExcelResult toProfitExcelResult = new ToProfitExcelResult();
+        List<Integer> list = tourGroupBiz.getGroupIdsByTravelExportStatus(c, bizId);
+        toProfitExcelResult.setList(list);
+        return toProfitExcelResult;
+    }
+
 }
