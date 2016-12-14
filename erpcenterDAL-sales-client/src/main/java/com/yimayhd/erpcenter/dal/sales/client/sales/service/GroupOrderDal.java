@@ -463,6 +463,6 @@ public interface GroupOrderDal {
 
     PageBean<GroupOrder> selectProductProfitStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId);
 
-    List<GroupOrderForCarCar> selectGroupOrdersInOneGroupForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean);
+    GroupOrderForCarCar selectGroupOrdersInGroupsForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean);
 } 
 

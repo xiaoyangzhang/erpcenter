@@ -11,7 +11,7 @@ public class GroupOrderForCarCar implements Serializable {
 
     private List<GroupOrder> groupOrderList;
 //    private String groupCode;
-    private String guestReresentativeName;
+//    private String guestReresentativeName;
 
     public List<GroupOrder> getGroupOrderList() {
         return groupOrderList;
@@ -29,11 +29,11 @@ public class GroupOrderForCarCar implements Serializable {
 //        this.groupCode = groupCode;
 //    }
 
-    public String getGuestReresentativeName() {
-        return guestReresentativeName;
-    }
-
-    public void setGuestReresentativeName(String guestReresentativeName) {
-        this.guestReresentativeName = guestReresentativeName;
-    }
+//    public String getGuestReresentativeName() {
+//        return guestReresentativeName;
+//    }
+//
+//    public void setGuestReresentativeName(String guestReresentativeName) {
+//        this.guestReresentativeName = guestReresentativeName;
+//    }
 }
