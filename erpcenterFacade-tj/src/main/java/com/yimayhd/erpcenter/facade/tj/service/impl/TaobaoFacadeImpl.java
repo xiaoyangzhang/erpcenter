@@ -1,17 +1,19 @@
 package com.yimayhd.erpcenter.facade.tj.service.impl;
 
+import java.io.*;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
+import com.yimayhd.erpcenter.common.util.DateUtils;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +29,6 @@ import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryB
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryPriceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.query.QueryBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderPriceBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRouteBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.SpecialGroupOrderBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.taobao.TaobaoOrderBiz;
 import com.yimayhd.erpcenter.biz.sys.service.MsgInfoBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
@@ -82,6 +78,8 @@ import com.yimayhd.erpcenter.facade.tj.client.service.TaobaoFacade;
 import com.yimayhd.erpcenter.facade.tj.client.utils.LogUtils;
 
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.WebUtils;
 
 public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
@@ -127,6 +125,8 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	private QueryBiz queryBiz;
 	@Autowired
 	private LogOperatorBiz logBiz;
+	@Autowired
+	private GroupOrderTransportBiz groupOrderTransportBiz;
 
 	/**
 	 * 操作单
@@ -507,8 +507,14 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 					mov.getOrderList().add(groupOrder);
 					result.add(mov);
 				}
+//				specialGroupOrderBiz.mergetGroupTaobao(result, bizId,
+//						userId, userName, saveSpecialGroupDTO.getMyBizCode());
+				PlatformEmployeePo platformEmployeePo =platformEmployeeBiz.findByEmployeeId(vo.getGroupOrder().getSaleOperatorId());
+				String supplierCode =platformOrgBiz.getCompanyCodeByOrgId(bizId,platformEmployeePo.getOrgId());
 				specialGroupOrderBiz.mergetGroupTaobao(result, bizId,
-						userId, userName, saveSpecialGroupDTO.getMyBizCode());
+						vo.getGroupOrder().getOperatorId(), vo.getGroupOrder().getOperatorName(),
+						supplierCode);
+
 				GroupOrder groupOrder=groupOrderBiz.findById(orderId);
 				TourGroup tourGroup=tourGroupBiz.selectByPrimaryKey(groupOrder.getGroupId());
 				tourGroup.setGroupMode(saveSpecialGroupDTO.getGroupMode());
@@ -533,6 +539,29 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		 }
 		saveSpecialGroupResult.setResultJson(successJson("groupId", orderId + ""));
 		return saveSpecialGroupResult;
+	}
+
+	@Override
+	public WebResult<Map<String, Object>> getSaveSpecialGroupNeed(Integer groupOrderId) {
+		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
+		Map<String,Object> map = new HashMap<String, Object>();
+		GroupOrder go=new GroupOrder();
+		List<GroupOrderPrice> incomeList = new ArrayList<GroupOrderPrice>();
+		List<GroupOrderGuest> guestList = new ArrayList<GroupOrderGuest>();
+		List<GroupOrderTransport> transList = new ArrayList<GroupOrderTransport>();
+		if(groupOrderId != null){
+			go = groupOrderBiz.findById(groupOrderId);
+			incomeList = groupOrderPriceBiz.selectByOrder(groupOrderId);
+			guestList = groupOrderGuestBiz.selectByOrderId(groupOrderId);
+			transList = groupOrderTransportBiz.selectByOrderId(groupOrderId);
+		}
+
+		map.put("go",go);
+		map.put("incomeList",incomeList);
+		map.put("guestList",guestList);
+		map.put("transList",transList);
+		result.setValue(map);
+		return result;
 	}
 
 	/**
@@ -974,7 +1003,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 //	        model.addAttribute("orderBean", orderBean);
 //	        model.addAttribute("orderMode", orderMode);
 //	        model.addAttribute("orderId", orderId);
-//	        int bizId = WebUtils.getCurBizId(request);
+//	        int bizId = bizId;
 //	        model.addAttribute("bizId", bizId);
 	        addSivaInfoDTO.setOrderBean(orderBean);
 	        
@@ -1047,7 +1076,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
      */
 	@Override
     public TaobaoOrderListByOpDTO findGroupOrderGuestPage(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO) {
-        //Integer bizId = WebUtils.getCurBizId(request);
+        //Integer bizId = bizId;
         List<DicInfo> typeList = dicBiz.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE, taobaoOrderListByOpDTO.getBizId());
 //        model.addAttribute("typeList", typeList);
 //        model.addAttribute("orgJsonStr", orgService.getComponentOrgTreeJsonStr(bizId));
@@ -1390,6 +1419,184 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	        groupOrderGuestDataListDTO.setPageBean(pageBean);
 	        groupOrderGuestDataListDTO.setTypeList(typeList);
 	        return groupOrderGuestDataListDTO;
+	}
+
+
+	@Override
+	public GroupOrderGuestDataListDTO taobaoOrderList_tableData(TaobaoOrderListTableDTO taobaoOrderListTableDTO) {
+
+		GroupOrderGuestDataListDTO groupOrderGuestDataListDTO = new GroupOrderGuestDataListDTO();
+		GroupOrder groupOrder = taobaoOrderListTableDTO.getGroupOrder();
+		Integer bizId = taobaoOrderListTableDTO.getBizId();
+		Integer rows = taobaoOrderListTableDTO.getRows();
+		if (StringUtils.isBlank(groupOrder.getSaleOperatorIds()) && StringUtils.isNotBlank(groupOrder.getOrgIds())) {
+			Set<Integer> set = new HashSet<Integer>();
+			String[] orgIdArr = groupOrder.getOrgIds().split(",");
+			for (String orgIdStr : orgIdArr) {
+				set.add(Integer.valueOf(orgIdStr));
+			}
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
+			String salesOperatorIds = "";
+			for (Integer usrId : set) {
+				salesOperatorIds += usrId + ",";
+			}
+			if (!salesOperatorIds.equals("")) {
+				groupOrder.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+			}
+		}
+		PageBean<GroupOrder> page = new PageBean<GroupOrder>();
+		if (!"".equals(groupOrder.getGuestName()) || !"".equals(groupOrder.getMobile())) {
+			page.setParameter(groupOrder);
+			page.setPage(groupOrder.getPage() == null ? 1 : groupOrder.getPage());
+			page.setPageSize(rows);
+			page = groupOrderBiz.selectTaobaoOrderGuestNameListPage(page, bizId,
+					taobaoOrderListTableDTO.getDataUserIdSets(), 1);
+		} else {
+			page.setParameter(groupOrder);
+			page.setPage(groupOrder.getPage() == null ? 1 : groupOrder.getPage());
+			page.setPageSize(rows);
+			page = groupOrderBiz.selectTaobaoOrderListPage(page, bizId,
+					taobaoOrderListTableDTO.getDataUserIdSets(), 1);
+		}
+		List<GroupOrder> list = page.getResult();
+		Integer pageTotalAudit = 0;
+		Integer pageTotalChild = 0;
+		Integer pageTotalGuide = 0;
+		List<DicInfo> typeList = dicBiz.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE,
+				bizId);
+		BigDecimal pageTotal = new BigDecimal(0);
+		if (page.getResult() != null && page.getResult().size() > 0) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			for (GroupOrder groupOrder2 : list) {
+				pageTotalAudit += groupOrder2.getNumAdult() == null ? 0 : groupOrder2.getNumAdult();
+				pageTotalChild += groupOrder2.getNumChild() == null ? 0 : groupOrder2.getNumChild();
+				pageTotalGuide += groupOrder2.getNumGuide() == null ? 0 : groupOrder2.getNumGuide();
+				pageTotal = pageTotal.add(groupOrder2.getTotal() == null ? new BigDecimal(0) : groupOrder2.getTotal());
+				Long createTime = groupOrder2.getCreateTime();
+				String dateStr = sdf.format(createTime);
+				groupOrder2.setCreateTimeStr(dateStr);
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				String today = formatter.format(new Date());
+				groupOrder2.setFitDate(today);
+				for(DicInfo item:typeList){
+					if(item.getId().equals(groupOrder2.getOrderMode()))
+						groupOrder2.setOrderModeType(item.getValue());
+				}
+			}
+		}
+		groupOrderGuestDataListDTO.setTypeList(typeList);
+		groupOrderGuestDataListDTO.setPageBean(page);
+		return groupOrderGuestDataListDTO;
+	}
+
+	@Override
+	public TaobaoOrderListTableDTO taobaoOrderList_PostFooter(TaobaoOrderListTableDTO taobaoOrderListTableDTO) {
+		GroupOrder groupOrder = taobaoOrderListTableDTO.getGroupOrder();
+		Integer bizId = taobaoOrderListTableDTO.getBizId();
+
+		if (StringUtils.isBlank(groupOrder.getSaleOperatorIds()) && StringUtils.isNotBlank(groupOrder.getOrgIds())) {
+			Set<Integer> set = new HashSet<Integer>();
+			String[] orgIdArr = groupOrder.getOrgIds().split(",");
+			for (String orgIdStr : orgIdArr) {
+				set.add(Integer.valueOf(orgIdStr));
+			}
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
+			String salesOperatorIds = "";
+			for (Integer usrId : set) {
+				salesOperatorIds += usrId + ",";
+			}
+			if (!salesOperatorIds.equals("")) {
+				groupOrder.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+			}
+		}
+		GroupOrder go = null;
+		if(!"".equals(groupOrder.getGuestName()) || !"".equals(groupOrder.getMobile())){
+			go = groupOrderBiz.selectTotalTaobaoGuestNameOrder(groupOrder,
+					bizId, taobaoOrderListTableDTO.getDataUserIdSets());
+		}else{
+			go = groupOrderBiz.selectTotalTaobaoOrder(groupOrder,
+					bizId, taobaoOrderListTableDTO.getDataUserIdSets());
+		}
+		taobaoOrderListTableDTO.setGroupOrder(go);
+
+		return taobaoOrderListTableDTO;
+	}
+
+
+	public WebResult<Map<String,String>> PaymentStatisticsList(Integer bizId) {
+		WebResult<Map<String,String>> result = new WebResult<Map<String,String>>();
+		String orgJsonStr = platformOrgBiz.getComponentOrgTreeJsonStr(bizId);
+		String orgUserJsonStr = platformEmployeeBiz.getComponentOrgUserTreeJsonStr(bizId);
+		Map<String,String> map = new HashMap<String, String>();
+		map.put("orgJsonStr",orgJsonStr);
+		map.put("orgUserJsonStr",orgUserJsonStr);
+		result.setValue(map);
+		return result;
+	}
+	@Override
+	public WebResult<PageBean<GroupOrder>> PaymentStatisticsListData(TaobaoOrderListTableDTO taobaoOrderListTableDTO){
+
+		WebResult<PageBean<GroupOrder>> result = new WebResult<PageBean<GroupOrder>>();
+		GroupOrder groupOrder = taobaoOrderListTableDTO.getGroupOrder();
+		Integer bizId = taobaoOrderListTableDTO.getBizId();
+		Integer rows = taobaoOrderListTableDTO.getRows();
+		if (StringUtils.isBlank(groupOrder.getSaleOperatorIds()) && StringUtils.isNotBlank(groupOrder.getOrgIds())) {
+			Set<Integer> set = new HashSet<Integer>();
+			String[] orgIdArr = groupOrder.getOrgIds().split(",");
+			for (String orgIdStr : orgIdArr) {
+				set.add(Integer.valueOf(orgIdStr));
+			}
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
+			String salesOperatorIds = "";
+			for (Integer usrId : set) {
+				salesOperatorIds += usrId + ",";
+			}
+			if (!salesOperatorIds.equals("")) {
+				groupOrder.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+			}
+		}
+		PageBean<GroupOrder> page = new PageBean<GroupOrder>();
+		page.setParameter(groupOrder);
+		page.setPage(groupOrder.getPage() == null ? 1 : groupOrder.getPage());
+		page.setPageSize(rows);
+		page = groupOrderBiz.selectPaymentStatisticsListPage(page, bizId);
+		result.setValue(page);
+
+		return result;
+	}
+
+
+	public WebResult<PageBean<GroupOrder>> toPaymentExcel(Map<String, Object> pm ,String saleOperatorIds,String orgIds ,Integer bizId) {
+		WebResult<PageBean<GroupOrder>> result = new WebResult<PageBean<GroupOrder>>();
+		PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
+		if(saleOperatorIds !=null && saleOperatorIds !=""){
+			pm.put("saleOperatorIds", saleOperatorIds);
+		}else{
+			if (orgIds != null && StringUtils.isNotBlank(orgIds.toString())) {
+				Set<Integer> set = new HashSet<Integer>();
+				String[] orgIdArr = orgIds.toString().split(",");
+				for (String orgIdStr : orgIdArr) {
+					set.add(Integer.valueOf(orgIdStr));
+				}
+				set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
+				String salesOperatorIds = "";
+				for (Integer usrId : set) {
+					salesOperatorIds += usrId + ",";
+				}
+				if (!salesOperatorIds.equals("")) {
+					pm.put("saleOperatorIds", salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+				}
+			}
+		}
+		pageBean.setParameter(pm);
+		pageBean.setPage(1);
+		pageBean.setPageSize(10000);
+		pageBean = groupOrderBiz.selectPaymentStatisticsListPage(pageBean, bizId);
+		result.setValue(pageBean);
+		return  result;
+
+
+
 	}
 	
 }

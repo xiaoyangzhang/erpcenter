@@ -1,10 +1,12 @@
 package com.yimayhd.erpcenter.facade.sales.result;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount;
 import com.yimayhd.erpresource.dal.po.SupplierInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +24,7 @@ public class BookingProfitTableResult extends ResultSupport {
     private List<RegionInfo> regionInfoList;
     private String orgJsonStr;
     private String orgUserJsonStr;
+    private List<DicInfo> typeList = new ArrayList<DicInfo>();
 
     public List<RegionInfo> getRegionInfoList() {
         return regionInfoList;
@@ -80,4 +83,11 @@ public class BookingProfitTableResult extends ResultSupport {
         this.sum = sum;
     }
 
+    public List<DicInfo> getTypeList() {
+        return typeList;
+    }
+
+    public void setTypeList(List<DicInfo> typeList) {
+        this.typeList = typeList;
+    }
 }
