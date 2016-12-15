@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.yimayhd.erpcenter.biz.sales.client.service.car.DoubleCarBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchDeliveryPriceResult;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchOrderGuestResult;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchTransportsResult;
 import com.yimayhd.erpcenter.biz.sys.service.PlatAuthBiz;
 import com.yimayhd.erpcenter.common.util.NumberUtil;
 import com.yimayhd.erpcenter.common.util.PageParameterCheckAndDealUtil;
@@ -3669,10 +3670,10 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 
 				SearchOrderGuestResult orderGuestResult = doubleCarBiz.
 						selectOrderGuest(order.getId(), BasicConstants.DEFAULT_PAGE, BasicConstants.BATCH_QUERY_PAGE_SIZE);
-				order.setOrderGuests(orderGuestResult.getPriceList());
+				order.setOrderGuests(orderGuestResult.getGuestList());
 
-				List<TransPort> transPorts = doubleCarBiz.selectTransportByOrderId(order.getId());
-				order.setOrderTrans(transPorts);
+				SearchTransportsResult transResult = doubleCarBiz.selectTransportByOrderId(order.getId());
+				order.setOrderTrans(transResult.getTransPorts());
 			}
 		}
 		result.setValue(groupOrderForCarCars);
