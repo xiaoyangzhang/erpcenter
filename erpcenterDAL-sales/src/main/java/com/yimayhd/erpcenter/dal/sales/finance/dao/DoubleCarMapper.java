@@ -16,7 +16,7 @@ public interface DoubleCarMapper {
 
 	List<TransPort> selectTransportByOrderId(int orderId);
 	
-	List<TransPort> selectTransportByOrderIds(@Param("orderIds") String orderIds);
+	List<TransPort> selectTransportByOrderIds(@Param("orderIds") List<Integer> orderIds);
 
 	List<TransPortHotel> selectTransPortHotelByGroupIds(@Param("groupIds") String groupIds);
 	

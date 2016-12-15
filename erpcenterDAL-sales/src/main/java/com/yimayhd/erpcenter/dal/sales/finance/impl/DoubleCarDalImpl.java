@@ -78,7 +78,7 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 	}
 
 	@Override
-	public List<TransPort> selectTransportByOrderIds(String orderIds) {
+	public List<TransPort> selectTransportByOrderIds(List<Integer> orderIds) {
 		List<TransPort> list = doubleCarMapper.selectTransportByOrderIds(orderIds);
 		String groupIds = list2String(list);
 		List<TransPortHotel> hotels = doubleCarMapper.selectTransPortHotelByGroupIds(groupIds);

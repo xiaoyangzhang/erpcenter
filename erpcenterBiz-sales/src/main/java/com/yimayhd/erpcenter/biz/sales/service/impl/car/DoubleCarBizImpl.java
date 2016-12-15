@@ -30,7 +30,7 @@ public class DoubleCarBizImpl implements DoubleCarBiz{
 	}
 	
 	@Override
-	public SearchTransportsResult selectTransportByOrderIds(String orderIds) {
+	public SearchTransportsResult selectTransportByOrderIds(List<Integer> orderIds) {
 		SearchTransportsResult result = new SearchTransportsResult();
 		if(null == orderIds){
 			result.setErrorCode(DoubleCarErrorCode.PARAM_ERROR);
