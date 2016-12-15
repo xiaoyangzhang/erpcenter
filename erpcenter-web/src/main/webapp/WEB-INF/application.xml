@@ -24,6 +24,7 @@
 	<import resource="../META-INF/spring/application-export-facade-sales.xml" />
 	
 	<import resource="../META-INF/spring/application-export-biz-sales.xml" />
+	<import resource="../META-INF/spring/application-export-biz-sys.xml" />
 	
 	<import resource="../META-INF/spring/application-export-dal-product.xml" />
 	<import resource="../META-INF/spring/application-export-dal-sales.xml" />
