@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.biz.sys.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,14 +11,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
+import com.yimayhd.erpcenter.biz.sys.service.errorCode.SysErrorCode;
+import com.yimayhd.erpcenter.biz.sys.service.result.SearchOrgEmployListResult;
 import com.yimayhd.erpcenter.common.exception.ClientException;
+import com.yimayhd.erpcenter.dal.sys.constants.Constants;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.dal.sys.po.SysDataRight;
 import com.yimayhd.erpcenter.dal.sys.service.PlatformEmployeeDal;
+import com.yimayhd.erpcenter.dal.sys.service.PlatformOrgDal;
 
 public class PlatformEmployeeBizImpl implements PlatformEmployeeBiz {
 	
@@ -25,6 +31,8 @@ public class PlatformEmployeeBizImpl implements PlatformEmployeeBiz {
 	
 	@Autowired
 	private PlatformEmployeeDal platformEmployeeDal;
+	@Autowired
+	private PlatformOrgDal platformOrgDal;
 	
 	@Override
 	public PlatformEmployeePo findByEmployeeId(Integer employeeId) {
@@ -201,6 +209,60 @@ public class PlatformEmployeeBizImpl implements PlatformEmployeeBiz {
 	public List<PlatformEmployeePo> getOrgIdListByEmployee(Integer bizId, Set<Integer> set) {
 		List<PlatformEmployeePo> empBeanList = platformEmployeeDal.getOrgIdListByEmployee(bizId, set);
 		return empBeanList;
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public SearchOrgEmployListResult getOrgEmployeeListPage(List<Integer> orgIds, int page, int pageSize) {
+		SearchOrgEmployListResult result = new SearchOrgEmployListResult();
+		if(CollectionUtils.isEmpty(orgIds)){
+			result.setErrorCode(SysErrorCode.PARAM_ERROR);
+			return result;
+		}
+		
+		try{
+			List<Integer> allOrgIds = new ArrayList<Integer>();
+			allOrgIds.addAll(orgIds);
+			while(true){
+				orgIds = platformOrgDal.selectOrgListByParentIds(orgIds);
+				if(CollectionUtils.isEmpty(orgIds)){
+					break;
+				}
+				allOrgIds.addAll(orgIds);
+			}
+			PageBean pageBean = new PageBean();
+			if(page == 0){
+				pageBean.setPage(1);
+			}else{
+				pageBean.setPage(page);
+			}
+			if(pageSize == 0){
+				pageBean.setPageSize(Constants.PAGESIZE);
+			}else{
+				pageBean.setPageSize(pageSize);
+			}
+			
+			Map<String, Object> parameter = new HashMap<String, Object>();
+			parameter.put("orgIds", allOrgIds);
+			pageBean.setParameter(parameter);
+			List<PlatformEmployeePo> employeeList = platformEmployeeDal.getOrgEmployeeListPage(pageBean);
+			result.setEmployeeList(employeeList);
+			result.setTotalCount(pageBean.getTotalCount());
+			result.setTotalPage(pageBean.getTotalPage());
+		}catch(Exception ex){
+			result.setErrorCode(SysErrorCode.SYSTEM_ERROR);
+			ex.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	@Override
+	public SearchOrgEmployListResult getOrgEmployeeListPage(int orgId, int page, int pageSize) {
+		List<Integer> ids = new ArrayList<Integer>();
+		ids.add(orgId);
+		SearchOrgEmployListResult result = getOrgEmployeeListPage(ids, page, pageSize);
+		return result;
 	}
 
 }

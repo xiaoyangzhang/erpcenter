@@ -729,4 +729,10 @@ public class PlatformEmployeeDalImpl implements PlatformEmployeeDal {
 		List<PlatformEmployeePo> empBeanList = platformEmployeeMapper.getOrgIdListByEmployee(bizId, set);
 		return empBeanList;
 	}
+
+	@Override
+	public List<PlatformEmployeePo> getOrgEmployeeListPage(PageBean pageBean) {
+		List<PlatformEmployeePo> empBeanList = platformEmployeeMapper.getOrgEmployeeListPage(pageBean);
+		return empBeanList;
+	}
 }

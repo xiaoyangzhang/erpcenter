@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.car.DoubleCarBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
+import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SettleApplyBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
@@ -47,6 +49,9 @@ public class TestController {
 	
 	@Autowired
 	private DoubleCarBiz doubleCarBiz;
+	
+	@Autowired
+	private PlatformEmployeeBiz platformEmployeeBiz;
 	
 	@RequestMapping(value = "/testBasicDal")
 	public Object testBasicDal(){
@@ -114,7 +119,13 @@ public class TestController {
 	
 	@RequestMapping(value = "/testSelectDeliveryPrice2")
 	public Object testSelectDeliveryPrice2(){
-		return doubleCarBiz.selectDeliveryPrice("9146, 9130, 9129, 9034, 9032", 0, 100);
+		List<Integer> ids = new ArrayList<Integer>();
+		ids.add(9146);
+		ids.add(9130);
+		ids.add(9129);
+		ids.add(9034);
+		ids.add(9032);
+		return doubleCarBiz.selectDeliveryPrice(ids, 0, 100);
 	}
 	
 	@RequestMapping(value = "/testSelectOrderGuest")
@@ -124,7 +135,11 @@ public class TestController {
 	
 	@RequestMapping(value = "/testSelectOrderGuest2")
 	public Object testSelectOrderGuest2(){
-		return doubleCarBiz.selectOrderGuest("2,3,35", 0, 100);
+		List<Integer> ids = new ArrayList<Integer>();
+		ids.add(2);
+		ids.add(3);
+		ids.add(35);
+		return doubleCarBiz.selectOrderGuest(ids, 0, 100);
 	}
 	
 	@RequestMapping(value = "/testSelectTransport")
@@ -136,7 +151,22 @@ public class TestController {
 	@RequestMapping(value = "/testSelectTransports")
 	public Object testSelectTransports(){
 
-		return doubleCarBiz.selectTransportByOrderIds("1060");
+		return doubleCarBiz.selectTransportByOrderIds("1060,9422,122804,122799");
 	}
-
+	
+	@RequestMapping(value = "/testGetOrgEmployeeListPage1")
+	public Object testGetOrgEmployeeListPage1(){
+		return platformEmployeeBiz.getOrgEmployeeListPage(5, 1, 100);
+	}
+	
+	@RequestMapping(value = "/testGetOrgEmployeeListPage2")
+	public Object testGetOrgEmployeeListPage2(){
+		List<Integer> orgIds = new ArrayList<Integer>();
+		orgIds.add(5);
+		orgIds.add(6);
+		return platformEmployeeBiz.getOrgEmployeeListPage(orgIds, 1, 100);
+	}
+	
+	
+	
 }

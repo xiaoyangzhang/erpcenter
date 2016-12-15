@@ -1,37 +1,32 @@
-package com.yimayhd.erpcenter.biz.sales.client.service.sales.result;
+package com.yimayhd.erpcenter.biz.sys.service.result;
 
 import java.util.List;
 
-import com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 
-public class SearchOrderGuestResult extends ResultSupport{
+public class SearchOrgEmployListResult extends ResultSupport{
 
 	private static final long serialVersionUID = -5636950350216985901L;
 	
-	private List<GroupOrderGuest> guestList;
+	private List<PlatformEmployeePo> employeeList;
 	private long totalCount;
 	private long totalPage;
 
-	public List<GroupOrderGuest> getGuestList() {
-		return guestList;
+	public List<PlatformEmployeePo> getEmployeeList() {
+		return employeeList;
 	}
-
-	public void setGuestList(List<GroupOrderGuest> guestList) {
-		this.guestList = guestList;
+	public void setEmployeeList(List<PlatformEmployeePo> employeeList) {
+		this.employeeList = employeeList;
 	}
-
 	public long getTotalCount() {
 		return totalCount;
 	}
-
 	public void setTotalCount(long totalCount) {
 		this.totalCount = totalCount;
 	}
-
 	public long getTotalPage() {
 		return totalPage;
 	}
-
 	public void setTotalPage(long totalPage) {
 		this.totalPage = totalPage;
 	}

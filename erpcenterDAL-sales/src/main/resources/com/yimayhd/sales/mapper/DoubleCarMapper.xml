@@ -51,6 +51,11 @@
 	    <result column="career" property="career" jdbcType="VARCHAR" />
 	    <result column="remark" property="remark" jdbcType="VARCHAR" />
 	</resultMap>
+	
+	<resultMap id="HotelMsg" type="com.yimayhd.erpcenter.dal.sales.client.car.po.HotelMsg" >
+	    <result column="supplier_id" property="groupId" jdbcType="INTEGER" />
+	    <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+	</resultMap>
   	
   	<select id="selectTransportByOrderId" resultMap="Transport">
 		SELECT o.group_id,t.id,t.order_id,t.method,t.type,t.class_no,t.source_type,t.departure_city,t.departure_station,t.departure_date,t.departure_time
@@ -61,7 +66,11 @@
 	<select id="selectTransportByOrderIds" resultMap="Transport">
 		SELECT o.group_id,t.id,t.order_id,t.method,t.type,t.class_no,t.source_type,t.departure_city,t.departure_station,t.departure_date,t.departure_time
 			,t.arrival_city,t.arrival_station,t.arrival_date,t.arrival_time  
-		FROM `group_order_transport` t JOIN `group_order` o ON t.order_id = o.id WHERE t.order_id in (${orderIds})
+		FROM `group_order_transport` t JOIN `group_order` o ON t.order_id = o.id 
+		WHERE t.order_id in 
+		<foreach collection="orderIds" item="item" index="index" open="(" separator="," close=")">
+			#{item,jdbcType=INTEGER}
+		</foreach>
 	</select>
 	
 	<select id="selectTransPortHotelByGroupIds" resultMap="TransportHotel">
@@ -73,13 +82,24 @@
 		SELECT p.id, p.booking_id, p.unit_price, p.num_times, p.num_person, p.total_price, p.item_name
 		FROM booking_delivery_order o 
 		LEFT JOIN booking_delivery_price p ON o.booking_id = p.booking_id
-		WHERE o.order_id IN(${page.parameter.orderIds})
+		WHERE o.order_id IN
+		<foreach collection="page.parameter.orderIds" item="item" index="index" open="(" separator="," close=")">
+			#{item,jdbcType=INTEGER}
+		</foreach>
 	</select>
 	
 	<select id="selectGroupOrderGuestListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="GroupOrderGuest">
 		SELECT id, order_id, name, mobile, gender, age, TYPE, certificate_type_id, certificate_num, native_place, career, remark 
 		FROM group_order_guest
-		WHERE order_id IN(${page.parameter.orderIds})
+		WHERE order_id IN
+		<foreach collection="page.parameter.orderIds" item="item" index="index" open="(" separator="," close=")">
+			#{item,jdbcType=INTEGER}
+		</foreach>
+	</select>	
+	
+	<select id="synHotelMsg" resultMap="HotelMsg">
+		SELECT t.supplier_id,t.supplier_name FROM booking_supplier t JOIN booking_supplier_detail d ON t.id = d.booking_id 
+			WHERE t.supplier_type = 3 AND t.group_id = #{groupId,jdbcType=INTEGER} AND  d.item_date = #{date}
 	</select>	
 	
 </mapper>

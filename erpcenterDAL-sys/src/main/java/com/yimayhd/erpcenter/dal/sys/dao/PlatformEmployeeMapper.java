@@ -123,4 +123,11 @@ public interface PlatformEmployeeMapper {
 	public List<PlatformEmployeePo> getEmpList(@Param("bizId") Integer bizId, @Param("set") Set<Integer> set);
 	
 	List<PlatformEmployeePo> getOrgIdListByEmployee(@Param("bizId") Integer bizId, @Param("set") Set<Integer> set);
+	
+	/**
+	 * 根据条件分页查询员工信息
+	 * @param pageBean
+	 * @return
+	 */
+	public List<PlatformEmployeePo> getOrgEmployeeListPage(@Param("page") PageBean pageBean);
 }

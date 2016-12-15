@@ -1,14 +1,18 @@
 package com.yimayhd.erpcenter.biz.sales.service.impl.car;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.sales.client.service.car.DoubleCarBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.errorCode.DoubleCarErrorCode;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.query.SynHotelQuery;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchDeliveryPriceResult;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchOrderGuestResult;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchTransportsResult;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SynHotelResult;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.BookingDeliveryPrice;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPort;
@@ -19,12 +23,14 @@ public class DoubleCarBizImpl implements DoubleCarBiz{
 	private DoubleCarDal doubleCarDal;
 
 	@Override
-	public List<TransPort> selectTransportByOrderId(int orderId) {
-		return doubleCarDal.selectTransportByOrderId(orderId);
+	public SearchTransportsResult selectTransportByOrderId(int orderId) {
+		SearchTransportsResult result = new SearchTransportsResult();
+		result.setTransPorts(doubleCarDal.selectTransportByOrderId(orderId));
+		return result;
 	}
 	
 	@Override
-	public SearchTransportsResult selectTransportByOrderIds(String orderIds) {
+	public SearchTransportsResult selectTransportByOrderIds(List<Integer> orderIds) {
 		SearchTransportsResult result = new SearchTransportsResult();
 		if(null == orderIds){
 			result.setErrorCode(DoubleCarErrorCode.PARAM_ERROR);
@@ -36,16 +42,20 @@ public class DoubleCarBizImpl implements DoubleCarBiz{
 
 	@Override
 	public SearchDeliveryPriceResult selectDeliveryPrice(int orderId, int page, int pageSize) {
-		SearchDeliveryPriceResult result = selectDeliveryPrice(orderId+"", page, pageSize);
+		List<Integer> orderIdList = new ArrayList<Integer>();
+		orderIdList.add(orderId);
+		SearchDeliveryPriceResult result = selectDeliveryPrice(orderIdList, page, pageSize);
 		return result;
 	}
 
 	@Override
-	public SearchDeliveryPriceResult selectDeliveryPrice(String orderIds, int page, int pageSize) {
+	public SearchDeliveryPriceResult selectDeliveryPrice(List<Integer> orderIds, int page, int pageSize) {
 		SearchDeliveryPriceResult result = new SearchDeliveryPriceResult();
 		try{
-			List<BookingDeliveryPrice> list = doubleCarDal.selectDeliveryPrice(orderIds, page, pageSize);
-			result.setPriceList(list);
+			PageBean<BookingDeliveryPrice> pbResult = doubleCarDal.selectDeliveryPrice(orderIds, page, pageSize);
+			result.setPriceList(pbResult.getResult());
+			result.setTotalCount(pbResult.getTotalCount());
+			result.setTotalPage(pbResult.getTotalPage());
 		}catch(Exception ex){
 			result.setErrorCode(DoubleCarErrorCode.QUERY_ERROR);
 			ex.printStackTrace();
@@ -55,21 +65,35 @@ public class DoubleCarBizImpl implements DoubleCarBiz{
 
 	@Override
 	public SearchOrderGuestResult selectOrderGuest(int orderId, int page, int pageSize) {
-		SearchOrderGuestResult result = selectOrderGuest(orderId+"", page, pageSize);
+		List<Integer> orderIdList = new ArrayList<Integer>();
+		orderIdList.add(orderId);
+		SearchOrderGuestResult result = selectOrderGuest(orderIdList, page, pageSize);
 		return result;
 	}
 
 	@Override
-	public SearchOrderGuestResult selectOrderGuest(String orderIds, int page, int pageSize) {
+	public SearchOrderGuestResult selectOrderGuest(List<Integer> orderIds, int page, int pageSize) {
 		
 		SearchOrderGuestResult result = new SearchOrderGuestResult();
 		try{
-			List<GroupOrderGuest> list = doubleCarDal.selectOrderGuestListPage(orderIds, page, pageSize);
-			result.setPriceList(list);
+			PageBean<GroupOrderGuest> pbResult = doubleCarDal.selectOrderGuestListPage(orderIds, page, pageSize);
+			result.setGuestList(pbResult.getResult());
+			result.setTotalCount(pbResult.getTotalCount());
+			result.setTotalPage(pbResult.getTotalPage());
 		}catch(Exception ex){
 			result.setErrorCode(DoubleCarErrorCode.QUERY_ERROR);
 			ex.printStackTrace();
 		}
+		return result;
+	}
+
+	@Override
+	public SynHotelResult synHotelMsg(SynHotelQuery query) {
+		SynHotelResult result = new SynHotelResult();
+		if(null == query){
+			result.setErrorCode(DoubleCarErrorCode.QUERY_ERROR);
+		}
+		result.setHotelMsgs(doubleCarDal.synHotelMsg(query.getGroupId(),query.getType(),query.getDepartureDate(),query.getArrivalDate()));
 		return result;
 	}
 
