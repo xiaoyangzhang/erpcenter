@@ -20,6 +20,11 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.yihg</groupId>
+			<artifactId>yihg-architect-mybatis</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 		<!-- <dependency>
 			<groupId>com.yimayhd.erpcenter</groupId>
 		  <artifactId>erpcenterBiz-sys-client</artifactId>

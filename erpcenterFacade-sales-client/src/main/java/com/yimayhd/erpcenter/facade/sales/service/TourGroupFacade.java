@@ -73,6 +73,6 @@ public interface TourGroupFacade {
     public ProfitQueryByTourResult toSaleProfitTableByTour(ProfitQueryByTourDTO profitQueryByTourDTO);
     public BookingProfitTableResult operatorSummaryTable(TourGroup tour,Integer bizId,Set<Integer> userIdSet);
     public BookingProfitTableResult toProfitSaleExcel(GroupOrder groupOrder,Integer bizId,Set<Integer> userIdSet);
-    public WebResult<List<TourGroupForCarCar>> selectGroupInfoWithArrangedTransAndGuideForCarCar(PageBean<GroupInfoQueryForCarCar> pageBean);
+    public WebResult<List<TourGroupForCarCar>> selectGroupInfoWithArrangedTransAndGuideForCarCar(PageBean pageBean);
 
 }

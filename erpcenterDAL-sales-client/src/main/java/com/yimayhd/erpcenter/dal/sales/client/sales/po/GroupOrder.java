@@ -9,12 +9,41 @@ import java.util.Map;
 import java.util.Set;
 
 import com.yimayhd.erpcenter.common.util.LogFieldAnno;
+import com.yimayhd.erpcenter.dal.sales.client.car.po.BookingDeliveryPrice;
+import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPort;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetailDeploy;
 
 public class GroupOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private  List<BookingDeliveryPrice> bookingOrderPrices;
+    private List<TransPort> orderTrans;
+    private List<com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest> orderGuests;
+
+    public List<com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest> getOrderGuests() {
+        return orderGuests;
+    }
+
+    public void setOrderGuests(List<com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest> orderGuests) {
+        this.orderGuests = orderGuests;
+    }
+
+    public List<BookingDeliveryPrice> getBookingOrderPrices() {
+        return bookingOrderPrices;
+    }
+
+    public void setBookingOrderPrices(List<BookingDeliveryPrice> bookingOrderPrices) {
+        this.bookingOrderPrices = bookingOrderPrices;
+    }
+
+    public List<TransPort> getOrderTrans() {
+        return orderTrans;
+    }
+
+    public void setOrderTrans(List<TransPort> orderTrans) {
+        this.orderTrans = orderTrans;
+    }
     @LogFieldAnno(isKey = true)
     private Integer id;
 

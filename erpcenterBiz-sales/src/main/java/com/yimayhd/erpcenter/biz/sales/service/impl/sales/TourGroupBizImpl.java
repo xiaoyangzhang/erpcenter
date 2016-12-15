@@ -527,7 +527,7 @@ public class TourGroupBizImpl implements TourGroupBiz {
 	}
 
 	@Override
-	public List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(PageBean<GroupInfoQueryForCarCar> pageBean) {
+	public List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(PageBean pageBean) {
 		List<TourGroupForCarCar> bookingGroups = tourGroupDal.selectGroupInfoWithArrangedTransForCarCar(pageBean);
 		for (TourGroupForCarCar tourCar : bookingGroups) {
 			PlatformEmployeePo employeePo = platformEmployeeDal.findByEmployeeId(tourCar.getTourGroup().getOperatorId());

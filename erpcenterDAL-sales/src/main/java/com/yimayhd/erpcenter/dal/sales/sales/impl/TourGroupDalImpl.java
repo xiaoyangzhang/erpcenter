@@ -1646,7 +1646,7 @@ public class TourGroupDalImpl implements TourGroupDal {
     }
 
 	@Override
-	public List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(PageBean<GroupInfoQueryForCarCar> pageBean) {
+	public List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(PageBean pageBean) {
 		List<TourGroupForCarCar> bookingGroups = tourGroupMapper.selectGroupInfoWithArrangedTransForCarCar(pageBean);
 		if (CollectionUtils.isEmpty(bookingGroups)) {
 			return Collections.emptyList();

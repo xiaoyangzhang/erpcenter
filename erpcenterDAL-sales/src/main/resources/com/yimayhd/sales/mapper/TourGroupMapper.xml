@@ -4475,7 +4475,9 @@
 		JOIN booking_guide bg ON  tg.`id`= bg.`group_id`
 		 where tg.create_time <![CDATA[>=]]> #{page.parameter.startTime}
 		  and tg.create_time <![CDATA[<=]]> #{page.parameter.endTime}
+		  <if test="page.parameter.supplierName != null">
 		and bd.supplier_name like concat ('%','${page.parameter.supplierName}','%')
+		  </if>
 		AND bg.`is_default` = 1
 	</select>
 </mapper>

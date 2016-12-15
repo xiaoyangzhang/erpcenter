@@ -537,5 +537,6 @@ public interface GroupOrderMapper {
 	
 	List<GroupOrder>selectProductProfitStatisticsListPage(@Param("page") PageBean<GroupOrder> pageBean,@Param("bizId") Integer bizId);
 
-    List<GroupOrderForCarCar> selectGroupOrdersInGroupsForCarCar(@Param("page")PageBean<GroupOrderQueryForCarCar> pageBean);
+    List<GroupOrderForCarCar> selectGroupOrdersInGroupsForCarCar(@Param("page")PageBean pageBean);
+//    List<GroupOrderForCarCar> selectGroupOrdersInGroupsForCarCarTest(@Param("page")com.yimayhd.erpcenter.common.util.PageBean pageBean);
 }

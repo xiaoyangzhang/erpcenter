@@ -522,5 +522,5 @@ public interface TourGroupBiz {
 
 	PageBean getPushDeliveryList(PageBean pageBean,Integer bizId);
 
-	List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(PageBean<GroupInfoQueryForCarCar> pageBean);
+	List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(PageBean pageBean);
 }

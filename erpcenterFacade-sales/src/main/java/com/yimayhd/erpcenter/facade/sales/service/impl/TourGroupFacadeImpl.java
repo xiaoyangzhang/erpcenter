@@ -12,6 +12,7 @@ import java.util.Set;
 
 import com.alibaba.fastjson.JSON;
 import com.yimayhd.erpcenter.common.util.NumberUtil;
+import com.yimayhd.erpcenter.common.util.PageParameterCheckAndDealUtil;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupInfoQueryForCarCar;
 import com.yimayhd.erpcenter.facade.sales.errorcode.OperationErrorCode;
@@ -2222,14 +2223,16 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
     }
 
     @Override
-    public WebResult<List<TourGroupForCarCar>> selectGroupInfoWithArrangedTransAndGuideForCarCar(PageBean<GroupInfoQueryForCarCar> pageBean) {
+    public WebResult<List<TourGroupForCarCar>> selectGroupInfoWithArrangedTransAndGuideForCarCar(PageBean pageBean) {
         logger.info("param pageBean={}", JSON.toJSONString(pageBean));
         WebResult<List<TourGroupForCarCar>> result = new WebResult<List<TourGroupForCarCar>>();
-        if (!NumberUtil.isIntegerValid(pageBean.getPage()) || !NumberUtil.isIntegerValid(pageBean.getPageSize())) {
+        GroupInfoQueryForCarCar paramerter = (GroupInfoQueryForCarCar) pageBean.getParameter();
+        if (StringUtils.isBlank(paramerter.getSupplierName())) {
             logger.error("params error:pageBean={}",JSON.toJSONString(pageBean));
             result.setErrorCode(OperationErrorCode.PARAM_ERROR);
             return result;
         }
+        PageParameterCheckAndDealUtil.pageAndPageSizeCheckAndDealUtil(pageBean);
         List<TourGroupForCarCar> tourGroupForCarCars = tourGroupBiz.selectGroupInfoWithArrangedTransForCarCar(pageBean);
         result.setValue(tourGroupForCarCars);
         return result;
