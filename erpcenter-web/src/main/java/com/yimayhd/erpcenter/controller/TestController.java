@@ -148,12 +148,6 @@ public class TestController {
 		return doubleCarBiz.selectTransportByOrderId(1060);
 	}
 	
-	@RequestMapping(value = "/testSelectTransports")
-	public Object testSelectTransports(){
-
-		return doubleCarBiz.selectTransportByOrderIds("1060,9422,122804,122799");
-	}
-	
 	@RequestMapping(value = "/testGetOrgEmployeeListPage1")
 	public Object testGetOrgEmployeeListPage1(){
 		return platformEmployeeBiz.getOrgEmployeeListPage(5, 1, 100);
