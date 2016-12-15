@@ -21,7 +21,7 @@ public interface TeamGroupFacade {
      * @param findTourGroupByConditionDTO
      * @return
      */
-    public FindTourGroupByConditionResult findTourGroupByConditionLoadModel(FindTourGroupByConditionDTO findTourGroupByConditionDTO,PageBean pageBean);
+    public FindTourGroupByConditionResult findTourGroupByConditionLoadModel(FindTourGroupByConditionDTO findTourGroupByConditionDTO);
 
     public ToAddTeamGroupInfoResult toAddTeamGroupInfo(ToAddTeamGroupInfoDTO toAddTeamGroupInfoDTO);
 

@@ -85,22 +85,9 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
 
 
     @Override
-    public FindTourGroupByConditionResult findTourGroupByConditionLoadModel(FindTourGroupByConditionDTO findTourGroupByConditionDTO,PageBean pageBean1) {
+    public FindTourGroupByConditionResult findTourGroupByConditionLoadModel(FindTourGroupByConditionDTO findTourGroupByConditionDTO) {
         FindTourGroupByConditionResult findTourGroupByConditionResult = new FindTourGroupByConditionResult();
         try {
-            
-           /* pageBean = groupOrderBiz.selectByConListPage(pageBean,
-                    findTourGroupByConditionDTO.getCurBizId(),
-                    findTourGroupByConditionDTO.getDataUserIdSet(), findTourGroupByConditionDTO.getOperatorType());
-            result.setPageBean(pageBean);
-            GroupOrder order = groupOrderBiz.selectTotalByCon(findTourGroupByConditionDTO.getGroupOrder(),
-            		findTourGroupByConditionDTO.getCurBizId(),
-                    findTourGroupByConditionDTO.getDataUserIdSet(), findTourGroupByConditionDTO.getOperatorType());
-            result.setGroupOrder(order);*/
-
-
-           // PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
-
             PageBean pageBean = new PageBean();
             if (findTourGroupByConditionDTO.getPage() == null) {
                 pageBean.setPage(1);
@@ -112,6 +99,7 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
             } else {
                 pageBean.setPageSize(findTourGroupByConditionDTO.getRows());
             }
+
 
             // 如果人员为空并且部门不为空，则取部门下的人id
             if (StringUtils.isBlank(findTourGroupByConditionDTO.getGroupOrder().getSaleOperatorIds())
@@ -147,11 +135,14 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
                     findTourGroupByConditionDTO.getGroupOrder().setEndTime(calendar.getTime().getTime() + "");
                 }
             }
+
             pageBean.setPage(findTourGroupByConditionDTO.getPage());
             pageBean.setParameter(findTourGroupByConditionDTO.getGroupOrder());
+            //返回查询的数据
             pageBean = groupOrderBiz.selectByConListPage(pageBean,
                     findTourGroupByConditionDTO.getCurBizId(),
                     findTourGroupByConditionDTO.getDataUserIdSet(), 0);
+
             Integer pageTotalAudit = 0;
             Integer pageTotalChild = 0;
             Integer pageTotalGuide = 0;
@@ -179,21 +170,25 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
                     pageTotalGuide += groupOrder2.getNumGuide();
                 }
             }
-            findTourGroupByConditionResult.setPageTotalAudit(pageTotalAudit);
-            findTourGroupByConditionResult.setPageTotalChild(pageTotalChild);
-            findTourGroupByConditionResult.setPageTotalGuide(pageTotalGuide);
+
+
             GroupOrder order = groupOrderBiz.selectTotalByCon(findTourGroupByConditionDTO.getGroupOrder(),
                     findTourGroupByConditionDTO.getCurBizId(),
                     findTourGroupByConditionDTO.getDataUserIdSet(), 0);
-            findTourGroupByConditionDTO.setGroupOrder(order);
+
+
+            findTourGroupByConditionResult.setPageTotalAudit(pageTotalAudit);
+            findTourGroupByConditionResult.setPageTotalChild(pageTotalChild);
+            findTourGroupByConditionResult.setPageTotalGuide(pageTotalGuide);
+
+            findTourGroupByConditionResult.setTotalAudit(order == null ? 0 : order.getNumAdult());
+            findTourGroupByConditionResult.setTotalChild(order == null ? 0 : order.getNumChild());
+            findTourGroupByConditionResult.setTotalGuide(order == null ? 0 : order.getNumGuide());
 
             /**
              * 根据组团社id获取组团社名称
              */
-            findTourGroupByConditionResult.setGroupOrderList(result);
             findTourGroupByConditionResult.setPageBean(pageBean);
-            findTourGroupByConditionResult.setGroupOrder(order);
-
         } catch (Exception e) {
             logger.error("获取团队列表数据失败", e);
         }
