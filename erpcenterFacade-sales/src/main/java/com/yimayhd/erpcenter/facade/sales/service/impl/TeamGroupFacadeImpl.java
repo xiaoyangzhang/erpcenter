@@ -176,11 +176,11 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
                     findTourGroupByConditionDTO.getCurBizId(),
                     findTourGroupByConditionDTO.getDataUserIdSet(), 0);
 
-
             findTourGroupByConditionResult.setPageTotalAudit(pageTotalAudit);
             findTourGroupByConditionResult.setPageTotalChild(pageTotalChild);
             findTourGroupByConditionResult.setPageTotalGuide(pageTotalGuide);
 
+            findTourGroupByConditionResult.setGroupOrder(order);
             findTourGroupByConditionResult.setTotalAudit(order == null ? 0 : order.getNumAdult());
             findTourGroupByConditionResult.setTotalChild(order == null ? 0 : order.getNumChild());
             findTourGroupByConditionResult.setTotalGuide(order == null ? 0 : order.getNumGuide());
