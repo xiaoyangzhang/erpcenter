@@ -3658,7 +3658,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			return result;
 		}
 		PageParameterCheckAndDealUtil.pageAndPageSizeCheckAndDealUtil(pageBean);
-		List<GroupOrderForCarCar> groupOrderForCarCars = groupOrderService.selectGroupOrdersInGroupsForCarCar(pageBean);
+		List<GroupOrderForCarCar> groupOrderForCarCars = groupOrderService.selectGroupOrderswithGroupIdSetForCarCar(pageBean);
 		for (GroupOrderForCarCar groupOrder : groupOrderForCarCars) {
 			List<GroupOrder> groupOrderList = groupOrder.getGroupOrderList();
 			for (GroupOrder order : groupOrderList) {

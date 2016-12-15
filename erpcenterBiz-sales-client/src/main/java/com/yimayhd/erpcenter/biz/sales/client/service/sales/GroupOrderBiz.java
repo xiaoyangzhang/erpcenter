@@ -464,7 +464,7 @@ public interface GroupOrderBiz {
 
     public PageBean selectGroupOrderGuestListPageOu(PageBean pageBean, Integer bizId,Set<Integer> set,Integer userRightType,String sidx,String sord);
 
-    List<GroupOrderForCarCar> selectGroupOrdersInGroupsForCarCar(PageBean pageBean);
+    List<GroupOrderForCarCar> selectGroupOrderswithGroupIdSetForCarCar(PageBean pageBean);
 
 }
 
