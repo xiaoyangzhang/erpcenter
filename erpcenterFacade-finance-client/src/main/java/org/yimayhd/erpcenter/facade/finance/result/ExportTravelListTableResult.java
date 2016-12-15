@@ -12,7 +12,7 @@ import java.util.Map;
  * @Auther xueshengdong
  * @Date 2016/12/13 18:50
  */
-public class ExportTravelListTableResult extends BaseResult {
+public class ExportTravelListTableResult extends ResultSupport {
 
     private static final long serialVersionUID = -2157680669110047307L;
     private PageBean pageBean;

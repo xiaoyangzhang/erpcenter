@@ -2,6 +2,7 @@ package org.yimayhd.erpcenter.facade.finance.query;
 
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,7 +13,8 @@ import java.util.Set;
  * @Auther xueshengdong
  * @Date 2016/12/13 18:50
  */
-public class ExportTravelListTableDTO {
+public class ExportTravelListTableDTO implements Serializable {
+    private static final long serialVersionUID = 2667687338405333546L;
     private String sl;
     private String ssl;
     private String rp;
