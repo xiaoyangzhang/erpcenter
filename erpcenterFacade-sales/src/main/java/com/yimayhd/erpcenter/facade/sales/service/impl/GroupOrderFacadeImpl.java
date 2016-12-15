@@ -19,9 +19,7 @@ import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchDeliver
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchOrderGuestResult;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchTransportsResult;
 import com.yimayhd.erpcenter.biz.sys.service.PlatAuthBiz;
-import com.yimayhd.erpcenter.common.util.NumberUtil;
 import com.yimayhd.erpcenter.common.util.PageParameterCheckAndDealUtil;
-import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPort;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupOrderQueryForCarCar;
 import com.yimayhd.erpcenter.dal.sys.po.PlatAuth;
@@ -3664,20 +3662,24 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		for (GroupOrderForCarCar groupOrder : groupOrderForCarCars) {
 			List<GroupOrder> groupOrderList = groupOrder.getGroupOrderList();
 			for (GroupOrder order : groupOrderList) {
-				SearchDeliveryPriceResult orderPricesResult = doubleCarBiz.
-						selectDeliveryPrice(order.getId(), BasicConstants.DEFAULT_PAGE, BasicConstants.BATCH_QUERY_PAGE_SIZE);
-				order.setBookingOrderPrices(orderPricesResult.getPriceList());
-
-				SearchOrderGuestResult orderGuestResult = doubleCarBiz.
-						selectOrderGuest(order.getId(), BasicConstants.DEFAULT_PAGE, BasicConstants.BATCH_QUERY_PAGE_SIZE);
-				order.setOrderGuests(orderGuestResult.getGuestList());
-
-				SearchTransportsResult transResult = doubleCarBiz.selectTransportByOrderId(order.getId());
-				order.setOrderTrans(transResult.getTransPorts());
+				setPriceInfoAndGuestsInfoAndPickUpServiceInfoInOneOrder(order);
 			}
 		}
 		result.setValue(groupOrderForCarCars);
 		return result;
+	}
+
+	private void setPriceInfoAndGuestsInfoAndPickUpServiceInfoInOneOrder(GroupOrder order) {
+		SearchDeliveryPriceResult orderPricesResult = doubleCarBiz.
+                selectDeliveryPrice(order.getId(), BasicConstants.DEFAULT_PAGE, BasicConstants.BATCH_QUERY_PAGE_SIZE);
+		order.setBookingOrderPrices(orderPricesResult.getPriceList());
+
+		SearchOrderGuestResult orderGuestResult = doubleCarBiz.
+                selectOrderGuest(order.getId(), BasicConstants.DEFAULT_PAGE, BasicConstants.BATCH_QUERY_PAGE_SIZE);
+		order.setOrderGuests(orderGuestResult.getGuestList());
+
+		SearchTransportsResult orderdPickUpServiceResult = doubleCarBiz.selectTransportByOrderId(order.getId());
+		order.setOrderTrans(orderdPickUpServiceResult.getTransPorts());
 	}
 
 }

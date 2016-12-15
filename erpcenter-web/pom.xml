@@ -204,7 +204,7 @@
 		</dependency>
 
 	</dependencies>
-	<build>
+	<!--<build>
 		<finalName>erpcenter-web</finalName>
 		<plugins>
 			<plugin>
@@ -228,5 +228,5 @@
 				</configuration>
 			</plugin>
 		</plugins>
-	</build>
+	</build>-->
 </project>
