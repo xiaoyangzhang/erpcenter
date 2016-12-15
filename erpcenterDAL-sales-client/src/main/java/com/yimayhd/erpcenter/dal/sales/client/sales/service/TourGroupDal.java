@@ -521,5 +521,5 @@ public interface TourGroupDal {
 	List<TourGroup> selecGroupBefAutoMergerGroup(Integer bizId,String startTime,Integer productId);
 	
 	PageBean getPushDeliveryList(PageBean pageBean,Integer bizId);
-	List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(PageBean<GroupInfoQueryForCarCar> pageBean);
+	List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(PageBean pageBean);
 }

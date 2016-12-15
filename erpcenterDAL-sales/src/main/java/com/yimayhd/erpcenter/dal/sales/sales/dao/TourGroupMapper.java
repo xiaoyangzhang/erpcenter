@@ -301,5 +301,5 @@ public interface TourGroupMapper {
 	List<BookingGroup> selectPushDeliveryListPage(@Param("page") PageBean pageBean,
                                                   @Param("bizId") Integer bizId);
 
-	List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(@Param("page") PageBean<GroupInfoQueryForCarCar> pageBean);
+	List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(@Param("page") PageBean pageBean);
 }

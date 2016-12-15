@@ -1227,7 +1227,7 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
 	}
 
     @Override
-    public List<GroupOrderForCarCar> selectGroupOrdersInGroupsForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean) {
+    public List<GroupOrderForCarCar> selectGroupOrderswithGroupIdSetForCarCar(PageBean pageBean) {
         List<GroupOrderForCarCar> groupOrderForCarCar = groupOrderDal.selectGroupOrdersInGroupsForCarCar(pageBean);
 
         return groupOrderForCarCar;

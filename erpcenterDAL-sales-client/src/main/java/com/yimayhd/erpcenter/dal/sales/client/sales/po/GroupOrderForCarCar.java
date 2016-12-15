@@ -1,5 +1,9 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.po;
 
+
+import com.yimayhd.erpcenter.dal.sales.client.car.po.BookingDeliveryPrice;
+import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPort;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,7 +15,7 @@ public class GroupOrderForCarCar implements Serializable {
 
     private List<GroupOrder> groupOrderList;
     private String groupCode;
-//    private String guestReresentativeName;
+
 
     public List<GroupOrder> getGroupOrderList() {
         return groupOrderList;
@@ -29,11 +33,4 @@ public class GroupOrderForCarCar implements Serializable {
         this.groupCode = groupCode;
     }
 
-//    public String getGuestReresentativeName() {
-//        return guestReresentativeName;
-//    }
-//
-//    public void setGuestReresentativeName(String guestReresentativeName) {
-//        this.guestReresentativeName = guestReresentativeName;
-//    }
 }

@@ -14,8 +14,12 @@ import java.util.Map;
 import java.util.Set;
 
 import com.alibaba.fastjson.JSON;
+import com.yimayhd.erpcenter.biz.sales.client.service.car.DoubleCarBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchDeliveryPriceResult;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchOrderGuestResult;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchTransportsResult;
 import com.yimayhd.erpcenter.biz.sys.service.PlatAuthBiz;
-import com.yimayhd.erpcenter.common.util.NumberUtil;
+import com.yimayhd.erpcenter.common.util.PageParameterCheckAndDealUtil;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupOrderQueryForCarCar;
 import com.yimayhd.erpcenter.dal.sys.po.PlatAuth;
@@ -107,6 +111,7 @@ import com.yimayhd.erpresource.biz.service.SupplierGuideBiz;
 import com.yimayhd.erpresource.dal.po.SupplierContactMan;
 import com.yimayhd.erpresource.dal.po.SupplierGuide;
 import com.yimayhd.erpresource.dal.po.SupplierInfo;
+import org.springframework.util.CollectionUtils;
 
 public class GroupOrderFacadeImpl implements GroupOrderFacade {
 	private static final Logger log = LoggerFactory.getLogger("GroupOrderFacadeImpl");
@@ -191,7 +196,8 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 
 	@Autowired
 	private PlatAuthBiz platAuthBiz;
-
+	@Autowired
+	private DoubleCarBiz doubleCarBiz;
 
 	@Override
 	public ToOrderLockListResult toOrderLockList(Integer bizId) {
@@ -3642,17 +3648,38 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 	}
 
 	@Override
-	public WebResult<List<GroupOrderForCarCar>> selectGroupOrdersInGroupsForCarCar(PageBean<GroupOrderQueryForCarCar> pageBean) {
+	public WebResult<List<GroupOrderForCarCar>> selectGroupOrdersInGroupsForCarCar(PageBean pageBean) {
 		log.info("params:pageBean={}", JSON.toJSONString(pageBean));
 		WebResult<List<GroupOrderForCarCar>> result = new WebResult<List<GroupOrderForCarCar>>();
-		if (!NumberUtil.isIntegerValid(pageBean.getPage()) || !NumberUtil.isIntegerValid(pageBean.getPageSize())) {
+		GroupOrderQueryForCarCar parameter = (GroupOrderQueryForCarCar) pageBean.getParameter();
+		if (CollectionUtils.isEmpty(parameter.getGroupIdSet())) {
 			log.error("params error:pageBean={}",JSON.toJSONString(pageBean));
 			result.setErrorCode(OperationErrorCode.PARAM_ERROR);
 			return result;
 		}
-		List<GroupOrderForCarCar> groupOrderForCarCar = groupOrderService.selectGroupOrdersInGroupsForCarCar(pageBean);
-		result.setValue(groupOrderForCarCar);
+		PageParameterCheckAndDealUtil.pageAndPageSizeCheckAndDealUtil(pageBean);
+		List<GroupOrderForCarCar> groupOrderForCarCars = groupOrderService.selectGroupOrderswithGroupIdSetForCarCar(pageBean);
+		for (GroupOrderForCarCar groupOrder : groupOrderForCarCars) {
+			List<GroupOrder> groupOrderList = groupOrder.getGroupOrderList();
+			for (GroupOrder order : groupOrderList) {
+				selectAndSetPriceInfoAndGuestsInfoAndPickUpServiceInfoInOneOrder(order);
+			}
+		}
+		result.setValue(groupOrderForCarCars);
 		return result;
+	}
+
+	private void selectAndSetPriceInfoAndGuestsInfoAndPickUpServiceInfoInOneOrder(GroupOrder order) {
+		SearchDeliveryPriceResult orderPricesResult = doubleCarBiz.
+                selectDeliveryPrice(order.getId(), BasicConstants.DEFAULT_PAGE, BasicConstants.BATCH_QUERY_PAGE_SIZE);
+		order.setBookingOrderPrices(orderPricesResult.getPriceList());
+
+		SearchOrderGuestResult orderGuestResult = doubleCarBiz.
+                selectOrderGuest(order.getId(), BasicConstants.DEFAULT_PAGE, BasicConstants.BATCH_QUERY_PAGE_SIZE);
+		order.setOrderGuests(orderGuestResult.getGuestList());
+
+		SearchTransportsResult orderdPickUpServiceResult = doubleCarBiz.selectTransportByOrderId(order.getId());
+		order.setOrderTrans(orderdPickUpServiceResult.getTransPorts());
 	}
 
 }

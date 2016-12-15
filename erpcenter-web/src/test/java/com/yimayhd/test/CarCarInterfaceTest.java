@@ -64,7 +64,7 @@ public class CarCarInterfaceTest {
         set.add(14186);
         car.setGroupIdSet(set);
         pageBean.setParameter(car);
-        WebResult<List<GroupOrderForCarCar>> result = groupOrderFacade.selectGroupOrdersInOneGroupForCarCar(pageBean);
+        WebResult<List<GroupOrderForCarCar>> result = groupOrderFacade.selectGroupOrdersInGroupsForCarCar(pageBean);
     }
 
 }
