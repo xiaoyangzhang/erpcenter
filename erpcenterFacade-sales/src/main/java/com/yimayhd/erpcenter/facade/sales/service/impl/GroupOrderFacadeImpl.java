@@ -3662,14 +3662,14 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		for (GroupOrderForCarCar groupOrder : groupOrderForCarCars) {
 			List<GroupOrder> groupOrderList = groupOrder.getGroupOrderList();
 			for (GroupOrder order : groupOrderList) {
-				setPriceInfoAndGuestsInfoAndPickUpServiceInfoInOneOrder(order);
+				selectAndSetPriceInfoAndGuestsInfoAndPickUpServiceInfoInOneOrder(order);
 			}
 		}
 		result.setValue(groupOrderForCarCars);
 		return result;
 	}
 
-	private void setPriceInfoAndGuestsInfoAndPickUpServiceInfoInOneOrder(GroupOrder order) {
+	private void selectAndSetPriceInfoAndGuestsInfoAndPickUpServiceInfoInOneOrder(GroupOrder order) {
 		SearchDeliveryPriceResult orderPricesResult = doubleCarBiz.
                 selectDeliveryPrice(order.getId(), BasicConstants.DEFAULT_PAGE, BasicConstants.BATCH_QUERY_PAGE_SIZE);
 		order.setBookingOrderPrices(orderPricesResult.getPriceList());
