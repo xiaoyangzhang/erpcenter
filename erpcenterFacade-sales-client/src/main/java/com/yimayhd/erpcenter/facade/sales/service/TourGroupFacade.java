@@ -70,5 +70,7 @@ public interface TourGroupFacade {
     public BookingProfitTableResult operatorSummaryTable(TourGroup tour,Integer bizId,Set<Integer> userIdSet);
     public BookingProfitTableResult toProfitSaleExcel(GroupOrder groupOrder,Integer bizId,Set<Integer> userIdSet);
 
+    public ToProfitExcelResult toProfitExcel(GroupOrder groupOrder,Integer bizId,Set<Integer> dataUserIdSet);
+    public ToProfitExcelResult getGroupIdsByTravelExportStatus(Integer c,Integer bizId);
 
 }

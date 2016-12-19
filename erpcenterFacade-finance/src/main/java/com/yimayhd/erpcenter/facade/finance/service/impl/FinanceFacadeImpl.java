@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.facade.finance.service.impl;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -11,54 +12,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 import org.yimayhd.erpcenter.facade.finance.errorcode.FinanceErrorCode;
-import org.yimayhd.erpcenter.facade.finance.query.AduditStatisticsListDTO;
-import org.yimayhd.erpcenter.facade.finance.query.AuditCommDTO;
-import org.yimayhd.erpcenter.facade.finance.query.AuditDTO;
-import org.yimayhd.erpcenter.facade.finance.query.AuditListDTO;
-import org.yimayhd.erpcenter.facade.finance.query.AuditShopDTO;
-import org.yimayhd.erpcenter.facade.finance.query.CheckBillDTO;
-import org.yimayhd.erpcenter.facade.finance.query.DiatributeBillDTO;
-import org.yimayhd.erpcenter.facade.finance.query.FinAuditDTO;
-import org.yimayhd.erpcenter.facade.finance.query.IncomeJoinTableListDTO;
-import org.yimayhd.erpcenter.facade.finance.query.IncomeOrPayDTO;
-import org.yimayhd.erpcenter.facade.finance.query.PayDTO;
-import org.yimayhd.erpcenter.facade.finance.query.PushWapListTableDTO;
-import org.yimayhd.erpcenter.facade.finance.query.QuerySettleCommissionDTO;
-import org.yimayhd.erpcenter.facade.finance.query.QuerySettleListDTO;
-import org.yimayhd.erpcenter.facade.finance.query.QueryShopCommissionStatsDTO;
-import org.yimayhd.erpcenter.facade.finance.query.ReceiveOrderListSelectDTO;
-import org.yimayhd.erpcenter.facade.finance.query.SaveDistributeBillDTO;
-import org.yimayhd.erpcenter.facade.finance.query.SaveVerifyBillDTO;
-import org.yimayhd.erpcenter.facade.finance.query.SettleListPageDTO;
-import org.yimayhd.erpcenter.facade.finance.query.SettleSealListDTO;
-import org.yimayhd.erpcenter.facade.finance.query.StatementCheckPreviewDTO;
-import org.yimayhd.erpcenter.facade.finance.query.SubjectSummaryDTO;
-import org.yimayhd.erpcenter.facade.finance.query.ToBookingShopVerifyListDTO;
-import org.yimayhd.erpcenter.facade.finance.query.UnsealDTO;
-import org.yimayhd.erpcenter.facade.finance.query.VerifyBillDTO;
-import org.yimayhd.erpcenter.facade.finance.result.CheckBillResult;
-import org.yimayhd.erpcenter.facade.finance.result.DiatributeBillResult;
-import org.yimayhd.erpcenter.facade.finance.result.IncomeOrPaytResult;
-import org.yimayhd.erpcenter.facade.finance.result.QueryPushWapListTableResult;
-import org.yimayhd.erpcenter.facade.finance.result.QuerySettleCommissionResult;
-import org.yimayhd.erpcenter.facade.finance.result.QuerySettleListResult;
-import org.yimayhd.erpcenter.facade.finance.result.QueryShopCommissionStatsResult;
-import org.yimayhd.erpcenter.facade.finance.result.ReceiveOrderListSelectResult;
-import org.yimayhd.erpcenter.facade.finance.result.ResultSupport;
-import org.yimayhd.erpcenter.facade.finance.result.SettleCommissionListResult;
-import org.yimayhd.erpcenter.facade.finance.result.SettleListPageResult;
-import org.yimayhd.erpcenter.facade.finance.result.SettleSealListResult;
-import org.yimayhd.erpcenter.facade.finance.result.StatementCheckPreviewResult;
-import org.yimayhd.erpcenter.facade.finance.result.SubjectSummaryResult;
-import org.yimayhd.erpcenter.facade.finance.result.ToBookingShopVerifyListlResult;
-import org.yimayhd.erpcenter.facade.finance.result.TourGroupDetiailsResult;
-import org.yimayhd.erpcenter.facade.finance.result.VerifyBillResult;
-import org.yimayhd.erpcenter.facade.finance.result.ViewShopCommissionStatsListResult;
+import org.yimayhd.erpcenter.facade.finance.query.*;
+import org.yimayhd.erpcenter.facade.finance.result.*;
 import org.yimayhd.erpcenter.facade.finance.service.FinanceFacade;
 
 import com.alibaba.fastjson.JSON;
@@ -75,10 +36,6 @@ import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopDetailBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierDetailBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.CommonSaleBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderPriceBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SysBizBankAccountBiz;
 import com.yimayhd.erpcenter.common.util.DateUtils;
@@ -166,7 +123,14 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	
 	@Autowired
 	private BookingDeliveryBiz bookingDeliveryBiz;
-	
+
+	@Autowired
+	private GroupRouteBiz groupRouteBiz;
+
+	@Autowired
+	private GroupOrderGuestBiz groupOrderGuestBiz;
+
+
 	/**
 	 * 此方法用来维护团金额的一致性
 	 * @param request
@@ -1995,5 +1959,130 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		result.setSum(sumMap);
 		
 		return result;
+	}
+
+	@Override
+	public ExportTravelListTableResult exportTravelListTable(ExportTravelListTableDTO exportTravelListTableDTO) {
+		ExportTravelListTableResult exportTravelListTableResult = new ExportTravelListTableResult();
+		PageBean pb = new PageBean();
+		pb.setPage(exportTravelListTableDTO.getPage());
+		if (exportTravelListTableDTO.getPageSize() == null) {
+			exportTravelListTableDTO.setPageSize(Constants.PAGESIZE);
+		}
+		pb.setPageSize(exportTravelListTableDTO.getPageSize());
+		//如果人员为空并且部门不为空，则取部门下的人id
+		if(StringUtils.isBlank(exportTravelListTableDTO.getGroup().getSaleOperatorIds()) && StringUtils.isNotBlank(exportTravelListTableDTO.getGroup().getOrgIds())){
+			Set<Integer> set = new HashSet<Integer>();
+			String[] orgIdArr = exportTravelListTableDTO.getGroup().getOrgIds().split(",");
+			for(String orgIdStr : orgIdArr){
+				set.add(Integer.valueOf(orgIdStr));
+			}
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(exportTravelListTableDTO.getBizId(), set);
+			String salesOperatorIds="";
+			for(Integer usrId : set){
+				salesOperatorIds+=usrId+",";
+			}
+			if(!salesOperatorIds.equals("")){
+				exportTravelListTableDTO.getGroup().setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+			}
+		}
+		Map<String,Object> pms  = exportTravelListTableDTO.getParameters();
+		if(null!=exportTravelListTableDTO.getGroup().getSaleOperatorIds() && !"".equals(exportTravelListTableDTO.getGroup().getSaleOperatorIds())){
+			pms.put("operator_id", exportTravelListTableDTO.getGroup().getSaleOperatorIds());
+		}
+		pms.put("set", exportTravelListTableDTO.getUserIdSet());
+		pb.setParameter(pms);
+		pb = getCommonService(exportTravelListTableDTO.getSvc()).queryListPage(exportTravelListTableDTO.getSl(), pb);
+		exportTravelListTableResult.setPageBean(pb);
+
+		Map<Integer, String> guideMap = new HashMap<Integer, String>();
+		List<Map> results = pb.getResult();
+		Map item = null;
+		for (int i = 0; i < results.size(); i++) {
+			item = results.get(i);
+			Integer groupId = Integer.parseInt(item.get("id").toString());
+			List<BookingGuide> bookingGuides = bookingGuideBiz.selectGuidesByGroupId(groupId);
+			StringBuffer s = new StringBuffer();
+			for (int j = 0; j < bookingGuides.size(); j++) {
+				if (j == (bookingGuides.size() - 1)) {
+					s.append(bookingGuides.get(j).getGuideName());
+				} else {
+					s.append(bookingGuides.get(j).getGuideName() + ",");
+				}
+				item.put("userName", bookingGuides.get(j).getUserName());
+			}
+			guideMap.put(groupId, s.toString());
+
+			BigDecimal totalIncome = NumberUtil.parseObj2Num(item.get("total_income"));
+			BigDecimal totalCost = NumberUtil.parseObj2Num(item.get("total_cost"));
+
+			//团收入 = 团收入 - 购物汇总
+			InfoBean shop = financeBiz.statsShopWithCommInfoBean(groupId);
+			totalIncome = totalIncome.subtract(shop.getNum());
+
+			item.put("total_income", totalIncome);
+			item.put("total_profit", totalIncome.subtract(totalCost));
+
+		}
+		exportTravelListTableResult.setGuideMap(guideMap);
+
+		// 总计查询
+		if (StringUtils.isNotBlank(exportTravelListTableDTO.getSsl())) {
+			Map pm = (Map) pb.getParameter();
+			pm.put("parameter", pm);
+			exportTravelListTableResult.setSum(getCommonService(exportTravelListTableDTO.getSvc()).queryOne(exportTravelListTableDTO.getSsl(), pm));
+		}
+		return exportTravelListTableResult;
+	}
+
+	@Override
+	public ExportTravelListTableResult queryAuditGroupExcelList(ExportTravelListTableDTO exportTravelListTableDTO) {
+		ExportTravelListTableResult  exportTravelListTableResult = new ExportTravelListTableResult();
+		Map<String, Object> pm = exportTravelListTableDTO.getParameters();
+		List<Map<String, Object>> orderList = getCommonService(null).queryList("fin.selectOrderList", pm);
+
+		//获取地接社
+		List<Map<String, Object>> deliveryList = getCommonService(null).queryList("fin.selectDeliveryList", pm);
+
+		//获取地接社，餐厅，酒店，车队，景区，其他，保险
+		List<Map<String, Object>> supplierList = getCommonService(null).queryList("fin.selectSupplierList", pm);
+		//其他收入
+		List<Map<String, Object>> otherIncomeList = getCommonService(null).queryList("fin.selectOtherIncomeList", pm);
+		exportTravelListTableResult.setOrderList(orderList);
+		exportTravelListTableResult.setDeliveryList(deliveryList);
+		exportTravelListTableResult.setSupplierList(supplierList);
+		exportTravelListTableResult.setOrderList(otherIncomeList);
+
+		return exportTravelListTableResult;
+	}
+
+	@Override
+	public ExportTravelListTableResult saleDataTravelExport(ExportTravelListTableDTO exportTravelListTableDTO) {
+		ExportTravelListTableResult  exportTravelListTableResult = new ExportTravelListTableResult();
+		Map<String,Object> model = new HashMap<String,Object>();
+		Map<String,Object> requestParams = exportTravelListTableDTO.getParameters();
+		List<Integer> groupIds = exportTravelListTableDTO.getGroupIds();
+		String[] paramsGroupids = exportTravelListTableDTO.getParamsGroupids();
+
+		List resultGroupsMap = new ArrayList();
+		if(null != groupIds && groupIds.size() > 0){
+			for(Integer groupid:groupIds){
+				Map<String,Object> resultMap = new HashMap<String,Object>();
+				//团基本信息
+				resultMap.put("groupInfo",tourGroupBiz.selectByPrimaryKey(groupid));
+				//团行程路线
+				resultMap.put("routes", groupRouteBiz.selectByGroupId(groupid));
+				//团全部人员
+				resultMap.put("guests",groupOrderGuestBiz.selectAllOrderGuestByGroupId(groupid));
+				resultGroupsMap.add(resultMap);
+			}
+			model.put("groupsData",resultGroupsMap);
+			model.put("requestParam",requestParams);
+			model.put("setupTime",new Date());
+			exportTravelListTableResult.setModel(model);
+		}
+
+		tourGroupBiz.updateTourGroupTravelExportStatus(groupIds,1);
+		return exportTravelListTableResult;
 	}
 }

@@ -191,4 +191,6 @@ public class BasicConstants {
     //分页默认
     public static int DEFAULT_PAGE = 1;
     public static int DEFAULT_PAGE_SIZE = 15;
+
+	public static String DATA_TRAVEL_ACCOUNT = "DATA_TRAVEL_ACCOUNT";
 }

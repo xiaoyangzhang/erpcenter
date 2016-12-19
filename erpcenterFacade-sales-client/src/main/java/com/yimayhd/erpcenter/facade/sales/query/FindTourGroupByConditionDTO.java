@@ -17,6 +17,9 @@ public class FindTourGroupByConditionDTO implements Serializable {
     private int CurBizId;
     private Set<Integer> dataUserIdSet;
     private Integer operatorType;
+    private Integer rows;
+    private Integer pageSize;
+    private Integer page;
     
     public Integer getOperatorType() {
 		return operatorType;
@@ -48,5 +51,29 @@ public class FindTourGroupByConditionDTO implements Serializable {
 
     public void setGroupOrder(GroupOrder groupOrder) {
         this.groupOrder = groupOrder;
+    }
+
+    public Integer getRows() {
+        return rows;
+    }
+
+    public void setRows(Integer rows) {
+        this.rows = rows;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
     }
 }

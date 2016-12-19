@@ -524,4 +524,17 @@ public interface TourGroupBiz {
 	List<TourGroup> selecGroupBefAutoMergerGroup(Integer bizId,String startTime,Integer productId);
 
 	PageBean getPushDeliveryList(PageBean pageBean,Integer bizId);
+	/**
+	 *根据travelExportStatus 状态获取团ids集合
+	 * @author daixiaoman
+	 * @date 2016年12月5日 上午11:25:11
+	 */
+	public List<Integer> getGroupIdsByTravelExportStatus(Integer travelExportStatus,Integer bizId);
+
+	/**
+	 * 更新导出状态
+	 * @author daixiaoman
+	 * @date 2016年12月6日 上午11:11:30
+	 */
+	public void updateTourGroupTravelExportStatus(List<Integer> groupIds,Integer status);
 }

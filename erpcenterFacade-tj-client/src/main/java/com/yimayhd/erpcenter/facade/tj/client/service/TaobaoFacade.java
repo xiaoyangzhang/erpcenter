@@ -1,27 +1,13 @@
 package com.yimayhd.erpcenter.facade.tj.client.service;
 
-import java.text.ParseException;
-import java.util.List;
-
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.facade.tj.client.query.AddSivaInfoDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.ChangePriceDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.GroupOrderGuestDataListDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
-import com.yimayhd.erpcenter.facade.tj.client.query.PresellTaobaoOriginalOrderDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.PushTradeQueryDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.SaveSpecialGroupDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.ShopSalesStatisticsQueryDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListByOpDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListTableDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOriginalOrderTableDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.ToEditTaobaoOrderDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.ToSaleGuestListExcelDTO;
+import com.yimayhd.erpcenter.facade.tj.client.query.*;
 import com.yimayhd.erpcenter.facade.tj.client.result.*;
 
-import org.springframework.ui.Model;
+import java.text.ParseException;
+import java.util.List;
+import java.util.Map;
 
 public interface TaobaoFacade{
 	
@@ -49,6 +35,12 @@ public interface TaobaoFacade{
 	 * 保存订单
 	 */
 	public SaveSpecialGroupResult saveSpecialGroup(SaveSpecialGroupDTO saveSpecialGroupDTO);
+
+	/**
+	 * 保存订单需要的日志信息
+	 * @return
+	 */
+	public WebResult<Map<String,Object>> getSaveSpecialGroupNeed(Integer groupOrderId);
 	
 	/**
 	 * 淘宝订单导入页面table
@@ -181,8 +173,6 @@ public interface TaobaoFacade{
     /**
      * 产品利润统计
      *
-     * @param request
-     * @param model
      * @return
      */
 	public TaobaoOrderListByOpDTO productProfitStatistics(TaobaoOrderListByOpDTO taobaoOrderListByOpDTO);
@@ -193,14 +183,16 @@ public interface TaobaoFacade{
 	
 	/**
      * JqGrid 查询
-     * @param request
-     * @param model
-     * @param groupOrder
-     * @param rows
-     * @param pageSize
-     * @param page
-     * @param userRightType
      * @return
      */
 	public GroupOrderGuestDataListDTO groupOrderGuestDataList(GroupOrderGuestDataListDTO groupOrderGuestDataListDTO);
+
+	public GroupOrderGuestDataListDTO taobaoOrderList_tableData(TaobaoOrderListTableDTO taobaoOrderListTableDTO);
+
+	public TaobaoOrderListTableDTO taobaoOrderList_PostFooter(TaobaoOrderListTableDTO taobaoOrderListTableDTO);
+
+	public WebResult<Map<String,String>> PaymentStatisticsList(Integer bizId);
+	public WebResult<PageBean<GroupOrder>> PaymentStatisticsListData(TaobaoOrderListTableDTO taobaoOrderListTableDTO);
+
+	public WebResult<PageBean<GroupOrder>> toPaymentExcel(Map<String, Object> pm ,String saleOperatorIds,String orgIds ,Integer bizId);
 }

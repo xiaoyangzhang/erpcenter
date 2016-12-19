@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.facade.sales.query.*;
+import com.yimayhd.erpcenter.facade.sales.result.ToFitGroupTableResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,10 +30,6 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.FitGroupInfoVO;
-import com.yimayhd.erpcenter.facade.sales.query.FitGroupInfoQueryDTO;
-import com.yimayhd.erpcenter.facade.sales.query.FitGroupInfoUpdateDTO;
-import com.yimayhd.erpcenter.facade.sales.query.FitTotalSKGroupQueryDTO;
-import com.yimayhd.erpcenter.facade.sales.query.FitUpdateTourGroupDTO;
 import com.yimayhd.erpcenter.facade.sales.query.grouporder.ToSecImpNotGroupListDTO;
 import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
 import com.yimayhd.erpcenter.facade.sales.result.FitGroupInfoQueryResult;
@@ -78,14 +76,14 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 		Set<Integer> userIdSet = totalSKGroupQueryDTO.getUserIdSet();
 		
 		if (null == tourGroup.getStartTime() && null == tourGroup.getEndTime()) {
-//			Calendar c = Calendar.getInstance();
-//			int year = c.get(Calendar.YEAR);
-//			int month = c.get(Calendar.MONTH);
-			//SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//			c.set(year, month, 1, 0, 0, 0);
-//			tourGroup.setStartTime(c.getTime());
-//			c.set(year, month, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-//			tourGroup.setEndTime(c.getTime());
+			Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			c.set(year, month, 1, 0, 0, 0);
+			tourGroup.setStartTime(c.getTime());
+			c.set(year, month, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			tourGroup.setEndTime(c.getTime());
 			tourGroup.setStartTime(DateUtils.fmt(DateUtils.getMonthFirstDay(), "yyyy-MM-dd"));
 			tourGroup.setEndTime(DateUtils.fmt(DateUtils.getMonthLastDay(), "yyyy-MM-dd"));
 		}
@@ -301,5 +299,130 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 		result.setPp(pp);
 		
 		return result;
+	}
+
+	@Override
+	public ToFitGroupTableResult toFitGroupTable(ToFitGroupTableDTO toFitGroupTableDTO) {
+		ToFitGroupTableResult toFitGroupTableResult = new ToFitGroupTableResult();
+		PageBean pageBean = new PageBean();
+		if (toFitGroupTableDTO.getPage() == null) {
+			pageBean.setPage(1);
+		} else {
+			pageBean.setPage(toFitGroupTableDTO.getPage());
+		}
+		if (toFitGroupTableDTO.getPageSize() == null) {
+			pageBean.setPageSize(Constants.PAGESIZE);
+		} else {
+			pageBean.setPageSize(toFitGroupTableDTO.getRows());
+		}
+
+		if (null == toFitGroupTableDTO.getTourGroup().getStartTime() && null == toFitGroupTableDTO.getTourGroup().getEndTime()) {
+			Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			c.set(year, month, 1, 0, 0, 0);
+			toFitGroupTableDTO.getTourGroup().setStartTime(c.getTime());
+			c.set(year, month, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			toFitGroupTableDTO.getTourGroup().setEndTime(c.getTime());
+
+		}
+		if (null == toFitGroupTableDTO.getTourGroup().getGroupState()) {
+			toFitGroupTableDTO.getTourGroup().setGroupState(-2);
+		}
+
+		// 如果人员为空并且部门不为空，则取部门下的人id
+		if (StringUtils.isBlank(toFitGroupTableDTO.getTourGroup().getOperatorIds())
+				&& StringUtils.isNotBlank(toFitGroupTableDTO.getTourGroup().getOrgIds())) {
+			Set<Integer> set = new HashSet<Integer>();
+			String[] orgIdArr = toFitGroupTableDTO.getTourGroup().getOrgIds().split(",");
+			for (String orgIdStr : orgIdArr) {
+				set.add(Integer.valueOf(orgIdStr));
+			}
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(
+					toFitGroupTableDTO.getCurBizId(), set);
+			String operatorIds = "";
+			for (Integer usrId : set) {
+				operatorIds += usrId + ",";
+			}
+			if (!operatorIds.equals("")) {
+				toFitGroupTableDTO.getTourGroup().setOperatorIds(operatorIds.substring(0,
+						operatorIds.length() - 1));
+			}
+		}
+		pageBean.setParameter(toFitGroupTableDTO.getTourGroup());
+		pageBean = tourGroupBiz.selectSKGroupListPage(pageBean,
+				toFitGroupTableDTO.getCurBizId(),
+				toFitGroupTableDTO.getUserIdSet());
+
+		List<TourGroup> result = pageBean.getResult();
+		if (result != null && result.size() > 0) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			for (TourGroup t : result) {
+				if (t.getCreateTime() != null) {
+					Long createTime = t.getCreateTime();
+					String dateStr = sdf.format(createTime);
+					t.setCreateTimeStr(dateStr);
+				}
+				if (t.getUpdateTime() != null) {
+					Long updateTime = t.getUpdateTime();
+					String dateStr = sdf.format(updateTime);
+					t.setUpdateTimeStr(dateStr);
+				} else {
+					t.setUpdateTimeStr("无");
+					t.setUpdateName("无");
+				}
+				List<BookingGuide> guideList = bookingGuideBiz.selectGuidesByGroupId(t.getId());
+				t.setGuideList(guideList);
+			}
+		}
+		toFitGroupTableResult.setPageBean(pageBean);
+		return toFitGroupTableResult;
+	}
+
+	@Override
+	public ToFitGroupTableResult toSelectTotalPerson(ToFitGroupTableDTO toFitGroupTableDTO) {
+		ToFitGroupTableResult toFitGroupTableResult = new ToFitGroupTableResult();
+
+		if (null == toFitGroupTableDTO.getTourGroup().getStartTime() && null == toFitGroupTableDTO.getTourGroup().getEndTime()) {
+			Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			c.set(year, month, 1, 0, 0, 0);
+			toFitGroupTableDTO.getTourGroup().setStartTime(c.getTime());
+			c.set(year, month, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+			toFitGroupTableDTO.getTourGroup().setEndTime(c.getTime());
+
+		}
+		if (null == toFitGroupTableDTO.getTourGroup().getGroupState()) {
+			toFitGroupTableDTO.getTourGroup().setGroupState(-2);
+		}
+
+		// 如果人员为空并且部门不为空，则取部门下的人id
+		if (StringUtils.isBlank(toFitGroupTableDTO.getTourGroup().getOperatorIds())
+				&& StringUtils.isNotBlank(toFitGroupTableDTO.getTourGroup().getOrgIds())) {
+			Set<Integer> set = new HashSet<Integer>();
+			String[] orgIdArr = toFitGroupTableDTO.getTourGroup().getOrgIds().split(",");
+			for (String orgIdStr : orgIdArr) {
+				set.add(Integer.valueOf(orgIdStr));
+			}
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(
+					toFitGroupTableDTO.getCurBizId(), set);
+			String operatorIds = "";
+			for (Integer usrId : set) {
+				operatorIds += usrId + ",";
+			}
+			if (!operatorIds.equals("")) {
+				toFitGroupTableDTO.getTourGroup().setOperatorIds(operatorIds.substring(0,
+						operatorIds.length() - 1));
+			}
+		}
+
+		TourGroup group = tourGroupBiz.selectTotalSKGroup(toFitGroupTableDTO.getTourGroup(),
+				toFitGroupTableDTO.getCurBizId(),
+				toFitGroupTableDTO.getUserIdSet());
+		toFitGroupTableResult.setGroup(group);
+		return toFitGroupTableResult;
 	}
 }

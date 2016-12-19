@@ -8,6 +8,7 @@ import com.yimayhd.erpcenter.dal.sales.client.query.vo.DepartmentOrderResult;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestCondition;
 import com.yimayhd.erpcenter.dal.sales.client.query.vo.ProductGuestStaticsVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorOrderStatic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SaleOperatorVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalePrice;
@@ -532,5 +533,17 @@ public interface GroupOrderMapper {
 	List<GroupOrder>selectMonthlyReportStatistics(@Param("page") PageBean<GroupOrder> pageBean, @Param("bizId") Integer bizId, @Param("set") Set<Integer> set);
 	
 	List<GroupOrder>selectProductProfitStatisticsListPage(@Param("page") PageBean<GroupOrder> pageBean,@Param("bizId") Integer bizId);
+    /**
+     * 根据团id 获取旅游团的所有的游客
+     * @author daixiaoman
+     * @date 2016年12月5日 上午10:00:19
+     */
+    List<GroupOrderGuest> selectAllOrderGuestByGroupId(int groupId);
+
+    /**
+     * 应收应付统计
+     * @author zhoumi
+     */
+    List<GroupOrder>selectPaymentStatisticsListPage(@Param("page") PageBean<GroupOrder> pageBean,@Param("bizId") Integer bizId);
 	
 }

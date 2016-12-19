@@ -98,6 +98,7 @@
 		<if test="parameter.group_state == null">and group_state in(1,3,4) </if>
 		<if test="parameter.audit_user != null">and audit_user = #{parameter.audit_user} </if>
 		<if test="parameter.wap_type != null">and wap_type = #{parameter.wap_type} </if>
+		<if test="parameter.travel_export_status != null and parameter.travel_export_status != ''">and travel_export_status = #{parameter.travel_export_status} </if>
 		<if test="parameter.set != null">
 			and operator_id in
 			<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
@@ -153,6 +154,20 @@
 		<if test="supType != null">and a.supplier_type = #{supType} </if>
 		order by create_time 
 	</select>
+
+	<!-- 其他收入审核 -->
+	<select id="selectOtherIncomeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT a.*, c.guide_id, b.booking_id, IFNULL(b.total,0) finance_total, b.pay_status,
+		(IFNULL(a.total,0)-IFNULL(a.total_cash,0)) balance,
+		FROM_UNIXTIME(a.create_time/1000,'%Y-%m-%d') create_date
+		FROM booking_supplier a
+		LEFT JOIN finance_guide b ON a.id = b.booking_id_link
+		LEFT JOIN booking_guide c ON b.booking_id = c.id
+		WHERE a.supplier_type = 120
+		<if test="groupId != null">and a.group_id = #{groupId} </if>
+		order by create_time
+	</select>
+
 	<!-- 订单收入明细 -->
 	<select id="selectOrderDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
 		select * from group_order_price where 1=1

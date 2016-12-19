@@ -1,17 +1,19 @@
 package com.yimayhd.erpcenter.facade.sales.service.impl;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.yimayhd.erpcenter.facade.sales.result.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +98,12 @@ import com.yimayhd.erpresource.dal.po.SupplierGuide;
 import com.yimayhd.erpresource.dal.po.SupplierImg;
 import com.yimayhd.erpresource.dal.po.SupplierImgType;
 import com.yimayhd.erpresource.dal.po.SupplierInfo;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.WebUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @ClassName: ${ClassName}
@@ -2233,8 +2240,11 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
         pageBean.setParameter(groupOrder);
         pageBean = groupOrderBiz.selectProfitEverifyListPage(pageBean, bizId, userIdSet, 1);
         Map<String,Object> map = groupOrderBiz.selectProfitEverifyByTotal(pageBean, bizId, userIdSet, 1);
+        List<DicInfo> typeList = dicBiz.getListByTypeCode(com.yimayhd.erpcenter.common.contants.BasicConstants.SALES_TEAM_TYPE,
+                bizId);
         BookingProfitTableResult result1 = new BookingProfitTableResult();
         result1.setPageBean(pageBean);
+        result1.setTypeList(typeList);
         result1.setSum(map);
         return  result1;
     }
@@ -2461,6 +2471,9 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             //毛利
             BigDecimal sum_g_profit = new BigDecimal(0);
 
+            List<DicInfo> typeList = dicBiz.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE,
+                    bizId);
+
             if (pageBean.getResult() != null && pageBean.getResult().size() > 0) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 for (GroupOrder groupOrder2 : list) {
@@ -2475,12 +2488,12 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
                     Long createTime = groupOrder2.getCreateTime();
                     String dateStr = sdf.format(createTime);
                     groupOrder2.setCreateTimeStr(dateStr);
+                    for (DicInfo item : typeList) {
+                        if (item.getId().equals(groupOrder2.getOrderMode()))
+                            groupOrder2.setOrderModeType(item.getValue());
+                    }
                 }
             }
-
-            List<DicInfo> typeList = dicBiz.getListByTypeCode(com.yimayhd.erpcenter.common.contants.BasicConstants.SALES_TEAM_TYPE,
-                    bizId);
-
 
             //查询内部结算信息
             GroupOrder groupOrderTatol=groupOrderBiz.selectProfitEverifyByCon(groupOrder,bizId,dataUserIdSet, 1);
@@ -2533,4 +2546,51 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
 		}
 		return sb.toString();
 	}
+
+    @Override
+    public ToProfitExcelResult toProfitExcel(GroupOrder groupOrder,Integer bizId,Set<Integer> dataUserIdSet) {
+
+        ToProfitExcelResult result = new ToProfitExcelResult();
+        if (StringUtils.isBlank(groupOrder.getSaleOperatorIds()) && StringUtils.isNotBlank(groupOrder.getOrgIds())) {
+            Set<Integer> set = new HashSet<Integer>();
+            String[] orgIdArr = groupOrder.getOrgIds().split(",");
+            for (String orgIdStr : orgIdArr) {
+                set.add(Integer.valueOf(orgIdStr));
+            }
+            set = platformEmployeeBiz.getUserIdListByOrgIdList(bizId, set);
+            String salesOperatorIds = "";
+            for (Integer usrId : set) {
+                salesOperatorIds += usrId + ",";
+            }
+            if (!salesOperatorIds.equals("")) {
+                groupOrder.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length() - 1));
+            }
+        }
+        PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
+        pageBean.setPage(1);
+        pageBean.setPageSize(10000);
+        pageBean.setParameter(groupOrder);
+        pageBean = groupOrderBiz.selectProfitByConListPage(pageBean, bizId,
+                dataUserIdSet);
+        GroupOrder staticInfo = groupOrderBiz.selectProfitByCon(pageBean, bizId,
+                dataUserIdSet);
+        GroupOrder groupOrderProfit = groupOrderBiz.selectProfitByConAndMode(pageBean,
+                bizId, dataUserIdSet);
+
+        result.setPageBean(pageBean);
+        result.setStaticInfo(staticInfo);
+        result.setGroupOrderProfit(groupOrderProfit);
+        return result;
+
+
+    }
+
+    @Override
+    public ToProfitExcelResult getGroupIdsByTravelExportStatus(Integer c, Integer bizId) {
+        ToProfitExcelResult toProfitExcelResult = new ToProfitExcelResult();
+        List<Integer> list = tourGroupBiz.getGroupIdsByTravelExportStatus(c, bizId);
+        toProfitExcelResult.setList(list);
+        return toProfitExcelResult;
+    }
+
 }
