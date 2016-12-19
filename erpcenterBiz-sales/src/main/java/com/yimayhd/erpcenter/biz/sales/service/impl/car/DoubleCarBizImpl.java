@@ -97,4 +97,25 @@ public class DoubleCarBizImpl implements DoubleCarBiz{
 		return result;
 	}
 
+	@Override
+	public List<SynHotelResult> batchSynHotelMsg(List<SynHotelQuery> querys) {
+		if(null == querys || querys.size() <=0){
+			return null;
+		}
+		List<SynHotelResult> synHotelResults = new ArrayList<SynHotelResult>();
+		for (SynHotelQuery query : querys) {
+			SynHotelResult result = new SynHotelResult();
+			if(null == query){
+				result.setErrorCode(DoubleCarErrorCode.QUERY_ERROR);
+			}
+			result.setGroupId(query.getGroupId());
+			result.setType(query.getType());
+			result.setDepartureDate(query.getDepartureDate());
+			result.setArrivalDate(query.getArrivalDate());
+			result.setHotelMsgs(doubleCarDal.synHotelMsg(query.getGroupId(),query.getType(),query.getDepartureDate(),query.getArrivalDate()));
+			synHotelResults.add(result);
+		}
+		return synHotelResults;
+	}
+
 }
