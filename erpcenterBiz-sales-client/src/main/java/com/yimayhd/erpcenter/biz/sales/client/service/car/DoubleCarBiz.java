@@ -53,5 +53,13 @@ public interface DoubleCarBiz {
 	 * @author wangjun
 	 */
 	SynHotelResult synHotelMsg(SynHotelQuery query);
+	
+	/**
+	 * 批量同步酒店
+	 * @param query
+	 * @return
+	 * @author wangjun
+	 */
+	List<SynHotelResult> batchSynHotelMsg(List<SynHotelQuery> querys);
 
 }
