@@ -105,6 +105,9 @@ public class SysLoginFacadImpl implements SysLoginFacade{
 	public UserSessionResult getUserSession(String sessionId) {
 		UserSessionResult result = new UserSessionResult();
 		UserSession userSession =  platformSessionBiz.getUserSession(sessionId);
+		if(userSession==null){
+			return null;
+		}
 		BeanUtils.copyProperties(userSession, result);
 		return result;
 	}
