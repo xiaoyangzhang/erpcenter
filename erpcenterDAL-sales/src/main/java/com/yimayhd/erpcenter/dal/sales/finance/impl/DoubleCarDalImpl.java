@@ -1,5 +1,6 @@
 package com.yimayhd.erpcenter.dal.sales.finance.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import com.yimayhd.erpcenter.dal.sales.client.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.DoubleCarMapper;
 
 public class DoubleCarDalImpl implements DoubleCarDal{
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@Autowired
 	private DoubleCarMapper doubleCarMapper;
@@ -158,7 +160,7 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 
 	@Override
 	public List<HotelMsg> synHotelMsg(int groupId, int type,
-			java.sql.Date departureDate, java.sql.Date arrivalDate) {
+			Date departureDate, Date arrivalDate) {
 		
 		Date date = null;
 		if(type == 0){//接
@@ -169,6 +171,7 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 			cal.set(Calendar.DATE, cal.get(Calendar.DATE-1));
 			date = cal.getTime();
 		}
-		return doubleCarMapper.synHotelMsg(groupId,date);
+		String dateStr = sdf.format(date);
+		return doubleCarMapper.synHotelMsg(groupId,dateStr);
 	}
 }

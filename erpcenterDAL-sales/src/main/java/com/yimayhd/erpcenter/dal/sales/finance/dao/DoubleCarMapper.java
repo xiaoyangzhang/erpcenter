@@ -1,6 +1,5 @@
 package com.yimayhd.erpcenter.dal.sales.finance.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -24,6 +23,6 @@ public interface DoubleCarMapper {
 	
 	List<GroupOrderGuest> selectGroupOrderGuestListPage(@Param("page") PageBean pageBean);
 
-	List<HotelMsg> synHotelMsg(@Param("groupId") int groupId, @Param("date") Date date);
+	List<HotelMsg> synHotelMsg(@Param("groupId") int groupId, @Param("date") String date);
 	
 }

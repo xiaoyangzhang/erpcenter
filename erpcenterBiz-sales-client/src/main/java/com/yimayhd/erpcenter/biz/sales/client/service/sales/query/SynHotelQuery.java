@@ -1,7 +1,7 @@
 package com.yimayhd.erpcenter.biz.sales.client.service.sales.query;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 public class SynHotelQuery implements Serializable{
 
