@@ -21,29 +21,12 @@ public class GroupOrder implements Serializable {
     private List<TransPort> orderTrans;
     private List<com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest> orderGuests;
 
-    public List<com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest> getOrderGuests() {
-        return orderGuests;
-    }
 
-    public void setOrderGuests(List<com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest> orderGuests) {
-        this.orderGuests = orderGuests;
-    }
+    private Integer guideId;
+    private String guideName;
+    private String guideMobile;
 
-    public List<BookingDeliveryPrice> getBookingOrderPrices() {
-        return bookingOrderPrices;
-    }
 
-    public void setBookingOrderPrices(List<BookingDeliveryPrice> bookingOrderPrices) {
-        this.bookingOrderPrices = bookingOrderPrices;
-    }
-
-    public List<TransPort> getOrderTrans() {
-        return orderTrans;
-    }
-
-    public void setOrderTrans(List<TransPort> orderTrans) {
-        this.orderTrans = orderTrans;
-    }
     @LogFieldAnno(isKey = true)
     private Integer id;
 
@@ -2079,8 +2062,57 @@ public class GroupOrder implements Serializable {
 	public void setOtherTotalBalance(BigDecimal otherTotalBalance) {
 		this.otherTotalBalance = otherTotalBalance;
 	}
-	
-	
-	
+
+
+
+    public Integer getGuideId() {
+        return guideId;
+    }
+
+    public void setGuideId(Integer guideId) {
+        this.guideId = guideId;
+    }
+
+    public String getGuideName() {
+        return guideName;
+    }
+
+    public void setGuideName(String guideName) {
+        this.guideName = guideName;
+    }
+
+    public String getGuideMobile() {
+        return guideMobile;
+    }
+
+    public void setGuideMobile(String guideMobile) {
+        this.guideMobile = guideMobile;
+    }
+
+
+    public List<com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest> getOrderGuests() {
+        return orderGuests;
+    }
+
+    public void setOrderGuests(List<com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest> orderGuests) {
+        this.orderGuests = orderGuests;
+    }
+
+
+    public List<BookingDeliveryPrice> getBookingOrderPrices() {
+        return bookingOrderPrices;
+    }
+
+    public void setBookingOrderPrices(List<BookingDeliveryPrice> bookingOrderPrices) {
+        this.bookingOrderPrices = bookingOrderPrices;
+    }
+
+    public List<TransPort> getOrderTrans() {
+        return orderTrans;
+    }
+
+    public void setOrderTrans(List<TransPort> orderTrans) {
+        this.orderTrans = orderTrans;
+    }
 
 }
