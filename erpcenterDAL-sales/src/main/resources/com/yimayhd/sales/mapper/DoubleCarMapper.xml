@@ -53,7 +53,7 @@
 	</resultMap>
 	
 	<resultMap id="HotelMsg" type="com.yimayhd.erpcenter.dal.sales.client.car.po.HotelMsg" >
-	    <result column="supplier_id" property="groupId" jdbcType="INTEGER" />
+	    <result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
 	    <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
 	</resultMap>
   	
@@ -99,7 +99,7 @@
 	
 	<select id="synHotelMsg" resultMap="HotelMsg">
 		SELECT t.supplier_id,t.supplier_name FROM booking_supplier t JOIN booking_supplier_detail d ON t.id = d.booking_id 
-			WHERE t.supplier_type = 3 AND t.group_id = #{groupId,jdbcType=INTEGER} AND  d.item_date = #{date}
+			WHERE t.supplier_type = 3 AND t.group_id = #{groupId,jdbcType=INTEGER} AND  d.item_date = #{date,jdbcType=VARCHAR}
 	</select>	
 	
 </mapper>

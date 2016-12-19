@@ -1,6 +1,6 @@
 package com.yimayhd.erpcenter.dal.sales.client.car.service;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import com.yihg.mybatis.utility.PageBean;

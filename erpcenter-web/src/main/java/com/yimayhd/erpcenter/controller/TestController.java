@@ -1,6 +1,10 @@
 package com.yimayhd.erpcenter.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +18,7 @@ import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.car.DoubleCarBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.query.SynHotelQuery;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SettleApplyBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
@@ -21,6 +26,7 @@ import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.query.ProductStockPageQueryDTO;
 import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
 import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
+import com.yimayhd.erpcenter.dal.sales.constants.PickTransportTypeEnum;
 import com.yimayhd.erpcenter.facade.service.ProductStockFacade;
 import com.yimayhd.erpcenter.facade.service.ProductUpAndDownFrameFacade;
 
@@ -161,6 +167,18 @@ public class TestController {
 		return platformEmployeeBiz.getOrgEmployeeListPage(orgIds, 1, 100);
 	}
 	
+	@RequestMapping(value = "/synHotelMsg")
+	public Object synHotelMsg(){
+		SynHotelQuery query = new SynHotelQuery();
+		query.setType(PickTransportTypeEnum.PICK.getId());
+		query.setGroupId(272);
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 2015);
+		cal.set(Calendar.MONTH, 10);
+		cal.set(Calendar.DATE, 7);
+		query.setArrivalDate(cal.getTime());
+		return doubleCarBiz.synHotelMsg(query);
+	}
 	
 	
 }
