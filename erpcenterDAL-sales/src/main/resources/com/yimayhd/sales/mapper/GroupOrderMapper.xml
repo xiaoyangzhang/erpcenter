@@ -223,6 +223,11 @@
 			<result column="contact_mobile" property="contactMobile" jdbcType="VARCHAR" />
 			<result column="contact_fax" property="contactFax" jdbcType="VARCHAR" />
 			<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+			<result property="guideId" column="guide_id" />
+			<result property="guideName" column="guide_name" />
+			<result property="guideMobile" column="guide_mobile" />
+			<result column="depart_province_name" property="departProvinceName" jdbcType="VARCHAR" />
+			<result column="depart_city_name" property="departCityName" jdbcType="VARCHAR" />
 		</collection>
 	</resultMap>
 	<sql id="Base_Column_List">
@@ -6745,9 +6750,11 @@
 		go.product_brand_name,
 		go.product_name,
 		receive_mode,
-
-		go.remark,tg.group_code
+		go.depart_province_name,
+		go.depart_city_name,
+		go.remark,tg.group_code,bg.`guide_id`,bg.`guide_name`,bg.`guide_mobile`
 		from group_order go left join tour_group tg on go.group_id = tg.id
+		join booking_guide bg on tg.id = bg.group_id
 		where <!-- create_time <![CDATA[>=]]> #{page.parameter.startTime}
 		  and create_time <![CDATA[<=]]> #{page.parameter.endTime}
 		  and -->
@@ -6756,6 +6763,7 @@
 				 separator="," close=")">
 			#{item}
 		</foreach>
+		AND bg.`is_default` = 1
 	</select>
 
 </mapper>
