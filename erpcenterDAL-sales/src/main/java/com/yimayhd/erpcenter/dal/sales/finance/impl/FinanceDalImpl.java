@@ -401,7 +401,7 @@ public class FinanceDalImpl implements FinanceDal {
 		groupMapper.updateByPrimaryKeySelective(tg);
 
 		//检查团成本是否合并到group_order_price的预算成本中
-		if(tourGroup != null &&tourGroup.getBizId().equals(5) && tourGroup.getGroupMode()>0){
+		if(tourGroup != null &&tourGroup.getBizId().equals(5) && tourGroup.getGroupMode()!=null&&tourGroup.getGroupMode()>0){
 			if (ordls != null && ordls.size()>0){
 				Integer orderId = ordls.get(0).getId();
 				GroupOrderPrice groupOrderPrices=groupOrderPriceMapper.selectByOrderAndTypeAndRowState(orderId, 1,100);

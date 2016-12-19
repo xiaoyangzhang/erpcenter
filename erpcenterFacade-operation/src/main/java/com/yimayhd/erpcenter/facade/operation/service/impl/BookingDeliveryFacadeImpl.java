@@ -111,7 +111,7 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 		result.setTourGroup(groupInfo);
         List<GroupRoute> routeList = groupRouteBiz.selectByGroupId(gid);
         result.setGroupRoutes(routeList);
-        if (groupInfo.getGroupMode() < 1) {
+        if (groupInfo!=null&&groupInfo.getGroupMode()!=null&&groupInfo.getGroupMode() < 1) {
             List<GroupOrder> orderList = groupOrderBiz.selectOrderByGroupId(gid);
             if (orderList != null && orderList.size() > 0) {
                 for (GroupOrder order : orderList) {

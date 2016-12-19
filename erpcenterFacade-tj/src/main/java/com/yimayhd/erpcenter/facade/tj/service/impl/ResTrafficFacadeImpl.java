@@ -185,7 +185,7 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 			vo.getTrafficRes().setNumReserved(0);
 			vo.getTrafficRes().setNumSold(0);
 			vo.getTrafficRes().setNumBalance((vo.getTrafficRes().getNumStock()-vo.getTrafficRes().getNumDisable()));
-			vo.getTrafficRes().setState((byte) 1);
+			vo.getTrafficRes().setState(1);
 			vo.getTrafficRes().setTimeUpdate(sdf.format(new Date()));
 		}else{
 			vo.getTrafficRes().setUserName(curUser.getName());

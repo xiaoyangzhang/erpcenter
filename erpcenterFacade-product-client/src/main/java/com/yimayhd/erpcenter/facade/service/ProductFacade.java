@@ -255,7 +255,7 @@ public interface ProductFacade {
 
 	ToProductTagResult getProductTags(Integer bizId);
 
-	void syncTaoBaoProducts(String authClient);
 
+	ResultSupport syncTaoBaoProducts(String authClient);
 
 }

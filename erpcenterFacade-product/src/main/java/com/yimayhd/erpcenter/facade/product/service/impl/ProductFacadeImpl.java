@@ -1152,8 +1152,11 @@ public class ProductFacadeImpl implements ProductFacade{
 	}
 
 	@Override
-	public void syncTaoBaoProducts(String authClient) {
+
+	public ResultSupport syncTaoBaoProducts(String authClient) {
+		ResultSupport result = new ResultSupport();
 		productInfoBiz.syncTaoBaoProducts(authClient);
+		return result;
 	}
 
 

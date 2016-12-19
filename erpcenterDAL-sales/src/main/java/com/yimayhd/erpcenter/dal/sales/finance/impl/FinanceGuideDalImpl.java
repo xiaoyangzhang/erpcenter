@@ -503,7 +503,7 @@ public class FinanceGuideDalImpl implements FinanceGuideDal {
 			}
 		}else{
 			//如果报账金额不相等，或者导游不一致，则修改报账单
-			if(item.getTotal().compareTo(fg.getTotal()) != 0 || item.getBookingId() != fg.getBookingId()){
+			if(item.getTotal() == null || item.getTotal().compareTo(fg.getTotal()) != 0 || item.getBookingId() != fg.getBookingId()){
 				
 				//如果修改了导游，则将原导游的报账记录删掉，给新导游增加报账记录
 				if(item.getBookingId() != fg.getBookingId()){

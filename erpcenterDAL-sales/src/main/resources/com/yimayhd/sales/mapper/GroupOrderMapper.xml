@@ -6734,9 +6734,9 @@
 		group by supplier_name,order_mode,tg.product_id 
 			</select>
 	<select id="selectGroupOrdersInGroupsForCarCar" resultMap="groupOrderForCarCar" parameterType="com.yihg.mybatis.utility.PageBean">
-		select go.id, group_id, supplier_id,supplier_name,
+		select go.id, go.group_id, supplier_id,supplier_name,
 		order_no,order_type,`type`,
-		total,
+		go.total,
 		contact_name,
 		contact_tel,
 		contact_mobile, contact_fax,
@@ -6758,7 +6758,7 @@
 		where <!-- create_time <![CDATA[>=]]> #{page.parameter.startTime}
 		  and create_time <![CDATA[<=]]> #{page.parameter.endTime}
 		  and -->
-		  group_id IN
+		  go.group_id IN
 		<foreach item="item" index="index" collection="page.parameter.groupIdSet" open="("
 				 separator="," close=")">
 			#{item}
