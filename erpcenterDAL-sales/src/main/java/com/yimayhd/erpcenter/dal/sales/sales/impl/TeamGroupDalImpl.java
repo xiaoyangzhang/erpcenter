@@ -168,7 +168,7 @@ public class TeamGroupDalImpl implements TeamGroupDal {
 			}
 				
 			tourGroup.setGroupCode(makeCodeByMode);
-
+			tourGroup.setGroupMode(1);//后期bug修改添加，不知道是否符合业务需要
 			GroupOrder orderCodeSort = groupOrderMapper
 					.selectGroupOrderCodeSort(tourGroup.getBizId(),
 							sdf.format(tourGroup.getDateStart()));
