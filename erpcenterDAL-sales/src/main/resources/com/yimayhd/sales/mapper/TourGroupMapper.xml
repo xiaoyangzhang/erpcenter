@@ -936,15 +936,15 @@
 		<choose>
 			<when
 				test="page.parameter.startTime != null and page.parameter.startTime !='' and page.parameter.endTime != null and page.parameter.endTime != ''">
-     <![CDATA[  and t.date_start >=#{page.parameter.startTime}  and t.date_start <=#{page.parameter.endTime}]]>
+     <![CDATA[  and t.date_start >=date_format(#{page.parameter.startTime},'%Y-%c-%d')  and t.date_start <=date_format(#{page.parameter.endTime},'%Y-%c-%d')]]>
 			</when>
 			<when
 				test="page.parameter.startTime != null and page.parameter.startTime !='' and (page.parameter.endTime == null or page.parameter.endTime == '' )">
-				and t.date_start=#{page.parameter.startTime}
+				and t.date_start=date_format(#{page.parameter.startTime},'%Y-%c-%d')
 			</when>
 			<when
 				test="page.parameter.endTime != null and page.parameter.endTime != '' and  (page.parameter.startTime == null or page.parameter.startTime == '' )">
-  	 <![CDATA[  and t.date_start =#{page.parameter.endTime}]]>
+  	 <![CDATA[  and t.date_start =date_format(#{page.parameter.endTime},'%Y-%c-%d')]]>
 			</when>
 
 		</choose>

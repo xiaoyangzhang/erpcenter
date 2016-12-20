@@ -57,11 +57,11 @@ public class CarCarInterfaceTest {
     private void selectGroupOrdersForCarCar() {
         PageBean<GroupOrderQueryForCarCar> pageBean  = new PageBean<GroupOrderQueryForCarCar>();
         pageBean.setPage(1);
-        pageBean.setPageSize(50);
+        pageBean.setPageSize(100);
         GroupOrderQueryForCarCar car = new GroupOrderQueryForCarCar();
         Set<Integer> set = new HashSet<Integer>();
-        set.add(14185);
-        set.add(14186);
+        set.add(16881);
+        set.add(16882);
         car.setGroupIdSet(set);
         pageBean.setParameter(car);
         WebResult<List<GroupOrderForCarCar>> result = groupOrderFacade.selectGroupOrdersInGroupsForCarCar(pageBean);

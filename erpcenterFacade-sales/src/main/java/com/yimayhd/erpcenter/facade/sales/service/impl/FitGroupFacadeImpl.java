@@ -81,7 +81,7 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 //			Calendar c = Calendar.getInstance();
 //			int year = c.get(Calendar.YEAR);
 //			int month = c.get(Calendar.MONTH);
-			//SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 //			c.set(year, month, 1, 0, 0, 0);
 //			tourGroup.setStartTime(c.getTime());
 //			c.set(year, month, c.getActualMaximum(Calendar.DAY_OF_MONTH));

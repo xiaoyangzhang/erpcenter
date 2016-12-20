@@ -31,6 +31,6 @@ public interface ComponentFacade {
 	
 	CheckProductStockResult checkProductStock(Integer bizId, Integer year, Integer month);
 
-	void setSupplierIds(SupplierInfo supplierInfo,String canEditPrice,Integer orgId);
+	String setSupplierIds(Integer orgId);
 
 }

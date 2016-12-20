@@ -28,8 +28,9 @@ public class DateUtils {
 	 */
 	public static String getMonthFirstDay(){
 	    Calendar c = Calendar.getInstance();    
-	    c.add(Calendar.MONTH, 0);
-	    c.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天 
+//	    c.add(Calendar.MONTH, 0);
+//	    c.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天
+		c.set(c.get(Calendar.YEAR),c.get(Calendar.MONTH),1);
 	    String first = DateUtils.format(c.getTime());
 	    return first;
 	}
@@ -40,7 +41,8 @@ public class DateUtils {
 	 */
 	public static String getMonthLastDay(){
 		Calendar ca = Calendar.getInstance();    
-        ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));  
+//        ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));
+		ca.set(ca.get(Calendar.YEAR),ca.get(Calendar.MONTH), ca.getActualMaximum(Calendar.DATE));
         String last = DateUtils.format(ca.getTime());
         return last;
 	}

@@ -30,6 +30,7 @@ import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.biz.service.SupplierDriverBiz;
 import com.yimayhd.erpresource.dal.po.SupplierDriver;
 import com.yimayhd.erpresource.dal.po.SupplierInfo;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.util.WebUtils;
 
 /**
@@ -163,18 +164,17 @@ public class ComponentFacadeImpl implements ComponentFacade {
 	}
 
 	@Override
-	public void setSupplierIds(SupplierInfo supplierInfo,String canEditPrice, Integer orgId) {
-		if(canEditPrice !=null && ( /*supplierInfo.getSupplierType()==1 ||*/ supplierInfo.getStypes().contains("1")) &&canEditPrice.equals("1")){
-			supplierInfo.setChooseType(1);
+	public String setSupplierIds(Integer orgId) {
+
 			List<SysDataRightSupplier> lists=sysDataRightSupplierBiz.selectSysDataRightSupplierInOrgIds(orgId);
 			String ids = "";
-			if(lists !=null &&lists.size()>0){
+			if(!CollectionUtils.isEmpty(lists)){
 				for(SysDataRightSupplier item:lists){
 					ids += item.getSupplierId() + ",";
 				}
-				supplierInfo.setSupplierIds(ids.substring(0, ids.length() - 1));
+				return ids.substring(0, ids.length() - 1);
 			}
-		}
+			return "";
 	}
 
 
