@@ -18,6 +18,7 @@ import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPort;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPortHotel;
 import com.yimayhd.erpcenter.dal.sales.client.car.service.DoubleCarDal;
 import com.yimayhd.erpcenter.dal.sales.client.constants.Constants;
+import com.yimayhd.erpcenter.dal.sales.constants.PickTransportTypeEnum;
 import com.yimayhd.erpcenter.dal.sales.finance.dao.DoubleCarMapper;
 
 public class DoubleCarDalImpl implements DoubleCarDal{
@@ -87,18 +88,26 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 		for (int i = 0;i < list.size();i++) {
 			TransPort transPort = list.get(i);
 			Date date = null;
-			if(transPort.getType() == 0){//接
+			if(transPort.getType() == PickTransportTypeEnum.PICK.getId()){//接机
 				date = transPort.getArrivalDate();
-			}else if(transPort.getType() == 1 && null != transPort.getDepartureDate()){//送
+			}else if(transPort.getType() == PickTransportTypeEnum.SEND.getId() && null != transPort.getDepartureDate()){//送机
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(transPort.getDepartureDate());
 				cal.set(Calendar.DATE, cal.get(Calendar.DATE-1));
 				date = cal.getTime();
 			}
+			if(null == date){//如果没有传日期，酒店就不需要匹配了
+				break;
+			}
 			StringBuffer nameBuffer = new StringBuffer();
 			for (int j = 0; j < hotels.size(); j++) {
 				TransPortHotel hotel = hotels.get(j);
-				if(null != date && hotel.getGroupId() == transPort.getGroupId() && hotel.getItemDate().compareTo(date) == 0){
+				if(null == hotel || null == hotel.getItemDate()){
+					break;
+				}
+				String queryTime = sdf.format(date);
+				String itemTime = sdf.format(hotel.getItemDate());
+				if(hotel.getGroupId() == transPort.getGroupId() && queryTime.equals(itemTime)){
 					if(transPort.getHotelId() == 0){
 						transPort.setHotelId(hotel.getSupplierId());
 					}
@@ -162,13 +171,15 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 	public List<HotelMsg> synHotelMsg(int groupId, int type,
 			Date departureDate, Date arrivalDate) {
 		Date date = null;
-		if(type == 0 ){//接
+		if(type == PickTransportTypeEnum.PICK.getId() ){//接
 			date = arrivalDate;
-		}else if(type == 1 ){//送
+		}else if(type == PickTransportTypeEnum.SEND.getId() ){//送
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(departureDate);
 			cal.set(Calendar.DATE, cal.get(Calendar.DATE-1));
 			date = cal.getTime();
+		}else{
+			return null;
 		}
 		String dateStr = sdf.format(date);
 		return doubleCarMapper.synHotelMsg(groupId,dateStr);
