@@ -13,6 +13,7 @@ public class DoubleCarErrorCode  implements Serializable {
     public static final DoubleCarErrorCode QUERY_ERROR = new DoubleCarErrorCode("1003","查询失败");
     public static final DoubleCarErrorCode UPDATE_ERROR = new DoubleCarErrorCode("1004","更新失败");
     public static final DoubleCarErrorCode MODIFY_ERROR = new DoubleCarErrorCode("1005","操作失败");
+    public static final DoubleCarErrorCode QUERY_DATE_ERROR = new DoubleCarErrorCode("1006","日期参数错误");
 
 
     private String errorCode;
