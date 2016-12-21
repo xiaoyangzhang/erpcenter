@@ -178,6 +178,8 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 			cal.setTime(departureDate);
 			cal.set(Calendar.DATE, cal.get(Calendar.DATE-1));
 			date = cal.getTime();
+		}else{
+			return null;
 		}
 		String dateStr = sdf.format(date);
 		return doubleCarMapper.synHotelMsg(groupId,dateStr);
