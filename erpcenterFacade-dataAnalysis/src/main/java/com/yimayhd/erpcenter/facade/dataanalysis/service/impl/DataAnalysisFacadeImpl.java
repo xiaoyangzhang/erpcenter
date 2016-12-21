@@ -2086,14 +2086,39 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			}
 		}
 
-		String jsonStr = queryBiz.getGroupNumStatics(allGroupOrder,dataType);
+		String jsonStr = concatGuestNumOrOrder2Str(allGroupOrder,dataType);
 				
 		QueryGroupNumberResult result=new QueryGroupNumberResult();
 		result.setDataType(dataType);
 		result.setGroupOrder(groupOrder);
 		result.setJsonStr(jsonStr);
-		
 		return result;
+	}
+
+	private  String concatGuestNumOrOrder2Str(List<GroupOrder> orders,Integer dataType) {
+		int len = orders.size();
+		int otherTotal = 0;
+		StringBuilder sb = new StringBuilder();
+		for(int idx=0;idx<orders.size();idx++){
+			GroupOrder groupOrder =orders.get(idx);
+			sb.append("['");
+			sb.append(groupOrder.getSupplierName());
+			if(dataType==0){
+				sb.append("（");
+				sb.append(groupOrder.getNumAdult());
+				sb.append("大");
+				sb.append(groupOrder.getNumChild());
+				sb.append("小）',");
+				sb.append(groupOrder.getGuestCount());
+			}else{
+				sb.append("',");
+				sb.append(groupOrder.getSupplierCount());
+			}
+
+			sb.append("],");
+		}
+
+		return sb.substring(0, sb.length()-1);
 	}
 
 	public ExpGroupNumberResult expGroupNumber(QueryGroupNumberDTO queryGroupNumberDTO) throws ParseException{

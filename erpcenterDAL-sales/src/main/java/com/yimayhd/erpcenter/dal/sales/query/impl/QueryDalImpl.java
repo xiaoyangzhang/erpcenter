@@ -100,37 +100,37 @@ public class QueryDalImpl implements QueryDAL {
 		return "";
 	}
 
-	@Override
-	public String getGroupNumStatics(List<GroupOrder> list,Integer dataType) {
-		// TODO Auto-generated method stub
-		
-		if(list!=null && list.size()>0){
-			int len = list.size();
-			int otherTotal = 0;
-			StringBuilder sb = new StringBuilder();
-			for(int idx=0;idx<list.size();idx++){
-				GroupOrder groupOrder =list.get(idx);
-					sb.append("['");
-					sb.append(groupOrder.getSupplierName());
-					if(dataType==0){
-						sb.append("（");
-						sb.append(groupOrder.getNumAdult());
-						sb.append("大");
-						sb.append(groupOrder.getNumChild());
-						sb.append("小）',");
-						sb.append(groupOrder.getGuestCount());
-					}else{
-						sb.append("',");
-						sb.append(groupOrder.getSupplierCount());
-					}
-					
-					sb.append("],");				
-			}
-		
-			return sb.substring(0, sb.length()-1); 
-		}
-		return null;
-	}
+//	@Override
+//	public String getGroupNumStatics(List<GroupOrder> list,Integer dataType) {
+//		// TODO Auto-generated method stub
+//
+//		if(list!=null && list.size()>0){
+//			int len = list.size();
+//			int otherTotal = 0;
+//			StringBuilder sb = new StringBuilder();
+//			for(int idx=0;idx<list.size();idx++){
+//				GroupOrder groupOrder =list.get(idx);
+//					sb.append("['");
+//					sb.append(groupOrder.getSupplierName());
+//					if(dataType==0){
+//						sb.append("（");
+//						sb.append(groupOrder.getNumAdult());
+//						sb.append("大");
+//						sb.append(groupOrder.getNumChild());
+//						sb.append("小）',");
+//						sb.append(groupOrder.getGuestCount());
+//					}else{
+//						sb.append("',");
+//						sb.append(groupOrder.getSupplierCount());
+//					}
+//
+//					sb.append("],");
+//			}
+//
+//			return sb.substring(0, sb.length()-1);
+//		}
+//		return null;
+//	}
 
 	@Override
 	public PageBean selectGroupBookingListPage(PageBean pageBean,
@@ -376,7 +376,26 @@ public class QueryDalImpl implements QueryDAL {
 	}
 
 	public PageBean selectSupplierGuestShopStatic(PageBean pageBean,Set<Integer> set) {
-		
+		List<Map<String,Object>> orderList = queryMapper.getSupplierGuestShoppingGroupOrderListPage(pageBean,set);
+		List<Map<String,Object>> detailList = queryMapper.getGuestSourceShoppingByOrderIds(pageBean,set);
+
+		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+		if(orderList!=null && orderList.size()>0){
+
+			for(Map<String,Object> map : orderList){
+				if(detailList!=null && detailList.size()>0){
+					List<ProductGuestShoppingItem> provinceShoppingList = new ArrayList<ProductGuestShoppingItem>();
+					for(Map<String,Object> detail : detailList){
+						if (map.get("supplierId").equals(detail.get("supplier_id"))) {
+							provinceShoppingStatics(provinceShoppingList,detail);
+						}
+					}
+					map.put("provinces", provinceShoppingList);
+				}
+				list.add(map);
+			}
+		}
+		pageBean.setResult(list);
 		return pageBean;
 		}
 	
