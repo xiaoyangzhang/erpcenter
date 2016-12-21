@@ -22,7 +22,11 @@
 		<groupId>com.yimayhd.erpcenter</groupId>
 		<artifactId>erpcenterBiz-sales-client</artifactId>
 	</dependency>
-      <dependency>
+    <dependency>
+		<groupId>com.yimayhd.erpcenter</groupId>
+		<artifactId>erpcenterDAL-sales</artifactId>
+	</dependency>
+	<dependency>
 		<groupId>com.yimayhd.erpcenter</groupId>
 		<artifactId>erpcenterDAL-sys-client</artifactId>
 	</dependency>

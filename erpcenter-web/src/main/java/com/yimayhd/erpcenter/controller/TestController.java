@@ -176,7 +176,7 @@ public class TestController {
 		cal.set(Calendar.YEAR, 2015);
 		cal.set(Calendar.MONTH, 10);
 		cal.set(Calendar.DATE, 7);
-		query.setArrivalDate(cal.getTime());
+//		query.setArrivalDate(cal.getTime());
 		return doubleCarBiz.synHotelMsg(query);
 	}
 	

@@ -17,6 +17,7 @@ import com.yimayhd.erpcenter.dal.sales.client.car.po.BookingDeliveryPrice;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest;
 import com.yimayhd.erpcenter.dal.sales.client.car.po.TransPort;
 import com.yimayhd.erpcenter.dal.sales.client.car.service.DoubleCarDal;
+import com.yimayhd.erpcenter.dal.sales.constants.PickTransportTypeEnum;
 
 public class DoubleCarBizImpl implements DoubleCarBiz{
 	@Autowired
@@ -93,6 +94,12 @@ public class DoubleCarBizImpl implements DoubleCarBiz{
 		if(null == query){
 			result.setErrorCode(DoubleCarErrorCode.QUERY_ERROR);
 		}
+		if(query.getType() == PickTransportTypeEnum.PICK.getId() && null == query.getArrivalDate()){
+			result.setErrorCode(DoubleCarErrorCode.QUERY_DATE_ERROR);
+		}
+		if(query.getType() == PickTransportTypeEnum.SEND.getId() && null == query.getDepartureDate()){
+			result.setErrorCode(DoubleCarErrorCode.QUERY_DATE_ERROR);
+		}
 		result.setHotelMsgs(doubleCarDal.synHotelMsg(query.getGroupId(),query.getType(),query.getDepartureDate(),query.getArrivalDate()));
 		return result;
 	}
@@ -107,6 +114,12 @@ public class DoubleCarBizImpl implements DoubleCarBiz{
 			SynHotelResult result = new SynHotelResult();
 			if(null == query){
 				result.setErrorCode(DoubleCarErrorCode.QUERY_ERROR);
+			}
+			if(query.getType() == PickTransportTypeEnum.PICK.getId() && null == query.getArrivalDate()){
+				result.setErrorCode(DoubleCarErrorCode.QUERY_DATE_ERROR);
+			}
+			if(query.getType() == PickTransportTypeEnum.SEND.getId() && null == query.getDepartureDate()){
+				result.setErrorCode(DoubleCarErrorCode.QUERY_DATE_ERROR);
 			}
 			result.setGroupId(query.getGroupId());
 			result.setType(query.getType());

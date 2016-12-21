@@ -161,11 +161,10 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 	@Override
 	public List<HotelMsg> synHotelMsg(int groupId, int type,
 			Date departureDate, Date arrivalDate) {
-		
 		Date date = null;
-		if(type == 0){//接
+		if(type == 0 ){//接
 			date = arrivalDate;
-		}else if(type == 1){//送
+		}else if(type == 1 ){//送
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(departureDate);
 			cal.set(Calendar.DATE, cal.get(Calendar.DATE-1));
