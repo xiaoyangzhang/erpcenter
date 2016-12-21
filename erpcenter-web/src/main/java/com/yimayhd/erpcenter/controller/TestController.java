@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +28,11 @@ import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.query.ProductStockPageQueryDTO;
 import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
 import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderForCarCar;
+import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupOrderQueryForCarCar;
 import com.yimayhd.erpcenter.dal.sales.constants.PickTransportTypeEnum;
+import com.yimayhd.erpcenter.facade.sales.result.WebResult;
+import com.yimayhd.erpcenter.facade.sales.service.GroupOrderFacade;
 import com.yimayhd.erpcenter.facade.service.ProductStockFacade;
 import com.yimayhd.erpcenter.facade.service.ProductUpAndDownFrameFacade;
 
@@ -58,6 +64,9 @@ public class TestController {
 	
 	@Autowired
 	private PlatformEmployeeBiz platformEmployeeBiz;
+	
+	@Autowired
+	private GroupOrderFacade groupOrderFacade;
 	
 	@RequestMapping(value = "/testBasicDal")
 	public Object testBasicDal(){
@@ -179,6 +188,21 @@ public class TestController {
 		cal.set(Calendar.DATE, 7);
 //		query.setArrivalDate(cal.getTime());
 		return doubleCarBiz.synHotelMsg(query);
+	}
+	
+	@RequestMapping(value = "/selectGroupOrdersForCarCar")
+	public void selectGroupOrdersForCarCar(){
+		PageBean<GroupOrderQueryForCarCar> pageBean  = new PageBean<GroupOrderQueryForCarCar>();
+        pageBean.setPage(1);
+        pageBean.setPageSize(100);
+        GroupOrderQueryForCarCar car = new GroupOrderQueryForCarCar();
+        Set<Integer> set = new HashSet<Integer>();
+        set.add(16881);
+        set.add(16882);
+        car.setGroupIdSet(set);
+        pageBean.setParameter(car);
+        WebResult<List<GroupOrderForCarCar>> result = groupOrderFacade.selectGroupOrdersInGroupsForCarCar(pageBean);
+        System.out.println(1111);
 	}
 	
 	
