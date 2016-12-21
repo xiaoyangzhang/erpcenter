@@ -34,7 +34,7 @@ public interface QueryDAL {
 	/**
 	 * 客户团量分析专用拼串
 	 */
-	public String getGroupNumStatics(List<GroupOrder> allGroup,Integer dataType);
+//	public String getGroupNumStatics(List<GroupOrder> allGroup,Integer dataType);
 	
 	/**
 	 * 计调预定安排
