@@ -1641,4 +1641,5 @@ public class QueryFacadeImpl implements QueryFacade {
         private Integer zeroIfNull (Integer cnt){
             return cnt == null ? 0 : cnt;
         }
+        //isNull
     }
