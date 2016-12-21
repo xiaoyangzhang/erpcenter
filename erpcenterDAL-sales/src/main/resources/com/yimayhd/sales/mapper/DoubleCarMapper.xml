@@ -101,6 +101,7 @@
 	<select id="synHotelMsg" resultMap="HotelMsg">
 		SELECT t.supplier_id,t.supplier_name FROM booking_supplier t JOIN booking_supplier_detail d ON t.id = d.booking_id 
 			WHERE t.supplier_type = 3 AND t.group_id = #{groupId,jdbcType=INTEGER} AND  d.item_date = #{date,jdbcType=VARCHAR}
+			GROUP BY t.group_id,t.supplier_id
 	</select>	
 	
 </mapper>
