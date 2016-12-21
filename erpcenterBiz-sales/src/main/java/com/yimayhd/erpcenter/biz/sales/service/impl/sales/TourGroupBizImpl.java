@@ -538,4 +538,12 @@ public class TourGroupBizImpl implements TourGroupBiz {
 		}
 		return bookingGroups;
 	}
+	public List<Integer> getGroupIdsByTravelExportStatus(Integer travelExportStatus, Integer bizId) {
+		return tourGroupDal.getGroupIdsByTravelExportStatus(travelExportStatus,bizId);
+	}
+
+	@Override
+	public void updateTourGroupTravelExportStatus(List<Integer> groupIds, Integer status) {
+		tourGroupDal.updateTourGroupTravelExportStatus(groupIds,status);
+	}
 }

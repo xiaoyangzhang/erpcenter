@@ -421,11 +421,11 @@ public interface GroupOrderDal {
 
     PageBean selectGroupOrderGuestListPage(PageBean pageBean, Integer bizId,Set<Integer> set,Integer userRightType);
 
-    PageBean<GroupOrder>selectMonthlyReportStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId);
+    PageBean<GroupOrder> selectMonthlyReportStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId);
 
     PageBean selectGroupOrderGuestListPageOu(PageBean pageBean, Integer bizId,Set<Integer> set,Integer userRightType,String sidx,String sord);
     
-    List<GroupOrder>selectMonthlyReportStatistics(PageBean<GroupOrder> pageBean, Integer bizId);
+    List<GroupOrder> selectMonthlyReportStatistics(PageBean<GroupOrder> pageBean, Integer bizId);
 
 
     PageBean<GroupOrder> selectOperatorOrderListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer userRightType);
@@ -433,7 +433,6 @@ public interface GroupOrderDal {
     PageBean<GroupOrder> selectOperatorGuestNameListPage(PageBean<GroupOrder> pageBean, Integer bizId, Set<Integer> set, Integer userRightType);
 
     /**
-     * @see 内部结算
      * @Auth TengDong
      * @Date 20161031
      * @param pageBean  model
@@ -447,10 +446,8 @@ public interface GroupOrderDal {
 
 
     /**
-     * @see 内部结算销售 总合计
      * @Auther TengDong
      * @Date 20161102
-     * @param pageBean
      * @param bizId
      * @param set
      * @param userRightType
@@ -462,6 +459,8 @@ public interface GroupOrderDal {
     Map<String, Object> selectProfitEverifyByTotal(PageBean pageBean,Integer bizId,Set<Integer> set,Integer userRightType);
 
     PageBean<GroupOrder> selectProductProfitStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId);
+
+    PageBean<GroupOrder> selectPaymentStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId);
 
     List<GroupOrderForCarCar> selectGroupOrdersInGroupsForCarCar(PageBean pageBean);
 }

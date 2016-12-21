@@ -185,7 +185,7 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 			vo.getTrafficRes().setNumReserved(0);
 			vo.getTrafficRes().setNumSold(0);
 			vo.getTrafficRes().setNumBalance((vo.getTrafficRes().getNumStock()-vo.getTrafficRes().getNumDisable()));
-			vo.getTrafficRes().setState(1);
+			vo.getTrafficRes().setState((byte) 1);
 			vo.getTrafficRes().setTimeUpdate(sdf.format(new Date()));
 		}else{
 			vo.getTrafficRes().setUserName(curUser.getName());
@@ -273,11 +273,15 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		PlatformEmployeePo curUser = dto.getCurUser();
 		int id = dto.getId();
 		int state = dto.getState();
+		//日志
+		TrafficRes trafficRes=trafficResBiz.findTrafficResById(id);
+		int rr = trafficResBiz.updateTrafficResState(id, state);
+		TrafficRes trafficRes1=trafficResBiz.findTrafficResById(id);
 		List<LogOperator> logList = new ArrayList<LogOperator>();
 		String stateStr = ("0".equals(String.valueOf(state))?"下架":"上架");
-		logList.add(LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(),LOG_ACTION.UPDATE, "traffic_res", id, 0, "更改状态为："+stateStr, null, null));
+		logList.add(LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(),LOG_ACTION.UPDATE, "traffic_res", id, 0, "更改状态为："+stateStr, trafficRes1, trafficRes));
 		logOperatorBiz.insert(logList);
-		return trafficResBiz.updateTrafficResState(id, state);
+		return rr;
 	}
 	
 	public List<TrafficRes> resDetails(int resId) {
@@ -1041,14 +1045,18 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 				TrafficResStocklog trafficResStocklog=new TrafficResStocklog();
 				trafficResStocklog.setAdjustAction(com.yimayhd.erpcenter.dal.product.constans.Constants.TRAFFICRES_STOCK_ACTION.STOCK.toString());
 				trafficResStocklog.setAdjustNum(toSaveResNumsSoldDTO.getPoorNumStock());
-				trafficResStocklog.setResId(Integer.valueOf(toSaveResNumsSoldDTO.getId()));
+				trafficResStocklog.setResId(toSaveResNumsSoldDTO.getId());
 				trafficResStocklog.setAdjustTime(new Date());
 				trafficResStocklog.setUserId(toSaveResNumsSoldDTO.getUserId());
 				trafficResStocklog.setUserName(toSaveResNumsSoldDTO.getUserName());
 				newId = trafficResBiz.insertTrafficResStocklog(trafficResStocklog);
 				trafficResBiz.updateStockOrStockDisable(Integer.valueOf(toSaveResNumsSoldDTO.getId()));
-				
-				logList.add(LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(),LOG_ACTION.UPDATE, "traffic_res_stocklog", newId, Integer.valueOf(toSaveResNumsSoldDTO.getId()), String.format(" 调整【总量】：%s", toSaveResNumsSoldDTO.getPoorNumStock().toString()), null, null));
+
+				LogOperator lo = LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(),LOG_ACTION.UPDATE, "traffic_res_stocklog", newId, Integer.valueOf(toSaveResNumsSoldDTO.getId()), String.format(" 调整【总量】：%s", toSaveResNumsSoldDTO.getPoorNumStock().toString()), null, null);
+
+				if (lo != null) {
+					logList.add(lo);
+				}
 			}
 		}
 		if(null != toSaveResNumsSoldDTO.getNumDisable()){
@@ -1062,8 +1070,11 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 				trafficResStocklog.setUserName(toSaveResNumsSoldDTO.getUserName());
 				newId = trafficResBiz.insertTrafficResStocklog(trafficResStocklog);
 				trafficResBiz.updateStockOrStockDisable(Integer.valueOf(toSaveResNumsSoldDTO.getId()));
-				
-				logList.add(LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(),LOG_ACTION.UPDATE, "traffic_res_stocklog", newId, Integer.valueOf(toSaveResNumsSoldDTO.getId()), String.format(" 调整【机动位】：%s", toSaveResNumsSoldDTO.getPoorNumDisable().toString()), null, null));
+
+				LogOperator lo = LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(),LOG_ACTION.UPDATE, "traffic_res_stocklog", newId, Integer.valueOf(toSaveResNumsSoldDTO.getId()), String.format(" 调整【机动位】：%s", toSaveResNumsSoldDTO.getPoorNumStock().toString()), null, null);
+				if (lo != null) {
+					logList.add(lo);
+				}
 			}
 		}
 		

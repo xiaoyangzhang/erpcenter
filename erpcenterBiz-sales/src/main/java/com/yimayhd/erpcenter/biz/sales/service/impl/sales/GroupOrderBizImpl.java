@@ -1232,4 +1232,7 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
 
         return groupOrderForCarCar;
     }
+    public PageBean<GroupOrder> selectPaymentStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId) {
+        return groupOrderDal.selectPaymentStatisticsListPage(pageBean,bizId);
+    }
 }

@@ -1758,6 +1758,12 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 
 
 
+    public PageBean<GroupOrder>selectPaymentStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId){
+        List<GroupOrder> lists=groupOrderMapper.selectPaymentStatisticsListPage(pageBean, bizId);
+        pageBean.setResult(lists);
+        return pageBean;
+    }
+
 
 }
 

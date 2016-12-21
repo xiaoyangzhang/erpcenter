@@ -75,4 +75,7 @@ public interface TourGroupFacade {
     public BookingProfitTableResult toProfitSaleExcel(GroupOrder groupOrder,Integer bizId,Set<Integer> userIdSet);
     public WebResult<List<TourGroupForCarCar>> selectGroupInfoWithArrangedTransAndGuideForCarCar(PageBean pageBean);
 
+    public ToProfitExcelResult toProfitExcel(GroupOrder groupOrder,Integer bizId,Set<Integer> dataUserIdSet);
+    public ToProfitExcelResult getGroupIdsByTravelExportStatus(Integer c,Integer bizId);
+
 }

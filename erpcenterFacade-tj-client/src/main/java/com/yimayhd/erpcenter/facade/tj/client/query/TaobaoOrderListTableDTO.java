@@ -18,6 +18,16 @@ public class TaobaoOrderListTableDTO implements Serializable{
 	
 	private Set<Integer> dataUserIdSets;
 
+	private Integer rows;
+
+	public Integer getRows() {
+		return rows;
+	}
+
+	public void setRows(Integer rows) {
+		this.rows = rows;
+	}
+
 	public Set<Integer> getDataUserIdSets() {
 		return dataUserIdSets;
 	}

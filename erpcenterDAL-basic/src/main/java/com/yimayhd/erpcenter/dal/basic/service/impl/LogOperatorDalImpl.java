@@ -16,9 +16,13 @@ public class LogOperatorDalImpl implements LogOperatorDal {
 	@Override
 	public void insert(List<LogOperator> list) {
 		long time = System.currentTimeMillis();
-		for(LogOperator info : list){
-			info.setBatchId(new Long(time).intValue());
-			logOperatorMapper.insert(info);
+		if(list.size()>0 && list != null) {
+			for (LogOperator info : list) {
+				if(info !=null) {
+					info.setBatchId(new Long(time).intValue());
+					logOperatorMapper.insert(info);
+				}
+			}
 		}
 	}
 

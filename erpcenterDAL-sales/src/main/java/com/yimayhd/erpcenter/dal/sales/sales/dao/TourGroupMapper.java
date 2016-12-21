@@ -5,7 +5,6 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
 import com.yimayhd.erpcenter.dal.sales.client.quality.vo.QualityTourGroupVo;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroupForCarCar;
-import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupInfoQueryForCarCar;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.OperatorGroupStatic;
 import org.apache.ibatis.annotations.Param;
 
@@ -302,4 +301,17 @@ public interface TourGroupMapper {
                                                   @Param("bizId") Integer bizId);
 
 	List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCarListPage(@Param("page") PageBean pageBean);
+	/**
+	 * 根据biz_id - travel_export_status获取集团id集合
+	 * @author daixiaoman
+	 * @date 2016年12月5日 上午11:22:46
+	 */
+	public List<Integer> getGroupIdsByTravelExportStatus(Map<String,Object> params);
+
+	/**
+	 * 更新导出状态
+	 * @author daixiaoman
+	 * @date 2016年12月6日 上午11:11:30
+	 */
+	public void updateTourGroupTravelExportStatus(@Param("groupIds")List<Integer> groupIds,@Param("travelExportStatus")Integer status);
 }

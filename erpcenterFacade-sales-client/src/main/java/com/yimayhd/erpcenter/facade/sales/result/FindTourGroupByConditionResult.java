@@ -15,6 +15,11 @@ public class FindTourGroupByConditionResult extends ResultSupport  {
     private int pageTotalAudit;
     private int pageTotalChild;
     private int pageTotalGuide;
+
+    private int totalAudit;
+    private int totalChild;
+    private int totalGuide;
+
     private GroupOrder order;
     private GroupOrder groupOrder;
     private PageBean<GroupOrder> pageBean;
@@ -74,5 +79,29 @@ public class FindTourGroupByConditionResult extends ResultSupport  {
 
     public void setGroupOrder(GroupOrder groupOrder) {
         this.groupOrder = groupOrder;
+    }
+
+    public int getTotalAudit() {
+        return totalAudit;
+    }
+
+    public void setTotalAudit(int totalAudit) {
+        this.totalAudit = totalAudit;
+    }
+
+    public int getTotalChild() {
+        return totalChild;
+    }
+
+    public void setTotalChild(int totalChild) {
+        this.totalChild = totalChild;
+    }
+
+    public int getTotalGuide() {
+        return totalGuide;
+    }
+
+    public void setTotalGuide(int totalGuide) {
+        this.totalGuide = totalGuide;
     }
 }
