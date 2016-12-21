@@ -76,6 +76,7 @@
 	<select id="selectTransPortHotelByGroupIds" resultMap="TransportHotel">
 		SELECT d.item_date,t.group_id ,t.supplier_id,t.supplier_name  FROM `booking_supplier` t JOIN `booking_supplier_detail` d ON t.id = d.booking_id  
 		WHERE  t.supplier_type =3 AND t.group_id in (${groupIds})
+		GROUP BY t.group_id,t.supplier_id
 	</select>
 	
 	<select id="selectDeliveryPriceListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BookingDeliveryPrice">
