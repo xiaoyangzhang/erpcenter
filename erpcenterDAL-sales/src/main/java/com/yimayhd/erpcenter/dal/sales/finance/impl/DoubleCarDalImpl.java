@@ -35,31 +35,52 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 		for (int i = 0;i < list.size();i++) {
 			TransPort transPort = list.get(i);
 			Date date = null;
-			if(transPort.getType() == 0){//接
-				date = transPort.getArrivalDate();
-			}else if(transPort.getType() == 1 && null != transPort.getDepartureDate()){//送
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(transPort.getDepartureDate());
-				cal.set(Calendar.DATE, cal.get(Calendar.DATE-1));
-				date = cal.getTime();
+			date = getDate(transPort, date);
+			if(null == date){//如果没有传日期，酒店就不需要匹配了
+				continue;
 			}
-			StringBuffer nameBuffer = new StringBuffer();
-			for (int j = 0; j < hotels.size(); j++) {
-				TransPortHotel hotel = hotels.get(j);
-				if(null != date && hotel.getGroupId() == transPort.getGroupId() && hotel.getItemDate().compareTo(date) == 0){
-					if(transPort.getHotelId() == 0){
-						transPort.setHotelId(hotel.getSupplierId());
-					}
-					nameBuffer.append(hotel.getSupplierName()+",");
-				}
-			}
-			String hotelName = nameBuffer.toString();
-			if(!StringUtils.isBlank(hotelName)){
-				hotelName = hotelName.substring(0, hotelName.length()-1);
-			}
-			transPort.setHotelName(hotelName);
+			transPort = getHotelMsg(hotels, date, transPort);
 		}
 		return list;
+	}
+	
+	private static Date getDate(TransPort transPort,Date date){
+		if(transPort.getType() == 0){//接
+			date = transPort.getArrivalDate();
+		}else if(transPort.getType() == 1 && null != transPort.getDepartureDate()){//送
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(transPort.getDepartureDate());
+			cal.add(Calendar.DATE, -1);
+			date = cal.getTime();
+		}
+		return date;
+	}
+	
+	private static TransPort getHotelMsg(List<TransPortHotel> hotels,Date date,TransPort transPort){
+		StringBuffer nameBuffer = new StringBuffer();
+		for (int j = 0; j < hotels.size(); j++) {
+			TransPortHotel hotel = hotels.get(j);
+			if(null == hotel || null == hotel.getItemDate()){
+				continue;
+			}
+			String queryTime = sdf.format(date);
+			String itemTime = sdf.format(hotel.getItemDate());
+			if(hotel.getGroupId() == transPort.getGroupId() && queryTime.equals(itemTime)){
+				if(transPort.getHotelId() == 0){
+					transPort.setHotelId(hotel.getSupplierId());
+				}
+				nameBuffer.append(hotel.getSupplierName());
+				if(j < hotels.size() - 1 ){
+					nameBuffer.append(",");
+				}
+			}
+		}
+		String hotelName = nameBuffer.toString();
+		if(!StringUtils.isBlank(hotelName)){
+			hotelName = hotelName.substring(0, hotelName.length()-1);
+		}
+		transPort.setHotelName(hotelName);
+		return transPort;
 	}
 	
 	
@@ -88,36 +109,11 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 		for (int i = 0;i < list.size();i++) {
 			TransPort transPort = list.get(i);
 			Date date = null;
-			if(transPort.getType() == PickTransportTypeEnum.PICK.getId()){//接机
-				date = transPort.getArrivalDate();
-			}else if(transPort.getType() == PickTransportTypeEnum.SEND.getId() && null != transPort.getDepartureDate()){//送机
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(transPort.getDepartureDate());
-				cal.set(Calendar.DATE, cal.get(Calendar.DATE-1));
-				date = cal.getTime();
-			}
+			date = getDate(transPort, date);
 			if(null == date){//如果没有传日期，酒店就不需要匹配了
-				break;
+				continue;
 			}
-			StringBuffer nameBuffer = new StringBuffer();
-			for (int j = 0; j < hotels.size(); j++) {
-				TransPortHotel hotel = hotels.get(j);
-				if(null == hotel || null == hotel.getItemDate()){
-					break;
-				}
-				String queryTime = sdf.format(date);
-				String itemTime = sdf.format(hotel.getItemDate());
-				if(hotel.getGroupId() == transPort.getGroupId() && queryTime.equals(itemTime)){
-					if(transPort.getHotelId() == 0){
-						transPort.setHotelId(hotel.getSupplierId());
-					}
-					nameBuffer.append(hotel.getSupplierName());
-					if(j < hotels.size() - 1 ){
-						nameBuffer.append(",");
-					}
-				}
-			}
-			transPort.setHotelName(nameBuffer.toString());
+			transPort = getHotelMsg(hotels, date, transPort);
 		}
 		return list;
 	}
@@ -176,7 +172,7 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 		}else if(type == PickTransportTypeEnum.SEND.getId() ){//送
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(departureDate);
-			cal.set(Calendar.DATE, cal.get(Calendar.DATE-1));
+			cal.add(Calendar.DATE, -1);
 			date = cal.getTime();
 		}else{
 			return null;

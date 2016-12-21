@@ -150,8 +150,9 @@ public class TestController {
 	
 	@RequestMapping(value = "/testSelectTransport")
 	public Object testSelectTransport(){
-
-		return doubleCarBiz.selectTransportByOrderId(1060);
+		List<Integer> ids = new ArrayList<Integer>();
+		ids.add(70673);
+		return doubleCarBiz.selectTransportByOrderIds(ids);
 	}
 	
 	@RequestMapping(value = "/testGetOrgEmployeeListPage1")
