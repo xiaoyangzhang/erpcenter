@@ -29,15 +29,12 @@
 		<artifactId>yihg-architect-mybatis</artifactId>
 	</dependency>
 	
-	<dependency>
-		<groupId>com.yimayhd.erpcenter</groupId>
-		<artifactId>erpcenter-common</artifactId>
-	</dependency>
 
-	<dependency>
+
+	<!--<dependency>
 				<groupId>com.yimayhd.erpcenter</groupId>
 				<artifactId>erpcenter-common</artifactId>
-	</dependency>
+	</dependency>-->
 
 	<dependency>
 			<groupId>com.yimayhd.erpcenter</groupId>

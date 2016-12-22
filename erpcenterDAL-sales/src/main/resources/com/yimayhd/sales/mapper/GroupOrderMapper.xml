@@ -6778,7 +6778,7 @@
 		group by supplier_name,order_mode,tg.product_id 
 			</select>
 	<select id="selectGroupOrdersInGroupsForCarCar" resultMap="groupOrderForCarCar" parameterType="com.yihg.mybatis.utility.PageBean">
-		select go.id, go.group_id, operator_id,operator_name,
+		select go.id, go.group_id, go.operator_id,go.operator_name,
 		order_no,order_type,`type`,
 		go.total,
 		contact_name,
