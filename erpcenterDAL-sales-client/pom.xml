@@ -29,10 +29,6 @@
 			<artifactId>junit</artifactId>
 		</exclusion>
 		<exclusion>
-			<groupId>com.yihg</groupId>
-			<artifactId>yihg-architect-mybatis</artifactId>
-		</exclusion>
-		<exclusion>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 		</exclusion>
