@@ -19,6 +19,11 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
+	  <dependency>
+		  <groupId>org.springframework</groupId>
+		  <artifactId>spring-tx</artifactId>
+
+	  </dependency>
     <dependency>
 		<groupId>com.yimayhd.erpcenter</groupId>
 		<artifactId>erpcenterDAL-sales-client</artifactId>
