@@ -11,7 +11,7 @@ public class TraficchangeResStateDTO implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private int state;
+	private byte state;
 	private PlatformEmployeePo curUser;
 	public int getId() {
 		return id;
@@ -19,10 +19,10 @@ public class TraficchangeResStateDTO implements Serializable{
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getState() {
+	public byte getState() {
 		return state;
 	}
-	public void setState(int state) {
+	public void setState(byte state) {
 		this.state = state;
 	}
 	public PlatformEmployeePo getCurUser() {
