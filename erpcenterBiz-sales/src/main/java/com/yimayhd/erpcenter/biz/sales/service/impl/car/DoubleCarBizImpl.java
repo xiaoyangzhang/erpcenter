@@ -35,6 +35,7 @@ public class DoubleCarBizImpl implements DoubleCarBiz{
 		SearchTransportsResult result = new SearchTransportsResult();
 		if(null == orderIds){
 			result.setErrorCode(DoubleCarErrorCode.PARAM_ERROR);
+			return result;
 		}
 		List<TransPort> lists = doubleCarDal.selectTransportByOrderIds(orderIds);
 		result.setTransPorts(lists);
@@ -93,12 +94,15 @@ public class DoubleCarBizImpl implements DoubleCarBiz{
 		SynHotelResult result = new SynHotelResult();
 		if(null == query){
 			result.setErrorCode(DoubleCarErrorCode.QUERY_ERROR);
+			return result;
 		}
 		if(query.getType() == PickTransportTypeEnum.PICK.getId() && null == query.getArrivalDate()){
 			result.setErrorCode(DoubleCarErrorCode.QUERY_DATE_ERROR);
+			return result;
 		}
 		if(query.getType() == PickTransportTypeEnum.SEND.getId() && null == query.getDepartureDate()){
 			result.setErrorCode(DoubleCarErrorCode.QUERY_DATE_ERROR);
+			return result;
 		}
 		result.setHotelMsgs(doubleCarDal.synHotelMsg(query.getGroupId(),query.getType(),query.getDepartureDate(),query.getArrivalDate()));
 		return result;

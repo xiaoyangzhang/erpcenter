@@ -180,13 +180,13 @@ public class TestController {
 	@RequestMapping(value = "/synHotelMsg")
 	public Object synHotelMsg(){
 		SynHotelQuery query = new SynHotelQuery();
-		query.setType(PickTransportTypeEnum.PICK.getId());
-		query.setGroupId(272);
+		query.setType(PickTransportTypeEnum.SEND.getId());
+		query.setGroupId(16881);
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.YEAR, 2015);
-		cal.set(Calendar.MONTH, 10);
-		cal.set(Calendar.DATE, 7);
-//		query.setArrivalDate(cal.getTime());
+		cal.set(Calendar.YEAR, 2016);
+		cal.set(Calendar.MONTH, 7);
+		cal.set(Calendar.DATE, 15);
+		query.setDepartureDate(cal.getTime());
 		return doubleCarBiz.synHotelMsg(query);
 	}
 	
