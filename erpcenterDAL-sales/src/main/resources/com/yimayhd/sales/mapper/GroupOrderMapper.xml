@@ -210,8 +210,8 @@
 			<result column="num_adult" property="numAdult" jdbcType="INTEGER" />
 			<result column="num_child" property="numChild" jdbcType="INTEGER" />
 			<result column="num_guide" property="numGuide" jdbcType="INTEGER" />
-			<result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
-			<result column="supplier_id" property="supplierId" jdbcType="INTEGER" />
+			<result column="operator_name" property="operatorName" jdbcType="VARCHAR" />
+			<result column="operator_id" property="operatorId" jdbcType="INTEGER" />
 			<result column="receive_mode" property="receiveMode" jdbcType="VARCHAR" />
 			<result column="group_id" property="groupId" jdbcType="INTEGER" />
 			<result column="order_type" property="orderType" jdbcType="INTEGER" />
@@ -6778,7 +6778,7 @@
 		group by supplier_name,order_mode,tg.product_id 
 			</select>
 	<select id="selectGroupOrdersInGroupsForCarCar" resultMap="groupOrderForCarCar" parameterType="com.yihg.mybatis.utility.PageBean">
-		select go.id, go.group_id, supplier_id,supplier_name,
+		select go.id, go.group_id, operator_id,operator_name,
 		order_no,order_type,`type`,
 		go.total,
 		contact_name,
