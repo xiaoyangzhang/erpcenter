@@ -1,15 +1,20 @@
 package com.yimayhd.erpcenter.dal.product.service.impl;
 
-import java.text.MessageFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.common.solr.SolrSearchPageDTO;
+import com.yimayhd.erpcenter.dal.product.dao.*;
+import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
+import com.yimayhd.erpcenter.dal.product.message.ProductInfoUpdateMessageDTO;
+import com.yimayhd.erpcenter.dal.product.po.*;
+import com.yimayhd.erpcenter.dal.product.query.ProductStatePageQueryDTO;
+import com.yimayhd.erpcenter.dal.product.query.ProductStockPageQueryDTO;
+import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
+import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStateConverter;
+import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStockConverter;
+import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
+import com.yimayhd.erpcenter.dal.product.utils.HttpUtil;
 import com.yimayhd.erpcenter.dal.product.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -20,46 +25,10 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.rocketmq.client.producer.LocalTransactionExecuter;
-import com.alibaba.rocketmq.client.producer.LocalTransactionState;
-import com.alibaba.rocketmq.client.producer.SendResult;
-import com.alibaba.rocketmq.client.producer.SendStatus;
-import com.alibaba.rocketmq.client.producer.TransactionSendResult;
-import com.alibaba.rocketmq.common.message.Message;
-import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.common.mq.MsgSenderService;
-import com.yimayhd.erpcenter.common.solr.SolrSearchPageDTO;
-import com.yimayhd.erpcenter.dal.product.dao.ProductAttachmentMapper;
-import com.yimayhd.erpcenter.dal.product.dao.ProductContactMapper;
-import com.yimayhd.erpcenter.dal.product.dao.ProductGroupPriceMapper;
-import com.yimayhd.erpcenter.dal.product.dao.ProductInfoMapper;
-import com.yimayhd.erpcenter.dal.product.dao.ProductRemarkMapper;
-import com.yimayhd.erpcenter.dal.product.dao.ProductRightMapper;
-import com.yimayhd.erpcenter.dal.product.dao.ProductRouteMapper;
-import com.yimayhd.erpcenter.dal.product.dao.TaobaoProductMapper;
-import com.yimayhd.erpcenter.dal.product.dto.ProductStateDTO;
-import com.yimayhd.erpcenter.dal.product.message.ProductInfoUpdateMessageDTO;
-import com.yimayhd.erpcenter.dal.product.po.PriceView;
-import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
-import com.yimayhd.erpcenter.dal.product.po.ProductContact;
-import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
-import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
-import com.yimayhd.erpcenter.dal.product.po.ProductRight;
-import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
-import com.yimayhd.erpcenter.dal.product.po.ProductSales;
-import com.yimayhd.erpcenter.dal.product.po.ProductStock;
-import com.yimayhd.erpcenter.dal.product.po.TaobaoProduct;
-import com.yimayhd.erpcenter.dal.product.query.ProductStatePageQueryDTO;
-import com.yimayhd.erpcenter.dal.product.query.ProductStockPageQueryDTO;
-import com.yimayhd.erpcenter.dal.product.service.ProductInfoDal;
-import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStateConverter;
-import com.yimayhd.erpcenter.dal.product.solr.converter.ProductStockConverter;
-import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
-import com.yimayhd.erpcenter.dal.product.topic.ProductTopic;
-import com.yimayhd.erpcenter.dal.product.utils.HttpUtil;
+import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class ProductInfoDalImpl implements ProductInfoDal{
 
@@ -85,8 +54,8 @@ public class ProductInfoDalImpl implements ProductInfoDal{
     @Autowired
     private TransactionTemplate transactionTemplateProduct;
     
-    @Autowired
-    private MsgSenderService msgSender;
+//    @Autowired
+//    private MsgSenderService msgSender;
     
     @Autowired
     private TaobaoProductMapper taobaoProductMapper;
@@ -96,12 +65,12 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		final ProductInfoUpdateMessageDTO msgDTO = new ProductInfoUpdateMessageDTO();
 		
 		infoMapper.insertSelective(record);
-		msgDTO.setProductId(record.getId());
-		SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(), ProductTopic.PRODUCT_MODIFY.getTags());
-		
-		if(sendResult.getSendStatus() != SendStatus.SEND_OK){
-			LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
-		}
+//		msgDTO.setProductId(record.getId());
+//		SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(), ProductTopic.PRODUCT_MODIFY.getTags());
+//
+//		if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+//			LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+//		}
 		
 		return record.getId();
 	}
@@ -321,11 +290,11 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 			LOGGER.error("save productInfo failed ,params:productInfoVo={},bizCode={},brandCode={}",JSON.toJSONString(productInfoVo),bizCode,brandCode);
 			return -1;
 		}else{
-			
-			SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(),  ProductTopic.PRODUCT_MODIFY.getTags());
-			if(sendResult.getSendStatus() != SendStatus.SEND_OK){
-				LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
-			}
+//
+//			SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(),  ProductTopic.PRODUCT_MODIFY.getTags());
+//			if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+//				LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+//			}
 		}
 		
 		
@@ -354,21 +323,21 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		final ProductInfoUpdateMessageDTO msgDTO = new ProductInfoUpdateMessageDTO();
 		msgDTO.setProductId(productInfo.getId());
 		
-		TransactionSendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(), ProductTopic.PRODUCT_MODIFY.getTags(), new LocalTransactionExecuter(){
+//		TransactionSendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(), ProductTopic.PRODUCT_MODIFY.getTags(), new LocalTransactionExecuter(){
 
-			@Override
-			public LocalTransactionState executeLocalTransactionBranch(Message msg, Object arg) {
+//			@Override
+//			public LocalTransactionState executeLocalTransactionBranch(Message msg, Object arg) {
 				
 				infoMapper.updateByPrimaryKeySelective(productInfo);
 				
-				return LocalTransactionState.COMMIT_MESSAGE;
-			}
-			
-		});
-		
-		if(sendResult.getSendStatus() != SendStatus.SEND_OK){
-			LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
-		}
+//				return LocalTransactionState.COMMIT_MESSAGE;
+//			}
+//
+//		});
+//
+//		if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+//			LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+//		}
 		
 		return 1;
 
@@ -508,10 +477,10 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		});
 		
 		
-		SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(),  ProductTopic.PRODUCT_MODIFY.getTags());
-		if(sendResult.getSendStatus() != SendStatus.SEND_OK){
-			LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
-		}
+//		SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(),  ProductTopic.PRODUCT_MODIFY.getTags());
+//		if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+//			LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+//		}
 		
 	}
 
@@ -679,18 +648,18 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	final ProductInfoUpdateMessageDTO msgDTO = new ProductInfoUpdateMessageDTO();
 	msgDTO.setProductId(productId);	
 	
-	SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(),ProductTopic.PRODUCT_MODIFY.getTags(), new LocalTransactionExecuter() {
-		@Override
-		public LocalTransactionState executeLocalTransactionBranch(Message msg, Object arg) {
+//	SendResult sendResult = msgSender.sendMessage(msgDTO, ProductTopic.PRODUCT_MODIFY.getTopic(),ProductTopic.PRODUCT_MODIFY.getTags(), new LocalTransactionExecuter() {
+//		@Override
+//		public LocalTransactionState executeLocalTransactionBranch(Message msg, Object arg) {
 			infoMapper.updateProductSysId(productId, productSysId);
-						
-			return LocalTransactionState.COMMIT_MESSAGE;
-		}
-	 });
-	
-	if(sendResult.getSendStatus() != SendStatus.SEND_OK){
-		LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
-	}
+
+//			return LocalTransactionState.COMMIT_MESSAGE;
+//		}
+//	 });
+//
+//	if(sendResult.getSendStatus() != SendStatus.SEND_OK){
+//		LOGGER.error("sendMessage error,sendResult={},msgDTO={}",JSONObject.toJSONString(sendResult),JSONObject.toJSONString(msgDTO));
+//	}
 	
 	
 	}
