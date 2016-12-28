@@ -14,6 +14,7 @@ import java.util.Set;
 
 import com.yimayhd.erpcenter.biz.basic.service.LogOperatorBiz;
 import com.yimayhd.erpcenter.common.exception.ClientException;
+import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
 import com.yimayhd.erpcenter.dal.basic.utils.LogFieldUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,6 @@ import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRequirementBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRouteBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
-import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sales.client.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinanceGuide;

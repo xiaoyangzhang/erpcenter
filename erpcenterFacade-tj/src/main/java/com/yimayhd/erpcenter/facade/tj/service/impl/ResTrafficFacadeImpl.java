@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
+import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants.LOG_ACTION;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +37,6 @@ import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderTransportB
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.SpecialGroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
-import com.yimayhd.erpcenter.common.contants.BasicConstants;
-import com.yimayhd.erpcenter.common.contants.BasicConstants.LOG_ACTION;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
@@ -202,7 +202,7 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 			id = vo.getTrafficRes().getId();
 			
 			TrafficRes orginReS = trafficResBiz.findTrafficResById(id);
-			logList.add(LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(), LOG_ACTION.UPDATE, "traffic_res", id, 0, "修改资源记录", vo.getTrafficRes(), orginReS));
+			logList.add(LogFieldUtil.getLog_Instant(curUser.getBizId(), curUser.getName(), BasicConstants.LOG_ACTION.UPDATE, "traffic_res", id, 0, "修改资源记录", vo.getTrafficRes(), orginReS));
 			
 			//产生日志（子表）
 			List<TrafficResLine> lineListDB = trafficResBiz.selectTrafficResLine(id);

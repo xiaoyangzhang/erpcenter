@@ -453,69 +453,17 @@
 	</select>
 
 	<select id="selectPaymentStaticData2" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BaseResultMap">
-		select distinct o.supplier_id,o.supplier_name as supplierName,IFNULL(s1.orderCount,0)
-		orderCount,ifNull(s1.total,0) total,ifNull(s1.totalCash,0) totalCash,ifNull(s1.totalBalance,0) totalBalance
-		,ifNull(s1.num_adult,0) num_adult,ifNull(s1.num_child,0) num_child,ifNull(s1.num_guide,0) num_guide
-		,ifNull(s2.preTotal,0) preTotal
+		select distinct o.supplier_id,o.supplier_name as supplierName,IFNULL(s2.preTotal, 0) AS preTotal,
+		COUNT(o.id) AS orderCount,
+		IFNULL(SUM(o.total), 0) AS total,
+		SUM(IFNULL(o.total_Cash, 0)) AS totalCash,
+		SUM(o.total - IFNULL(total_Cash, 0)) totalBalance,
+		IFNULL(SUM(o.num_adult), 0) AS num_adult,
+		IFNULL(SUM(o.num_child), 0) AS num_child,
+		IFNULL(SUM(o.num_guide), 0) AS num_guide
 		from group_order o
-		left join (SELECT o.supplier_id as supplierId1 ,SUM(total) AS total,SUM(total_cash) AS
-		totalCash,SUM(total-total_cash) AS totalBalance,SUM(num_adult) AS
-		num_adult,SUM(num_child) AS
-		num_child,SUM(num_guide) AS num_guide,COUNT(o.id) orderCount
-		FROM group_order o left join tour_group tg on (o.group_id=tg.id)
-		where o.biz_id = #{bizId} AND o.state=1 and IFNULL(tg.group_state,0) <![CDATA[!=]]>
-		2
-		<if test="set!=null">
-			AND o.operator_id in
-			<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		<!-- 人员 -->
-		<if test="page.parameter.type == 0">
-			<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds !=''">
-				and operator_id in (${page.parameter.saleOperatorIds})
-			</if>
-		</if>
-		<if test="page.parameter.type == 1">
-			<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds !=''">
-				and sale_operator_id in(${page.parameter.saleOperatorIds})
-			</if>
-		</if>
-		<!-- 时间 -->
-		<if test="page.parameter.startTime != null and page.parameter.startTime != ''">and
-			departure_date <![CDATA[>=]]>
-			#{page.parameter.startTime}
-		</if>
-		<if test="page.parameter.endTime != null and page.parameter.endTime != ''">and
-			departure_date <![CDATA[<=]]>
-			#{page.parameter.endTime}
-		</if>
-		<if test="page.parameter.supplierName != null and page.parameter.supplierName != ''">and supplier_name LIKE
-			CONCAT('%',#{page.parameter.supplierName},'%')
-		</if>
-		<if test="page.parameter.productName != null and page.parameter.productName != ''">and
-			CONCAT('【',product_brand_name,'】',product_name) LIKE CONCAT('%',#{page.parameter.productName},'%')
-		</if>
-		<!-- 团类型 订单类型count判断 -->
-		<if test="page.parameter.groupMode !=null and page.parameter.groupMode !=''">
-			<if test="page.parameter.groupMode == 1">and
-				order_type <![CDATA[=]]>1
-			</if>
-			<if test="page.parameter.groupMode == 0">and
-				order_type <![CDATA[!=]]>1
-			</if>
-		</if>
-		<!-- 财务状态 -->
-		<if test="page.parameter.paymentState!=null">
-			<if test="page.parameter.paymentState == 0">and
-				total <![CDATA[<>]]>
-				total_cash
-			</if>
-			<if test="page.parameter.paymentState == 1">and total = total_cash</if>
-		</if>
-		GROUP BY supplier_id
-		) s1 on (o.supplier_id=s1.supplierId1)
+		 left join tour_group tg on (o.group_id=tg.id)
+
 		left join (SELECT SUM(total-total_cash) AS preTotal,supplier_id as supplierId2
 		FROM group_order o left join tour_group tg on (o.group_id=tg.id)
 		WHERE o.state =1 and o.biz_id = #{bizId} and IFNULL(tg.group_state,0) <![CDATA[!=]]>2
@@ -565,11 +513,62 @@
 			<if test="page.parameter.paymentState == 1">and total = total_cash</if>
 		</if>
 		GROUP BY supplier_id
-		having SUM(total-total_cash) <![CDATA[!=]]>
-		0
+		having SUM(total-total_cash) <![CDATA[!=]]>0
 		)s2 ON o.supplier_id = s2.supplierId2
-		where o.biz_id = #{bizId} and ((s1.supplierId1 is not null) or (s2.supplierId2 is not null))
-		order by ifNull(s1.totalBalance,0)+ifNull(s2.preTotal,0) desc
+		where o.biz_id = #{bizId} and ((supplier_id is not null) or (s2.supplierId2 is not null))
+		AND o.state=1 and IFNULL(tg.group_state,0) <![CDATA[!=]]>2
+		<if test="set!=null">
+			AND o.operator_id in
+			<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<!-- 人员 -->
+		<if test="page.parameter.type == 0">
+			<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds !=''">
+				and operator_id in (${page.parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="page.parameter.type == 1">
+			<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds !=''">
+				and sale_operator_id in(${page.parameter.saleOperatorIds})
+			</if>
+		</if>
+		<!-- 时间 -->
+		<if test="page.parameter.startTime != null and page.parameter.startTime != ''">and
+			departure_date <![CDATA[>=]]>
+			#{page.parameter.startTime}
+		</if>
+		<if test="page.parameter.endTime != null and page.parameter.endTime != ''">and
+			departure_date <![CDATA[<=]]>
+			#{page.parameter.endTime}
+		</if>
+		<if test="page.parameter.supplierName != null and page.parameter.supplierName != ''">and supplier_name LIKE
+			CONCAT('%',#{page.parameter.supplierName},'%')
+		</if>
+		<if test="page.parameter.productName != null and page.parameter.productName != ''">and
+			CONCAT('【',go.product_brand_name,'】',go.product_name) LIKE CONCAT('%',#{page.parameter.productName},'%')
+		</if>
+		<!-- 团类型 订单类型count判断 -->
+		<if test="page.parameter.groupMode !=null and page.parameter.groupMode !=''">
+			<if test="page.parameter.groupMode == 1">and
+				order_type <![CDATA[=]]>1
+			</if>
+			<if test="page.parameter.groupMode == 0">and
+				order_type <![CDATA[!=]]>1
+			</if>
+		</if>
+		<!-- 财务状态 -->
+		<if test="page.parameter.paymentState!=null">
+			<if test="page.parameter.paymentState == 0">and
+				total <![CDATA[<>]]>
+				total_cash
+			</if>
+			<if test="page.parameter.paymentState == 1">and total = total_cash</if>
+		</if>
+		GROUP BY supplier_id
+
+		order by ifNull(SUM(o.total - IFNULL(total_Cash, 0)),0)+ifNull(s2.preTotal,0) desc
 	</select>
 	<select id="selectTotalNumAdultByOrderId" resultType="Integer" parameterType="Integer">
 		SELECT SUM(go.`num_adult`) FROM group_order go WHERE
@@ -810,7 +809,7 @@
 		</if>
 		<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
 			and go.departure_date <![CDATA[<=]]>
-			#{page.parameter.startTime}
+			#{page.parameter.endTime}
 		</if>
 		<if test="page.parameter.supplierName != null and page.parameter.supplierName != ''">
 			and go.supplier_name LIKE
@@ -837,6 +836,7 @@
 		<if test="page.parameter.itemId != -1">
 			and gop.item_id = ${page.parameter.itemId}
 		</if>
+		and gop.mode =0
 		) gopp
 		LEFT JOIN tour_group tg ON tg.id = gopp.group_id
 		where 1=1
@@ -5099,7 +5099,7 @@
 		num_adult,IFNULL(go.`num_child`,0) num_child,IFNULL(go.`num_guide`,0)
 		num_guide,go.`supplier_name`,go.`receive_mode`,
 		IFNULL(got.pickUpInfo,'') pickUpInfo,IFNULL(got.transferInfo,'')
-		transferInfo,SUM(totalPrice) totalSum
+		transferInfo,SUM(totalPrice) totalSum,tg.id as groupId
 		FROM `tour_group` tg JOIN `group_order` go ON tg.`id`=go.`group_id` JOIN
 		(SELECT order_id,
 		(CASE WHEN `type`=0 THEN GROUP_CONCAT(DISTINCT

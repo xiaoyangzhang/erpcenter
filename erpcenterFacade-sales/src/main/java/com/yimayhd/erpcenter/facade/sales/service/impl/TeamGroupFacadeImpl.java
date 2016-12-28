@@ -136,7 +136,7 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
                 }
             }
 
-            pageBean.setPage(findTourGroupByConditionDTO.getPage());
+//            pageBean.setPage(findTourGroupByConditionDTO.getPage());
             pageBean.setParameter(findTourGroupByConditionDTO.getGroupOrder());
             //返回查询的数据
             pageBean = groupOrderBiz.selectByConListPage(pageBean,
