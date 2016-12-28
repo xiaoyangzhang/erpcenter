@@ -21,9 +21,31 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.yimayhd.erpcenter</groupId>
-      <artifactId>erpcenter-common</artifactId>
-    </dependency>
+	<groupId>com.yimayhd.erpcenter</groupId>
+	<artifactId>erpcenter-common</artifactId>
+	<exclusions>
+		<exclusion>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</exclusion>
+		<exclusion>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</exclusion>
+		<exclusion>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</exclusion>
+		<exclusion>
+			<groupId>com.alibaba</groupId>
+			<artifactId>dubbo</artifactId>
+		</exclusion>
+		<exclusion>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-solrj</artifactId>
+			</exclusion>
+		</exclusions>
+	</dependency>
     <dependency>
 		<groupId>com.yihg</groupId>
 		<artifactId>yihg-architect-mybatis</artifactId>
