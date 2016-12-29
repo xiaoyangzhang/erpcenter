@@ -72,6 +72,11 @@ public class TrafficResBizImpl implements TrafficResBiz{
 	}
 
 	@Override
+	public PageBean<TrafficRes> selectAirTicketProfitListPage(PageBean<TrafficRes> pageBean) {
+		return trafficResDal.selectAirTicketProfitListPage(pageBean);
+	}
+
+	@Override
 	public int copyRes(Integer resId,String date) {
 		return trafficResDal.copyRes(resId, date);
 	}

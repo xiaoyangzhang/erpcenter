@@ -54,7 +54,8 @@ public class BasicConstants {
 	public static final String QTSR_JSFS="QTSR_JSFS";
 	//角色组
 	public static final String ROLE_GROUP="ROLE_GROUP";
-
+	//产品说明
+	public static final String PRODUCT_DES="PRODUCT_DES";
 
 	// 供应商-司机-准驾车型
 	public static final String GYS_SJ_ZJCX = "GYS_SJ_ZJCX";

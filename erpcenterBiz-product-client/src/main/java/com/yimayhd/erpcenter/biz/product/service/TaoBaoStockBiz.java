@@ -69,4 +69,10 @@ public interface TaoBaoStockBiz {
 	 
 	 PageBean findTaoBaoProductStockListPage(PageBean pageBean);
 
+	int delTaoBaoProductStock(TaobaoStockLog stockLog);
+
+	TaobaoStockLog selectStockLogAllByOrderId(Integer orderId);
+
+	TaobaoStockLog selectStockLogAllByTaobaoOrderId(Integer taobaoOrderId);
+
 }

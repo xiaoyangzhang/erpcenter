@@ -27,4 +27,6 @@ public interface TrafficResProductDal {
 
 	int updateResProductNumStock(Integer id, Integer numStock);
 
+	TrafficResProduct selectSumCostByProductCode(Integer productCode,Integer resId);
+
 }

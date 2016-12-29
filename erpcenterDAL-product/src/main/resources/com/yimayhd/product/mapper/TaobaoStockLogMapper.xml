@@ -158,5 +158,25 @@
     where order_id = #{orderId,jdbcType=INTEGER} and stock_date_id =#{stockDateId,jdbcType=INTEGER}
     limit 1
   </select>
-   
+
+  <select id="selectStockLogAllByOrderId" resultMap="BaseResultMap">
+    select *
+    from taobao_stock_log
+    where order_id = #{orderId,jdbcType=INTEGER}
+    limit 1
+  </select>
+
+  <update id="delStockById" parameterType="java.lang.Integer">
+    update taobao_stock_log
+    set num = 0
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectStockLogAllByTaobaoOrderId" resultMap="BaseResultMap">
+    select *
+    from taobao_stock_log
+    where taobao_order_id = #{taobaoOrderId,jdbcType=INTEGER}
+    limit 1
+  </select>
+
 </mapper>

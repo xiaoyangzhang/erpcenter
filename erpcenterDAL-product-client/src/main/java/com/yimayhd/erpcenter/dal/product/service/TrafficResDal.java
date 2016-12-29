@@ -47,4 +47,6 @@ public interface TrafficResDal {
 
 	TrafficRes selectTrafficResAndLineInfoById1(Integer id);
 
+	PageBean<TrafficRes> selectAirTicketProfitListPage(PageBean<TrafficRes> pageBean);
+
 }

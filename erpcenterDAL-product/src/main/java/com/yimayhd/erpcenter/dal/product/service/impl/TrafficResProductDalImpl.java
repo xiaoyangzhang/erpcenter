@@ -240,4 +240,9 @@ public class TrafficResProductDalImpl implements TrafficResProductDal{
 		return trafficResProductMapper.updateResProductNumStock(id, numStock);
 	}
 
+	@Override
+	public TrafficResProduct selectSumCostByProductCode(Integer productCode,Integer  resId) {
+		return trafficResProductMapper.selectSumCostByProductCode(productCode,resId);
+	}
+
 }

@@ -42,8 +42,11 @@
     <result column="ORDER_CLEAN" jdbcType="VARCHAR" property="ORDERCLEAN" />
     <result column="ORDER_UNCONFIRM" jdbcType="VARCHAR" property="ORDERUNCONFIRM" />
     <result column="ORDER_CONFIRM" jdbcType="VARCHAR" property="ORDERCONFIRM" />
-    
+
+      <result column="plan_cost" jdbcType="DECIMAL" property="planCost" />
+      <result column="plan_income" jdbcType="DECIMAL" property="planIncome" />
      <result column="num_cancel" jdbcType="VARCHAR" property="numCancel" />
+      <result column="sum_cost" jdbcType="DECIMAL" property="sumCost" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from traffic_res
@@ -401,4 +404,28 @@ LEFT JOIN (select res_id, GROUP_CONCAT(CONCAT_WS(' ',class_no,CONCAT(departure_c
 	from traffic_res_line group by res_id) b ON(b.res_id=a.id) 
     where a.id = #{id,jdbcType=INTEGER}
   </select>
+
+    <select id="selectAirTicketProfitListPage" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select tr.*, sum(IFNULL((trp.adult_cost_hotel+trp.adult_cost_ticket+trp.adult_cost_js+trp.adult_cost_other)*trp.num_stock,0)) plan_cost
+        , sum(IFNULL((trp.adult_suggest_price-trp.adult_same_pay-trp.adult_proxy_pay)*trp.num_stock,0)) plan_income
+        from traffic_res tr
+        LEFT JOIN traffic_res_product trp ON (tr.id=trp.res_id)
+        where   tr.biz_id =#{page.parameter.bizId,jdbcType=INTEGER}
+        <if test="page.parameter.resName != null and page.parameter.resName!=''">
+            AND tr.res_name LIKE CONCAT('%',#{page.parameter.resName},'%' )
+        </if>
+        <if test="page.parameter.resMethod!=null and page.parameter.resMethod!=''">
+            and tr.res_method =#{page.parameter.resMethod}
+        </if>
+        <if test="page.parameter.startMin != null and page.parameter.startMin!='' ">
+            AND tr.date_start <![CDATA[>= ]]>#{page.parameter.startMin}
+        </if>
+        <if test="page.parameter.startMax!= null and page.parameter.startMax!='' ">
+            AND tr.date_start <![CDATA[<= ]]>#{page.parameter.startMax}
+        </if>
+        <if test="page.parameter.state!=null and page.parameter.state!=''">
+            and tr.state =#{page.parameter.state}
+        </if>
+        GROUP BY tr.id ORDER BY tr.date_start
+    </select>
 </mapper>

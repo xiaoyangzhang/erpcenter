@@ -80,5 +80,7 @@ public interface TrafficResMapper {
   	 * @return
   	 */
    TrafficRes selectTrafficResAndLineInfoById1(Integer id);
+
+    List<TrafficRes>selectAirTicketProfitListPage(@Param("page") PageBean pageBean);
 }
 
