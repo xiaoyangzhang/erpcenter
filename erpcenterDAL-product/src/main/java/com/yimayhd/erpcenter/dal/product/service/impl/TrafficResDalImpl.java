@@ -262,4 +262,12 @@ public class TrafficResDalImpl implements TrafficResDal{
 		return trafficRes;
 	}
 
+	@Override
+	public PageBean<TrafficRes> selectAirTicketProfitListPage(
+			PageBean<TrafficRes> pageBean) {
+		List<TrafficRes> list = trafficResMapper.selectAirTicketProfitListPage(pageBean);
+		pageBean.setResult(list);
+		return pageBean;
+	}
+
 }

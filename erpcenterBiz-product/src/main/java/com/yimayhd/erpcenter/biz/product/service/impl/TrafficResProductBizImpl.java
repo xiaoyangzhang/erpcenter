@@ -80,4 +80,9 @@ public class TrafficResProductBizImpl implements TrafficResProductBiz{
 		return trafficResProductDal.updateResProductNumStock(id,numStock);
 	}
 
+	@Override
+	public TrafficResProduct selectSumCostByProductCode(Integer productCode, Integer resId) {
+		return trafficResProductDal.selectSumCostByProductCode(productCode,resId);
+	}
+
 }

@@ -160,7 +160,86 @@ public class TrafficResProduct implements Serializable{
 	 */
 	private Date timeUpdate;
 	
-	private String dateStart; 
+	private String dateStart;
+
+	private BigDecimal adultCostHotel;
+	private BigDecimal adultCostTicket;
+	private BigDecimal adultCostJs;
+	private BigDecimal adultCostOther;
+
+	private BigDecimal childCostHotel;
+	private BigDecimal childCostTicket;
+	private BigDecimal childCostJs;
+	private BigDecimal childCostOther;
+
+	private BigDecimal babyCostHotel;
+	private BigDecimal babyCostTicket;
+	private BigDecimal babyCostJs;
+	private BigDecimal babyCostOther;
+
+	public BigDecimal getChildCostHotel() {
+		return childCostHotel;
+	}
+
+	public void setChildCostHotel(BigDecimal childCostHotel) {
+		this.childCostHotel = childCostHotel;
+	}
+
+	public BigDecimal getChildCostTicket() {
+		return childCostTicket;
+	}
+
+	public void setChildCostTicket(BigDecimal childCostTicket) {
+		this.childCostTicket = childCostTicket;
+	}
+
+	public BigDecimal getChildCostJs() {
+		return childCostJs;
+	}
+
+	public void setChildCostJs(BigDecimal childCostJs) {
+		this.childCostJs = childCostJs;
+	}
+
+	public BigDecimal getChildCostOther() {
+		return childCostOther;
+	}
+
+	public void setChildCostOther(BigDecimal childCostOther) {
+		this.childCostOther = childCostOther;
+	}
+
+	public BigDecimal getBabyCostHotel() {
+		return babyCostHotel;
+	}
+
+	public void setBabyCostHotel(BigDecimal babyCostHotel) {
+		this.babyCostHotel = babyCostHotel;
+	}
+
+	public BigDecimal getBabyCostTicket() {
+		return babyCostTicket;
+	}
+
+	public void setBabyCostTicket(BigDecimal babyCostTicket) {
+		this.babyCostTicket = babyCostTicket;
+	}
+
+	public BigDecimal getBabyCostJs() {
+		return babyCostJs;
+	}
+
+	public void setBabyCostJs(BigDecimal babyCostJs) {
+		this.babyCostJs = babyCostJs;
+	}
+
+	public BigDecimal getBabyCostOther() {
+		return babyCostOther;
+	}
+
+	public void setBabyCostOther(BigDecimal babyCostOther) {
+		this.babyCostOther = babyCostOther;
+	}
 	
 	private Integer numBalance;
 	private String resName; 
@@ -180,6 +259,48 @@ public class TrafficResProduct implements Serializable{
 	private String dateLatest;
 	private Integer confirm;
 	private Integer unconfirm;
+	private BigDecimal sumCost;
+
+
+	public BigDecimal getSumCost() {
+		return sumCost;
+	}
+
+	public void setSumCost(BigDecimal sumCost) {
+		this.sumCost = sumCost;
+	}
+
+	public BigDecimal getAdultCostHotel() {
+		return adultCostHotel;
+	}
+
+	public void setAdultCostHotel(BigDecimal adultCostHotel) {
+		this.adultCostHotel = adultCostHotel;
+	}
+
+	public BigDecimal getAdultCostTicket() {
+		return adultCostTicket;
+	}
+
+	public void setAdultCostTicket(BigDecimal adultCostTicket) {
+		this.adultCostTicket = adultCostTicket;
+	}
+
+	public BigDecimal getAdultCostJs() {
+		return adultCostJs;
+	}
+
+	public void setAdultCostJs(BigDecimal adultCostJs) {
+		this.adultCostJs = adultCostJs;
+	}
+
+	public BigDecimal getAdultCostOther() {
+		return adultCostOther;
+	}
+
+	public void setAdultCostOther(BigDecimal adultCostOther) {
+		this.adultCostOther = adultCostOther;
+	}
 	
 	public Integer getConfirm() {
 		return confirm;

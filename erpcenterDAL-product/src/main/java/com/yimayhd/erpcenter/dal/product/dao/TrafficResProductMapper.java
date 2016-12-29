@@ -90,4 +90,6 @@ public interface TrafficResProductMapper {
     TrafficResProduct selectNumSoldCount(@Param("resId") Integer resId);
     
     int updateResProductNumStock(@Param("id") Integer id, @Param("numStock") Integer numStock);
+
+    TrafficResProduct selectSumCostByProductCode(@Param("productCode") Integer  productCode,@Param("resId") Integer  resId);
 }

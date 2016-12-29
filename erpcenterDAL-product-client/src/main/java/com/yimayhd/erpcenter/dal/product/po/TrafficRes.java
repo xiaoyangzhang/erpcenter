@@ -148,6 +148,47 @@ public class TrafficRes implements Serializable{
 
 	private BigDecimal childPrice;
 	private BigDecimal babyPrice;
+
+	private BigDecimal planCost;
+	private BigDecimal planIncome;
+
+	private BigDecimal sumCost;
+	private BigDecimal sumTotal;
+
+
+	public BigDecimal getSumTotal() {
+		return sumTotal;
+	}
+
+	public void setSumTotal(BigDecimal sumTotal) {
+		this.sumTotal = sumTotal;
+	}
+
+	public BigDecimal getSumCost() {
+		return sumCost;
+	}
+
+	public void setSumCost(BigDecimal sumCost) {
+		this.sumCost = sumCost;
+	}
+
+
+
+	public BigDecimal getPlanCost() {
+		return planCost;
+	}
+
+	public void setPlanCost(BigDecimal planCost) {
+		this.planCost = planCost;
+	}
+
+	public BigDecimal getPlanIncome() {
+		return planIncome;
+	}
+
+	public void setPlanIncome(BigDecimal planIncome) {
+		this.planIncome = planIncome;
+	}
 	
 	
 	public BigDecimal getChildPrice() {

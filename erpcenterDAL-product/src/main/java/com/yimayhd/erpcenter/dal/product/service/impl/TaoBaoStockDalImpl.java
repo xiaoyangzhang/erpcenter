@@ -189,7 +189,25 @@ public class TaoBaoStockDalImpl implements TaoBaoStockDal{
 		return log;
 	}
 
-	
+	@Override
+	public int delTaoBaoProductStock(TaobaoStockLog stockLog){
+		taobaoStockLogMapper.delStockById(stockLog.getId());
+		if(stockLog.getStockDateId()!=null)
+			taobaoStockDateMapper.updateByLog(stockLog.getStockDateId());  // 计算已售
+		return stockLog.getId();
+	}
+
+	@Override
+	public TaobaoStockLog selectStockLogAllByOrderId(Integer orderId){
+		TaobaoStockLog log = taobaoStockLogMapper.selectStockLogAllByOrderId(orderId);
+		return log;
+	}
+
+	@Override
+	public TaobaoStockLog selectStockLogAllByTaobaoOrderId(Integer taobaoOrderId){
+		TaobaoStockLog log = taobaoStockLogMapper.selectStockLogAllByTaobaoOrderId(taobaoOrderId);
+		return log;
+	}
 
 
 }

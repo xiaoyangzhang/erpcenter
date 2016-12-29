@@ -30,4 +30,5 @@ public interface TrafficResProductBiz {
 
 	int updateResProductNumStock(Integer id,Integer numStock);
 
+	TrafficResProduct selectSumCostByProductCode(Integer productCode,Integer resId);
 }

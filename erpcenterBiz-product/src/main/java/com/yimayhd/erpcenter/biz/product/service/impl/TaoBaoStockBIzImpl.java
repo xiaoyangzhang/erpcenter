@@ -104,4 +104,19 @@ public class TaoBaoStockBIzImpl implements TaoBaoStockBiz{
 	public PageBean findTaoBaoProductStockListPage(PageBean pageBean) {
 		return taoBaoStockDal.findTaoBaoProductStockListPage(pageBean);
 	}
+
+	@Override
+	public int delTaoBaoProductStock(TaobaoStockLog stockLog) {
+		return taoBaoStockDal.delTaoBaoProductStock(stockLog);
+	}
+
+	@Override
+	public TaobaoStockLog selectStockLogAllByOrderId(Integer orderId) {
+		return taoBaoStockDal.selectStockLogAllByTaobaoOrderId(orderId);
+	}
+
+	@Override
+	public TaobaoStockLog selectStockLogAllByTaobaoOrderId(Integer taobaoOrderId) {
+		return taoBaoStockDal.selectStockLogAllByTaobaoOrderId(taobaoOrderId);
+	}
 }

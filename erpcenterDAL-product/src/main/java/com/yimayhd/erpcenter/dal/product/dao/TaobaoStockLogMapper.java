@@ -27,4 +27,10 @@ public interface TaobaoStockLogMapper {
     TaobaoStockLog selectByStockDateIdAndOrderId(@Param("stockDateId") Integer stockDateId, @Param("orderId") Integer orderId);
     
     TaobaoStockLog selectByStockDateIdAndTaobaoOrderId(@Param("stockDateId") Integer stockDateId, @Param("taobaoOrderId") Integer taobaoOrderId);
+
+    int delStockById(Integer id);
+
+    TaobaoStockLog selectStockLogAllByOrderId(Integer orderId);
+
+    TaobaoStockLog selectStockLogAllByTaobaoOrderId(Integer taobaoOrderId);
 }
