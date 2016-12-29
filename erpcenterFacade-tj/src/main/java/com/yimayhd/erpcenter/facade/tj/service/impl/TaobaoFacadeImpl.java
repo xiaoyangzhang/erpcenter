@@ -650,84 +650,37 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
      * 同步 by time
      */
 	public PageBean synchroByTime(TaobaoOriginalOrderTableDTO taobaoOriginalOrderTableDTO){
-//		PageBean<PlatTaobaoTrade> pageBean = new PageBean<PlatTaobaoTrade>();
-//		if(page==null){
-//			pageBean.setPage(1);
-//		}else{
-//			pageBean.setPage(page);
-//		}
-//		if(pageSize==null){
-//			pageBean.setPageSize(Constants.PAGESIZE);
-//		}else{
-//			pageBean.setPageSize(pageSize);
-//		}
-//		Map<String,Object> pm  = WebUtils.getQueryParamters(request);
-//		pm.put("myStoreId",authClient);
-//		pm.put("curUserName",WebUtils.getCurrentUserSession(request).getName());
-//		pm.put("startMin",startTime+" 00:00:00");
-//		pm.put("startMax",endTime+" 23:59:59");
-//
-//		pageBean.setParameter(pm);
-
 		PageBean<PlatTaobaoTrade> pageBean = taobaoOrderBiz.syncTaobaoOrderByTime(taobaoOriginalOrderTableDTO.getPageBean(), taobaoOriginalOrderTableDTO.getBizId());
 
-		List<PlatTaobaoTrade> pttList = pageBean.getResult();
+		reduceTaoBaoTradeStock(pageBean.getResult());
+		return pageBean ;
+	}
+
+	private void reduceTaoBaoTradeStock(List<PlatTaobaoTrade> platTaobaoTradeList) {
 		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
 
 		// 获取备注(扣除库存)
-		for (PlatTaobaoTrade pt : pttList) {
+		for (PlatTaobaoTrade pt : platTaobaoTradeList) {
 			if (pt.getReceiveCount() != null && new Integer(pt.getReceiveCount()) > 0) {
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("numIid", pt.getNumIid());// 自编码、日期、数量,
 				// PlatTaobaoTradeOrderId
 				map.put("depDate", pt.getDepartureDate());
-				map.put("receiveCount", pt.getReceiveCount());
+//				map.put("receiveCount", pt.getReceiveCount());
 				map.put("receiveCount", pt.getReceiveCount());
 				map.put("taobaoOrderId", pt.getId().toString());
 				mapList.add(map);
 			}
 		}
 		taobaoStockBiz.updateProductStockByTaobao(mapList);
-		return pageBean ;
 	}
+
 	/**
      * 同步 by tid
      */
 	public PageBean synchroByTid(TaobaoOriginalOrderTableDTO taobaoOriginalOrderTableDTO){
-//		PageBean<PlatTaobaoTrade> pageBean = new PageBean<PlatTaobaoTrade>();
-//		if(page==null){
-//			pageBean.setPage(1);
-//		}else{
-//			pageBean.setPage(page);
-//		}
-//		if(pageSize==null){
-//			pageBean.setPageSize(Constants.PAGESIZE);
-//		}else{
-//			pageBean.setPageSize(pageSize);
-//		}
-//		Map<String,Object> pm  = WebUtils.getQueryParamters(request);
-//		pm.put("myStoreId",authClient);
-//		pm.put("curUserName",WebUtils.getCurrentUserSession(request).getName());
-//		pm.put("tid",tid);
-//
-//		pageBean.setParameter(pm);
-
 		PageBean<PlatTaobaoTrade> pageBean=taobaoOrderBiz.selectTaobaoOrderByTid(taobaoOriginalOrderTableDTO.getPageBean(),taobaoOriginalOrderTableDTO.getBizId());
-		List<PlatTaobaoTrade> pttList = pageBean.getResult();
-		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
-		for (PlatTaobaoTrade pt : pttList) {
-			if (pt.getReceiveCount() != null && new Integer(pt.getReceiveCount()) > 0) {
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("numIid", pt.getNumIid());// 自编码、日期、数量,
-				// PlatTaobaoTradeOrderId
-				map.put("depDate", pt.getDepartureDate());
-				map.put("receiveCount", pt.getReceiveCount());
-				map.put("receiveCount", pt.getReceiveCount());
-				map.put("taobaoOrderId", pt.getId().toString());
-				mapList.add(map);
-			}
-		}
-		taobaoStockBiz.updateProductStockByTaobao(mapList);
+		reduceTaoBaoTradeStock(pageBean.getResult());
 
 		return pageBean ;
 	}
@@ -758,22 +711,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 
         pageBean = taobaoOrderBiz.savePushTrade(pushTradeQueryDTO.getTid(), pushTradeQueryDTO.getAuthClient(), pushTradeQueryDTO.getResponse());
 
-        List<PlatTaobaoTrade> pttList = pageBean.getResult();
-        List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
-
-     // 获取备注(扣除库存)
-        for (PlatTaobaoTrade pt : pttList) {
-            if (pt.getReceiveCount() !=null && new Integer(pt.getReceiveCount())>0){
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("numIid", pt.getNumIid());//自编码、日期、数量, PlatTaobaoTradeOrderId
-                map.put("depDate", pt.getDepartureDate());
-                map.put("receiveCount", pt.getReceiveCount());
-                map.put("receiveCount", pt.getReceiveCount());
-                map.put("taobaoOrderId", pt.getId().toString());
-                mapList.add(map);
-            }
-        }
-        taobaoStockBiz.updateProductStockByTaobao(mapList);
+        reduceTaoBaoTradeStock(pageBean.getResult());
         return "OK";
 	}
 	@Override
