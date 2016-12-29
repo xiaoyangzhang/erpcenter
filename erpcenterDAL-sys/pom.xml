@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.yimayhd.erpcenter</groupId>
 		<artifactId>erpcenter</artifactId>
-		<version>0.3.5-SNAPSHOT</version>
+		<version>0.3.6-SNAPSHOT</version>
 	</parent>
 	<artifactId>erpcenterDAL-sys</artifactId>
 	<name>erpcenterDAL-sys</name>
