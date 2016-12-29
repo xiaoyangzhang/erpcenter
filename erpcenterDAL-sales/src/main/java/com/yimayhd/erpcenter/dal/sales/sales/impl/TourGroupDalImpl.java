@@ -1664,4 +1664,29 @@ public class TourGroupDalImpl implements TourGroupDal {
 	public void updateTourGroupTravelExportStatus(List<Integer> groupIds, Integer status) {
 		tourGroupMapper.updateTourGroupTravelExportStatus(groupIds, status);
 	}
+
+	@Override
+	public List<TourGroup> selectTotalByResId(Integer resId) {
+		List<TourGroup> list= tourGroupMapper.selectTotalByResId(resId);
+		return list;
+	}
+
+	@Override
+	public PageBean selectTourGroupCodeListPage(PageBean pageBean, Integer bizId,Set<Integer> set) {
+		List<TourGroup> lists = tourGroupMapper.selectTourGroupCodeListPage(pageBean, bizId,set);
+		pageBean.setResult(lists);
+		return pageBean;
+	}
+
+	@Override
+	public TourGroup selectGroupCodeSort (Integer bizId,Integer groupMode,String departureDate) {
+		TourGroup list= tourGroupMapper.selectGroupCodeSort(bizId, groupMode,departureDate);
+		return list;
+	}
+
+	@Override
+	public int updateTourGroup(TourGroup record) {
+		int updateReturn = tourGroupMapper.updateByPrimaryKeySelective(record);
+		return updateReturn;
+	}
 }

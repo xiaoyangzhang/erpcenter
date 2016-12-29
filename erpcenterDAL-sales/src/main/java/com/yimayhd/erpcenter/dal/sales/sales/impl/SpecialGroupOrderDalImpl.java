@@ -113,7 +113,7 @@ public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 			hotelInfo.setCreateTime(System.currentTimeMillis());
 			groupRequirementMapper.insert(hotelInfo);
 		} else {
-			groupRequirementMapper.updateByPrimaryKey(hotelInfo);
+			groupRequirementMapper.updateByPrimaryKeySelective(hotelInfo);
 		}
 		
 		

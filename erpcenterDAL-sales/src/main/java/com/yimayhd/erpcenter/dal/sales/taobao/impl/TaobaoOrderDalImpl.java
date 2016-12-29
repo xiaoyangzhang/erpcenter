@@ -450,7 +450,7 @@ public class TaobaoOrderDalImpl implements TaobaoOrderDal {@Autowired
         if (StringUtils.isNotBlank(sellerMemo)) {
         	if (sellerMemo.indexOf("(") > -1 && sellerMemo.substring(sellerMemo.indexOf("(") + 1).indexOf(")") > -1) {
                 String[] memo = sellerMemo.substring(sellerMemo.indexOf("(") + 1, sellerMemo.indexOf(")")).split(",");
-                if (memo.length > index && memo.length > 3) {
+                if (memo.length > index && memo.length > 2) {
                     return memo[index];
                 }
             }

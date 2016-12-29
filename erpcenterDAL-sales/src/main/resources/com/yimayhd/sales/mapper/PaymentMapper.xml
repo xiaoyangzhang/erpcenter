@@ -386,7 +386,7 @@
 	</select>
 	
 	<!-- 查询应收款项2 ou2016-06-06 -->
-	<select id="selectPaymentListPage2" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+	<!--<select id="selectPaymentListPage2" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
 		SELECT o.supplier_name AS supplierName, o.supplier_id, ifNull(s2.preTotal, 0) AS preTotal,
 		COUNT(o.id) AS orderCount, ifNull(SUM(o.total), 0) AS total,SUM(ifNull(o.total_Cash, 0)) AS totalCash,
 		SUM(o.total - ifNull(total_Cash, 0)) totalBalance, ifNull(SUM(o.num_adult), 0) AS num_adult,
@@ -458,8 +458,118 @@
 		</if>
 		GROUP BY o.supplier_id
 		ORDER BY SUM(o.total - ifnull(total_Cash,0)) + ifNull(s2.preTotal, 0) DESC
+	</select>-->
+
+
+	<select id="selectPaymentListPage2" parameterType="com.yihg.mybatis.utility.PageBean"
+			resultType="java.util.HashMap">
+		SELECT supplierName,supplier_id,SUM(orderCount) orderCount,SUM(total) total,SUM(totalCash) totalCash,SUM(totalBalance) totalBalance,
+		SUM(num_adult) num_adult,SUM(num_child) num_child,SUM(num_guide) num_guide,SUM(preTotal)  preTotal FROM (
+		SELECT o.supplier_name AS supplierName, o.supplier_id,
+		COUNT(o.id) AS orderCount, ifNull(SUM(o.total), 0) AS total,SUM(ifNull(o.total_Cash, 0)) AS totalCash,
+		SUM(o.total - ifNull(total_Cash, 0)) totalBalance, ifNull(SUM(o.num_adult), 0) AS num_adult,
+		ifNull(SUM(o.num_child), 0) AS num_child,ifNull(SUM(o.num_guide), 0) AS num_guide,0 as preTotal
+		FROM group_order AS o
+		LEFT JOIN tour_group AS tg ON (o.group_id = tg.id )
+		WHERE o.biz_id =  #{parameter.bizId}
+		AND o.state = 1 AND IFNULL(tg.group_state, 0) <![CDATA[<>]]> 2
+		<if test="parameter.startTime != null">
+			AND departure_date <![CDATA[>=]]> #{parameter.startTime}
+		</if>
+		<if test="parameter.endTime != null">
+			AND departure_date <![CDATA[<=]]> #{parameter.endTime}
+		</if>
+		<if test="parameter.supplierName != null">
+			AND supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%')
+		</if>
+		<if test="parameter.productName != null">
+			AND CONCAT('【',o.product_brand_name,'】',o.product_name) LIKE CONCAT('%',#{parameter.productName},'%')
+		</if>
+		<if test="parameter.paymentState!=null">
+			<if test="parameter.paymentState == 0">
+				AND total <![CDATA[<>]]> total_cash
+			</if>
+			<if test="parameter.paymentState == 1">
+				AND total = total_cash
+			</if>
+		</if>
+		<if test="parameter.set!=null">
+			AND o.operator_id IN
+			<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="parameter.type == 0">
+			<if test="parameter.saleOperatorIds != null and parameter.saleOperatorIds !=''">
+				AND o.operator_id IN (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.type == 1">
+			<if test="parameter.saleOperatorIds != null and parameter.saleOperatorIds !=''">
+				AND o.sale_operator_id IN(${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.groupMode!=null">
+			<if test="parameter.groupMode == 1">AND order_type <![CDATA[=]]> 1</if>
+			<if test="parameter.groupMode ==0 ">AND order_type <![CDATA[<>]]>1</if>
+		</if>
+		GROUP BY o.supplier_id
+
+		union all
+
+		SELECT supplier_name,supplier_id,0 as orderCount,0 as total,0 as totalCash,0 as totalBalance,0 as num_adult,
+		0 as num_child,0 as num_guide,
+		SUM(total - ifNull(total_cash,0)) AS preTotal
+		FROM group_order AS o
+		LEFT JOIN tour_group AS tg ON (o.group_id = tg.id)
+		WHERE o.state = 1 AND o.biz_id =  #{parameter.bizId} AND IFNULL(tg.group_state, 0) <![CDATA[<>]]> 2
+		<if test="parameter.startTime != null">
+			AND departure_date <![CDATA[<]]> #{parameter.startTime}
+		</if>
+		<if test="parameter.supplierName != null">
+			AND supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%')
+		</if>
+		<if test="parameter.productName != null">
+			AND CONCAT('【',o.product_brand_name,'】',o.product_name) LIKE CONCAT('%',#{parameter.productName},'%')
+		</if>
+		<if test="parameter.paymentState!=null">
+			<if test="parameter.paymentState == 0">
+				AND total <![CDATA[<>]]> total_cash
+			</if>
+			<if test="parameter.paymentState == 1">
+				AND total = total_cash
+			</if>
+		</if>
+		<if test="parameter.set!=null">
+			AND o.operator_id IN
+			<foreach item="item" index="index" collection="parameter.set" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="parameter.type == 0">
+			<if test="parameter.saleOperatorIds != null and parameter.saleOperatorIds !=''">
+				AND o.operator_id IN (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.type == 1">
+			<if test="parameter.saleOperatorIds != null and parameter.saleOperatorIds !=''">
+				AND o.sale_operator_id IN(${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.groupMode!=null">
+			<if test="parameter.groupMode == 1">AND order_type <![CDATA[=]]> 1</if>
+			<if test="parameter.groupMode ==0 ">AND order_type <![CDATA[<>]]>1</if>
+		</if>
+
+		GROUP BY supplier_id
+		)as aa
+		WHERE 	 (preTotal > 0 OR orderCount >0)
+		GROUP BY supplier_id
+		ORDER BY total-totalCash+preTotal DESC
+
 	</select>
-	
+
+
 	<!-- 查询应收款项 详情-->
 	<select id="selectPaymentDetailListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
 		SELECT 

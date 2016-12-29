@@ -1611,9 +1611,16 @@ public class GroupOrderDalImpl implements GroupOrderDal {
 				requirement = requirements.get(j);
 				Integer requirementOrderId = (Integer)requirement.get("order_id");
 				if(order.getId().intValue() == requirementOrderId.intValue()){
-					order.setHotelLevels(requirement.get("hotelLevels").toString());
-					order.setHotelNums(requirement.get("hotelNums").toString());
-					break;
+                    if("".equals(requirement.get("hotelLevels").toString())){
+                        order.setHotelLevels("");
+                    }else {
+                        order.setHotelLevels(requirement.get("hotelLevels").toString());
+                    }
+                    if ("".equals(requirement.get("hotelNums").toString())) {
+                        order.setHotelNums("");
+                    }else {
+                        order.setHotelNums(requirement.get("hotelNums").toString());
+                    }
 				}
 			}
 		}
@@ -1763,7 +1770,36 @@ public class GroupOrderDalImpl implements GroupOrderDal {
         pageBean.setResult(lists);
         return pageBean;
     }
+    @Override
+    public PageBean<GroupOrder> selectRoomExtrabedListPage(PageBean<GroupOrder> pageBean, Integer bizId) {
+        List<GroupOrder> roomList=groupOrderMapper.selectRoomExtrabedListPage(pageBean, bizId);
+        pageBean.setResult(roomList);
+        return pageBean;
+    }
 
+    @Override
+    public Map<String, Object> selectSumRoomExtrabed(PageBean<GroupOrder> pageBean, Integer bizId) {
+        return groupOrderMapper.selectSumRoomExtrabed(pageBean, bizId);
+    }
+
+    @Override
+    public List<GroupOrder>selectGroupOrderByResId(Integer resId){
+        List<GroupOrder> lists=groupOrderMapper.selectGroupOrderByResId(resId);
+        return lists;
+    }
+
+    @Override
+    public GroupOrder selectSumTotalByResId(Integer resId){
+        GroupOrder list=groupOrderMapper.selectSumTotalByResId(resId);
+        return list;
+    }
+
+
+    @Override
+    public List<GroupOrder> selectGroupOrderGroupByPro(Integer resId){
+        List<GroupOrder> lists=groupOrderMapper.selectGroupOrderGroupByPro(resId);
+        return lists;
+    }
 
 }
 

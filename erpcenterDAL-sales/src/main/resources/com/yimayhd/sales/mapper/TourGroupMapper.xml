@@ -892,7 +892,20 @@
 	<select id="selectSKGroupListPage" resultMap="BaseResultMap"
 		parameterType="com.yihg.mybatis.utility.PageBean">
 		select
-		<include refid="Base_Column_List" />
+		select id, biz_id, group_mode, group_code,group_code_mark,
+		group_code_sort,
+		group_state,
+		prudct_brand_id,
+		product_brand_name,
+		product_id,
+		product_name, date_start, date_end,daynum,ifnull(total_adult,0) total_adult,total_baby,
+		ifnull(total_child,0) total_child,
+		ifnull(total_guide,0) total_guide, service_standard, remark, remark_internal,
+		notice,
+		other_notice,
+		warm_notice, operator_id, operator_name,
+		create_time,update_id,update_name,update_time,order_num,total_income,total_income_cash,total_income_shop,
+		total_income_shop_cash,total_cost,total_cost_cash,travel_export_status
 		from tour_group t
 		where t.biz_id = #{bizId,jdbcType=INTEGER}
 		and t.group_state != -1
@@ -947,14 +960,8 @@
 			and t.group_state =#{page.parameter.groupState}
 		</if>
 
-		<choose>
-			<when test="page.parameter.sidx != null and page.parameter.sidx !=''">
-				ORDER BY ${page.parameter.sidx} ${page.parameter.sord}
-			</when>
-			<otherwise>
-				order by t.date_start ,t.create_time
-			</otherwise>
-		</choose>
+		order by t.date_start ,t.create_time
+
 	</select>
 
 
@@ -4412,11 +4419,11 @@
 		order_id) gop ON go.`id`=gop.order_id
 		WHERE tg.biz_id = #{bizId,jdbcType=INTEGER}
 		and tg.group_state in (0,1,3,4)
-		and tg.operator_id in
+		<!--and tg.operator_id in
 		<foreach item="item" index="index" collection="set" open="("
 				 separator="," close=")">
 			#{item}
-		</foreach>
+		</foreach>-->
 		<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds !=''">
 			and tg.operator_id in (#{page.parameter.saleOperatorIds})
 		</if>
@@ -4514,5 +4521,46 @@
 			#{groupId}
 		</foreach>
 	</update>
+
+
+	<select id="selectTotalByResId" resultMap="BaseResultMap">
+		SELECT product_id,product_name,total_adult,total_child,total_baby, total_income, total_cost
+		FROM tour_group WHERE group_state !=2
+		AND id in (SELECT distinct group_id FROM group_order
+		WHERE ext_res_id=#{resId,jdbcType=INTEGER}
+		AND group_id <![CDATA[>]]>0 AND state !=-1)
+		GROUP BY product_id
+	</select>
+
+	<select id="selectTourGroupCodeListPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
+		select
+		<include refid="Base_Column_List"/>
+		from tour_group t
+		where t.biz_id = #{bizId,jdbcType=INTEGER}
+		and t.group_state!=-1
+		and t.operator_id in
+		<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		<if test="page.parameter.groupCode != null and page.parameter.groupCode != ''">
+			and t.group_code LIKE CONCAT('%','${page.parameter.groupCode}','%')
+		</if>
+		<if test="page.parameter.productBrandId != null and page.parameter.productBrandId !=''">
+			and t.prudct_brand_id =${page.parameter.productBrandId}
+		</if>
+		<if test="page.parameter.productName != null and page.parameter.productName !=''">
+			and t.product_name LIKE CONCAT('%','${page.parameter.productName}','%')
+		</if>
+		<if test="page.parameter.startTime != null and page.parameter.startTime !=''">
+			<![CDATA[AND t.date_start >= #{page.parameter.startTime}]]>
+		</if>
+		<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
+			<![CDATA[AND t.date_start <= #{page.parameter.endTime}]]>
+		</if>
+		<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds!=''">
+			and t.operator_id in (${page.parameter.saleOperatorIds})
+		</if>
+		ORDER BY group_code
+	</select>
 
 </mapper>

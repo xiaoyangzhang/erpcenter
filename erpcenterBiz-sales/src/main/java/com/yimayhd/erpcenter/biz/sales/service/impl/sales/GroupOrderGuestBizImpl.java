@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.biz.sales.service.impl.sales;
 import java.util.List;
 import java.util.Map;
 
+import com.yihg.mybatis.utility.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
@@ -120,6 +121,18 @@ public class GroupOrderGuestBizImpl implements GroupOrderGuestBiz {
 	@Override
 	public List<GroupOrderGuest> selectAllOrderGuestByGroupId(Integer groupId) {
 		return groupOrderGuestDal.selectAllOrderGuestByGroupId(groupId);
+	}
+
+	/**
+	 * 获取游客重复参团信息
+	 *
+	 * @param pageBean
+	 * @param bizId
+	 * @return
+	 */
+	@Override
+	public PageBean<GroupOrderGuest> selectGroupGuestRepeatListPage(PageBean<GroupOrderGuest> pageBean, Integer bizId) {
+		return groupOrderGuestDal.selectGroupGuestRepeatListPage(pageBean,bizId);
 	}
 
 

@@ -52,7 +52,11 @@ public interface GroupOrderMapper {
 
     GroupOrder selectTotalNotGroup(@Param("groupOrder") GroupOrder groupOrder,
                                    @Param("bizId") Integer bizId, @Param("set") Set<Integer> set);
+    List<GroupOrder> selectRoomExtrabedListPage(@Param("page") PageBean<GroupOrder> pageBean,
+                                                @Param("bizId") Integer bizId);
 
+    Map<String, Object> selectSumRoomExtrabed(@Param("page") PageBean<GroupOrder> pageBean,
+                                              @Param("bizId") Integer bizId);
     /**
      * @param pageBean
      * @param bizId
@@ -548,5 +552,10 @@ public interface GroupOrderMapper {
      * @author zhoumi
      */
     List<GroupOrder>selectPaymentStatisticsListPage(@Param("page") PageBean<GroupOrder> pageBean,@Param("bizId") Integer bizId);
-	
+
+    List<GroupOrder>selectGroupOrderByResId(Integer resId);
+
+    GroupOrder selectSumTotalByResId(Integer resId);
+
+    List<GroupOrder>selectGroupOrderGroupByPro(Integer resId);
 }

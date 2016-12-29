@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
 
+import com.yihg.mybatis.utility.PageBean;
 /**
  * 销售订单-客人
  * @author qindz
@@ -99,4 +100,12 @@ public interface GroupOrderGuestDal {
      * @date 2016年12月5日 上午9:50:46
      */
     public List<GroupOrderGuest> selectAllOrderGuestByGroupId(Integer groupId);
+
+    /**
+     * 获取游客重复参团信息
+     * @param pageBean
+     * @param bizId
+     * @return
+     */
+    public PageBean<GroupOrderGuest> selectGroupGuestRepeatListPage(PageBean<GroupOrderGuest> pageBean, Integer bizId);
 }

@@ -12,7 +12,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderGuestDal;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
 import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
-
+import com.yihg.mybatis.utility.PageBean;
 public class GroupOrderGuestDalImpl implements GroupOrderGuestDal {
 
 	@Autowired
@@ -130,5 +130,16 @@ public class GroupOrderGuestDalImpl implements GroupOrderGuestDal {
 	@Override
 	public List<GroupOrderGuest> selectAllOrderGuestByGroupId(Integer groupId) {
 		return groupOrderGuestMapper.selectAllOrderGuestByGroupId(groupId);
+	}
+
+
+	/**
+	 * 获取游客重复参团信息
+	 */
+	@Override
+	public PageBean<GroupOrderGuest> selectGroupGuestRepeatListPage(PageBean<GroupOrderGuest> pageBean, Integer bizId) {
+		List<GroupOrderGuest> guestCardIdList = groupOrderGuestMapper.selectGroupGuestRepeatListPage(pageBean,bizId);
+		pageBean.setResult(guestCardIdList);
+		return pageBean;
 	}
 }

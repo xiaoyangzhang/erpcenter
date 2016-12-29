@@ -206,6 +206,16 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
     }
 
     @Override
+    public PageBean<GroupOrder> selectRoomExtrabedListPage(PageBean<GroupOrder> pageBean, Integer bizId) {
+        return groupOrderDal.selectRoomExtrabedListPage(pageBean,bizId);
+    }
+
+    @Override
+    public Map<String, Object> selectSumRoomExtrabed(PageBean<GroupOrder> pageBean, Integer bizId) {
+        return groupOrderDal.selectSumRoomExtrabed(pageBean,bizId);
+    }
+
+    @Override
     public GroupOrder selectFitOrderTotalCount(GroupOrder groupOrder, Integer bizId,
                                                Set<Integer> set, Integer listType) {
         return groupOrderDal.selectFitOrderTotalCount(groupOrder, bizId, set, listType);
@@ -1234,5 +1244,25 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
     }
     public PageBean<GroupOrder> selectPaymentStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId) {
         return groupOrderDal.selectPaymentStatisticsListPage(pageBean,bizId);
+    }
+
+    @Override
+    public List<GroupOrder> selectGroupOrderByResId(Integer resId) {
+        return groupOrderDal.selectGroupOrderByResId(resId);
+    }
+
+    /**
+     * @param resId
+     * @return
+     * @see 根据RESID求总收入，总成本
+     */
+    @Override
+    public GroupOrder selectSumTotalByResId(Integer resId) {
+        return groupOrderDal.selectSumTotalByResId(resId);
+    }
+
+    @Override
+    public List<GroupOrder> selectGroupOrderGroupByPro(Integer resId) {
+        return groupOrderDal.selectGroupOrderGroupByPro(resId);
     }
 }

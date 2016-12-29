@@ -41,11 +41,69 @@ public class GroupOrderGuest implements Serializable{
     private Long createTime;
     private Integer man;
     private Integer woman;
+
+    private Integer pageSize;
+    private Integer page = 1;
     
     private String userName;
     private String ticketTime;
     private String groupCode;
     private Integer groupId;
+
+    private String startTime;
+    private String endTime;
+
+    private Integer times;
+
+    private String notChangeGroupCode;
+
+    public String getNotChangeGroupCode() {
+        return notChangeGroupCode;
+    }
+
+    public void setNotChangeGroupCode(String notChangeGroupCode) {
+        this.notChangeGroupCode = notChangeGroupCode;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getTimes() {
+        return times;
+    }
+
+    public void setTimes(Integer times) {
+        this.times = times;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
     
     
 	public String getGroupCode() {

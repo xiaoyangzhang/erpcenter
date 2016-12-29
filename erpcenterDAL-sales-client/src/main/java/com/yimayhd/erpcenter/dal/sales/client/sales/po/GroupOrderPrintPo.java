@@ -35,6 +35,8 @@ public class GroupOrderPrintPo implements Serializable{
 	private String airOff ;
 	//订单备注
 	private String remark ;
+
+	private String remarkInternal ;
 	
 	//电话
 	private String phone ;
@@ -48,7 +50,14 @@ public class GroupOrderPrintPo implements Serializable{
 	private String guesStatic ;
 	//线路类型
 	private String trans ;
-	
+
+
+	public String getRemarkInternal() {
+		return remarkInternal;
+	}
+	public void setRemarkInternal(String remarkInternal) {
+		this.remarkInternal = remarkInternal;
+	}
 	private List<GroupOrderGuest> guests  ;
 	private GroupOrder groupOrder;
 	private List<GroupOrderTransport> orderTransports;

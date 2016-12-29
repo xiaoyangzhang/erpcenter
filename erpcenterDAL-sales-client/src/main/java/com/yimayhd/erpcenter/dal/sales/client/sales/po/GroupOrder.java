@@ -151,6 +151,9 @@ public class GroupOrder implements Serializable {
 
     private List<GroupOrderPrice> orderPrices;
 
+    private Integer countDoubleRoom;
+    private Integer extraBed;
+
     private Long createTime;
     private String createTimeStr;
     private Integer state;
@@ -2121,6 +2124,53 @@ public class GroupOrder implements Serializable {
     private String orderModeType;
 
     protected Integer rows; //每页显示的行数 如：15
+
+
+    protected Integer numSold;
+
+    protected Integer numStock;
+
+    private BigDecimal sumCost;
+
+    public Integer getCountDoubleRoom() {
+        return countDoubleRoom;
+    }
+
+    public void setCountDoubleRoom(Integer countDoubleRoom) {
+        this.countDoubleRoom = countDoubleRoom;
+    }
+
+    public Integer getExtraBed() {
+        return extraBed;
+    }
+
+    public void setExtraBed(Integer extraBed) {
+        this.extraBed = extraBed;
+    }
+
+    public Integer getNumSold() {
+        return numSold;
+    }
+
+    public void setNumSold(Integer numSold) {
+        this.numSold = numSold;
+    }
+
+    public Integer getNumStock() {
+        return numStock;
+    }
+
+    public void setNumStock(Integer numStock) {
+        this.numStock = numStock;
+    }
+
+    public BigDecimal getSumCost() {
+        return sumCost;
+    }
+
+    public void setSumCost(BigDecimal sumCost) {
+        this.sumCost = sumCost;
+    }
 
     public String getOrderModeType() {
         return orderModeType;

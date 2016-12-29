@@ -12,7 +12,7 @@ public interface GroupRequirementMapper {
 	int deleteByPrimaryKey(Integer id);
 
 	int insert(GroupRequirement record);
-
+	int insertSpecialGroupOrder(GroupRequirement record);
 	int insertSelective(GroupRequirement record);
 
 	GroupRequirement selectByPrimaryKey(Integer id);
@@ -20,7 +20,7 @@ public interface GroupRequirementMapper {
 	int updateByPrimaryKeySelective(GroupRequirement record);
 
 	int updateByPrimaryKey(GroupRequirement record);
-
+	int updateSpecialGroupOrder(GroupRequirement record);
 	List<GroupRequirement> selectByOrderAndType(@Param("orderId")Integer orderId, @Param("type")Integer type);
 	
 	List<GroupRequirement> selectByGroupIdAndType(@Param("groupId")Integer groupId,@Param("type")Integer type);

@@ -29,6 +29,8 @@
     <result column="audit_user_id" property="auditUserId" jdbcType="INTEGER" />
     <result column="audit_time" property="auditTime" jdbcType="DATE" />
     <result column="push_status" property="pushStatus" jdbcType="INTEGER" />
+    <result column="product_des" property="productDes" jdbcType="VARCHAR" />
+    <result column="product_des_id" property="productDesId" jdbcType="INTEGER" />
   </resultMap>
   <resultMap type="com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingDeliveryStatics" id="staticsResultMap">
   		<result column="booking_count" property="bookingCount" jdbcType="INTEGER" />
@@ -37,7 +39,7 @@
   <sql id="Base_Column_List" >
     id, group_id,order_id,supplier_id,supplier_name,supplier_order_no, contact, contact_tel, contact_fax, 
     contact_mobile, person_adult,person_child, person_guide, date_arrival, remark, total, total_cash, state_booking, 
-    state_finance, user_id,user_name, booking_date,create_time,audit_user,audit_user_id,audit_time,push_status
+    state_finance, user_id,user_name, booking_date,create_time,audit_user,audit_user_id,audit_time,push_status,product_des,product_des_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -56,21 +58,22 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery" useGeneratedKeys="true" keyProperty="id" >
-    insert into booking_delivery (id, group_id, order_id,supplier_id,supplier_name,supplier_order_no, 
-      contact, contact_tel, contact_fax, 
-      contact_mobile, person_adult, person_child, 
-      person_guide, date_arrival, remark, 
-      total, state_booking, 
-      state_finance, user_id,user_name,booking_date, create_time,push_status
+     insert into booking_delivery (id, group_id, order_id,supplier_id,supplier_name,supplier_order_no,
+      contact, contact_tel, contact_fax,
+      contact_mobile, person_adult, person_child,
+      person_guide, date_arrival, remark,
+      total, state_booking,
+      state_finance, user_id,user_name,booking_date, create_time,push_status,product_des,product_des_id
       )
-    values (#{id,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER}, #{supplierId,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{groupId,jdbcType=INTEGER}, #{orderId,jdbcType=INTEGER}, #{supplierId,jdbcType=INTEGER},
       #{supplierName,jdbcType=VARCHAR},#{supplierOrderNo,jdbcType=VARCHAR},
-      #{contact,jdbcType=VARCHAR}, #{contactTel,jdbcType=VARCHAR}, #{contactFax,jdbcType=VARCHAR}, 
-      #{contactMobile,jdbcType=VARCHAR}, #{personAdult,jdbcType=INTEGER}, #{personChild,jdbcType=INTEGER}, 
-      #{personGuide,jdbcType=INTEGER}, #{dateArrival,jdbcType=DATE}, #{remark,jdbcType=VARCHAR}, 
-      #{total,jdbcType=DECIMAL}, #{stateBooking,jdbcType=TINYINT}, 
+      #{contact,jdbcType=VARCHAR}, #{contactTel,jdbcType=VARCHAR}, #{contactFax,jdbcType=VARCHAR},
+      #{contactMobile,jdbcType=VARCHAR}, #{personAdult,jdbcType=INTEGER}, #{personChild,jdbcType=INTEGER},
+      #{personGuide,jdbcType=INTEGER}, #{dateArrival,jdbcType=DATE}, #{remark,jdbcType=VARCHAR},
+      #{total,jdbcType=DECIMAL}, #{stateBooking,jdbcType=TINYINT},
       #{stateFinance,jdbcType=TINYINT}, #{userId,jdbcType=INTEGER},
-      #{userName,jdbcType=VARCHAR},#{bookingDate,jdbcType=DATE}, #{createTime,jdbcType=BIGINT}, #{pushStatus, jdbcType=INTEGER}
+      #{userName,jdbcType=VARCHAR},#{bookingDate,jdbcType=DATE}, #{createTime,jdbcType=BIGINT}, #{pushStatus, jdbcType=INTEGER},
+      #{productDes,jdbcType=VARCHAR},#{productDesId,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery" useGeneratedKeys="true" keyProperty="id">
@@ -146,7 +149,14 @@
         create_time,
       </if>
       <if test="pushStatus != null">
-        push_status
+        push_status,
+      </if>
+
+      <if test="productDes != null">
+        product_des,
+      </if>
+      <if test="productDesId != null">
+        product_des_id
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -220,7 +230,14 @@
         #{createTime,jdbcType=BIGINT},
       </if>
       <if test="pushStatus != null">
-        #{pushStatus, jdbcType=INTEGER}
+        #{pushStatus, jdbcType=INTEGER},
+      </if>
+
+      <if test="pushStatus != null">
+        #{productDes, jdbcType=VARCHAR},
+      </if>
+      <if test="pushStatus != null">
+        #{productDesId, jdbcType=INTEGER}
       </if>
     </trim>
   </insert>
@@ -294,7 +311,14 @@
         create_time = #{createTime,jdbcType=BIGINT},
       </if>
       <if test="pushStatus != null">
-        push_status = #{pushStatus, jdbcType=INTEGER}
+        push_status = #{pushStatus, jdbcType=INTEGER},
+      </if>
+
+      <if test="productDes != null">
+        product_des = #{productDes, jdbcType=VARCHAR},
+      </if>
+      <if test="productDesId != null">
+        product_des_id = #{productDesId, jdbcType=INTEGER}
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -323,7 +347,9 @@
       user_name = #{userName,jdbcType=VARCHAR},
       booking_date = #{bookingDate,jdbcType=DATE},
       create_time = #{createTime,jdbcType=BIGINT},
-      push_status = #{pushStatus, jdbcType=INTEGER}
+      push_status = #{pushStatus, jdbcType=INTEGER},
+      product_des = #{productDes, jdbcType=VARCHAR},
+      product_des_id = #{productDesId, jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   

@@ -76,4 +76,12 @@ public interface GroupOrderGuestMapper {
      */
     public List<GroupOrderGuest> selectAllOrderGuestByGroupId(Integer groupId);
 
+    /**
+     * 获取游客重复参团信息
+     * @param pageBean
+     * @param bizId
+     * @return
+     */
+    List<GroupOrderGuest> selectGroupGuestRepeatListPage(@Param("page") PageBean<GroupOrderGuest> pageBean, @Param("bizId") Integer bizId);
+
 }

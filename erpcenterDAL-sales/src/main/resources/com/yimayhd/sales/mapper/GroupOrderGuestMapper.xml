@@ -464,4 +464,29 @@ GROUP BY order_id
 					 on a.order_id = b.id
 				]]>
   </select>
+
+  <!-- 获取游客重复参团信息 -->
+  <select id="selectGroupGuestRepeatListPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
+    select gog.id,gog.`name`,gog.certificate_num,gog.age,gog.gender,gog.mobile,gog.native_place,gog.create_time,count(*) as times,GROUP_CONCAT(distinct tg.group_code) as group_code
+    from group_order_guest gog join group_order go on (gog.order_id=go.id) join tour_group tg on (go.group_id=tg.id)
+    where tg.biz_id=#{bizId} and tg.group_state in (1,3,4) and go.state=1
+    <if test="page.parameter.notChangeGroupCode!=null and page.parameter.notChangeGroupCode!=''" >
+      and tg.group_code not like CONCAT('%',#{page.parameter.notChangeGroupCode},'%')
+    </if>
+    <if test="page.parameter.startTime != null and page.parameter.startTime != ''">
+      and tg.date_start <![CDATA[>=]]> #{page.parameter.startTime}
+    </if>
+    <if test="page.parameter.endTime != null and page.parameter.endTime != ''">
+      and tg.date_start <![CDATA[<=]]> #{page.parameter.endTime}
+    </if>
+    <if test="page.parameter.name != null and page.parameter.name != ''">
+      and gog.name like CONCAT('%',#{page.parameter.name},'%')
+    </if>
+    <if test="page.parameter.certificateNum != null and page.parameter.certificateNum != ''">
+      and gog.certificate_num like CONCAT('%',#{page.parameter.certificateNum},'%')
+    </if>
+    group by gog.certificate_num
+    having count(gog.certificate_num)>1
+  </select>
+
 </mapper>

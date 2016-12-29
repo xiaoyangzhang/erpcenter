@@ -92,7 +92,9 @@ public interface GroupOrderBiz {
      * @return
      */
     public PageBean selectFitOrderListPage(PageBean pageBean, Integer bizId, Set<Integer> set, Integer listType);
+    public PageBean<GroupOrder> selectRoomExtrabedListPage(PageBean<GroupOrder> pageBean, Integer bizId);
 
+    public Map<String, Object> selectSumRoomExtrabed(PageBean<GroupOrder> pageBean, Integer bizId);
     public GroupOrder selectFitOrderTotalCount(GroupOrder groupOrder, Integer bizId, Set<Integer> set, Integer listType);
 
     /**
@@ -466,6 +468,15 @@ public interface GroupOrderBiz {
 
     List<GroupOrderForCarCar> selectGroupOrderswithGroupIdSetForCarCar(PageBean pageBean);
     PageBean<GroupOrder> selectPaymentStatisticsListPage(PageBean<GroupOrder> pageBean, Integer bizId);
+
+    List<GroupOrder>selectGroupOrderByResId(Integer resId);
+    /**
+     * @see 根据RESID求总收入，总成本
+     * @return
+     */
+    GroupOrder selectSumTotalByResId(Integer resId);
+
+    List<GroupOrder> selectGroupOrderGroupByPro(Integer resId);
 
 }
 

@@ -536,4 +536,18 @@ public interface TourGroupBiz {
 	 * @date 2016年12月6日 上午11:11:30
 	 */
 	public void updateTourGroupTravelExportStatus(List<Integer> groupIds,Integer status);
+
+	List<TourGroup> selectTotalByResId(Integer resId);
+
+	PageBean selectTourGroupCodeListPage(PageBean pageBean, Integer bizId,Set<Integer> set);
+
+	TourGroup selectGroupCodeSort (Integer bizId,Integer groupMode,String departureDate);
+
+	/**
+	 * 单纯的修改旅行团的团号
+	 *
+	 * @param record
+	 * @return
+	 */
+	int updateTourGroup(TourGroup tourGroup);
 }

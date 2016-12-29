@@ -107,6 +107,9 @@
 		<result column="affirmOrderCount" property="affirmOrderCount" jdbcType="INTEGER" />
 		<result column="reserveOrderCount" property="reserveOrderCount" jdbcType="INTEGER" />
 		<result column="totalOrderNum" property="totalOrderNum" jdbcType="INTEGER" />
+		<result column="count_double_room" property="countDoubleRoom" jdbcType="INTEGER" />
+		<result column="extraBed" property="extraBed" jdbcType="INTEGER" />
+
 
 		<result column="order_mode" property="orderMode" jdbcType="INTEGER" />
 		<result column="limitTime" property="limitTime" jdbcType="VARCHAR" />
@@ -1868,7 +1871,7 @@
 				ORDER BY ${page.parameter.sidx} ${page.parameter.sord}
 			</when>
 			<otherwise>
-				ORDER BY tg.date_start desc
+				ORDER BY tg.date_start
 			</otherwise>
 		</choose>
 	</select>
@@ -4124,7 +4127,7 @@
 			and a.biz_id=#{bizId}
 		</if>
 			and a.aiyou_group_id=-1
-		<if test="userRightType==1"> 
+		<!--<if test="userRightType==1">
 			and a.sale_operator_id in
 		</if>
 		<if test="userRightType!=1"> 
@@ -4132,7 +4135,7 @@
 		</if>
 		<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
 			#{item}
-		</foreach>
+		</foreach>-->
 		<if test="groupOrder.startTime != null and groupOrder.startTime !='' ">
 			<if test="groupOrder.dateType==1">
 				and a.departure_date<![CDATA[>=]]>#{groupOrder.startTime}
@@ -4331,7 +4334,7 @@
 			and a.biz_id=#{bizId}
 		</if>
 			and a.aiyou_group_id=-1
-		<if test="userRightType==1"> 
+		<!--<if test="userRightType==1">
 			and a.sale_operator_id in
 		</if>
 		<if test="userRightType!=1"> 
@@ -4339,7 +4342,7 @@
 		</if>
 		<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
 			#{item}
-		</foreach>
+		</foreach>-->
 		<if test="page.parameter.startTime != null and page.parameter.startTime !='' ">
 			<if test="page.parameter.dateType==1">
 				and a.departure_date<![CDATA[>=]]>#{page.parameter.startTime}
@@ -6939,6 +6942,65 @@
 		</if>
 		order by supplier_name
 
+	</select>
+
+	<select id="selectRoomExtrabedListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BaseResultMap">
+		select a.product_id,a.product_brand_name,a.product_name,a.departure_date, sum(b.count_double_room) as count_double_room,sum(b.extrabed) as extrabed
+		from group_order a join group_requirement b on (a.id=b.order_id)
+		where a.biz_id=#{bizId} and a.state=1
+		<if test="page.parameter.startTime != null and page.parameter.startTime != ''">
+			and	a.departure_date <![CDATA[>=]]> #{page.parameter.startTime}
+		</if>
+		<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
+			and a.departure_date <![CDATA[<=]]> #{page.parameter.endTime}
+		</if>
+		<if test="page.parameter.productBrandId != null and page.parameter.productBrandId != -1">
+			and a.product_brand_id =#{page.parameter.productBrandId}
+		</if>
+		<if test="page.parameter.productName != null and page.parameter.productName !=''">
+			and a.product_name LIKE CONCAT('%','${page.parameter.productName}','%')
+		</if>
+		group by a.product_id,a.departure_date
+	</select>
+
+	<select id="selectSumRoomExtrabed" resultType="java.util.HashMap" parameterType="com.yihg.mybatis.utility.PageBean">
+		select sum(b.count_double_room) as count_double_room,sum(b.extrabed) as extrabed
+		from group_order a join group_requirement b on (a.id=b.order_id)
+		where a.biz_id=#{bizId} and a.state=1
+		<if test="page.parameter.startTime != null and page.parameter.startTime != ''">
+			and	a.departure_date <![CDATA[>=]]> #{page.parameter.startTime}
+		</if>
+		<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
+			and a.departure_date <![CDATA[<=]]> #{page.parameter.endTime}
+		</if>
+		<if test="page.parameter.productBrandId != null and page.parameter.productBrandId != -1">
+			and a.product_brand_id =#{page.parameter.productBrandId}
+		</if>
+		<if test="page.parameter.productName != null and page.parameter.productName !=''">
+			and a.product_name LIKE CONCAT('%','${page.parameter.productName}','%')
+		</if>
+	</select>
+
+	<select id="selectGroupOrderByResId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from group_order
+		where ext_res_id = #{resId,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectSumTotalByResId" resultMap="BaseResultMap">
+		SELECT SUM(total_income) total,SUM(total_cost) cost
+		FROM tour_group WHERE group_state !=2
+		AND id in (SELECT distinct group_id FROM group_order
+		WHERE ext_res_id=#{resId,jdbcType=INTEGER} AND group_id <![CDATA[>]]>0 AND state !=-1)
+	</select>
+
+	<select id="selectGroupOrderGroupByPro" resultMap="BaseResultMap">
+		SELECT product_name,product_id,ext_res_id,SUM(num_adult) num_adult,SUM(num_child) num_child,
+		SUM(num_child_baby) num_child_baby,SUM(total) total from group_order
+		where ext_res_id = #{resId,jdbcType=INTEGER}
+		and state=1
+		GROUP BY product_id  ORDER BY product_id
 	</select>
 
 

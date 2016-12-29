@@ -546,4 +546,29 @@ public class TourGroupBizImpl implements TourGroupBiz {
 	public void updateTourGroupTravelExportStatus(List<Integer> groupIds, Integer status) {
 		tourGroupDal.updateTourGroupTravelExportStatus(groupIds,status);
 	}
+
+	@Override
+	public List<TourGroup> selectTotalByResId(Integer resId) {
+		return tourGroupDal.selectTotalByResId(resId);
+	}
+
+	@Override
+	public PageBean selectTourGroupCodeListPage(PageBean pageBean, Integer bizId, Set<Integer> set) {
+		return tourGroupDal.selectTourGroupCodeListPage(pageBean, bizId, set) ;
+	}
+
+	@Override
+	public TourGroup selectGroupCodeSort(Integer bizId, Integer groupMode, String departureDate) {
+		return tourGroupDal.selectGroupCodeSort( bizId,  groupMode,  departureDate);
+	}
+
+	/**
+	 * 单纯的修改旅行团的团号
+	 *
+	 * @param tourGroup@return
+	 */
+	@Override
+	public int updateTourGroup(TourGroup tourGroup) {
+		return tourGroupDal.updateTourGroup(tourGroup);
+	}
 }

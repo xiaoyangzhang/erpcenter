@@ -314,4 +314,8 @@ public interface TourGroupMapper {
 	 * @date 2016年12月6日 上午11:11:30
 	 */
 	public void updateTourGroupTravelExportStatus(@Param("groupIds")List<Integer> groupIds,@Param("travelExportStatus")Integer status);
+
+	List<TourGroup> selectTotalByResId(Integer resId);
+
+	List<TourGroup>selectTourGroupCodeListPage(@Param("page") PageBean pageBean, @Param("bizId") Integer bizId,@Param("set")Set<Integer> set);
 }
