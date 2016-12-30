@@ -33,7 +33,7 @@ public class DoubleCarBizImpl implements DoubleCarBiz{
 	@Override
 	public SearchTransportsResult selectTransportByOrderIds(List<Integer> orderIds) {
 		SearchTransportsResult result = new SearchTransportsResult();
-		if(null == orderIds){
+		if(null == orderIds || orderIds.size() <=0){
 			result.setErrorCode(DoubleCarErrorCode.PARAM_ERROR);
 			return result;
 		}
