@@ -3737,4 +3737,20 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		return result;
 	}
 
+	@Override
+	public ToNotGroupListResult toOrderPreview(ToNotGroupListDTO toNotGroupListDTO) {
+		ToNotGroupListResult toNotGroupListResult = new ToNotGroupListResult();
+		PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
+		Map<String,Object> pmBean  = toNotGroupListDTO.getPmBean();
+		pageBean.setPage(1);
+		pageBean.setPageSize(100000);
+		pageBean.setParameter(pmBean);
+		pageBean=groupOrderService.selectResAdminOrderList(pageBean,
+				toNotGroupListDTO.getBizId(),toNotGroupListDTO.getUserIdSet());
+		HashMap<String, BigDecimal> map_sum = groupOrderService.sumResAdminOrder(pageBean);
+		toNotGroupListResult.setPageBean(pageBean);
+		toNotGroupListResult.setMap_sum(map_sum);
+		return toNotGroupListResult;
+	}
+
 }
