@@ -13,4 +13,5 @@
 	<bean id="imgFacade" class="com.yimayhd.erpcenter.facade.basic.service.impl.ImgFacadeImpl"></bean>
 	<bean id="logFacade" class="com.yimayhd.erpcenter.facade.basic.service.impl.LogFacadeImpl"></bean>
 	<bean id="regionFacade" class="com.yimayhd.erpcenter.facade.basic.service.impl.RegionFacadeImpl"></bean>
+	<bean id="basicCommonFacade" class="com.yimayhd.erpcenter.facade.common.service.impl.BasicCommonFacadeImpl"></bean>
 </beans>
