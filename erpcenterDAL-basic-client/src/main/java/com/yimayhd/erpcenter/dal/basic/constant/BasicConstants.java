@@ -70,7 +70,8 @@ public class BasicConstants {
     public static final String YK_BQ_XQAH = "YK_BQ_XQAH";
     //供应商-星级pin
     //public static final String YK_BQ_XQAH = "YK_BQ_XQAH";
-
+//产品说明
+    public static final String PRODUCT_DES="PRODUCT_DES";
     // 导游信息-等级
     public static final String DYXX_DJ = "DYXX_DJ";
     // 导游信息-星级评定

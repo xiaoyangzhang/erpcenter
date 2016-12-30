@@ -14,6 +14,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.yimayhd.erpcenter.facade.dataanalysis.client.result.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -79,38 +80,6 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToOperatorGroupSta
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToOrdersPreviewDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToSaleOperatorOrderStaticTableDTO;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.query.ToSaleOperatorPreviewDTO;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.AirTicketDetailQueriesResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.BookingSupplierDetailListResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.DeliveryDetailListResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ExpGroupNumberResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetAgeListByProductResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetAirTicketDetailResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetNumAndOrderResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetOrdersResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GetPaymentDataResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GroupBookingListResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.GroupInfoListResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.HotelDetailPreviewResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.HotelQueriesResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.OpearteGroupListResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.PaymentStaticPreviewResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ProductGuestStaticsResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.QueryGroupNumberResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.RestaurantQueriesResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.SaleOperatorExcelResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ShopDetailListResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ShopInfoDetailResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ShopSelectListResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToBookingShopListResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToOperatorGroupStaticTableResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToOrdersPreviewResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToPaymentPreviewResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToProductListResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorOrderStaticTableResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorPreviewResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSaleOperatorTableResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.ToSubsidiaryDebtResult;
-import com.yimayhd.erpcenter.facade.dataanalysis.client.result.TranportListResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.service.DataAnalysisFacade;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.dal.constants.BasicConstants;
@@ -2260,5 +2229,110 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 			svc = "commonSaleBiz";
 		}
 		return appContext.getBean(svc, CommonSaleBiz.class);
+	}
+
+	@Override
+	public ScheduledQueryResult getScheduledList(PageBean pageBean, Integer bizId, Set<Integer> dataUserIdSet) {
+
+		TourGroupVO tourGroup = (TourGroupVO) pageBean.getParameter();
+		List<Map<String, Object>> mapList = groupOrderBiz.selectGroupIdsByReceiveMode(tourGroup);
+		if (mapList != null && mapList.size() > 0) {
+			Set<Integer> groupIdSet = new HashSet<Integer>();
+			for (Map<String, Object> map : mapList) {
+				groupIdSet.add(TypeUtils.castToInt(map.get("group_id")));
+			}
+			if (groupIdSet.size() == 0) {
+				groupIdSet.add(-1);
+			}
+			tourGroup.setGroupIdSet(groupIdSet);
+		}
+
+		pageBean = queryBiz.selectGroupBookingListPage(pageBean, bizId, dataUserIdSet);
+		ScheduledQueryResult queryResult = new ScheduledQueryResult();
+
+		List result = pageBean.getResult();
+		if (!CollectionUtils.isEmpty(result)) {
+
+			GroupBookingInfo bookingInfo = null;
+			StringBuilder groupIds = new StringBuilder();
+			for (int i = 0; i < result.size(); i++) {
+				if (i > 0) {
+					groupIds.append(",");
+				}
+				bookingInfo = (GroupBookingInfo) result.get(i);
+				groupIds.append(bookingInfo.getGroupId());
+			}
+
+			String groupIdStr = groupIds.toString();
+
+			List<Map<String, Object>> sightList = queryBiz
+					.selectBookingSupplierCountForGroups(groupIdStr,
+							com.yimayhd.erpresource.dal.constants.Constants.SCENICSPOT, tourGroup.getSupplierName());
+			List<Map<String, Object>> hotelList = queryBiz
+					.selectBookingSupplierCountForGroups(groupIdStr,
+							com.yimayhd.erpresource.dal.constants.Constants.HOTEL, tourGroup.getSupplierName());
+			List<Map<String, Object>> eatList = queryBiz
+					.selectBookingSupplierCountForGroups(groupIdStr,
+							com.yimayhd.erpresource.dal.constants.Constants.RESTAURANT, tourGroup.getSupplierName());
+			List<Map<String, Object>> carList = queryBiz
+					.selectBookingSupplierCountForGroups(groupIdStr,
+							com.yimayhd.erpresource.dal.constants.Constants.FLEET, tourGroup.getSupplierName());
+			List<Map<String, Object>> airList = queryBiz
+					.selectBookingSupplierCountForGroups(groupIdStr,
+							com.yimayhd.erpresource.dal.constants.Constants.AIRTICKETAGENT,
+							tourGroup.getSupplierName());
+			List<Map<String, Object>> trainList = queryBiz
+					.selectBookingSupplierCountForGroups(groupIdStr,
+							com.yimayhd.erpresource.dal.constants.Constants.TRAINTICKETAGENT,
+							tourGroup.getSupplierName());
+			List<Map<String, Object>> insuranceList = queryBiz
+					.selectBookingSupplierCountForGroups(groupIdStr,
+							com.yimayhd.erpresource.dal.constants.Constants.INSURANCE, tourGroup.getSupplierName());
+			List<Map<String, Object>> shopList = queryBiz
+					.selectBookingShopCountForGroups(groupIdStr,
+							tourGroup.getSupplierName());
+			List<Map<String, Object>> inList = queryBiz
+					.selectBookingSupplierCountForGroups(groupIdStr,
+							com.yimayhd.erpresource.dal.constants.Constants.OTHERINCOME, tourGroup.getSupplierName());
+			List<Map<String, Object>> outList = queryBiz
+					.selectBookingSupplierCountForGroups(groupIdStr,
+							com.yimayhd.erpresource.dal.constants.Constants.OTHEROUTCOME, tourGroup.getSupplierName());
+
+			List<Map<String, Object>> guideList = queryBiz
+					.selectBookingGuideForGroups(groupIdStr,
+							tourGroup.getSupplierName());
+			List<Map<String, Object>> deliveryList = queryBiz
+					.selectBookingDeliveryForGroups(groupIdStr,
+							tourGroup.getSupplierName());
+			List<Map<String, Object>> deList = queryBiz
+					.selectBookingSupplierCountForGroups(groupIdStr,
+							com.yimayhd.erpresource.dal.constants.Constants.LOCALTRAVEL, tourGroup.getSupplierName());
+			for (int i = 0; i < result.size(); i++) {
+				bookingInfo = (GroupBookingInfo) result.get(i);
+				Integer groupId = bookingInfo.getGroupId();
+				bookingInfo.setSightCnt(getCountByGroupId(sightList, groupId));
+				bookingInfo.setHotelCnt(getCountByGroupId(hotelList, groupId));
+				bookingInfo.setEatCnt(getCountByGroupId(eatList, groupId));
+				bookingInfo.setCarCnt(getCountByGroupId(carList, groupId));
+				bookingInfo.setDeliveryCnt(getCountByGroupId(deList, groupId));
+				bookingInfo.setAirCnt(getCountByGroupId(airList, groupId));
+				bookingInfo.setTrainCnt(getCountByGroupId(trainList, groupId));
+				bookingInfo.setInsuranceCnt(getCountByGroupId(insuranceList,
+						groupId));
+				bookingInfo.setShopCnt(getCountByGroupId(shopList, groupId));
+				bookingInfo.setInCnt(getCountByGroupId(inList, groupId));
+				bookingInfo.setOutCnt(getCountByGroupId(outList, groupId));
+				bookingInfo
+						.setGuideNames(getNamesByGroupId(guideList, groupId));
+				bookingInfo.setDeliveryNames(getNamesByGroupId(deliveryList,
+						groupId));
+			}
+		}
+
+
+		Map<String, Object> personCount = queryBiz.getPersonCount(pageBean, bizId, dataUserIdSet);
+		queryResult.setMap(personCount);
+		queryResult.setPageBean(pageBean);
+		return queryResult;
 	}
 }

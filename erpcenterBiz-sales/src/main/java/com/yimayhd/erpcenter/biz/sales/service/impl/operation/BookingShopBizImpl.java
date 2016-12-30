@@ -126,5 +126,10 @@ public class BookingShopBizImpl implements BookingShopBiz{
 		return bookingShopDal.existBookingShop(supplierId);
 	}
 
+	@Override
+	public QueryGuideShop getGuideShopListPageTotal(PageBean pageBean, Set<Integer> set) {
+		return bookingShopDal.getGuideShopListPageTotal(pageBean,set);
+	}
+
 
 }

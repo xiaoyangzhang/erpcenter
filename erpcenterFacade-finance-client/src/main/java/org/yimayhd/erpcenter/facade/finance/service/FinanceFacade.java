@@ -387,4 +387,6 @@ public interface FinanceFacade{
 	ExportTravelListTableResult queryAuditGroupExcelList(ExportTravelListTableDTO exportTravelListTableDTO);
 
 	ExportTravelListTableResult saleDataTravelExport(ExportTravelListTableDTO exportTravelListTableDTO);
+
+//	QueryAuditGroupResult queryAuditGroupExcelList(Integer groupId, Integer bizId, Map<String, Object> parameters);
 }

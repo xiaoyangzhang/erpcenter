@@ -1,18 +1,20 @@
 package com.yimayhd.erpcenter.facade.sales.service;
 
-import java.text.ParseException;
-import java.util.List;
-
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderForCarCar;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
-import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupOrderQueryForCarCar;
 import com.yimayhd.erpcenter.facade.sales.query.ReportStatisticsQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.query.grouporder.*;
 import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
+import com.yimayhd.erpcenter.facade.sales.result.QueryResAdminOrderResult;
+import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.sales.result.WebResult;
 import com.yimayhd.erpcenter.facade.sales.result.grouporder.*;
+
+import java.text.ParseException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 
@@ -178,4 +180,15 @@ public interface GroupOrderFacade {
 	public List<GroupOrderPrice> selectByOrder(Integer orderId);
 
 	WebResult<List<GroupOrderForCarCar>> selectGroupOrdersInGroupsForCarCar(PageBean pageBean);
+
+	PageBean selectGroupGuestRepeatListPage(PageBean pageBean,Integer bizId);
+
+	ResultSupport delTaobaoGroupOrder(Integer bizId, Integer orderId);
+
+	QueryResRoomExtraBedResult selectResRoomExtraBedList(PageBean pageBean, Integer bizId);
+	//
+	QueryResAdminOrderResult selectResAdminOrderList(PageBean pageBean, Integer bizId, Set<Integer> set);
+
+
+
 }

@@ -498,4 +498,9 @@ public class BookingShopFacadeImpl implements BookingShopFacade{
 		return page;
 	}
 
+	@Override
+	public QueryGuideShop getGuideShopListPageTotal(PageBean pageBean, Set<Integer> dataUserIdSet) {
+		return bookingShopBiz.getGuideShopListPageTotal(pageBean,dataUserIdSet);
+	}
+
 }

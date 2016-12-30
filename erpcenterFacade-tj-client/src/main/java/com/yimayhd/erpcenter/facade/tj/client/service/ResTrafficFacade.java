@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.dubbo.container.page.Page;
 import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
@@ -240,5 +241,9 @@ public interface ResTrafficFacade {
 	 * @return
 	 */
 	public String toSaveResNumsSold(ToSaveResNumsSoldDTO toSaveResNumsSoldDTO);
+
+	PageBean selectAirTicketProfitList(PageBean pageBean);
+
+	List<TrafficResProduct> loadTrafficResProductInfo(Integer resId);
 
 }

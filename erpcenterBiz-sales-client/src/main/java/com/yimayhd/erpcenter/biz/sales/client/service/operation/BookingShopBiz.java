@@ -9,6 +9,7 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDet;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopSelect;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryGuideShop;
 
 
 public interface BookingShopBiz {
@@ -60,4 +61,5 @@ public interface BookingShopBiz {
 
 	Integer existBookingShop(Integer supplierId);
 
+	QueryGuideShop getGuideShopListPageTotal(PageBean pageBean, Set<Integer> set);
 }

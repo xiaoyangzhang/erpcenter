@@ -8,6 +8,7 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShopDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingShopDetailDeployVO;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.QueryGuideShop;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 import com.yimayhd.erpcenter.facade.operation.query.BookingShopDTO;
 import com.yimayhd.erpcenter.facade.operation.query.BookingShopDetailDeployDTO;
@@ -163,4 +164,6 @@ public interface BookingShopFacade {
 	ResultSupport delShopDetail(Integer bookingShopDetailId,Integer groupId);
 	ResultSupport saveShopDetail(BookingShopDetailDeployVO vo);
 	PageBean shopTJList(PageBean pageBean,Integer bizId);
+
+	QueryGuideShop getGuideShopListPageTotal(PageBean pageBean, Set<Integer> dataUserIdSet);
 }

@@ -2562,4 +2562,58 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
         return toProfitExcelResult;
     }
 
+    @Override
+    public PageBean selectTourGroupCodeListPage(PageBean pageBean, Integer bizId, Set<Integer> dataUserIdSet) {
+        return tourGroupBiz.selectTourGroupCodeListPage(pageBean,bizId,dataUserIdSet);
+    }
+
+    @Override
+    public Map<String, Object> changerGroupCodePage(Integer groupId, Integer bizId) {
+        TourGroup tg =tourGroupBiz.selectByPrimaryKey(groupId);
+        Map<String,Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("oldGroupCode",tg.getGroupCode());
+
+        List<GroupOrder> lists=groupOrderBiz.selectOrderByGroupId(groupId);
+        GroupOrder go=lists.get(0);
+        Integer orgId=0;
+        if(tg.getGroupMode()>0){
+            PlatformEmployeePo salePEP = platformEmployeeBiz
+                    .findByEmployeeId(go.getSaleOperatorId());
+            orgId=salePEP.getOrgId();
+        }else{
+            PlatformEmployeePo operatorPEP = platformEmployeeBiz
+                    .findByEmployeeId(tg.getOperatorId());
+            orgId=operatorPEP.getOrgId();
+        }
+        String supplierCode = platformOrgBiz.getCompanyCodeByOrgId(bizId,orgId);
+        TourGroup tourGroup=tourGroupBiz.selectGroupCodeSort(tg.getBizId(), tg.getGroupMode(), go.getDepartureDate());
+        String makeCodeByMode = tourGroupBiz.makeCodeByMode(supplierCode, tg.getGroupMode(), go.getDepartureDate(),
+                tg.getGroupCodeMark(), tourGroup == null ? 1: tourGroup.getGroupCodeSort() + 1);
+        resultMap.put("groupCodeSort",tourGroup == null ? 1: tourGroup.getGroupCodeSort() + 1);
+        resultMap.put("newGroupCode",makeCodeByMode);
+        return resultMap;
+    }
+
+    @Override
+    public WebResult<Boolean> updateTourGroup(TourGroup tourGroup) {
+        int result = tourGroupBiz.updateTourGroup(tourGroup);
+        WebResult<Boolean> webResult = new WebResult<Boolean>();
+        if (result < 1) {
+            webResult.setErrorCode(OperationErrorCode.MODIFY_ERROR);
+        }
+        return webResult;
+    }
+
+    @Override
+    public WebResult<Boolean> updateWapType(Integer groupId) {
+	    tourGroupBiz.updateWapType(groupId);
+	    WebResult<Boolean> result = new WebResult<Boolean>();
+        return result;
+    }
+
+    @Override
+    public List<TourGroup> selectTotalByResId(Integer resId) {
+        return tourGroupBiz.selectTotalByResId(resId);
+    }
+
 }

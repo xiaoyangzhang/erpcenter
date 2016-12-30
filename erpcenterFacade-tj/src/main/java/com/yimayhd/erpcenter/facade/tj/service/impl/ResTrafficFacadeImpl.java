@@ -1090,4 +1090,21 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		return JSON.toJSONString(map);
 	}
 
+	@Override
+	public PageBean selectAirTicketProfitList(PageBean pageBean) {
+		pageBean=trafficResBiz.selectAirTicketProfitListPage(pageBean);
+		List <TrafficRes> trafficRes=pageBean.getResult();
+		for(TrafficRes item:trafficRes){
+			GroupOrder go=groupOrderBiz.selectSumTotalByResId(item.getId());
+			item.setSumTotal(go.getTotal());
+			item.setSumCost(go.getCost());
+		}
+		return pageBean;
+	}
+
+	@Override
+	public List<TrafficResProduct> loadTrafficResProductInfo(Integer resId) {
+		return trafficResProductBiz.loadTrafficResProductInfo(resId);
+	}
+
 }

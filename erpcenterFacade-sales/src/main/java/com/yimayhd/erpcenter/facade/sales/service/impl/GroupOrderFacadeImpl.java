@@ -14,21 +14,29 @@ import java.util.Map;
 import java.util.Set;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.util.TypeUtils;
+import com.yimayhd.erpcenter.biz.product.service.*;
 import com.yimayhd.erpcenter.biz.sales.client.service.car.DoubleCarBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchDeliveryPriceResult;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchOrderGuestResult;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchTransportsResult;
+import com.yimayhd.erpcenter.biz.sales.client.service.taobao.TaobaoOrderBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatAuthBiz;
 import com.yimayhd.erpcenter.common.util.PageParameterCheckAndDealUtil;
+import com.yimayhd.erpcenter.dal.product.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupOrderQueryForCarCar;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.*;
 import com.yimayhd.erpcenter.dal.sys.po.PlatAuth;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.facade.sales.errorcode.OperationErrorCode;
 import com.yimayhd.erpcenter.facade.sales.query.ReportStatisticsQueryDTO;
 import com.yimayhd.erpcenter.facade.sales.query.grouporder.*;
+import com.yimayhd.erpcenter.facade.sales.result.QueryResAdminOrderResult;
+import com.yimayhd.erpcenter.facade.sales.result.ResultSupport;
 import com.yimayhd.erpcenter.facade.sales.result.WebResult;
 import com.yimayhd.erpcenter.facade.sales.result.grouporder.*;
+import com.yimayhd.erpcenter.facade.sales.service.QueryResRoomExtraBedResult;
 import com.yimayhd.erpcenter.facade.sales.utils.*;
 
 import org.apache.commons.lang3.StringUtils;
@@ -51,13 +59,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
 import com.yimayhd.erpcenter.biz.basic.service.RegionBiz;
-import com.yimayhd.erpcenter.biz.product.service.ProductGroupBiz;
-import com.yimayhd.erpcenter.biz.product.service.ProductGroupExtraItemBiz;
-import com.yimayhd.erpcenter.biz.product.service.ProductGroupPriceBiz;
-import com.yimayhd.erpcenter.biz.product.service.ProductGroupSupplierBiz;
-import com.yimayhd.erpcenter.biz.product.service.ProductInfoBiz;
-import com.yimayhd.erpcenter.biz.product.service.ProductRemarkBiz;
-import com.yimayhd.erpcenter.biz.product.service.ProductRouteBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.airticket.AirTicketRequestBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingGuideBiz;
@@ -76,15 +77,6 @@ import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
-import com.yimayhd.erpcenter.dal.product.po.ProductAttachment;
-import com.yimayhd.erpcenter.dal.product.po.ProductGroup;
-import com.yimayhd.erpcenter.dal.product.po.ProductGroupExtraItem;
-import com.yimayhd.erpcenter.dal.product.po.ProductGroupPrice;
-import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
-import com.yimayhd.erpcenter.dal.product.po.ProductRemark;
-import com.yimayhd.erpcenter.dal.product.po.ProductRoute;
-import com.yimayhd.erpcenter.dal.product.po.ProductRouteSupplier;
-import com.yimayhd.erpcenter.dal.product.po.ProductRouteTraffic;
 import com.yimayhd.erpcenter.dal.product.vo.ProductGroupSupplierVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductRouteDayVo;
 import com.yimayhd.erpcenter.dal.product.vo.ProductRouteVo;
@@ -95,13 +87,6 @@ import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingShop;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupOrderPriceVO;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupOrderVO;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteDayVO;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.GroupRouteVO;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SalePrice;
-import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TransportVO;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.facade.sales.constants.BizConfigConstant;
 import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
@@ -199,6 +184,10 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 	@Autowired
 	private DoubleCarBiz doubleCarBiz;
 
+	@Autowired
+	private TaobaoOrderBiz taobaoOrderBiz;
+	@Autowired
+	private TaoBaoStockBiz taoBaoStockBiz;
 	@Override
 	public ToOrderLockListResult toOrderLockList(Integer bizId) {
 
@@ -3669,6 +3658,9 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		return result;
 	}
 
+
+
+
 	private void selectAndSetPriceInfoAndGuestsInfoAndPickUpServiceInfoInOneOrder(GroupOrder order) {
 		SearchDeliveryPriceResult orderPricesResult = doubleCarBiz.
                 selectDeliveryPrice(order.getId(), BasicConstants.DEFAULT_PAGE, BasicConstants.BATCH_QUERY_PAGE_SIZE);
@@ -3680,6 +3672,69 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 
 		SearchTransportsResult orderdPickUpServiceResult = doubleCarBiz.selectTransportByOrderId(order.getId());
 		order.setOrderTrans(orderdPickUpServiceResult.getTransPorts());
+	}
+
+	@Override
+	public PageBean selectGroupGuestRepeatListPage(PageBean pageBean, Integer bizId) {
+
+		return groupOrderGuestService.selectGroupGuestRepeatListPage(pageBean, bizId);
+	}
+
+	@Override
+	public ResultSupport delTaobaoGroupOrder(Integer bizId, Integer orderId) {
+		ResultSupport resultSupport = new ResultSupport();
+		if (airTicketRequestService.doesOrderhaveRequested(bizId, orderId)) {
+			resultSupport.setErrorCode(OperationErrorCode.CANCEL_APP);
+			return resultSupport;
+//			return errorJson("删除订单前请先取消机票申请。");
+		}
+		GroupOrder groupOrder = groupOrderService.findById(orderId);
+		taobaoOrderBiz.updateOrderId(orderId);									// 更新淘宝原始单OrderId为0
+		groupOrder.setState(-1);
+		groupOrderService.updateGroupOrder(groupOrder);
+		if(groupOrder.getGroupId()!=null){    									// 判断是否成团，团中有无订单，若无订单删除团。
+			List<GroupOrder> list =groupOrderService.selectSubOrderList(groupOrder.getGroupId());
+			if(list==null || list.size()<1){
+				TourGroup tourGroup=tourGroupService.selectByPrimaryKey(groupOrder.getGroupId());
+				tourGroup.setGroupState(-1);
+				tourGroupService.updateByPrimaryKeySelective(tourGroup);
+			}
+		}
+		if (groupOrder.getPriceId() != null) {
+
+			boolean updateStock = productGroupPriceService.updateStock(groupOrder.getPriceId(),
+					groupOrder.getSupplierId(),
+					-(groupOrder.getNumAdult() + groupOrder.getNumChild()));
+
+			log.info("更新库存:" + updateStock);
+		}
+		bookingSupplierService.upateGroupIdAfterDelOrderFromGroup(orderId);
+		TaobaoStockLog sLog = taoBaoStockBiz.selectStockLogAllByOrderId(orderId);  //判断是否存在淘宝产品库存，有则更新该单已售为0
+		if (sLog != null) {
+			taoBaoStockBiz.delTaoBaoProductStock(sLog);
+		}
+		return null;
+	}
+
+	@Override
+	public QueryResRoomExtraBedResult selectResRoomExtraBedList(PageBean pageBean, Integer bizId) {
+		QueryResRoomExtraBedResult result = new QueryResRoomExtraBedResult();
+		pageBean=groupOrderService.selectRoomExtrabedListPage(pageBean, bizId);
+		result.setPageBean(pageBean);
+		Map<String, Object> sumRoomExtrabed = groupOrderService.selectSumRoomExtrabed(pageBean, bizId);
+		result.setMap(sumRoomExtrabed);
+		return result;
+	}
+
+	@Override
+	public QueryResAdminOrderResult selectResAdminOrderList(PageBean pageBean, Integer bizId, Set<Integer> set) {
+		QueryResAdminOrderResult result = new QueryResAdminOrderResult();
+		pageBean=groupOrderService.selectResAdminOrderList(pageBean,
+				bizId,set);
+		result.setPageBean(pageBean);
+		Map<String, BigDecimal> map_sum = groupOrderService.sumResAdminOrder(pageBean);
+		result.setMap(map_sum);
+		return result;
 	}
 
 }

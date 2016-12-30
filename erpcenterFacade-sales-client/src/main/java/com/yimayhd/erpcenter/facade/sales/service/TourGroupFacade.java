@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.facade.sales.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.yihg.mybatis.utility.PageBean;
@@ -77,5 +78,14 @@ public interface TourGroupFacade {
 
     public ToProfitExcelResult toProfitExcel(GroupOrder groupOrder,Integer bizId,Set<Integer> dataUserIdSet);
     public ToProfitExcelResult getGroupIdsByTravelExportStatus(Integer c,Integer bizId);
+
+    PageBean selectTourGroupCodeListPage(PageBean pageBean,Integer bizId,Set<Integer> dataUserIdSet);
+
+   Map<String,Object> changerGroupCodePage(Integer groupId, Integer bizId);
+
+   WebResult<Boolean> updateTourGroup(TourGroup tourGroup);
+   WebResult<Boolean> updateWapType(Integer groupId);
+
+   List<TourGroup> selectTotalByResId(Integer resId);
 
 }
