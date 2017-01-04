@@ -35,6 +35,7 @@
 	    <result column="num_person" property="numPerson" jdbcType="DECIMAL" />
 	    <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
 	    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<resultMap id="GroupOrderGuest" type="com.yimayhd.erpcenter.dal.sales.client.car.po.GroupOrderGuest" >
@@ -80,7 +81,7 @@
 	</select>
 	
 	<select id="selectDeliveryPriceListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BookingDeliveryPrice">
-		SELECT p.id, p.booking_id, p.unit_price, p.num_times, p.num_person, p.total_price, p.item_name
+		SELECT p.id, p.booking_id, p.unit_price, p.num_times, p.num_person, p.total_price, p.item_name, p.remark
 		FROM booking_delivery_order o 
 		LEFT JOIN booking_delivery_price p ON o.booking_id = p.booking_id
 		WHERE o.order_id IN
