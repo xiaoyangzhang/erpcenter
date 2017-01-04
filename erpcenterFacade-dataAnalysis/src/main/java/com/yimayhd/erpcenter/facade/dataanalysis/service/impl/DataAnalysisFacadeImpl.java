@@ -1148,11 +1148,15 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
         }
 
 		PageBean pb = new PageBean();
-		if (page == null || !StringUtils.isNumeric(page)){
+		if (page == null || !StringUtils.isNumeric(page) ){
 			pb.setPage(1);
+		}else {
+			pb.setPage(Integer.parseInt(page));
 		}
 		if (pageSize == null || !StringUtils.isNumeric(pageSize)) {
 			pb.setPageSize(Constants.PAGESIZE);
+		}else {
+			pb.setPageSize(Integer.parseInt(pageSize));
 		}
 		if (StringUtils.isBlank((String) paramters.get("saleOperatorIds"))
 				&& StringUtils.isNotBlank((String) paramters.get("orgIds"))) {

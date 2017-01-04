@@ -891,7 +891,6 @@
 
 	<select id="selectSKGroupListPage" resultMap="BaseResultMap"
 		parameterType="com.yihg.mybatis.utility.PageBean">
-		select
 		select id, biz_id, group_mode, group_code,group_code_mark,
 		group_code_sort,
 		group_state,

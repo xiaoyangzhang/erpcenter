@@ -2,6 +2,7 @@ package com.yimayhd.erpcenter.facade.sales.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
@@ -17,6 +18,7 @@ import com.yimayhd.erpcenter.facade.sales.result.BaseStateResult;
 import com.yimayhd.erpcenter.facade.sales.result.grouprequirement.EditGroupRequirementResult;
 import com.yimayhd.erpcenter.facade.sales.result.grouprequirement.ToRequirementListResult;
 import com.yimayhd.erpcenter.facade.sales.service.GroupRequirementFacade;
+import org.springframework.util.CollectionUtils;
 
 public class GroupRequirementFacadeImpl implements GroupRequirementFacade{
 	
@@ -40,9 +42,12 @@ public class GroupRequirementFacadeImpl implements GroupRequirementFacade{
 		List<GroupRequirement> fleetList = groupRequirementService.selectByGroupIdAndType(groupId, Constants.FLEET);
 		List<GroupRequirement> guideList = groupRequirementService.selectByGroupIdAndType(groupId, Constants.GUIDE);
 		List<GroupRequirement> restaurantList = groupRequirementService.selectByGroupIdAndType(groupId, Constants.RESTAURANT);
-		if(hotelList!=null && hotelList.size()>0){
+		if(!CollectionUtils.isEmpty(hotelList)){
 			for (GroupRequirement hotel : hotelList) {
-				hotel.setHotelLevelName(dicService.getById(Integer.parseInt(hotel.getHotelLevel())).getValue());
+				if (!StringUtils.isBlank(hotel.getHotelLevel())) {
+
+					hotel.setHotelLevelName(dicService.getById(Integer.parseInt(hotel.getHotelLevel())).getValue());
+				}
 			}
 		}
 		

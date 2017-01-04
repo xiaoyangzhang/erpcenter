@@ -2052,7 +2052,7 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		exportTravelListTableResult.setDeliveryList(deliveryList);
 		exportTravelListTableResult.setSupplierList(supplierList);
 		exportTravelListTableResult.setOrderList(otherIncomeList);
-
+		exportTravelListTableResult.setOtherIncomeList(otherIncomeList);
 		return exportTravelListTableResult;
 	}
 
