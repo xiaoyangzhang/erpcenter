@@ -246,4 +246,11 @@ public interface ResTrafficFacade {
 
 	List<TrafficResProduct> loadTrafficResProductInfo(Integer resId);
 
+	TrafficAddResOrderResult airTicketProfit_table(TrafficResDTO trafficResDTO);
+
+	TrafficAddResOrderResult budgetDetail(TrafficResDTO trafficResDTO);
+
+	TrafficAddResOrderResult constantlyDetail(TrafficResDTO trafficResDTO);
+
+	TrafficAddResOrderResult resRoomExtrabed_table(TrafficResDTO trafficResDTO);
 }

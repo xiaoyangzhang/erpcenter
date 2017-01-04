@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.facade.sales.query.grouporder;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Set;
 
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
@@ -10,6 +11,7 @@ public class ToNotGroupListDTO implements Serializable {
 	private GroupOrder groupOrder;
 	private Integer bizId;
 	private Set<Integer> userIdSet;
+	private Map<String,Object> pmBean;
 
 	public GroupOrder getGroupOrder() {
 		return groupOrder;
@@ -33,5 +35,13 @@ public class ToNotGroupListDTO implements Serializable {
 
 	public void setUserIdSet(Set<Integer> userIdSet) {
 		this.userIdSet = userIdSet;
+	}
+
+	public Map<String, Object> getPmBean() {
+		return pmBean;
+	}
+
+	public void setPmBean(Map<String, Object> pmBean) {
+		this.pmBean = pmBean;
 	}
 }

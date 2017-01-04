@@ -1,8 +1,10 @@
 package com.yimayhd.erpcenter.facade.tj.client.query;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import com.yimayhd.erpcenter.dal.product.vo.TrafficResVo;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 
 public class TrafficResDTO implements Serializable{
@@ -23,7 +25,20 @@ public class TrafficResDTO implements Serializable{
 	
 	private Integer operType;
 	private int orderId;
-	
+	Integer pageSize;
+	Integer page;
+	Map<String,Object> pm;
+	Integer resId;
+	GroupOrder groupOrder;
+
+	public Map<String, Object> getPm() {
+		return pm;
+	}
+
+	public void setPm(Map<String, Object> pm) {
+		this.pm = pm;
+	}
+
 	public TrafficResVo getTrafficResVo() {
 		return trafficResVo;
 	}
@@ -85,5 +100,36 @@ public class TrafficResDTO implements Serializable{
 	public void setSupplierName(String supplierName) {
 		this.supplierName = supplierName;
 	}
-	
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public Integer getPage() {
+		return page;
+	}
+
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+
+	public Integer getResId() {
+		return resId;
+	}
+
+	public void setResId(Integer resId) {
+		this.resId = resId;
+	}
+
+	public GroupOrder getGroupOrder() {
+		return groupOrder;
+	}
+
+	public void setGroupOrder(GroupOrder groupOrder) {
+		this.groupOrder = groupOrder;
+	}
 }

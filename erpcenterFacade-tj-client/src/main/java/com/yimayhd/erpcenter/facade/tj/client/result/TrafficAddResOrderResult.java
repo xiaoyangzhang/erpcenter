@@ -2,12 +2,16 @@ package com.yimayhd.erpcenter.facade.tj.client.result;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
+import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
+import com.yimayhd.erpcenter.dal.product.po.TrafficRes;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResLine;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SpecialGroupOrderVO;
 
 public class TrafficAddResOrderResult implements Serializable{
@@ -28,9 +32,13 @@ public class TrafficAddResOrderResult implements Serializable{
 	private ProductInfo productInfo;
 	private List<TrafficResLine> trafficResLine;
 	private List<RegionInfo> cityList;
+	List<TrafficResProduct> trafficResProductLists;
+
+	List<TourGroup> tourGroupLists;
 	
 	private Integer operType;
-	
+	PageBean pageBean;
+	Map<String, Object> sumRoomExtrabed;
 	public TrafficResProduct getTrafficResProduct() {
 		return trafficResProduct;
 	}
@@ -103,5 +111,36 @@ public class TrafficAddResOrderResult implements Serializable{
 	public void setOperType(Integer operType) {
 		this.operType = operType;
 	}
-	
+
+	public PageBean getPageBean() {
+		return pageBean;
+	}
+
+	public void setPageBean(PageBean pageBean) {
+		this.pageBean = pageBean;
+	}
+
+	public List<TourGroup> getTourGroupLists() {
+		return tourGroupLists;
+	}
+
+	public void setTourGroupLists(List<TourGroup> tourGroupLists) {
+		this.tourGroupLists = tourGroupLists;
+	}
+
+	public List<TrafficResProduct> getTrafficResProductLists() {
+		return trafficResProductLists;
+	}
+
+	public void setTrafficResProductLists(List<TrafficResProduct> trafficResProductLists) {
+		this.trafficResProductLists = trafficResProductLists;
+	}
+
+	public Map<String, Object> getSumRoomExtrabed() {
+		return sumRoomExtrabed;
+	}
+
+	public void setSumRoomExtrabed(Map<String, Object> sumRoomExtrabed) {
+		this.sumRoomExtrabed = sumRoomExtrabed;
+	}
 }

@@ -189,6 +189,6 @@ public interface GroupOrderFacade {
 	//
 	QueryResAdminOrderResult selectResAdminOrderList(PageBean pageBean, Integer bizId, Set<Integer> set);
 
-
+	ToNotGroupListResult toOrderPreview(ToNotGroupListDTO toNotGroupListDTO);
 
 }

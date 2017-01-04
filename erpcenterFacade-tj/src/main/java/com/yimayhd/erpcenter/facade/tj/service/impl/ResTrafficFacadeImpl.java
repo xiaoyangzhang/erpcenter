@@ -11,8 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
 import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
 import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants.LOG_ACTION;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +32,6 @@ import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingGuideBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierDetailBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderPriceBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderTransportBiz;
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.SpecialGroupOrderBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
@@ -55,10 +52,6 @@ import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePayDetail;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SpecialGroupOrderVO;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.facade.tj.client.errorcode.TjErrorCode;
@@ -136,6 +129,11 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 	
 	@Autowired
 	private SupplierItemBiz supplierItemBiz;
+
+	@Autowired
+	private TourGroupBiz tourGroupBiz;
+
+
 	
 	/**
 	 * 交通资源table
@@ -705,6 +703,18 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		trproBean.setProductName("");
 		trproBean.setNumStock(0);
 		trproBean.setNumSold(0);
+		trproBean.setAdultCostHotel(new BigDecimal(0.0000));
+		trproBean.setAdultCostTicket(new BigDecimal(0.0000));
+		trproBean.setAdultCostJs(new BigDecimal(0.0000));
+		trproBean.setAdultCostOther(new BigDecimal(0.0000));
+		trproBean.setChildCostHotel(new BigDecimal(0.0000));
+		trproBean.setChildCostTicket(new BigDecimal(0.0000));
+		trproBean.setChildCostJs(new BigDecimal(0.0000));
+		trproBean.setAdultCostOther(new BigDecimal(0.0000));
+		trproBean.setBabyCostHotel(new BigDecimal(0.0000));
+		trproBean.setBabyCostTicket(new BigDecimal(0.0000));
+		trproBean.setAdultCostJs(new BigDecimal(0.0000));
+		trproBean.setAdultCostOther(new BigDecimal(0.0000));
 		trproBean.setAdultCostPrice(new BigDecimal(0.0000));
 		trproBean.setAdultSuggestPrice(new BigDecimal(0.0000));
 		trproBean.setAdultSamePay(new BigDecimal(0.0000));
@@ -1106,5 +1116,75 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 	public List<TrafficResProduct> loadTrafficResProductInfo(Integer resId) {
 		return trafficResProductBiz.loadTrafficResProductInfo(resId);
 	}
+
+	@Override
+	public TrafficAddResOrderResult airTicketProfit_table(TrafficResDTO trafficResDTO) {
+		TrafficAddResOrderResult trafficAddResOrderResult = new TrafficAddResOrderResult();
+		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
+		PageBean<TrafficRes> pageBean = new PageBean<TrafficRes>();
+		if(trafficResDTO.getPage()==null){
+			pageBean.setPage(1);
+		}else{
+			pageBean.setPage(trafficResDTO.getPage());
+		}
+		if(trafficResDTO.getPageSize()==null){
+			pageBean.setPageSize(Constants.PAGESIZE);
+		}else{
+			pageBean.setPageSize(trafficResDTO.getPageSize());
+		}
+		pageBean.setPage(trafficResDTO.getPage());
+		pageBean.setParameter(trafficResDTO.getPm());
+		pageBean=trafficResBiz.selectAirTicketProfitListPage(pageBean);
+		List <TrafficRes> trafficRes=pageBean.getResult();
+		for(TrafficRes item:trafficRes){
+			GroupOrder go=groupOrderBiz.selectSumTotalByResId(item.getId());
+			item.setSumTotal(go.getTotal());
+			item.setSumCost(go.getCost());
+		}
+		pageBean.setResult(trafficRes);
+		trafficAddResOrderResult.setPageBean(pageBean);
+		return trafficAddResOrderResult;
+	}
+
+	@Override
+	public TrafficAddResOrderResult budgetDetail(TrafficResDTO trafficResDTO) {
+		TrafficAddResOrderResult trafficAddResOrderResult = new TrafficAddResOrderResult();
+		List<TrafficResProduct> lists=trafficResProductBiz.loadTrafficResProductInfo(trafficResDTO.getResId());
+		trafficAddResOrderResult.setTrafficResProductLists(lists);
+		return trafficAddResOrderResult;
+	}
+
+	@Override
+	public TrafficAddResOrderResult constantlyDetail(TrafficResDTO trafficResDTO) {
+		TrafficAddResOrderResult trafficAddResOrderResult = new TrafficAddResOrderResult();
+		List<TourGroup> lists= tourGroupBiz.selectTotalByResId(trafficResDTO.getResId());
+		trafficAddResOrderResult.setTourGroupLists(lists);
+		return trafficAddResOrderResult;
+	}
+
+	@Override
+	public TrafficAddResOrderResult resRoomExtrabed_table(TrafficResDTO trafficResDTO) {
+		TrafficAddResOrderResult trafficAddResOrderResult = new TrafficAddResOrderResult();
+		PageBean<GroupOrder> pageBean = new PageBean<GroupOrder>();
+		if(trafficResDTO.getPage()==null){
+			pageBean.setPage(1);
+		}else{
+			pageBean.setPage(trafficResDTO.getPage());
+		}
+		if(trafficResDTO.getPageSize()==null){
+			pageBean.setPageSize(Constants.PAGESIZE);
+		}else{
+			pageBean.setPageSize(trafficResDTO.getPageSize());
+		}
+		pageBean.setPage(trafficResDTO.getPage());
+		pageBean.setParameter(trafficResDTO.getGroupOrder());
+		pageBean=groupOrderBiz.selectRoomExtrabedListPage(pageBean, trafficResDTO.getBizId());
+
+		Map<String, Object> sumRoomExtrabed = groupOrderBiz.selectSumRoomExtrabed(pageBean, trafficResDTO.getBizId());
+		trafficAddResOrderResult.setSumRoomExtrabed(sumRoomExtrabed);
+		trafficAddResOrderResult.setPageBean(pageBean);
+		return trafficAddResOrderResult;
+	}
+
 
 }
