@@ -204,7 +204,7 @@
 		</dependency>
 
 	</dependencies>
-	<!--<build>
+	<build>
 		<finalName>erpcenter-web</finalName>
 		<plugins>
 			<plugin>
@@ -228,5 +228,29 @@
 				</configuration>
 			</plugin>
 		</plugins>
-	</build>-->
+	</build>
+
+
+	<profiles>
+		<profile>
+			<id>test</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.alibaba.citrus.tool</groupId>
+						<artifactId>autoconfig-maven-plugin</artifactId>
+						<configuration>
+							<charset>UTF-8</charset>
+							<dest>../target/erpcenter.war</dest>
+							<userProperties>../run/test.properties</userProperties>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+	</profiles>
 </project>

@@ -4,20 +4,24 @@
 		<property name="zk.address" defaultValue="192.168.1.202:2181"			description="dubbo注册的zookeeper地址" />
 		<property name="zk.port" defaultValue="-1" description="dubbo服务使用的端口号" />
 		<property name="export.dubbo.timeout" defaultValue="5000"			description="提供dubbo服务的默认超时时间" />
-		<property name="export.dubbo.version" defaultValue="LATEST"			description="暴露dubbo的版本号" />
+		<property name="export.dubbo.version" defaultValue="1.0.0.test"			description="暴露dubbo的版本号" />
 		<property name="dubbo.retries" defaultValue="0" description="dubbo调用不重试" />
 		<property name="consumer.dubbo.timeout" defaultValue="5000"			description="使用其他dubbo服务的超市时间" />
 		<property name="consumer.dubbo.check" defaultValue="false"			description="启东时是否强依赖其他服务，如果true那么依赖的服务必须先启动；如果false,其他服务可以不存在，但是调用的时候，如果服务依然不存在，则报错" />
-		<property name="consumer.user.dubbo.version" defaultValue="LATEST"			description="消费user的dubbo的版本号" />
-		<property name="consumer.idgen.dubbo.version" defaultValue="LATEST"			description="消费id generator的版本" />
+		<property name="consumer.user.dubbo.version" defaultValue="1.0.0.test"			description="消费user的dubbo的版本号" />
+		<property name="consumer.supplier.dubbo.version" defaultValue="1.0.0.test"			description="资源中心的dubbo的版本号" />
+		<property name="consumer.idgen.dubbo.version" defaultValue="1.0.0.test"			description="消费id generator的版本" />
 	</group>
 
-	<group name="">
-		<property name="app.name" defaultValue="center"			description="应用名称" />
-		<property name="jdbc.url"			defaultValue="jdbc:mysql://192.168.1.202:3306/center?useUnicode=true&amp;amp;characterset=utf-8"			description="数据库链接url" />
-		<property name="jdbc.username" defaultValue="root"			description="数据库用户名" />
-		<property name="jdbc.password" defaultValue="123456"			description="数据库密码" />
-		<property name="log.home" defaultValue="/home/admin/logs/center"			description="日志输出目录" />
+	<group name="mysql">
+		<property name="app.name" defaultValue="erpcenter"			description="应用名称" />
+		<property name="jdbc.url.product"			defaultValue="jdbc:mysql://192.168.1.157/yihg_erp_product?autoReconnect=true&amp;useUnicode=true&amp;characterset=utf8mb4&amp;allowMultiQueries=true"			description="数据库链接url" />
+		<property name="jdbc.url.sys"			defaultValue="jdbc:mysql://192.168.1.157/yihg_erp_user?autoReconnect=true&amp;useUnicode=true&amp;characterset=utf8mb4&amp;allowMultiQueries=true"			description="数据库链接url" />
+		<property name="jdbc.url.basic"			defaultValue="jdbc:mysql://192.168.1.157/yihg_erp_basic?autoReconnect=true&amp;useUnicode=true&amp;characterset=utf8mb4&amp;allowMultiQueries=true"			description="数据库链接url" />
+		<property name="jdbc.url.sales"			defaultValue="jdbc:mysql://192.168.1.157/yihg_erp_sales?autoReconnect=true&amp;useUnicode=true&amp;characterset=utf8mb4&amp;allowMultiQueries=true"			description="数据库链接url" />
+		<property name="jdbc.username" defaultValue="b2c"			description="数据库用户名" />
+		<property name="jdbc.password" defaultValue="b2c123"			description="数据库密码" />
+		<property name="log.home" defaultValue="/home/admin/logs/erpcenter"			description="日志输出目录" />
 	</group>
 
 	<group name="tair">
@@ -25,19 +29,36 @@
 		<property name="tair.groupName.per" defaultValue="p_group1"			description=" 持久化tair的namespace" />
 		<property name="tair.groupName.temp" defaultValue="m_group1"			description=" 非持久化tair的namespace" />
 		<property name="tair.timeout" defaultValue="5000"			description=" tair超时" />
-		<property name="tair.configServer.main" defaultValue="192.168.1.202:5198"			description=" tair服务器的地址" />
-		<property name="tair.configServer.slave" defaultValue="192.168.1.202:5198"			description=" tair服务器的地址" />
+		<property name="tair.configServer.main" defaultValue="192.168.1.153:5198"			description=" tair服务器的地址" />
+		<property name="tair.configServer.slave" defaultValue="192.168.1.154:5198"			description=" tair服务器的地址" />
 	</group>
 
 	<group name="mq">
-		<property name="rocketmq.server.name" defaultValue="192.168.1.206:9876"			description="rocketmq的注册中心地址" />
-		<property name="rocketmq.consumer.group" defaultValue="_consume_group" />
-		<property name="rocketmq.domain.name" defaultValue="*" />
+		<property name="rocketmq.server.name" defaultValue="192.168.1.149:9876"			description="rocketmq的注册中心地址" />
+		<property name="rocketmq.consumer.group" defaultValue="erpcenter_consume_group" />
+		<property name="rocketmq.domain.name" defaultValue="192.168.1.149:9876" />
 	</group>
 
 	<group name="idgen">
-		<property name="idgen.allocount" defaultValue="10"			description="idgen" />
-		<property name="idgen.domain" defaultValue="center"			description="idgen" />
+		<property name="idgen.allocount" defaultValue="100"			description="idgen" />
+		<property name="idgen.domain" defaultValue="erpcenter"			description="idgen" />
+	</group>
+	<group name="redis">
+		<property name="redis-haAddress" defaultValue="redis05.jiuxiulvxing.net:26383,redis06.jiuxiulvxing.net:26383,redis07.jiuxiulvxing.net:26383,redis08.jiuxiulvxing.net:26383,redis09.jiuxiulvxing.net:26383,redis10.jiuxiulvxing.net:26383,redis11.jiuxiulvxing.net:26383,redis12.jiuxiulvxing.net:26383,redis13.jiuxiulvxing.net:26383,redis14.jiuxiulvxing.net:26383,redis15.jiuxiulvxing.net:26383,redis16.jiuxiulvxing.net:26383,redis17.jiuxiulvxing.net:26383,redis18.jiuxiulvxing.net:26383,redis19.jiuxiulvxing.net:26383,redis20.jiuxiulvxing.net:26383
+"			description="redis" />
+		<property name="redis-redisInitParam" defaultValue="timeout\=30000;pool_size\=50;"			description="idgen" />
+		<property name="redis.pool.host" defaultValue="redis05.jiuxiulvxing.net,redis06.jiuxiulvxing.net,redis07.jiuxiulvxing.net,redis08.jiuxiulvxing.net,redis09.jiuxiulvxing.net,redis10.jiuxiulvxing.net,redis11.jiuxiulvxing.net,redis12.jiuxiulvxing.net,redis13.jiuxiulvxing.net,redis14.jiuxiulvxing.net,redis15.jiuxiulvxing.net,redis16.jiuxiulvxing.net,redis17.jiuxiulvxing.net,redis18.jiuxiulvxing.net,redis19.jiuxiulvxing.net,redis20.jiuxiulvxing.net
+"			description="idgen" />
+		<property name="redis.pool.port" defaultValue="26383"			description="idgen" />
+		<property name="redis.pool.maxIdle" defaultValue="60000"			description="idgen" />
+		<property name="redis.pool.maxTotal" defaultValue="500"			description="idgen" />
+		<property name="redis.pool.maxWaitMillis" defaultValue="1000"			description="idgen" />
+		<property name="redis.pool.testOnBorrow" defaultValue="true"			description="idgen" />
+		<property name="redis.encode" defaultValue="utf-8"			description="idgen" />
+		<property name="zk.client.timeout" defaultValue="60000"			description="idgen" />
+		<property name="zk.connect.timeout" defaultValue="60000"			description="idgen" />
+		<property name="solr.zk.address" defaultValue="192.168.1.202:2181"			description="idgen" />
+
 	</group>
 	<script>
 		<generate template="config.properties.vm" destfile="WEB-INF/config.properties"
