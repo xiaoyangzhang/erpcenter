@@ -214,7 +214,7 @@
 		(SUM(total)-SUM(total_cash)) AS balance,
 		SUM(total_cash) AS total_cash,
 		SUM(total) AS total,
-		ifnull(originalTotalBalance,0) originalTotalBalance 
+		sum(ifnull(originalTotalBalance,0)) originalTotalBalance
 		<include refid="dijieshe" />
 	</select>
 	
