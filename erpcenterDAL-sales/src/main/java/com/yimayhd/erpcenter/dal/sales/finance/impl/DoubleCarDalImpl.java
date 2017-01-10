@@ -31,6 +31,9 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 	public List<TransPort> selectTransportByOrderId(int orderId) {
 		List<TransPort> list = doubleCarMapper.selectTransportByOrderId(orderId);
 		String groupIds = list2String(list);
+		if(null == groupIds){
+			return list;
+		}
 		List<TransPortHotel> hotels = doubleCarMapper.selectTransPortHotelByGroupIds(groupIds);
 		for (int i = 0;i < list.size();i++) {
 			TransPort transPort = list.get(i);
@@ -57,6 +60,9 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 	}
 	
 	private static TransPort getHotelMsg(List<TransPortHotel> hotels,Date date,TransPort transPort){
+		if(hotels.size() <= 0){
+			return transPort;
+		}
 		StringBuffer nameBuffer = new StringBuffer();
 		for (int j = 0; j < hotels.size(); j++) {
 			TransPortHotel hotel = hotels.get(j);
@@ -105,6 +111,9 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 	public List<TransPort> selectTransportByOrderIds(List<Integer> orderIds) {
 		List<TransPort> list = doubleCarMapper.selectTransportByOrderIds(orderIds);
 		String groupIds = list2String(list);
+		if(null == groupIds){
+			return list;
+		}
 		List<TransPortHotel> hotels = doubleCarMapper.selectTransPortHotelByGroupIds(groupIds);
 		for (int i = 0;i < list.size();i++) {
 			TransPort transPort = list.get(i);
