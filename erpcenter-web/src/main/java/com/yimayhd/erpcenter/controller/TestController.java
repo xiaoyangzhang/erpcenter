@@ -207,9 +207,8 @@ public class TestController {
 	
 	@RequestMapping(value = "/getEmployeeById")
 	public Object getEmployeeById(){
-		SearchEmployeeResult result = platformEmployeeBiz.getEmployeeById(1);
-		PlatformEmployeePo employee = result.getEmployee();
-		return employee;
+		SearchEmployeeResult result = platformEmployeeBiz.getEmployeeById(2555555L);
+		return result;
 	}
 	
 	@RequestMapping(value = "/getEmployeeByIds")
