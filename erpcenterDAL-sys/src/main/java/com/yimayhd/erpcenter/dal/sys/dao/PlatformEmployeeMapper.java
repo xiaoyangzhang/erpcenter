@@ -130,4 +130,11 @@ public interface PlatformEmployeeMapper {
 	 * @return
 	 */
 	public List<PlatformEmployeePo> getOrgEmployeeListPage(@Param("page") PageBean pageBean);
+	
+	/**
+	 * 批量查询员工信息
+	 * @param ids
+	 * @return
+	 */
+	public List<PlatformEmployeePo> getEmployeeByIds(@Param("ids") Set<Long> ids);
 }

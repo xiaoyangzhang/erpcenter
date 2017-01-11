@@ -218,4 +218,14 @@ GROUP BY p.`employee_id`
         	#{item,jdbcType=INTEGER}
     	</foreach>
   	 </select>
+  	 
+  	 <select id="getEmployeeByIds" resultMap="platformEmployeePo">
+		select employee_id, biz_id, org_id, name, gender, position, mobile, phone, 
+			   fax, email, qq_code, STATUS, del_status, is_super, create_time, update_time 
+		from platform_employee
+		where employee_id in
+		 <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">  
+        	#{item,jdbcType=INTEGER}
+    	</foreach>  	
+	</select>
 </mapper>

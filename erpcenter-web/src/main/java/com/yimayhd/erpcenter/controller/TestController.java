@@ -1,10 +1,7 @@
 package com.yimayhd.erpcenter.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +20,8 @@ import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.query.SynHotelQuery;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SettleApplyBiz;
+import com.yimayhd.erpcenter.biz.sys.service.result.SearchEmployeeListResult;
+import com.yimayhd.erpcenter.biz.sys.service.result.SearchEmployeeResult;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.product.po.ProductInfo;
 import com.yimayhd.erpcenter.dal.product.query.ProductStockPageQueryDTO;
@@ -31,6 +30,7 @@ import com.yimayhd.erpcenter.dal.product.solr.manager.ProductSolrQueryManager;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderForCarCar;
 import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupOrderQueryForCarCar;
 import com.yimayhd.erpcenter.dal.sales.constants.PickTransportTypeEnum;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.facade.sales.result.WebResult;
 import com.yimayhd.erpcenter.facade.sales.service.GroupOrderFacade;
 import com.yimayhd.erpcenter.facade.service.ProductStockFacade;
@@ -203,6 +203,26 @@ public class TestController {
         pageBean.setParameter(car);
         WebResult<List<GroupOrderForCarCar>> result = groupOrderFacade.selectGroupOrdersInGroupsForCarCar(pageBean);
         System.out.println(1111);
+	}
+	
+	@RequestMapping(value = "/getEmployeeById")
+	public Object getEmployeeById(){
+		SearchEmployeeResult result = platformEmployeeBiz.getEmployeeById(1);
+		PlatformEmployeePo employee = result.getEmployee();
+		return employee;
+	}
+	
+	@RequestMapping(value = "/getEmployeeByIds")
+	public Object getEmployeeByIds(){
+		Set<Long> ids = new HashSet<Long>();
+		ids.add(1L);
+		ids.add(2L);
+		ids.add(3L);
+		ids.add(4L);
+		ids.add(12285787L);
+		SearchEmployeeListResult result = platformEmployeeBiz.getEmployeeByIds(ids);
+		List<PlatformEmployeePo> list = result.getEmployeeList();
+		return list;
 	}
 	
 	

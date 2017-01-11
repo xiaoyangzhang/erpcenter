@@ -735,4 +735,15 @@ public class PlatformEmployeeDalImpl implements PlatformEmployeeDal {
 		List<PlatformEmployeePo> empBeanList = platformEmployeeMapper.getOrgEmployeeListPage(pageBean);
 		return empBeanList;
 	}
+
+	@Override
+	public List<PlatformEmployeePo> getEmployeeByIds(Set<Long> ids) {
+		
+		if(ids == null || ids.size() == 0){
+			return new ArrayList<PlatformEmployeePo>();
+		}
+		
+		return platformEmployeeMapper.getEmployeeByIds(ids);
+	}
 }
+

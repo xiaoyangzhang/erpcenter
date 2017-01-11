@@ -10,26 +10,16 @@ public class PlatformEmployeePo implements Serializable{
 	 * 序列化
 	 */
 	private static final long serialVersionUID = -3054735478817165404L;
-
-	private Integer employeeId;
+	
+	/**
+	 * 用户Id
+	 */
+	private Integer employeeId;   
 	
 	private Integer bizId;
 	
 	private Integer orgId;
-	private String orgName;
-	private String roleName;
-	public String getRoleName() {
-		return roleName;
-	}
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-	public String getOrgName() {
-		return orgName;
-	}
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
-	}
+	
 	/**
 	 * 登录名称
 	 */
@@ -44,9 +34,9 @@ public class PlatformEmployeePo implements Serializable{
 	 */
 	private String name;
 	/**
-	 * 性别
+	 * 性别   0：女、1:男
 	 */
-	private Integer gender;
+	private Integer gender;		
 	/**
 	 * 职务
 	 */
@@ -92,10 +82,14 @@ public class PlatformEmployeePo implements Serializable{
 	 * 更新时间
 	 */
 	private Timestamp updateTime;
+	
+	private String orgName;
+	
+	private String roleName;
+	
 	/**
 	 * 分页
 	 */
-	
 	private Integer page;
 	private Integer pageSize;
 	public Integer getPageSize() {
@@ -242,6 +236,19 @@ public class PlatformEmployeePo implements Serializable{
 	}
 	public void setPosition(String position) {
 		this.position = position;
+	}
+	
+	public String getRoleName() {
+		return roleName;
+	}
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+	public String getOrgName() {
+		return orgName;
+	}
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
 	}
 	
 }

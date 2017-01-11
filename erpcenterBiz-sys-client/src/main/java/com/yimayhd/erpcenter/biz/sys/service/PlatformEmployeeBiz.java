@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.biz.sys.service.result.SearchEmployeeListResult;
+import com.yimayhd.erpcenter.biz.sys.service.result.SearchEmployeeResult;
 import com.yimayhd.erpcenter.biz.sys.service.result.SearchOrgEmployListResult;
 import com.yimayhd.erpcenter.common.exception.ClientException;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
@@ -160,4 +162,14 @@ public interface PlatformEmployeeBiz {
 	 * @return
 	 */
 	public SearchOrgEmployListResult getOrgEmployeeListPage(int orgId, int page, int pageSize);
+	
+	/**
+	 * 查询员工信息
+	 */
+	public SearchEmployeeResult getEmployeeById(long id);
+	
+	/**
+	 * 批量查询员工信息
+	 */
+	public SearchEmployeeListResult getEmployeeByIds(Set<Long> ids);
 }

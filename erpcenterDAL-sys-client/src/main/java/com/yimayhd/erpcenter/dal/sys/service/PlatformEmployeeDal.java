@@ -155,4 +155,9 @@ public interface PlatformEmployeeDal {
 	 */
 	public List<PlatformEmployeePo> getOrgEmployeeListPage(PageBean pageBean);
 	
+	/**
+	 * 查询员工信息
+	 */
+	public List<PlatformEmployeePo> getEmployeeByIds(Set<Long> ids) ;
+	
 }

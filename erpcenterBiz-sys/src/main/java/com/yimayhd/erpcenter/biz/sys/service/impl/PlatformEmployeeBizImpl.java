@@ -2,6 +2,7 @@ package com.yimayhd.erpcenter.biz.sys.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,6 +17,8 @@ import org.springframework.util.CollectionUtils;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.errorCode.SysErrorCode;
+import com.yimayhd.erpcenter.biz.sys.service.result.SearchEmployeeListResult;
+import com.yimayhd.erpcenter.biz.sys.service.result.SearchEmployeeResult;
 import com.yimayhd.erpcenter.biz.sys.service.result.SearchOrgEmployListResult;
 import com.yimayhd.erpcenter.common.exception.ClientException;
 import com.yimayhd.erpcenter.dal.sys.constants.Constants;
@@ -262,6 +265,50 @@ public class PlatformEmployeeBizImpl implements PlatformEmployeeBiz {
 		List<Integer> ids = new ArrayList<Integer>();
 		ids.add(orgId);
 		SearchOrgEmployListResult result = getOrgEmployeeListPage(ids, page, pageSize);
+		return result;
+	}
+
+	@Override
+	public SearchEmployeeResult getEmployeeById(long id) {
+		
+		SearchEmployeeResult result = new SearchEmployeeResult();
+		try{
+			Set<Long> ids = new HashSet<Long>();
+			ids.add(id);
+			SearchEmployeeListResult listResult = getEmployeeByIds(ids);
+			if(!listResult.isSuccess()){
+				return result;
+			}
+			
+			List<PlatformEmployeePo> list = listResult.getEmployeeList();
+			if(list != null && list.size() > 0){
+				result.setEmployee(list.get(0));
+			}
+		}catch(Exception ex){
+			ex.printStackTrace();
+			result.setErrorCode(SysErrorCode.SYSTEM_ERROR);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public SearchEmployeeListResult getEmployeeByIds(Set<Long> ids) {
+		
+		SearchEmployeeListResult result = new SearchEmployeeListResult();
+		if(ids == null || ids.size() == 0){
+			result.setErrorCode(SysErrorCode.PARAM_ERROR);
+			return result;
+		}
+		
+		try{
+			List<PlatformEmployeePo> list = platformEmployeeDal.getEmployeeByIds(ids);
+			result.setEmployeeList(list);
+		}catch(Exception ex){
+			ex.printStackTrace();
+			result.setErrorCode(SysErrorCode.SYSTEM_ERROR);
+		}
+		
 		return result;
 	}
 
