@@ -13,7 +13,8 @@ public class BookingDeliveryPrice implements Serializable {
 	private BigDecimal unitPrice;	//单价
 	private BigDecimal numTimes;	//次数
 	private BigDecimal numPerson;	//人数
-	private BigDecimal totalPrice;		//金额
+	private BigDecimal totalPrice;	//金额
+	private String remark;			//备注
 	
 	public int getId() {
 		return id;
@@ -57,4 +58,11 @@ public class BookingDeliveryPrice implements Serializable {
 	public void setTotalPrice(BigDecimal totalPrice) {
 		this.totalPrice = totalPrice;
 	}
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
 }
