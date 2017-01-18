@@ -57,6 +57,6 @@ solr.cloud.zk=
 #redis.encode=${redis.encode}
 
 ##############################################
-zk.client.timeout = ${zk.client.timeout}
-zk.connect.timeout = ${zk.connect.timeout}
+#zk.client.timeout = ${zk.client.timeout}
+#zk.connect.timeout = ${zk.connect.timeout}
 #solr.zk.address = ${solr.zk.address}
