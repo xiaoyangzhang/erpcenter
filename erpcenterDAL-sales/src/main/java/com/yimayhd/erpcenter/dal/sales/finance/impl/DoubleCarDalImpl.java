@@ -176,9 +176,9 @@ public class DoubleCarDalImpl implements DoubleCarDal{
 	public List<HotelMsg> synHotelMsg(int groupId, int type,
 			Date departureDate, Date arrivalDate) {
 		Date date = null;
-		if(type == PickTransportTypeEnum.PICK.getId() ){//接
+		if(type == PickTransportTypeEnum.PICK.getId() && null != arrivalDate){//接
 			date = arrivalDate;
-		}else if(type == PickTransportTypeEnum.SEND.getId() ){//送
+		}else if(type == PickTransportTypeEnum.SEND.getId() && null != departureDate){//送
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(departureDate);
 			cal.add(Calendar.DATE, -1);
