@@ -1,4 +1,3 @@
-
 zk.address = ${zk.address}
 zk.port = ${zk.port}
 export.dubbo.timeout = ${export.dubbo.timeout}
@@ -32,5 +31,9 @@ idgen.allocount = ${idgen.allocount}
 
 redis-haAddress=${redis-haAddress}
 redis-redisInitParam=${redis-redisInitParam}
+
+zk.client.timeout = ${zk.client.timeout}
+zk.connect.timeout = ${zk.connect.timeout}
+solr.zk.address = ${solr.zk.address}
 
 

@@ -11,6 +11,9 @@
 		<property name="consumer.user.dubbo.version" defaultValue="1.0.0.test"			description="消费user的dubbo的版本号" />
 		<property name="consumer.supplier.dubbo.version" defaultValue="1.0.0.test"			description="资源中心的dubbo的版本号" />
 		<property name="consumer.idgen.dubbo.version" defaultValue="1.0.0.test"			description="消费id generator的版本" />
+		<property name="zk.client.timeout" defaultValue="60000"			/>
+		<property name="zk.connect.timeout" defaultValue="60000"			/> 
+		<property name="solr.zk.address" defaultValue="192.168.1.147:2181"			/> 
 	</group>
 
 	<group name="mysql">
