@@ -40,8 +40,6 @@ idgen.allocount = ${idgen.allocount}
 redis-haAddress=${redis-haAddress}
 redis-redisInitParam=${redis-redisInitParam}
 
-solr.cloud.zk=
-
 
 #######################################################
 #IP
