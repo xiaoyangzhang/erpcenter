@@ -24,15 +24,6 @@
 		<property name="log.home" defaultValue="/home/admin/logs/erpcenter"			description="日志输出目录" />
 	</group>
 
-	<!-- <group name="tair">
-		<property name="tair.namespace" defaultValue="30"			description=" tair命名空间" />
-		<property name="tair.groupName.per" defaultValue="p_group1"			description=" 持久化tair的namespace" />
-		<property name="tair.groupName.temp" defaultValue="m_group1"			description=" 非持久化tair的namespace" />
-		<property name="tair.timeout" defaultValue="5000"			description=" tair超时" />
-		<property name="tair.configServer.main" defaultValue="192.168.1.153:5198"			description=" tair服务器的地址" />
-		<property name="tair.configServer.slave" defaultValue="192.168.1.154:5198"			description=" tair服务器的地址" />
-	</group> -->
-
 	<group name="mq">
 		<property name="rocketmq.server.name" defaultValue="192.168.1.149:9876"			description="rocketmq的注册中心地址" />
 		<property name="rocketmq.consumer.group" defaultValue="erpcenter_consume_group" />
@@ -44,21 +35,8 @@
 		<property name="idgen.domain" defaultValue="erpcenter"			description="idgen" />
 	</group>
 	<group name="redis">
-		<property name="redis-haAddress" defaultValue="redis05.jiuxiulvxing.net:26383,redis06.jiuxiulvxing.net:26383,redis07.jiuxiulvxing.net:26383,redis08.jiuxiulvxing.net:26383,redis09.jiuxiulvxing.net:26383,redis10.jiuxiulvxing.net:26383,redis11.jiuxiulvxing.net:26383,redis12.jiuxiulvxing.net:26383,redis13.jiuxiulvxing.net:26383,redis14.jiuxiulvxing.net:26383,redis15.jiuxiulvxing.net:26383,redis16.jiuxiulvxing.net:26383,redis17.jiuxiulvxing.net:26383,redis18.jiuxiulvxing.net:26383,redis19.jiuxiulvxing.net:26383,redis20.jiuxiulvxing.net:26383
-"			description="redis" />
-		<property name="redis-redisInitParam" defaultValue="timeout\=30000;pool_size\=50;"			description="idgen" />
-		<!-- <property name="redis.pool.host" defaultValue="redis05.jiuxiulvxing.net,redis06.jiuxiulvxing.net,redis07.jiuxiulvxing.net,redis08.jiuxiulvxing.net,redis09.jiuxiulvxing.net,redis10.jiuxiulvxing.net,redis11.jiuxiulvxing.net,redis12.jiuxiulvxing.net,redis13.jiuxiulvxing.net,redis14.jiuxiulvxing.net,redis15.jiuxiulvxing.net,redis16.jiuxiulvxing.net,redis17.jiuxiulvxing.net,redis18.jiuxiulvxing.net,redis19.jiuxiulvxing.net,redis20.jiuxiulvxing.net
-"			description="idgen" />
-		<property name="redis.pool.port" defaultValue="26383"			description="idgen" />
-		<property name="redis.pool.maxIdle" defaultValue="60000"			description="idgen" />
-		<property name="redis.pool.maxTotal" defaultValue="500"			description="idgen" />
-		<property name="redis.pool.maxWaitMillis" defaultValue="1000"			description="idgen" />
-		<property name="redis.pool.testOnBorrow" defaultValue="true"			description="idgen" />
-		<property name="redis.encode" defaultValue="utf-8"			description="idgen" />
-		<property name="zk.client.timeout" defaultValue="60000"			description="idgen" />
-		<property name="zk.connect.timeout" defaultValue="60000"			description="idgen" />
-		<property name="solr.zk.address" defaultValue="192.168.1.202:2181"			description="idgen" /> -->
-
+		<property name="redis-haAddress" defaultValue="redis05.jiuxiulvxing.net:26383,redis06.jiuxiulvxing.net:26383,redis07.jiuxiulvxing.net:26383,redis08.jiuxiulvxing.net:26383,redis09.jiuxiulvxing.net:26383,redis10.jiuxiulvxing.net:26383,redis11.jiuxiulvxing.net:26383,redis12.jiuxiulvxing.net:26383,redis13.jiuxiulvxing.net:26383,redis14.jiuxiulvxing.net:26383,redis15.jiuxiulvxing.net:26383,redis16.jiuxiulvxing.net:26383,redis17.jiuxiulvxing.net:26383,redis18.jiuxiulvxing.net:26383,redis19.jiuxiulvxing.net:26383,redis20.jiuxiulvxing.net:26383"	description="redis" />
+		<property name="redis-redisInitParam" defaultValue="timeout=30000;pool_size=50;"			description="idgen" />
 	</group>
 	<script>
 		<generate template="config.properties.vm" destfile="WEB-INF/config.properties"

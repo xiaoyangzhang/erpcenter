@@ -23,13 +23,6 @@ jdbc.username = ${jdbc.username}
 jdbc.password = ${jdbc.password}
 log.home = ${log.home}
 
-#tair.namespace = ${tair.namespace}
-#tair.groupName.per = ${tair.groupName.per}
-#tair.groupName.temp = ${tair.groupName.temp}
-#tair.timeout = ${tair.timeout}
-#tair.configServer.main   = ${tair.configServer.main}
-#tair.configServer.slave  = ${tair.configServer.slave}
-
 rocketmq.server.name = ${rocketmq.server.name}
 rocketmq.consumer.group = ${rocketmq.consumer.group}
 rocketmq.domain.name=${rocketmq.domain.name}
@@ -41,20 +34,3 @@ redis-haAddress=${redis-haAddress}
 redis-redisInitParam=${redis-redisInitParam}
 
 
-#######################################################
-#IP
-#redis.pool.host=${redis.pool.host}
-#port
-#redis.pool.port=${redis.pool.port}
-#maxIdle
-#redis.pool.maxIdle=${redis.pool.maxIdle}
-#maxTotal
-#redis.pool.maxTotal=${redis.pool.maxTotal}
-#redis.pool.maxWaitMillis=${redis.pool.maxWaitMillis}
-#redis.pool.testOnBorrow=${redis.pool.testOnBorrow}
-#redis.encode=${redis.encode}
-
-##############################################
-#zk.client.timeout = ${zk.client.timeout}
-#zk.connect.timeout = ${zk.connect.timeout}
-#solr.zk.address = ${solr.zk.address}
