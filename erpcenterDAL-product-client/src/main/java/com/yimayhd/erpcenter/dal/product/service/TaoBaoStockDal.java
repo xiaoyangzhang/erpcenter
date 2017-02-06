@@ -52,8 +52,9 @@ public interface TaoBaoStockDal {
 	
 	int insertTbStockProduct(TaobaoStockProduct record);
 	
-	PageBean<TaobaoProduct> findTaoBaoProductListPage(PageBean<TaobaoProduct> pageBean);
+	PageBean<TaobaoProduct> findTaoBaoProductListPage(PageBean<TaobaoProduct> pageBean,Integer bizId);
 	
+	PageBean<TaobaoProduct> selectTPBytpdIdListPage(PageBean<TaobaoProduct> pageBean,Integer bizId);
 	 TaobaoProduct findByPrimaryKey(Integer id);
 	 
 	 int deleteTaoBaoStockProduct(TaobaoStockProduct taobaoStockProduct);
@@ -74,5 +75,15 @@ public interface TaoBaoStockDal {
 	TaobaoStockLog selectStockLogAllByOrderId(Integer orderId);
 
 	TaobaoStockLog selectStockLogAllByTaobaoOrderId(Integer taobaoOrderId);
+	
+	 TaobaoProductSkus selectByVid(String vid,String numIid);
+	 
+	 int updateTaobaoProductSkus(TaobaoProductSkus record);
+	 
+	 int insertTaobaoProductSkus(TaobaoProductSkus record);
+	 
+	 int updateTaobaoProduct(TaobaoProduct record);
+	 
+	 TaobaoProductSkus selectSkusById(Integer id);
 
 }

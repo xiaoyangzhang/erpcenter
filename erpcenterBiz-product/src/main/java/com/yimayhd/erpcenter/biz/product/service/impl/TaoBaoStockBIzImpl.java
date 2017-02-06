@@ -61,8 +61,13 @@ public class TaoBaoStockBIzImpl implements TaoBaoStockBiz{
 	}
 
 	@Override
-	public PageBean<TaobaoProduct> findTaoBaoProductListPage(PageBean<TaobaoProduct> pageBean) {
-		return taoBaoStockDal.findTaoBaoProductListPage(pageBean);
+	public PageBean<TaobaoProduct> findTaoBaoProductListPage(PageBean<TaobaoProduct> pageBean,Integer bizId) {
+		return taoBaoStockDal.findTaoBaoProductListPage(pageBean,bizId);
+	}
+	
+	@Override
+	public PageBean<TaobaoProduct> selectTPBytpdIdListPage(PageBean<TaobaoProduct> pageBean,Integer bizId){
+		return taoBaoStockDal.selectTPBytpdIdListPage(pageBean, bizId);
 	}
 
 	@Override
@@ -118,5 +123,25 @@ public class TaoBaoStockBIzImpl implements TaoBaoStockBiz{
 	@Override
 	public TaobaoStockLog selectStockLogAllByTaobaoOrderId(Integer taobaoOrderId) {
 		return taoBaoStockDal.selectStockLogAllByTaobaoOrderId(taobaoOrderId);
+	}
+	@Override
+	public TaobaoProductSkus selectByVid(String vid,String numIid){
+		return taoBaoStockDal.selectByVid(vid, numIid);
+	}
+	@Override
+	public int updateTaobaoProductSkus(TaobaoProductSkus record){
+		return taoBaoStockDal.updateTaobaoProductSkus(record);
+	}
+	@Override
+	public int insertTaobaoProductSkus(TaobaoProductSkus record){
+		return taoBaoStockDal.insertTaobaoProductSkus(record);
+	}
+	@Override
+	public int updateTaobaoProduct(TaobaoProduct record){
+		return taoBaoStockDal.updateTaobaoProduct(record);
+	}
+	@Override
+	public TaobaoProductSkus selectSkusById(Integer id){
+		return taoBaoStockDal.selectSkusById(id);
 	}
 }
