@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.dal.product.service.impl;
 import com.yimayhd.erpcenter.dal.product.dao.TrafficResProductMapper;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
 import com.yimayhd.erpcenter.dal.product.service.TrafficResProductDal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
@@ -243,6 +244,17 @@ public class TrafficResProductDalImpl implements TrafficResProductDal{
 	@Override
 	public TrafficResProduct selectSumCostByProductCode(Integer productCode,Integer  resId) {
 		return trafficResProductMapper.selectSumCostByProductCode(productCode,resId);
+	}
+
+	@Override
+	public List<TrafficResProduct> findProductInfoListByTimeToWX(Integer bizId,
+			String dateTime, Integer trId, Integer supplierId) {
+		List<TrafficResProduct> list = trafficResProductMapper.selectProductInfoListByTimeToWX(bizId, dateTime, trId,
+                supplierId);
+        for (TrafficResProduct trafficResProduct : list) {
+            trafficResProduct.setNumStock(trafficResProduct.getNumStock() - trafficResProduct.getNumSold());
+        }
+        return list;
 	}
 
 }

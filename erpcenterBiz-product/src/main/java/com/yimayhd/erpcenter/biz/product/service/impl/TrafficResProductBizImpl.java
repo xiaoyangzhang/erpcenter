@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.biz.product.service.impl;
 import com.yimayhd.erpcenter.biz.product.service.TrafficResProductBiz;
 import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
 import com.yimayhd.erpcenter.dal.product.service.TrafficResProductDal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -83,6 +84,12 @@ public class TrafficResProductBizImpl implements TrafficResProductBiz{
 	@Override
 	public TrafficResProduct selectSumCostByProductCode(Integer productCode, Integer resId) {
 		return trafficResProductDal.selectSumCostByProductCode(productCode,resId);
+	}
+
+	@Override
+	public List<TrafficResProduct> findProductInfoListByTimeToWX(Integer bizId,
+			String dateTime, Integer trId, Integer supplierId) {
+		return trafficResProductDal.findProductInfoListByTimeToWX(bizId, dateTime, trId, supplierId);
 	}
 
 }
