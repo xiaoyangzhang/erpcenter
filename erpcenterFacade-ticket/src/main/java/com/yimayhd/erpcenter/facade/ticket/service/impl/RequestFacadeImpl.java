@@ -97,7 +97,7 @@ public class RequestFacadeImpl implements RequestFacade{
 	private BookingSupplierBiz bookingSupplierBiz;
 	
 	@Autowired
-	private SupplierBiz supplierBiz;
+	private SupplierBiz    supplierBiz;
 	
 	@Autowired
 	private TourGroupBiz tourGroupBiz;
@@ -110,7 +110,8 @@ public class RequestFacadeImpl implements RequestFacade{
 	
 	@Autowired
 	private PlatformEmployeeBiz platformEmployeeBiz;
-		
+	@Autowired
+	private BookingSupplierBiz bookingSupplierBiz;
 	@Override
 	public ShowListResult showList(ShowListDTO dto) {
 		
@@ -227,7 +228,10 @@ public class RequestFacadeImpl implements RequestFacade{
 		AirTicketResourceBO resourceBo = new AirTicketResourceBO(po.getResource());
 		resourceBo.setLegList(airTicketResourceBiz.findLegsByResourceId(resourceBo.getPo().getId()));
 		List<GroupOrderGuest> groupGuestList = groupOrderGuestBiz.selectByOrderId(po.getGroupOrderId());
-		
+		if(po.getBookingSupplierId() !=null){
+			BookingSupplier booking = bookingSupplierBiz.selectByPrimaryKey(po.getBookingSupplierId());
+			bo.getGroupOrder().setStateFinance(booking.getStateFinance());
+		}
 		GetResourceBoResult result = new GetResourceBoResult();
 		result.setBo(bo);
 		result.setGroupGuestList(groupGuestList);

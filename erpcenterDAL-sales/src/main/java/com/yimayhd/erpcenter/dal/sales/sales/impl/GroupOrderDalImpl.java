@@ -1317,7 +1317,12 @@ public class GroupOrderDalImpl implements GroupOrderDal {
             groupOrder.setSupplierName(supplierName);
             groupOrder.setState(1);
             groupOrder.setOrderType(orderType);
-
+            // 业务类型 暂时硬编码 石林九乡=1555
+            groupOrder.setOrderMode(1555);
+            // 爱游订单id，来自爱游系统接口 暂时硬编码 -1
+            groupOrder.setAiyouGroupId("-1");
+            // 订单锁单状态 暂时硬编码 2
+            groupOrder.setOrderLockState(2);
             groupOrderMapper.updateByPrimaryKeySelective(groupOrder);
         }
         return groupOrder == null ? 0 : groupOrder.getId();
@@ -1338,6 +1343,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
             groupOrder.setNumAdult(Integer.valueOf(tfOrder.getPersonAdult()));
             groupOrder.setNumChild(Integer.valueOf(tfOrder.getPersonChild()));
             groupOrder.setNumGuide(Integer.valueOf(tfOrder.getPersonGuide()));
+            groupOrder.setProductBrandName("");
             groupOrder.setProductName(tfOrder.getOrderProductName());
             groupOrder.setOrderType(Integer.valueOf(0));
             groupOrder.setState(Integer.valueOf(0));
@@ -1350,7 +1356,7 @@ public class GroupOrderDalImpl implements GroupOrderDal {
             groupOrder.setPushOrderId(tfOrder.getId());
             groupOrder.setPushTimeUpdate(tfOrder.getTimeUpdate());
             groupOrder.setPushSupplierName(tfOrder.getApiSupplierName());
-
+            groupOrder.setReceiveMode(tfOrder.getReceiveMode());
             groupOrderMapper.insertSelective(groupOrder);
         } else {
             if (groupOrder.getPushTimeUpdate() != tfOrder.getTimeUpdate()) {
@@ -1405,7 +1411,8 @@ public class GroupOrderDalImpl implements GroupOrderDal {
             gOrderPrice.setCreatorId(userId);
             gOrderPrice.setCreatorName(userName);
             gOrderPrice.setCreateTime(Long.valueOf(System.currentTimeMillis()));
-
+            gOrderPrice.setMode(0);
+            gOrderPrice.setItemName("成人");
             if (groupOrder == null) {
                 groupOrderPriceMapper.insertSelective(gOrderPrice);
             } else {
@@ -1799,6 +1806,16 @@ public class GroupOrderDalImpl implements GroupOrderDal {
     public List<GroupOrder> selectGroupOrderGroupByPro(Integer resId){
         List<GroupOrder> lists=groupOrderMapper.selectGroupOrderGroupByPro(resId);
         return lists;
+    }
+
+    @Override
+    public Integer findGroupOrderCountBySidAndDate(Integer bizId, Integer supplierId, String depaDate) {
+        return groupOrderMapper.selectGroupOrderCountBySidAndDate(bizId, supplierId, depaDate);
+    }
+
+    @Override
+    public List<GroupOrder> findGroupOrderBysIdAndResState(Integer bizId, Integer extResState, Integer supplierId) {
+        return groupOrderMapper.selectGroupOrderBysIdAndResState(bizId, extResState, supplierId);
     }
 
 }

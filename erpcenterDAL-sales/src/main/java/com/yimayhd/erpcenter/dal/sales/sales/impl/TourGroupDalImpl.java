@@ -1623,7 +1623,7 @@ public class TourGroupDalImpl implements TourGroupDal {
 	}
 
 	@Override
-    public PageBean getPushDeliveryList(PageBean pageBean, Integer bizId) {
+    public PageBean getPushDeliveryList(PageBean pageBean, Integer bizId, Set<Integer> set, Set<Integer> supplierIdSet) {
         List<BookingGroup> bookingGroups = null;
         bookingGroups = tourGroupMapper.selectPushDeliveryListPage(pageBean, bizId);
         if (bookingGroups != null && bookingGroups.size() > 0) {
@@ -1639,6 +1639,10 @@ public class TourGroupDalImpl implements TourGroupDal {
                 } else {
                     bg.setSupplierName("散客团");
                 }
+				bg.setDriverName("");
+				if (bg.getPushStatus() == null) {
+					bg.setPushStatus(0);
+				}
             }
         }
         pageBean.setResult(bookingGroups);

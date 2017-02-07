@@ -1248,8 +1248,9 @@ public class QueryFacadeImpl implements QueryFacade {
 
             paramters.put("citysSupplierIds",queryDTO.getCitysSupplierIds());
             paramters.put("supplierLevel", queryDTO.getSupplierLevel());
-            // paramters.put("supplierDetailLevel",
-            // request.getAttribute("supplierDetailLevel"));
+            if(null != queryDTO.getOtherParams() && queryDTO.getOtherParams().size() > 0){
+                paramters.putAll(queryDTO.getOtherParams());
+            }
 
             // 如果人员为空并且部门不为空，则取部门下的人id
             if (StringUtils.isBlank((String) paramters.get("saleOperatorIds"))

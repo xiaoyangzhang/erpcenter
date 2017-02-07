@@ -69,7 +69,16 @@ public class BookingDelivery implements Serializable {
 	private Date auditTime;
 	
 	private Integer pushStatus;
-//	private String guideInfo;
+    private BigDecimal totalSale;
+
+    public BigDecimal getTotalSale() {
+        return totalSale;
+    }
+
+    public void setTotalSale(BigDecimal totalSale) {
+        this.totalSale = totalSale;
+    }
+    //	private String guideInfo;
 //	
 //	public String getGuideInfo() {
 //		return guideInfo;

@@ -466,8 +466,9 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 			LogUtils.LogRow_SetValue(logList, "group_order_transport", null, orderId);
 
 			if (isStock) {
+				Integer oldStockDateId=0;
 				TaobaoStockLog sLog = taobaoStockBiz
-						.selectLogByStockDateIdAndOrderId(vo.getGroupOrder().getProductId(), orderId);
+						.selectStockLogAllByOrderId(vo.getGroupOrder().getProductId(), orderId);
 				if (sLog == null) {
 					sLog = new TaobaoStockLog();
 					sLog.setId(0);
@@ -479,10 +480,18 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 					sLog.setNum(newNum);
 					productStockBiz.insertTaobaoStockLogSelective(sLog);
 				} else {
+					if(sLog.getStockDateId() != vo.getGroupOrder().getProductId()){
+						oldStockDateId=sLog.getStockDateId();
+						sLog.setStockId(vo.getGroupOrder().getProductBrandId());
+						sLog.setStockDateId(vo.getGroupOrder().getProductId());
+					}
 					sLog.setNum(newNum);
 					productStockBiz.updateTaobaoStockLogSelective(sLog);
 				}
 				productStockBiz.updateByLog(sLog.getStockDateId());
+				if(oldStockDateId>0){
+					productStockService.updateByLog(oldStockDateId);
+				}
 			}
 			//todo取出原来ids，并对比现在在的ids，得到要删除的ids ,　　比如原来：１,２,３,４　删除了2,3－> 14,
 			String id = saveSpecialGroupDTO.getTaobaoOrderId();
@@ -661,10 +670,23 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 
 		// 获取备注(扣除库存)
 		for (PlatTaobaoTrade pt : platTaobaoTradeList) {
-			if (pt.getReceiveCount() != null && new Integer(pt.getReceiveCount()) > 0) {
+			if (pt.getReceiveCount() != null && new Integer(pt.getReceiveCount()) > 0 && pt.getSkuPropertiesName() != null) {
+				String[] ary = pt.getSkuPropertiesName().split("\\;");
+				String[] ary1=ary[0].split("\\:");
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("numIid", pt.getNumIid());// 自编码、日期、数量,
 				// PlatTaobaoTradeOrderId
+				if (StringUtils.isNotBlank(pt.getSellerMemo())) {
+					String createUser = "";
+					if (pt.getSellerMemo().indexOf("{") > 0 && pt.getSellerMemo().indexOf("}") > 0) {
+						createUser = pt.getSellerMemo().substring(pt.getSellerMemo().indexOf("{") + 1,
+								pt.getSellerMemo().indexOf("}"));
+					}
+					map.put("createUser", createUser);
+				} else {
+					map.put("createUser", "空");
+				}
+				map.put("sku", ary1[1]);
 				map.put("depDate", pt.getDepartureDate());
 //				map.put("receiveCount", pt.getReceiveCount());
 				map.put("receiveCount", pt.getReceiveCount());
@@ -1535,6 +1557,357 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 
 
 
+	}
+	@RequestMapping(value = "/toOriginalExcel.do")
+	@ResponseBody
+	public void toOriginalExcel(HttpServletRequest request, HttpServletResponse response, String startMin,
+								String startMax, String tid, String buyerNick, Integer isBrushSingle, String title,String myState,
+								String outerIid, String authClient) {
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+		PageBean<PlatTaobaoTrade> pageBean = new PageBean<PlatTaobaoTrade>();
+		Map<String, Object> pm = new HashMap<String, Object>();
+		pm.put("startMin", startMin);
+		pm.put("startMax", startMax);
+		pm.put("myState", myState);
+		pm.put("tid", tid);
+		pm.put("buyerNick", buyerNick);
+		pm.put("isBrushSingle", isBrushSingle);
+		pm.put("title", title);
+		pm.put("outerIid", outerIid);
+		pm.put("myStoreId", authClient);
+		pageBean.setParameter(pm);
+		pageBean.setPage(1);
+		pageBean.setPageSize(10000);
+		pageBean = taobaoOrderService.selectTaobaoOrder(pageBean, WebUtils.getCurBizId(request));
+		List<PlatTaobaoTrade> orders = pageBean.getResult();
+		String path = "";
+
+		try {
+			String url = request.getSession().getServletContext()
+					.getRealPath("/template/excel/taobaoOriginalOrder.xlsx");
+			FileInputStream input = new FileInputStream(new File(url)); // 读取的文件路径
+			XSSFWorkbook wb = new XSSFWorkbook(new BufferedInputStream(input));
+			XSSFFont createFont = wb.createFont();
+			createFont.setFontName("微软雅黑");
+			createFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);// 粗体显示
+			createFont.setFontHeightInPoints((short) 12);
+
+			XSSFFont tableIndex = wb.createFont();
+			tableIndex.setFontName("宋体");
+			tableIndex.setFontHeightInPoints((short) 11);
+
+			CellStyle cellStyle = wb.createCellStyle();
+			cellStyle.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
+			cellStyle.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
+			cellStyle.setBorderTop(CellStyle.BORDER_THIN);// 上边框
+			cellStyle.setBorderRight(CellStyle.BORDER_THIN);// 右边框
+			cellStyle.setAlignment(CellStyle.ALIGN_CENTER); // 居中
+
+			CellStyle styleFontCenter = wb.createCellStyle();
+			styleFontCenter.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
+			styleFontCenter.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
+			styleFontCenter.setBorderTop(CellStyle.BORDER_THIN);// 上边框
+			styleFontCenter.setBorderRight(CellStyle.BORDER_THIN);// 右边框
+			styleFontCenter.setAlignment(CellStyle.ALIGN_CENTER); // 居中
+			styleFontCenter.setFont(createFont);
+
+			CellStyle styleFontTable = wb.createCellStyle();
+			styleFontTable.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
+			styleFontTable.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
+			styleFontTable.setBorderTop(CellStyle.BORDER_THIN);// 上边框
+			styleFontTable.setBorderRight(CellStyle.BORDER_THIN);// 右边框
+			styleFontTable.setAlignment(CellStyle.ALIGN_CENTER); // 居中
+			styleFontTable.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+			styleFontTable.setFillPattern(CellStyle.SOLID_FOREGROUND);
+
+			CellStyle styleLeft = wb.createCellStyle();
+			styleLeft.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
+			styleLeft.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
+			styleLeft.setBorderTop(CellStyle.BORDER_THIN);// 上边框
+			styleLeft.setBorderRight(CellStyle.BORDER_THIN);// 右边框
+			styleLeft.setAlignment(CellStyle.ALIGN_LEFT); // 居左
+
+			CellStyle styleRight = wb.createCellStyle();
+			styleRight.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
+			styleRight.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
+			styleRight.setBorderTop(CellStyle.BORDER_THIN);// 上边框
+			styleRight.setBorderRight(CellStyle.BORDER_THIN);// 右边框
+			styleRight.setAlignment(CellStyle.ALIGN_RIGHT); // 居右
+			Sheet sheet = wb.getSheetAt(0); // 获取到第一个sheet
+			Row row = null;
+			Cell cc = null;
+			// 遍历集合数据，产生数据行
+			Iterator<PlatTaobaoTrade> it = orders.iterator();
+			int index = 0;
+			Double sumPayment=0.00;
+			while (it.hasNext()) {
+				PlatTaobaoTrade order = it.next();
+				sumPayment += order.getPayment() == null ? 0 : Double.parseDouble(order.getPayment());
+				row = sheet.createRow(index + 2);
+				cc = row.createCell(0);
+				cc.setCellValue(index + 1);
+				cc.setCellStyle(cellStyle);
+				cc = row.createCell(1);
+				cc.setCellValue(order.getTid());
+				cc.setCellStyle(styleLeft);
+				cc = row.createCell(2);
+				cc.setCellValue(order.getBuyerNick());
+				cc.setCellStyle(styleLeft);
+				cc = row.createCell(3);
+				cc.setCellValue(order.getOuterIid());
+				cc.setCellStyle(styleLeft);
+				cc = row.createCell(4);
+				cc.setCellValue(order.getTitle()+order.getSkuPropertiesName());
+				cc.setCellStyle(styleLeft);
+				cc = row.createCell(5);
+				cc.setCellValue(order.getSellerMemo());
+				cc.setCellStyle(styleLeft);
+				cc = row.createCell(6);
+				cc.setCellValue(order.getCreated());
+				cc.setCellStyle(styleLeft);
+				cc = row.createCell(7);
+				cc.setCellValue(order.getPayment());
+				cc.setCellStyle(cellStyle);
+				cc = row.createCell(8);
+				cc.setCellValue(order.getTradeFrom());
+				cc.setCellStyle(cellStyle);
+				cc = row.createCell(9);
+				cc.setCellValue(order.getMyState());
+				cc.setCellStyle(cellStyle);
+				cc = row.createCell(10);
+				cc.setCellValue(order.getIsBrushSingle()  == 1 ? "是" : "否");
+				cc.setCellStyle(cellStyle);
+				index++;
+
+			}
+			row = sheet.createRow(orders.size() + 2); // 加合计行
+			cc = row.createCell(0);
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(1);
+			cc.setCellValue("合计：");
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(2);
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(3);
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(4);
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(5);
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(6);
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(7);
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(8);
+			cc.setCellValue(sumPayment);
+			cc.setCellStyle(cellStyle);
+			cc = row.createCell(9);
+			cc.setCellStyle(cellStyle);
+			cc = row.createCell(10);
+			cc.setCellStyle(cellStyle);
+			CellRangeAddress region = new CellRangeAddress(orders.size() + 3, orders.size() + 3, 0, 10);
+			sheet.addMergedRegion(region);
+			row = sheet.createRow(orders.size() + 3);
+			cc = row.createCell(0);
+			cc.setCellValue("打印人：" + WebUtils.getCurUser(request).getName() + " 打印时间："
+					+ DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			path = request.getSession().getServletContext().getRealPath("/") + "/download/" + System.currentTimeMillis()
+					+ ".xlsx";
+			FileOutputStream out = new FileOutputStream(path);
+			wb.write(out);
+			out.close();
+			wb.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		String fileName = "";
+		try {
+			fileName = new String("淘宝原始单.xlsx".getBytes("UTF-8"), "iso-8859-1");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		download(path, fileName, request, response);
+	}
+
+	@RequestMapping(value = "/toPresellExcel.do")
+	@ResponseBody
+	public void toPresellExcel(HttpServletRequest request, HttpServletResponse response, String startMin,
+							   String startMax, String tid, String buyerNick, Integer isBrushSingle, String title,
+							   String outerIid, String authClient) {
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+		PageBean<PlatTaobaoTrade> pageBean = new PageBean<PlatTaobaoTrade>();
+		Map<String, Object> pm = new HashMap<String, Object>();
+		pm.put("startMin", startMin);
+		pm.put("startMax", startMax);
+		pm.put("tid", tid);
+		pm.put("buyerNick", buyerNick);
+		pm.put("isBrushSingle", isBrushSingle);
+		pm.put("title", title);
+		pm.put("outerIid", outerIid);
+		pm.put("myStoreId", authClient);
+		pageBean.setParameter(pm);
+		pageBean.setPage(1);
+		pageBean.setPageSize(10000);
+		pageBean = taobaoOrderService.selectPresellTaobaoOrderListPage(pageBean, WebUtils.getCurBizId(request));
+		List<PlatTaobaoTrade> orders = pageBean.getResult();
+		String path = "";
+
+		try {
+			String url = request.getSession().getServletContext()
+					.getRealPath("/template/excel/presellTaobaoOriginalOrder.xlsx");
+			FileInputStream input = new FileInputStream(new File(url)); // 读取的文件路径
+			XSSFWorkbook wb = new XSSFWorkbook(new BufferedInputStream(input));
+			XSSFFont createFont = wb.createFont();
+			createFont.setFontName("微软雅黑");
+			createFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);// 粗体显示
+			createFont.setFontHeightInPoints((short) 12);
+
+			XSSFFont tableIndex = wb.createFont();
+			tableIndex.setFontName("宋体");
+			tableIndex.setFontHeightInPoints((short) 11);
+
+			CellStyle cellStyle = wb.createCellStyle();
+			cellStyle.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
+			cellStyle.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
+			cellStyle.setBorderTop(CellStyle.BORDER_THIN);// 上边框
+			cellStyle.setBorderRight(CellStyle.BORDER_THIN);// 右边框
+			cellStyle.setAlignment(CellStyle.ALIGN_CENTER); // 居中
+
+			CellStyle styleFontCenter = wb.createCellStyle();
+			styleFontCenter.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
+			styleFontCenter.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
+			styleFontCenter.setBorderTop(CellStyle.BORDER_THIN);// 上边框
+			styleFontCenter.setBorderRight(CellStyle.BORDER_THIN);// 右边框
+			styleFontCenter.setAlignment(CellStyle.ALIGN_CENTER); // 居中
+			styleFontCenter.setFont(createFont);
+
+			CellStyle styleFontTable = wb.createCellStyle();
+			styleFontTable.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
+			styleFontTable.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
+			styleFontTable.setBorderTop(CellStyle.BORDER_THIN);// 上边框
+			styleFontTable.setBorderRight(CellStyle.BORDER_THIN);// 右边框
+			styleFontTable.setAlignment(CellStyle.ALIGN_CENTER); // 居中
+			styleFontTable.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+			styleFontTable.setFillPattern(CellStyle.SOLID_FOREGROUND);
+
+			CellStyle styleLeft = wb.createCellStyle();
+			styleLeft.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
+			styleLeft.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
+			styleLeft.setBorderTop(CellStyle.BORDER_THIN);// 上边框
+			styleLeft.setBorderRight(CellStyle.BORDER_THIN);// 右边框
+			styleLeft.setAlignment(CellStyle.ALIGN_LEFT); // 居左
+
+			CellStyle styleRight = wb.createCellStyle();
+			styleRight.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
+			styleRight.setBorderLeft(CellStyle.BORDER_THIN);// 左边框
+			styleRight.setBorderTop(CellStyle.BORDER_THIN);// 上边框
+			styleRight.setBorderRight(CellStyle.BORDER_THIN);// 右边框
+			styleRight.setAlignment(CellStyle.ALIGN_RIGHT); // 居右
+			Sheet sheet = wb.getSheetAt(0); // 获取到第一个sheet
+			Row row = null;
+			Cell cc = null;
+			// 遍历集合数据，产生数据行
+			Iterator<PlatTaobaoTrade> it = orders.iterator();
+			int index = 0;
+			Integer sumNum=0;
+			Double sumStepPaidFee=0.00;
+			Double sumPayment=0.00;
+			while (it.hasNext()) {
+				PlatTaobaoTrade order = it.next();
+				sumNum += order.getNum() == null ? 0 : order.getNum();
+				sumStepPaidFee += order.getStepPaidFee() == null ? 0 : Double.parseDouble(order.getStepPaidFee());
+				sumPayment += order.getPayment() == null ? 0 : Double.parseDouble(order.getPayment());
+				row = sheet.createRow(index + 2);
+				cc = row.createCell(0);
+				cc.setCellValue(index + 1);
+				cc.setCellStyle(cellStyle);
+				cc = row.createCell(1);
+				cc.setCellValue(order.getTid());
+				cc.setCellStyle(styleLeft);
+				cc = row.createCell(2);
+				cc.setCellValue(order.getBuyerNick());
+				cc.setCellStyle(styleLeft);
+				cc = row.createCell(3);
+				cc.setCellValue(order.getOuterIid());
+				cc.setCellStyle(styleLeft);
+				cc = row.createCell(4);
+				cc.setCellValue(order.getTitle());
+				cc.setCellStyle(styleLeft);
+				cc = row.createCell(5);
+				cc.setCellValue(order.getTradeFrom());
+				cc.setCellStyle(styleLeft);
+				cc = row.createCell(6);
+				cc.setCellValue(sdf.format(order.getPayTime()));
+				cc.setCellStyle(styleLeft);
+				cc = row.createCell(7);
+				cc.setCellValue(order.getPrice());
+				cc.setCellStyle(cellStyle);
+				cc = row.createCell(8);
+				cc.setCellValue(order.getNum());
+				cc.setCellStyle(cellStyle);
+				cc = row.createCell(9);
+				cc.setCellValue(order.getStepPaidFee());
+				cc.setCellStyle(cellStyle);
+				cc = row.createCell(10);
+				cc.setCellValue(order.getPayment());
+				cc.setCellStyle(cellStyle);
+				cc = row.createCell(11);
+				cc.setCellValue(order.getIsBrushSingle()  == 1 ? "是" : "否");
+				cc.setCellStyle(cellStyle);
+				index++;
+
+			}
+			row = sheet.createRow(orders.size() + 2); // 加合计行
+			cc = row.createCell(0);
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(1);
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(2);
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(3);
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(4);
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(5);
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(6);
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(7);
+			cc.setCellValue("合计：");
+			cc.setCellStyle(styleRight);
+			cc = row.createCell(8);
+			cc.setCellValue(sumNum);
+			cc.setCellStyle(cellStyle);
+			cc = row.createCell(9);
+			cc.setCellValue(sumStepPaidFee);
+			cc.setCellStyle(cellStyle);
+			cc = row.createCell(10);
+			cc.setCellValue(sumPayment);
+			cc.setCellStyle(cellStyle);
+			cc = row.createCell(11);
+			cc.setCellStyle(cellStyle);
+			CellRangeAddress region = new CellRangeAddress(orders.size() + 3, orders.size() + 3, 0, 11);
+			sheet.addMergedRegion(region);
+			row = sheet.createRow(orders.size() + 3);
+			cc = row.createCell(0);
+			cc.setCellValue("打印人：" + WebUtils.getCurUser(request).getName() + " 打印时间："
+					+ DateUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			path = request.getSession().getServletContext().getRealPath("/") + "/download/" + System.currentTimeMillis()
+					+ ".xlsx";
+			FileOutputStream out = new FileOutputStream(path);
+			wb.write(out);
+			out.close();
+			wb.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		String fileName = "";
+		try {
+			fileName = new String("淘宝预售单.xlsx".getBytes("UTF-8"), "iso-8859-1");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		download(path, fileName, request, response);
 	}
 	
 }
