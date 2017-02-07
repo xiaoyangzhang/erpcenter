@@ -297,8 +297,9 @@ public interface TourGroupMapper {
 	List<TourGroup> selectGroupByDateZone(@Param("startTime") String startTime, @Param("endTime") String endTime, @Param("bizId") Integer bizId);
 	
 	
-	List<BookingGroup> selectPushDeliveryListPage(@Param("page") PageBean pageBean,
-                                                  @Param("bizId") Integer bizId);
+	List<BookingGroup> selectPushDeliveryListPage(@Param("page") PageBean pageBean,@Param("set") Set<Integer> set,
+												  @Param("bizId") Integer bizId,
+												  @Param("supplierIdSet") Set<Integer> supplierIdSet);
 
 	List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCarListPage(@Param("page") PageBean pageBean);
 	/**

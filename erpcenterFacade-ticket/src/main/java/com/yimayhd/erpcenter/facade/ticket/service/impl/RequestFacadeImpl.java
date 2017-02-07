@@ -93,9 +93,7 @@ public class RequestFacadeImpl implements RequestFacade{
 	@Autowired
 	private GroupOrderTransportBiz groupOrderTransportBiz;
 	
-	@Autowired
-	private BookingSupplierBiz bookingSupplierBiz;
-	
+
 	@Autowired
 	private SupplierBiz    supplierBiz;
 	
@@ -112,6 +110,9 @@ public class RequestFacadeImpl implements RequestFacade{
 	private PlatformEmployeeBiz platformEmployeeBiz;
 	@Autowired
 	private BookingSupplierBiz bookingSupplierBiz;
+
+
+
 	@Override
 	public ShowListResult showList(ShowListDTO dto) {
 		
