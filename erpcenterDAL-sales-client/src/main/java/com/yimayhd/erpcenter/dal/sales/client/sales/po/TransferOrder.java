@@ -47,13 +47,7 @@ public class TransferOrder implements Serializable {
 	private String toAppKey;
 	private String receiveMode;
 
-	public String getReceiveMode() {
-		return receiveMode;
-	}
 
-	public void setReceiveMode(String receiveMode) {
-		this.receiveMode = receiveMode;
-	}
 
 	public int getId() {
 		return id;
@@ -350,5 +344,12 @@ public class TransferOrder implements Serializable {
 	public void setToAppKey(String toAppKey) {
 		this.toAppKey = toAppKey;
 	}
+	
+	public String getReceiveMode() {
+        return receiveMode;
+    }
 
+    public void setReceiveMode(String receiveMode) {
+        this.receiveMode = receiveMode;
+    }
 }

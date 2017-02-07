@@ -428,4 +428,12 @@ LEFT JOIN (select res_id, GROUP_CONCAT(CONCAT_WS(' ',class_no,CONCAT(departure_c
         </if>
         GROUP BY tr.id ORDER BY tr.date_start
     </select>
+    
+    <select id="selectProductInfoByYearToWX" resultMap="BaseResultMap">
+      SELECT tr.id,tr.date_start FROM traffic_res AS tr
+      WHERE tr.biz_id=#{bizId,jdbcType=INTEGER} AND tr.`STATE`=1
+      AND tr.date_start<![CDATA[>=]]>#{startTime,jdbcType=INTEGER}
+      AND tr.date_start<![CDATA[<=]]>#{endTime,jdbcType=INTEGER}
+      Group BY date_start
+  </select>
 </mapper>

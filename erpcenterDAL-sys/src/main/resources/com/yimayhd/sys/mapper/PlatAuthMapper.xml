@@ -132,6 +132,12 @@
     AND biz_id = #{bizId,jdbcType=INTEGER}
   </select>
   
+  <select id="selectByBizIdAndSupplierNotZero" resultMap="BaseResultMap">
+    SELECT * FROM plat_auth
+    WHERE plat_status = 1 AND supplier_id > 0
+    AND biz_id = #{bizId,jdbcType=INTEGER}
+  </select>
+  
   <select id="selectByBizIdAndOrgIdOrSupplierId" resultMap="BaseResultMap">
   SELECT * FROM plat_auth 
   WHERE plat_status = 1 AND biz_id = #{bizId,jdbcType=INTEGER} 

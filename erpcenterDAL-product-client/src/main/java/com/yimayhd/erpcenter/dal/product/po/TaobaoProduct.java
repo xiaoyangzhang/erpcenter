@@ -17,6 +17,7 @@ public class TaobaoProduct implements Serializable {
     private Date modified;
     private String myStoreId;
 
+
     private Integer proId;
     private Integer tpsId;
     private String pidName;
@@ -24,65 +25,68 @@ public class TaobaoProduct implements Serializable {
     private String vid;
     private String stockName;
 
-    public String getMyStoreId() {
-        return myStoreId;
-    }
 
-    public void setMyStoreId(String myStoreId) {
-        this.myStoreId = myStoreId;
-    }
 
-    public Integer getProId() {
-        return proId;
-    }
 
-    public void setProId(Integer proId) {
-        this.proId = proId;
-    }
 
-    public Integer getTpsId() {
-        return tpsId;
-    }
-
-    public void setTpsId(Integer tpsId) {
-        this.tpsId = tpsId;
-    }
-
-    public String getPidName() {
-        return pidName;
-    }
-
-    public void setPidName(String pidName) {
-        this.pidName = pidName;
-    }
-
-    public String getPid() {
-        return pid;
-    }
-
-    public void setPid(String pid) {
-        this.pid = pid;
-    }
-
-    public String getVid() {
-        return vid;
-    }
-
-    public void setVid(String vid) {
-        this.vid = vid;
-    }
-
-    public String getStockName() {
-        return stockName;
-    }
-
-    public void setStockName(String stockName) {
-        this.stockName = stockName;
-    }
 
     public Integer getId() {
         return id;
     }
+
+
+	public void setStockName(String stockName) {
+		this.stockName = stockName;
+	}
+
+	public Integer getProId() {
+		return proId;
+	}
+
+	public void setProId(Integer proId) {
+		this.proId = proId;
+	}
+
+	public Integer getTpsId() {
+		return tpsId;
+	}
+
+	public void setTpsId(Integer tpsId) {
+		this.tpsId = tpsId;
+	}
+
+	public String getPidName() {
+		return pidName;
+	}
+
+	public void setPidName(String pidName) {
+		this.pidName = pidName;
+	}
+
+	public String getPid() {
+		return pid;
+	}
+
+	public void setPid(String pid) {
+		this.pid = pid;
+	}
+
+	public String getVid() {
+		return vid;
+	}
+
+	public void setVid(String vid) {
+		this.vid = vid;
+	}
+
+	public String getMyStoreId() {
+		return myStoreId;
+	}
+
+	public void setMyStoreId(String myStoreId) {
+		this.myStoreId = myStoreId;
+	}
+
 
     public void setId(Integer id) {
         this.id = id;

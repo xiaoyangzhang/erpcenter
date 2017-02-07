@@ -31,4 +31,6 @@ public interface TrafficResProductBiz {
 	int updateResProductNumStock(Integer id,Integer numStock);
 
 	TrafficResProduct selectSumCostByProductCode(Integer productCode,Integer resId);
+	
+    List<TrafficResProduct> findProductInfoListByTimeToWX(Integer bizId, String dateTime, Integer trId, Integer supplierId);
 }

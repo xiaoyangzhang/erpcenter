@@ -19,10 +19,12 @@ public interface TaobaoStockDateMapper {
 
     int updateByPrimaryKey(TaobaoStockDate record);
     
-    List<TaobaoStockDate> selectTaobaoStocksByProductIdAndDate(@Param("stockId") Integer stockId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    List<TaobaoStockDate> selectTaobaoStocksByProductIdAndDate(@Param("stockId") Integer stockId,@Param("startDate")Date startDate,@Param("endDate")Date endDate);
     
      int updateByLog(Integer stockDateId);
      
-     TaobaoStockDate selectTaobaoStocksByNumIidAndStockDate(@Param("numIid") String numIid, @Param("stockDate") Date stockDate);
+     TaobaoStockDate selectTaobaoStocksByNumIidAndStockDate(@Param("sku") String sku,@Param("stockDate")Date stockDate,@Param("numIid") String numIid);
+     
+     int updateRemark(TaobaoStockDate record);
      
 }
