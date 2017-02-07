@@ -43,7 +43,15 @@
     
 	<insert id="insert" parameterType="com.yimayhd.erpcenter.dal.basic.po.LogOperator"  useGeneratedKeys="true" keyProperty="id">
         insert into log_operator(biz_id,batch_id,action,`table_name`,table_id,table_parent_id,log_brief,log_text,edit_user)
-        values (#{bizId,jdbcType=INTEGER},#{batchId,jdbcType=INTEGER},#{action,jdbcType=VARCHAR},#{tableName,jdbcType=VARCHAR},#{tableId,jdbcType=INTEGER},#{tableParentId,jdbcType=INTEGER},#{logBrief,jdbcType=VARCHAR},#{logText,jdbcType=VARCHAR},#{editUser,jdbcType=VARCHAR})
+        values (#{bizId,jdbcType=INTEGER},
+        #{batchId,jdbcType=INTEGER},
+        #{action,jdbcType=VARCHAR},
+        #{tableName,jdbcType=VARCHAR},
+        #{tableId,jdbcType=INTEGER},
+        #{tableParentId,jdbcType=INTEGER},
+        #{logBrief,jdbcType=VARCHAR},
+        #{logText,jdbcType=VARCHAR},
+        #{editUser,jdbcType=VARCHAR})
     </insert>
     
 	<update id="update" parameterType="com.yimayhd.erpcenter.dal.basic.po.LogOperator">

@@ -13,6 +13,17 @@ public class TaobaoStockDate  implements Serializable {
     private Integer stockCount;
     private Integer saleCount;
     private Byte state;
+    private String remark;
+    
+    
+
+    public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 
     public Integer getId() {
         return id;

@@ -100,4 +100,10 @@
   <select id="cnm" parameterType="java.lang.String">
   select item_value from sys_biz_config where biz_id = #{bizId,jdbcType=INTEGER} and item_code=#{config}
   </select>
+  
+   <select id="selectByBizIdAndCode" resultMap="BaseResultMap">
+  	select id, biz_id, item_code, item_value, item_desp 
+  	from sys_biz_config 
+  	where biz_id = #{bizId,jdbcType=INTEGER} and item_code=#{itemCode}
+  </select>
 </mapper>

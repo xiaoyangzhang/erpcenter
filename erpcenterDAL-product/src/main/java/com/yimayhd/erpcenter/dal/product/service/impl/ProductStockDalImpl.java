@@ -270,5 +270,11 @@ public class ProductStockDalImpl implements ProductStockDal {
 	public TaobaoStockDate selectStockDataById(Integer id) {
 		return taobaoStockDateMapper.selectByPrimaryKey(id);
 	}
+	
+	@Override
+	public int updateRemark(TaobaoStockDate taobaoStockDate){
+    	taobaoStockDateMapper.updateRemark(taobaoStockDate);
+    	return taobaoStockDate.getId();
+    }
 
 }
