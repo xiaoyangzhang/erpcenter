@@ -93,4 +93,19 @@ public interface TrafficResProductMapper {
     int updateResProductNumStock(@Param("id") Integer id, @Param("numStock") Integer numStock);
 
     TrafficResProduct selectSumCostByProductCode(@Param("productCode") Integer  productCode,@Param("resId") Integer  resId);
+
+    List<TrafficResProduct> selectResProductToWXListPage(@Param("page") PageBean pageBean);
+
+    List<TrafficResProduct> selectResProductInfoListToWX(@Param("bizId") Integer bizId,
+                                                         @Param("startTime") String startTime,
+                                                         @Param("endTime") String endTime,
+                                                         @Param("productCode") Integer productCode);
+
+    TrafficResProduct selectResProductInfoToWX(@Param("trpId") Integer trpId, @Param("resId") Integer resId);
+
+    List<TrafficResProduct> selectProductInfoListByTimeToWX(@Param("bizId") Integer bizId,
+                                                            @Param("dateTime") String dateTime,
+                                                            @Param("trId") Integer trId,
+                                                            @Param("supplierId") Integer supplierId);
+
 }

@@ -19,6 +19,7 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="total" property="total" jdbcType="DECIMAL" />
     <result column="total_cash" property="totalCash" jdbcType="DECIMAL" />
+    <result column="total_sale" property="totalSale" jdbcType="DECIMAL" />
     <result column="state_booking" property="stateBooking" jdbcType="TINYINT" />
     <result column="state_finance" property="stateFinance" jdbcType="TINYINT" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
@@ -38,7 +39,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, group_id,order_id,supplier_id,supplier_name,supplier_order_no, contact, contact_tel, contact_fax, 
-    contact_mobile, person_adult,person_child, person_guide, date_arrival, remark, total, total_cash, state_booking, 
+    contact_mobile, person_adult,person_child, person_guide, date_arrival, remark, total, total_cash, total_sale,state_booking,
     state_finance, user_id,user_name, booking_date,create_time,audit_user,audit_user_id,audit_time,push_status,product_des,product_des_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -130,6 +131,9 @@
       <if test="totalCash != null" >
         total_cash,
       </if>
+      <if test="totalSale != null" >
+        total_sale,
+      </if>
       <if test="stateBooking != null" >
         state_booking,
       </if>
@@ -210,6 +214,9 @@
       </if>
       <if test="totalCash != null" >
         #{totalCash,jdbcType=DECIMAL},
+      </if>
+      <if test="totalSale != null" >
+        #{totalSale,jdbcType=DECIMAL},
       </if>
       <if test="stateBooking != null" >
         #{stateBooking,jdbcType=TINYINT},
@@ -292,6 +299,9 @@
       <if test="totalCash != null" >
         total_cash = #{totalCash,jdbcType=DECIMAL},
       </if>
+      <if test="totalSale != null" >
+        total_sale = #{totalSale,jdbcType=DECIMAL},
+      </if>
       <if test="stateBooking != null" >
         state_booking = #{stateBooking,jdbcType=TINYINT},
       </if>
@@ -341,6 +351,7 @@
       remark = #{remark,jdbcType=VARCHAR},
       total = #{total,jdbcType=DECIMAL},
       total_cash = #{totalCash,jdbcType=DECIMAL},
+      total_sale = #{totalSale,jdbcType=DECIMAL},
       state_booking = #{stateBooking,jdbcType=TINYINT},
       state_finance = #{stateFinance,jdbcType=TINYINT},
       user_id = #{userId,jdbcType=INTEGER},
@@ -379,6 +390,7 @@
   <update id="updateTotal" parameterType="java.lang.Integer" >
     UPDATE `booking_delivery` d
 	SET d.`total`=(SELECT SUM(IFNULL(p.`total_price`,0))  FROM `booking_delivery_price` p WHERE p.`booking_id`=#{id,jdbcType=INTEGER})
+	,d.`total_sale`=(SELECT SUM(IFNULL(p.`sale_price`*num_times*num_person,0))  FROM `booking_delivery_price` p WHERE p.`booking_id`=#{id,jdbcType=INTEGER})
 	WHERE d.`id`=#{id,jdbcType=INTEGER}
   </update>
   <!-- <select id="getBookingDeliveryByOrderId" parameterType="java.lang.Integer"  resultMap="BaseResultMap">

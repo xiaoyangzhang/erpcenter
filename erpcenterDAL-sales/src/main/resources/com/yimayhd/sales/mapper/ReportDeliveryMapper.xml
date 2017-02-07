@@ -139,6 +139,9 @@
 				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
 				and b.operator_id in (${parameter.saleOperatorIds})
 			</if>
+		<if test="parameter.djType == 1"><if test="parameter.limitSupplerIds != null and parameter.limitSupplerIds != ''"> and a.supplier_id in (${parameter.limitSupplerIds})</if></if>
+		<if test="parameter.djType == 2"><if test="parameter.limitSupplerIds != null and parameter.limitSupplerIds != ''"> and a.supplier_id not in (${parameter.limitSupplerIds})</if></if>
+
 	</sql>
 	
 	
@@ -236,6 +239,7 @@
 			b.product_name,
 			IFNULL(a.total,0) total,
 			IFNULL(a.total_cash,0) totalCash,
+		IFNULL(a.total_sale,0) totalSale,
 			a.user_name,
 		    a.product_des,
 			b.operator_name operator_name,
@@ -257,7 +261,9 @@
 		    SUM(IFNULL(a.person_guide, 0)) total_guide,
 			SUM(IFNULL(a.total,0)) total,
 			SUM(IFNULL(a.total_cash,0)) totalCash,
-			SUM(IFNULL(a.total,0) - IFNULL(a.total_cash,0)) balance
+			SUM(IFNULL(a.total,0) - IFNULL(a.total_cash,0)) balance,
+		SUM(IFNULL(a.total_sale,0)) totalSale,
+		SUM(IFNULL(a.total_sale,0) - IFNULL(a.total,0)) profit,
 		<include refid="selectDeliveryCashDetail" />
 
 		<if test="parameter.status == 0">and IFNULL(a.total,0) - IFNULL(a.total_cash,0)<![CDATA[=]]>0</if>
