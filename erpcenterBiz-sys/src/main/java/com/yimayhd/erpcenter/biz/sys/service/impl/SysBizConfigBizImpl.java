@@ -1,6 +1,5 @@
 package com.yimayhd.erpcenter.biz.sys.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +22,11 @@ public class SysBizConfigBizImpl implements SysBizConfigBiz {
 	@Override
 	public Map<String, String> getConfigMapByBizId(int bizId) {
 		return sysBizConfigDal.getConfigMapByBizId(bizId);
+	}
+
+	@Override
+	public SysBizConfig findByItemValue(int bizId, String itemCode) {
+		return sysBizConfigDal.findByItemValue(bizId, itemCode);
 	}
 
 //	@Override

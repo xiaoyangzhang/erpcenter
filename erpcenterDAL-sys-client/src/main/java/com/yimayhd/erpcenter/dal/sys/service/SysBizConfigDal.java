@@ -9,4 +9,6 @@ public interface SysBizConfigDal {
 	List<SysBizConfig> getListByBizId(Integer bizId);
 
 	Map<String, String> getConfigMapByBizId(int bizId);
+	
+	SysBizConfig findByItemValue(int bizId,String itemCode);
 }
