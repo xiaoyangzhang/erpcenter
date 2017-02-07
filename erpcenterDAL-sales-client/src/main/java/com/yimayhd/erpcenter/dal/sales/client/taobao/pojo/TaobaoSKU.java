@@ -1,4 +1,4 @@
-package com.yihg.taobao.pojo;
+package com.yimayhd.erpcenter.dal.sales.client.taobao.pojo;
 
 import java.io.Serializable;
 
