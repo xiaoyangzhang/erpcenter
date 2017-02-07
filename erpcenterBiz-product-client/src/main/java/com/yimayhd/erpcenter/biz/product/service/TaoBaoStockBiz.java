@@ -3,10 +3,10 @@ package com.yimayhd.erpcenter.biz.product.service;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoProduct;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoProductSkus;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStock;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct;
-import com.yimayhd.erpcenter.dal.product.service.TaobaoProductSkus;
 
 import java.util.List;
 import java.util.Map;
