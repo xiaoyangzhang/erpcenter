@@ -47,6 +47,8 @@ public class TransferOrder implements Serializable {
 	private String toAppKey;
 	private String receiveMode;
 
+
+
 	public int getId() {
 		return id;
 	}

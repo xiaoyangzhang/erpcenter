@@ -48,5 +48,11 @@ public interface TrafficResDal {
 	TrafficRes selectTrafficResAndLineInfoById1(Integer id);
 
 	PageBean<TrafficRes> selectAirTicketProfitListPage(PageBean<TrafficRes> pageBean);
+	PageBean<TrafficResProduct> findResProductListToWX(PageBean<TrafficResProduct> pageBean);
+
+	TrafficResProduct findResProductToWX(Integer trpId, Integer resId);
+
+	List<TrafficRes> findProductInfoByYearToWX(Integer bizId, String startTime, String endTime);
+
 
 }

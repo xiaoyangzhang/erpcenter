@@ -31,6 +31,40 @@ public class BookingSupplierDetail implements Serializable {
 	private Integer resId;
 	private Integer sumTicket;
 
+
+    public Double getCarProfitTotal() {
+        return carProfitTotal;
+    }
+
+    public void setCarProfitTotal(Double carProfitTotal) {
+        this.carProfitTotal = carProfitTotal;
+    }
+
+    public String getCarPayType() {
+        return carPayType;
+    }
+
+    public void setCarPayType(String carPayType) {
+        this.carPayType = carPayType;
+    }
+
+    public Double getCarProfitTotal2() {
+        return carProfitTotal2;
+    }
+
+    public void setCarProfitTotal2(Double carProfitTotal2) {
+        this.carProfitTotal2 = carProfitTotal2;
+    }
+
+    public String getCarPayType2() {
+        return carPayType2;
+    }
+
+    public void setCarPayType2(String carPayType2) {
+        this.carPayType2 = carPayType2;
+    }
+
+
 	public Integer getResId() {
 		return resId;
 	}
@@ -96,37 +130,7 @@ public class BookingSupplierDetail implements Serializable {
 	@LogFieldAnno(description = "备注", delOrIns = true)
 	private String carPayType2;
 
-	public Double getCarProfitTotal2() {
-		return carProfitTotal2;
-	}
 
-	public void setCarProfitTotal2(Double carProfitTotal2) {
-		this.carProfitTotal2 = carProfitTotal2;
-	}
-
-	public String getCarPayType2() {
-		return carPayType2;
-	}
-
-	public void setCarPayType2(String carPayType2) {
-		this.carPayType2 = carPayType2;
-	}
-
-	public Double getCarProfitTotal() {
-		return carProfitTotal;
-	}
-
-	public void setCarProfitTotal(Double carProfitTotal) {
-		this.carProfitTotal = carProfitTotal;
-	}
-
-	public String getCarPayType() {
-		return carPayType;
-	}
-
-	public void setCarPayType(String carPayType) {
-		this.carPayType = carPayType;
-	}
 
 	public String getSupplierName() {
 		return supplierName;

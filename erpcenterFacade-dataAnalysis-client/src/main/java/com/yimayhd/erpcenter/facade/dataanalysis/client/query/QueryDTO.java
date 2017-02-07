@@ -107,6 +107,15 @@ public class QueryDTO implements Serializable {
     private String ssl;
     private  String rp;
     private String svc;
+    private Map<String,Object> otherParams;
+
+    public Map<String, Object> getOtherParams() {
+        return otherParams;
+    }
+
+    public void setOtherParams(Map<String, Object> otherParams) {
+        this.otherParams = otherParams;
+    }
 
     public TourGroupVO getGroup() {
         return group;

@@ -270,4 +270,54 @@ public class TrafficResDalImpl implements TrafficResDal{
 		return pageBean;
 	}
 
+	@Override
+	public PageBean<TrafficResProduct> findResProductListToWX(PageBean<TrafficResProduct> pageBean) {
+
+		List<TrafficResProduct> list = trafficResProductMapper.selectResProductToWXListPage(pageBean);
+
+		Map<String, String> map = (Map<String, String>) pageBean.getParameter();
+
+		for (TrafficResProduct trp : list) {
+			List<TrafficResProduct> trpList = trafficResProductMapper.selectResProductInfoListToWX(
+					Integer.parseInt(map.get("bizId")), map.get("startTime"), map.get("endTime"), trp.getProductCode());
+
+			for (TrafficResProduct resProduct : trpList) {
+				if (resProduct.getNumStock() == 0) {
+					resProduct.setNumStock(resProduct.getNumBalance());
+				} else {
+					resProduct.setNumStock(resProduct.getNumStock() - resProduct.getNumSold());
+				}
+				if (resProduct.getUnconfirm() == null) {
+					resProduct.setUnconfirm(0);
+				}
+				if (resProduct.getConfirm() == null) {
+					resProduct.setConfirm(0);
+				}
+
+			}
+
+			trp.setTrafficResProducts(trpList);
+		}
+
+		pageBean.setResult(list);
+		return pageBean;
+	}
+
+	@Override
+	public TrafficResProduct findResProductToWX(Integer trpId, Integer resId) {
+
+		TrafficResProduct trafficResProduct = trafficResProductMapper.selectResProductInfoToWX(trpId, resId);
+		if (trafficResProduct.getNumStock() == 0) {
+			trafficResProduct.setNumStock(trafficResProduct.getNumBalance());
+		} else {
+			trafficResProduct.setNumStock(trafficResProduct.getNumStock() - trafficResProduct.getNumSold());
+		}
+		return trafficResProduct;
+	}
+
+	@Override
+	public List<TrafficRes> findProductInfoByYearToWX(Integer bizId, String startTime, String endTime) {
+		return trafficResMapper.selectProductInfoByYearToWX(bizId, startTime, endTime);
+	}
+
 }

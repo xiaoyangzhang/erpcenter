@@ -520,7 +520,7 @@ public interface TourGroupBiz {
 	
 	List<TourGroup> selecGroupBefAutoMergerGroup(Integer bizId,String startTime,Integer productId);
 
-	PageBean getPushDeliveryList(PageBean pageBean,Integer bizId);
+	PageBean getPushDeliveryList(PageBean pageBean,Integer bizId, Set<Integer> set, Set<Integer> supplierIdSet);
 
 	List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(PageBean pageBean);
 	/**

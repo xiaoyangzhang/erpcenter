@@ -16,18 +16,24 @@ public class TaobaoProduct implements Serializable {
     private Date created;
     private Date modified;
     private String myStoreId;
-    
+
+
     private Integer proId;
     private Integer tpsId;
     private String pidName;
     private String pid;
     private String vid;
     private String stockName;
-    
-    
-    public String getStockName() {
-		return stockName;
-	}
+
+
+
+
+
+
+    public Integer getId() {
+        return id;
+    }
+
 
 	public void setStockName(String stockName) {
 		this.stockName = stockName;
@@ -81,9 +87,6 @@ public class TaobaoProduct implements Serializable {
 		this.myStoreId = myStoreId;
 	}
 
-	public Integer getId() {
-        return id;
-    }
 
     public void setId(Integer id) {
         this.id = id;

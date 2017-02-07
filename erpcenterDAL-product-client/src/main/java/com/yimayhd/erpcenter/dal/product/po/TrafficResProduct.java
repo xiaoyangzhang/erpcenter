@@ -6,6 +6,7 @@ import com.yimayhd.erpcenter.common.util.LogFieldAnno;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class TrafficResProduct implements Serializable{
 
@@ -260,7 +261,15 @@ public class TrafficResProduct implements Serializable{
 	private Integer confirm;
 	private Integer unconfirm;
 	private BigDecimal sumCost;
+	private List<TrafficResProduct> trafficResProducts;
 
+	public List<TrafficResProduct> getTrafficResProducts() {
+		return trafficResProducts;
+	}
+
+	public void setTrafficResProducts(List<TrafficResProduct> trafficResProducts) {
+		this.trafficResProducts = trafficResProducts;
+	}
 
 	public BigDecimal getSumCost() {
 		return sumCost;

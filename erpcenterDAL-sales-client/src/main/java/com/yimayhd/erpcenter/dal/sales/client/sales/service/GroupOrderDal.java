@@ -475,5 +475,10 @@ public interface GroupOrderDal {
     GroupOrder selectSumTotalByResId(Integer resId);
 
     List<GroupOrder> selectGroupOrderGroupByPro(Integer resId);
+
+    Integer findGroupOrderCountBySidAndDate(Integer bizId, Integer supplierId, String depaDate);
+
+    List<GroupOrder> findGroupOrderBysIdAndResState(Integer bizId, Integer extResState, Integer supplierId);
+
 }
 
