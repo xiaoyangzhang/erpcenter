@@ -5,9 +5,10 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="product_id" jdbcType="INTEGER" property="productId" />
     <result column="stock_id" jdbcType="INTEGER" property="stockId" />
+    <result column="product_skus_id" jdbcType="INTEGER" property="productSkusId" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, product_id, stock_id
+    id, product_id, stock_id,product_skus_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -23,8 +24,8 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into taobao_stock_product (product_id, stock_id)
-    values (#{productId,jdbcType=INTEGER}, #{stockId,jdbcType=INTEGER})
+    insert into taobao_stock_product (product_id, stock_id,product_skus_id)
+    values (#{productId,jdbcType=INTEGER}, #{stockId,jdbcType=INTEGER},#{productSkusId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct" useGeneratedKeys="true" keyProperty="id">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -38,6 +39,9 @@
       <if test="stockId != null">
         stock_id,
       </if>
+      <if test="productSkusId != null">
+        product_skus_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="productId != null">
@@ -45,6 +49,9 @@
       </if>
       <if test="stockId != null">
         #{stockId,jdbcType=INTEGER},
+      </if>
+      <if test="productSkusId != null">
+        #{productSkusId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -57,19 +64,23 @@
       <if test="stockId != null">
         stock_id = #{stockId,jdbcType=INTEGER},
       </if>
+      <if test="productSkusId != null">
+        product_skus_id = #{productSkusId,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct">
     update taobao_stock_product
     set product_id = #{productId,jdbcType=INTEGER},
-      stock_id = #{stockId,jdbcType=INTEGER}
+      stock_id = #{stockId,jdbcType=INTEGER},
+       product_skus_id = #{productSkusId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   
   <select id="findStockProductStockId" parameterType="java.lang.Integer"
 		resultMap="BaseResultMap">
-		select id, product_id, stock_id 
+		select id, product_id, stock_id ,product_skus_id
 		from taobao_stock_product
 		where stock_id = #{stockId}
 	</select>
@@ -83,5 +94,17 @@
 		select id, product_id, stock_id 
 		from taobao_stock_product
 		where stock_id = #{stockId,jdbcType=INTEGER} and product_id=#{productId}
+	</select>
+	
+	<delete id="deleteStockProductBySkus" parameterType="com.yihg.product.po.TaobaoStockProduct">
+    	delete from taobao_stock_product
+    	where stock_id = #{stockId,jdbcType=INTEGER} and product_skus_id=#{productSkusId}
+  	</delete>
+  
+   <select id="findStockProductBySkus" parameterType="com.yihg.product.po.TaobaoStockProduct"
+		resultMap="BaseResultMap">
+		select id, product_id, stock_id ,product_skus_id
+		from taobao_stock_product
+		where stock_id = #{stockId,jdbcType=INTEGER} and product_skus_id=#{productSkusId}
 	</select>
 </mapper>

@@ -114,4 +114,9 @@ public class ProductStockBizImpl implements ProductStockBiz {
 	public TaobaoStockDate selectStockDataById(Integer id) {
 		return productStockDal.selectStockDataById(id);
 	}
+
+	@Override
+	public int updateRemark(TaobaoStockDate taobaoStockDate) {
+		return productStockDal.updateRemark(taobaoStockDate);
+	}
 }
