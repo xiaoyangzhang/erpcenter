@@ -1625,7 +1625,7 @@ public class TourGroupDalImpl implements TourGroupDal {
 	@Override
     public PageBean getPushDeliveryList(PageBean pageBean, Integer bizId, Set<Integer> set, Set<Integer> supplierIdSet) {
         List<BookingGroup> bookingGroups = null;
-        bookingGroups = tourGroupMapper.selectPushDeliveryListPage(pageBean, bizId);
+        bookingGroups = tourGroupMapper.selectPushDeliveryListPage(pageBean,set, bizId,supplierIdSet);
         if (bookingGroups != null && bookingGroups.size() > 0) {
             for (BookingGroup bg : bookingGroups) {
                 if (bg.getGroupMode().intValue() > 0) {
