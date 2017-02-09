@@ -140,7 +140,7 @@
 			and tps.num_iid=#{numIid,jdbcType=VARCHAR}
     </select>
     
-     <update id="updateRemark" parameterType="com.yihg.product.po.TaobaoStockDate">
+     <update id="updateRemark" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate">
     update taobao_stock_date
     <set>
       <if test="remark != null">

@@ -670,7 +670,7 @@
 	</select>
 
 	<select id="selectResProductInfoListToWX" resultMap="BaseResultMap"
-			parameterType="com.yihg.product.po.TrafficResProduct">
+			parameterType="com.yimayhd.erpcenter.dal.product.po.TrafficResProduct">
 		SELECT trp.id,trp.res_id,tr.date_start,trp.num_stock,trp.num_sold,sale.unconfirm,sale.confirm,tr.num_balance
 		FROM traffic_res_product AS trp
 		LEFT JOIN traffic_res AS tr ON(trp.res_id=tr.id)
@@ -686,7 +686,7 @@
 	</select>
 
 	<select id="selectResProductInfoToWX" resultMap="BaseResultMap"
-			parameterType="com.yihg.product.po.TrafficResProduct">
+			parameterType="com.yimayhd.erpcenter.dal.product.po.TrafficResProduct">
 		SELECT trp.id,trp.product_code,trp.product_name,tr.date_start,lineInfo,adult_suggest_price,adult_cost_price,adult_suggest_price,
 		adult_same_pay,adult_proxy_pay,child_cost_price,child_suggest_price,child_same_pay,child_proxy_pay
 		,baby_cost_price,baby_suggest_price,baby_same_pay,bady_proxy_pay,date_latest,trp.num_stock,tr.num_balance,

@@ -96,12 +96,12 @@
 		where stock_id = #{stockId,jdbcType=INTEGER} and product_id=#{productId}
 	</select>
 	
-	<delete id="deleteStockProductBySkus" parameterType="com.yihg.product.po.TaobaoStockProduct">
+	<delete id="deleteStockProductBySkus" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct">
     	delete from taobao_stock_product
     	where stock_id = #{stockId,jdbcType=INTEGER} and product_skus_id=#{productSkusId}
   	</delete>
   
-   <select id="findStockProductBySkus" parameterType="com.yihg.product.po.TaobaoStockProduct"
+   <select id="findStockProductBySkus" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct"
 		resultMap="BaseResultMap">
 		select id, product_id, stock_id ,product_skus_id
 		from taobao_stock_product
