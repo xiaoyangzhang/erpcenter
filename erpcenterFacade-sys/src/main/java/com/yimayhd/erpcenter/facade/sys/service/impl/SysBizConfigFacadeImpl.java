@@ -31,5 +31,12 @@ public class SysBizConfigFacadeImpl implements SysBizConfigFacade {
 		return sysBizConfigBiz.getConfigMapByBizId(bizId);
 	}
 
+	@Override
+	public SysBizConfig findByItemValue(int bizId, String itemCode) {
+
+		SysBizConfig sysConfigBean = sysBizConfigBiz.findByItemValue(bizId, itemCode);
+		return sysConfigBean;
+	}
+
 
 }

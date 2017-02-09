@@ -49,4 +49,8 @@ public interface TrafficResBiz {
 	TrafficRes selectTrafficResAndLineInfoById1(Integer id);
 
 	PageBean<TrafficRes> selectAirTicketProfitListPage(PageBean<TrafficRes> pageBean);
+
+	public PageBean<TrafficResProduct> findResProductListToWX(PageBean<TrafficResProduct> pageBean) ;
+	public TrafficResProduct findResProductToWX(Integer trpId, Integer resId) ;
+	List<TrafficRes> findProductInfoByYearToWX(Integer bizId, String startTime, String endTime);
 }

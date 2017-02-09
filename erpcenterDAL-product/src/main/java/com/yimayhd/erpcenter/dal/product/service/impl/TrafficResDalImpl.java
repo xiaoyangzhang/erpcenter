@@ -316,6 +316,8 @@ public class TrafficResDalImpl implements TrafficResDal{
 		return trafficResProduct;
 	}
 
+
+
 	@Override
 	public List<TrafficRes> findProductInfoByYearToWX(Integer bizId, String startTime, String endTime) {
 		return trafficResMapper.selectProductInfoByYearToWX(bizId, startTime, endTime);

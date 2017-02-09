@@ -77,6 +77,21 @@ public class TrafficResBizImpl implements TrafficResBiz{
 	}
 
 	@Override
+	public PageBean<TrafficResProduct> findResProductListToWX(PageBean<TrafficResProduct> pageBean) {
+		return trafficResDal.findResProductListToWX(pageBean);
+	}
+
+	@Override
+	public TrafficResProduct findResProductToWX(Integer trpId, Integer resId) {
+		return trafficResDal.findResProductToWX(trpId,resId);
+	}
+
+	@Override
+	public List<TrafficRes> findProductInfoByYearToWX(Integer bizId, String startTime, String endTime) {
+		return trafficResDal.findProductInfoByYearToWX(bizId, startTime, endTime);
+	}
+
+	@Override
 	public int copyRes(Integer resId,String date) {
 		return trafficResDal.copyRes(resId, date);
 	}
