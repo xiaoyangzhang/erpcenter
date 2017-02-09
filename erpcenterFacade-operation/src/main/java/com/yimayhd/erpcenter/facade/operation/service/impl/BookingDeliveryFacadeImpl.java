@@ -313,7 +313,7 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 	@Override
 	public WebResult<PageBean> pushListTable(PageBean pageBean, Integer bizId, Set<Integer> set) {
 		WebResult<PageBean> result = new WebResult<PageBean>();
-		List<PlatAuth> paList = ps.findByBizIdAndSupplierNotZero(bizId);
+		List<PlatAuth> paList = platAuthBiz.findByBizIdAndSupplierNotZero(bizId);
 		Set<Integer> supplierIdSet = new HashSet<Integer>();
 		for (PlatAuth platAuth : paList) {
 			supplierIdSet.add(platAuth.getSupplierId());
@@ -323,7 +323,7 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 			List<BookingGroup> list = pageBean.getResult();
 			for (BookingGroup bg : list) {
 				PlatAuth pa;
-				pa = ps.findByBizIdAndOrgIdOrSupplierId(bizId, null,
+				pa = platAuthBiz.findByBizIdAndOrgIdOrSupplierId(bizId, null,
 						Integer.parseInt(bg.getBookSupplierIds()));
 				if (bg.getBookSupplierIds().equals(pa.getSupplierId().toString())) {
 					bg.setDriverName(pa.getAppKey());
