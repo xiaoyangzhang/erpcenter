@@ -7,6 +7,7 @@
     <result column="item_name" property="itemName" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="unit_price" property="unitPrice" jdbcType="DECIMAL" />
+    <result column="sale_price" property="salePrice" jdbcType="DECIMAL" />
     <result column="num_times" property="numTimes" jdbcType="DECIMAL" />
     <result column="num_person" property="numPerson" jdbcType="DECIMAL" />
     <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
@@ -16,7 +17,7 @@
     <result column="create_time" property="createTime" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, booking_id, item_name, remark, unit_price, num_times, num_person, total_price, 
+    id, booking_id, item_name, remark, unit_price, sale_price,num_times, num_person, total_price,
     row_state, creator_id, creator_name, create_time
   </sql>
   <select id="getSupplierPriceListPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean" >
@@ -40,6 +41,7 @@
 			bdp.num_person,
 			bdp.num_times,
 			bdp.unit_price,
+			bdp.sale_price,
 			bdp.total_price,
 			tg.product_brand_name,
 			tg.product_name
@@ -178,12 +180,12 @@
   </delete>
   <insert id="insert" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDeliveryPrice" >
     insert into booking_delivery_price (id, booking_id, item_name, 
-      remark, unit_price, num_times, 
+      remark, unit_price,sale_price, num_times,
       num_person, total_price, row_state, 
       creator_id, creator_name, create_time
       )
     values (#{id,jdbcType=INTEGER}, #{bookingId,jdbcType=INTEGER}, #{itemName,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{unitPrice,jdbcType=DECIMAL}, #{numTimes,jdbcType=DECIMAL}, 
+      #{remark,jdbcType=VARCHAR}, #{unitPrice,jdbcType=DECIMAL}, #{salePrice,jdbcType=DECIMAL},#{numTimes,jdbcType=DECIMAL},
       #{numPerson,jdbcType=DECIMAL}, #{totalPrice,jdbcType=DECIMAL}, #{rowState,jdbcType=TINYINT}, 
       #{creatorId,jdbcType=INTEGER}, #{creatorName,jdbcType=VARCHAR}, #{createTime,jdbcType=BIGINT}
       )
@@ -205,6 +207,9 @@
       </if>
       <if test="unitPrice != null" >
         unit_price,
+      </if>
+      <if test="salePrice != null" >
+        sale_price,
       </if>
       <if test="numTimes != null" >
         num_times,
@@ -282,6 +287,9 @@
       <if test="unitPrice != null" >
         unit_price = #{unitPrice,jdbcType=DECIMAL},
       </if>
+      <if test="salePrice != null" >
+        sale_price = #{salePrice,jdbcType=DECIMAL},
+      </if>
       <if test="numTimes != null" >
         num_times = #{numTimes,jdbcType=DECIMAL},
       </if>
@@ -312,6 +320,7 @@
       item_name = #{itemName,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       unit_price = #{unitPrice,jdbcType=DECIMAL},
+      sale_price = #{salePrice,jdbcType=DECIMAL},
       num_times = #{numTimes,jdbcType=DECIMAL},
       num_person = #{numPerson,jdbcType=DECIMAL},
       total_price = #{totalPrice,jdbcType=DECIMAL},
@@ -329,7 +338,7 @@
     values 
     <foreach collection="list" item="item" index="index" separator=",">
 	    (#{item.id,jdbcType=INTEGER}, #{item.bookingId,jdbcType=INTEGER}, #{item.itemName,jdbcType=VARCHAR},
-	    #{item.remark,jdbcType=VARCHAR},#{item.unitPrice,jdbcType=DECIMAL},#{item.numTimes,jdbcType=DECIMAL},
+	    #{item.remark,jdbcType=VARCHAR},#{item.unitPrice,jdbcType=DECIMAL},#{item.salePrice,jdbcType=DECIMAL},#{item.numTimes,jdbcType=DECIMAL},
 	    #{item.numPerson,jdbcType=DECIMAL},#{item.totalPrice,jdbcType=DECIMAL},#{item.rowState,jdbcType=TINYINT},
 	    #{item.creatorId,jdbcType=INTEGER},#{item.creatorName,jdbcType=VARCHAR},#{item.createTime,jdbcType=BIGINT}
 	    )    	
@@ -367,6 +376,9 @@
 	      </if>
 	      <if test="item.unitPrice != null" >
 	        unit_price = #{item.unitPrice,jdbcType=DECIMAL},
+	      </if>
+	      <if test="item.salePrice != null" >
+	        sale_price = #{item.salePrice,jdbcType=DECIMAL},
 	      </if>
 	      <if test="item.numTimes!= null" >
 	        num_times = #{item.numTimes,jdbcType=DECIMAL},

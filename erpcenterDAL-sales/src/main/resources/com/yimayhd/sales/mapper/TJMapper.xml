@@ -81,8 +81,10 @@
 		<result column="expense_other" property="expenseOther" jdbcType="DECIMAL" />
 		<result column="expense_other_state" property="expenseOtherState" jdbcType="INTEGER" />
 		<result column="total_income" property="totalIncome" jdbcType="DECIMAL" />
+		<result column="total_income1" property="totalIncome1" jdbcType="DECIMAL" />
 		<result column="total_expense" property="totalExpense" jdbcType="DECIMAL" />
 		<result column="total_profit" property="totalProfit" jdbcType="DECIMAL" />
+		<result column="total_profit1" property="totalProfit1" jdbcType="DECIMAL" />
 		<result column="profit_per_guest" property="profitPerGuest" jdbcType="DECIMAL" />
 		<result column="shop_sales" property="shopSales" jdbcType="DECIMAL" />
 		<result column="shop_sales_state" property="shopSalesState" jdbcType="INTEGER" />
@@ -874,7 +876,7 @@
 			,Sum(expense_fleet) expense_fleet, Sum(expense_scenicspot) expense_scenicspot
 			,Sum(expense_airticket) expense_airticket, Sum(expense_trainticket) expense_trainticket
 			,Sum(expense_insurance) expense_insurance, Sum(expense_other) expense_other
-			,Sum(total_income) total_income, Sum(total_cost) as total_expense,Sum(total_income)-Sum(total_cost) as total_profit
+			,Sum(total_income) total_income,Sum(total_income)-sum(ifnull(income_shop,0)-ifnull(income_shopCommission,0)) total_income1, Sum(total_cost) as total_expense,Sum(total_income)-Sum(total_cost) as total_profit,Sum(total_income)-Sum(total_cost)-sum(ifnull(income_shop,0)-ifnull(income_shopCommission,0)) as total_profit1
 			,sum(total_income-total_cost)/sum(total_adult+total_child+total_guide) as profit_per_guest 
 		from tour_group tg
 		left join (select group_id,sum(total) as income_order from group_order where group_id in (select id from tour_group as tg where 1=1 <include refid="selectGroupProfitListPage_Where"/>) group by group_id) gd on (tg.id=gd.group_id)

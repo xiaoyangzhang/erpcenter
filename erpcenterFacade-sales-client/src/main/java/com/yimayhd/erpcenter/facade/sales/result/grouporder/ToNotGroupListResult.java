@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.facade.sales.result.grouporder;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
@@ -33,6 +34,8 @@ public class ToNotGroupListResult extends BaseStateResult {
 	private String orgUserJsonStr;
 
 	HashMap<String, BigDecimal> map_sum;
+
+	List<Map<String,Object>> list;
 
 	public GroupOrder getGroupOrder() {
 		return groupOrder;
@@ -144,5 +147,13 @@ public class ToNotGroupListResult extends BaseStateResult {
 
 	public void setMap_sum(HashMap<String, BigDecimal> map_sum) {
 		this.map_sum = map_sum;
+	}
+
+	public List<Map<String, Object>> getList() {
+		return list;
+	}
+
+	public void setList(List<Map<String, Object>> list) {
+		this.list = list;
 	}
 }

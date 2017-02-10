@@ -54,5 +54,6 @@ public interface BookingDeliveryDal {
 	 */
 	List<BookingDelivery> selectInitDeliveryList(Integer groupId);
 	
-    void updatePushStatus(Integer bookingId); 
+    void updatePushStatus(Integer bookingId);
+	public BookingDelivery loadBookingInfoById(Integer bookingId);
 }

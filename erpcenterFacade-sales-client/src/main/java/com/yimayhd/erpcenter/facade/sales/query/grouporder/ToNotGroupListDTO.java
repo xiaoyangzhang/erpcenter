@@ -13,6 +13,9 @@ public class ToNotGroupListDTO implements Serializable {
 	private Set<Integer> userIdSet;
 	private Map<String,Object> pmBean;
 
+	private String guestCertificateNum;
+	private Integer orderId;
+
 	public GroupOrder getGroupOrder() {
 		return groupOrder;
 	}
@@ -43,5 +46,21 @@ public class ToNotGroupListDTO implements Serializable {
 
 	public void setPmBean(Map<String, Object> pmBean) {
 		this.pmBean = pmBean;
+	}
+
+	public String getGuestCertificateNum() {
+		return guestCertificateNum;
+	}
+
+	public void setGuestCertificateNum(String guestCertificateNum) {
+		this.guestCertificateNum = guestCertificateNum;
+	}
+
+	public Integer getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
 	}
 }

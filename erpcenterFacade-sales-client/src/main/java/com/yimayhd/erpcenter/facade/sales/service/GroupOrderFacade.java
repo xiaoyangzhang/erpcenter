@@ -191,4 +191,7 @@ public interface GroupOrderFacade {
 
 	ToNotGroupListResult toOrderPreview(ToNotGroupListDTO toNotGroupListDTO);
 
+
+	ToNotGroupListResult guestCertificateNumValidateList(ToNotGroupListDTO toNotGroupListDTO);
+
 }

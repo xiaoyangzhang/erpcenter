@@ -114,5 +114,10 @@ public class BookingDeliveryBizImpl implements BookingDeliveryBiz {
         bookingDeliveryDal.updatePushStatus(bookingId);
     }
 
+    @Override
+    public BookingDelivery loadBookingInfoById(Integer bookingId) {
+        return bookingDeliveryDal.loadBookingInfoById(bookingId);
+    }
+
 
 }

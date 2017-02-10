@@ -330,4 +330,26 @@ public class BookingDeliveryDalImpl implements BookingDeliveryDal {
 	    delivery.setPushStatus(1);
 	    bookingDeliveryMapper.updateByPrimaryKeySelective(delivery);
     }
+
+	@Override
+	public BookingDelivery loadBookingInfoById(Integer bookingId) {
+		BookingDelivery delivery = bookingDeliveryMapper.selectByPrimaryKey(bookingId);
+		if(delivery!=null){
+			List<BookingDeliveryOrder> orderList = bookingDeliveryOrderMapper.getOrderListByBookingId(bookingId);
+			List<BookingDeliveryRoute> routeList = bookingDeliveryRouteMapper.getRouteListByBookingId(bookingId);
+			List<BookingDeliveryPrice> priceList = bookingDeliveryPriceMapper.getPriceListByBookingId(bookingId);
+			delivery.setOrderList(orderList);
+			delivery.setRouteList(routeList);
+			delivery.setPriceList(priceList);
+			try {
+				delivery.setOrderListJson(JSON.json(orderList));
+				delivery.setRouteListJson(JSON.json(routeList));
+				delivery.setPriceListJson(JSON.json(priceList));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+		return delivery;
+	}
 }
