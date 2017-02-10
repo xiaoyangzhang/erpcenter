@@ -9,9 +9,12 @@ import org.springframework.ui.ModelMap;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoProduct;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoProductSkus;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStock;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog;
+import com.yimayhd.erpcenter.dal.product.vo.TaobaoProductVo;
+import com.yimayhd.erpcenter.dal.sales.client.taobao.pojo.TaobaoSKU;
 
 public interface TaobaoProductFacade {
 
@@ -68,7 +71,7 @@ public interface TaobaoProductFacade {
 	 */
 	public List<TaobaoProduct> toStockProductBindingList(Integer stockId, ModelMap model);
 
-	public PageBean<TaobaoProduct> findTaoBaoProduct(Map<String,Object> psBean, Integer pageSize, Integer page) throws ParseException;
+	public PageBean<TaobaoProduct> findTaoBaoProduct(Map<String,Object> psBean, Integer pageSize, Integer page,Integer bizId) throws ParseException;
 
 	public PageBean<TaobaoProduct> TaoBaoProductStock_Table(Map<String,Object> psBean, Integer pageSize, Integer page) throws ParseException;
 
@@ -80,7 +83,7 @@ public interface TaobaoProductFacade {
 	 * @param model
 	 * @return
 	 */
-	public Map<String,Object> saveStockProBinding(String productId, Integer stockId, ModelMap model);
+	public Map<String,Object> saveStockProBinding(String tpsId, Integer stockId, ModelMap model);
 
 	/**
 	 * 删除淘宝库存产品关联信息
@@ -91,7 +94,7 @@ public interface TaobaoProductFacade {
 	 * @param model
 	 * @return
 	 */
-	public boolean deleteTaoBaoStockProduct(String productId, Integer stockId, ModelMap model);
+	public boolean deleteTaoBaoStockProduct(String tpsId, Integer stockId, ModelMap model);
 
 	/**
 	 * 保存
@@ -116,4 +119,11 @@ public interface TaobaoProductFacade {
 	 * @return
 	 */
 	public Map<String,Object> deleteTaoBaoStockProduct(Integer id, ModelMap model);
+
+	public void syncProductSku(String[] ary,TaobaoSKU ss,String productId);
+
+	public Map<String,Object> addTaobaoSku(Integer skuId);
+
+	public Integer saveTaobaoSku(TaobaoProductVo vo, TaobaoProduct tp,
+			TaobaoProductSkus tps, Integer skuId);
 }

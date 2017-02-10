@@ -466,8 +466,9 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 			LogUtils.LogRow_SetValue(logList, "group_order_transport", null, orderId);
 
 			if (isStock) {
+				Integer oldStockDateId=0;
 				TaobaoStockLog sLog = taobaoStockBiz
-						.selectLogByStockDateIdAndOrderId(vo.getGroupOrder().getProductId(), orderId);
+						.selectStockLogAllByOrderId( orderId);
 				if (sLog == null) {
 					sLog = new TaobaoStockLog();
 					sLog.setId(0);
@@ -479,10 +480,18 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 					sLog.setNum(newNum);
 					productStockBiz.insertTaobaoStockLogSelective(sLog);
 				} else {
+					if(sLog.getStockDateId() != vo.getGroupOrder().getProductId()){
+						oldStockDateId=sLog.getStockDateId();
+						sLog.setStockId(vo.getGroupOrder().getProductBrandId());
+						sLog.setStockDateId(vo.getGroupOrder().getProductId());
+					}
 					sLog.setNum(newNum);
 					productStockBiz.updateTaobaoStockLogSelective(sLog);
 				}
 				productStockBiz.updateByLog(sLog.getStockDateId());
+				if(oldStockDateId>0){
+					productStockBiz.updateByLog(oldStockDateId);
+				}
 			}
 			//todo取出原来ids，并对比现在在的ids，得到要删除的ids ,　　比如原来：１,２,３,４　删除了2,3－> 14,
 			String id = saveSpecialGroupDTO.getTaobaoOrderId();
@@ -661,10 +670,23 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 
 		// 获取备注(扣除库存)
 		for (PlatTaobaoTrade pt : platTaobaoTradeList) {
-			if (pt.getReceiveCount() != null && new Integer(pt.getReceiveCount()) > 0) {
+			if (pt.getReceiveCount() != null && new Integer(pt.getReceiveCount()) > 0 && pt.getSkuPropertiesName() != null) {
+				String[] ary = pt.getSkuPropertiesName().split("\\;");
+				String[] ary1=ary[0].split("\\:");
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("numIid", pt.getNumIid());// 自编码、日期、数量,
 				// PlatTaobaoTradeOrderId
+				if (StringUtils.isNotBlank(pt.getSellerMemo())) {
+					String createUser = "";
+					if (pt.getSellerMemo().indexOf("{") > 0 && pt.getSellerMemo().indexOf("}") > 0) {
+						createUser = pt.getSellerMemo().substring(pt.getSellerMemo().indexOf("{") + 1,
+								pt.getSellerMemo().indexOf("}"));
+					}
+					map.put("createUser", createUser);
+				} else {
+					map.put("createUser", "空");
+				}
+				map.put("sku", ary1[1]);
 				map.put("depDate", pt.getDepartureDate());
 //				map.put("receiveCount", pt.getReceiveCount());
 				map.put("receiveCount", pt.getReceiveCount());
@@ -1536,5 +1558,6 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 
 
 	}
+
 	
 }

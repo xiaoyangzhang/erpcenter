@@ -82,5 +82,9 @@ public interface TrafficResMapper {
    TrafficRes selectTrafficResAndLineInfoById1(Integer id);
 
     List<TrafficRes>selectAirTicketProfitListPage(@Param("page") PageBean pageBean);
+    
+    List<TrafficRes> selectProductInfoByYearToWX(@Param("bizId") Integer bizId,
+            @Param("startTime") String startTime,
+            @Param("endTime") String endTime);
 }
 

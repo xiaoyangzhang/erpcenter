@@ -37,8 +37,16 @@ public class ToSaleGuestListExcelDTO implements Serializable{
 	private PageBean pageBean;
 	
 	private Integer doType;
-	
-	
+//	private  String orderNo;
+//
+//	public String getOrderNo() {
+//		return orderNo;
+//	}
+//
+//	public void setOrderNo(String orderNo) {
+//		this.orderNo = orderNo;
+//	}
+
 	/**
 	 * @return the doType
 	 */

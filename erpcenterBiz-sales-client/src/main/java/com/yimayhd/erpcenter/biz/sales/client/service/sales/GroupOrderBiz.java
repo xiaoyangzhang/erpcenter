@@ -477,6 +477,8 @@ public interface GroupOrderBiz {
     GroupOrder selectSumTotalByResId(Integer resId);
 
     List<GroupOrder> selectGroupOrderGroupByPro(Integer resId);
+    public Integer findGroupOrderCountBySidAndDate(Integer bizId, Integer supplierId, String depaDate);
+    List<GroupOrder> findGroupOrderBysIdAndResState(Integer bizId, Integer extResState, Integer supplierId);
 
 
 }

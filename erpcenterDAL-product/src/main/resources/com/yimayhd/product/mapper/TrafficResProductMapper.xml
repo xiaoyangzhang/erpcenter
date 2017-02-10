@@ -594,18 +594,18 @@
 	           					</if>
 	         		 		</if>
 							),0) as supplierCountMy
-				,sale.confirm,sale.unconfirm
+				,ifnull(sale.confirm,0) confirm,ifnull(sale.unconfirm,0) unconfirm
 			FROM traffic_res_product trp 
 				LEFT JOIN traffic_res tr on(tr.id=trp.res_id)
 				LEFT JOIN product_info pi on(pi.id=trp.product_code)
 				LEFT JOIN product_attachment patt on (patt.obj_id=pi.id and patt.type=2 and patt.obj_type=1)
 				LEFT JOIN (select res_id, GROUP_CONCAT(CONCAT_WS(' ',line_date,class_no,CONCAT(departure_city,'-',arrival_city), CONCAT(departure_time,'-',arrival_time)) separator '<![CDATA[<br/>]]>') as lineInfo
 				from traffic_res_line group by res_id) b ON(b.res_id=tr.id)
-				left join (select res_id
+				left join (select res_product_id
 							,ifnull(sum(case when adjust_action='ORDER_SOLD' and adjust_state=0 then adjust_num else 0 end),0) unconfirm 
 							,ifnull(sum(case when adjust_action='ORDER_SOLD' and adjust_state=1 then adjust_num else 0 end),0) confirm 
-							from traffic_res_stocklog where order_id>0 group by res_id
-						) as sale on sale.res_id=trp.res_id
+							from traffic_res_stocklog where order_id>0 group by res_product_id
+						) as sale on sale.res_product_id=trp.id
 	    		where tr.state=1  and trp.product_code>0
 				AND tr.biz_id =#{page.parameter.bizId,jdbcType=INTEGER} 
 				AND tr.date_latest >= now()
@@ -652,5 +652,74 @@
 		sum(IFNULL((adult_cost_hotel+adult_cost_ticket+adult_cost_js+adult_cost_other)*num_sold,0)) sum_cost
 		FROM traffic_res_product
 		WHERE product_code=#{productCode} and res_id=#{resId}
+	</select>
+
+	<select id="selectResProductToWXListPage" resultMap="BaseResultMap"
+			parameterType="com.yihg.mybatis.utility.PageBean">
+		select id,product_name,product_code from (
+		SELECT trp.id,trp.product_name,trp.product_code
+		,ifnull((select count(*) from product_group_supplier aa where aa.group_id=trp.res_id and aa.product_id=trp.product_code),0) as supplierCount
+		,ifnull((select count(*) from product_group_supplier aa where aa.group_id=trp.res_id and aa.product_id=trp.product_code and aa.supplier_id=#{page.parameter.supplierId}),0) as supplierCountMy
+		FROM traffic_res_product AS trp
+		LEFT JOIN traffic_res AS tr ON(trp.res_id=tr.id)
+		WHERE tr.state = 1 AND trp.product_code > 0 AND tr.date_latest >= now()
+		AND tr.biz_id = #{page.parameter.bizId,jdbcType=INTEGER}
+		AND tr.date_start <![CDATA[>=]]> #{page.parameter.startTime}
+		AND tr.date_start <![CDATA[<=]]> #{page.parameter.endTime}
+		) pp where (supplierCountMy > 0 or supplierCount=0)	GROUP BY pp.product_code
+	</select>
+
+	<select id="selectResProductInfoListToWX" resultMap="BaseResultMap"
+			parameterType="com.yimayhd.erpcenter.dal.product.po.TrafficResProduct">
+		SELECT trp.id,trp.res_id,tr.date_start,trp.num_stock,trp.num_sold,sale.unconfirm,sale.confirm,tr.num_balance
+		FROM traffic_res_product AS trp
+		LEFT JOIN traffic_res AS tr ON(trp.res_id=tr.id)
+		LEFT JOIN (SELECT res_product_id
+		,ifnull(sum(CASE WHEN adjust_action='ORDER_SOLD' AND adjust_state=0 THEN adjust_num ELSE 0 END ),0) unconfirm
+		,ifnull(sum(CASE WHEN adjust_action='ORDER_SOLD' AND adjust_state=1 THEN adjust_num ELSE 0 END),0) confirm
+		FROM traffic_res_stocklog WHERE order_id > 0 GROUP BY res_product_id
+		) AS sale ON sale.res_product_id=trp.id
+		WHERE tr.state = 1 AND trp.product_code > 0 AND tr.date_latest >= now() AND tr.biz_id = #{bizId,jdbcType=INTEGER}
+		AND tr.date_start <![CDATA[>=]]> #{startTime} AND tr.date_start <![CDATA[<=]]> #{endTime}
+		AND trp.product_code = #{productCode}
+		ORDER BY date_start
+	</select>
+
+	<select id="selectResProductInfoToWX" resultMap="BaseResultMap"
+			parameterType="com.yimayhd.erpcenter.dal.product.po.TrafficResProduct">
+		SELECT trp.id,trp.product_code,trp.product_name,tr.date_start,lineInfo,adult_suggest_price,adult_cost_price,adult_suggest_price,
+		adult_same_pay,adult_proxy_pay,child_cost_price,child_suggest_price,child_same_pay,child_proxy_pay
+		,baby_cost_price,baby_suggest_price,baby_same_pay,bady_proxy_pay,date_latest,trp.num_stock,tr.num_balance,
+		trp.num_sold
+		FROM traffic_res_product AS trp
+		LEFT JOIN traffic_res AS tr ON(trp.res_id=tr.id)
+		LEFT JOIN (SELECT res_id,
+		GROUP_CONCAT(CONCAT_WS(' ',line_date,class_no,CONCAT(departure_city,'-',arrival_city),
+		CONCAT(departure_time,'-',arrival_time)) separator '<![CDATA[<br/>]]>') AS lineInfo
+		FROM traffic_res_line GROUP BY res_id) b ON(b.res_id=tr.id) WHERE trp.id=#{trpId}
+		AND tr.id=#{resId}
+	</select>
+
+	<select id="selectProductInfoListByTimeToWX" resultMap="BaseResultMap">
+		SELECT id,product_name,product_code,res_id,date_start,num_stock,num_sold,
+		unconfirm,confirm,num_balance
+		FROM
+		(SELECT trp.id,trp.product_name,trp.product_code,trp.res_id,tr.date_start,trp.num_stock,trp.num_sold,
+		sale.unconfirm,sale.confirm,tr.num_balance
+		,ifnull((SELECT count(*) FROM product_group_supplier aa WHERE aa.group_id=trp.res_id
+		AND aa.product_id=trp.product_code),0) AS supplierCount
+		,ifnull((SELECT count(*) FROM product_group_supplier aa WHERE aa.group_id=trp.res_id
+		AND aa.product_id=trp.product_code AND aa.supplier_id=#{supplierId}),0) AS supplierCountMy
+		FROM traffic_res_product AS trp
+		LEFT JOIN traffic_res AS tr ON(trp.res_id=tr.id)
+		LEFT JOIN
+		(SELECT res_product_id
+		,ifnull(sum(CASE WHEN adjust_action='ORDER_SOLD' AND adjust_state=0 THEN adjust_num ELSE 0 END ),0) unconfirm
+		,ifnull(sum(CASE WHEN adjust_action='ORDER_SOLD' AND adjust_state=1 THEN adjust_num ELSE 0 END),0) confirm
+		FROM traffic_res_stocklog WHERE order_id > 0 GROUP BY res_product_id) AS sale ON sale.res_product_id=trp.id
+		WHERE tr.state = 1 AND trp.product_code > 0 AND tr.biz_id=#{bizId}
+		AND tr.date_start=#{dateTime} AND tr.id=#{trId}) pp
+		WHERE (supplierCountMy > 0 OR supplierCount=0)
+
 	</select>
 </mapper>

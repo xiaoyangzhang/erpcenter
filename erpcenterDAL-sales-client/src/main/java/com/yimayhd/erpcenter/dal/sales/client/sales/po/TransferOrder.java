@@ -45,6 +45,9 @@ public class TransferOrder implements Serializable {
 	private Date timeUpdate;
 	private String fromAppKey;
 	private String toAppKey;
+	private String receiveMode;
+
+
 
 	public int getId() {
 		return id;
@@ -341,5 +344,12 @@ public class TransferOrder implements Serializable {
 	public void setToAppKey(String toAppKey) {
 		this.toAppKey = toAppKey;
 	}
+	
+	public String getReceiveMode() {
+        return receiveMode;
+    }
 
+    public void setReceiveMode(String receiveMode) {
+        this.receiveMode = receiveMode;
+    }
 }

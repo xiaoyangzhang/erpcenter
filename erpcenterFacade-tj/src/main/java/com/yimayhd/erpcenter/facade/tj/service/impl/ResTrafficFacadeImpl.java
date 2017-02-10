@@ -373,11 +373,8 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		List<TrafficResProduct> list=pageBean.getResult();
 		if(pageBean.getResult()!=null && pageBean.getResult().size()>0){
 			 for(TrafficResProduct trp : list){
-				 if(trp.getNumStock()==0){     // 库存
-					 trp.setNumStock(trp.getNumBalance());
-					}else{
-						trp.setNumStock(trp.getNumStock()-trp.getNumSold());
-						}
+
+				 trp.setNumStock(trp.getNumStock()-trp.getNumSold());
 				 trp.setAdultSame(trp.getAdultSuggestPrice().subtract(trp.getAdultSamePay()));
 				 trp.setAdultProxy((trp.getAdultSuggestPrice().subtract(trp.getAdultSamePay())).subtract(trp.getAdultProxyPay()));
 				 trp.setChildSame(trp.getChildSuggestPrice().subtract(trp.getChildSamePay()));

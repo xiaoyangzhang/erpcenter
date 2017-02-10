@@ -8,6 +8,8 @@ public interface PlatAuthBiz{
 
     public List<PlatAuth> findByBizIdAndOrgNotZero(Integer bizId);
 	
+    public List<PlatAuth> findByBizIdAndSupplierNotZero(Integer bizId);
+    
 	public PlatAuth findByBizIdAndOrgIdOrSupplierId(Integer bizId, Integer orgId, 
 			Integer supplierId);
 

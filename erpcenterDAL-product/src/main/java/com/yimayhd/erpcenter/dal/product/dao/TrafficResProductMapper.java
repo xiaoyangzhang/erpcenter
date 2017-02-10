@@ -1,11 +1,12 @@
 package com.yimayhd.erpcenter.dal.product.dao;
 
-import com.yihg.mybatis.utility.PageBean;
-import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
 import java.util.Set;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.product.po.TrafficResProduct;
 
 public interface TrafficResProductMapper {
     /**
@@ -92,4 +93,19 @@ public interface TrafficResProductMapper {
     int updateResProductNumStock(@Param("id") Integer id, @Param("numStock") Integer numStock);
 
     TrafficResProduct selectSumCostByProductCode(@Param("productCode") Integer  productCode,@Param("resId") Integer  resId);
+
+    List<TrafficResProduct> selectResProductToWXListPage(@Param("page") PageBean pageBean);
+
+    List<TrafficResProduct> selectResProductInfoListToWX(@Param("bizId") Integer bizId,
+                                                         @Param("startTime") String startTime,
+                                                         @Param("endTime") String endTime,
+                                                         @Param("productCode") Integer productCode);
+
+    TrafficResProduct selectResProductInfoToWX(@Param("trpId") Integer trpId, @Param("resId") Integer resId);
+
+    List<TrafficResProduct> selectProductInfoListByTimeToWX(@Param("bizId") Integer bizId,
+                                                            @Param("dateTime") String dateTime,
+                                                            @Param("trId") Integer trId,
+                                                            @Param("supplierId") Integer supplierId);
+
 }

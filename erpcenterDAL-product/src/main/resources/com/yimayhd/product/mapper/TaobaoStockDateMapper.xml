@@ -8,9 +8,10 @@
     <result column="stock_count" jdbcType="INTEGER" property="stockCount" />
     <result column="sale_count" jdbcType="INTEGER" property="saleCount" />
     <result column="state" jdbcType="TINYINT" property="state" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, stock_id, stock_date, stock_count, sale_count, state
+    id, stock_id, stock_date, stock_count, sale_count, state,remark
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -70,6 +71,9 @@
       <if test="state != null">
         state,
       </if>
+      <if test="remark != null">
+        remark,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="stockId != null">
@@ -86,6 +90,9 @@
       </if>
       <if test="state != null">
         #{state,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -107,6 +114,9 @@
       <if test="state != null">
         state = #{state,jdbcType=TINYINT},
       </if>
+      <if test="remark != null">
+        state = #{remark,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -117,14 +127,26 @@
       stock_count = #{stockCount,jdbcType=INTEGER},
       sale_count = #{saleCount,jdbcType=INTEGER},
       state = #{state,jdbcType=TINYINT}
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
   </update>
   
       <select id="selectTaobaoStocksByNumIidAndStockDate" resultMap="BaseResultMap">
 			 SELECT tsd.* FROM taobao_stock_date tsd
 			JOIN taobao_stock_product tsp on(tsp.stock_id=tsd.stock_id)
-			JOIN taobao_product tp on(tp.id=tsp.product_id)
-			WHERE tp.num_iid=#{numIid,jdbcType=VARCHAR}
+			JOIN taobao_product_skus tps on(tps.id=tsp.product_skus_id)
+			WHERE tps.pid_name=#{sku,jdbcType=VARCHAR}
 			AND tsd.stock_date=#{stockDate,jdbcType=DATE}
+			and tps.num_iid=#{numIid,jdbcType=VARCHAR}
     </select>
+    
+     <update id="updateRemark" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate">
+    update taobao_stock_date
+    <set>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

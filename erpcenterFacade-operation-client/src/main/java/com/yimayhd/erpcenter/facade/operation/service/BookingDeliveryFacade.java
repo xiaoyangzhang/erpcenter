@@ -89,7 +89,7 @@ public interface BookingDeliveryFacade {
 	 * @param bizId
 	 * @return
 	 */
-	WebResult<PageBean> pushListTable(PageBean pageBean ,Integer bizId);
+	WebResult<PageBean> pushListTable(PageBean pageBean ,Integer bizId, Set<Integer> set);
 
 	/**
 	 * @author liyong

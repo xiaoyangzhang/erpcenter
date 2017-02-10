@@ -78,7 +78,7 @@ public class GroupOrder implements Serializable {
     private Integer reqType;
 
     private Integer dateType;
-
+private String dateEnd;
     private Integer showNum;
     @LogFieldAnno(description = "客户订单号")
     private String supplierCode;
@@ -191,7 +191,42 @@ public class GroupOrder implements Serializable {
     private BigDecimal sumProfit;
     
     private Integer byType;
-   
+    private BigDecimal totalQdtotal; //其他收入
+    private String date_end;
+    private String dateLatest;
+
+    public BigDecimal getTotalQdtotal() {
+        return totalQdtotal;
+    }
+
+    public void setTotalQdtotal(BigDecimal totalQdtotal) {
+        this.totalQdtotal = totalQdtotal;
+    }
+
+    public String getDate_end() {
+        return date_end;
+    }
+
+    public void setDate_end(String date_end) {
+        this.date_end = date_end;
+    }
+
+    public String getDateLatest() {
+        return dateLatest;
+    }
+
+    public void setDateLatest(String dateLatest) {
+        this.dateLatest = dateLatest;
+    }
+
+    public String getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEnd(String dateEnd) {
+        this.dateEnd = dateEnd;
+    }
+
     public BigDecimal getTotalCost() {
 		return totalCost;
 	}

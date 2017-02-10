@@ -59,7 +59,15 @@ public class TourGroupVO implements Serializable {
 	protected String sord;  //排序方式： desc、asc
 	
 	private Integer pushStatus;
+	private Integer stateLockType;
 	
+	
+	public Integer getStateLockType() {
+		return stateLockType;
+	}
+	public void setStateLockType(Integer stateLockType) {
+		this.stateLockType = stateLockType;
+	}
 	public Integer getRows() {
 		return rows;
 	}

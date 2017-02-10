@@ -20,10 +20,13 @@ import com.yimayhd.erpcenter.biz.product.service.TaoBaoStockBiz;
 import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.dal.product.constans.Constants;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoProduct;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoProductSkus;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStock;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct;
+import com.yimayhd.erpcenter.dal.product.vo.TaobaoProductVo;
+import com.yimayhd.erpcenter.dal.sales.client.taobao.pojo.TaobaoSKU;
 import com.yimayhd.erpcenter.facade.tj.client.service.TaobaoProductFacade;
 
 public class TaobaoProductFacadeImpl implements TaobaoProductFacade {
@@ -75,6 +78,7 @@ public class TaobaoProductFacadeImpl implements TaobaoProductFacade {
 					taobaoStockLog.setStockDateId(dateId);
 				} else {
 					taobaoStockLog.setStockDateId(item.getId());
+					productStockBiz.updateRemark(item);
 				}
 				productStockBiz.insertTaobaoStockLogSelective(taobaoStockLog);
 				productStockBiz.updateByLog(item.getId()); // 计算库存
@@ -129,7 +133,7 @@ public class TaobaoProductFacadeImpl implements TaobaoProductFacade {
 				taoBaoStockBiz.findStockProductStockId(stockId);
 		Set<Integer> proIdSets = new HashSet<Integer>();
 		for(TaobaoStockProduct spBean: stockProList){
-			proIdSets.add(spBean.getProductId());
+			proIdSets.add(spBean.getProductSkusId());
 		}
 		//根据taobao_stock_product中的product_id获取产品名称
 		List<TaobaoProduct> proInfoList = null;
@@ -140,7 +144,7 @@ public class TaobaoProductFacadeImpl implements TaobaoProductFacade {
 	}
 
 	@Override
-	public PageBean<TaobaoProduct> findTaoBaoProduct(Map<String, Object> psBean, Integer pageSize, Integer page)
+	public PageBean<TaobaoProduct> findTaoBaoProduct(Map<String, Object> psBean, Integer pageSize, Integer page,Integer bizId)
 			throws ParseException {
 		PageBean<TaobaoProduct> pageBean = new PageBean<TaobaoProduct>();
 
@@ -157,7 +161,7 @@ public class TaobaoProductFacadeImpl implements TaobaoProductFacade {
 		pageBean.setPage(page);
 		pageBean.setParameter(psBean);
 
-		pageBean = taoBaoStockBiz.findTaoBaoProductListPage(pageBean);
+		pageBean = taoBaoStockBiz.selectTPBytpdIdListPage(pageBean, bizId);
 		return pageBean;
 	}
 
@@ -184,12 +188,12 @@ public class TaobaoProductFacadeImpl implements TaobaoProductFacade {
 	}
 
 	@Override
-	public Map<String,Object> saveStockProBinding(String productId, Integer stockId, ModelMap model) {
+	public Map<String,Object> saveStockProBinding(String tpsId, Integer stockId, ModelMap model) {
 		Map<String,Object> map = new HashMap<String,Object>();
-		String[] arrProId= productId.split(",");
+		String[] arrProId= tpsId.split(",");
 		for(int i=0;i<arrProId.length;i++){
 			TaobaoStockProduct tbspBean = new TaobaoStockProduct();
-			tbspBean.setProductId(Integer.valueOf(arrProId[i]));
+			tbspBean.setProductSkusId(Integer.valueOf(arrProId[i]));
 			tbspBean.setStockId(stockId);
 			//插入淘宝库存产品关联信息
 			TaobaoStockProduct taobaoStockProduct = taoBaoStockBiz.findStockProductInfo(tbspBean);
@@ -205,11 +209,11 @@ public class TaobaoProductFacadeImpl implements TaobaoProductFacade {
 	}
 
 	@Override
-	public boolean deleteTaoBaoStockProduct(String productId, Integer stockId, ModelMap model) {
-		String[] arrProId= productId.split(",");
+	public boolean deleteTaoBaoStockProduct(String tpsId, Integer stockId, ModelMap model) {
+		String[] arrProId= tpsId.split(",");
 		for(int i=0;i<arrProId.length;i++){
 			TaobaoStockProduct tbspBean = new TaobaoStockProduct();
-			tbspBean.setProductId(Integer.valueOf(arrProId[i]));
+			tbspBean.setProductSkusId(Integer.valueOf(arrProId[i]));
 			tbspBean.setStockId(stockId);
 			//删除淘宝库存产品关联信息
 			taoBaoStockBiz.deleteTaoBaoStockProduct(tbspBean);
@@ -250,5 +254,56 @@ public class TaobaoProductFacadeImpl implements TaobaoProductFacade {
 			map.put("success", num);
 		}
 		return map;
+	}
+
+	@Override
+	public void syncProductSku(String[] ary,TaobaoSKU ss,String productId) {
+	       for(String item:ary){
+	    	   String[] skus = item.split("\\:");
+	    		   TaobaoProductSkus tps=new TaobaoProductSkus();
+	    		   tps.setPid(skus[0]);
+	    		   tps.setVid(skus[1]);
+	    		   tps.setPidName(skus[2]);
+	    		   tps.setNumIid(ss.getNum_iid());
+	    		   tps.setTaobaoProductId(productId);
+	    		   TaobaoProductSkus oldSkus=taoBaoStockBiz.selectByVid(tps.getVid(),tps.getNumIid());
+	    		   if(oldSkus ==null){
+	    			   taoBaoStockBiz.insertTaobaoProductSkus(tps);
+	    		   }else{
+	    			   tps.setId(oldSkus.getId());
+	    			   taoBaoStockBiz.updateTaobaoProductSkus(tps);
+	    		   }
+	       }
+		
+	}
+
+	@Override
+	public Map<String,Object> addTaobaoSku(Integer skuId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		TaobaoProductSkus tps=taoBaoStockBiz.selectSkusById(skuId);
+    	if(tps.getTaobaoProductId() != null){
+    		TaobaoProduct tp=taoBaoStockBiz.findByPrimaryKey(Integer.parseInt(tps.getTaobaoProductId()));
+    		map.put("tp", tp);
+    	}
+    	map.put("tps", tps);
+		return map;
+	}
+
+	@Override
+	public Integer saveTaobaoSku(TaobaoProductVo vo, TaobaoProduct tp,
+			TaobaoProductSkus tps, Integer skuId) {
+		if(vo.getTaobaoProductId() != null && vo.getSkusId() != null){
+    		tp.setId(vo.getTaobaoProductId());
+    		tps.setId(vo.getSkusId());
+    		taoBaoStockBiz.updateTaobaoProduct(tp);
+    		taoBaoStockBiz.updateTaobaoProductSkus(tps);
+    		skuId=vo.getSkusId();
+    	}else{
+	    	tp.setNumIid("0");
+	    	Integer taobaoProId=taoBaoStockBiz.insertTaobaoProduct(tp);
+	    	tps.setTaobaoProductId(taobaoProId.toString());
+	    	skuId=taoBaoStockBiz.insertTaobaoProductSkus(tps);
+    	}
+		return skuId;
 	}
 }

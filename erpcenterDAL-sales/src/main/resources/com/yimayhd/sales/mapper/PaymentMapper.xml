@@ -510,8 +510,8 @@
 			</if>
 		</if>
 		<if test="parameter.groupMode!=null">
-			<if test="parameter.groupMode == 1">AND order_type <![CDATA[=]]> 1</if>
-			<if test="parameter.groupMode ==0 ">AND order_type <![CDATA[<>]]>1</if>
+			<if test="parameter.groupMode == 0">AND order_type <![CDATA[<=]]> 0</if>
+			<if test="parameter.groupMode ==1 ">AND order_type <![CDATA[>]]>0</if>
 		</if>
 		GROUP BY o.supplier_id
 
@@ -557,13 +557,13 @@
 			</if>
 		</if>
 		<if test="parameter.groupMode!=null">
-			<if test="parameter.groupMode == 1">AND order_type <![CDATA[=]]> 1</if>
-			<if test="parameter.groupMode ==0 ">AND order_type <![CDATA[<>]]>1</if>
+			<if test="parameter.groupMode == 1">AND order_type <![CDATA[>]]> 0</if>
+			<if test="parameter.groupMode ==0 ">AND order_type <![CDATA[<=]]>1</if>
 		</if>
 
 		GROUP BY supplier_id
 		)as aa
-		WHERE 	 (preTotal > 0 OR orderCount >0)
+		WHERE 	 preTotal<![CDATA[<>]]>0 or total<![CDATA[<>]]>0
 		GROUP BY supplier_id
 		ORDER BY total-totalCash+preTotal DESC
 

@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.dal.product.service;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoProduct;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoProductSkus;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStock;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct;
@@ -52,8 +53,9 @@ public interface TaoBaoStockDal {
 	
 	int insertTbStockProduct(TaobaoStockProduct record);
 	
-	PageBean<TaobaoProduct> findTaoBaoProductListPage(PageBean<TaobaoProduct> pageBean);
+	PageBean<TaobaoProduct> findTaoBaoProductListPage(PageBean<TaobaoProduct> pageBean,Integer bizId);
 	
+	PageBean<TaobaoProduct> selectTPBytpdIdListPage(PageBean<TaobaoProduct> pageBean,Integer bizId);
 	 TaobaoProduct findByPrimaryKey(Integer id);
 	 
 	 int deleteTaoBaoStockProduct(TaobaoStockProduct taobaoStockProduct);
@@ -74,5 +76,15 @@ public interface TaoBaoStockDal {
 	TaobaoStockLog selectStockLogAllByOrderId(Integer orderId);
 
 	TaobaoStockLog selectStockLogAllByTaobaoOrderId(Integer taobaoOrderId);
+	
+	 TaobaoProductSkus selectByVid(String vid,String numIid);
+	 
+	 int updateTaobaoProductSkus(TaobaoProductSkus record);
+	 
+	 int insertTaobaoProductSkus(TaobaoProductSkus record);
+	 
+	 int updateTaobaoProduct(TaobaoProduct record);
+	 
+	 TaobaoProductSkus selectSkusById(Integer id);
 
 }

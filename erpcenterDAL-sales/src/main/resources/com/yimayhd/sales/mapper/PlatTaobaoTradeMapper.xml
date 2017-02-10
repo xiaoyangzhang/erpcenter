@@ -687,7 +687,7 @@ and o.refund_status!='SUCCESS'
 	</select>
 	
 	<select id="selectPresellTaobaoOrderListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BaseResultMap">
-	SELECT   o.tid,o.num,o.title,o.outer_iid, o.price,t.pay_time,t.is_brush_single,t.buyer_nick,IFNULL(t.payment, 0) payment,
+	SELECT   o.tid,o.num,o.title,o.outer_iid, o.price,t.pay_time,t.is_brush_single,t.buyer_nick,IFNULL(t.payment, 0) payment,t.trade_from,
 		          IFNULL(t.step_paid_fee, 0) step_paid_fee  
 		FROM plat_taobao_trade_order o
 		LEFT JOIN plat_taobao_trade t on (t.id=o.trade_id)
@@ -708,9 +708,11 @@ and o.refund_status!='SUCCESS'
 		<if test="page.parameter.buyerNick!= null and page.parameter.buyerNick!=''">
 			AND t.buyer_nick LIKE CONCAT('%','${page.parameter.buyerNick}','%')
 		</if>
-		<if test="page.parameter.isBrushSingle!= null and page.parameter.isBrushSingle!=''">
-			AND t.is_brush_single= #{page.parameter.isBrushSingle}
+			<if test="page.parameter.isBrushSingle == 0 ">
+			AND t.is_brush_single=0
 		</if>
+		<if test="page.parameter.isBrushSingle == 1">
+			AND t.is_brush_single=1
 		<if test="page.parameter.myStoreId!= null and page.parameter.myStoreId!=''">
 			AND t.my_store_id= #{page.parameter.myStoreId}
 		</if>

@@ -22,4 +22,6 @@ public interface SysBizConfigMapper {
     List<SysBizConfig> selectListByBizId(@Param("bizId")Integer bizId);
 
 	String cnm(@Param("bizId")Integer bizId, @Param("config")String config);
+	
+	SysBizConfig selectByBizIdAndCode(@Param("bizId")Integer bizId, @Param("itemCode")String itemCode);
 }

@@ -31,4 +31,6 @@ public interface TaobaoProductMapper {
     
     TaobaoProduct selectTaobaoProductBynumIidAndModified(@Param("numIid") String numIid);
     List<Map<String,Object>> findTaoBaoProductStockListPage(@Param("page") PageBean pageBean);
+    
+    List<TaobaoProduct> selectTPBytpdIdListPage(@Param("page")PageBean pageBean,@Param("bizId")Integer bizId);
 }

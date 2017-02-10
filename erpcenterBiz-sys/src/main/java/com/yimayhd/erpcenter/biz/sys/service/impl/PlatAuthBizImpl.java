@@ -24,4 +24,9 @@ public class PlatAuthBizImpl implements PlatAuthBiz {
 		return platAuthDal.findByBizIdAndOrgIdOrSupplierId(bizId, orgId, supplierId);
 	}
 
+	@Override
+	public List<PlatAuth> findByBizIdAndSupplierNotZero(Integer bizId) {
+		return platAuthDal.findByBizIdAndSupplierNotZero(bizId);
+	}
+
 }

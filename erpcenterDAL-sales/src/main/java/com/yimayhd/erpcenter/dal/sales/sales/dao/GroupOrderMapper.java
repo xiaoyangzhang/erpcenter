@@ -558,4 +558,16 @@ public interface GroupOrderMapper {
     GroupOrder selectSumTotalByResId(Integer resId);
 
     List<GroupOrder>selectGroupOrderGroupByPro(Integer resId);
+
+    Integer selectGroupOrderCountBySidAndDate(@Param("bizId") Integer bizId, @Param("supplierId") Integer supplierId,
+                                              @Param("departureDate") String departureDate);
+
+    List<GroupOrder> selectGroupOrderBysIdAndResState(@Param("bizId") Integer bizId, @Param("extResState") Integer extResState,
+                                                      @Param("supplierId") Integer supplierId);
+
+
+    List<Map<String, Object>> selectIncomePayAddTableListPage(
+            @Param("page") PageBean<GroupOrder> pageBean, @Param("bizId") Integer bizId);
+
+
 }
