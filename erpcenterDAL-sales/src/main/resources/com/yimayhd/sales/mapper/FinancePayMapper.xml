@@ -26,6 +26,10 @@
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="BIGINT" />
     <result column="detail_count" property="detailCount" jdbcType="INTEGER" />
+      <result column="sumCash" property="sumCash" jdbcType="DECIMAL" />
+      <result column="detailCash" property="detailCash" jdbcType="DECIMAL" />
+      <result column="sumDetailCash" property="sumDetailCash" jdbcType="DECIMAL" />
+      <result column="sumBalanceCash" property="sumBalanceCash" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, pay_date, pay_code, pay_direct, supplier_type, supplier_id,	supplier_name, pay_type, left_bank, 
@@ -440,7 +444,141 @@
       	<if test="supplierType != 1 and supplierType != 6 and supplierType != 16" >
          	and (p.supplier_type is null or p.supplier_type not in (1,6,16)) and type<![CDATA[!=]]>1
       	</if>		 		
-	</select>	
-	
+	</select>
+    <!-- 2017-02-06根据payId一次性更新业务表的total_cash -->
+    <update id="batchUpdate_TotalCash">
+        <if test="supplierType == 1" >
+            <!-- 汇总销售订单的收款 -->
+            update group_order s join
+            (select loc_order_id, sum(d.cash) as payCash from finance_pay_detail d join finance_pay p on (d.pay_id=p.id)
+            where p.pay_direct=1 and p.supplier_type=1 and d.cash is not null group by loc_order_id
+            ) p on s.id=p.loc_order_id
+            set s.total_cash=ifnull(p.payCash,0)
+            where s.id in (select loc_order_id from finance_pay_detail where pay_id=#{payId,jdbcType=INTEGER})
+        </if>
+        <if test="supplierType == 120" >
+            <!-- 汇总其它收入的付款 -->
+            update booking_supplier s join
+            (select loc_order_id, sum(d.cash) as payCash from finance_pay_detail d join finance_pay p on (d.pay_id=p.id)
+            where p.pay_direct=1 and (p.supplier_type is null or p.supplier_type not in (1,6)) and d.cash is not null group by loc_order_id
+            ) p on s.id=p.loc_order_id
+            set s.total_cash=ifnull(p.payCash,0)
+            where s.id in (select loc_order_id from finance_pay_detail where pay_id=#{payId,jdbcType=INTEGER})
+        </if>
+
+        <if test="supplierType != 1 and supplierType != 6 and supplierType != 16" >
+            <!-- 汇总供应商的付款 除了 [其它收入，地接，购物店] -->
+            update booking_supplier s join
+            (select loc_order_id, sum(d.cash) as payCash from finance_pay_detail d join finance_pay p on (d.pay_id=p.id)
+            where p.pay_direct=0 and (p.supplier_type is null or p.supplier_type not in (6,16)) and d.cash is not null group by loc_order_id
+            ) p on s.id=p.loc_order_id
+            set s.total_cash=ifnull(p.payCash,0)
+            where s.id in (select loc_order_id from finance_pay_detail where pay_id=#{payId,jdbcType=INTEGER})
+        </if>
+        <if test="supplierType == 16" >
+            <!-- 汇总地接社的付款 -->
+            update booking_delivery s join
+            (select loc_order_id, sum(d.cash) as payCash from finance_pay_detail d join finance_pay p on (d.pay_id=p.id)
+            where p.pay_direct=0 and p.supplier_type = 16 and d.cash is not null group by loc_order_id
+            ) p on s.id=p.loc_order_id
+            set s.total_cash=ifnull(p.payCash,0)
+            where s.id in (select loc_order_id from finance_pay_detail where pay_id=#{payId,jdbcType=INTEGER})
+        </if>
+    </update>
+    <!-- 查询收款记录 -->
+    <select id="findIncomePayRecordListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BaseResultMap">
+        select a.id,a.supplier_name,a.pay_date,a.pay_type,a.remark,a.cash,a.user_name,
+        b.detail_count as detailCount,b.loc_order_id,detailCash
+        from finance_pay a LEFT JOIN
+        (SELECT pay_id,loc_order_id,sum(IFNULL(cash,0)) detailCash, COUNT(*) detail_count FROM finance_pay_detail GROUP BY pay_id) b ON a.id = b.pay_id
+        where biz_id = #{bizId} and a.type = 0
+        <if test="page.parameter.set != null">
+            and a.user_id in
+            <foreach item="item" index="index" collection="page.parameter.set" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="page.parameter.payDirect != null">
+            and pay_direct = #{page.parameter.payDirect }
+        </if>
+        <if test="page.parameter.dateStart != null">
+            and pay_date <![CDATA[>=]]> #{page.parameter.dateStart }
+        </if>
+        <if test="page.parameter.dateEnd != null">
+            and pay_date <![CDATA[<=]]> #{page.parameter.dateEnd }
+        </if>
+        <if test="page.parameter.supplierName != '' and page.parameter.supplierName != null">
+            and supplier_name LIKE CONCAT('%',#{page.parameter.supplierName},'%')
+        </if>
+        <if test="page.parameter.payType != null">
+            and pay_type = #{page.parameter.payType}
+        </if>
+        <if test="page.parameter.userName != '' and page.parameter.userName != null">
+            and user_name = #{page.parameter.userName}
+        </if>
+        ORDER BY a.pay_date ASC
+    </select>
+
+    <!-- 查询收款记录总合计 -->
+    <select id="findIncomePayRecordTotal" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+        select SUM(IFNULL(a.cash,0)) as sumCash,SUM(IFNULL(b.sumDetailCash,0)) as sumDetailCash,
+        SUM(IFNULL(a.cash,0)-IFNULL(b.sumDetailCash,0)) as sumBalanceCash
+        from finance_pay a LEFT JOIN
+        (SELECT pay_id,sum(IFNULL(cash,0)) sumDetailCash, COUNT(*) detail_count FROM finance_pay_detail GROUP BY pay_id) b ON a.id = b.pay_id
+        where biz_id = #{bizId} and a.type = 0
+        <if test="page.parameter.set != null">
+            and a.user_id in
+            <foreach item="item" index="index" collection="page.parameter.set" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="page.parameter.payDirect != null">
+            and pay_direct = #{page.parameter.payDirect }
+        </if>
+        <if test="page.parameter.dateStart != null">
+            and pay_date <![CDATA[>=]]> #{page.parameter.dateStart }
+        </if>
+        <if test="page.parameter.dateEnd != null">
+            and pay_date <![CDATA[<=]]> #{page.parameter.dateEnd }
+        </if>
+        <if test="page.parameter.supplierName != '' and page.parameter.supplierName != null">
+            and supplier_name LIKE CONCAT('%',#{page.parameter.supplierName},'%')
+        </if>
+        <if test="page.parameter.payType != null">
+            and pay_type = #{page.parameter.payType}
+        </if>
+        <if test="page.parameter.userName != '' and page.parameter.userName != null">
+            and user_name = #{page.parameter.userName}
+        </if>
+    </select>
+
+    <!-- 添加订单信息到收款 -->
+    <select id="findOrderToIncomePayList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select a.id,
+        <if test="payId!=null"> c.cash, </if>
+        <if test="supType==6">
+            (IFNULL(a.total_repay, 0) + IFNULL(a.person_repay_total, 0)) total,
+            (IFNULL(a.total_repay, 0) + IFNULL(a.person_repay_total, 0) - IFNULL(a.total_cash, 0)) balance,
+        </if>
+        <if test="supType!=6"> a.total,(IFNULL(a.total, 0) - IFNULL(a.total_cash, 0)) balance, </if>
+        <if test="supType==1"> a.receive_mode, a.order_no </if>
+        <if test="supType!=1"> a.booking_no </if>
+        order_no,
+        a.total_cash,
+        a.audit_user,
+        ifNull(b.id,0) group_id,
+        b.group_code,
+        b.product_name,
+        b.product_brand_name,
+        b.group_mode,
+        b.operator_name
+        from
+        <if test="supType==1"> group_order </if>
+        <if test="supType==6"> booking_shop </if>
+        <if test="supType==12"> booking_supplier </if>
+        a left join tour_group b on a.group_id = b.id
+        where a.id in(#{ids})
+        order by date_start ,b.create_time
+    </select>
 	
 </mapper>

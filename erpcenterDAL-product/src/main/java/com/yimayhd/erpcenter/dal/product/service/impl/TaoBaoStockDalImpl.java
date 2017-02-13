@@ -10,10 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public class TaoBaoStockDalImpl implements TaoBaoStockDal{
@@ -38,10 +35,12 @@ public class TaoBaoStockDalImpl implements TaoBaoStockDal{
 	
 	  @Transactional
 	    @Override
-	    public void updateProductStockByTaobao(List<Map<String, String>> mapList) {
+	    public List<Map<String, String>> updateProductStockByTaobao(List<Map<String, String>> mapList) {
+		  List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		  for (Map<String, String> map : mapList) {
 	            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	            Date date;
+			  int count=0;
 	            try {
 	                if (StringUtils.isNotBlank(map.get("depDate"))) {
 	                    date = sdf.parse(map.get("depDate"));
@@ -60,20 +59,31 @@ public class TaoBaoStockDalImpl implements TaoBaoStockDal{
 	                    	taobaoStockLog.setOrderId(0);
 	                    	taobaoStockLogMapper.insertSelective(taobaoStockLog);
 	                    	taobaoStockDateMapper.updateByLog(taobaoStockDate.getId());  // 计算已售
+								// 如果库存小于0
+								count =taobaoStockDate.getStockCount() - taobaoStockDate.getSaleCount()
+										- Integer.parseInt(map.get("receiveCount"));
 	                        }else{
 	                        	if(tsl.getNum()!=Integer.parseInt(map.get("receiveCount"))){
 	                        		tsl.setNum(Integer.parseInt(map.get("receiveCount")));
 	                        		tsl.setCreateUser(map.get("createUser"));
 	                        		taobaoStockLogMapper.updateByPrimaryKeySelective(tsl);
 	                        		taobaoStockDateMapper.updateByLog(taobaoStockDate.getId());  // 计算已售
-	                        	}
+									if(tsl.getNum()<Integer.parseInt(map.get("receiveCount"))){
+										count =taobaoStockDate.getStockCount() - taobaoStockDate.getSaleCount()
+												- Integer.parseInt(map.get("receiveCount")+tsl.getNum());
+									}
 	                        }
 	                    }
 	                }
+						if(count < 0){
+							list.add(map);
+						}
+					}
 	            } catch (ParseException e) {
 	                e.printStackTrace();
 	            }
 	        }
+		  return list;
 	    }
 	  
 	  
@@ -255,5 +265,14 @@ public class TaoBaoStockDalImpl implements TaoBaoStockDal{
 		TaobaoProductSkus sku=	taobaoProductSkusMapper.selectByPrimaryKey(id);
 		return sku;
 	}
+	@Override
+	public void updateState(Integer id,Integer state){
+		taobaoStockMapper.updateState(id, state);
+	}
 
+	@Override
+	public List<TaobaoStockProduct> findStockProductStockIdHavePSI(Integer stockId) {
+		List<TaobaoStockProduct> tbspList = taobaoStockProductMapper.findStockProductStockIdHavePSI(stockId);
+		return tbspList;
+	}
 }

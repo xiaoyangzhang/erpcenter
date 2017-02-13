@@ -140,6 +140,13 @@ public class FinanceDalImpl implements FinanceDal {
 		
 		// 佣金统计
 		List<FinanceCommission> commls = financeCommissionMapper.selectByGroupId(groupId);
+		BigDecimal totalCommls=new BigDecimal(0);
+		if(commls !=null && commls.size()>0){
+			for(FinanceCommission item:commls){
+				totalCommls =totalCommls.add(item.getTotal());
+			}
+		}
+		group.put("total_commls", totalCommls);
 		InfoBean comm = new InfoBean();
 		comm.setCount(commls.size());
 		view.put("comm", comm);
@@ -791,7 +798,13 @@ public class FinanceDalImpl implements FinanceDal {
 						payDetailMapper.insert(d);
 					}
 				}
-	
+			}
+		}
+
+		payMapper.batchUpdate_TotalCash(pay.getId(), supplierType);
+
+		if(details != null && details.size() > 0){
+			for (FinancePayDetail d : details) {
 				// 维护组团社已付金额
 				if (Constants.TRAVELAGENCY.equals(supplierType)) {
 					// 收款标识组团社
@@ -800,18 +813,18 @@ public class FinanceDalImpl implements FinanceDal {
 //						throw new ClientException("单号为["+order.getOrderNo()+"]的订单没有审核");
 //					}
 	
-					GroupOrder modify = new GroupOrder();
+					/*GroupOrder modify = new GroupOrder();
 					modify.setId(order.getId());
 					originalCash = calcTotalCashValue(order.getId(), Constants.TRAVELAGENCY);
 					modify.setTotalCash(originalCash);
-					orderMapper.updateByPrimaryKeySelective(modify);
+					orderMapper.updateByPrimaryKeySelective(modify);*/
 					// 维护整团收支信息
 					calcTourGroupAmount(order.getGroupId());
 				}
 				// 维护地接社已付金额
 				else if(Constants.LOCALTRAVEL.equals(supplierType)){
 					BookingDelivery del = deliveryMapper.selectByPrimaryKey(d.getLocOrderId());
-					if(del.getStateFinance() != 1){
+					/*if(del.getStateFinance() != 1){
 						throw new ClientException("单号为["+del.getSupplierOrderNo()+"]的订单没有审核");
 					}
 					
@@ -819,7 +832,7 @@ public class FinanceDalImpl implements FinanceDal {
 					modify.setId(del.getId());
 					originalCash = calcTotalCashValue(del.getId(), Constants.LOCALTRAVEL);
 					modify.setTotalCash(originalCash);
-					deliveryMapper.updateByPrimaryKeySelective(modify);
+					deliveryMapper.updateByPrimaryKeySelective(modify);*/
 					// 维护整团收支信息
 					calcTourGroupAmount(del.getGroupId());
 				}
@@ -827,7 +840,7 @@ public class FinanceDalImpl implements FinanceDal {
 				// 购物应收统计
 				else if(Constants.SHOPPING.equals(supplierType)) {
 					BookingShop shop = shopMapper.selectByPrimaryKey(d.getLocOrderId());
-					if(shop.getStateFinance() != 1){
+					/*if(shop.getStateFinance() != 1){
 						throw new ClientException("单号为["+shop.getBookingNo()+"]的订单没有审核");
 					}
 					
@@ -840,7 +853,7 @@ public class FinanceDalImpl implements FinanceDal {
 						totalCash = totalCash.add(d.getCash());
 						modify.setTotalCash(totalCash);
 					}
-					shopMapper.updateByPrimaryKeySelective(modify);
+					shopMapper.updateByPrimaryKeySelective(modify);*/
 					
 					// 维护整团收支信息
 					calcTourGroupAmount(shop.getGroupId());
@@ -848,14 +861,14 @@ public class FinanceDalImpl implements FinanceDal {
 				// 维护供应商已付金额
 				else {
 					BookingSupplier sup = supplierMapper.selectByPrimaryKey(d.getLocOrderId());
-					if(sup.getStateFinance() != 1){
+					/*if(sup.getStateFinance() != 1){
 						throw new ClientException("单号为["+sup.getBookingNo()+"]的订单没有审核");
 					}
 					BookingSupplier modify = new BookingSupplier();
 					modify.setId(sup.getId());
 					originalCash = calcTotalCashValue(sup.getId(), sup.getSupplierType());
 					modify.setTotalCash(originalCash);
-					supplierMapper.updateByPrimaryKeySelective(modify);
+					supplierMapper.updateByPrimaryKeySelective(modify);*/
 					// 维护整团收支信息
 					calcTourGroupAmount(sup.getGroupId());
 				}

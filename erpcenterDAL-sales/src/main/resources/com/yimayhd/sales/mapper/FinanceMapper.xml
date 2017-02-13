@@ -451,7 +451,7 @@
 		inner join finance_pay_detail c on (a.id = c.loc_order_id) join finance_pay p on (c.pay_id=p.id)
 		where c.pay_id=#{payId} and p.supplier_id=a.supplier_id
 		<if test="oids != null"> and a.id in (${oids}) </if>
-		order by date_start ,b.create_time 
+		order by b.date_start ,b.create_time
 	</select>
 	<!-- 付款记录详情查看 -->
 	<select id="selectPayViewList" parameterType="java.util.HashMap" resultType="java.util.HashMap">

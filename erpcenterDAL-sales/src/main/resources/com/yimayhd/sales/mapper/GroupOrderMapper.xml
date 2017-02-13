@@ -1433,6 +1433,16 @@
 												gop1.`order_id`
 											FROM group_order_price gop1
 										) gop2 GROUP BY gop2.order_id
+		<if test='page.parameter.budgetFlag !=null and page.parameter.budgetFlag == "0" '>
+			<![CDATA[
+					        			 HAVING budget = 0
+					        		]]>
+		</if>
+		<if test='page.parameter.budgetFlag !=null and page.parameter.budgetFlag == "1" '>
+			<![CDATA[
+					        			 HAVING budget <> 0
+					        		]]>
+		</if>
 								) gop ON go.`id`=gop.`order_id`
 		LEFT JOIN tour_group tg ON go.group_id = tg.id
 		left join (select sup.order_id,sum(sup.total) qdtotal from booking_supplier sup
@@ -1596,7 +1606,18 @@
 		left join (select sup.order_id,sum(sup.total) qdtotal from booking_supplier sup
 		where sup.supplier_type=120 GROUP BY sup.order_id) c on c.order_id=go.id
 		left join (select
-		order_id,sum(total_price) total_price from group_order_price where mode=1 group by order_id) bd on (go.id=bd.order_id)
+		order_id,sum(total_price) total_price from group_order_price where mode=1 group by order_id
+		<if test='page.parameter.budgetFlag !=null and page.parameter.budgetFlag == "0" '>
+			<![CDATA[
+        			 HAVING total_price = 0
+        		]]>
+		</if>
+		<if test='page.parameter.budgetFlag !=null and page.parameter.budgetFlag == "1" '>
+			<![CDATA[
+        			 HAVING total_price <> 0
+        		]]>
+		</if>
+		) bd on (go.id=bd.order_id)
 		WHERE
 		go.state != -1
 		AND
@@ -1656,6 +1677,16 @@
 				<![CDATA[  and go.departure_date =date_format(#{page.parameter.tourGroup.endTime},'%Y-%m-%d')]]>
 			</when>
 		</choose>
+		<if test='page.parameter.budgetFlag !=null and page.parameter.budgetFlag == "0" '>
+			<![CDATA[
+        			 and ifnull(bd.total_price, 0) = 0
+        		]]>
+		</if>
+		<if test='page.parameter.budgetFlag !=null and page.parameter.budgetFlag == "1" '>
+			<![CDATA[
+        			 and ifnull(bd.total_price, 0)  <> 0
+        		]]>
+		</if>
 		ORDER BY go.departure_date,go.create_time
 	</select>
 	
@@ -3348,7 +3379,7 @@
 			<if test="departureDate != null">
 				departure_date = #{departureDate,jdbcType=DATE},
 			</if>
-			<if test="dateEnd != null">
+			<if test="dateEnd != null and dateEnd !=''">
 				date_end = #{dateEnd,jdbcType=DATE},
 			</if>
 			<if test="productId != null">
@@ -4450,7 +4481,7 @@
 		select a.*,ifNull(b.group_state,0) as groupState,b.group_mode ,b.group_state,b.group_code
 		from group_order a left join tour_group b on a.group_id=b.id 
 		where a.state!=-1 and a.biz_id=${bizId}
-		and a.aiyou_group_id=-1
+
 		<if test="userRightType==1"> 
 			and a.sale_operator_id in
 		</if>
@@ -4564,6 +4595,9 @@
 		<if test="page.parameter.orderNo!=null and page.parameter.orderNo!=''">
 			and a.order_mode<![CDATA[<>]]>0 and a.order_mode in (${page.parameter.orderNo})
 		</if>
+		<if test="page.parameter.type != null">
+			and a.type =#{page.parameter.type}
+		</if>
 		<choose>
 			<when test="page.parameter.sidx != null and page.parameter.sidx !=''">
 				order by ${page.parameter.sidx} ${page.parameter.sord}
@@ -4584,7 +4618,7 @@
 		select gg.`name`, a.*,ifNull(b.group_state,0) as groupState,b.group_mode ,b.group_state,b.group_code
 		from group_order a left join tour_group b on a.group_id=b.id left join group_order_guest gg on a.id=gg.order_id
 		where a.state!=-1 and a.biz_id=${bizId}
-		and a.aiyou_group_id=-1
+
 		<if test="userRightType==1"> 
 			and a.sale_operator_id in
 		</if>
@@ -4704,6 +4738,9 @@
 		<if test="page.parameter.orderNo!=null and page.parameter.orderNo!=''">
 			and a.order_mode<![CDATA[<>]]>0 and a.order_mode in (${page.parameter.orderNo})
 		</if>
+		<if test="page.parameter.type != null">
+			and a.type =#{page.parameter.type}
+		</if>
 		ORDER BY a.create_time desc,a.departure_date desc
 	</select>
 
@@ -4813,7 +4850,7 @@
 		numGuide, IFNULL(sum(a.total),0) as total from group_order a left join
 		tour_group b on a.group_id=b.id where
 		a.state!=-1 and a.biz_id=${bizId}
-		and a.aiyou_group_id=-1
+
 		and a.sale_operator_id
 		in
 		<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
@@ -4918,6 +4955,9 @@
 		<if test="groupOrder.orderNo!=null and groupOrder.orderNo!=''">
 			and a.order_mode<![CDATA[<>]]>0 and a.order_mode in (${groupOrder.orderNo})
 		</if>
+	<if test="groupOrder.type!=null">
+		and a.type =#{groupOrder.type}
+	</if>
 		ORDER BY a.departure_date,a.create_time
 	</select>
 	
@@ -4927,7 +4967,7 @@
 		numGuide, IFNULL(sum(a.total),0) as total from group_order a left join
 		tour_group b on a.group_id=b.id left join group_order_guest gg on a.id=gg.order_id
 		where a.state!=-1 and a.biz_id=${bizId}
-		and a.aiyou_group_id=-1
+
 		and a.sale_operator_id
 		in
 		<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
@@ -5037,6 +5077,9 @@
 		</if>
 		<if test="groupOrder.orderNo!=null and groupOrder.orderNo!=''">
 			and a.order_mode<![CDATA[<>]]>0 and a.order_mode in (${groupOrder.orderNo})
+		</if>
+		<if test="groupOrder.type!=null">
+			and a.type =#{groupOrder.type}
 		</if>
 		ORDER BY a.departure_date,a.create_time
 	</select>

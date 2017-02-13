@@ -31,7 +31,7 @@
 		</dependency>
 	</dependencies>
 
-	<build>
+	<!--<build>
 		<finalName>erpcenterBiz-product-client</finalName>
 		<plugins>
 			<plugin>
@@ -58,5 +58,5 @@
 				</executions>
 			</plugin>
 		</plugins>
-	</build>
+	</build>-->
 </project>

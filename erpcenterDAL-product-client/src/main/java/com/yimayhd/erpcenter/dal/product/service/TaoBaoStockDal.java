@@ -17,8 +17,8 @@ import java.util.Set;
  * @Description: 淘宝库存信息接口
  */
 public interface TaoBaoStockDal {
-	
-	void updateProductStockByTaobao(List<Map<String, String>> mapList);
+
+	List<Map<String, String>> updateProductStockByTaobao(List<Map<String, String>> mapList);
 	/**
 	 * 查询淘宝库存信息
 	 * @param pageBean
@@ -86,5 +86,9 @@ public interface TaoBaoStockDal {
 	 int updateTaobaoProduct(TaobaoProduct record);
 	 
 	 TaobaoProductSkus selectSkusById(Integer id);
+
+	void updateState(Integer id,Integer state);
+
+	List<TaobaoStockProduct> findStockProductStockIdHavePSI(Integer stockId);
 
 }
