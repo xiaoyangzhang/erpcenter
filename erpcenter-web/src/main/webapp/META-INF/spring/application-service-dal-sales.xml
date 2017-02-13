@@ -62,5 +62,5 @@
 	
 	<!-- tj -->
 	<bean id="tJDal" class="com.yimayhd.erpcenter.dal.sales.tj.impl.TJDalImpl" />
-	
+
 </beans>
