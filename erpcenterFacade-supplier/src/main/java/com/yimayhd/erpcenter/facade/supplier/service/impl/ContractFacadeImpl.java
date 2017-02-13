@@ -423,4 +423,9 @@ public class ContractFacadeImpl implements ContractFacade{
 		result.setCashTypes(cashTypes);
 		return result;
 	}
+
+	@Override
+	public void delPriceExtRow(Integer priceExtId) {
+		supplierBiz.delPriceExtRow(priceExtId);
+	}
 }
