@@ -1682,4 +1682,9 @@ public class SupplierFacadeImpl implements SupplierFacade {
 	public List<Integer> getSupplierIds(Map<String, Object> params) {
 		return supplierBiz.getSupplierIds(params);
 	}
+
+	@Override
+	public List<SupplierBankaccount> selectBankBySupplierId(Integer var1) {
+		return supplierBiz.selectBankBySupplierId(var1);
+	}
 }

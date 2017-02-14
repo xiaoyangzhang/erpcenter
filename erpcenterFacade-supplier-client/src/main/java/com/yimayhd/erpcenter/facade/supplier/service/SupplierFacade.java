@@ -521,4 +521,5 @@ public interface SupplierFacade {
 	 */
 	public WebResult<Boolean> checkSupplier(String checkedSupplierIds);
 	public List<Integer> getSupplierIds(Map<String, Object> params);
+	List<SupplierBankaccount> selectBankBySupplierId(Integer var1);
 }

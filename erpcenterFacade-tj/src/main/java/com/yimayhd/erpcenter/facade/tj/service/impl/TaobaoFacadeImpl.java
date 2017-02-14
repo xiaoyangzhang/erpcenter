@@ -1,23 +1,5 @@
 package com.yimayhd.erpcenter.facade.tj.service.impl;
 
-import java.io.*;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
-import com.yimayhd.erpcenter.common.util.DateUtils;
-import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
@@ -29,6 +11,7 @@ import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryB
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryPriceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.query.QueryBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
 import com.yimayhd.erpcenter.biz.sales.client.service.taobao.TaobaoOrderBiz;
 import com.yimayhd.erpcenter.biz.sys.service.MsgInfoBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
@@ -40,47 +23,28 @@ import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SpecialGroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.facade.tj.client.errorcode.TjErrorCode;
-import com.yimayhd.erpcenter.facade.tj.client.query.AddSivaInfoDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.ChangePriceDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.GroupOrderGuestDataListDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
-import com.yimayhd.erpcenter.facade.tj.client.query.PresellTaobaoOriginalOrderDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.PushTradeQueryDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.SaveSpecialGroupDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.ShopSalesStatisticsQueryDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListByOpDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListTableDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOriginalOrderTableDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.ToEditTaobaoOrderDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.ToSaleGuestListExcelDTO;
-import com.yimayhd.erpcenter.facade.tj.client.result.AddNewTaobaoOrderResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.ImportTaobaoOrderTableResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.PresellProductStatisticsListResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.SaveSpecialGroupResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.ShopSalesStatisticsResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListTableResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.ToEditTaobaoOrderResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.WebResult;
+import com.yimayhd.erpcenter.facade.tj.client.query.*;
+import com.yimayhd.erpcenter.facade.tj.client.result.*;
 import com.yimayhd.erpcenter.facade.tj.client.service.TaobaoFacade;
 import com.yimayhd.erpcenter.facade.tj.client.utils.LogUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.util.WebUtils;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	private static final Logger LOGGER = LoggerFactory.getLogger("TaobaoFacadeImpl");
@@ -1569,5 +1533,22 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 
 	}
 
-	
+	@Override
+	public WebResult<Map<String, Object>> findStockProductStockIdHavePSIAndUpdateState(Integer stockId, Integer state) {
+		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		//判断是否存在订单信息
+		List<TaobaoStockProduct> count = taobaoStockBiz.findStockProductStockIdHavePSI(stockId);
+		if (count != null && count.size()>0) {
+			map.put("error", "logError");
+
+		} else {
+			taobaoStockBiz.updateState(stockId, state);
+			map.put("success", 1);
+		}
+		result.setValue(map);
+		return result;
+	}
+
+
 }

@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.facade.tj.client.service;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.facade.tj.client.query.*;
 import com.yimayhd.erpcenter.facade.tj.client.result.*;
@@ -195,4 +196,5 @@ public interface TaobaoFacade{
 	public WebResult<PageBean<GroupOrder>> PaymentStatisticsListData(TaobaoOrderListTableDTO taobaoOrderListTableDTO);
 
 	public WebResult<PageBean<GroupOrder>> toPaymentExcel(Map<String, Object> pm ,String saleOperatorIds,String orgIds ,Integer bizId);
+	public WebResult<Map<String, Object>> findStockProductStockIdHavePSIAndUpdateState(Integer stockId,Integer state);
 }
