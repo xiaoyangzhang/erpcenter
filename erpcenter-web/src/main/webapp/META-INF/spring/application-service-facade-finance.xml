@@ -11,4 +11,5 @@
  	<bean id="verifyFacade" class="com.yimayhd.erpcenter.facade.finance.service.impl.VerifyFacadeImpl" />
  	<bean id="financePayFacade" class="com.yimayhd.erpcenter.facade.finance.service.impl.FinancePayFacadeImpl" />
  	<bean id="financePayDetailFacade" class="com.yimayhd.erpcenter.facade.finance.service.impl.FinancePayDetailFacadeImpl" />
+ 	<bean id="ymgFacade" class="com.yimayhd.erpcenter.facade.finance.service.impl.YMGFacadeImpl" />
 </beans>
