@@ -10,5 +10,7 @@ import java.util.List;
 public interface BasicCommonFacade {
 
     public List<DicInfo> getProductDesc(String typeCode,Integer bizId);
+    public List<DicInfo> getListByTypeCode(String typeCode,Integer bizId);
+    public List<DicInfo> getListByTypeCode(String typeCode);
 
 }

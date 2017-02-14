@@ -17,4 +17,14 @@ public class BasicCommonFacadeImpl implements BasicCommonFacade {
     public List<DicInfo> getProductDesc(String typeCode, Integer bizId) {
         return dicBiz.getListByTypeCode(typeCode,bizId);
     }
+
+    @Override
+    public List<DicInfo> getListByTypeCode(String typeCode, Integer bizId) {
+        return getProductDesc(typeCode, bizId);
+    }
+
+    @Override
+    public List<DicInfo> getListByTypeCode(String typeCode) {
+        return dicBiz.getListByTypeCode(typeCode);
+    }
 }

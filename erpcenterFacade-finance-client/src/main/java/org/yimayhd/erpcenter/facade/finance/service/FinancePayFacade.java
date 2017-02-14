@@ -2,7 +2,10 @@ package org.yimayhd.erpcenter.facade.finance.service;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay;
+import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePayDetail;
+import org.yimayhd.erpcenter.facade.finance.result.FinancePayResult;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,15 +18,9 @@ public interface FinancePayFacade {
      * @param bizId
      * @return
      */
-    PageBean<FinancePay> loadIncomePayRecordListPage(PageBean<FinancePay> pageBean, Integer bizId);
+    FinancePayResult loadIncomePayRecordListPage(PageBean<FinancePay> pageBean, Integer bizId);
 
-    /**
-     * 收付款总计查询
-     * @param pageBean
-     * @param bizId
-     * @return
-     */
-    Map<String, Object> loadIncomePayRecordTotal(PageBean<FinancePay> pageBean, Integer bizId);
+
 
     /**
      * 查询付款信息
@@ -73,5 +70,5 @@ public interface FinancePayFacade {
      */
     void deletePayById(Integer payId);
 
-    void batchUpdateTotalCash(Integer payId, Integer supplierType);
+    void batchUpdateTotalCash(Integer payId, Integer supplierType, List<FinancePayDetail> financePayDetails);
 }
