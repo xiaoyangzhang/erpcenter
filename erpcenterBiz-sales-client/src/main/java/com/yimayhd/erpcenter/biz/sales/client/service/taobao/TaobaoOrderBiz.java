@@ -85,6 +85,7 @@ public interface TaobaoOrderBiz {
 	PageBean<PlatTaobaoTrade>selectSaleOperatorSalesStatisticsListPage(PageBean<PlatTaobaoTrade> pageBean,Integer bizId);
 	
 	PageBean<PlatTaobaoTrade> savePushTrade(String tid, String authClient, String response);
-
+	
+	void updateBEYOND(Integer toId);
 	
 }

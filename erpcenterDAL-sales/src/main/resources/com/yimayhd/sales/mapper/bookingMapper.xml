@@ -216,7 +216,7 @@
 	<!-- 供应商订单统计（订单）-->
 	<select id="selectbookingSupplier2DetailListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
 		SELECT bs.group_id AS groupId, tg.group_code AS groupCode, tg.date_start AS dateStart, tg.product_brand_name AS productBrandName,tg.product_name AS productName,tg.group_mode groupMode,tg.operator_name AS operatorName
-				,bs.id AS id, bs.supplier_id AS supplierId,bs.supplier_name AS supplierName, bs.cash_type AS cashType 
+				,bs.id AS id, bs.id,bs.supplier_id AS supplierId,bs.supplier_name AS supplierName, bs.cash_type AS cashType 
 			  ,bs.booking_date bookingDate, IFNULL(bs.`total`, 0) AS total, IFNULL(bs.`total_cash`, 0) AS totalCash 			  
 				,GROUP_CONCAT(DISTINCT CONCAT (item_date,'【',type1_name,'】',CAST(item_price AS DECIMAL (15, 0)),'*(',CAST(item_num AS DECIMAL (15, 0)),'-',CAST(item_num_minus AS DECIMAL (15, 1)),')') )details
 				,GROUP_CONCAT(distinct CONCAT_WS('-',bg.guide_name,bg.guide_mobile)) bookingGuideInfo
@@ -301,14 +301,24 @@
 	</select>
 	
 	<!-- 供应商订单明细（房、餐、保险、机票、门票、火车票明细查询）总合计 -->
-	<select id="bookingSupplierDetailTotal" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
-		SELECT SUM(ifnull(item_num,0)) totalNum,
-		SUM(ifnull(item_num_minus,0)) totalNumMinus,
+		<select id="bookingSupplierDetailTotal" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
+		SELECT 
+		<!-- ifnull(SUM(item_num),0) totalNum, 
+		ifnull(SUM(item_num_minus),0) totalNumMinus, 
+		ifnull(SUM(item_total),0) totalCount -->
+		<!-- ,ifnull(SUM(det.sale_item_price*(item_num-item_num_minus)),0) totalSale -->
+		<!-- ,ifnull(SUM(det.item_total - det.sale_item_price*(item_num-item_num_minus)),0) totalProfit  -->
+		SUM(ifnull(item_num,0)) totalNum, 
+		SUM(ifnull(item_num_minus,0)) totalNumMinus, 
 		SUM(ifnull(item_total,0)) totalCount,
 		SUM(ifnull(det.sale_item_price*(item_num-item_num_minus),0)) totalSale,
-		SUM(ifnull(det.item_total,0) - ifnull(det.sale_item_price*(item_num-item_num_minus),0)) as totalProfit,
-		SUM(ifnull(total,0)) total,
+		SUM(ifnull(det.sale_item_price*(item_num-item_num_minus),0)-ifnull(det.item_total,0)) as totalProfit, 
+		SUM(ifnull(total,0)) total, 
 		SUM(ifnull(total_cash,0)) totalCash
+		
+		<!-- ,ifnull(SUM(total),0) total,  -->
+		<!-- ifnull(SUM(total_cash),0) totalCash -->
+		 
 		FROM booking_supplier_detail det
 		JOIN booking_supplier bs ON (bs.`id`=det.booking_id
 					<if test="parameter.selectDate!=null and parameter.selectDate==1">
@@ -778,7 +788,7 @@ where 1=1 <if test="parameter.gender != null">and gender =#{parameter.gender} </
 	<select id="bookingSupplierDetailTwoListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
 		SELECT tg.id groupId,tg.group_mode groupMode, tg.`group_code` groupCode, tg.`total_adult` totalAdult,tg.`total_child` totalChild,tg.total_guide totalGuide
 		,tg.product_brand_name productBrandName,tg.product_name productName, tg.`operator_name` operatorName
-		,bs.supplier_type supplierType, bs.supplier_id supplierId,bs.`supplier_name` supplierName, bs.`cash_type` cashType,bs.total, ifnull(bs.total_cash,0) as totalCash
+		,bs.supplier_type supplierType,bs.id, bs.supplier_id supplierId,bs.`supplier_name` supplierName, bs.`cash_type` cashType,bs.total, ifnull(bs.total_cash,0) as totalCash
 		,det.`item_date` itemDate, det.item_date_to itemDateTo, det.`item_num` itemNum, ifnull(det.`item_num_minus`,0) itemNumMinus, det.`item_price` itemPrice, det.sale_item_price as saleItemPrice
 		,det.`item_total` itemTotal,det.sale_item_price *(det.`item_num`-ifnull(det.`item_num_minus`,0)) as totalSale
 		,det.`type1_name` type1Name, det.`type2_name` type2Name,det.`item_brief` itemBrief
@@ -872,7 +882,7 @@ where 1=1 <if test="parameter.gender != null">and gender =#{parameter.gender} </
 		SUM(ifnull(det.sale_item_price,0)) as saleItemPrice,
 		SUM(ifnull(det.sale_item_price*(det.item_num-det.item_num_minus),0)) totalSale,
 
-		SUM(ifnull(det.item_total,0) - ifnull(det.sale_item_price*(item_num-item_num_minus) ,0)) totalProfit,
+		SUM(ifnull(det.sale_item_price*(item_num-item_num_minus) ,0) - ifnull(det.item_total,0)) totalProfit, 
 		SUM(ifnull(total,0)) total,
 		SUM(ifnull(total_cash,0)) totalCash
 		<!-- ifnull(SUM(item_num),0) totalNum,
@@ -1022,8 +1032,8 @@ where 1=1 <if test="parameter.gender != null">and gender =#{parameter.gender} </
 	<select id="bookingSupplierCarTotal" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
 		SELECT
 		SUM(ifnull(det.item_num,0)) totalNum,
+		SUM(IFNULL(det.item_price,0)-IFNULL(fg.total,0)-IFNULL(det.car_profit_total,0)-IFNULL(det.car_profit_total2,0)) salePrice,
 		SUM(IFNULL(det.item_price,0)-IFNULL(fg.total,0)) costPrice,
-		SUM(IFNULL(det.item_price,0)-IFNULL(fg.total,0)) salePrice,
 		SUM(ifnull(det.car_profit_total,0)) carProfitTotal,
 		SUM(ifnull(det.car_profit_total2,0)) carProfitTotal2
 		FROM booking_supplier_detail det
@@ -1044,7 +1054,7 @@ where 1=1 <if test="parameter.gender != null">and gender =#{parameter.gender} </
 	<select id="bookingSupplierCarListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
 		SELECT tg.id groupId,tg.group_mode groupMode, tg.`group_code` groupCode, tg.`total_adult` totalAdult,tg.`total_child` totalChild,tg.total_guide totalGuide
 		,tg.product_brand_name productBrandName,tg.product_name productName, tg.`operator_name` operatorName
-		,bs.supplier_type supplierType, bs.supplier_id supplierId,bs.`supplier_name` supplierName, bs.`cash_type` cashType,bs.total, ifnull(bs.total_cash,0) as totalCash,bs.remark
+		,bs.supplier_type supplierType,bs.id as bookingId, bs.supplier_id supplierId,bs.`supplier_name` supplierName, bs.`cash_type` cashType,bs.total, ifnull(bs.total_cash,0) as totalCash,bs.remark
 		,det.`item_date` itemDate, det.item_date_to itemDateTo, det.`item_num` itemNum, ifnull(det.`item_num_minus`,0) itemNumMinus, det.`item_price` itemPrice, det.sale_item_price as saleItemPrice
 		,det.`item_total` itemTotal,det.sale_item_price *(det.`item_num`-ifnull(det.`item_num_minus`,0)) as totalSale
 		,det.`type1_name` type1Name, det.`type2_name` type2Name,det.`item_brief` itemBrief

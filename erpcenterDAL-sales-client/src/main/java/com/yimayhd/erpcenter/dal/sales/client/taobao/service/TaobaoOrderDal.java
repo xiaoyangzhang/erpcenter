@@ -82,4 +82,7 @@ public interface TaobaoOrderDal {	/**
 	
 	PageBean<PlatTaobaoTrade>selectSaleOperatorSalesStatisticsListPage(PageBean<PlatTaobaoTrade> pageBean,Integer bizId);
 	
-	PageBean<PlatTaobaoTrade> savePushTrade(String tid, String authClient, String response);}
+	PageBean<PlatTaobaoTrade> savePushTrade(String tid, String authClient, String response);
+	
+	void updateBEYOND(Integer toId);
+}
