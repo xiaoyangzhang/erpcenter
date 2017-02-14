@@ -107,4 +107,11 @@
 		from taobao_stock_product
 		where stock_id = #{stockId,jdbcType=INTEGER} and product_skus_id=#{productSkusId}
 	</select>
+    <select id="findStockProductStockIdHavePSI" parameterType="java.lang.Integer"
+            resultMap="BaseResultMap">
+        select id, product_id, stock_id ,product_skus_id
+        from taobao_stock_product
+        where stock_id = #{stockId}
+        AND product_skus_id is NOT null
+    </select>
 </mapper>

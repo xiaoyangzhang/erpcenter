@@ -7,10 +7,10 @@
     <result column="clear_day_reset" jdbcType="INTEGER" property="clearDayReset" />
     <result column="brief" jdbcType="VARCHAR" property="brief" />
     <result column="sumProductId" jdbcType="INTEGER" property="sumProductId" />
-    
+    <result column="state" jdbcType="INTEGER" property="state" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, stock_name, clear_day_reset, brief
+    id, stock_name, clear_day_reset, brief,state
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -26,9 +26,9 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into taobao_stock (stock_name, clear_day_reset, brief
+    insert into taobao_stock (stock_name, clear_day_reset, brief,state
       )
-    values (#{stockName,jdbcType=VARCHAR}, #{clearDayReset,jdbcType=INTEGER}, #{brief,jdbcType=VARCHAR}
+    values (#{stockName,jdbcType=VARCHAR}, #{clearDayReset,jdbcType=INTEGER}, #{brief,jdbcType=VARCHAR},#{state,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStock">
@@ -46,6 +46,9 @@
       <if test="brief != null">
         brief,
       </if>
+      <if test="state != null">
+        state,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="stockName != null">
@@ -57,6 +60,11 @@
       <if test="brief != null">
         #{brief,jdbcType=VARCHAR},
       </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+
+
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoStock">
@@ -71,6 +79,9 @@
       <if test="brief != null">
         brief = #{brief,jdbcType=VARCHAR},
       </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -78,17 +89,23 @@
     update taobao_stock
     set stock_name = #{stockName,jdbcType=VARCHAR},
       clear_day_reset = #{clearDayReset,jdbcType=INTEGER},
-      brief = #{brief,jdbcType=VARCHAR}
+      brief = #{brief,jdbcType=VARCHAR},
+       state = #{state,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   
   <select id="selectByStockListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BaseResultMap">
     select ts.id, ts.stock_name, ts.clear_day_reset, ts.brief,count(ps.stock_id) as sumProductId 
     from taobao_stock ts LEFT JOIN taobao_stock_product ps on (ts.id=ps.stock_id)
-    where 1=1 
+    where state=1
 	<if test="page.parameter.stockName != null and page.parameter.stockName!=''">
 		and ts.stock_name LIKE CONCAT('%',#{page.parameter.stockName},'%' )
 	</if>
 	GROUP BY ts.id
   </select>
+  <update id="updateState">
+    update taobao_stock
+    set state = #{state,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

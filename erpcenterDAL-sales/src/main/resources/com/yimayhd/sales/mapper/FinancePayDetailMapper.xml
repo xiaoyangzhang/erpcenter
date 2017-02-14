@@ -112,4 +112,18 @@
 	select a.*,b.pay_date,b.pay_type,b.user_name,b.remark from finance_pay_detail a join finance_pay b on (a.pay_id=b.id)
 where b.supplier_type=1 and a.loc_order_id=#{orderId,jdbcType=INTEGER}
 	</select>
+  <!-- 点击移除时，删除单条订单信息 -->
+  <delete id="deleteByPayIdAndOrder" parameterType="java.util.HashMap" >
+    delete from finance_pay_detail
+    where pay_id = #{payId,jdbcType=INTEGER} and loc_order_id = #{locOrderId,jdbcType=INTEGER}
+  </delete>
+
+  <!-- 点击删除选中时，批量删除收款订单信息 -->
+  <delete id="batchDeleteByPayIdLocOrderId" parameterType="java.util.HashMap" >
+    delete from finance_pay_detail
+    where pay_id = #{payId,jdbcType=INTEGER} and loc_order_id in
+    <foreach item="item" index="index" collection="locOrderIdSet" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
 </mapper>

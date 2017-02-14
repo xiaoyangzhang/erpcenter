@@ -510,7 +510,7 @@ public interface TourGroupDal {
 	
 	List<TourGroup> selecGroupBefAutoMergerGroup(Integer bizId,String startTime,Integer productId);
 	
-	PageBean getPushDeliveryList(PageBean pageBean,Integer bizId, Set<Integer> set, Set<Integer> supplierIdSet);
+	public PageBean getPushDeliveryList(PageBean pageBean,Integer bizId, Set<Integer> set, Set<Integer> supplierIdSet);
 	List<TourGroupForCarCar> selectGroupInfoWithArrangedTransForCarCar(PageBean pageBean);
 
 	/**

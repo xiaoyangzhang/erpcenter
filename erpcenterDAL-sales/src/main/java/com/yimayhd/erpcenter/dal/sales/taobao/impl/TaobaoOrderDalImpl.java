@@ -578,4 +578,9 @@ public class TaobaoOrderDalImpl implements TaobaoOrderDal {@Autowired
     @Override
     public void updateNEW(String idss) {
         platTaobaoTradeMapper.updateNEW(idss);
-    }}
+    }
+    @Override
+    public void updateBEYOND(Integer toId) {
+        platTaobaoTradeMapper.updateBEYOND(toId);
+    }
+}

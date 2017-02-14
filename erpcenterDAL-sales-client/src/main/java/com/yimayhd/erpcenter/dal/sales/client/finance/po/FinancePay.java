@@ -72,7 +72,46 @@ public class FinancePay implements Serializable {
 	private Integer guideId;
 	
 	private Integer type;
-	
+	private BigDecimal detailCash;//收款明细金额
+
+	private BigDecimal sumCash;//收付款总计
+
+	private BigDecimal sumDetailCash;//收款明细金额总计
+
+	private BigDecimal sumBalanceCash;
+
+	public BigDecimal getDetailCash() {
+		return detailCash;
+	}
+
+	public void setDetailCash(BigDecimal detailCash) {
+		this.detailCash = detailCash;
+	}
+
+	public BigDecimal getSumCash() {
+		return sumCash;
+	}
+
+	public void setSumCash(BigDecimal sumCash) {
+		this.sumCash = sumCash;
+	}
+
+	public BigDecimal getSumDetailCash() {
+		return sumDetailCash;
+	}
+
+	public void setSumDetailCash(BigDecimal sumDetailCash) {
+		this.sumDetailCash = sumDetailCash;
+	}
+
+	public BigDecimal getSumBalanceCash() {
+		return sumBalanceCash;
+	}
+
+	public void setSumBalanceCash(BigDecimal sumBalanceCash) {
+		this.sumBalanceCash = sumBalanceCash;
+	}
+
 	public String getCommissionDeductionIds() {
 		return commissionDeductionIds;
 	}

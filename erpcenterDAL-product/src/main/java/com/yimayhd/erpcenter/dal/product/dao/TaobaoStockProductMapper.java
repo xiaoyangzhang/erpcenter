@@ -27,4 +27,5 @@ public interface TaobaoStockProductMapper {
     int deleteStockProductBySkus(TaobaoStockProduct record);
     
     TaobaoStockProduct findStockProductBySkus(TaobaoStockProduct record);
+    List<TaobaoStockProduct> findStockProductStockIdHavePSI(Integer stockId);
 }

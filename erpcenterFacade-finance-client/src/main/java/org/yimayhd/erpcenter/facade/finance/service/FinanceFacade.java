@@ -2,11 +2,59 @@ package org.yimayhd.erpcenter.facade.finance.service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
-import org.yimayhd.erpcenter.facade.finance.query.*;
-import org.yimayhd.erpcenter.facade.finance.result.*;
+import org.yimayhd.erpcenter.facade.finance.query.AduditStatisticsListDTO;
+import org.yimayhd.erpcenter.facade.finance.query.AuditCommDTO;
+import org.yimayhd.erpcenter.facade.finance.query.AuditDTO;
+import org.yimayhd.erpcenter.facade.finance.query.AuditListDTO;
+import org.yimayhd.erpcenter.facade.finance.query.AuditShopDTO;
+import org.yimayhd.erpcenter.facade.finance.query.CheckBillDTO;
+import org.yimayhd.erpcenter.facade.finance.query.DiatributeBillDTO;
+import org.yimayhd.erpcenter.facade.finance.query.ExportTravelListTableDTO;
+import org.yimayhd.erpcenter.facade.finance.query.FinAuditDTO;
+import org.yimayhd.erpcenter.facade.finance.query.IncomeJoinTableListDTO;
+import org.yimayhd.erpcenter.facade.finance.query.IncomeOrPayDTO;
+import org.yimayhd.erpcenter.facade.finance.query.PayDTO;
+import org.yimayhd.erpcenter.facade.finance.query.PushWapListTableDTO;
+import org.yimayhd.erpcenter.facade.finance.query.QueryCommissionDeductionDTO;
+import org.yimayhd.erpcenter.facade.finance.query.QueryCommissionGrantDTO;
+import org.yimayhd.erpcenter.facade.finance.query.QuerySettleCommissionDTO;
+import org.yimayhd.erpcenter.facade.finance.query.QuerySettleListDTO;
+import org.yimayhd.erpcenter.facade.finance.query.QueryShopCommissionStatsDTO;
+import org.yimayhd.erpcenter.facade.finance.query.ReceiveOrderListSelectDTO;
+import org.yimayhd.erpcenter.facade.finance.query.SaveDistributeBillDTO;
+import org.yimayhd.erpcenter.facade.finance.query.SaveVerifyBillDTO;
+import org.yimayhd.erpcenter.facade.finance.query.SettleListPageDTO;
+import org.yimayhd.erpcenter.facade.finance.query.SettleSealListDTO;
+import org.yimayhd.erpcenter.facade.finance.query.StatementCheckPreviewDTO;
+import org.yimayhd.erpcenter.facade.finance.query.SubjectSummaryDTO;
+import org.yimayhd.erpcenter.facade.finance.query.ToBookingShopVerifyListDTO;
+import org.yimayhd.erpcenter.facade.finance.query.UnsealDTO;
+import org.yimayhd.erpcenter.facade.finance.query.VerifyBillDTO;
+import org.yimayhd.erpcenter.facade.finance.result.CheckBillResult;
+import org.yimayhd.erpcenter.facade.finance.result.CommissionDeductionResult;
+import org.yimayhd.erpcenter.facade.finance.result.DiatributeBillResult;
+import org.yimayhd.erpcenter.facade.finance.result.ExportTravelListTableResult;
+import org.yimayhd.erpcenter.facade.finance.result.IncomeOrPaytResult;
+import org.yimayhd.erpcenter.facade.finance.result.QueryCommissionGrantResult;
+import org.yimayhd.erpcenter.facade.finance.result.QueryPushWapListTableResult;
+import org.yimayhd.erpcenter.facade.finance.result.QuerySettleCommissionResult;
+import org.yimayhd.erpcenter.facade.finance.result.QuerySettleListResult;
+import org.yimayhd.erpcenter.facade.finance.result.QueryShopCommissionStatsResult;
+import org.yimayhd.erpcenter.facade.finance.result.ReceiveOrderListSelectResult;
+import org.yimayhd.erpcenter.facade.finance.result.ResultSupport;
+import org.yimayhd.erpcenter.facade.finance.result.SettleCommissionListResult;
+import org.yimayhd.erpcenter.facade.finance.result.SettleListPageResult;
+import org.yimayhd.erpcenter.facade.finance.result.SettleSealListResult;
+import org.yimayhd.erpcenter.facade.finance.result.StatementCheckPreviewResult;
+import org.yimayhd.erpcenter.facade.finance.result.SubjectSummaryResult;
+import org.yimayhd.erpcenter.facade.finance.result.ToBookingShopVerifyListlResult;
+import org.yimayhd.erpcenter.facade.finance.result.TourGroupDetiailsResult;
+import org.yimayhd.erpcenter.facade.finance.result.VerifyBillResult;
+import org.yimayhd.erpcenter.facade.finance.result.ViewShopCommissionStatsListResult;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplier;
@@ -301,12 +349,16 @@ public interface FinanceFacade{
 	
 	QueryShopCommissionStatsResult queryShopCommissionStats2(QueryShopCommissionStatsDTO queryDTO);
 	
+	CommissionDeductionResult queryCommissionDeduction(QueryCommissionDeductionDTO queryDTO) throws ParseException;
+	
 	/**
 	 * 购物佣金扣除统计列表
 	 */
 	QueryShopCommissionStatsResult queryShopCommissionDeductionStats(QueryShopCommissionStatsDTO queryDTO);
 
 	QueryShopCommissionStatsResult queryShopCommissionDeductionStats2(QueryShopCommissionStatsDTO queryDTO);
+	
+	QueryCommissionGrantResult queryCommissionGrant(QueryCommissionGrantDTO queryDTO) throws ParseException;
 
 	/**
 	 * 批量审核购物发放佣金
