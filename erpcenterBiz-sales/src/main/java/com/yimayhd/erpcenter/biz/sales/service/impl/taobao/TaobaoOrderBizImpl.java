@@ -279,4 +279,9 @@ public class TaobaoOrderBizImpl implements TaobaoOrderBiz {
 		
 		return taobaoOrderDal.savePushTrade(tid, authClient, response);
 	}
+
+	@Override
+	public void updateBEYOND(Integer toId) {
+		taobaoOrderDal.updateBEYOND(toId);
+	}
 }

@@ -287,6 +287,9 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		List<DicInfo> typeList = dicBiz
 				.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE,bizId);
 		result.setTypeList(typeList);
+		List<DicInfo> sourceTypeList = dicBiz
+				.getListByTypeCode(BasicConstants.GYXX_AGENCY_SOURCE_TYPE,bizId);
+		result.setSourceTypeList(sourceTypeList);
 		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 		result.setAllProvince(allProvince);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -390,6 +393,9 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		result.setTypeList(typeList);
 		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 		result.setAllProvince(allProvince);
+		List<DicInfo> sourceTypeList = dicBiz
+				.getListByTypeCode(BasicConstants.GYXX_AGENCY_SOURCE_TYPE,bizId);
+		result.setSourceTypeList(sourceTypeList);
 
 		List<DicInfo> lysfxmList = dicBiz.getListByTypeCode(
 				BasicConstants.GYXX_LYSFXM, bizId);
@@ -431,7 +437,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 					int freeCount = tsd.getStockCount() - tsd.getSaleCount(); // 查出库存(剩余人数)
 					//实际库存应该是修改前人数+库存
 					freeCount = oldNum + freeCount;
-					if(newNum > freeCount){
+					if(oldNum < newNum && newNum > oldNum){
 						//如果新增人数大于库存,则不能保存
 						saveSpecialGroupResult.setErrorCode(TjErrorCode.INVENTORY_SHORTAGE);
 						saveSpecialGroupResult.setResultMsg(errorJson("由于库存剩余数有变化，目前剩余库存不足【" + newNum + "】！实际库存还有【" + freeCount + "】"));
@@ -694,7 +700,11 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 				mapList.add(map);
 			}
 		}
-		taobaoStockBiz.updateProductStockByTaobao(mapList);
+		List<Map<String, String>> list =taobaoStockBiz.updateProductStockByTaobao(mapList);
+		for (Map<String, String> map : list) {
+			Integer toId=Integer.parseInt(map.get("taobaoOrderId"));
+			taobaoStockBiz.updateBEYOND(toId);
+		}
 	}
 
 	/**
