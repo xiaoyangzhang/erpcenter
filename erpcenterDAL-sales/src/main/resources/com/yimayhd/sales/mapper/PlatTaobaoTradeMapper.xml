@@ -928,4 +928,11 @@ and o.refund_status!='SUCCESS'
 		WHERE order_id = #{orderId,jdbcType=INTEGER}
 	</select>
 	
+		<select id="updateBEYOND"  resultMap="BaseResultMap">
+		UPDATE plat_taobao_trade a
+		JOIN plat_taobao_trade_order b ON (a.id = b.trade_id)
+		SET a.my_state = 'BEYOND', b.my_state = 'BEYOND'
+		WHERE a.id = #{toId}
+	</select>
+	
 </mapper>

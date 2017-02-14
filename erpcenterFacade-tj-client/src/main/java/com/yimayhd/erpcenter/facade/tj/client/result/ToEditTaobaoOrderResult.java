@@ -26,6 +26,7 @@ public class ToEditTaobaoOrderResult extends ResultSupport{
 	private List<DicInfo> lysfxmList;
 	private List<DicInfo> jtfsList;
 	private List<DicInfo> typeList;
+	private List<DicInfo> sourceTypeList;
 	private List<RegionInfo> allProvince;
 	private int count;
 	private List<RegionInfo> cityList;
@@ -193,4 +194,13 @@ public class ToEditTaobaoOrderResult extends ResultSupport{
 	public void setGroupOrder(GroupOrder groupOrder) {
 		this.groupOrder = groupOrder;
 	}
+
+	public List<DicInfo> getSourceTypeList() {
+		return sourceTypeList;
+	}
+
+	public void setSourceTypeList(List<DicInfo> sourceTypeList) {
+		this.sourceTypeList = sourceTypeList;
+	}
+	
 }

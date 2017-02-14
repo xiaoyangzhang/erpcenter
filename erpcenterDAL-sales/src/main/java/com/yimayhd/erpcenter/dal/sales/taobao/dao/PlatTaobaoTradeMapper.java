@@ -81,4 +81,6 @@ public interface PlatTaobaoTradeMapper {
 	 * @param id 
 	 */
 	void updateNEW(@Param("idss") String idss);
+	
+	void updateBEYOND(@Param("toId") Integer toId);
 }

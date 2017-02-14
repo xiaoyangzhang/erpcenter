@@ -68,11 +68,20 @@ public class PlatTaobaoTrade implements Serializable {
     private Date startTime;
     private String divideOrderFee;
     private String customerService;
-     private Integer isPresell;
-     private Integer dateType;
+    private Integer isPresell;
+    private Integer dateType;
+    private Integer tradeOrderId;
      
      
-    public String getDivideOrderFee() {
+    public Integer getTradeOrderId() {
+		return tradeOrderId;
+	}
+
+	public void setTradeOrderId(Integer tradeOrderId) {
+		this.tradeOrderId = tradeOrderId;
+	}
+
+	public String getDivideOrderFee() {
 		return divideOrderFee;
 	}
 
