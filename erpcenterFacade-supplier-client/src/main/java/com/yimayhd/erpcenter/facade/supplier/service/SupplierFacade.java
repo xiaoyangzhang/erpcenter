@@ -520,4 +520,5 @@ public interface SupplierFacade {
 	 * @return
 	 */
 	public WebResult<Boolean> checkSupplier(String checkedSupplierIds);
+	public List<Integer> getSupplierIds(Map<String, Object> params);
 }

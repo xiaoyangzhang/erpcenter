@@ -1677,4 +1677,9 @@ public class SupplierFacadeImpl implements SupplierFacade {
 		
 		
 	}
+
+	@Override
+	public List<Integer> getSupplierIds(Map<String, Object> params) {
+		return supplierBiz.getSupplierIds(params);
+	}
 }
