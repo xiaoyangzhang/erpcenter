@@ -2,15 +2,7 @@ package com.yimayhd.erpcenter.facade.dataanalysis.service.impl;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.PaymentExportVO;
 import org.apache.commons.lang3.StringUtils;
@@ -54,6 +46,7 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.result.QueryResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.service.QueryFacade;
 import com.yimayhd.erpresource.dal.constants.Constants;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.util.WebUtils;
 
 /**
  * @ClassName: ${ClassName}
@@ -1280,6 +1273,8 @@ public class QueryFacadeImpl implements QueryFacade {
         return queryResult;
     }
 
+
+
     @Override
     public QueryResult productProfitList(QueryDTO queryDTO) {
         QueryResult queryResult = new QueryResult();
@@ -1643,4 +1638,54 @@ public class QueryFacadeImpl implements QueryFacade {
             return cnt == null ? 0 : cnt;
         }
         //isNull
+
+    @Override
+    public Map commonQuerySum(QueryDTO queryDTO) {
+        if (StringUtils.isNotBlank(queryDTO.getSsl())) {
+            Map pm = (Map) queryDTO.getPageBean().getParameter();
+            pm.put("parameter", pm);
+            return  getCommonService(queryDTO.getSvc()).queryOne(queryDTO.getSsl(), pm);
+        }
+        return Collections.emptyMap();
     }
+
+    @Override
+    public Map saleDeliveryDetailList(Map parameters) {
+            Integer bizId = (Integer) parameters.get("bizId");
+        if (StringUtils.isNotBlank((String) parameters.get("orgIds"))) {
+            Set<Integer> set = new HashSet<Integer>();
+            String[] orgIdArr = ((String) parameters.get("orgIds")).split(",");
+            for (String orgIdStr : orgIdArr) {
+                set.add(Integer.valueOf(orgIdStr));
+            }
+            List<PlatformOrgPo> orgList = platformOrgBiz.getOrgListByIdSet(
+                    bizId, set);
+            StringBuilder sb = new StringBuilder();
+            for (PlatformOrgPo orgPo : orgList) {
+                sb.append(orgPo.getName() + ",");
+            }
+            // condition.setOrgNames(sb.substring(0, sb.length()-1));
+            parameters.put("orgNames", sb.substring(0, sb.length() - 1));
+
+        }
+        // 如果计调不为null，查询计调名字
+        if (StringUtils.isNotBlank((String) parameters.get("saleOperatorIds"))) {
+            Set<Integer> set = new HashSet<Integer>();
+            String[] userIdArr = ((String) parameters.get("saleOperatorIds"))
+                    .split(",");
+            for (String userIdStr : userIdArr) {
+                set.add(Integer.valueOf(userIdStr));
+            }
+            List<PlatformEmployeePo> empList = platformEmployeeBiz
+                    .getEmpList(bizId, set);
+            StringBuilder sb = new StringBuilder();
+            for (PlatformEmployeePo employeePo : empList) {
+                sb.append(employeePo.getName() + "");
+            }
+            // condition.setSaleOperatorName(sb.substring(0, sb.length()-1));
+            parameters.put("saleOperatorName", sb.substring(0, sb.length() - 1));
+
+        }
+        return parameters;
+    }
+}

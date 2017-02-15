@@ -141,4 +141,14 @@ public class TaoBaoStockBIzImpl implements TaoBaoStockBiz{
 	public TaobaoProductSkus selectSkusById(Integer id){
 		return taoBaoStockDal.selectSkusById(id);
 	}
+
+	@Override
+	public List<TaobaoStockProduct> findStockProductStockIdHavePSI(Integer stockId) {
+		return taoBaoStockDal.findStockProductStockIdHavePSI(stockId);
+	}
+
+	@Override
+	public void updateState(Integer id, Integer state) {
+		taoBaoStockDal.updateState(id, state);
+	}
 }

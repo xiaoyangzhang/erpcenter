@@ -86,4 +86,6 @@ public interface TaoBaoStockBiz {
 	 int updateTaobaoProduct(TaobaoProduct record);
 	 
 	 TaobaoProductSkus selectSkusById(Integer id);
+	public List<TaobaoStockProduct> findStockProductStockIdHavePSI(Integer stockId);
+	public void updateState(Integer id,Integer state);
 }

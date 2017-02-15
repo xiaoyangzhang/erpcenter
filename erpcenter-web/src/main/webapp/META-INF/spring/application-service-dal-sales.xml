@@ -62,5 +62,7 @@
 	
 	<!-- tj -->
 	<bean id="tJDal" class="com.yimayhd.erpcenter.dal.sales.tj.impl.TJDalImpl" />
+	<bean id="financePayDetailDal" class="com.yimayhd.erpcenter.dal.sales.finance.impl.FinancePayDetailDalImpl" />
+	<bean id="financePayDal" class="com.yimayhd.erpcenter.dal.sales.finance.impl.FinancePayDalImpl" />
 
 </beans>
