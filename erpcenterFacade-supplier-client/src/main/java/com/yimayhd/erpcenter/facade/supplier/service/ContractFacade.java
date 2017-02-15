@@ -54,4 +54,6 @@ public interface ContractFacade {
     public NewContractPagaResult editDeliveryContractPage(Integer bizId,String contractId);
 
     public void delPriceExtRow(Integer priceExtId);
+    PageBean findJoinPriceListPage( PageBean pageBean,Integer supplierId,Integer bizId);
+    PageBean findBasePriceListPage( PageBean pageBean,Integer supplierId,Integer bizId);
 }

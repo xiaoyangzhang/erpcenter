@@ -195,4 +195,5 @@ public class BasicConstants {
     public static int BATCH_QUERY_PAGE_SIZE = 100;
 
 	public static String DATA_TRAVEL_ACCOUNT = "DATA_TRAVEL_ACCOUNT";
+
 }

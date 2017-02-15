@@ -11,6 +11,8 @@ import com.yimayhd.erpcenter.biz.sys.service.PlatAuthBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.util.DateUtil;
 import com.yimayhd.erpcenter.common.util.DateUtils;
+import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sales.client.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
@@ -565,7 +567,6 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 
 
 
-
 	/**
 	 * 接送信息
 	 *
@@ -632,5 +633,42 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 		return sb.toString();
 	}
 
-
+	@Override
+	public BookingDeliveryResult loadBookingDeliveryInfo(Integer gid, Integer bid, Integer bizId) {
+		BookingDeliveryResult result = new BookingDeliveryResult();
+		List<DicInfo> typeList = dicBiz
+				.getListByTypeCode(BasicConstants.XMFY_DJXM, bizId);
+		result.setTypeList(typeList);
+		TourGroup groupInfo = tourGroupBiz.selectByPrimaryKey(gid);
+		List<GroupRoute> routeList = groupRouteBiz.selectByGroupId(gid);
+		if (groupInfo.getGroupMode() < 1) {
+			List<GroupOrder> orderList = groupOrderBiz.selectOrderByGroupId(gid);
+			if (orderList != null && orderList.size() > 0) {
+				for (GroupOrder order : orderList) {
+					SupplierInfo supplierInfo = supplierBiz.selectBySupplierId(order.getSupplierId());
+					if (supplierInfo != null) {
+						order.setSupplierName(supplierInfo.getNameFull());
+					}
+				}
+			}
+//			model.addAttribute("orderList", orderList);
+			result.setGroupOrders(orderList);
+		}
+//		model.addAttribute("group", groupInfo);
+		result.setTourGroup(groupInfo);
+        /*if(groupInfo!=null && routeList!=null
+        ){
+            for(GroupRoute route : routeList){
+				route.setGroupDate(DateUtils.addDays(groupInfo.getDateStart(), route.getDayNum()));
+			}
+		}*/
+//		model.addAttribute("routeList", routeList);
+		result.setGroupRoutes(routeList);
+		if (bid != null) {
+			BookingDelivery delivery = bookingDeliveryBiz.loadBookingInfoById(bid);
+//			model.addAttribute("booking", delivery);
+			result.setBookingDelivery(delivery);
+		}
+		return result;
+	}
 }

@@ -713,6 +713,7 @@ and o.refund_status!='SUCCESS'
 		</if>
 		<if test="page.parameter.isBrushSingle == 1">
 			AND t.is_brush_single=1
+		</if>
 		<if test="page.parameter.myStoreId!= null and page.parameter.myStoreId!=''">
 			AND t.my_store_id= #{page.parameter.myStoreId}
 		</if>

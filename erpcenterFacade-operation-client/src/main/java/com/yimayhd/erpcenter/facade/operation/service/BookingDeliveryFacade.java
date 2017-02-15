@@ -109,6 +109,7 @@ public interface BookingDeliveryFacade {
 	 * @return
 	 */
 	WebResult<Boolean> updatePushStatus(Integer bookingId);
+	BookingDeliveryResult loadBookingDeliveryInfo(Integer gid, Integer bid, Integer bizId);
 
 
 }

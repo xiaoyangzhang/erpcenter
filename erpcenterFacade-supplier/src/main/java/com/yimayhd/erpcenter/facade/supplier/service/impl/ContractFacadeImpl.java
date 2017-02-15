@@ -428,4 +428,14 @@ public class ContractFacadeImpl implements ContractFacade{
 	public void delPriceExtRow(Integer priceExtId) {
 		supplierBiz.delPriceExtRow(priceExtId);
 	}
+
+	@Override
+	public PageBean findJoinPriceListPage(PageBean pageBean, Integer supplierId, Integer bizId) {
+		return contractBiz.findJoinPriceListPage(pageBean, supplierId, bizId);
+	}
+
+	@Override
+	public PageBean findBasePriceListPage(PageBean pageBean, Integer supplierId, Integer bizId) {
+		return contractBiz.findBasePriceListPage(pageBean, supplierId, bizId);
+	}
 }
