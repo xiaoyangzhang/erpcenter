@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public interface TaoBaoStockBiz {
 	
-	void updateProductStockByTaobao(List<Map<String, String>> mapList);
+	List<Map<String, String>> updateProductStockByTaobao(List<Map<String, String>> mapList);
 	/**
 	 * 查询淘宝库存信息
 	 * @param pageBean

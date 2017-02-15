@@ -18,8 +18,8 @@ public class TaoBaoStockBIzImpl implements TaoBaoStockBiz{
 
 
 	@Override
-	public void updateProductStockByTaobao(List<Map<String, String>> mapList) {
-		taoBaoStockDal.updateProductStockByTaobao(mapList);
+	public List<Map<String, String>> updateProductStockByTaobao(List<Map<String, String>> mapList) {
+		return taoBaoStockDal.updateProductStockByTaobao(mapList);
 	}
 
 	@Override
