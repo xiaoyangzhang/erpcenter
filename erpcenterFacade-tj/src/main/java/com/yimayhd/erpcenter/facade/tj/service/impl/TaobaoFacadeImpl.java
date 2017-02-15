@@ -667,7 +667,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		List<Map<String, String>> list =taobaoStockBiz.updateProductStockByTaobao(mapList);
 		for (Map<String, String> map : list) {
 			Integer toId=Integer.parseInt(map.get("taobaoOrderId"));
-			taobaoStockBiz.updateBEYOND(toId);
+			taobaoOrderBiz.updateBEYOND(toId);
 		}
 	}
 
