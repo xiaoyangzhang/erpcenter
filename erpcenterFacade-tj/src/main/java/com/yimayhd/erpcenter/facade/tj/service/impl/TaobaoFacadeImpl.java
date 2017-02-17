@@ -401,7 +401,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 					int freeCount = tsd.getStockCount() - tsd.getSaleCount(); // 查出库存(剩余人数)
 					//实际库存应该是修改前人数+库存
 					freeCount = oldNum + freeCount;
-					if(oldNum < newNum && newNum > oldNum){
+					if(newNum > freeCount && newNum > oldNum){
 						//如果新增人数大于库存,则不能保存
 						saveSpecialGroupResult.setErrorCode(TjErrorCode.INVENTORY_SHORTAGE);
 						saveSpecialGroupResult.setResultMsg(errorJson("由于库存剩余数有变化，目前剩余库存不足【" + newNum + "】！实际库存还有【" + freeCount + "】"));

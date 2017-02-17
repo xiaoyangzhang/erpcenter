@@ -4391,16 +4391,16 @@
 		<if test = "bizId!=null">
 			and a.biz_id=#{bizId}
 		</if>
-			and a.aiyou_group_id=-1
-		<!--<if test="userRightType==1">
-			and a.sale_operator_id in
-		</if>
-		<if test="userRightType!=1"> 
-			and a.operator_id in
-		</if>
-		<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
-			#{item}
-		</foreach>-->
+		<!--and a.aiyou_group_id=-1
+    <if test="userRightType==1">
+        and a.sale_operator_id in
+    </if>
+    <if test="userRightType!=1">
+        and a.operator_id in
+    </if>
+    <foreach item="item" index="index" collection="set" open="(" separator="," close=")">
+        #{item}
+    </foreach>-->
 		<if test="page.parameter.startTime != null and page.parameter.startTime !='' ">
 			<if test="page.parameter.dateType==1">
 				and a.departure_date<![CDATA[>=]]>#{page.parameter.startTime}
