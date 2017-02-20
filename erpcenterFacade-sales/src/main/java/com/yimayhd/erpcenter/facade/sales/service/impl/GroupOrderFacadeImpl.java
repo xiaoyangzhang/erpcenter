@@ -3648,6 +3648,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		}
 		PageParameterCheckAndDealUtil.pageAndPageSizeCheckAndDealUtil(pageBean);
 		List<GroupOrderForCarCar> groupOrderForCarCars = groupOrderService.selectGroupOrderswithGroupIdSetForCarCar(pageBean);
+		// TODO 优化 一次性查询
 		for (GroupOrderForCarCar groupOrder : groupOrderForCarCars) {
 			List<GroupOrder> groupOrderList = groupOrder.getGroupOrderList();
 			for (GroupOrder order : groupOrderList) {
