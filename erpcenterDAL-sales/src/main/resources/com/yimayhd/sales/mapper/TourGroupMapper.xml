@@ -4506,7 +4506,7 @@
 		  <if test="page.parameter.supplierName != null">
 		and bd.supplier_name like concat ('%','${page.parameter.supplierName}','%')
 		  </if>
-		AND bg.`is_default` = 1
+		<!--AND bg.`is_default` = 1-->
 		<if test="page.parameter.bizIds != null">
 			and tg.biz_id in (${page.parameter.bizIds})
 		</if>
