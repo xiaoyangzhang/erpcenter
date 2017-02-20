@@ -4518,8 +4518,8 @@
 		 tg.operator_id, tg.operator_name,order_num,bg.`guide_id`,bg.`guide_name`,bg.`guide_mobile`
 		from tour_group tg join booking_delivery bd on tg.id=bd.group_id
 		JOIN booking_guide bg ON  tg.`id`= bg.`group_id`
-		 where tg.create_time <![CDATA[>=]]> #{page.parameter.startTime}
-		  and tg.create_time <![CDATA[<=]]> #{page.parameter.endTime}
+		 where bd.create_time <![CDATA[>=]]> #{page.parameter.startTime}
+		  and bd.create_time <![CDATA[<=]]> #{page.parameter.endTime}
 		  <if test="page.parameter.supplierName != null">
 		and bd.supplier_name like concat ('%','${page.parameter.supplierName}','%')
 		  </if>
