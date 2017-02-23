@@ -205,7 +205,7 @@ public class TeamGroupFacadeImpl implements TeamGroupFacade {
             // 收费类型
             List<DicInfo> typeList = dicBiz.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE, bizId);
             List<DicInfo> sourceTypeList = dicBiz
-                    .getListByTypeCode(BasicConstants.GYXX_AGENCY_SOURCE_TYPE, bizId);
+                    .getListByTypeCode(Constants.GUEST_SOURCE_TYPE, bizId);
 
 
             List<RegionInfo> allProvince = regionBiz.getAllProvince();
