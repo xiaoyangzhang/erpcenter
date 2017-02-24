@@ -88,6 +88,7 @@ public class QueryFacadeImpl implements QueryFacade {
             // 如果人员为空并且部门不为空，则取部门下的人id
             Set<Integer> set = new HashSet<Integer>();
             if (StringUtils.isBlank(queryDTO.getSaleOperatorIds())
+
                     && StringUtils.isNotBlank(queryDTO.getOrgIds())) {
                 String[] orgIdArr = queryDTO.getOrgIds().split(",");
                 for (String orgIdStr : orgIdArr) {
@@ -1238,9 +1239,14 @@ public class QueryFacadeImpl implements QueryFacade {
             }
             pb.setPageSize(queryDTO.getPageSize());
             Map paramters = queryDTO.getParameters();
+            if (StringUtils.isNotEmpty(queryDTO.getCitysSupplierIds())) {
 
-            paramters.put("citysSupplierIds",queryDTO.getCitysSupplierIds());
-            paramters.put("supplierLevel", queryDTO.getSupplierLevel());
+                paramters.put("citysSupplierIds",queryDTO.getCitysSupplierIds());
+            }
+            if (StringUtils.isNotEmpty(queryDTO.getSupplierLevel())) {
+
+                paramters.put("supplierLevel", queryDTO.getSupplierLevel());
+            }
             if(null != queryDTO.getOtherParams() && queryDTO.getOtherParams().size() > 0){
                 paramters.putAll(queryDTO.getOtherParams());
             }
