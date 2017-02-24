@@ -35,9 +35,27 @@ public class TaobaoProduct implements Serializable {
     }
 
 
+
+
+	/**
+	 * @return the stockName
+	 */
+	public String getStockName() {
+		return stockName;
+	}
+
+
+
+
+	/**
+	 * @param stockName the stockName to set
+	 */
 	public void setStockName(String stockName) {
 		this.stockName = stockName;
 	}
+
+
+
 
 	public Integer getProId() {
 		return proId;
