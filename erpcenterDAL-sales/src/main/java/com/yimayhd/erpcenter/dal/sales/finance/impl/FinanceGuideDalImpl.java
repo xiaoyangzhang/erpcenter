@@ -1099,6 +1099,15 @@ public class FinanceGuideDalImpl implements FinanceGuideDal {
 		}
 		return commissionMapper.getCommisionTotalSumAndTotalCashSum(groupId, guideId);
 	}
+	
+	@Override
+	public Map<String, Object> getCommisionDeductionTotalSumAndTotalCashSum(Integer groupId, Integer guideId) {
+		
+		if(groupId == null || guideId == null){
+			return null;
+		}
+		return commissionDeductionMapper.getCommisionTotalSumAndTotalCashSum(groupId, guideId);
+	}
 
 	@Override
 	public List<FinanceCommission> getCommisions(PageBean pageBean) {

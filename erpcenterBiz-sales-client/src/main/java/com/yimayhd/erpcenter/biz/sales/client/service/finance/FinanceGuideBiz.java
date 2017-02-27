@@ -279,6 +279,8 @@ public interface FinanceGuideBiz {
 	 */
 	Map<String, Object> getCommisionTotalSumAndTotalCashSum(@Param("groupId")Integer groupId, @Param("guideId")Integer guideId);
 	
+	Map<String, Object> getCommisionDeductionTotalSumAndTotalCashSum(@Param("groupId")Integer groupId, @Param("guideId")Integer guideId);
+	
 	List<FinanceCommission> getCommisions(PageBean pageBean);
 	
 	List<FinanceCommission> getCommisionDeductions(PageBean pageBean);

@@ -279,6 +279,10 @@ public interface FinanceGuideDal {
 	 */
 	Map<String, Object> getCommisionTotalSumAndTotalCashSum(@Param("groupId")Integer groupId, @Param("guideId")Integer guideId);
 	
+	
+	Map<String, Object> getCommisionDeductionTotalSumAndTotalCashSum(@Param("groupId")Integer groupId, @Param("guideId")Integer guideId);
+
+	
 	List<FinanceCommission> getCommisions(PageBean pageBean);
 	
 	List<FinanceCommission> getCommisionDeductions(PageBean pageBean);
@@ -321,4 +325,5 @@ public interface FinanceGuideDal {
 	BookingGuide parseDataToGuide(Map<String, Object> dataMap, PageBean pageBean, boolean isDeduction);
 
 	void changeGroup(Integer groupId, Integer guideId, Integer mguideId);
+	
 }
