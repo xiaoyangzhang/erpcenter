@@ -640,6 +640,10 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 
 		// 获取备注(扣除库存)
 		for (PlatTaobaoTrade pt : platTaobaoTradeList) {
+			if (!StringUtils.isNumeric(pt.getReceiveCount())) {
+				LOGGER.error("wrong format:receiveCount={]",pt.getReceiveCount());
+				continue;
+			}
 			if (pt.getReceiveCount() != null && new Integer(pt.getReceiveCount()) > 0 && pt.getSkuPropertiesName() != null) {
 				String[] ary = pt.getSkuPropertiesName().split("\\;");
 				String[] ary1=ary[0].split("\\:");

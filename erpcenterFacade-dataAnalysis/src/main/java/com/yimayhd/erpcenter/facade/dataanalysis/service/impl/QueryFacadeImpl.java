@@ -580,8 +580,11 @@ public class QueryFacadeImpl implements QueryFacade {
             pb.setPage(queryDTO.getPage());
             if (queryDTO.getPageSize() == null) {
                 queryDTO.setPageSize(Constants.PAGESIZE);
+            }else  {
+
+                pb.setPageSize(queryDTO.getPageSize());
             }
-            pb.setPageSize(queryDTO.getPageSize());
+
             // 如果人员为空并且部门不为空，则取部门下的人id
             if (StringUtils.isBlank(queryDTO.getGroup().getSaleOperatorIds())
                     && StringUtils.isNotBlank(queryDTO.getGroup().getOrgIds())) {

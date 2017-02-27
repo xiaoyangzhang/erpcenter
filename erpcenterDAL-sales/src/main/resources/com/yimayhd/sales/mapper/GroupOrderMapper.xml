@@ -6745,7 +6745,7 @@
 		</select>
 		
 	<select id="selectProductProfitStatisticsListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BaseResultMap">
-		SELECT go.supplier_name, go.order_mode, tg.product_id, tg.product_name,sum(go.adult) numAdult,sum(go.child) numChild
+		SELECT go.supplier_name, go.order_mode,tg.product_brand_name, tg.product_id, tg.product_name,sum(go.adult) numAdult,sum(go.child) numChild
 		 ,sum(go.goTotal) totalIncome, sum(ifnull(oIn.otherIn,0))/sum(tg.total_adult+tg.total_child)*sum(go.adult+go.child) otherTotal, 
 		sum(tg.total_cost) /sum(tg.total_adult+tg.total_child)*sum(go.adult+go.child) as total_cost
 		FROM tour_group tg

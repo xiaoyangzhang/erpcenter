@@ -216,7 +216,7 @@
 	<!-- 供应商订单统计（订单）-->
 	<select id="selectbookingSupplier2DetailListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
 		SELECT bs.group_id AS groupId, tg.group_code AS groupCode, tg.date_start AS dateStart, tg.product_brand_name AS productBrandName,tg.product_name AS productName,tg.group_mode groupMode,tg.operator_name AS operatorName
-				,bs.id AS id, bs.id,bs.supplier_id AS supplierId,bs.supplier_name AS supplierName, bs.cash_type AS cashType 
+				,bs.id AS id,bs.supplier_id AS supplierId,bs.supplier_name AS supplierName, bs.cash_type AS cashType
 			  ,bs.booking_date bookingDate, IFNULL(bs.`total`, 0) AS total, IFNULL(bs.`total_cash`, 0) AS totalCash 			  
 				,GROUP_CONCAT(DISTINCT CONCAT (item_date,'【',type1_name,'】',CAST(item_price AS DECIMAL (15, 0)),'*(',CAST(item_num AS DECIMAL (15, 0)),'-',CAST(item_num_minus AS DECIMAL (15, 1)),')') )details
 				,GROUP_CONCAT(distinct CONCAT_WS('-',bg.guide_name,bg.guide_mobile)) bookingGuideInfo

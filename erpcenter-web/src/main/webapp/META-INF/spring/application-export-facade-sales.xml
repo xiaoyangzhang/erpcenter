@@ -358,7 +358,7 @@
         <property name="registry" ref="dubboRegistryConfig"/>
         <property name="protocol" ref="dubboProtocolConfig"/>
         <property name="version" value="${export.dubbo.version}"/>
-        <property name="timeout" value="${export.dubbo.timeout}"/>
+        <property name="timeout" value="50000"/>
         <property name="retries" value="${dubbo.retries}"/>
     </bean>
     <bean id="taobaoProductFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
