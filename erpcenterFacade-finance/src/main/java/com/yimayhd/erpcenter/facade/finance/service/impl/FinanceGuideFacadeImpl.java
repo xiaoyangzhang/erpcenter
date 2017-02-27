@@ -541,6 +541,18 @@ public class FinanceGuideFacadeImpl implements FinanceGuideFacade{
 					item.put("comm_total", 0);
 					item.put("comm_total_cash", 0);
 				}
+				
+				Map<String, Object> commDeductionMap = financeGuideBiz.getCommisionDeductionTotalSumAndTotalCashSum(groupId, guideId);
+				if(commDeductionMap != null){
+					BigDecimal total = new BigDecimal(commDeductionMap.get("total").toString());
+					BigDecimal totalCash = new BigDecimal(commDeductionMap.get("total_cash").toString());
+					item.put("comm_deduction_total", total);
+					item.put("comm_deduction_total_cash", totalCash);
+				}else{
+					item.put("comm_deduction_total", 0);
+					item.put("comm_deduction_total_cash", 0);
+				}
+				
 			}
 		}
 		

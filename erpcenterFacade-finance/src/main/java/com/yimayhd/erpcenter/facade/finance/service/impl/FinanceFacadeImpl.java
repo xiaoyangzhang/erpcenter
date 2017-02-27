@@ -684,14 +684,15 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	@Override
 	public ResultSupport finAudit(FinAuditDTO finAuditDTO) {
 		
-		ResultSupport result = new ResultSupport();
-		try{
+//		ResultSupport result = new ResultSupport();
+//		try{
 			financeBiz.audit(finAuditDTO.getGroupId(), finAuditDTO.getEmployeeId(), finAuditDTO.getEmployeeName());
-		}catch(Exception ex){
-			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
-			ex.printStackTrace();
-		}
-		return result;
+//		}catch(Exception ex){
+//			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+//			ex.printStackTrace();
+//		}
+//		return result;
+		return null;
 	}
 
 	/**
@@ -699,14 +700,15 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	 */
 	@Override
 	public ResultSupport finUnAudit(FinAuditDTO finAuditDTO) {
-		ResultSupport result = new ResultSupport();
-		try{
+//		ResultSupport result = new ResultSupport();
+//		try{
 			financeBiz.unAudit(finAuditDTO.getGroupId(), finAuditDTO.getEmployeeName());
-		}catch(Exception ex){
-			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
-			ex.printStackTrace();
-		}
-		return result;
+//		}catch(Exception ex){
+//			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+//			ex.printStackTrace();
+//		}
+//		return result;
+		return null;
 	}
 
 	@Override
