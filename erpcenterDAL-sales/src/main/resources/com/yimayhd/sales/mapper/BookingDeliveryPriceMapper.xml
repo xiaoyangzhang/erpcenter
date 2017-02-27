@@ -332,7 +332,7 @@
   </update>
   <insert id="insertBatch" parameterType="java.util.List" >
     insert into booking_delivery_price (id, booking_id, item_name, 
-      remark, unit_price, num_times, 
+      remark, unit_price,sale_price, num_times,
       num_person, total_price, row_state, 
       creator_id, creator_name, create_time)  
     values 
@@ -350,7 +350,7 @@
     <foreach collection="list" item="item" open="(" separator="," close=")">
     	#{item.id,jdbcType=INTEGER}
     </foreach>   
-    and booking_id=#{list[0].bookingId} 	
+    and booking_id=#{list[0].bookingId}
   </delete>
   <select id="getPriceListByBookingId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
