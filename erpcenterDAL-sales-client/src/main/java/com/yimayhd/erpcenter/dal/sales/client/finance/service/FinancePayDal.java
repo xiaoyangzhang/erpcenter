@@ -4,6 +4,7 @@ import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.sales.client.finance.po.FinancePay;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by zhangxy on 2017/2/13.
@@ -73,5 +74,5 @@ public interface FinancePayDal {
      */
     void deletePayById(Integer payId);
 
-    void batchUpdateTotalCash(Integer payId, Integer supplierType);
+    void batchUpdateTotalCash(Set<Integer> set, Integer supplierType);
 }

@@ -6309,20 +6309,21 @@
 		</if>
 	</select>
 		<select id="selectMonthlyReportStatisticsListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BaseResultMap">
-		select * from (
-		select tg.id as group_id,tg.group_code,tg.date_start,tg.product_name,receive_mode,order_mode,
-		1 as supplier_type,supplier_name as businessName,'' as supplier_name, '' as departure_place,num_adult,num_child,sale_operator_name,go.operator_name,
-		total ,total_cash,total-total_cash as total_balance,
-		0 as cost, 0 as cost_cash,0 as cost_balance,tg.total_income - tg.total_cost as group_cost,
-		 0 as other_total ,0 as other_total_cash,0 as other_total_balance
-		from group_order go join tour_group tg on (go.group_id=tg.id)
-		where tg.group_state in (1,3,4) and tg.biz_id=#{bizId,jdbcType=INTEGER} and go.state !=-1
-		<if test="page.parameter.orderNo!=null and page.parameter.orderNo!=''">
-			and go.order_mode<![CDATA[<>]]>0 and go.order_mode in (${page.parameter.orderNo})
-		</if>
-		<if test="page.parameter.supplierName!=null">
-			and supplier_name like concat('%',#{page.parameter.supplierName},'%') 
-		</if>
+			select * from (
+			select tg.id as group_id,tg.group_code,tg.date_start,tg.date_end,tg.product_brand_name,tg.product_name,receive_mode,order_mode,
+			1 as supplier_type,supplier_name as businessName,'' as supplier_name, '' as
+			departure_place,num_adult,num_child,sale_operator_name,go.operator_name,
+			total ,total_cash,total-total_cash as total_balance,
+			0 as cost, 0 as cost_cash,0 as cost_balance,tg.total_income - tg.total_cost as group_cost,
+			0 as other_total ,0 as other_total_cash,0 as other_total_balance
+			from group_order go join tour_group tg on (go.group_id=tg.id)
+			where tg.group_state in (1,3,4) and tg.biz_id=#{bizId,jdbcType=INTEGER} and go.state !=-1
+			<if test="page.parameter.orderNo!=null and page.parameter.orderNo!=''">
+				and go.order_mode<![CDATA[<>]]>0 and go.order_mode in (${page.parameter.orderNo})
+			</if>
+			<if test="page.parameter.supplierName!=null">
+				and supplier_name like concat('%',#{page.parameter.supplierName},'%')
+			</if>
 			<if test="page.parameter.groupMode == 1 ">
 				and tg.group_mode <![CDATA[>]]> 0
 			</if>
@@ -6341,80 +6342,83 @@
 				</if>
 			</if>
 			<if test="page.parameter.dateType == 2">
-			<if test="page.parameter.startTime != null and page.parameter.startTime != ''">
-				and tg.date_end <![CDATA[>=]]> #{page.parameter.startTime}
+				<if test="page.parameter.startTime != null and page.parameter.startTime != ''">
+					and tg.date_end <![CDATA[>=]]> #{page.parameter.startTime}
+				</if>
+				<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
+					and tg.date_end <![CDATA[<=]]> #{page.parameter.endTime}
+				</if>
 			</if>
-			<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
-				and tg.date_end <![CDATA[<=]]> #{page.parameter.endTime}
+			<if test="page.parameter.operType==1">
+				<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds!=''">
+					and go.operator_id in (${page.parameter.saleOperatorIds})
+				</if>
+				<if test="page.parameter.operatorIds!=null and page.parameter.operatorIds!=''">
+					and go.operator_id in (${page.parameter.operatorIds})
+				</if>
 			</if>
-			</if>
-		<if test="page.parameter.operType==1">
-		<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds!=''">
-			and go.operator_id in (${page.parameter.saleOperatorIds})
-		</if>
-			<if test="page.parameter.operatorIds!=null and page.parameter.operatorIds!=''">
-			and go.operator_id in (${page.parameter.operatorIds})
-		</if>
-		</if>
 			<if test="page.parameter.operType==2">
-		<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds!=''">
-			and sale_operator_id in (${page.parameter.saleOperatorIds})
-		</if>
-			<if test="page.parameter.operatorIds!=null and page.parameter.operatorIds!=''">
-			and sale_operator_id in (${page.parameter.operatorIds})
-		</if>
-		</if>
+				<if test="page.parameter.saleOperatorIds!=null and page.parameter.saleOperatorIds!=''">
+					and sale_operator_id in (${page.parameter.saleOperatorIds})
+				</if>
+				<if test="page.parameter.operatorIds!=null and page.parameter.operatorIds!=''">
+					and sale_operator_id in (${page.parameter.operatorIds})
+				</if>
+			</if>
 			<if test="page.parameter.groupCode!=null">
-			and tg.group_code like concat('%',#{page.parameter.groupCode},'%') 
-		</if>
+				and tg.group_code like concat('%',#{page.parameter.groupCode},'%')
+			</if>
 			<if test="page.parameter.receiveMode!=null">
-			and receive_mode like concat('%',#{page.parameter.receiveMode},'%') 
-		</if>
-		 union all 
-		select tg.id as group_id,tg.group_code,tg.date_start,tg.date_end,tg.product_brand_name,tg.product_name,go.receive_mode,go.order_mode
-		,bs.supplier_type,go.businessName,bs.supplier_name,'' as departure_place,0 as num_adult, 0 as num_child,
-		'' sale_operator_name,bs.operator_name
-		,0 as total, 0 as total_cash, 0 as total_balance
-		,bs.total cost,bs.total_cash cost_cash,bs.total-bs.total_cash as cost_balance,0 group_cost,other_total,other_total_cash,other_total-other_total_cash as other_total_balance
-		 from 
-			(select group_id,16 as supplier_type,supplier_id,supplier_name,user_name as operator_name,sum(ifnull(total,0)) total, 0 as other_total,0 as other_total_cash,
-			sum(ifnull(total_cash,0)) total_cash from booking_delivery 
-		where <if test="set!=null">
-				 group_id in
-			<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		group by group_id,supplier_id,user_name
-			 union all
+				and receive_mode like concat('%',#{page.parameter.receiveMode},'%')
+			</if>
+			union all
+
+			select tg.id as group_id,tg.group_code,tg.date_start,tg.date_end,tg.product_brand_name,tg.product_name,go.receive_mode,go.order_mode
+			,bs.supplier_type,go.businessName,bs.supplier_name,'' as departure_place,0 as num_adult, 0 as num_child,'' sale_operator_name,bs.operator_name
+			,0 as total, 0 as total_cash, 0 as total_balance
+			,bs.total cost,bs.total_cash cost_cash,bs.total-bs.total_cash as cost_balance,0
+			group_cost,other_total,other_total_cash,other_total-other_total_cash as other_total_balance
+			from
+			(select group_id,16 as supplier_type,supplier_id,supplier_name,user_name as operator_name,sum(ifnull(total,0))
+			total, 0 as other_total,0 as other_total_cash,
+			sum(ifnull(total_cash,0)) total_cash from booking_delivery
+			where
+			<if test="set!=null">
+				group_id in
+				<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			group by group_id,supplier_id,user_name
+			union all
 			select group_id,supplier_type,supplier_id,supplier_name,user_name as operator_name
 			,sum(case when supplier_type <![CDATA[<>]]>120 then total else 0 end) as total
 			,sum(case when (supplier_type =120 or sub_type = 1) then total else 0 end) as other_total
 			,ifnull(sum(case when supplier_type =120 or sub_type = 1 then total_cash else 0 end),0) as other_total_cash
 			,sum(ifnull(total_cash,0)) total_cash
-			from booking_supplier where  
-		<if test="set!=null">
-				 group_id in
-			<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
-		group by group_id,supplier_id,user_name
+			from booking_supplier where
+			<if test="set!=null">
+				group_id in
+				<foreach item="item" index="index" collection="set" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			group by group_id,supplier_id,user_name
 			) as bs join tour_group tg on (tg.id=bs.group_id)
 			left join
-				(select group_id,GROUP_CONCAT(CONCAT_WS('、',receive_mode)) receive_mode,supplier_name as businessName,order_mode
-					from group_order where state !=-1 group by group_id
-				) go on (go.group_id=tg.id) 
-		 where tg.group_state in (1,3,4) and tg.biz_id=#{bizId,jdbcType=INTEGER}
+			(select group_id,GROUP_CONCAT(CONCAT_WS('、',receive_mode)) receive_mode,supplier_name as businessName,order_mode
+			from group_order where state !=-1 group by group_id
+			) go on (go.group_id=tg.id)
+			where tg.group_state in (1,3,4) and tg.biz_id=#{bizId,jdbcType=INTEGER}
 			<if test="page.parameter.supplierName!=null">
-			and supplier_name like concat('%',#{page.parameter.supplierName},'%') 
-		</if>
-		<if test="page.parameter.productName!=null">
-			and tg.product_name like concat('%',#{page.parameter.productName},'%') 
-		</if>
+				and supplier_name like concat('%',#{page.parameter.supplierName},'%')
+			</if>
+			<if test="page.parameter.productName!=null">
+				and tg.product_name like concat('%',#{page.parameter.productName},'%')
+			</if>
 			<if test="page.parameter.productBrandName!=null">
-			and tg.product_brand_name like concat('%',#{page.parameter.productBrandName},'%')
-		</if>
+				and tg.product_brand_name like concat('%',#{page.parameter.productBrandName},'%')
+			</if>
 			<if test="page.parameter.groupMode == 1 ">
 				and tg.group_mode <![CDATA[>]]> 0
 			</if>
@@ -6435,12 +6439,12 @@
 				</if>
 			</if>
 			<if test="page.parameter.groupCode!=null">
-			and tg.group_code like concat('%',#{page.parameter.groupCode},'%') 
-		</if>
+				and tg.group_code like concat('%',#{page.parameter.groupCode},'%')
+			</if>
 			<if test="page.parameter.receiveMode!=null">
-			and receive_mode like concat('%',#{page.parameter.receiveMode},'%') 
-		</if>
-		) as aa
+				and receive_mode like concat('%',#{page.parameter.receiveMode},'%')
+			</if>
+			) as aa
 			<if test="page.parameter.deliveryName != null and  page.parameter.deliveryName != ''">
 				where group_id in (select group_id from booking_delivery where supplier_name like concat('%',#{page.parameter.deliveryName},'%'))
 				<if test="set!=null">
@@ -6450,6 +6454,7 @@
 					</foreach>
 				</if>
 			</if>
+
 			order by date_start,group_id,supplier_type
 		</select>
 	<select id="selectGroupOrderGuestListPage" resultType="java.util.HashMap" parameterType="com.yihg.mybatis.utility.PageBean">

@@ -496,7 +496,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 
 				GroupOrder groupOrder=groupOrderBiz.findById(orderId);
 				TourGroup tourGroup=tourGroupBiz.selectByPrimaryKey(groupOrder.getGroupId());
-				tourGroup.setGroupMode(saveSpecialGroupDTO.getGroupMode());
+				tourGroup.setGroupMode(saveSpecialGroupDTO.getVo().getGroupOrder().getOrderType());
 				tourGroupBiz.updateByPrimaryKey(tourGroup);
 			}
 			// 插入到日志

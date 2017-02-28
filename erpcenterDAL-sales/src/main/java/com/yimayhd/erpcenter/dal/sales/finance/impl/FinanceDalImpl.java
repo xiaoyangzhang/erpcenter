@@ -36,6 +36,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -757,7 +758,7 @@ public class FinanceDalImpl implements FinanceDal {
 		}else{
 			payMapper.update(pay);
 		}
-		
+		Set<Integer> orderIds = new HashSet<Integer>();
 		//删除前台删除的订单
 		List<FinancePayDetail> existDetails = payDetailMapper.selectByPayId(pay.getId());
 		if(existDetails != null && existDetails.size() > 0){
@@ -772,6 +773,7 @@ public class FinanceDalImpl implements FinanceDal {
 					}
 				}
 				if(needDelete){
+					orderIds.add(existDetail.getLocOrderId());
 					this.deletePayDetail(supplierType, existDetail.getLocOrderId(), pay.getId());
 				}
 			}
@@ -788,27 +790,30 @@ public class FinanceDalImpl implements FinanceDal {
 				BigDecimal originalCash = null;
 				if(isInsert){
 					payDetailMapper.insert(d);
+					orderIds.add(d.getLocOrderId());
 				}else{
 					FinancePayDetail selectedDetail = payDetailMapper.selectByPayIdAndLocOrderId(pay.getId(), d.getLocOrderId());
 					if(selectedDetail != null){
 						originalCash = selectedDetail.getCash();
 						selectedDetail.setCash(d.getCash());
 						payDetailMapper.update(selectedDetail);
+						orderIds.add(selectedDetail.getLocOrderId());
 					}else{
 						payDetailMapper.insert(d);
+						orderIds.add(d.getLocOrderId());
 					}
 				}
 			}
 		}
 
-		payMapper.batchUpdate_TotalCash(pay.getId(), supplierType);
+		payMapper.batchUpdate_TotalCash(orderIds, supplierType);
 
-		if(details != null && details.size() > 0){
-			for (FinancePayDetail d : details) {
+		if(!CollectionUtils.isEmpty(orderIds)){
+			for (Integer d : orderIds) {
 				// 维护组团社已付金额
 				if (Constants.TRAVELAGENCY.equals(supplierType)) {
 					// 收款标识组团社
-					GroupOrder order = orderMapper.selectByPrimaryKey(d.getLocOrderId());
+					GroupOrder order = orderMapper.selectByPrimaryKey(d);
 //					if( null==order.getStateFinance() || 1 != order.getStateFinance()){
 //						throw new ClientException("单号为["+order.getOrderNo()+"]的订单没有审核");
 //					}
@@ -823,7 +828,7 @@ public class FinanceDalImpl implements FinanceDal {
 				}
 				// 维护地接社已付金额
 				else if(Constants.LOCALTRAVEL.equals(supplierType)){
-					BookingDelivery del = deliveryMapper.selectByPrimaryKey(d.getLocOrderId());
+					BookingDelivery del = deliveryMapper.selectByPrimaryKey(d);
 					/*if(del.getStateFinance() != 1){
 						throw new ClientException("单号为["+del.getSupplierOrderNo()+"]的订单没有审核");
 					}
@@ -839,7 +844,7 @@ public class FinanceDalImpl implements FinanceDal {
 				
 				// 购物应收统计
 				else if(Constants.SHOPPING.equals(supplierType)) {
-					BookingShop shop = shopMapper.selectByPrimaryKey(d.getLocOrderId());
+					BookingShop shop = shopMapper.selectByPrimaryKey(d);
 					/*if(shop.getStateFinance() != 1){
 						throw new ClientException("单号为["+shop.getBookingNo()+"]的订单没有审核");
 					}
@@ -860,7 +865,7 @@ public class FinanceDalImpl implements FinanceDal {
 				}
 				// 维护供应商已付金额
 				else {
-					BookingSupplier sup = supplierMapper.selectByPrimaryKey(d.getLocOrderId());
+					BookingSupplier sup = supplierMapper.selectByPrimaryKey(d);
 					/*if(sup.getStateFinance() != 1){
 						throw new ClientException("单号为["+sup.getBookingNo()+"]的订单没有审核");
 					}
@@ -973,14 +978,14 @@ public class FinanceDalImpl implements FinanceDal {
 	@Transactional
 	public void deletePayDetail(Integer supplierType, Integer locOrderId, Integer payId) {
 
-		FinancePayDetail detail = payDetailMapper.selectByPayIdAndLocOrderId(payId, locOrderId);
+		/*FinancePayDetail detail = payDetailMapper.selectByPayIdAndLocOrderId(payId, locOrderId);
 		if(detail == null){
 			return;
-		}
+		}*/
 		payDetailMapper.deleteByLocOrderIdAndPayId(locOrderId, payId);
 		
 		// 维护组团社已付金额
-		if (Constants.TRAVELAGENCY.equals(supplierType)) {
+		/*if (Constants.TRAVELAGENCY.equals(supplierType)) {
 			// 收款标识组团社
 			GroupOrder order = orderMapper.selectByPrimaryKey(locOrderId);
 			GroupOrder modify = new GroupOrder();
@@ -1024,7 +1029,7 @@ public class FinanceDalImpl implements FinanceDal {
 
 			// 维护整团收支信息
 			calcTourGroupAmount(sup.getGroupId());
-		}
+		}*/
 		
 	}
 

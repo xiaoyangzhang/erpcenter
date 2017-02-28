@@ -449,40 +449,40 @@
     <update id="batchUpdate_TotalCash">
         <if test="supplierType == 1" >
             <!-- 汇总销售订单的收款 -->
-            update group_order s join
+            update group_order s LEFT join
             (select loc_order_id, sum(d.cash) as payCash from finance_pay_detail d join finance_pay p on (d.pay_id=p.id)
             where p.pay_direct=1 and p.supplier_type=1 and d.cash is not null group by loc_order_id
             ) p on s.id=p.loc_order_id
             set s.total_cash=ifnull(p.payCash,0)
-            where s.id in (select loc_order_id from finance_pay_detail where pay_id=#{payId,jdbcType=INTEGER})
+            where s.id in <foreach item="item" index="index" collection="orderIds" open="(" separator="," close=")"> #{item}</foreach>
         </if>
-        <if test="supplierType == 120" >
+        <if test="supplierType == 120 or supplierType == 12 or supplierType == 121" >
             <!-- 汇总其它收入的付款 -->
-            update booking_supplier s join
+            update booking_supplier s LEFT join
             (select loc_order_id, sum(d.cash) as payCash from finance_pay_detail d join finance_pay p on (d.pay_id=p.id)
-            where p.pay_direct=1 and (p.supplier_type is null or p.supplier_type not in (1,6)) and d.cash is not null group by loc_order_id
+            where p.pay_direct=1 and (p.supplier_type is null or p.supplier_type  in (12,120,121)) and d.cash is not null group by loc_order_id
             ) p on s.id=p.loc_order_id
             set s.total_cash=ifnull(p.payCash,0)
-            where s.id in (select loc_order_id from finance_pay_detail where pay_id=#{payId,jdbcType=INTEGER})
+            where s.id in <foreach item="item" index="index" collection="orderIds" open="(" separator="," close=")"> #{item}</foreach>
         </if>
 
-        <if test="supplierType != 1 and supplierType != 6 and supplierType != 16" >
+        <if test="supplierType != 1 and supplierType != 6 and supplierType != 16 and supplierType != 12 and supplierType != 120 and supplierType != 121" >
             <!-- 汇总供应商的付款 除了 [其它收入，地接，购物店] -->
-            update booking_supplier s join
+            update booking_supplier s LEFT join
             (select loc_order_id, sum(d.cash) as payCash from finance_pay_detail d join finance_pay p on (d.pay_id=p.id)
             where p.pay_direct=0 and (p.supplier_type is null or p.supplier_type not in (6,16)) and d.cash is not null group by loc_order_id
             ) p on s.id=p.loc_order_id
             set s.total_cash=ifnull(p.payCash,0)
-            where s.id in (select loc_order_id from finance_pay_detail where pay_id=#{payId,jdbcType=INTEGER})
+            where s.id in <foreach item="item" index="index" collection="orderIds" open="(" separator="," close=")"> #{item}</foreach>
         </if>
         <if test="supplierType == 16" >
             <!-- 汇总地接社的付款 -->
-            update booking_delivery s join
+            update booking_delivery s LEFT join
             (select loc_order_id, sum(d.cash) as payCash from finance_pay_detail d join finance_pay p on (d.pay_id=p.id)
             where p.pay_direct=0 and p.supplier_type = 16 and d.cash is not null group by loc_order_id
             ) p on s.id=p.loc_order_id
             set s.total_cash=ifnull(p.payCash,0)
-            where s.id in (select loc_order_id from finance_pay_detail where pay_id=#{payId,jdbcType=INTEGER})
+            where s.id in <foreach item="item" index="index" collection="orderIds" open="(" separator="," close=")"> #{item}</foreach>
         </if>
     </update>
     <!-- 查询收款记录 -->

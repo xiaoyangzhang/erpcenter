@@ -7,6 +7,7 @@ import com.yimayhd.erpcenter.dal.sales.client.finance.service.FinancePayDal;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by zhangxy on 2017/2/14.
@@ -60,7 +61,7 @@ public class FinancePayBizImpl implements FinancePayBiz {
     }
 
     @Override
-    public void batchUpdateTotalCash(Integer payId, Integer supplierType) {
-        financePayDal.batchUpdateTotalCash(payId, supplierType);
+    public void batchUpdateTotalCash(Set<Integer> set, Integer supplierType) {
+        financePayDal.batchUpdateTotalCash(set, supplierType);
     }
 }

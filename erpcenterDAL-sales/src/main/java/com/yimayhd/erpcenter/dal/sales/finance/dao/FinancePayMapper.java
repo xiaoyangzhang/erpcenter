@@ -2,6 +2,7 @@ package com.yimayhd.erpcenter.dal.sales.finance.dao;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -52,7 +53,7 @@ public interface FinancePayMapper {
 	 * @param supplierType 1, 120, 16, 其它     ：1为销售订单 ，120为其它收入，16为地接订单 ，其它为房餐车等 
 	 */
 	java.math.BigDecimal calcTotalCashValue(@Param("orderId")Integer orderId, @Param("supplierType")Integer supplierType);
-    void batchUpdate_TotalCash(@Param("payId")Integer payId, @Param("supplierType")Integer supplierType );//根据finance_pay.id 统一更新业务表的total_cash字段
+    void batchUpdate_TotalCash(@Param("orderIds")Set<Integer> set, @Param("supplierType")Integer supplierType );//根据finance_pay.id 统一更新业务表的total_cash字段
 
     //收付款查询
     List<FinancePay> findIncomePayRecordListPage(@Param("page") PageBean<FinancePay> pageBean,@Param("bizId") Integer bizId);

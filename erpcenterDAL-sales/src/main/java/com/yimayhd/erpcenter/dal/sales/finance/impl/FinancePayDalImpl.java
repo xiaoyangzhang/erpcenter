@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by zhangxy on 2017/2/13.
@@ -99,8 +100,8 @@ public class FinancePayDalImpl implements FinancePayDal {
     }
 
     @Override
-    public void batchUpdateTotalCash(Integer payId, Integer supplierType) {
-        financePayMapper.batchUpdate_TotalCash(payId, supplierType);
+    public void batchUpdateTotalCash(Set<Integer> set, Integer supplierType) {
+        financePayMapper.batchUpdate_TotalCash(set, supplierType);
 
     }
 }

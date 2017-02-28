@@ -10,8 +10,10 @@ import org.springframework.util.CollectionUtils;
 import org.yimayhd.erpcenter.facade.finance.result.FinancePayResult;
 import org.yimayhd.erpcenter.facade.finance.service.FinancePayFacade;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by zhangxy on 2017/2/14.
@@ -77,25 +79,29 @@ public class FinancePayFacadeImpl implements FinancePayFacade {
 
     @Override
     public void batchUpdateTotalCash(Integer payId, Integer supplierType,List<FinancePayDetail> financePayDetails) {
+        Set<Integer> orderIds= new HashSet<Integer>();
         if(!CollectionUtils.isEmpty(financePayDetails)){
             boolean isInsert = payId == null ? true : false;
             for (FinancePayDetail fpd : financePayDetails) {
                 fpd.setPayId(payId);
                 if(isInsert){
                     financePayDetailBiz.insertFinancePayDetail(fpd);
+                    orderIds.add(fpd.getLocOrderId());
                 }else {
                     FinancePayDetail detailBean = financePayDetailBiz.selectByPayIdAndLocOrderId(payId, fpd.getLocOrderId());
+                    orderIds.add(fpd.getLocOrderId());
                     if(detailBean != null){
-                        detailBean.setCash(fpd.getCash());
+                        detailBean.setCash(detailBean.getCash());
                         financePayDetailBiz.updateFinancePayDetail(detailBean);
                     }else{
                         financePayDetailBiz.insertFinancePayDetail(fpd);
+                        orderIds.add(fpd.getLocOrderId());
                     }
                 }
             }
 
             //汇总，到业务表的total_cash
-            financePayBiz.batchUpdateTotalCash(payId, supplierType);
+            financePayBiz.batchUpdateTotalCash(orderIds, supplierType);
         }
     }
 }
