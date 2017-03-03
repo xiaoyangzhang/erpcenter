@@ -391,7 +391,7 @@ public class BookingGuideFacadeImpl implements BookingGuideFacade {
 	public BookingGuideResult getGroupRouteInfo(Integer groupId) {
 		BookingGuideResult result = new BookingGuideResult();
 		//查询导游信息
-		BookingGuide bookingGuide = bookingGuideBiz.selectByPrimaryKey(groupId);			
+		BookingGuide bookingGuide = bookingGuideBiz.selectByPrimaryKey(groupId);
 		result.setBookingGuide(bookingGuide);
 		//团信息
 		TourGroup tourGroup = tourGroupBiz.selectByPrimaryKey(bookingGuide.getGroupId());

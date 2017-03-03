@@ -4100,7 +4100,7 @@
 			and a.receive_mode LIKE
 			CONCAT('%','${page.parameter.receiveMode}','%')
 		</if>
-		<if test="page.parameter.sourceTypeId != null and page.parametersourceTypeId !=-1">
+		<if test="page.parameter.sourceTypeId != null and page.parameter.sourceTypeId !=-1">
 			and a.source_type_id=#{page.parameter.sourceTypeId}
 		</if>
 		<if test="page.parameter.provinceId != null and page.parameter.provinceId !=-1">
@@ -4793,7 +4793,7 @@
 			and a.receive_mode LIKE
 			CONCAT('%','${groupOrder.receiveMode}','%')
 		</if>
-		<if test="groupOrder.sourceTypeId != null and groupOrdersourceTypeId !=-1">
+		<if test="groupOrder.sourceTypeId != null and groupOrder.sourceTypeId !=-1">
 			and a.source_type_id=#{groupOrder.sourceTypeId}
 		</if>
 		<if test="groupOrder.provinceId != null and groupOrder.provinceId !=-1">

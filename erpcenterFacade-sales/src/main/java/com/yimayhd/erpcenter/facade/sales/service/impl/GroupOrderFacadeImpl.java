@@ -1915,6 +1915,11 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			if (guides.size() > 0) {
 				guideString = getGuides(guides);
 			}
+		}else {
+			tg.setProductBrandName(go.getProductBrandName());
+			tg.setProductName(go.getProductName());
+			tg.setTotalAdult(go.getNumAdult());
+			tg.setTotalChild(go.getNumChild());
 		}
 
 		GroupOrderPrintPo gop = new GroupOrderPrintPo();
@@ -2519,6 +2524,9 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			if (guides.size() > 0) {
 				guideString = getGuides(guides);
 			}
+		}else {
+			tg.setProductBrandName(go.getProductBrandName());
+			tg.setProductName(go.getProductName());
 		}
 		List<GroupOrderPrintPo> gops = new ArrayList<GroupOrderPrintPo>();
 		GroupOrderPrintPo gop = new GroupOrderPrintPo();

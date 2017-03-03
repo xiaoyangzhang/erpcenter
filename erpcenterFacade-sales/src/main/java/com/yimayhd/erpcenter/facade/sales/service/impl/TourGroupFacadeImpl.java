@@ -1170,8 +1170,10 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
         ToPreviewResult toPreviewResult = new ToPreviewResult();
         try {
             GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
+            toPreviewResult.setGroupOrder(groupOrder);
             List<GroupOrderGuest> guests = groupOrderGuestBiz
                     .selectByOrderId(orderId);
+            toPreviewResult.setGuests(guests);
             List<GroupOrderPrice> prices = groupOrderPriceBiz
                     .selectByOrder(orderId);
             GroupOrderPrice gop = new GroupOrderPrice();
@@ -1181,13 +1183,15 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
             gop.setNumPerson(new Double(groupOrderBiz.selectTotalNumByOrderId(orderId)))  ;
             gop.setTotalPrice(gop.getUnitPrice()*gop.getNumPerson());
             prices.add(gop) ;
+            toPreviewResult.setPriceList(prices);
             SupplierInfo supplier = supplierBiz.selectBySupplierId(groupOrder
                     .getSupplierId());
-
+            toPreviewResult.setSupplier(supplier);
          //   PlatformEmployeePo employee = sysPlatformEmployeeFacade
             //        .findByEmployeeId(groupOrder.getSaleOperatorId()).getPlatformEmployeePo();
             PlatformEmployeePo employee =  platformEmployeeBiz.findByEmployeeId(groupOrder.getSaleOperatorId());
 //            String imgPath = platformOrgBiz.getLogoByOrgId(curBizId, orgId);
+            toPreviewResult.setEmployee(employee);
             String company = platformOrgBiz.findByOrgId(employee.getOrgId()).getName();
 
 
