@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.util.TypeUtils;
 import com.yimayhd.erpcenter.biz.product.service.*;
 import com.yimayhd.erpcenter.biz.sales.client.service.car.DoubleCarBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchDeliveryPriceResult;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchOrderGuestResult;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchTransportsResult;
@@ -188,6 +189,8 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 	private TaobaoOrderBiz taobaoOrderBiz;
 	@Autowired
 	private TaoBaoStockBiz taoBaoStockBiz;
+	@Autowired
+	private FinanceBiz financeBiz;
 	@Override
 	public ToOrderLockListResult toOrderLockList(Integer bizId) {
 
@@ -3711,6 +3714,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 				tourGroupService.updateByPrimaryKeySelective(tourGroup);
 			}
 		}
+		financeBiz.calcTourGroupAmount(groupOrder.getGroupId());
 		if (groupOrder.getPriceId() != null) {
 
 			boolean updateStock = productGroupPriceService.updateStock(groupOrder.getPriceId(),

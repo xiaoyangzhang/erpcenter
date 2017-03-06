@@ -29,6 +29,7 @@ public class OperationErrorCode implements Serializable {
     public static final OperationErrorCode NOT_FOUND = new OperationErrorCode("1009","未查到该团号对应的散客团信息!");
     public static final OperationErrorCode UNALLOWED_DELETE_CHECKED_ORDER = new OperationErrorCode("1010","该团有已审核的订单,不允许删除！");
     public static final OperationErrorCode UNALLOWED_DELETE_FINANCE_RECORD = new OperationErrorCode("1011","该团有收付款记录,不允许删除！");
+    public static final OperationErrorCode UPDATE_STOCK_FAILED = new OperationErrorCode("1012","更新库存失败！");
 
 	 public OperationErrorCode() {
 		super();
