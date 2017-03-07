@@ -127,7 +127,7 @@
               <property name="retries" value="${dubbo.retries}"/>
   </bean>
     <bean id="sysPlatAuthFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
-              <property name="interface" value="com.yimayhd.erpcenter.facade.sys.service.impl.SysPlatAuthFacadeImpl"/>
+              <property name="interface" value="com.yimayhd.erpcenter.facade.sys.service.SysPlatAuthFacade"/>
               <property name="ref" ref="sysPlatAuthFacade"/>
               <property name="application" ref="dubboApplicationConfig"/>
               <property name="registry" ref="dubboRegistryConfig"/>
