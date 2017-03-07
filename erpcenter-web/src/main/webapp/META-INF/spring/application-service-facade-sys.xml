@@ -30,5 +30,6 @@
 	<bean id="sysSettleApplyFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysSettleApplyFacadeImpl" />
 	
 	<bean id="sysMsgInfoFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysMsgInfoFacadeImpl" />
+	<bean id="sysPlatAuthFacade" class="com.yimayhd.erpcenter.facade.sys.service.impl.SysPlatAuthFacadeImpl" />
 
 </beans>
