@@ -951,12 +951,12 @@ public class TourGroupDalImpl implements TourGroupDal {
 		}else{
 			tours = tourGroupMapper.selectProfitByTourConListPage(pageBean, bizId, set);
 			for (TourGroup tour : tours) {
-				if (tour != null) {
+//				if (tour != null) {
 					if (tour.getId() != null) {
 						tour.setBudget(tourGroupMapper.selectProfitByModeAndTourId(tour.getId(), 1));
 						tour.setTotal(tourGroupMapper.selectProfitByModeAndTourId(tour.getId(), 0));
 					}
-				}
+//				}
 			}
 		}
 		

@@ -2255,8 +2255,8 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
 			}
 		}
 		pageBean = tourGroupBiz.selectProfitByTourConListPage(pageBean,bizId,userIdSet);
-		
-		// 统计成人、小孩、全陪
+        List<TourGroup> result1 = pageBean.getResult();
+        // 统计成人、小孩、全陪
 		PageBean<TourGroup> pb = tourGroupBiz.selectProfitByTourCon(pageBean,bizId,userIdSet);
 
 		// 总成本、总收入
@@ -2268,6 +2268,7 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
 		}
 		
 		ProfitQueryByTourResult result=new ProfitQueryByTourResult();
+		pageBean.setResult(result1);
 		result.setPageBean(pageBean);
 		result.setPb(pb);
 		result.setGroup(group);

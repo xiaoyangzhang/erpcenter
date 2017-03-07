@@ -368,7 +368,7 @@
 	</select>
 	<select id="selectProfitByModeAndTourId" resultType="java.math.BigDecimal">
 		SELECT
-		SUM(gop.`total_price`)
+		ifnull(SUM(gop.`total_price`),0) total_price
 		FROM
 		tour_group tg
 		LEFT
@@ -387,7 +387,7 @@
 	<!-- XTSM：销售利润统计 -->
 	<select id="selectSaleProfitByModeAndTourId" resultType="java.math.BigDecimal">
 		SELECT
-		SUM(gop.`total_price`)
+		ifnull(SUM(gop.`total_price`),0) total_price
 		FROM
 		tour_group tg
 		LEFT
@@ -708,8 +708,7 @@
 		tg.id,
 		tg.group_code,
 		tg.group_mode,
-		go.supplier_name as
-		supplierName,
+		go.supplier_name ,
 		tg.date_start,
 		tg.product_brand_name,
 		tg.product_name,
