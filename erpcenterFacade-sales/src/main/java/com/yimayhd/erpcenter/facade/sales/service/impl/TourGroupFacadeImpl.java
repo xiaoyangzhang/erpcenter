@@ -2233,8 +2233,10 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
 		pageBean.setPage(page);
 		if (pageSize == null) {
 			pageSize = Constants.PAGESIZE;
-		}
-		pageBean.setPageSize(pageSize);
+		}else {
+
+            pageBean.setPageSize(pageSize);
+        }
 		pageBean.setParameter(tour);
 		// 如果人员为空并且部门不为空，则取部门下的人id
 		if (StringUtils.isBlank(tour.getSaleOperatorIds())&& StringUtils.isNotBlank(tour.getOrgIds())) {

@@ -4473,7 +4473,7 @@
         operator_name AS operatorName,
         group_state AS groupState,
         SUM(IFNULL(bd.`total`,0)) AS price,
-        COUNT(bd.id) AS COUNT,bd.push_status AS pushStatus,
+        COUNT(bd.id) AS COUNT,bd.push_status AS pushStatus
 
         FROM tour_group AS tg
        JOIN booking_delivery bd ON(tg.`id`= bd.`group_id`)
@@ -4486,11 +4486,12 @@
 				 separator="," close=")">
 			#{item}
 		</foreach>
+		<if test="supplierIdSet != null and supplierIdSet.size() > 0">
 		AND bd.supplier_id IN
 		<foreach item="item" index="index" collection="supplierIdSet" open="("
 				 separator="," close=")">
 			#{item}
-		</foreach>
+		</foreach></if>
         <if test="page.parameter.startTime != null and page.parameter.startTime !=''">
             <![CDATA[AND tg.date_start >= #{page.parameter.startTime}]]>
         </if>
