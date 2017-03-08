@@ -1099,10 +1099,13 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 
 	@Override
 	public PageBean selectAirTicketProfitList(PageBean pageBean) {
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>,pageBean={}",JSON.toJSONString(pageBean));
 		pageBean=trafficResBiz.selectAirTicketProfitListPage(pageBean);
 		List <TrafficRes> trafficRes=pageBean.getResult();
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>,pageBean={}",JSON.toJSONString(pageBean));
 		for(TrafficRes item:trafficRes){
 			GroupOrder go=groupOrderBiz.selectSumTotalByResId(item.getId());
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>,go={}",JSON.toJSONString(go));
 			item.setSumTotal(go.getTotal());
 			item.setSumCost(go.getCost());
 		}

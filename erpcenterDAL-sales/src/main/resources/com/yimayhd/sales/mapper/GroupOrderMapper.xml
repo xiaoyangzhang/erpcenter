@@ -1369,22 +1369,14 @@
 			tg.group_mode <![CDATA[>]]>0
 		</if>
 		<!-- 时间 -->
-		<if test="page.parameter.dateType == 1">
-			<if test="page.parameter.startTime != null">and go.departure_date <![CDATA[>=]]> #{page.parameter.startTime} </if>
-			<if test="page.parameter.endTime != null">and go.departure_date <![CDATA[<=]]> #{page.parameter.endTime} </if>
-		</if>
-		<if test="page.parameter.dateType == 0">
-			<if test="page.parameter.startTime != null">and go.create_time <![CDATA[>=]]> #{page.parameter.startTime} </if>
-			<if test="page.parameter.endTime != null">and go.create_time <![CDATA[<=]]> #{page.parameter.endTime} </if>
-		</if>
-		<!--<if test="page.parameter.startTime != null and page.parameter.startTime != ''">
+		<if test="page.parameter.startTime != null and page.parameter.startTime != ''">
 			and go.departure_date <![CDATA[>=]]>
 			#{page.parameter.startTime}
 		</if>
 		<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
 			and go.departure_date <![CDATA[<=]]>
 			#{page.parameter.endTime}
-		</if>-->
+		</if>
 		<!-- 财务状态 -->
 		<if test="page.parameter.paymentState == 0">and
 			go.total <![CDATA[<>]]>go.total_cash
