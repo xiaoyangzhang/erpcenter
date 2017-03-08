@@ -89,7 +89,7 @@ public interface BookingDeliveryFacade {
 	 * @param bizId
 	 * @return
 	 */
-	WebResult<PageBean> pushListTable(PageBean pageBean ,Integer bizId);
+	WebResult<PageBean> pushListTable(PageBean pageBean ,Integer bizId, Set<Integer> set);
 
 	/**
 	 * @author liyong
@@ -109,6 +109,7 @@ public interface BookingDeliveryFacade {
 	 * @return
 	 */
 	WebResult<Boolean> updatePushStatus(Integer bookingId);
+	BookingDeliveryResult loadBookingDeliveryInfo(Integer gid, Integer bid, Integer bizId);
 
 
 }

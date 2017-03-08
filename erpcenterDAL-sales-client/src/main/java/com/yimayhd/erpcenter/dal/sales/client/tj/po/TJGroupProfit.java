@@ -75,7 +75,23 @@ public class TJGroupProfit implements Serializable{
 	private Integer shopCommissionState = 0;
 	private BigDecimal personAvgCost = new BigDecimal(0);
 	private String orderDetails;
-	
+	private BigDecimal totalIncome1 = new BigDecimal(0);
+	private BigDecimal totalProfit1 = new BigDecimal(0);
+
+
+
+	public BigDecimal getTotalIncome1() {
+		return totalIncome1;
+	}
+	public void setTotalIncome1(BigDecimal totalIncome1) {
+		this.totalIncome1 = totalIncome1;
+	}
+	public BigDecimal getTotalProfit1() {
+		return totalProfit1;
+	}
+	public void setTotalProfit1(BigDecimal totalProfit1) {
+		this.totalProfit1 = totalProfit1;
+	}
 	public BigDecimal getPersonAvgCost() {
 		return personAvgCost;
 	}

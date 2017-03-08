@@ -9,6 +9,16 @@ public class TaobaoStockProduct  implements Serializable {
     private Integer id;
     private Integer productId;
     private Integer stockId;
+    private Integer productSkusId;
+    
+    
+    public Integer getProductSkusId() {
+		return productSkusId;
+	}
+
+	public void setProductSkusId(Integer productSkusId) {
+		this.productSkusId = productSkusId;
+	}
 
     public Integer getId() {
         return id;

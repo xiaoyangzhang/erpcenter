@@ -36,6 +36,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -140,6 +141,13 @@ public class FinanceDalImpl implements FinanceDal {
 		
 		// 佣金统计
 		List<FinanceCommission> commls = financeCommissionMapper.selectByGroupId(groupId);
+		BigDecimal totalCommls=new BigDecimal(0);
+		if(commls !=null && commls.size()>0){
+			for(FinanceCommission item:commls){
+				totalCommls =totalCommls.add(item.getTotal());
+			}
+		}
+		group.put("total_commls", totalCommls);
 		InfoBean comm = new InfoBean();
 		comm.setCount(commls.size());
 		view.put("comm", comm);
@@ -401,7 +409,7 @@ public class FinanceDalImpl implements FinanceDal {
 		groupMapper.updateByPrimaryKeySelective(tg);
 
 		//检查团成本是否合并到group_order_price的预算成本中
-		if(tourGroup != null &&tourGroup.getBizId().equals(5) && tourGroup.getGroupMode()!=null&&tourGroup.getGroupMode()>0){
+		if(tourGroup != null &&(tourGroup.getBizId().equals(5)||tourGroup.getBizId().equals(7)||tourGroup.getBizId().equals(9)||tourGroup.getBizId().equals(10)||tourGroup.getBizId().equals(11) ) && tourGroup.getGroupMode()!=null&&tourGroup.getGroupMode()>0){
 			if (ordls != null && ordls.size()>0){
 				Integer orderId = ordls.get(0).getId();
 				GroupOrderPrice groupOrderPrices=groupOrderPriceMapper.selectByOrderAndTypeAndRowState(orderId, 1,100);
@@ -750,7 +758,7 @@ public class FinanceDalImpl implements FinanceDal {
 		}else{
 			payMapper.update(pay);
 		}
-		
+		Set<Integer> orderIds = new HashSet<Integer>();
 		//删除前台删除的订单
 		List<FinancePayDetail> existDetails = payDetailMapper.selectByPayId(pay.getId());
 		if(existDetails != null && existDetails.size() > 0){
@@ -765,6 +773,7 @@ public class FinanceDalImpl implements FinanceDal {
 					}
 				}
 				if(needDelete){
+					orderIds.add(existDetail.getLocOrderId());
 					this.deletePayDetail(supplierType, existDetail.getLocOrderId(), pay.getId());
 				}
 			}
@@ -781,37 +790,46 @@ public class FinanceDalImpl implements FinanceDal {
 				BigDecimal originalCash = null;
 				if(isInsert){
 					payDetailMapper.insert(d);
+					orderIds.add(d.getLocOrderId());
 				}else{
 					FinancePayDetail selectedDetail = payDetailMapper.selectByPayIdAndLocOrderId(pay.getId(), d.getLocOrderId());
 					if(selectedDetail != null){
 						originalCash = selectedDetail.getCash();
 						selectedDetail.setCash(d.getCash());
 						payDetailMapper.update(selectedDetail);
+						orderIds.add(selectedDetail.getLocOrderId());
 					}else{
 						payDetailMapper.insert(d);
+						orderIds.add(d.getLocOrderId());
 					}
 				}
-	
+			}
+		}
+
+		payMapper.batchUpdate_TotalCash(orderIds, supplierType);
+
+		if(!CollectionUtils.isEmpty(orderIds)){
+			for (Integer d : orderIds) {
 				// 维护组团社已付金额
 				if (Constants.TRAVELAGENCY.equals(supplierType)) {
 					// 收款标识组团社
-					GroupOrder order = orderMapper.selectByPrimaryKey(d.getLocOrderId());
+					GroupOrder order = orderMapper.selectByPrimaryKey(d);
 //					if( null==order.getStateFinance() || 1 != order.getStateFinance()){
 //						throw new ClientException("单号为["+order.getOrderNo()+"]的订单没有审核");
 //					}
 	
-					GroupOrder modify = new GroupOrder();
+					/*GroupOrder modify = new GroupOrder();
 					modify.setId(order.getId());
 					originalCash = calcTotalCashValue(order.getId(), Constants.TRAVELAGENCY);
 					modify.setTotalCash(originalCash);
-					orderMapper.updateByPrimaryKeySelective(modify);
+					orderMapper.updateByPrimaryKeySelective(modify);*/
 					// 维护整团收支信息
 					calcTourGroupAmount(order.getGroupId());
 				}
 				// 维护地接社已付金额
 				else if(Constants.LOCALTRAVEL.equals(supplierType)){
-					BookingDelivery del = deliveryMapper.selectByPrimaryKey(d.getLocOrderId());
-					if(del.getStateFinance() != 1){
+					BookingDelivery del = deliveryMapper.selectByPrimaryKey(d);
+					/*if(del.getStateFinance() != 1){
 						throw new ClientException("单号为["+del.getSupplierOrderNo()+"]的订单没有审核");
 					}
 					
@@ -819,15 +837,15 @@ public class FinanceDalImpl implements FinanceDal {
 					modify.setId(del.getId());
 					originalCash = calcTotalCashValue(del.getId(), Constants.LOCALTRAVEL);
 					modify.setTotalCash(originalCash);
-					deliveryMapper.updateByPrimaryKeySelective(modify);
+					deliveryMapper.updateByPrimaryKeySelective(modify);*/
 					// 维护整团收支信息
 					calcTourGroupAmount(del.getGroupId());
 				}
 				
 				// 购物应收统计
 				else if(Constants.SHOPPING.equals(supplierType)) {
-					BookingShop shop = shopMapper.selectByPrimaryKey(d.getLocOrderId());
-					if(shop.getStateFinance() != 1){
+					BookingShop shop = shopMapper.selectByPrimaryKey(d);
+					/*if(shop.getStateFinance() != 1){
 						throw new ClientException("单号为["+shop.getBookingNo()+"]的订单没有审核");
 					}
 					
@@ -840,22 +858,22 @@ public class FinanceDalImpl implements FinanceDal {
 						totalCash = totalCash.add(d.getCash());
 						modify.setTotalCash(totalCash);
 					}
-					shopMapper.updateByPrimaryKeySelective(modify);
+					shopMapper.updateByPrimaryKeySelective(modify);*/
 					
 					// 维护整团收支信息
 					calcTourGroupAmount(shop.getGroupId());
 				}
 				// 维护供应商已付金额
 				else {
-					BookingSupplier sup = supplierMapper.selectByPrimaryKey(d.getLocOrderId());
-					if(sup.getStateFinance() != 1){
+					BookingSupplier sup = supplierMapper.selectByPrimaryKey(d);
+					/*if(sup.getStateFinance() != 1){
 						throw new ClientException("单号为["+sup.getBookingNo()+"]的订单没有审核");
 					}
 					BookingSupplier modify = new BookingSupplier();
 					modify.setId(sup.getId());
 					originalCash = calcTotalCashValue(sup.getId(), sup.getSupplierType());
 					modify.setTotalCash(originalCash);
-					supplierMapper.updateByPrimaryKeySelective(modify);
+					supplierMapper.updateByPrimaryKeySelective(modify);*/
 					// 维护整团收支信息
 					calcTourGroupAmount(sup.getGroupId());
 				}
@@ -960,14 +978,14 @@ public class FinanceDalImpl implements FinanceDal {
 	@Transactional
 	public void deletePayDetail(Integer supplierType, Integer locOrderId, Integer payId) {
 
-		FinancePayDetail detail = payDetailMapper.selectByPayIdAndLocOrderId(payId, locOrderId);
+		/*FinancePayDetail detail = payDetailMapper.selectByPayIdAndLocOrderId(payId, locOrderId);
 		if(detail == null){
 			return;
-		}
+		}*/
 		payDetailMapper.deleteByLocOrderIdAndPayId(locOrderId, payId);
 		
 		// 维护组团社已付金额
-		if (Constants.TRAVELAGENCY.equals(supplierType)) {
+		/*if (Constants.TRAVELAGENCY.equals(supplierType)) {
 			// 收款标识组团社
 			GroupOrder order = orderMapper.selectByPrimaryKey(locOrderId);
 			GroupOrder modify = new GroupOrder();
@@ -1011,7 +1029,7 @@ public class FinanceDalImpl implements FinanceDal {
 
 			// 维护整团收支信息
 			calcTourGroupAmount(sup.getGroupId());
-		}
+		}*/
 		
 	}
 

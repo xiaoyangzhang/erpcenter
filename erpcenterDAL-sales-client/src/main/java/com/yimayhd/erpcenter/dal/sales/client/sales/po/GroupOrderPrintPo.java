@@ -1,7 +1,10 @@
 package com.yimayhd.erpcenter.dal.sales.client.sales.po;
 
+import org.springframework.util.CollectionUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -64,12 +67,18 @@ public class GroupOrderPrintPo implements Serializable{
 	private List<GroupRequirement> groupRequirements;
 	
 	public List<GroupRequirement> getGroupRequirements() {
+		if (CollectionUtils.isEmpty(groupRequirements)) {
+			return Collections.emptyList();
+		}
 		return groupRequirements;
 	}
 	public void setGroupRequirements(List<GroupRequirement> groupRequirements) {
 		this.groupRequirements = groupRequirements;
 	}
 	public List<GroupOrderTransport> getOrderTransports() {
+		if (CollectionUtils.isEmpty(orderTransports)) {
+			return Collections.emptyList();
+		}
 		return orderTransports;
 	}
 	public void setOrderTransports(List<GroupOrderTransport> orderTransports) {
@@ -82,7 +91,10 @@ public class GroupOrderPrintPo implements Serializable{
 		this.groupOrder = groupOrder;
 	}
 	public List<GroupOrderGuest> getGuests() {
-		return new ArrayList<GroupOrderGuest>();
+		if (CollectionUtils.isEmpty(guests)) {
+			return Collections.emptyList();
+		}
+		return guests;
 	}
 	public void setGuests(List<GroupOrderGuest> guests) {
 		this.guests = guests;

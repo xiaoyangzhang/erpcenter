@@ -16,6 +16,7 @@ public class AddNewTaobaoOrderResult extends ResultSupport{
 	private List<DicInfo> jtfsList;
 	private List<DicInfo> zjlxList;
 	private List<DicInfo> typeList;
+	private List<DicInfo> sourceTypeList;
 	private List<RegionInfo> allProvince;
 	private List<DicInfo> lysfxmList;
 	public List<DicInfo> getJdxjList() {
@@ -53,6 +54,12 @@ public class AddNewTaobaoOrderResult extends ResultSupport{
 	}
 	public void setLysfxmList(List<DicInfo> lysfxmList) {
 		this.lysfxmList = lysfxmList;
+	}
+	public List<DicInfo> getSourceTypeList() {
+		return sourceTypeList;
+	}
+	public void setSourceTypeList(List<DicInfo> sourceTypeList) {
+		this.sourceTypeList = sourceTypeList;
 	}
 
 }

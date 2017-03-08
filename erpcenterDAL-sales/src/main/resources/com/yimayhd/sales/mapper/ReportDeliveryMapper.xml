@@ -95,7 +95,7 @@
 	<sql id="selectDeliveryCashDetail">
 		FROM booking_delivery a
 		INNER JOIN tour_group b ON a.group_id = b.id
-		LEFT JOIN group_order go ON go.id=a.order_id #添加group_order表关联
+		LEFT JOIN group_order go ON go.id=a.order_id
 		LEFT JOIN (SELECT booking_id, GROUP_CONCAT(CONCAT(item_name,':',remark,' ',FORMAT(unit_price,'.##'),'*',FORMAT(num_times,'.##'),'*',FORMAT(num_person,'.##'),'=',FORMAT(total_price,'.##') ) separator ';' ) detailInfo FROM `booking_delivery_price` GROUP BY booking_id  ) price ON a.`id`=price.booking_id
 		
 		where 1=1   AND group_state in (1,3,4)
@@ -139,6 +139,9 @@
 				test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
 				and b.operator_id in (${parameter.saleOperatorIds})
 			</if>
+		<if test="parameter.djType == 1"><if test="parameter.limitSupplerIds != null and parameter.limitSupplerIds != ''"> and a.supplier_id in (${parameter.limitSupplerIds})</if></if>
+		<if test="parameter.djType == 2"><if test="parameter.limitSupplerIds != null and parameter.limitSupplerIds != ''"> and a.supplier_id not in (${parameter.limitSupplerIds})</if></if>
+
 	</sql>
 	
 	
@@ -217,7 +220,40 @@
 		sum(ifnull(originalTotalBalance,0)) originalTotalBalance
 		<include refid="dijieshe" />
 	</select>
-	
+
+	<!-- 地接社收支明细 -->
+	<select id="selectDeliveryCashDetailListPage2" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
+		select * from (
+		SELECT
+			b.group_code,
+			a.date_arrival,
+			a.supplier_name,
+			b.id groupId,
+			b.group_mode,
+			b.product_brand_name ,
+			go.receive_mode,
+			IFNULL(a.person_adult,0) total_adult,
+			IFNULL(a.person_child,0) total_child,
+			IFNULL(a.person_guide,0) total_guide,
+			b.product_name,
+			IFNULL(a.total,0) total,
+			IFNULL(a.total_cash,0) totalCash,
+			IFNULL(a.total_sale,0) totalSale,
+			IFNULL(a.total_temp,0) totalTemp,
+			a.user_name,
+			a.product_des,
+			b.operator_name operator_name,
+			detailInfo
+		<include refid="selectDeliveryCashDetail" />
+		order by date_start ,b.create_time ) m
+		where 1=1 
+		<!-- 原来的 -->
+		<!-- <if test="parameter.status == 0">and (ifnull(total,0) - ifnull(totalCash,0)) <![CDATA[=]]>0</if>
+		<if test="parameter.status == 1">and (ifnull(total,0) - ifnull(totalCash,0)) <![CDATA[<>]]>0</if> -->
+		<!-- 临时使用total_temp -->
+		<if test="parameter.status == 0">and (ifnull(total_temp,0) - ifnull(totalCash,0)) <![CDATA[=]]>0</if>
+		<if test="parameter.status == 1">and (ifnull(total_temp,0) - ifnull(totalCash,0)) <![CDATA[<>]]>0</if>
+	</select>	
 
 	<!-- 地接社收支明细 -->
 	<select id="selectDeliveryCashDetailListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
@@ -236,6 +272,8 @@
 			b.product_name,
 			IFNULL(a.total,0) total,
 			IFNULL(a.total_cash,0) totalCash,
+			IFNULL(a.total_sale,0) totalSale,
+			IFNULL(a.total_temp,0) totalTemp,
 			a.user_name,
 		    a.product_des,
 			b.operator_name operator_name,
@@ -247,7 +285,31 @@
 			<if test="parameter.status == 1">and (ifnull(total,0) - ifnull(totalCash,0)) <![CDATA[<>]]>0</if>
 		
 	</select>
-
+	
+	<!-- 地接社收支明细总计 -->
+	<select id="selectDeliveryCashDetailSum2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		
+		SELECT
+		SUM(IFNULL(a.person_adult, 0)) total_adult,
+		    SUM(IFNULL(a.person_child, 0)) total_child,
+		    SUM(IFNULL(a.person_guide, 0)) total_guide,
+			SUM(IFNULL(a.total,0)) total,
+			SUM(IFNULL(a.total_cash,0)) totalCash,
+			SUM(IFNULL(a.total_sale,0)) totalSale,
+			SUM(IFNULL(a.total_temp,0)) totalTemp,
+			SUM(IFNULL(a.total_sale,0) - IFNULL(a.total,0)) profit,
+			SUM(IFNULL(a.total,0) - IFNULL(a.total_cash,0)) balance
+		<include refid="selectDeliveryCashDetail" />
+		<!-- 原来的 -->
+		<!-- <if test="parameter.status == 0">and IFNULL(a.total,0) - IFNULL(a.total_cash,0)<![CDATA[=]]>0</if>
+		<if test="parameter.status == 1">and IFNULL(a.total,0) - IFNULL(a.total_cash,0) <![CDATA[<>]]>0</if> -->
+		<!-- 临时换成total_temp -->
+		<if test="parameter.status == 0">and IFNULL(a.total_temp,0) - IFNULL(a.total_cash,0)<![CDATA[=]]>0</if>
+		<if test="parameter.status == 1">and IFNULL(a.total_temp,0) - IFNULL(a.total_cash,0) <![CDATA[<>]]>0</if>
+		
+		
+	</select>
+	
 	<!-- 地接社收支明细总计 -->
 	<select id="selectDeliveryCashDetailSum" parameterType="java.util.HashMap" resultType="java.util.HashMap">
 		
@@ -257,6 +319,9 @@
 		    SUM(IFNULL(a.person_guide, 0)) total_guide,
 			SUM(IFNULL(a.total,0)) total,
 			SUM(IFNULL(a.total_cash,0)) totalCash,
+			SUM(IFNULL(a.total_sale,0)) totalSale,
+			SUM(IFNULL(a.total_temp,0)) totalTemp,
+			SUM(IFNULL(a.total_sale,0) - IFNULL(a.total,0)) profit,
 			SUM(IFNULL(a.total,0) - IFNULL(a.total_cash,0)) balance
 		<include refid="selectDeliveryCashDetail" />
 

@@ -22,6 +22,10 @@ public class TicketErrorCode implements Serializable {
     public static final TicketErrorCode PARAM_ERROR = new TicketErrorCode("1002","参数错误");
     public static final TicketErrorCode QUERY_ERROR = new TicketErrorCode("1003","查询失败");
     public static final TicketErrorCode MODIFY_ERROR = new TicketErrorCode("1005","操作失败");
+    public static final TicketErrorCode CODE_NOT_EXIST = new TicketErrorCode("1006","当前企业编码不存在！");
+    public static final TicketErrorCode NOT_MATCH = new TicketErrorCode("1007","用户名密码不匹配！");
+	public static final TicketErrorCode NAME_NOT_EXIST = new TicketErrorCode("1008","用户名不存在！");
+	public static final TicketErrorCode NO_WAY_TO_RESERVE = new TicketErrorCode("1009","之前预留的订单未结清，不可再预留！");
 
 	 public TicketErrorCode() {
 		super();

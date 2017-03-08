@@ -633,8 +633,8 @@ public class SpecialGroupOrderDalImpl implements SpecialGroupOrderDal {
 			if(groupOrder.getGroupId()==null){ //插入
 			TourGroup tourGroup = new TourGroup();
 			tourGroup.setCreateTime(System.currentTimeMillis());
-			tourGroup.setGroupMode(-1);
-			tourGroup.setGroupState(0); // 默认未确认，因为确认步骤有客服操作
+			tourGroup.setGroupMode(1);
+			tourGroup.setGroupState(1); // 默认未确认，因为确认步骤有客服操作
 			tourGroup.setBizId(bizId);
 			tourGroup.setOperatorId(operid);
 			tourGroup.setOperatorName(operName);

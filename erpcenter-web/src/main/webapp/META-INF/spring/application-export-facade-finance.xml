@@ -46,5 +46,35 @@
               <property name="timeout" value="${export.dubbo.timeout}"/>
               <property name="retries" value="${dubbo.retries}"/>
   </bean>
+    <bean id="financePayFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
+ 			  <property name="interface" value="org.yimayhd.erpcenter.facade.finance.service.FinancePayFacade"/>
+              <property name="ref" ref="financePayFacade"/>
+              <property name="application" ref="dubboApplicationConfig"/>
+              <property name="registry" ref="dubboRegistryConfig"/>
+              <property name="protocol" ref="dubboProtocolConfig"/>
+              <property name="version" value="${export.dubbo.version}"/>
+              <property name="timeout" value="${export.dubbo.timeout}"/>
+              <property name="retries" value="${dubbo.retries}"/>
+  </bean>
+    <bean id="financePayDetailFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
+ 			  <property name="interface" value="org.yimayhd.erpcenter.facade.finance.service.FinancePayDetailFacade"/>
+              <property name="ref" ref="financePayDetailFacade"/>
+              <property name="application" ref="dubboApplicationConfig"/>
+              <property name="registry" ref="dubboRegistryConfig"/>
+              <property name="protocol" ref="dubboProtocolConfig"/>
+              <property name="version" value="${export.dubbo.version}"/>
+              <property name="timeout" value="${export.dubbo.timeout}"/>
+              <property name="retries" value="${dubbo.retries}"/>
+  </bean>
+  <bean id="ymgFacadeExport" class="com.alibaba.dubbo.config.spring.ServiceBean">
+ 			  <property name="interface" value="org.yimayhd.erpcenter.facade.finance.service.YMGFacade"/>
+              <property name="ref" ref="ymgFacade"/>
+              <property name="application" ref="dubboApplicationConfig"/>
+              <property name="registry" ref="dubboRegistryConfig"/>
+              <property name="protocol" ref="dubboProtocolConfig"/>
+              <property name="version" value="${export.dubbo.version}"/>
+              <property name="timeout" value="${export.dubbo.timeout}"/>
+              <property name="retries" value="${dubbo.retries}"/>
+  </bean>
    
 </beans>

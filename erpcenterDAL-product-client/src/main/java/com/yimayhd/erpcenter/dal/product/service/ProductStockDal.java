@@ -86,4 +86,6 @@ public interface ProductStockDal {
     void updateProductStockByTaobao(List<Map<String, String>> mapList);
 	
 	TaobaoStockDate selectStockDataById(Integer id);
+	
+	int updateRemark(TaobaoStockDate taobaoStockDate);
 }

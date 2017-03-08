@@ -31,6 +31,12 @@ public class SysBizConfigDalImpl implements SysBizConfigDal {
 		}
 		return map;
 	}
+	
+	@Override
+	public SysBizConfig findByItemValue(int bizId, String itemCode) {
+		SysBizConfig sysConfigBean = configMapper.selectByBizIdAndCode(bizId, itemCode);
+		return sysConfigBean;
+	}
 
 //	@Override
 //	public boolean cnm(Integer bizId, String config) {

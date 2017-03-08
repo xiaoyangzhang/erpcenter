@@ -3,6 +3,7 @@ package com.yimayhd.erpcenter.dal.product.service;
 
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoProduct;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoProductSkus;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStock;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct;
@@ -16,8 +17,8 @@ import java.util.Set;
  * @Description: 淘宝库存信息接口
  */
 public interface TaoBaoStockDal {
-	
-	void updateProductStockByTaobao(List<Map<String, String>> mapList);
+
+	List<Map<String, String>> updateProductStockByTaobao(List<Map<String, String>> mapList);
 	/**
 	 * 查询淘宝库存信息
 	 * @param pageBean
@@ -52,8 +53,9 @@ public interface TaoBaoStockDal {
 	
 	int insertTbStockProduct(TaobaoStockProduct record);
 	
-	PageBean<TaobaoProduct> findTaoBaoProductListPage(PageBean<TaobaoProduct> pageBean);
+	PageBean<TaobaoProduct> findTaoBaoProductListPage(PageBean<TaobaoProduct> pageBean,Integer bizId);
 	
+	PageBean<TaobaoProduct> selectTPBytpdIdListPage(PageBean<TaobaoProduct> pageBean,Integer bizId);
 	 TaobaoProduct findByPrimaryKey(Integer id);
 	 
 	 int deleteTaoBaoStockProduct(TaobaoStockProduct taobaoStockProduct);
@@ -74,5 +76,19 @@ public interface TaoBaoStockDal {
 	TaobaoStockLog selectStockLogAllByOrderId(Integer orderId);
 
 	TaobaoStockLog selectStockLogAllByTaobaoOrderId(Integer taobaoOrderId);
+	
+	 TaobaoProductSkus selectByVid(String vid,String numIid);
+	 
+	 int updateTaobaoProductSkus(TaobaoProductSkus record);
+	 
+	 int insertTaobaoProductSkus(TaobaoProductSkus record);
+	 
+	 int updateTaobaoProduct(TaobaoProduct record);
+	 
+	 TaobaoProductSkus selectSkusById(Integer id);
+
+	void updateState(Integer id,Integer state);
+
+	List<TaobaoStockProduct> findStockProductStockIdHavePSI(Integer stockId);
 
 }

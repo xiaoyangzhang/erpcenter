@@ -385,4 +385,45 @@ public class AgencyFitFacadeImpl implements AgencyFitFacade {
 		return resultSupport;
 	}
 
+	@Override
+	public ResultSupport delYmgGroupOrder(Integer bizId, Integer id) throws ParseException {
+		ResultSupport resultSupport = new ResultSupport();
+		if (airTicketRequestBiz.doesOrderhaveRequested(
+				bizId, id)) {
+			resultSupport.setErrorCode(OperationErrorCode.CANCEL_APP);
+		}
+		GroupOrder groupOrder = groupOrderBiz.findById(id);
+		groupOrder.setState(-1);
+		groupOrderBiz.updateGroupOrder(groupOrder);
+
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+			if(groupOrder.getType()==0){ //预留
+				productStockBiz.updateReserveCount(groupOrder.getProductId(), sdf.parse(groupOrder.getDepartureDate()),-(groupOrder.getNumAdult() + groupOrder.getNumChild()));
+
+			}else{
+
+
+				productStockBiz.updateStockCount(groupOrder.getProductId(),
+						sdf.parse(groupOrder.getDepartureDate()),
+						-(groupOrder.getNumAdult() + groupOrder.getNumChild()));
+
+			}
+			if(groupOrder.getGroupId()!=null){    									// 判断是否成团，团中有无订单，若无订单删除团。
+				List<GroupOrder> list =groupOrderBiz.selectSubOrderList(groupOrder.getGroupId());
+				if(list==null || list.size()<1){
+					TourGroup tourGroup=tourGroupBiz.selectByPrimaryKey(groupOrder.getGroupId());
+					tourGroup.setGroupState(-1);
+					tourGroupBiz.updateByPrimaryKeySelective(tourGroup);
+				}
+				financeBiz.calcTourGroupAmount(groupOrder.getGroupId());
+			}
+		} catch (Exception e) {
+			resultSupport.setErrorCode(OperationErrorCode.UPDATE_STOCK_FAILED);
+		}
+
+		return resultSupport;
+	}
+
 }

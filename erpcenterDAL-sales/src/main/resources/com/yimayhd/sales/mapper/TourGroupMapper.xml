@@ -368,7 +368,7 @@
 	</select>
 	<select id="selectProfitByModeAndTourId" resultType="java.math.BigDecimal">
 		SELECT
-		SUM(gop.`total_price`)
+		ifnull(SUM(gop.`total_price`),0) total_price
 		FROM
 		tour_group tg
 		LEFT
@@ -387,7 +387,7 @@
 	<!-- XTSM：销售利润统计 -->
 	<select id="selectSaleProfitByModeAndTourId" resultType="java.math.BigDecimal">
 		SELECT
-		SUM(gop.`total_price`)
+		ifnull(SUM(gop.`total_price`),0) total_price
 		FROM
 		tour_group tg
 		LEFT
@@ -708,8 +708,7 @@
 		tg.id,
 		tg.group_code,
 		tg.group_mode,
-		go.supplier_name as
-		supplierName,
+		go.supplier_name ,
 		tg.date_start,
 		tg.product_brand_name,
 		tg.product_name,
@@ -3033,6 +3032,12 @@
 		AND biz_id =
 		#{bizId,jdbcType=INTEGER}
 		AND group_state in (0,1,3,4)
+		<if test="page.parameter.stateLockType ==0">
+			and bg.state_lock =0
+		</if>
+		<if test="page.parameter.stateLockType ==1">
+			and bg.state_lock =1
+		</if>
 		<if
 			test="page.parameter.startTime != null and page.parameter.startTime !=''">
 	<![CDATA[and t.date_start >=#{page.parameter.startTime}]]>
@@ -4459,6 +4464,7 @@
         product_brand_name AS productBrandName,
         0 AS orderId,
         ' ' AS supplierName,
+		bd.supplier_id AS bookSupplierIds,
         bd.supplier_name AS bookSupplierName,
         IFNULL(tg.`total_adult`,0)  AS adultCount,
         IFNULL(tg.total_child,0)  AS childCount,
@@ -4466,14 +4472,25 @@
         operator_name AS operatorName,
         group_state AS groupState,
         SUM(IFNULL(bd.`total`,0)) AS price,
-        COUNT(bd.id) AS COUNT,bd.push_status AS pushStatus,
-        pa.app_key AS driverName <!-- driverName临时使用 接收方的app_key  -->
+        COUNT(bd.id) AS COUNT,bd.push_status AS pushStatus
+
         FROM tour_group AS tg
-        LEFT JOIN booking_delivery bd ON(tg.`id`= bd.`group_id`)
-        RIGHT JOIN yihg_erp_user.plat_auth AS pa 
-        ON(bd.supplier_id = pa.supplier_id AND pa.plat_status = 1)
+       JOIN booking_delivery bd ON(tg.`id`= bd.`group_id`)
+
         WHERE tg.biz_id = #{bizId,jdbcType=INTEGER}
         AND tg.group_state in (0,1,3,4)
+		AND bd.id IS NOT NULL
+		AND tg.operator_id IN
+		<foreach item="item" index="index" collection="set" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach>
+		<if test="supplierIdSet != null and supplierIdSet.size() > 0">
+		AND bd.supplier_id IN
+		<foreach item="item" index="index" collection="supplierIdSet" open="("
+				 separator="," close=")">
+			#{item}
+		</foreach></if>
         <if test="page.parameter.startTime != null and page.parameter.startTime !=''">
             <![CDATA[AND tg.date_start >= #{page.parameter.startTime}]]>
         </if>

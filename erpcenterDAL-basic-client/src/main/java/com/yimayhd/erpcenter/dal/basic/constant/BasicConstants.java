@@ -35,6 +35,20 @@ public class BasicConstants {
     public static final String SUPPLIER_LEVEL_INSURANCE = "SUPPLIER_LEVEL_INSURANCE"; //供应商-类别-保险
 
     public static final String SUPPLIER_LEVEL_LOCALTRAVEL = "SUPPLIER_LEVEL_LOCALTRAVEL"; //供应商-类别-地接社
+    public static final String SUPPLIER_CLASS_TRAVELAGENCY = "SUPPLIER_CLASS_TRAVELAGENCY"; //供应商-分类-组团社
+    public static final String SUPPLIER_CLASS_HOTEL = "SUPPLIER_CLASS_HOTEL"; //供应商-分类-酒店
+    public static final String SUPPLIER_CLASS_RESTAURANT = "SUPPLIER_CLASS_RESTAURANT"; //供应商-分类-餐厅
+    public static final String SUPPLIER_CLASS_FLEET = "SUPPLIER_CLASS_FLEET"; //供应商-分类-车队
+    public static final String SUPPLIER_CLASS_SCENICSPOT = "SUPPLIER_CLASS_SCENICSPOT"; //供应商-分类-景区
+    public static final String SUPPLIER_CLASS_SHOPPING = "SUPPLIER_CLASS_SHOPPING"; //供应商-分类-购物
+    public static final String SUPPLIER_CLASS_ENTERTAINMENT = "SUPPLIER_CLASS_ENTERTAINMENT"; //供应商-分类-娱乐
+    public static final String SUPPLIER_CLASS_GUIDE = "SUPPLIER_CLASS_GUIDE"; //供应商-分类-导游
+    public static final String SUPPLIER_CLASS_AIRTICKETAGENT = "SUPPLIER_CLASS_AIRTICKETAGENT"; //供应商-分类-机票代理
+    public static final String SUPPLIER_CLASS_TRAINTICKETAGENT = "SUPPLIER_CLASS_TRAINTICKETAGENT"; //供应商-分类-火车票代理
+    public static final String SUPPLIER_CLASS_GOLF = "SUPPLIER_CLASS_GOLF"; //供应商-分类-高尔夫
+    public static final String SUPPLIER_CLASS_OTHER = "SUPPLIER_CLASS_OTHER"; //供应商-分类-其他
+    public static final String SUPPLIER_CLASS_INSURANCE = "SUPPLIER_CLASS_INSURANCE"; //供应商-分类-保险
+    public static final String SUPPLIER_CLASS_LOCALTRAVEL = "SUPPLIER_CLASS_LOCALTRAVEL"; //供应商-分类-地接社
 
 
     public static final String SALES_TEAM_TYPE = "SALES_TEAM_TYPE";// 团队类别
@@ -195,4 +209,5 @@ public class BasicConstants {
     public static int BATCH_QUERY_PAGE_SIZE = 100;
 
     public static String DATA_TRAVEL_ACCOUNT = "DATA_TRAVEL_ACCOUNT";
+
 }

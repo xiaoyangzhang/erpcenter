@@ -216,7 +216,7 @@
 	<!-- 供应商订单统计（订单）-->
 	<select id="selectbookingSupplier2DetailListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap">
 		SELECT bs.group_id AS groupId, tg.group_code AS groupCode, tg.date_start AS dateStart, tg.product_brand_name AS productBrandName,tg.product_name AS productName,tg.group_mode groupMode,tg.operator_name AS operatorName
-				,bs.id AS id, bs.supplier_id AS supplierId,bs.supplier_name AS supplierName, bs.cash_type AS cashType 
+				,bs.id AS id,bs.supplier_id AS supplierId,bs.supplier_name AS supplierName, bs.cash_type AS cashType
 			  ,bs.booking_date bookingDate, IFNULL(bs.`total`, 0) AS total, IFNULL(bs.`total_cash`, 0) AS totalCash 			  
 				,GROUP_CONCAT(DISTINCT CONCAT (item_date,'【',type1_name,'】',CAST(item_price AS DECIMAL (15, 0)),'*(',CAST(item_num AS DECIMAL (15, 0)),'-',CAST(item_num_minus AS DECIMAL (15, 1)),')') )details
 				,GROUP_CONCAT(distinct CONCAT_WS('-',bg.guide_name,bg.guide_mobile)) bookingGuideInfo
@@ -301,11 +301,24 @@
 	</select>
 	
 	<!-- 供应商订单明细（房、餐、保险、机票、门票、火车票明细查询）总合计 -->
-	<select id="bookingSupplierDetailTotal" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
-		SELECT ifnull(SUM(item_num),0) totalNum, ifnull(SUM(item_num_minus),0) totalNumMinus, ifnull(SUM(item_total),0) totalCount
-		,ifnull(SUM(det.sale_item_price*(item_num-item_num_minus)),0) totalSale
-		,ifnull(SUM(det.sale_item_price*(item_num-item_num_minus) - det.item_total ),0) totalProfit
-		,ifnull(SUM(total),0) total, ifnull(SUM(total_cash),0) totalCash 
+		<select id="bookingSupplierDetailTotal" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
+		SELECT 
+		<!-- ifnull(SUM(item_num),0) totalNum, 
+		ifnull(SUM(item_num_minus),0) totalNumMinus, 
+		ifnull(SUM(item_total),0) totalCount -->
+		<!-- ,ifnull(SUM(det.sale_item_price*(item_num-item_num_minus)),0) totalSale -->
+		<!-- ,ifnull(SUM(det.item_total - det.sale_item_price*(item_num-item_num_minus)),0) totalProfit  -->
+		SUM(ifnull(item_num,0)) totalNum, 
+		SUM(ifnull(item_num_minus,0)) totalNumMinus, 
+		SUM(ifnull(item_total,0)) totalCount,
+		SUM(ifnull(det.sale_item_price*(item_num-item_num_minus),0)) totalSale,
+		SUM(ifnull(det.sale_item_price*(item_num-item_num_minus),0)-ifnull(det.item_total,0)) as totalProfit, 
+		SUM(ifnull(total,0)) total, 
+		SUM(ifnull(total_cash,0)) totalCash
+		
+		<!-- ,ifnull(SUM(total),0) total,  -->
+		<!-- ifnull(SUM(total_cash),0) totalCash -->
+		 
 		FROM booking_supplier_detail det
 		JOIN booking_supplier bs ON (bs.`id`=det.booking_id
 					<if test="parameter.selectDate!=null and parameter.selectDate==1">
@@ -772,6 +785,298 @@ where 1=1 <if test="parameter.gender != null">and gender =#{parameter.gender} </
 		GROUP BY go.`supplier_id`,go.`product_brand_name`
 		order by tg.date_start
 	</select>
-	
-	
+	<select id="bookingSupplierDetailTwoListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
+		SELECT tg.id groupId,tg.group_mode groupMode, tg.`group_code` groupCode, tg.`total_adult` totalAdult,tg.`total_child` totalChild,tg.total_guide totalGuide
+		,tg.product_brand_name productBrandName,tg.product_name productName, tg.`operator_name` operatorName
+		,bs.supplier_type supplierType,bs.id, bs.supplier_id supplierId,bs.`supplier_name` supplierName, bs.`cash_type` cashType,bs.total, ifnull(bs.total_cash,0) as totalCash
+		,det.`item_date` itemDate, det.item_date_to itemDateTo, det.`item_num` itemNum, ifnull(det.`item_num_minus`,0) itemNumMinus, det.`item_price` itemPrice, det.sale_item_price as saleItemPrice
+		,det.`item_total` itemTotal,det.sale_item_price *(det.`item_num`-ifnull(det.`item_num_minus`,0)) as totalSale
+		,det.`type1_name` type1Name, det.`type2_name` type2Name,det.`item_brief` itemBrief
+		,det.driver_name driverName, det.driver_tel driverTel,  det.car_lisence carLisence
+		,det.`ticket_departure` ticketDeparture, det.`ticket_arrival` ticketArrival, det.`ticket_flight` ticketFlight
+		,ifNull(bg.guideInfo,'') bookingGuideInfo,bs.remark
+		FROM booking_supplier_detail det
+		JOIN booking_supplier bs ON (bs.`id`=det.booking_id
+		<if test="parameter.selectDate!=null and parameter.selectDate==1">
+			<if test="parameter.startTime != null">and item_date<![CDATA[>=]]> #{parameter.startTime} </if>
+			<if test="parameter.endTime != null">and item_date<![CDATA[<=]]> #{parameter.endTime} </if>
+		</if>
+		<if test="parameter.type1Id!=null and parameter.type1Id!=''">
+			and type1_id = #{parameter.type1Id}
+		</if>
+		)
+		JOIN tour_group tg ON tg.`id`=bs.`group_id`
+		LEFT JOIN (SELECT g.`group_id`,GROUP_CONCAT(CONCAT_WS('-',g.guide_name,g.guide_mobile)) guideInfo FROM booking_guide g GROUP BY g.`group_id`) bg ON tg.`id`=bg.group_id
+		WHERE tg.biz_id=#{parameter.bizId} and tg.group_state in (1,3,4)
+		<include refid="selectBookingSupplier_Where_Date"/>
+		<include refid="selectBookingSupplier_Where"/>
+		<if test="parameter.limitSupplerIds !=null and parameter.limitSupplerIds !=''">
+			and bs.supplier_id not in (${parameter.limitSupplerIds})
+		</if>
+		ORDER BY tg.date_start,tg.group_code_sort,tg.id,bs.supplier_id
+	</select>
+
+
+	<!-- 预订明细查询 -->
+	<select id="placeOrderDetailListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
+		SELECT
+		tg.id groupId,
+		tg.group_mode groupMode,
+		tg.`group_code` groupCode,
+		tg.`total_adult` totalAdult,
+		tg.`total_child` totalChild,
+		tg.total_guide totalGuide,
+		tg.product_brand_name productBrandName,
+		tg.product_name productName,
+		tg.`operator_name` operatorName,
+		bs.supplier_type supplierType,
+		bs.supplier_id supplierId,
+		bs.`supplier_name` supplierName,
+		bs.`cash_type` cashType,
+		bs.total,
+		ifnull(bs.total_cash, 0) AS totalCash,
+		det.`item_date` itemDate,
+		det.item_date_to itemDateTo,
+		det.`item_num` itemNum,
+		ifnull(det.`item_num_minus`, 0) itemNumMinus,
+		det.`item_price` itemPrice,
+		det.`item_total` itemTotal,
+		det.`type1_name` type1Name,
+		det.`type2_name` type2Name,
+		det.`item_brief` itemBrief,
+		det.driver_name driverName,
+		det.driver_tel driverTel,
+		det.car_lisence carLisence,
+		det.`ticket_departure` ticketDeparture,
+		det.`ticket_arrival` ticketArrival,
+		det.`ticket_flight` ticketFlight,
+		/**销售价格**/
+		det.sale_item_price  as sale_item_price,
+		/**销售金额-毛利**/
+		(det.item_num-det.item_num_minus)*det.item_price-item_price  as sale_item_price_gp,
+		ifNull(bg.guideInfo, '') bookingGuideInfo,
+		bs.remark
+		FROM yihg_erp_sales.booking_supplier_detail det
+		JOIN yihg_erp_sales.booking_supplier bs ON (bs.`id`=det.booking_id
+		<if test="parameter.selectDate!=null and parameter.selectDate==1">
+			<if test="parameter.startTime != null">and item_date<![CDATA[>=]]> #{parameter.startTime} </if>
+			<if test="parameter.endTime != null">and item_date<![CDATA[<=]]> #{parameter.endTime} </if>
+		</if>
+		<if test="parameter.type1Id!=null and parameter.type1Id!=''">
+			and type1_id = #{parameter.type1Id}
+		</if>
+		)
+		JOIN yihg_erp_sales.tour_group tg ON tg.`id`=bs.`group_id`
+		LEFT JOIN (SELECT g.`group_id`,GROUP_CONCAT(CONCAT_WS('-',g.guide_name,g.guide_mobile)) guideInfo FROM yihg_erp_sales.booking_guide g GROUP BY g.`group_id`) bg ON tg.`id`=bg.group_id
+		WHERE tg.biz_id=#{parameter.bizId} and tg.group_state in (1,3,4)
+		<include refid="selectBookingSupplier_Where_Date"/>
+		<include refid="selectBookingSupplier_Where"/>
+		ORDER BY tg.date_start,tg.group_code_sort,tg.id,bs.supplier_id
+	</select>
+	<select id="bookingSupplierDetailTwoTotal" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
+		SELECT
+		SUM(det.item_num) totalNum,
+		SUM(det.item_num_minus) totalNumMinus,
+		SUM(ifnull(det.item_price,0)) totalPrice,
+		SUM(ifnull(det.item_total,0)) totalCount,
+		SUM(ifnull(det.sale_item_price,0)) as saleItemPrice,
+		SUM(ifnull(det.sale_item_price*(det.item_num-det.item_num_minus),0)) totalSale,
+
+		SUM(ifnull(det.sale_item_price*(item_num-item_num_minus) ,0) - ifnull(det.item_total,0)) totalProfit, 
+		SUM(ifnull(total,0)) total,
+		SUM(ifnull(total_cash,0)) totalCash
+		<!-- ifnull(SUM(item_num),0) totalNum,
+		ifnull(SUM(item_num_minus),0) totalNumMinus,
+		ifnull(SUM(item_total),0) totalCount
+		,ifnull(SUM(det.sale_item_price*(item_num-item_num_minus)),0) totalSale
+		,ifnull(SUM(det.sale_item_price*(item_num-item_num_minus) - det.item_total ),0) totalProfit
+		,ifnull(SUM(total),0) total,
+		ifnull(SUM(total_cash),0) totalCash  -->
+		FROM booking_supplier_detail det
+		JOIN booking_supplier bs ON (bs.`id`=det.booking_id
+		<if test="parameter.selectDate!=null and parameter.selectDate==1">
+			<if test="parameter.startTime != null">and item_date<![CDATA[>=]]> #{parameter.startTime} </if>
+			<if test="parameter.endTime != null">and item_date<![CDATA[<=]]> #{parameter.endTime} </if>
+		</if>
+		<if test="parameter.type1Id!=null and parameter.type1Id!=''">
+			and type1_id = #{parameter.type1Id}
+		</if>
+		)
+		JOIN tour_group tg ON tg.`id`=bs.`group_id`
+		LEFT JOIN (SELECT g.`group_id`,GROUP_CONCAT(CONCAT_WS('-',g.guide_name,g.guide_mobile)) guideInfo
+		FROM booking_guide g
+		GROUP BY g.`group_id`) bg ON tg.`id`=bg.group_id
+		WHERE tg.biz_id=#{parameter.bizId} and tg.group_state in (1,3,4)
+		<include refid="selectBookingSupplier_Where_Date"/>
+		<include refid="selectBookingSupplier_Where"/>
+		<if test="parameter.limitSupplerIds !=null and parameter.limitSupplerIds !=''">
+			and bs.supplier_id not in (${parameter.limitSupplerIds})
+		</if>
+	</select>
+
+	<sql id="bookingSupplierCarListPage_Where_Clause">
+		<if test="parameter.selectDate!=null and parameter.selectDate==0">
+			<if test="parameter.startTime != null">and tg.date_start <![CDATA[>=]]>#{parameter.startTime} </if>
+			<if test="parameter.endTime != null">and tg.date_start<![CDATA[<=]]>#{parameter.endTime} </if>
+		</if>
+		<if test="parameter.selectDate!=null and parameter.selectDate==2">
+			<if test="parameter.startTime != null">and tg.date_end <![CDATA[>=]]>#{parameter.startTime} </if>
+			<if test="parameter.endTime != null">and tg.date_end<![CDATA[<=]]>#{parameter.endTime} </if>
+		</if>
+		<if test="parameter.supplierName != null and parameter.supplierName !=''">and supplier_name LIKE CONCAT('%',#{parameter.supplierName},'%') </if>
+
+		<if test="parameter.supplierId != null and parameter.supplierId !=''">and bs.supplier_id=#{parameter.supplierId} </if>
+		<if test="parameter.cashType != null and parameter.cashType !=''">and bs.cash_type like CONCAT('%',#{parameter.cashType},'%') </if>
+		<if test="parameter.paymentState == 0"> and IFNULL(bs.total,0)-IFNULL(bs.total_cash,0) <![CDATA[<>]]>0 </if>
+		<if test="parameter.paymentState == 1"> and IFNULL(bs.total,0)-IFNULL(bs.total_cash,0) <![CDATA[=]]>0 </if>
+		<if test="parameter.citysSupplierIds!=null and parameter.citysSupplierIds!=''">
+			and bs.supplier_id in (${parameter.citysSupplierIds}) <!-- 选择了省市  -->
+		</if>
+		<if test="parameter.supplierLevel!=null and parameter.supplierLevel!=''">
+			and bs.supplier_id in (${parameter.supplierLevel}) <!-- 选择了级别  -->
+		</if>
+		<if test="parameter.groupMode != null">
+			<if test="parameter.groupMode == 0">and group_mode <![CDATA[<]]> 1</if>
+			<if test="parameter.groupMode !=0 and parameter.groupMode!=null">and group_mode <![CDATA[>]]>0</if>
+		</if>
+		<if test="parameter.productBrandName!= null and parameter.productBrandName!=''">
+			and (tg.product_brand_name LIKE CONCAT('%',#{parameter.productBrandName},'%') or tg.product_name LIKE CONCAT('%',#{parameter.productBrandName},'%'))
+		</if>
+		<if test="parameter.rightUserIds!=null and parameter.rightUserIds!=''">
+			AND tg.operator_id in (${parameter.rightUserIds})
+		</if>
+		<if test="parameter.operType==0 or parameter.operType==null ">
+			<if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and tg.operator_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.operType==1">
+			<if test="parameter.saleOperatorIds!=null and parameter.saleOperatorIds!=''">
+				and bs.user_id in (${parameter.saleOperatorIds})
+			</if>
+		</if>
+		<if test="parameter.carProfitTotal != null and parameter.carProfitTotal != '' ">
+			<if test='parameter.carProfitTotal == "1" '>
+				<![CDATA[
+					and ifnull(det.car_profit_total,0) > 0
+				]]>
+			</if>
+			<if test='parameter.carProfitTotal == "0" '>
+				<![CDATA[
+				 	and ifnull(det.car_profit_total,0) <= 0
+				]]>
+			</if>
+		</if>
+		<if test="parameter.carProfitTotal2 != null and parameter.carProfitTotal2 != '' ">
+			<if test='parameter.carProfitTotal2 == "1" '>
+				<![CDATA[
+					and ifnull(det.car_profit_total2,0) > 0
+				]]>
+			</if>
+			<if test='parameter.carProfitTotal2 == "0" '>
+				<![CDATA[
+				 	and ifnull(det.car_profit_total2,0) <= 0
+				]]>
+			</if>
+		</if>
+
+		<if test="parameter.carPayType != null and parameter.carPayType !='' ">
+			<![CDATA[
+				and det.car_pay_type = #{parameter.carPayType}
+			]]>
+		</if>
+		<if test="parameter.carPayType2 != null and parameter.carPayType2 !='' ">
+			<![CDATA[
+				and det.car_pay_type2 = #{parameter.carPayType2}
+			]]>
+		</if>
+		<!-- class_name 查询附加的条件 -->
+		<if test="parameter.classNameSupplierIds != null">
+			<![CDATA[
+			   and bs.supplier_id in
+			]]>
+			<foreach collection="parameter.classNameSupplierIds" item="supplierId" open="(" close=")" separator="," >
+				#{supplierId}
+			</foreach>
+		</if>
+
+		<if test="parameter.limitSupplerIds != null and parameter.limitSupplerIds != ''">
+			<if test=' parameter.include != null and parameter.include == "1" '>
+				<![CDATA[
+					and bs.supplier_id in (${parameter.limitSupplerIds})
+				]]>
+			</if>
+			<if test=' parameter.include != null and parameter.include == "0" '>
+				<![CDATA[
+					and bs.supplier_id not in (${parameter.limitSupplerIds})
+				]]>
+			</if>
+
+		</if>
+
+
+
+
+		<!-- 以下条件为订单统计时使用 -->
+		<if test="parameter.groupCode != null and parameter.groupCode != ''">and group_code LIKE CONCAT('%',#{parameter.groupCode},'%')</if>
+		<if test="parameter.type1Name != null and parameter.type1Name != ''">and type1_name LIKE CONCAT('%',#{parameter.type1Name },'%')  </if>
+		<if test="parameter.ticketFlight != null and parameter.ticketFlight != ''">and ticket_flight LIKE CONCAT('%',#{parameter.ticketFlight  },'%')</if>
+
+		<!-- 以下条件为订车明细查询时使用 -->
+		<if test="parameter.carLisence != null and parameter.carLisence != ''">and car_lisence LIKE CONCAT('%',#{parameter.carLisence },'%')  </if>
+		<if test="parameter.driverName != null and parameter.driverName != ''">and driver_name LIKE CONCAT('%',#{parameter.driverName },'%')  </if>
+		<if test="parameter.carNumMin != null and parameter.carNumMin != ''">and Convert(case when (type2_name REGEXP '^[0-9]+$'=1) then type2_name else 0 end, SIGNED)<![CDATA[>=]]>#{parameter.carNumMin } </if>
+		<if test="parameter.carNumMax != null and parameter.carNumMax != ''">and Convert(case when (type2_name REGEXP '^[0-9]+$'=1) then type2_name else 0 end, SIGNED)<![CDATA[<=]]>#{parameter.carNumMax } </if>
+	</sql>
+
+	<select id="bookingSupplierCarTotal" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
+		SELECT
+		SUM(ifnull(det.item_num,0)) totalNum,
+		SUM(IFNULL(det.item_price,0)-IFNULL(fg.total,0)-IFNULL(det.car_profit_total,0)-IFNULL(det.car_profit_total2,0)) salePrice,
+		SUM(IFNULL(det.item_price,0)-IFNULL(fg.total,0)) costPrice,
+		SUM(ifnull(det.car_profit_total,0)) carProfitTotal,
+		SUM(ifnull(det.car_profit_total2,0)) carProfitTotal2
+		FROM booking_supplier_detail det
+		JOIN booking_supplier bs ON (bs.`id`=det.booking_id
+		<if test="parameter.selectDate!=null and parameter.selectDate==1">
+			<if test="parameter.startTime != null">and item_date<![CDATA[>=]]> #{parameter.startTime} </if>
+			<if test="parameter.endTime != null">and item_date<![CDATA[<=]]> #{parameter.endTime} </if>
+		</if>
+		<if test="parameter.type1Id!=null and parameter.type1Id!=''">
+			and type1_id = #{parameter.type1Id}
+		</if>
+		)
+		JOIN tour_group tg ON tg.`id`=bs.`group_id`
+		LEFT JOIN finance_guide fg ON fg.booking_id_link = det.booking_id
+		WHERE tg.biz_id=#{parameter.bizId} and tg.group_state in (1,3,4) and bs.supplier_type=4
+		<include refid="bookingSupplierCarListPage_Where_Clause"></include>
+	</select>
+	<select id="bookingSupplierCarListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultType="java.util.HashMap" >
+		SELECT tg.id groupId,tg.group_mode groupMode, tg.`group_code` groupCode, tg.`total_adult` totalAdult,tg.`total_child` totalChild,tg.total_guide totalGuide
+		,tg.product_brand_name productBrandName,tg.product_name productName, tg.`operator_name` operatorName
+		,bs.supplier_type supplierType,bs.id as bookingId, bs.supplier_id supplierId,bs.`supplier_name` supplierName, bs.`cash_type` cashType,bs.total, ifnull(bs.total_cash,0) as totalCash,bs.remark
+		,det.`item_date` itemDate, det.item_date_to itemDateTo, det.`item_num` itemNum, ifnull(det.`item_num_minus`,0) itemNumMinus, det.`item_price` itemPrice, det.sale_item_price as saleItemPrice
+		,det.`item_total` itemTotal,det.sale_item_price *(det.`item_num`-ifnull(det.`item_num_minus`,0)) as totalSale
+		,det.`type1_name` type1Name, det.`type2_name` type2Name,det.`item_brief` itemBrief
+		,det.driver_name driverName, det.driver_tel driverTel,  det.car_lisence carLisence, det.`car_profit_total` as carProfitTotal , det.`car_pay_type` as carPayType
+		,det.`car_profit_total2` as carProfitTotal2 , det.`car_pay_type2` as carPayType2
+		,det.`ticket_departure` ticketDeparture, det.`ticket_arrival` ticketArrival, det.`ticket_flight` ticketFlight
+		,ifNull(bg.guideInfo,'') bookingGuideInfo,fg.total financeTotal
+		FROM booking_supplier_detail det
+		JOIN booking_supplier bs ON (bs.`id`=det.booking_id
+		<if test="parameter.selectDate!=null and parameter.selectDate==1">
+			<if test="parameter.startTime != null">and item_date<![CDATA[>=]]> #{parameter.startTime} </if>
+			<if test="parameter.endTime != null">and item_date<![CDATA[<=]]> #{parameter.endTime} </if>
+		</if>
+		<if test="parameter.type1Id!=null and parameter.type1Id!=''">
+			and type1_id = #{parameter.type1Id}
+		</if>
+		)
+		JOIN tour_group tg ON tg.`id`=bs.`group_id`
+		LEFT JOIN finance_guide fg ON fg.booking_id_link = det.booking_id
+		LEFT JOIN (SELECT g.`group_id`,GROUP_CONCAT(CONCAT_WS('-',g.guide_name,g.guide_mobile)) guideInfo FROM booking_guide g GROUP BY g.`group_id`) bg ON tg.`id`=bg.group_id
+		WHERE tg.biz_id=#{parameter.bizId} and tg.group_state in (1,3,4) and bs.supplier_type=4
+		<include refid="bookingSupplierCarListPage_Where_Clause"></include>
+		ORDER BY tg.date_start,tg.group_code_sort,tg.id,bs.supplier_id
+	</select>
 </mapper>

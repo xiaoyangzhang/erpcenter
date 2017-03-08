@@ -58,5 +58,7 @@
 	
 	<!-- tj -->
 	<bean id="tJBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.tj.TJBizImpl" />
-	
+	<bean id="financePayBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.finance.FinancePayBizImpl" />
+	<bean id="financePayDetailBiz" class="com.yimayhd.erpcenter.biz.sales.service.impl.finance.FinancePayDetailBizImpl" />
+
 </beans>

@@ -580,7 +580,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		pStock.setReceiveCount(0);
 		pStock.setStockCount(0);
 		
-			
+				
 			
 		return pStock;
 		
@@ -678,7 +678,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 	}
 	
     @Override
-    public void syncTaoBaoProducts(String authClient) {
+    public void syncTaoBaoProducts(final String authClient) {
     	
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("authClient", authClient);
@@ -708,6 +708,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		                		  tp.setCid(item.getCid());
 		                		  tp.setModified(item.getModified());
 		                		  tp.setNumIid(item.getNum_iid());
+		                		  tp.setMyStoreId(authClient);
 		                		  taobaoProductMapper.updateByPrimaryKeySelective(tp);
 		                			  }
 		                		  }else{   // 没有产品
@@ -721,6 +722,7 @@ public class ProductInfoDalImpl implements ProductInfoDal{
 		                    		  taobaoProduct.setCid(item.getCid());
 		                    		  taobaoProduct.setModified(item.getModified());
 		                    		  taobaoProduct.setNumIid(item.getNum_iid());
+		                    		  taobaoProduct.setMyStoreId(authClient);
 		                    		  taobaoProductMapper.insertSelective(taobaoProduct);
 		                		  }
 		                      }

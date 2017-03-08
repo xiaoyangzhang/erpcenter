@@ -2,15 +2,7 @@ package com.yimayhd.erpcenter.facade.dataanalysis.service.impl;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.yimayhd.erpcenter.dal.sales.client.operation.vo.PaymentExportVO;
 import org.apache.commons.lang3.StringUtils;
@@ -54,6 +46,7 @@ import com.yimayhd.erpcenter.facade.dataanalysis.client.result.QueryResult;
 import com.yimayhd.erpcenter.facade.dataanalysis.client.service.QueryFacade;
 import com.yimayhd.erpresource.dal.constants.Constants;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.util.WebUtils;
 
 /**
  * @ClassName: ${ClassName}
@@ -95,6 +88,7 @@ public class QueryFacadeImpl implements QueryFacade {
             // 如果人员为空并且部门不为空，则取部门下的人id
             Set<Integer> set = new HashSet<Integer>();
             if (StringUtils.isBlank(queryDTO.getSaleOperatorIds())
+
                     && StringUtils.isNotBlank(queryDTO.getOrgIds())) {
                 String[] orgIdArr = queryDTO.getOrgIds().split(",");
                 for (String orgIdStr : orgIdArr) {
@@ -586,8 +580,11 @@ public class QueryFacadeImpl implements QueryFacade {
             pb.setPage(queryDTO.getPage());
             if (queryDTO.getPageSize() == null) {
                 queryDTO.setPageSize(Constants.PAGESIZE);
+            }else  {
+
+                pb.setPageSize(queryDTO.getPageSize());
             }
-            pb.setPageSize(queryDTO.getPageSize());
+
             // 如果人员为空并且部门不为空，则取部门下的人id
             if (StringUtils.isBlank(queryDTO.getGroup().getSaleOperatorIds())
                     && StringUtils.isNotBlank(queryDTO.getGroup().getOrgIds())) {
@@ -1245,11 +1242,17 @@ public class QueryFacadeImpl implements QueryFacade {
             }
             pb.setPageSize(queryDTO.getPageSize());
             Map paramters = queryDTO.getParameters();
+            if (StringUtils.isNotEmpty(queryDTO.getCitysSupplierIds())) {
 
-            paramters.put("citysSupplierIds",queryDTO.getCitysSupplierIds());
-            paramters.put("supplierLevel", queryDTO.getSupplierLevel());
-            // paramters.put("supplierDetailLevel",
-            // request.getAttribute("supplierDetailLevel"));
+                paramters.put("citysSupplierIds",queryDTO.getCitysSupplierIds());
+            }
+            if (StringUtils.isNotEmpty(queryDTO.getSupplierLevel())) {
+
+                paramters.put("supplierLevel", queryDTO.getSupplierLevel());
+            }
+            if(null != queryDTO.getOtherParams() && queryDTO.getOtherParams().size() > 0){
+                paramters.putAll(queryDTO.getOtherParams());
+            }
 
             // 如果人员为空并且部门不为空，则取部门下的人id
             if (StringUtils.isBlank((String) paramters.get("saleOperatorIds"))
@@ -1278,6 +1281,8 @@ public class QueryFacadeImpl implements QueryFacade {
         }
         return queryResult;
     }
+
+
 
     @Override
     public QueryResult productProfitList(QueryDTO queryDTO) {
@@ -1642,4 +1647,54 @@ public class QueryFacadeImpl implements QueryFacade {
             return cnt == null ? 0 : cnt;
         }
         //isNull
+
+    @Override
+    public Map commonQuerySum(QueryDTO queryDTO) {
+        if (StringUtils.isNotBlank(queryDTO.getSsl())) {
+            Map pm = (Map) queryDTO.getPageBean().getParameter();
+            pm.put("parameter", pm);
+            return  getCommonService(queryDTO.getSvc()).queryOne(queryDTO.getSsl(), pm);
+        }
+        return Collections.emptyMap();
     }
+
+    @Override
+    public Map saleDeliveryDetailList(Map parameters) {
+            Integer bizId = (Integer) parameters.get("bizId");
+        if (StringUtils.isNotBlank((String) parameters.get("orgIds"))) {
+            Set<Integer> set = new HashSet<Integer>();
+            String[] orgIdArr = ((String) parameters.get("orgIds")).split(",");
+            for (String orgIdStr : orgIdArr) {
+                set.add(Integer.valueOf(orgIdStr));
+            }
+            List<PlatformOrgPo> orgList = platformOrgBiz.getOrgListByIdSet(
+                    bizId, set);
+            StringBuilder sb = new StringBuilder();
+            for (PlatformOrgPo orgPo : orgList) {
+                sb.append(orgPo.getName() + ",");
+            }
+            // condition.setOrgNames(sb.substring(0, sb.length()-1));
+            parameters.put("orgNames", sb.substring(0, sb.length() - 1));
+
+        }
+        // 如果计调不为null，查询计调名字
+        if (StringUtils.isNotBlank((String) parameters.get("saleOperatorIds"))) {
+            Set<Integer> set = new HashSet<Integer>();
+            String[] userIdArr = ((String) parameters.get("saleOperatorIds"))
+                    .split(",");
+            for (String userIdStr : userIdArr) {
+                set.add(Integer.valueOf(userIdStr));
+            }
+            List<PlatformEmployeePo> empList = platformEmployeeBiz
+                    .getEmpList(bizId, set);
+            StringBuilder sb = new StringBuilder();
+            for (PlatformEmployeePo employeePo : empList) {
+                sb.append(employeePo.getName() + "");
+            }
+            // condition.setSaleOperatorName(sb.substring(0, sb.length()-1));
+            parameters.put("saleOperatorName", sb.substring(0, sb.length() - 1));
+
+        }
+        return parameters;
+    }
+}

@@ -1,23 +1,5 @@
 package com.yimayhd.erpcenter.facade.tj.service.impl;
 
-import java.io.*;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
-import com.yimayhd.erpcenter.common.util.DateUtils;
-import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.alibaba.fastjson.JSON;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.biz.basic.service.DicBiz;
@@ -29,6 +11,7 @@ import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryB
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingDeliveryPriceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.query.QueryBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
 import com.yimayhd.erpcenter.biz.sales.client.service.taobao.TaobaoOrderBiz;
 import com.yimayhd.erpcenter.biz.sys.service.MsgInfoBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
@@ -40,47 +23,28 @@ import com.yimayhd.erpcenter.dal.basic.po.LogOperator;
 import com.yimayhd.erpcenter.dal.basic.po.RegionInfo;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStockDate;
 import com.yimayhd.erpcenter.dal.product.po.TaobaoStockLog;
+import com.yimayhd.erpcenter.dal.product.po.TaobaoStockProduct;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderGuest;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderTransport;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.MergeGroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.SpecialGroupOrderVO;
 import com.yimayhd.erpcenter.dal.sales.client.taobao.po.PlatTaobaoTrade;
+import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.facade.tj.client.errorcode.TjErrorCode;
-import com.yimayhd.erpcenter.facade.tj.client.query.AddSivaInfoDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.ChangePriceDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.GroupOrderGuestDataListDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.ImportTaobaoOrderTableDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.PresellProductStatistics;
-import com.yimayhd.erpcenter.facade.tj.client.query.PresellTaobaoOriginalOrderDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.PushTradeQueryDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.SaveSpecialGroupDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.ShopSalesStatisticsQueryDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListByOpDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOrderListTableDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.TaobaoOriginalOrderTableDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.ToEditTaobaoOrderDTO;
-import com.yimayhd.erpcenter.facade.tj.client.query.ToSaleGuestListExcelDTO;
-import com.yimayhd.erpcenter.facade.tj.client.result.AddNewTaobaoOrderResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.ImportTaobaoOrderTableResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.PresellProductStatisticsListResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.SaveSpecialGroupResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.ShopSalesStatisticsResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.TaobaoOrderListTableResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.ToEditTaobaoOrderResult;
-import com.yimayhd.erpcenter.facade.tj.client.result.WebResult;
+import com.yimayhd.erpcenter.facade.tj.client.query.*;
+import com.yimayhd.erpcenter.facade.tj.client.result.*;
 import com.yimayhd.erpcenter.facade.tj.client.service.TaobaoFacade;
 import com.yimayhd.erpcenter.facade.tj.client.utils.LogUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.util.WebUtils;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 	private static final Logger LOGGER = LoggerFactory.getLogger("TaobaoFacadeImpl");
@@ -287,6 +251,9 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		List<DicInfo> typeList = dicBiz
 				.getListByTypeCode(BasicConstants.SALES_TEAM_TYPE,bizId);
 		result.setTypeList(typeList);
+		List<DicInfo> sourceTypeList = dicBiz
+				.getListByTypeCode(BasicConstants.GYXX_AGENCY_SOURCE_TYPE,bizId);
+		result.setSourceTypeList(sourceTypeList);
 		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 		result.setAllProvince(allProvince);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -390,6 +357,9 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 		result.setTypeList(typeList);
 		List<RegionInfo> allProvince = regionBiz.getAllProvince();
 		result.setAllProvince(allProvince);
+		List<DicInfo> sourceTypeList = dicBiz
+				.getListByTypeCode(BasicConstants.GYXX_AGENCY_SOURCE_TYPE,bizId);
+		result.setSourceTypeList(sourceTypeList);
 
 		List<DicInfo> lysfxmList = dicBiz.getListByTypeCode(
 				BasicConstants.GYXX_LYSFXM, bizId);
@@ -431,7 +401,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 					int freeCount = tsd.getStockCount() - tsd.getSaleCount(); // 查出库存(剩余人数)
 					//实际库存应该是修改前人数+库存
 					freeCount = oldNum + freeCount;
-					if(newNum > freeCount){
+					if(newNum > freeCount && newNum > oldNum){
 						//如果新增人数大于库存,则不能保存
 						saveSpecialGroupResult.setErrorCode(TjErrorCode.INVENTORY_SHORTAGE);
 						saveSpecialGroupResult.setResultMsg(errorJson("由于库存剩余数有变化，目前剩余库存不足【" + newNum + "】！实际库存还有【" + freeCount + "】"));
@@ -466,8 +436,9 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 			LogUtils.LogRow_SetValue(logList, "group_order_transport", null, orderId);
 
 			if (isStock) {
+				Integer oldStockDateId=0;
 				TaobaoStockLog sLog = taobaoStockBiz
-						.selectLogByStockDateIdAndOrderId(vo.getGroupOrder().getProductId(), orderId);
+						.selectStockLogAllByOrderId( orderId);
 				if (sLog == null) {
 					sLog = new TaobaoStockLog();
 					sLog.setId(0);
@@ -479,10 +450,18 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 					sLog.setNum(newNum);
 					productStockBiz.insertTaobaoStockLogSelective(sLog);
 				} else {
+					if(sLog.getStockDateId() != vo.getGroupOrder().getProductId()){
+						oldStockDateId=sLog.getStockDateId();
+						sLog.setStockId(vo.getGroupOrder().getProductBrandId());
+						sLog.setStockDateId(vo.getGroupOrder().getProductId());
+					}
 					sLog.setNum(newNum);
 					productStockBiz.updateTaobaoStockLogSelective(sLog);
 				}
 				productStockBiz.updateByLog(sLog.getStockDateId());
+				if(oldStockDateId>0){
+					productStockBiz.updateByLog(oldStockDateId);
+				}
 			}
 			//todo取出原来ids，并对比现在在的ids，得到要删除的ids ,　　比如原来：１,２,３,４　删除了2,3－> 14,
 			String id = saveSpecialGroupDTO.getTaobaoOrderId();
@@ -517,7 +496,7 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 
 				GroupOrder groupOrder=groupOrderBiz.findById(orderId);
 				TourGroup tourGroup=tourGroupBiz.selectByPrimaryKey(groupOrder.getGroupId());
-				tourGroup.setGroupMode(saveSpecialGroupDTO.getGroupMode());
+				tourGroup.setGroupMode(saveSpecialGroupDTO.getVo().getGroupOrder().getOrderType());
 				tourGroupBiz.updateByPrimaryKey(tourGroup);
 			}
 			// 插入到日志
@@ -661,10 +640,27 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 
 		// 获取备注(扣除库存)
 		for (PlatTaobaoTrade pt : platTaobaoTradeList) {
-			if (pt.getReceiveCount() != null && new Integer(pt.getReceiveCount()) > 0) {
+			if (!StringUtils.isNumeric(pt.getReceiveCount())) {
+				LOGGER.error("wrong format:receiveCount={]",pt.getReceiveCount());
+				continue;
+			}
+			if (pt.getReceiveCount() != null && new Integer(pt.getReceiveCount()) > 0 && pt.getSkuPropertiesName() != null) {
+				String[] ary = pt.getSkuPropertiesName().split("\\;");
+				String[] ary1=ary[0].split("\\:");
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("numIid", pt.getNumIid());// 自编码、日期、数量,
 				// PlatTaobaoTradeOrderId
+				if (StringUtils.isNotBlank(pt.getSellerMemo())) {
+					String createUser = "";
+					if (pt.getSellerMemo().indexOf("{") > 0 && pt.getSellerMemo().indexOf("}") > 0) {
+						createUser = pt.getSellerMemo().substring(pt.getSellerMemo().indexOf("{") + 1,
+								pt.getSellerMemo().indexOf("}"));
+					}
+					map.put("createUser", createUser);
+				} else {
+					map.put("createUser", "空");
+				}
+				map.put("sku", ary1[1]);
 				map.put("depDate", pt.getDepartureDate());
 //				map.put("receiveCount", pt.getReceiveCount());
 				map.put("receiveCount", pt.getReceiveCount());
@@ -672,7 +668,11 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 				mapList.add(map);
 			}
 		}
-		taobaoStockBiz.updateProductStockByTaobao(mapList);
+		List<Map<String, String>> list =taobaoStockBiz.updateProductStockByTaobao(mapList);
+		for (Map<String, String> map : list) {
+			Integer toId=Integer.parseInt(map.get("taobaoOrderId"));
+			taobaoOrderBiz.updateBEYOND(toId);
+		}
 	}
 
 	/**
@@ -1536,5 +1536,23 @@ public class TaobaoFacadeImpl extends BaseResult implements TaobaoFacade{
 
 
 	}
-	
+
+	@Override
+	public WebResult<Map<String, Object>> findStockProductStockIdHavePSIAndUpdateState(Integer stockId, Integer state) {
+		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		//判断是否存在订单信息
+		List<TaobaoStockProduct> count = taobaoStockBiz.findStockProductStockIdHavePSI(stockId);
+		if (count != null && count.size()>0) {
+			map.put("error", "logError");
+
+		} else {
+			taobaoStockBiz.updateState(stockId, state);
+			map.put("success", 1);
+		}
+		result.setValue(map);
+		return result;
+	}
+
+
 }

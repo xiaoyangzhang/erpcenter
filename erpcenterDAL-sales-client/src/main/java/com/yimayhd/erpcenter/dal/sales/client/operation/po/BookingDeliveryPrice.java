@@ -21,6 +21,8 @@ public class BookingDeliveryPrice implements Serializable  {
 
     private BigDecimal unitPrice;
 
+	private BigDecimal salePrice;
+
     private BigDecimal numTimes;
 
     private BigDecimal numPerson;
@@ -307,4 +309,11 @@ public class BookingDeliveryPrice implements Serializable  {
         this.createTime = createTime;
     }
 
+	public BigDecimal getSalePrice() {
+		return salePrice;
+	}
+
+	public void setSalePrice(BigDecimal salePrice) {
+		this.salePrice = salePrice;
+	}
 }

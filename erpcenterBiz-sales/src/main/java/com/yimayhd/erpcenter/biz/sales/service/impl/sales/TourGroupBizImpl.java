@@ -522,8 +522,8 @@ public class TourGroupBizImpl implements TourGroupBiz {
 	}
 
 	@Override
-	public PageBean getPushDeliveryList(PageBean pageBean, Integer bizId) {
-		return tourGroupDal.getPushDeliveryList(pageBean, bizId);
+	public PageBean getPushDeliveryList(PageBean pageBean, Integer bizId, Set<Integer> set, Set<Integer> supplierIdSet) {
+		return tourGroupDal.getPushDeliveryList(pageBean, bizId, set, supplierIdSet);
 	}
 
 	@Override

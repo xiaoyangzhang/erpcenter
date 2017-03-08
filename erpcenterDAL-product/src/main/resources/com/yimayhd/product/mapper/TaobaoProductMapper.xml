@@ -10,9 +10,16 @@
     <result column="props" jdbcType="VARCHAR" property="props" />
     <result column="created" jdbcType="TIMESTAMP" property="created" />
     <result column="modified" jdbcType="TIMESTAMP" property="modified" />
+    <result column="my_store_id" jdbcType="VARCHAR" property="myStoreId" />
+    <result column="pro_id" jdbcType="INTEGER" property="proId" />
+    <result column="tps_id" jdbcType="INTEGER" property="tpsId" />
+    <result column="pid_name" jdbcType="VARCHAR" property="pidName" />
+    <result column="pid" jdbcType="VARCHAR" property="pid" />
+    <result column="vid" jdbcType="VARCHAR" property="vid" />
+    <result column="stock_name" jdbcType="VARCHAR" property="stockName" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, num_iid, outer_id, cid, title, props, created, modified
+    id, num_iid, outer_id, cid, title, props, created, modified,my_store_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -30,10 +37,10 @@
     </selectKey>
     insert into taobao_product (num_iid, outer_id, cid, 
       title, props, created, 
-      modified)
+      modified,my_store_id)
     values (#{numIid,jdbcType=VARCHAR}, #{outerId,jdbcType=VARCHAR}, #{cid,jdbcType=VARCHAR}, 
       #{title,jdbcType=VARCHAR}, #{props,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, 
-      #{modified,jdbcType=TIMESTAMP})
+      #{modified,jdbcType=TIMESTAMP}, #{myStoreId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.product.po.TaobaoProduct">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -62,6 +69,9 @@
       <if test="modified != null">
         modified,
       </if>
+      <if test="myStoreId != null">
+        my_store_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="numIid != null">
@@ -84,6 +94,9 @@
       </if>
       <if test="modified != null">
         #{modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="myStoreId != null">
+        #{myStoreId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -111,6 +124,9 @@
       <if test="modified != null">
         modified = #{modified,jdbcType=TIMESTAMP},
       </if>
+      <if test="myStoreId != null">
+        my_store_id = #{myStoreId,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -122,17 +138,19 @@
       title = #{title,jdbcType=VARCHAR},
       props = #{props,jdbcType=VARCHAR},
       created = #{created,jdbcType=TIMESTAMP},
-      modified = #{modified,jdbcType=TIMESTAMP}
+      modified = #{modified,jdbcType=TIMESTAMP},
+      my_store_id = #{myStoreId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   
   <select id="findTaobaoProductById" parameterType="java.util.Set"
 		resultMap="BaseResultMap">
-		select id, num_iid, outer_id, cid, title, props, created, modified 
-		from taobao_product
-		where 1=1 
+		select tp.id pro_id,tp.num_iid,tp.outer_id,tp.title,tp.my_store_id,tp.created,
+				tps.id tps_id,tps.pid,tps.vid,tps.pid_name
+	from taobao_product tp 
+	LEFT JOIN taobao_product_skus tps on (tp.id=tps.taobao_product_id)
 		<if test="set != null">
-			and id in
+			where tps.id in
 			<foreach item="item" index="index" collection="set" open="("
 				separator="," close=")">
 				#{item}
@@ -165,6 +183,9 @@
       <if test="modified != null">
         modified,
       </if>
+      <if test="myStoreId != null">
+        my_store_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="numIid != null">
@@ -188,15 +209,21 @@
       <if test="modified != null">
         #{modified,jdbcType=TIMESTAMP},
       </if>
+      <if test="myStoreId != null">
+        #{myStoreId,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
 	
 	<select id="findTaoBaoProductStockListPage" parameterType="com.yihg.mybatis.utility.PageBean" 
 		resultType="java.util.HashMap">
-	    select tsd.stock_id,ts.stock_name, tb.outer_id,tb.title,tsd.stock_date,tsd.stock_count,tsd.sale_count,tsd.stock_count-tsd.sale_count stockBalance,tsd.id as stockDateId 
-		from taobao_stock_date tsd join taobao_stock ts on (tsd.stock_id=ts.id) 
+	   select tsd.stock_id,ts.stock_name, tb.outer_id,tb.title,tsd.stock_date,tsd.stock_count,tsd.sale_count,
+		tsd.stock_count-tsd.sale_count stockBalance,tsd.id as stockDateId,tps.pid_name 
+		from taobao_stock_date tsd 
+		join taobao_stock ts on (tsd.stock_id=ts.id) 
 		join taobao_stock_product tsp on (tsp.stock_id=ts.id)
-		join taobao_product tb on (tsp.product_id=tb.id)
+		join taobao_product_skus tps on (tsp.product_skus_id=tps.id)
+		join taobao_product tb on (tps.taobao_product_id=tb.id)
 		where tsd.stock_date=#{page.parameter.stockDate} 
 	    <if test="page.parameter.outerId != null and page.parameter.outerId!=''">
 			and outer_id LIKE CONCAT('%',#{page.parameter.outerId},'%' )
@@ -206,6 +233,9 @@
 		</if>
 		<if test="page.parameter.title != null and page.parameter.title!=''">
 			and title LIKE CONCAT('%',#{page.parameter.title},'%' )
+		</if>
+		<if test="page.parameter.pidName != null and page.parameter.pidName!=''">
+			and tps.pid_name  LIKE CONCAT('%',#{page.parameter.pidName},'%' )
 		</if>
     </select>
 	<select id="findTaoBaoProductListPage" parameterType="com.yihg.mybatis.utility.PageBean" 
@@ -221,14 +251,42 @@
 		</if>
   </select>
   
-   <select id="selectTaobaoProductListPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
-    select * from taobao_product
+  <select id="selectTaobaoProductListPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
+   select tp.id pro_id,tp.num_iid,tp.outer_id,tp.title,tp.my_store_id,
+				tps.id tps_id,tps.pid,tps.vid,tps.pid_name,ts.stock_name
+	from taobao_product tp 
+	LEFT JOIN taobao_product_skus tps on (tp.id=tps.taobao_product_id)
+	LEFT JOIN taobao_stock_product tsp ON(tps.id=tsp.product_skus_id)
+	LEFT JOIN taobao_stock ts ON (tsp.stock_id=ts.id)
       where   1=1
 	  <if test="page.parameter.title != null and page.parameter.title!=''">
-           AND title LIKE CONCAT('%',#{page.parameter.title},'%' )
+           AND tp.title LIKE CONCAT('%',#{page.parameter.title},'%' )
          </if>
-         <if test="page.parameter.outerId != null and page.parameter.outerId!=''">
-           AND outer_id LIKE CONCAT('%',#{page.parameter.outerId},'%' )
+    <if test="page.parameter.outerId != null and page.parameter.outerId!=''">
+           AND tp.outer_id LIKE CONCAT('%',#{page.parameter.outerId},'%' )
+         </if>
+		<if test="page.parameter.pidName != null and page.parameter.pidName!=''">
+           AND tps.pid_name LIKE CONCAT('%',#{page.parameter.pidName},'%' )
+         </if>
+         <if test="page.parameter.myStoreId != null and page.parameter.myStoreId!=''">
+           AND tp.my_store_id LIKE CONCAT('%',#{page.parameter.myStoreId},'%' )
+         </if>
+  </select>
+  
+   <select id="selectTPBytpdIdListPage" resultMap="BaseResultMap" parameterType="com.yihg.mybatis.utility.PageBean">
+   select tp.id pro_id,tp.num_iid,tp.outer_id,tp.title,tp.my_store_id,
+				tps.id tps_id,tps.pid,tps.vid,tps.pid_name
+	from taobao_product tp 
+	LEFT JOIN taobao_product_skus tps on (tp.id=tps.taobao_product_id)
+      where   tps.id >0
+	  <if test="page.parameter.title != null and page.parameter.title!=''">
+           AND tp.title LIKE CONCAT('%',#{page.parameter.title},'%' )
+         </if>
+    <if test="page.parameter.outerId != null and page.parameter.outerId!=''">
+           AND tp.outer_id LIKE CONCAT('%',#{page.parameter.outerId},'%' )
+         </if>
+		<if test="page.parameter.pidName != null and page.parameter.pidName!=''">
+           AND tps.pid_name LIKE CONCAT('%',#{page.parameter.pidName},'%' )
          </if>
   </select>
   

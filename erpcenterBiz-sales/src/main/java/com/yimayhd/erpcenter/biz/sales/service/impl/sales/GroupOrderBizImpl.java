@@ -1265,4 +1265,14 @@ public class GroupOrderBizImpl implements GroupOrderBiz {
     public List<GroupOrder> selectGroupOrderGroupByPro(Integer resId) {
         return groupOrderDal.selectGroupOrderGroupByPro(resId);
     }
+
+    @Override
+    public Integer findGroupOrderCountBySidAndDate(Integer bizId, Integer supplierId, String depaDate) {
+        return groupOrderDal.findGroupOrderCountBySidAndDate(bizId,supplierId,depaDate);
+    }
+
+    @Override
+    public List<GroupOrder> findGroupOrderBysIdAndResState(Integer bizId, Integer extResState, Integer supplierId) {
+        return groupOrderDal.findGroupOrderBysIdAndResState(bizId, extResState, supplierId);
+    }
 }

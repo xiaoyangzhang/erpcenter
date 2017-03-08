@@ -356,6 +356,12 @@ public class FinanceGuideBizImpl implements FinanceGuideBiz {
 		
 		return financeGuideDal.getCommisionTotalSumAndTotalCashSum(groupId, guideId);
 	}
+	
+	@Override
+	public Map<String, Object> getCommisionDeductionTotalSumAndTotalCashSum(Integer groupId, Integer guideId) {
+		
+		return financeGuideDal.getCommisionDeductionTotalSumAndTotalCashSum(groupId, guideId);
+	}
 
 	@Override
 	public List<FinanceCommission> getCommisions(PageBean pageBean) {
@@ -391,4 +397,6 @@ public class FinanceGuideBizImpl implements FinanceGuideBiz {
 	public void changeGroup(Integer groupId, Integer guideId, Integer mguideId) {
 		financeGuideDal.changeGroup(groupId, guideId, mguideId);
 	}
+
+	
 }

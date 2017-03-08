@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.util.TypeUtils;
 import com.yimayhd.erpcenter.biz.product.service.*;
 import com.yimayhd.erpcenter.biz.sales.client.service.car.DoubleCarBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.finance.FinanceBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchDeliveryPriceResult;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchOrderGuestResult;
 import com.yimayhd.erpcenter.biz.sales.client.service.sales.result.SearchTransportsResult;
@@ -188,6 +189,8 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 	private TaobaoOrderBiz taobaoOrderBiz;
 	@Autowired
 	private TaoBaoStockBiz taoBaoStockBiz;
+	@Autowired
+	private FinanceBiz financeBiz;
 	@Override
 	public ToOrderLockListResult toOrderLockList(Integer bizId) {
 
@@ -801,6 +804,9 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		result.setSuccess(true);
 		return result;
 	}
+
+
+
 
 	@Override
 	public BaseStateResult judgeMergeGroup(String ids) {
@@ -1912,6 +1918,11 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			if (guides.size() > 0) {
 				guideString = getGuides(guides);
 			}
+		}else {
+			tg.setProductBrandName(go.getProductBrandName());
+			tg.setProductName(go.getProductName());
+			tg.setTotalAdult(go.getNumAdult());
+			tg.setTotalChild(go.getNumChild());
 		}
 
 		GroupOrderPrintPo gop = new GroupOrderPrintPo();
@@ -2516,6 +2527,9 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 			if (guides.size() > 0) {
 				guideString = getGuides(guides);
 			}
+		}else {
+			tg.setProductBrandName(go.getProductBrandName());
+			tg.setProductName(go.getProductName());
 		}
 		List<GroupOrderPrintPo> gops = new ArrayList<GroupOrderPrintPo>();
 		GroupOrderPrintPo gop = new GroupOrderPrintPo();
@@ -3701,6 +3715,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 				tourGroupService.updateByPrimaryKeySelective(tourGroup);
 			}
 		}
+		financeBiz.calcTourGroupAmount(groupOrder.getGroupId());
 		if (groupOrder.getPriceId() != null) {
 
 			boolean updateStock = productGroupPriceService.updateStock(groupOrder.getPriceId(),
@@ -3751,6 +3766,28 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 		HashMap<String, BigDecimal> map_sum = groupOrderService.sumResAdminOrder(pageBean);
 		toNotGroupListResult.setPageBean(pageBean);
 		toNotGroupListResult.setMap_sum(map_sum);
+		return toNotGroupListResult;
+	}
+
+	@Override
+	public ToNotGroupListResult guestCertificateNumValidateList(ToNotGroupListDTO toNotGroupListDTO) {
+		ToNotGroupListResult toNotGroupListResult = new ToNotGroupListResult();
+		Map<String, Object> map = null;
+		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+		String[] orderIdsArr = toNotGroupListDTO.getGuestCertificateNum().split(",");
+		for (String orderIdStr : orderIdsArr) {
+			List<GroupOrderGuest> guests = groupOrderGuestService.getGuestByGuestCertificateNum(orderIdStr,toNotGroupListDTO.getOrderId());
+			map = new HashMap<String, Object>();
+			if(guests.size()>0){
+				map.put("certificateNum", orderIdStr);
+				map.put("cNum", 1);
+			}else{
+				map.put("certificateNum", 0);
+				map.put("cNum", 0);
+			}
+			list.add(map);
+		}
+		toNotGroupListResult.setList(list);
 		return toNotGroupListResult;
 	}
 

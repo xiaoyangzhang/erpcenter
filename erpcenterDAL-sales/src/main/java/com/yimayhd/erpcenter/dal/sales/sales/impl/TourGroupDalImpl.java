@@ -1,34 +1,18 @@
 package com.yimayhd.erpcenter.dal.sales.sales.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
-import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
-import com.yimayhd.erpcenter.dal.sales.client.sales.query.GroupInfoQueryForCarCar;
-import org.apache.commons.lang.StringUtils;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.util.TypeUtils;
 import com.yihg.mybatis.utility.PageBean;
 import com.yimayhd.erpcenter.common.contants.BasicConstants;
 import com.yimayhd.erpcenter.common.solr.SolrSearchPageDTO;
 import com.yimayhd.erpcenter.common.util.DateUtils;
 import com.yimayhd.erpcenter.dal.sales.client.dto.TourProfitQueryDTO;
-import com.yimayhd.erpcenter.dal.sales.client.dto.TourTotalProfitQueryDTO;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuideTimes;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
-import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierPO;
+import com.yimayhd.erpcenter.dal.sales.client.operation.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingDeliveryDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingGuideDal;
 import com.yimayhd.erpcenter.dal.sales.client.operation.service.BookingSupplierDal;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.constants.Constants;
+import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupOrderDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.GroupRouteDal;
 import com.yimayhd.erpcenter.dal.sales.client.sales.service.TourGroupDal;
@@ -36,25 +20,19 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.vo.OperatorGroupStatic;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 import com.yimayhd.erpcenter.dal.sales.client.solr.dto.TourGroupDTO;
 import com.yimayhd.erpcenter.dal.sales.converter.TourGroupConverter;
-import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingDeliveryMapper;
-import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingGuideMapper;
-import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingGuideTimesMapper;
-import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierDetailMapper;
-import com.yimayhd.erpcenter.dal.sales.operation.dao.BookingSupplierMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderGuestMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderPriceMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupOrderTransportMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRequirementMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteAttachmentMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteSupplierMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.GroupRouteTrafficMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupCommentMapper;
-import com.yimayhd.erpcenter.dal.sales.sales.dao.TourGroupMapper;
+import com.yimayhd.erpcenter.dal.sales.operation.dao.*;
+import com.yimayhd.erpcenter.dal.sales.sales.dao.*;
 import com.yimayhd.erpcenter.dal.sales.sales.util.GenerateCodeUtil;
 import com.yimayhd.erpcenter.dal.sales.solr.manager.TourGroupSolrQueryManager;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class TourGroupDalImpl implements TourGroupDal {
 
@@ -973,12 +951,12 @@ public class TourGroupDalImpl implements TourGroupDal {
 		}else{
 			tours = tourGroupMapper.selectProfitByTourConListPage(pageBean, bizId, set);
 			for (TourGroup tour : tours) {
-				if (tour != null) {
+//				if (tour != null) {
 					if (tour.getId() != null) {
 						tour.setBudget(tourGroupMapper.selectProfitByModeAndTourId(tour.getId(), 1));
 						tour.setTotal(tourGroupMapper.selectProfitByModeAndTourId(tour.getId(), 0));
 					}
-				}
+//				}
 			}
 		}
 		
@@ -1623,9 +1601,9 @@ public class TourGroupDalImpl implements TourGroupDal {
 	}
 
 	@Override
-    public PageBean getPushDeliveryList(PageBean pageBean, Integer bizId) {
+    public PageBean getPushDeliveryList(PageBean pageBean, Integer bizId, Set<Integer> set, Set<Integer> supplierIdSet) {
         List<BookingGroup> bookingGroups = null;
-        bookingGroups = tourGroupMapper.selectPushDeliveryListPage(pageBean, bizId);
+        bookingGroups = tourGroupMapper.selectPushDeliveryListPage(pageBean,set, bizId,supplierIdSet);
         if (bookingGroups != null && bookingGroups.size() > 0) {
             for (BookingGroup bg : bookingGroups) {
                 if (bg.getGroupMode().intValue() > 0) {
@@ -1639,6 +1617,10 @@ public class TourGroupDalImpl implements TourGroupDal {
                 } else {
                     bg.setSupplierName("散客团");
                 }
+				bg.setDriverName("");
+				if (bg.getPushStatus() == null) {
+					bg.setPushStatus(0);
+				}
             }
         }
         pageBean.setResult(bookingGroups);

@@ -27,24 +27,20 @@
     <result column="sumTicket" property="sumTicket" jdbcType="INTEGER" />
     <result column="resIds" property="resIds" jdbcType="VARCHAR" />
     <result column="sale_item_price" property="saleItemPrice" jdbcType="DECIMAL" />
+    <result column="car_profit_total" property="carProfitTotal" jdbcType="DECIMAL" />
+    <result column="car_pay_type" property="carPayType" jdbcType="VARCHAR" />
+    <result column="car_profit_total2" property="carProfitTotal2" jdbcType="DECIMAL" />
+    <result column="car_pay_type2" property="carPayType2" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, booking_id, type1_id, type1_name, type2_id, type2_name, item_date,item_date_to ,item_num, 
     item_price, item_num_minus, item_total, item_brief, ticket_departure, ticket_arrival, 
-    ticket_flight, driver_id, driver_name,driver_tel,car_lisence, fangdiao_luru,sale_item_price
+    ticket_flight, driver_id, driver_name,driver_tel,car_lisence, fangdiao_luru,sale_item_price,car_profit_total,car_pay_type,car_profit_total2,car_pay_type2
   </sql>
   <select id="selectBookingSupplierDetailByGroupId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
 	   SELECT 	
 		pbs.supplier_name AS supplierName,
 		bsd.*
-		<!-- bsd.type2_name,
-		bsd.`item_date`,
-		bsd.`item_date_to`,
-		bsd.`type1_name`,
-		bsd.`car_lisence`,
-		bsd.driver_name,
-		bsd.driver_tel,
-		bsd.item_price -->
 	  FROM
 	    booking_supplier_detail bsd 
 	    INNER JOIN 
@@ -80,14 +76,14 @@
       item_date, item_date_to, item_num, item_price, 
       item_num_minus, item_total, item_brief, 
       ticket_departure, ticket_arrival, ticket_flight, 
-      driver_id, driver_name,driver_tel,car_lisence, fangdiao_luru,sale_item_price)
+      driver_id, driver_name,driver_tel,car_lisence, fangdiao_luru,sale_item_price,car_profit_total,car_pay_type,car_profit_total2,car_pay_type2)
     values (#{id,jdbcType=INTEGER}, #{bookingId,jdbcType=INTEGER}, #{type1Id,jdbcType=INTEGER}, 
       #{type1Name,jdbcType=VARCHAR}, #{type2Id,jdbcType=INTEGER}, #{type2Name,jdbcType=VARCHAR}, 
       #{itemDate,jdbcType=DATE},#{itemDateTo,jdbcType=DATE}, #{itemNum,jdbcType=DECIMAL}, #{itemPrice,jdbcType=DECIMAL}, 
       #{itemNumMinus,jdbcType=DECIMAL}, #{itemTotal,jdbcType=DECIMAL}, #{itemBrief,jdbcType=VARCHAR}, 
       #{ticketDeparture,jdbcType=VARCHAR}, #{ticketArrival,jdbcType=VARCHAR}, #{ticketFlight,jdbcType=VARCHAR}, 
       #{driverId,jdbcType=INTEGER}, #{driverName,jdbcType=VARCHAR},#{driverTel,jdbcType=VARCHAR},#{carLisence,jdbcType=VARCHAR},
-      #{fangDiaoLuRu,jdbcType=VARCHAR},#{saleItemPrice,jdbcType=DECIMAL})
+      #{fangDiaoLuRu,jdbcType=VARCHAR},#{saleItemPrice,jdbcType=DECIMAL},#{carProfitTotal,jdbcType=DECIMAL},#{carPayType},#{carProfitTotal2},#{carPayType2})
   </insert>
   <insert id="insertSelective" parameterType="com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail" >
     insert into booking_supplier_detail
@@ -152,6 +148,18 @@
       <if test="carLisence != null" >
         car_lisence,
       </if>
+      <if test="carProfitTotal != null" >
+        car_profit_total,
+      </if>
+       <if test="carPayType != null" >
+        car_pay_type
+      </if>
+       <if test="carProfitTotal2 != null" >
+        car_profit_total2,
+      </if>
+       <if test="carPayType2 != null" >
+        car_pay_type2
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -213,6 +221,18 @@
       </if>
       <if test="carLisence != null" >
         #{carLisence,jdbcType=VARCHAR},
+      </if>
+      <if test="carProfitTotal != null" >
+        #{carProfitTotal,jdbcType=DECIMAL},
+      </if>
+       <if test="carPayType != null" >
+       #{carPayType},
+      </if>
+      <if test="carProfitTotal2 != null" >
+        #{carProfitTotal2},
+      </if>
+      <if test="carPayType2 != null" >
+       #{carPayType2},
       </if>
     </trim>
   </insert>
@@ -279,6 +299,18 @@
       <if test="saleItemPrice != null" >
         sale_item_price = #{saleItemPrice,jdbcType=DECIMAL},
       </if>
+      <if test="carProfitTotal != null" >
+        car_profit_total = #{carProfitTotal,jdbcType=DECIMAL},
+      </if>
+       <if test="carPayType != null" >
+        car_pay_type = #{carPayType}
+      </if>
+      <if test="carProfitTotal2 != null" >
+        car_profit_total2 = #{carProfitTotal2,jdbcType=DECIMAL},
+      </if>
+       <if test="carPayType2 != null" >
+        car_pay_type2 = #{carPayType2}
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -302,7 +334,12 @@
       driver_id = #{driverId,jdbcType=INTEGER},
       driver_name = #{driverName,jdbcType=VARCHAR},
       driver_tel = #{driverTel,jdbcType=VARCHAR},
-      car_lisence = #{carLisence,jdbcType=VARCHAR}
+      car_lisence = #{carLisence,jdbcType=VARCHAR},
+      car_profit_total = #{carProfitTotal,jdbcType=DECIMAL},
+      car_pay_type = #{carPayType},
+      car_profit_total2 = #{carProfitTotal2,jdbcType=DECIMAL},
+      car_pay_type2 = #{carPayType2},
+      sale_item_price = #{saleItemPrice,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
   

@@ -199,7 +199,15 @@ public class TaobaoOrderDalImpl implements TaobaoOrderDal {@Autowired
                 List<TaobaoTrade> taobaoTradeList = new ArrayList<TaobaoTrade>();
                 taobaoTradeList.add(JSONArray.parseObject(trade, TaobaoTrade.class));
                 if (taobaoTradeList.size() > 0) {
-                    saveOrUpdatePlatTaobaoTrade(taobaoTradeList, 5, "自动推送", authClient);
+                    int bizId = 5;
+                    if ("YM".equals(authClient)) {
+                        bizId = 10;
+                    } else if ("JY".equals(authClient)) {
+                        bizId = 11;
+                    } else if ("OUTSIDE".equals(authClient)) {
+                        bizId = 9;
+                    }
+                    saveOrUpdatePlatTaobaoTrade(taobaoTradeList, bizId, "自动推送", authClient);
                 }
             }
         }
@@ -578,4 +586,9 @@ public class TaobaoOrderDalImpl implements TaobaoOrderDal {@Autowired
     @Override
     public void updateNEW(String idss) {
         platTaobaoTradeMapper.updateNEW(idss);
-    }}
+    }
+    @Override
+    public void updateBEYOND(Integer toId) {
+        platTaobaoTradeMapper.updateBEYOND(toId);
+    }
+}

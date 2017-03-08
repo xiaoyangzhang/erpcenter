@@ -373,11 +373,8 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		List<TrafficResProduct> list=pageBean.getResult();
 		if(pageBean.getResult()!=null && pageBean.getResult().size()>0){
 			 for(TrafficResProduct trp : list){
-				 if(trp.getNumStock()==0){     // 库存
-					 trp.setNumStock(trp.getNumBalance());
-					}else{
-						trp.setNumStock(trp.getNumStock()-trp.getNumSold());
-						}
+
+				 trp.setNumStock(trp.getNumStock()-trp.getNumSold());
 				 trp.setAdultSame(trp.getAdultSuggestPrice().subtract(trp.getAdultSamePay()));
 				 trp.setAdultProxy((trp.getAdultSuggestPrice().subtract(trp.getAdultSamePay())).subtract(trp.getAdultProxyPay()));
 				 trp.setChildSame(trp.getChildSuggestPrice().subtract(trp.getChildSamePay()));
@@ -1102,12 +1099,20 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 
 	@Override
 	public PageBean selectAirTicketProfitList(PageBean pageBean) {
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>,pageBean={}",JSON.toJSONString(pageBean));
 		pageBean=trafficResBiz.selectAirTicketProfitListPage(pageBean);
 		List <TrafficRes> trafficRes=pageBean.getResult();
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>,pageBean={}",JSON.toJSONString(pageBean));
 		for(TrafficRes item:trafficRes){
 			GroupOrder go=groupOrderBiz.selectSumTotalByResId(item.getId());
-			item.setSumTotal(go.getTotal());
-			item.setSumCost(go.getCost());
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>,go={}",JSON.toJSONString(go));
+			if (go != null) {
+				item.setSumTotal(go.getTotal());
+				item.setSumCost(go.getCost());
+			}else {
+				item.setSumTotal(new BigDecimal(0));
+				item.setSumCost(new BigDecimal(0));
+			}
 		}
 		return pageBean;
 	}

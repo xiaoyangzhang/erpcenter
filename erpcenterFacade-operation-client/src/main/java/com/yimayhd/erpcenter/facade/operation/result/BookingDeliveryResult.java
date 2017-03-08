@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.yihg.mybatis.utility.PageBean;
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingDelivery;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingGuide;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.BookingSupplierDetail;
@@ -59,7 +60,15 @@ public class BookingDeliveryResult extends ResultSupport implements Serializable
 	}
 	private List<BookingSupplierDetail> supplierDetails;
 	private List<BookingGuide> bookingGuides;
+	private  List<DicInfo> typeList;
 
+	public List<DicInfo> getTypeList() {
+		return typeList;
+	}
+
+	public void setTypeList(List<DicInfo> typeList) {
+		this.typeList = typeList;
+	}
 
 	public List<BookingSupplierDetail> getSupplierDetails() {
 		return supplierDetails;

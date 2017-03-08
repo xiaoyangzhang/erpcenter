@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 public class BookingDelivery implements Serializable {
-    private Integer id;
+	private Integer id;
 
     private Integer groupId;
 
@@ -39,6 +39,13 @@ public class BookingDelivery implements Serializable {
     private BigDecimal total;
 
     private BigDecimal totalCash;
+    
+    private BigDecimal totalSale;
+    
+    /**
+     * totalTemp：临时使用来替换total（成本价）
+     */
+    private BigDecimal totalTemp;
 
     private Integer stateBooking;
 
@@ -69,6 +76,9 @@ public class BookingDelivery implements Serializable {
 	private Date auditTime;
 	
 	private Integer pushStatus;
+	
+	private Integer productDesId;
+	private String productDes;
 //	private String guideInfo;
 //	
 //	public String getGuideInfo() {
@@ -78,9 +88,41 @@ public class BookingDelivery implements Serializable {
 //	public void setGuideInfo(String guideInfo) {
 //		this.guideInfo = guideInfo;
 //	}
-
+	
 	public String getAuditUser() {
 		return auditUser;
+	}
+
+	public BigDecimal getTotalTemp() {
+		return totalTemp;
+	}
+
+	public void setTotalTemp(BigDecimal totalTemp) {
+		this.totalTemp = totalTemp;
+	}
+
+	public BigDecimal getTotalSale() {
+		return totalSale;
+	}
+
+	public void setTotalSale(BigDecimal totalSale) {
+		this.totalSale = totalSale;
+	}
+
+	public Integer getProductDesId() {
+		return productDesId;
+	}
+
+	public void setProductDesId(Integer productDesId) {
+		this.productDesId = productDesId;
+	}
+
+	public String getProductDes() {
+		return productDes;
+	}
+
+	public void setProductDes(String productDes) {
+		this.productDes = productDes;
 	}
 
 	public void setAuditUser(String auditUser) {

@@ -81,8 +81,10 @@
 		<result column="expense_other" property="expenseOther" jdbcType="DECIMAL" />
 		<result column="expense_other_state" property="expenseOtherState" jdbcType="INTEGER" />
 		<result column="total_income" property="totalIncome" jdbcType="DECIMAL" />
+		<result column="total_income1" property="totalIncome1" jdbcType="DECIMAL" />
 		<result column="total_expense" property="totalExpense" jdbcType="DECIMAL" />
 		<result column="total_profit" property="totalProfit" jdbcType="DECIMAL" />
+		<result column="total_profit1" property="totalProfit1" jdbcType="DECIMAL" />
 		<result column="profit_per_guest" property="profitPerGuest" jdbcType="DECIMAL" />
 		<result column="shop_sales" property="shopSales" jdbcType="DECIMAL" />
 		<result column="shop_sales_state" property="shopSalesState" jdbcType="INTEGER" />
@@ -836,7 +838,7 @@
 		,expense_insurance,expense_other
 		,total_income,total_cost as total_expense,total_income-total_cost as total_profit,(total_income-total_cost)/(total_adult+total_child+total_guide) as profit_per_guest
 		from tour_group tg
-		left join (select group_id,sum(total) as income_order,ifnull(GROUP_CONCAT(supplier_name,'@',num_adult,'@',num_child,'@',num_guide,'@',total,'@',sale_operator_name,'@',source_type_name),'') as order_supplier_names from group_order where group_id in (select id from tour_group as tg where 1=1 <include refid="selectGroupProfitListPage_Where"/>) group by group_id) gd on (tg.id=gd.group_id)
+		left join (select group_id,sum(total) as income_order,ifnull(GROUP_CONCAT(supplier_name,'@',num_adult,'@',num_child,'@',num_guide,'@',total,'@',sale_operator_name,'@',source_type_name),'') as order_supplier_names from group_order where state !=-1 and group_id in (select id from tour_group as tg where 1=1 <include refid="selectGroupProfitListPage_Where"/>) group by group_id) gd on (tg.id=gd.group_id)
 		left join (select group_id,sum(total_repay) as income_shop from booking_shop where group_id in (select id from tour_group as tg where 1=1 <include refid="selectGroupProfitListPage_Where"/>) group by group_id) bsh on (tg.id=bsh.group_id)
 		left join (select group_id,sum(total) as income_shopCommission from finance_commission where group_id in (select id from tour_group as tg where 1=1 <include refid="selectGroupProfitListPage_Where"/>) group by group_id) bsc on (tg.id=bsc.group_id)
 		left join (select group_id,sum(total) as expense_travelagency,ifnull(GROUP_CONCAT(supplier_name),'') delivery_names from booking_delivery where group_id in (select id from tour_group as tg where 1=1 <include refid="selectGroupProfitListPage_Where"/>) group by group_id) bd on (tg.id=bd.group_id)
@@ -874,10 +876,10 @@
 			,Sum(expense_fleet) expense_fleet, Sum(expense_scenicspot) expense_scenicspot
 			,Sum(expense_airticket) expense_airticket, Sum(expense_trainticket) expense_trainticket
 			,Sum(expense_insurance) expense_insurance, Sum(expense_other) expense_other
-			,Sum(total_income) total_income, Sum(total_cost) as total_expense,Sum(total_income)-Sum(total_cost) as total_profit
+			,Sum(total_income) total_income,Sum(total_income)-sum(ifnull(income_shop,0)-ifnull(income_shopCommission,0)) total_income1, Sum(total_cost) as total_expense,Sum(total_income)-Sum(total_cost) as total_profit,Sum(total_income)-Sum(total_cost)-sum(ifnull(income_shop,0)-ifnull(income_shopCommission,0)) as total_profit1
 			,sum(total_income-total_cost)/sum(total_adult+total_child+total_guide) as profit_per_guest 
 		from tour_group tg
-		left join (select group_id,sum(total) as income_order from group_order where group_id in (select id from tour_group as tg where 1=1 <include refid="selectGroupProfitListPage_Where"/>) group by group_id) gd on (tg.id=gd.group_id)
+		left join (select group_id,sum(total) as income_order from group_order where state !=-1 and group_id in (select id from tour_group as tg where 1=1 <include refid="selectGroupProfitListPage_Where"/>) group by group_id) gd on (tg.id=gd.group_id)
 		left join (select group_id,sum(total_repay) as income_shop from booking_shop where group_id in (select id from tour_group as tg where 1=1 <include refid="selectGroupProfitListPage_Where"/>) group by group_id) bsh on (tg.id=bsh.group_id)
 		left join (select group_id,sum(total) as income_shopCommission from finance_commission where group_id in (select id from tour_group as tg where 1=1 <include refid="selectGroupProfitListPage_Where"/>) group by group_id) bsc on (tg.id=bsc.group_id)
 		left join (select group_id,sum(total) as expense_travelagency from booking_delivery where group_id in (select id from tour_group as tg where 1=1 <include refid="selectGroupProfitListPage_Where"/>) group by group_id) bd on (tg.id=bd.group_id)

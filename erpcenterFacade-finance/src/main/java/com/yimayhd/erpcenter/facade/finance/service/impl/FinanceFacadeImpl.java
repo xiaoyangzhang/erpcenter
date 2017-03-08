@@ -1,9 +1,10 @@
 package com.yimayhd.erpcenter.facade.finance.service.impl;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,14 +13,61 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.yimayhd.erpcenter.biz.sales.client.service.sales.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.util.WebUtils;
 import org.yimayhd.erpcenter.facade.finance.errorcode.FinanceErrorCode;
-import org.yimayhd.erpcenter.facade.finance.query.*;
-import org.yimayhd.erpcenter.facade.finance.result.*;
+import org.yimayhd.erpcenter.facade.finance.query.AduditStatisticsListDTO;
+import org.yimayhd.erpcenter.facade.finance.query.AuditCommDTO;
+import org.yimayhd.erpcenter.facade.finance.query.AuditDTO;
+import org.yimayhd.erpcenter.facade.finance.query.AuditListDTO;
+import org.yimayhd.erpcenter.facade.finance.query.AuditShopDTO;
+import org.yimayhd.erpcenter.facade.finance.query.CheckBillDTO;
+import org.yimayhd.erpcenter.facade.finance.query.DiatributeBillDTO;
+import org.yimayhd.erpcenter.facade.finance.query.ExportTravelListTableDTO;
+import org.yimayhd.erpcenter.facade.finance.query.FinAuditDTO;
+import org.yimayhd.erpcenter.facade.finance.query.IncomeJoinTableListDTO;
+import org.yimayhd.erpcenter.facade.finance.query.IncomeOrPayDTO;
+import org.yimayhd.erpcenter.facade.finance.query.PayDTO;
+import org.yimayhd.erpcenter.facade.finance.query.PushWapListTableDTO;
+import org.yimayhd.erpcenter.facade.finance.query.QueryCommissionDeductionDTO;
+import org.yimayhd.erpcenter.facade.finance.query.QueryCommissionGrantDTO;
+import org.yimayhd.erpcenter.facade.finance.query.QuerySettleCommissionDTO;
+import org.yimayhd.erpcenter.facade.finance.query.QuerySettleListDTO;
+import org.yimayhd.erpcenter.facade.finance.query.QueryShopCommissionStatsDTO;
+import org.yimayhd.erpcenter.facade.finance.query.ReceiveOrderListSelectDTO;
+import org.yimayhd.erpcenter.facade.finance.query.SaveDistributeBillDTO;
+import org.yimayhd.erpcenter.facade.finance.query.SaveVerifyBillDTO;
+import org.yimayhd.erpcenter.facade.finance.query.SettleListPageDTO;
+import org.yimayhd.erpcenter.facade.finance.query.SettleSealListDTO;
+import org.yimayhd.erpcenter.facade.finance.query.StatementCheckPreviewDTO;
+import org.yimayhd.erpcenter.facade.finance.query.SubjectSummaryDTO;
+import org.yimayhd.erpcenter.facade.finance.query.ToBookingShopVerifyListDTO;
+import org.yimayhd.erpcenter.facade.finance.query.UnsealDTO;
+import org.yimayhd.erpcenter.facade.finance.query.VerifyBillDTO;
+import org.yimayhd.erpcenter.facade.finance.result.CheckBillResult;
+import org.yimayhd.erpcenter.facade.finance.result.CommissionDeductionResult;
+import org.yimayhd.erpcenter.facade.finance.result.DiatributeBillResult;
+import org.yimayhd.erpcenter.facade.finance.result.ExportTravelListTableResult;
+import org.yimayhd.erpcenter.facade.finance.result.IncomeOrPaytResult;
+import org.yimayhd.erpcenter.facade.finance.result.QueryCommissionGrantResult;
+import org.yimayhd.erpcenter.facade.finance.result.QueryPushWapListTableResult;
+import org.yimayhd.erpcenter.facade.finance.result.QuerySettleCommissionResult;
+import org.yimayhd.erpcenter.facade.finance.result.QuerySettleListResult;
+import org.yimayhd.erpcenter.facade.finance.result.QueryShopCommissionStatsResult;
+import org.yimayhd.erpcenter.facade.finance.result.ReceiveOrderListSelectResult;
+import org.yimayhd.erpcenter.facade.finance.result.ResultSupport;
+import org.yimayhd.erpcenter.facade.finance.result.SettleCommissionListResult;
+import org.yimayhd.erpcenter.facade.finance.result.SettleListPageResult;
+import org.yimayhd.erpcenter.facade.finance.result.SettleSealListResult;
+import org.yimayhd.erpcenter.facade.finance.result.StatementCheckPreviewResult;
+import org.yimayhd.erpcenter.facade.finance.result.SubjectSummaryResult;
+import org.yimayhd.erpcenter.facade.finance.result.ToBookingShopVerifyListlResult;
+import org.yimayhd.erpcenter.facade.finance.result.TourGroupDetiailsResult;
+import org.yimayhd.erpcenter.facade.finance.result.VerifyBillResult;
+import org.yimayhd.erpcenter.facade.finance.result.ViewShopCommissionStatsListResult;
 import org.yimayhd.erpcenter.facade.finance.service.FinanceFacade;
 
 import com.alibaba.fastjson.JSON;
@@ -36,6 +84,12 @@ import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingShopDetailBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierBiz;
 import com.yimayhd.erpcenter.biz.sales.client.service.operation.BookingSupplierDetailBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.CommonSaleBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderGuestBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupOrderPriceBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.GroupRouteBiz;
+import com.yimayhd.erpcenter.biz.sales.client.service.sales.TourGroupBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformEmployeeBiz;
 import com.yimayhd.erpcenter.biz.sys.service.SysBizBankAccountBiz;
 import com.yimayhd.erpcenter.common.util.DateUtils;
@@ -56,6 +110,7 @@ import com.yimayhd.erpcenter.dal.sales.client.sales.po.FinanceBillDetail;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrder;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.GroupOrderPrice;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.TourGroup;
+import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 import com.yimayhd.erpcenter.dal.sys.po.SysBizBankAccount;
 import com.yimayhd.erpresource.biz.service.SupplierBiz;
 import com.yimayhd.erpresource.biz.service.SupplierGuideBiz;
@@ -129,7 +184,6 @@ public class FinanceFacadeImpl implements FinanceFacade{
 
 	@Autowired
 	private GroupOrderGuestBiz groupOrderGuestBiz;
-
 
 	/**
 	 * 此方法用来维护团金额的一致性
@@ -630,14 +684,15 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	@Override
 	public ResultSupport finAudit(FinAuditDTO finAuditDTO) {
 		
-		ResultSupport result = new ResultSupport();
-		try{
+//		ResultSupport result = new ResultSupport();
+//		try{
 			financeBiz.audit(finAuditDTO.getGroupId(), finAuditDTO.getEmployeeId(), finAuditDTO.getEmployeeName());
-		}catch(Exception ex){
-			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
-			ex.printStackTrace();
-		}
-		return result;
+//		}catch(Exception ex){
+//			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+//			ex.printStackTrace();
+//		}
+//		return result;
+		return null;
 	}
 
 	/**
@@ -645,14 +700,15 @@ public class FinanceFacadeImpl implements FinanceFacade{
 	 */
 	@Override
 	public ResultSupport finUnAudit(FinAuditDTO finAuditDTO) {
-		ResultSupport result = new ResultSupport();
-		try{
+//		ResultSupport result = new ResultSupport();
+//		try{
 			financeBiz.unAudit(finAuditDTO.getGroupId(), finAuditDTO.getEmployeeName());
-		}catch(Exception ex){
-			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
-			ex.printStackTrace();
-		}
-		return result;
+//		}catch(Exception ex){
+//			result.setErrorCode(FinanceErrorCode.MODIFY_ERROR);
+//			ex.printStackTrace();
+//		}
+//		return result;
+		return null;
 	}
 
 	@Override
@@ -1317,7 +1373,86 @@ public class FinanceFacadeImpl implements FinanceFacade{
 		
 		return result;
 	}
+	
+    @Override
+    public CommissionDeductionResult queryCommissionDeduction(QueryCommissionDeductionDTO queryDTO)throws ParseException {
+			System.out.println("》》》》进入导出佣金扣除查询《《《《");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			TourGroupVO group =new TourGroupVO();
+			group.setStartTime(queryDTO.getStartTime() == "" ? null : sdf.parse(queryDTO.getStartTime()));
+			group.setEndTime(queryDTO.getEndTime() == "" ? null : sdf.parse(queryDTO.getEndTime()));
+			group.setGroupCode(queryDTO.getGroupCode());
+			group.setProductBrandId(queryDTO.getProductBrandId());
+			group.setProductName(queryDTO.getProductName());
+			group.setOrgIds(queryDTO.getOrgIds());
+			//group.setState(status);
+			group.setGuideName(queryDTO.getGuideName());
+			group.setSaleOperatorIds(queryDTO.getSaleOperatorIds());
+			
+			PageBean pageBean = new PageBean();
+			pageBean.setPage(queryDTO.getPage());
+	        pageBean.setPageSize(queryDTO.getPageSize());
+			Map paramters = queryDTO.getParamters();
+			/*String carInfo = (String)WebUtils.getQueryParamters(request).get("carInfo");*/
+			if (StringUtils.isNotBlank(queryDTO.getCarInfo())) {
+				List<Integer> groupIds = bookingSupplierBiz.getGroupIdByCarInfo(queryDTO.getCarInfo());
+				if (groupIds!=null && groupIds.size()>0) {
+					String groupIdStr = groupIds.toString().substring(1,groupIds.toString().length()-1);
+					paramters.put("groupIds", groupIdStr);
+					//bookingDeliveryPrice.setGroupIds(groupIdStr);
+				}else{
+					paramters.put("groupIds", "9999999999");
+				}
+			}
+			//如果人员为空并且部门不为空，则取部门下的人id
+			if(StringUtils.isBlank(group.getSaleOperatorIds()) && StringUtils.isNotBlank(group.getOrgIds())){
+				Set<Integer> set = new HashSet<Integer>();
+				String[] orgIdArr = group.getOrgIds().split(",");
+				for(String orgIdStr : orgIdArr){
+					set.add(Integer.valueOf(orgIdStr));
+				}
+				set = platformEmployeeBiz.getUserIdListByOrgIdList(queryDTO.getBizId(), set);
+				String salesOperatorIds="";
+				for(Integer usrId : set){
+					salesOperatorIds+=usrId+",";
+				}
+				if(!salesOperatorIds.equals("")){
+					group.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length()-1));
+				}
+			}
+			
+			if(null!=group.getSaleOperatorIds() && !"".equals(group.getSaleOperatorIds())){
+				paramters.put("operator_id", group.getSaleOperatorIds());
+			}
+			paramters.put("set", queryDTO.getSet());
+			pageBean.setParameter(paramters);
+			pageBean = financeGuideBiz.getCommisionDeductionStatsListPage(pageBean);
+			List<Map<String, Object>> data = pageBean.getResult();
+			List<BookingGuide> guides = new ArrayList<BookingGuide>();
+			if(data != null && data.size() > 0){
+				for(int i = 0 ; i < data.size(); i++){
+					BookingGuide guide = financeGuideBiz.parseDataToGuide(data.get(i), pageBean, true);
+					guides.add(guide);
+					
+					SupplierGuide sg = supplierGuideBiz.getGuideInfoById(guide.getGuideId());
+					if(sg != null){
+						guide.setBankAccount(sg.getBankAccount());
+					}
+				}
+			}
+			pageBean.setResult(guides);
 
+			List<DicInfo> dicInfoList = dicBiz.getListByTypeCode(BasicConstants.YJ_KKXM, queryDTO.getBizId());
+			//总合计
+			Map<String, Object> map = financeGuideBiz.getCommisionsDeductionSum(pageBean);
+			
+			CommissionDeductionResult result = new CommissionDeductionResult();
+			result.setDicInfoList(dicInfoList);
+			result.setMap(map);
+			result.setPageBean(pageBean);
+			return result;
+	}
+	
 	@Override
 	public QueryShopCommissionStatsResult queryShopCommissionDeductionStats(QueryShopCommissionStatsDTO queryDTO) {
 		PageBean pageBean = new PageBean();
@@ -1443,6 +1578,86 @@ public class FinanceFacadeImpl implements FinanceFacade{
 
 		return result;
 	}
+	
+	@Override
+    public QueryCommissionGrantResult queryCommissionGrant(QueryCommissionGrantDTO queryDTO) throws ParseException{
+		//System.out.println("》》》》进入导出佣金发放查询《《《《");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		TourGroupVO group =new TourGroupVO();
+		group.setStartTime(queryDTO.getStartTime() == "" ? null : sdf.parse(queryDTO.getStartTime()));
+		group.setEndTime(queryDTO.getEndTime() == "" ? null : sdf.parse(queryDTO.getEndTime()));
+		group.setGroupCode(queryDTO.getGroupCode());
+		group.setProductBrandId(queryDTO.getProductBrandId());
+		group.setProductName(queryDTO.getProductName());
+		group.setOrgIds(queryDTO.getOrgIds());
+		//group.setState(status);
+		group.setGuideName(queryDTO.getGuideName());
+		group.setSaleOperatorIds(queryDTO.getSaleOperatorIds());
+		
+		PageBean pageBean = new PageBean();
+		pageBean.setPage(1);
+        pageBean.setPageSize(10000);
+		Map paramters = queryDTO.getParamters();
+		/*String carInfo = (String)WebUtils.getQueryParamters(request).get("carInfo");*/
+		if (StringUtils.isNotBlank(queryDTO.getCarInfo())) {
+			List<Integer> groupIds = bookingSupplierBiz.getGroupIdByCarInfo(queryDTO.getCarInfo());
+			if (groupIds!=null && groupIds.size()>0) {
+				String groupIdStr = groupIds.toString().substring(1,groupIds.toString().length()-1);
+				paramters.put("groupIds", groupIdStr);
+				//bookingDeliveryPrice.setGroupIds(groupIdStr);
+			}else{
+				paramters.put("groupIds", "9999999999");
+			}
+		}
+		//如果人员为空并且部门不为空，则取部门下的人id
+		if(StringUtils.isBlank(group.getSaleOperatorIds()) && StringUtils.isNotBlank(group.getOrgIds())){
+			Set<Integer> set = new HashSet<Integer>();
+			String[] orgIdArr = group.getOrgIds().split(",");
+			for(String orgIdStr : orgIdArr){
+				set.add(Integer.valueOf(orgIdStr));
+			}
+			set = platformEmployeeBiz.getUserIdListByOrgIdList(queryDTO.getBizId(), set);
+			String salesOperatorIds="";
+			for(Integer usrId : set){
+				salesOperatorIds+=usrId+",";
+			}
+			if(!salesOperatorIds.equals("")){
+				group.setSaleOperatorIds(salesOperatorIds.substring(0, salesOperatorIds.length()-1));
+			}
+		}
+		
+		if(null!=group.getSaleOperatorIds() && !"".equals(group.getSaleOperatorIds())){
+			paramters.put("operator_id", group.getSaleOperatorIds());
+		}
+		paramters.put("set", queryDTO.getSet());
+		pageBean.setParameter(paramters);
+		pageBean = financeGuideBiz.getCommisionStatsListPage(pageBean);
+		List<Map<String, Object>> data = pageBean.getResult();
+		List<BookingGuide> guides = new ArrayList<BookingGuide>();
+		if(data != null && data.size() > 0){
+			for(int i = 0 ; i < data.size(); i++){
+				BookingGuide guide = financeGuideBiz.parseDataToGuide(data.get(i), pageBean, false);
+				guides.add(guide);
+				
+				SupplierGuide sg = supplierGuideBiz.getGuideInfoById(guide.getGuideId());
+				if(sg != null){
+					guide.setBankAccount(sg.getBankAccount());
+				}
+			}
+		}
+		pageBean.setResult(guides);
+		
+		List<DicInfo> dicInfoList = dicBiz.getListByTypeCode(BasicConstants.YJ_XMLX, queryDTO.getBizId());
+		//总合计
+		Map<String, Object> map = financeGuideBiz.getCommisionsSum(pageBean);
+		
+		QueryCommissionGrantResult result = new QueryCommissionGrantResult();
+		result.setPageBean(pageBean);
+		result.setMap(map);
+		result.setDicInfoList(dicInfoList);
+		return result;
+	}
+	
 
 	@Override
 	public ResultSupport auditComm(AuditCommDTO auditCommDTO) {

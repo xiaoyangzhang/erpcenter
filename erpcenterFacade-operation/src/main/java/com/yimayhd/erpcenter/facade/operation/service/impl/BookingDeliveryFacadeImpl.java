@@ -11,11 +11,15 @@ import com.yimayhd.erpcenter.biz.sys.service.PlatAuthBiz;
 import com.yimayhd.erpcenter.biz.sys.service.PlatformOrgBiz;
 import com.yimayhd.erpcenter.common.util.DateUtil;
 import com.yimayhd.erpcenter.common.util.DateUtils;
+import com.yimayhd.erpcenter.dal.basic.constant.BasicConstants;
+import com.yimayhd.erpcenter.dal.basic.po.DicInfo;
 import com.yimayhd.erpcenter.dal.sales.client.constants.Constants;
 import com.yimayhd.erpcenter.dal.sales.client.operation.po.*;
+import com.yimayhd.erpcenter.dal.sales.client.operation.vo.BookingGroup;
 import com.yimayhd.erpcenter.dal.sales.client.sales.po.*;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TourGroupVO;
 import com.yimayhd.erpcenter.dal.sales.client.sales.vo.TransferOrderVO;
+import com.yimayhd.erpcenter.dal.sys.po.PlatAuth;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformEmployeePo;
 import com.yimayhd.erpcenter.dal.sys.po.PlatformOrgPo;
 import com.yimayhd.erpcenter.facade.operation.errorcode.OperationErrorCode;
@@ -309,10 +313,24 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 	}
 
 	@Override
-	public WebResult<PageBean> pushListTable(PageBean pageBean, Integer bizId) {
+	public WebResult<PageBean> pushListTable(PageBean pageBean, Integer bizId, Set<Integer> set) {
 		WebResult<PageBean> result = new WebResult<PageBean>();
+		List<PlatAuth> paList = platAuthBiz.findByBizIdAndSupplierNotZero(bizId);
+		Set<Integer> supplierIdSet = new HashSet<Integer>();
+		for (PlatAuth platAuth : paList) {
+			supplierIdSet.add(platAuth.getSupplierId());
+		}
 		try {
-			PageBean pageBean1 = tourGroupBiz.getPushDeliveryList(pageBean, bizId);
+			PageBean pageBean1 = tourGroupBiz.getPushDeliveryList(pageBean, bizId,set,supplierIdSet);
+			List<BookingGroup> list = pageBean.getResult();
+			for (BookingGroup bg : list) {
+				PlatAuth pa;
+				pa = platAuthBiz.findByBizIdAndOrgIdOrSupplierId(bizId, null,
+						Integer.parseInt(bg.getBookSupplierIds()));
+				if (bg.getBookSupplierIds().equals(pa.getSupplierId().toString())) {
+					bg.setDriverName(pa.getAppKey());
+				}
+			}
 			result.setValue(pageBean1);
 		}catch (Exception e){
 			result.setSuccess(false);
@@ -368,12 +386,12 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 			transferOrder.setDaynum(tourGroup.getDaynum());
 			transferOrder.setDateStart(tourGroup.getDateStart());
 			transferOrder.setDateEnd(tourGroup.getDateEnd());
-			transferOrder.setPersonAdult(bd.getPersonAdult());
-			transferOrder.setPersonChild(bd.getPersonChild());
-			transferOrder.setPersonGuide(bd.getPersonGuide());
+			transferOrder.setPersonAdult(tourGroup.getTotalAdult());
+			transferOrder.setPersonChild(tourGroup.getTotalChild());
+			transferOrder.setPersonGuide(tourGroup.getTotalGuide());
 			transferOrder.setRemark(bd.getRemark());
 			transferOrder.setRemarkService("");
-			transferOrder.setTotal(tourGroup.getTotal());
+			transferOrder.setTotal(bd.getTotal());
 			transferOrder.setStateReceive((byte) 0);
 			transferOrder.setStateUpdate((byte) 1);
 			transferOrder.setTimeReceive(null);
@@ -381,6 +399,7 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 			transferOrder.setTimeUpdate(new Date());
 			transferOrder.setFromAppKey(fromAppKey);
 			transferOrder.setToAppKey(toAppKey);
+			transferOrder.setReceiveMode(groupOrder.get(0).getReceiveMode());
 
 			//TransferOrderFamily
 			if (tourGroup.getGroupMode() <= 0) { // 散客团
@@ -548,7 +567,6 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 
 
 
-
 	/**
 	 * 接送信息
 	 *
@@ -615,5 +633,42 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 		return sb.toString();
 	}
 
-
+	@Override
+	public BookingDeliveryResult loadBookingDeliveryInfo(Integer gid, Integer bid, Integer bizId) {
+		BookingDeliveryResult result = new BookingDeliveryResult();
+		List<DicInfo> typeList = dicBiz
+				.getListByTypeCode(BasicConstants.XMFY_DJXM, bizId);
+		result.setTypeList(typeList);
+		TourGroup groupInfo = tourGroupBiz.selectByPrimaryKey(gid);
+		List<GroupRoute> routeList = groupRouteBiz.selectByGroupId(gid);
+		if (groupInfo.getGroupMode() < 1) {
+			List<GroupOrder> orderList = groupOrderBiz.selectOrderByGroupId(gid);
+			if (orderList != null && orderList.size() > 0) {
+				for (GroupOrder order : orderList) {
+					SupplierInfo supplierInfo = supplierBiz.selectBySupplierId(order.getSupplierId());
+					if (supplierInfo != null) {
+						order.setSupplierName(supplierInfo.getNameFull());
+					}
+				}
+			}
+//			model.addAttribute("orderList", orderList);
+			result.setGroupOrders(orderList);
+		}
+//		model.addAttribute("group", groupInfo);
+		result.setTourGroup(groupInfo);
+        /*if(groupInfo!=null && routeList!=null
+        ){
+            for(GroupRoute route : routeList){
+				route.setGroupDate(DateUtils.addDays(groupInfo.getDateStart(), route.getDayNum()));
+			}
+		}*/
+//		model.addAttribute("routeList", routeList);
+		result.setGroupRoutes(routeList);
+		if (bid != null) {
+			BookingDelivery delivery = bookingDeliveryBiz.loadBookingInfoById(bid);
+//			model.addAttribute("booking", delivery);
+			result.setBookingDelivery(delivery);
+		}
+		return result;
+	}
 }

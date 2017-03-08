@@ -20,4 +20,5 @@ public interface TaobaoStockMapper {
     int updateByPrimaryKey(TaobaoStock record);
     
     List<TaobaoStock> selectByStockListPage(@Param("page") PageBean pageBean);
+    void updateState(@Param("id") Integer id,@Param("state") Integer state);
 }

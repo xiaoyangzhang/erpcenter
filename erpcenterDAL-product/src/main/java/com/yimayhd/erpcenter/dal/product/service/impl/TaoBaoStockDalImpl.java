@@ -10,10 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 public class TaoBaoStockDalImpl implements TaoBaoStockDal{
@@ -33,16 +30,22 @@ public class TaoBaoStockDalImpl implements TaoBaoStockDal{
 	@Autowired
 	private TaobaoStockDateMapper taobaoStockDateMapper;
 	
+	@Autowired
+	private TaobaoProductSkusMapper taobaoProductSkusMapper;
+	
 	  @Transactional
 	    @Override
-	    public void updateProductStockByTaobao(List<Map<String, String>> mapList) {
+	    public List<Map<String, String>> updateProductStockByTaobao(List<Map<String, String>> mapList) {
+		  List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		  for (Map<String, String> map : mapList) {
 	            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	            Date date;
+			  int count=0;
 	            try {
 	                if (StringUtils.isNotBlank(map.get("depDate"))) {
 	                    date = sdf.parse(map.get("depDate"));
-	                    TaobaoStockDate taobaoStockDate =  taobaoStockDateMapper.selectTaobaoStocksByNumIidAndStockDate(map.get("numIid"), date);
+//	                    TaobaoStockDate taobaoStockDate =  taobaoStockDateMapper.selectTaobaoStocksByNumIidAndStockDate(map.get("numIid"), date);
+	                    TaobaoStockDate taobaoStockDate =  taobaoStockDateMapper.selectTaobaoStocksByNumIidAndStockDate(map.get("sku"), date,map.get("numIid"));  
 	                    if(taobaoStockDate !=null){
 	                        TaobaoStockLog tsl = taobaoStockLogMapper.selectByStockDateIdAndTaobaoOrderId(taobaoStockDate.getId(), Integer.parseInt(map.get("taobaoOrderId")));
 	                        if(tsl==null){
@@ -52,22 +55,35 @@ public class TaoBaoStockDalImpl implements TaoBaoStockDal{
 	                    	taobaoStockLog.setNum(Integer.parseInt(map.get("receiveCount")));
 	                    	taobaoStockLog.setCreateUser("sys");
 	                    	taobaoStockLog.setTaobaoOrderId(Integer.parseInt(map.get("taobaoOrderId")));
+	                    	taobaoStockLog.setCreateUser(map.get("createUser"));
 	                    	taobaoStockLog.setOrderId(0);
 	                    	taobaoStockLogMapper.insertSelective(taobaoStockLog);
 	                    	taobaoStockDateMapper.updateByLog(taobaoStockDate.getId());  // 计算已售
+								// 如果库存小于0
+								count =taobaoStockDate.getStockCount() - taobaoStockDate.getSaleCount()
+										- Integer.parseInt(map.get("receiveCount"));
 	                        }else{
 	                        	if(tsl.getNum()!=Integer.parseInt(map.get("receiveCount"))){
 	                        		tsl.setNum(Integer.parseInt(map.get("receiveCount")));
+	                        		tsl.setCreateUser(map.get("createUser"));
 	                        		taobaoStockLogMapper.updateByPrimaryKeySelective(tsl);
 	                        		taobaoStockDateMapper.updateByLog(taobaoStockDate.getId());  // 计算已售
-	                        	}
+									if(tsl.getNum()<Integer.parseInt(map.get("receiveCount"))){
+										count =taobaoStockDate.getStockCount() - taobaoStockDate.getSaleCount()
+												- Integer.parseInt(map.get("receiveCount")+tsl.getNum());
+									}
 	                        }
 	                    }
 	                }
+						if(count < 0){
+							list.add(map);
+						}
+					}
 	            } catch (ParseException e) {
 	                e.printStackTrace();
 	            }
 	        }
+		  return list;
 	    }
 	  
 	  
@@ -132,11 +148,22 @@ public class TaoBaoStockDalImpl implements TaoBaoStockDal{
 	 * 查询taobao_product中的产品名称信息
 	 */
 	@Override
-	public PageBean<TaobaoProduct> findTaoBaoProductListPage(PageBean<TaobaoProduct> pageBean) {
-		List<TaobaoProduct> tbProductsList = taobaoProductMapper.findTaoBaoProductListPage(pageBean);
+	public PageBean<TaobaoProduct> findTaoBaoProductListPage(PageBean<TaobaoProduct> pageBean,Integer bizId) {
+		List<TaobaoProduct> tbProductsList = taobaoProductMapper.selectTaobaoProductListPage(pageBean, bizId);
 		pageBean.setResult(tbProductsList);
 		return pageBean;
 	}
+	
+	/**
+	 * 查询taobao_product中的产品名称信息
+	 */
+	@Override
+	public PageBean<TaobaoProduct> selectTPBytpdIdListPage(PageBean<TaobaoProduct> pageBean,Integer bizId) {
+		List<TaobaoProduct> tbProductsList = taobaoProductMapper.selectTPBytpdIdListPage(pageBean, bizId);
+		pageBean.setResult(tbProductsList);
+		return pageBean;
+	}
+	
 	/**
 	 * 查询taobao_product库存信息（操作单引用产品时，弹出框） ou.zongying 2016-10-15
 	 */
@@ -156,7 +183,7 @@ public class TaoBaoStockDalImpl implements TaoBaoStockDal{
 
 	@Override
 	public int deleteTaoBaoStockProduct(TaobaoStockProduct taobaoStockProduct) {
-		int num = taobaoStockProductMapper.deleteTaoBaoStockProduct(taobaoStockProduct);
+		int num = taobaoStockProductMapper.deleteStockProductBySkus(taobaoStockProduct);
 		return num;
 	}
 
@@ -173,7 +200,7 @@ public class TaoBaoStockDalImpl implements TaoBaoStockDal{
 
 	@Override
 	public TaobaoStockProduct findStockProductInfo(TaobaoStockProduct record) {
-		TaobaoStockProduct taobaoStockProduct = taobaoStockProductMapper.findStockProductInfo(record);
+		TaobaoStockProduct taobaoStockProduct = taobaoStockProductMapper.findStockProductBySkus(record);
 		return taobaoStockProduct;
 	}
 
@@ -208,6 +235,44 @@ public class TaoBaoStockDalImpl implements TaoBaoStockDal{
 		TaobaoStockLog log = taobaoStockLogMapper.selectStockLogAllByTaobaoOrderId(taobaoOrderId);
 		return log;
 	}
+	
+	@Override
+	public TaobaoProductSkus selectByVid(String vid,String numIid){
+		TaobaoProductSkus sku=	taobaoProductSkusMapper.selectByVid(vid,numIid);
+		return sku;
+	}
+	
+	@Override
+	public int updateTaobaoProductSkus(TaobaoProductSkus record){
+		taobaoProductSkusMapper.updateByPrimaryKeySelective(record);
+		return record.getId();
+	}
+	
+	@Override
+	public int insertTaobaoProductSkus(TaobaoProductSkus record){
+		taobaoProductSkusMapper.insertSelective(record);
+		return record.getId();
+	}
+	
+	@Override
+	public int updateTaobaoProduct(TaobaoProduct record){
+		taobaoProductMapper.updateByPrimaryKeySelective(record);
+		return record.getId();
+	}
+	
+	@Override
+	public TaobaoProductSkus selectSkusById(Integer id){
+		TaobaoProductSkus sku=	taobaoProductSkusMapper.selectByPrimaryKey(id);
+		return sku;
+	}
+	@Override
+	public void updateState(Integer id,Integer state){
+		taobaoStockMapper.updateState(id, state);
+	}
 
-
+	@Override
+	public List<TaobaoStockProduct> findStockProductStockIdHavePSI(Integer stockId) {
+		List<TaobaoStockProduct> tbspList = taobaoStockProductMapper.findStockProductStockIdHavePSI(stockId);
+		return tbspList;
+	}
 }

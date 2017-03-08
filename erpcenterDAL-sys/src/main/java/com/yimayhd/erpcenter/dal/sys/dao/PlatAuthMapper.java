@@ -23,4 +23,6 @@ public interface PlatAuthMapper {
                                                @Param("orgId") Integer orgId, @Param("supplierId") Integer supplierId);
 
 	List<PlatAuth> selectByBizIdAndOrgNotZero(@Param("bizId") Integer bizId);
+    
+    List<PlatAuth> selectByBizIdAndSupplierNotZero(@Param("bizId") Integer bizId);
 }
