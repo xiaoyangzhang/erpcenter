@@ -7140,13 +7140,13 @@
 
 	</select>
 
-	<select id="selectRoomExtrabedListPage" parameterType="com.yihg.mybatis.utility.PageBean" resultMap="BaseResultMap">
+	<select id="selectRoomExtrabedListPage"  resultMap="BaseResultMap">
 		select a.product_id,a.product_brand_name,a.product_name,a.departure_date, sum(b.count_double_room) as count_double_room,sum(b.extrabed) as extrabed
 		from group_order a join group_requirement b on (a.id=b.order_id)
 		where a.biz_id=#{bizId} and a.state=1
 		<if test="page.parameter.startTime != null and page.parameter.startTime != ''">
-			and	a.departure_date <![CDATA[>=]]> #{page.parameter.startTime}
-		</if>
+		and	a.departure_date <![CDATA[>=]]> #{page.parameter.startTime}
+	</if>
 		<if test="page.parameter.endTime != null and page.parameter.endTime != ''">
 			and a.departure_date <![CDATA[<=]]> #{page.parameter.endTime}
 		</if>
