@@ -1106,8 +1106,13 @@ public class ResTrafficFacadeImpl implements ResTrafficFacade{
 		for(TrafficRes item:trafficRes){
 			GroupOrder go=groupOrderBiz.selectSumTotalByResId(item.getId());
 			log.info(">>>>>>>>>>>>>>>>>>>>>>>,go={}",JSON.toJSONString(go));
-			item.setSumTotal(go.getTotal());
-			item.setSumCost(go.getCost());
+			if (go != null) {
+				item.setSumTotal(go.getTotal());
+				item.setSumCost(go.getCost());
+			}else {
+				item.setSumTotal(new BigDecimal(0));
+				item.setSumCost(new BigDecimal(0));
+			}
 		}
 		return pageBean;
 	}
