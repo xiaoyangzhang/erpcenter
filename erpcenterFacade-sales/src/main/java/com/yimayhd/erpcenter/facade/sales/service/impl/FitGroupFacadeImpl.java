@@ -241,10 +241,10 @@ public class FitGroupFacadeImpl implements FitGroupFacade{
 				result.setError("该团已有购物及佣金被审核！");
 				return result;
 			}
-			List<GroupOrder> lists=groupOrderBiz.selectOrderByGroupId(tourGroup.getId());
-			if(lists !=null && lists.size()>0){
-				result.setError("该团已有订单，不可废弃！");
-			}
+//			List<GroupOrder> lists=groupOrderBiz.selectOrderByGroupId(tourGroup.getId());
+//			if(lists !=null && lists.size()>0){
+//				result.setError("该团已有订单，不可废弃！");
+//			}
 		}
 		
 		tourGroupBiz.updateByPrimaryKeySelective(tourGroup);
