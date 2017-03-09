@@ -47,13 +47,14 @@ public class AirTicketResourceBO implements Serializable{
     }
     
     public String getStartDate(){
-    	System.out.println("----------------------------------------------------"+sdf.format(this.po.getStartDate()));
+    	System.out.println("----------------------------------------------------"+DateUtils.format(this.po.getStartDate()));
+    	System.out.println("----------------------------------------------------"+DateUtils.format(po.getStartDate(), "yyyy-MM-dd"));
     	return DateUtils.format(po.getStartDate(), "yyyy-MM-dd");
-//    	return sdf.format(this.po.getStartDate());
+//    	return DateUtils.format(this.po.getStartDate());
     }
     public String getEndDate(){
     	if (this.po.getEndDate()==null){return "";}
-//    	return sdf.format(this.po.getEndDate());
+//    	return DateUtils.format(this.po.getEndDate());
     	return DateUtils.format(po.getEndDate(), "yyyy-MM-dd");
     }
 
@@ -66,7 +67,7 @@ public class AirTicketResourceBO implements Serializable{
     }
     
     public String getDepDate() {
-        return sdf.format(this.po.getDepDate());
+        return DateUtils.format(this.po.getDepDate());
     }
 
     public String getDepCity(){
@@ -140,11 +141,11 @@ public class AirTicketResourceBO implements Serializable{
 		ArrayList<String> arrLeg = new ArrayList<String>();
 		for (AirTicketLeg leg : this.legList){
 			StringBuffer sb = new StringBuffer();
-			sb.append(sdf.format(leg.getDepDate()));
+			sb.append(DateUtils.format(leg.getDepDate(),"yyyy-MM-dd"));
 			sb.append(" &nbsp; ").append(leg.getAirCode());
 			sb.append(" &nbsp; ").append(leg.getDepCity()).append("-").append(leg.getArrCity());
-			String depTime=(leg.getDepTime()==null)?"":legFormat.format(leg.getDepTime());
-			String arrTime=(leg.getArrTime()==null)?"":legFormat.format(leg.getArrTime());
+			String depTime=(leg.getDepTime()==null)?"":DateUtils.format(leg.getDepTime(),"HH:mm");
+			String arrTime=(leg.getArrTime()==null)?"":DateUtils.format(leg.getArrTime(),"HH:mm");
 			sb.append(" &nbsp; ").append(depTime).append("-").append(arrTime);
 			arrLeg.add(sb.toString());
 		}
@@ -155,11 +156,11 @@ public class AirTicketResourceBO implements Serializable{
 		StringBuffer sb = new StringBuffer("<table class='air_ticket_leg'>");
 		for(int i=0; i<this.legList.size(); i++){
 			AirTicketLeg leg = this.legList.get(i);
-			sb.append("<tr><td width='75'>").append(sdf.format(leg.getDepDate())).append("</td><td>");
+			sb.append("<tr><td width='75'>").append(DateUtils.format(leg.getDepDate(),"yyyy-MM-dd")).append("</td><td>");
 			sb.append(leg.getAirCode()).append("</td><td>");
 			sb.append(leg.getDepCity()).append("-").append(leg.getArrCity()).append("</td>");
-			String depTime=(leg.getDepTime()==null)?"":legFormat.format(leg.getDepTime());
-			String arrTime=(leg.getArrTime()==null)?"":legFormat.format(leg.getArrTime());
+			String depTime=(leg.getDepTime()==null)?"":DateUtils.format(leg.getDepTime(),"HH:mm");
+			String arrTime=(leg.getArrTime()==null)?"":DateUtils.format(leg.getArrTime(),"HH:mm");
 			sb.append("<td>").append(depTime).append("-").append(arrTime).append("</td></tr>");
 		}
 		sb.append("</table>");
