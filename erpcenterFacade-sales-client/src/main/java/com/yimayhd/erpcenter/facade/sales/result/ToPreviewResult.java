@@ -43,6 +43,15 @@ public class ToPreviewResult extends ResultSupport {
     private PageBean pageBean;
     private   List<SysBizBankAccount> sysBizBankAccountList;
     private GroupOrderPrice groupOrderPrice;
+    private TourGroup tourGroup;
+
+    public TourGroup getTourGroup() {
+        return tourGroup;
+    }
+
+    public void setTourGroup(TourGroup tourGroup) {
+        this.tourGroup = tourGroup;
+    }
 
     public GroupOrderPrice getGroupOrderPrice() {
         return groupOrderPrice;

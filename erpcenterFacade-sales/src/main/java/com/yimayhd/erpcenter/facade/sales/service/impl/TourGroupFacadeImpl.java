@@ -1320,11 +1320,11 @@ public class TourGroupFacadeImpl implements TourGroupFacade {
     public ToPreviewResult saleInsurance(Integer orderId, Integer curBizId) {
         ToPreviewResult toPreviewResult = new ToPreviewResult();
         try {
-            GroupOrder groupOrder = groupOrderBiz.selectByPrimaryKey(orderId);
-            List<GroupOrderGuest> guests = groupOrderGuestBiz
-                    .selectByOrderId(orderId);
-            GroupRoute groupRoute=groupRouteBiz.selectDayNumAndMaxday(null,groupOrder.getGroupId());
-            toPreviewResult.setGroupOrder(groupOrder);
+            List<GroupOrderGuest> guests = groupOrderGuestBiz.getGuestByGroupIdAndIsLeader(orderId, null);
+            TourGroup tg = tourGroupBiz.selectByPrimaryKey(orderId);
+
+            GroupRoute groupRoute = groupRouteBiz.selectDayNumAndMaxday(null, orderId);
+            toPreviewResult.setTourGroup(tg);
             toPreviewResult.setGuests(guests);
             toPreviewResult.setGroupRoute(groupRoute);
         } catch (Exception e) {

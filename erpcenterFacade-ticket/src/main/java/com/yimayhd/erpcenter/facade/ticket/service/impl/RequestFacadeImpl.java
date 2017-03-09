@@ -1,6 +1,7 @@
 package com.yimayhd.erpcenter.facade.ticket.service.impl;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -247,6 +248,11 @@ public class RequestFacadeImpl implements RequestFacade{
 		AirTicketResourceBO resourceBo = new AirTicketResourceBO(resourcePo);
 		resourceBo.setLegList(airTicketResourceBiz.findLegsByResourceId(resourceBo.getPo().getId()));
 		List<AirTicketRequest> requestList = airTicketRequestBiz.findRequestsByResource(id, bizId);
+		try {
+			System.out.println(resourceBo.getLegHtml());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		List<AirTicketRequestBO> boList = new ArrayList<AirTicketRequestBO>();
 		for (int i=0; i<requestList.size(); i++){
 			AirTicketRequest po = requestList.get(i);
