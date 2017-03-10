@@ -280,6 +280,8 @@ public class DataAnalysisFacadeImpl implements DataAnalysisFacade {
 		// 本期发生的应收已收
 		GroupOrder orderMiddle = groupOrderBiz.selectTotalStatic(pageBean, bizId, userIdSet);
 		// 期初余额
+		vo.setEndTime(null);
+//		pageBean.setParameter(vo);
 		GroupOrder orderPre = groupOrderBiz.selectTotalStatic(pageBean, bizId, userIdSet);
 
 		ToPaymentPreviewResult result = new ToPaymentPreviewResult();
