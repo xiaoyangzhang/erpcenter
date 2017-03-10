@@ -2979,6 +2979,7 @@ public class GroupOrderFacadeImpl implements GroupOrderFacade {
 
 			gopp.setSaleOperatorName(order.getSaleOperatorName());
 			gopp.setRemark(order.getRemarkInternal());
+			gopp.setRemarkInternal(order.getRemarkInternal());
 			gopp.setPlace((order.getProvinceName() == null ? "" : order.getProvinceName())
 					+ (order.getCityName() == null ? "" : order.getCityName()));
 			// 根据散客订单统计人数

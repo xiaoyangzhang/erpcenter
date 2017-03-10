@@ -74,7 +74,7 @@
 		   ,SUM(bsd.itemNum) totalNum, SUM(bsd.itemNumMinus) totalNumMinus
 		   ,IFNULL(originalTotalBalance,0) originalTotalBalance
 	FROM booking_supplier bs
-	left JOIN (SELECT booking_id,SUM(IFNULL(item_num,0)- IFNULL(`item_num_minus`,0)) itemNum,sum(IFNULL(`item_num_minus`,0)) itemNumMinus
+	 JOIN (SELECT booking_id,SUM(IFNULL(item_num,0)- IFNULL(`item_num_minus`,0)) itemNum,sum(IFNULL(`item_num_minus`,0)) itemNumMinus
 			   FROM booking_supplier_detail
 			   <where>
 				<if test="parameter.selectDate!=null and parameter.selectDate==1">
