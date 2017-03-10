@@ -156,7 +156,7 @@ public class TjGroupFacadeImpl implements TjGroupFacade{
 		ToGroupListResult result = new ToGroupListResult();
 		int bizId = tjSearchDTO.getBizId();
 		TourGroupVO group = tjSearchDTO.getGroup();
-		String dataUserIdString = tjSearchDTO.getDataUserIdString();
+		String dataUser = tjSearchDTO.getDataUserIdString();
 		// 如果人员为空并且部门不为空，则取部门下的人id
 		if (StringUtils.isBlank(group.getSaleOperatorIds()) && StringUtils.isNotBlank(group.getOrgIds())) {
 			Set<Integer> set = new HashSet<Integer>();
@@ -179,7 +179,7 @@ public class TjGroupFacadeImpl implements TjGroupFacade{
 		pageBean.setPageSize(pageSize);
 		pageBean.setPage(page);
 		
-		String dataUser = dataUserIdString; //数据权限
+//		String dataUser = dataUserIdString; //数据权限
 		pageBean.setParameter(group);
 		
 		TJGroupProfit totalTj = tjBiz.selectTotalGroupProfitOu(pageBean, bizId, dataUser);
