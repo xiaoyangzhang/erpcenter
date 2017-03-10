@@ -248,11 +248,11 @@ public class RequestFacadeImpl implements RequestFacade{
 		AirTicketResourceBO resourceBo = new AirTicketResourceBO(resourcePo);
 		resourceBo.setLegList(airTicketResourceBiz.findLegsByResourceId(resourceBo.getPo().getId()));
 		List<AirTicketRequest> requestList = airTicketRequestBiz.findRequestsByResource(id, bizId);
-		try {
-			System.out.println(resourceBo.getLegHtml());
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			System.out.println(resourceBo.getLegHtml());
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
 		List<AirTicketRequestBO> boList = new ArrayList<AirTicketRequestBO>();
 		for (int i=0; i<requestList.size(); i++){
 			AirTicketRequest po = requestList.get(i);
