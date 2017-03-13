@@ -424,7 +424,7 @@
   	
   </select>
    <update id="updateByGroupId" parameterType="java.lang.Integer"  >
-  	UPDATE `product_group_price` price   SET price.state=-1  WHERE price.group_id=#{groupId}
+  	UPDATE `product_group_price` price   SET price.state=-1  WHERE price.group_id=#{groupId} and price.state=1
   </update> 
   
   <insert id="copyPrices">
