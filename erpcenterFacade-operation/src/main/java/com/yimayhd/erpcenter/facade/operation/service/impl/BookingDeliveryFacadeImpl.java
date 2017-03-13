@@ -219,7 +219,7 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
 	    GroupOrderPrintPo gopp = null;
         // 房量总计
         String total = "";
-        if (tourGroup != null && tourGroup.getGroupMode() < 1) {
+//        if (tourGroup != null && tourGroup.getGroupMode() < 1) {
             for (GroupOrder order : orderList) {
                 // 拿到单条订单信息
                 gopp = new GroupOrderPrintPo();
@@ -251,7 +251,7 @@ public class BookingDeliveryFacadeImpl implements BookingDeliveryFacade {
                 gopp.setOrderTransports(groupOrderTransports);
                 gopps.add(gopp);
             }
-        }
+//        }
         result.setOrderPrints(gopps);
         if (tourGroup != null && tourGroup.getGroupMode() > 0) {
         	 Map parameters = new HashMap();

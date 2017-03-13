@@ -251,7 +251,7 @@ GROUP BY supplier_type
 	  WHERE group_id = #{groupId} AND booking_id = #{bookingId}
 	  and pay_status=1 
 	  <if test="type==0">
-	  and supplier_type!=120
+	  and supplier_type<![CDATA[!=]]>120
 	  </if>
 	   <if test="type==1">
 	  and supplier_type=120
