@@ -196,7 +196,7 @@ GROUP BY p.`employee_id`
 		platform_employee WHERE org_id=#{orgId} AND status=1 AND del_status=1	<if test="userIds!=null"> and employee_id in (${userIds})	</if>
 	</select> 
 	<select id="getEmpList" resultMap="platformEmployeePo">
-		select * from platform_employee where biz_id=#{bizId} and AND status=1 AND del_status=1	 and employee_id
+		select * from platform_employee where biz_id=#{bizId} and AND status=1 AND del_status=1	 and employee_id IN
 		 <foreach collection="set" item="item" index="index" open="(" separator="," close=")">  
         	#{item,jdbcType=INTEGER}
     	</foreach>  	
